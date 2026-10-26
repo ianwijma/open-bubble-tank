@@ -161,7 +161,7 @@ export function projectileScriptBounds(
   return scriptBounds(source, bullet.symbol, frame, matrix, override, [], 0, bullet.artPose);
 }
 
-/** The fallback renderer draws these directly in field coordinates, without artScale. */
+/** Legacy bounds for unknown future symbols; known mock shots use authored numeric geometry. */
 export function mockProjectileBounds(bullet: Projectile): Bounds {
   if (bullet.artPose && !bullet.artPose.placements.length)
     return { x: bullet.x, y: bullet.y, width: 0, height: 0, empty: true };

@@ -25,6 +25,7 @@ import { showProjectileOrderProof } from './projectile-order';
 import { showSeekerMineProof } from './seeker-mines';
 import { showSpecialProjectilesProof } from './special-projectiles';
 import { showProjectileClocksProof } from './projectile-clocks';
+import { showMockAssetsProof } from './mock-assets';
 
 const file = document.querySelector<HTMLInputElement>('#swf')!;
 const fixture = document.querySelector<HTMLSelectElement>('#fixture')!;
@@ -98,6 +99,13 @@ async function reset() {
   renderer = undefined;
   world = undefined;
   stage.replaceChildren();
+  if (fixture.value === 'mock-assets') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    const proof = await showMockAssetsProof(pack, stage);
+    status.dataset.mockAssets = JSON.stringify(proof);
+    status.textContent = 'Ready · mock colors, authored sizes and shoot-down geometry';
+    return;
+  }
   if (fixture.value === 'projectile-clocks') {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
     const proof = await showProjectileClocksProof(pack, stage);

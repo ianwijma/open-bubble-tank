@@ -5,6 +5,7 @@ import { DEG, Random } from '../core/math';
 import type { Field, Settings, Tank, Vec } from '../core/types';
 import type { World } from '../simulation/world';
 import { whipSamples } from '../simulation/whip';
+import { drawMockProjectile } from './mock-projectile-view';
 import { SwfSymbolView } from './swf-symbol-view';
 import { SwfTextures } from './swf-textures';
 import { setBeamLength } from './swf-beam-view';
@@ -292,6 +293,10 @@ export class GameRenderer {
         nativeBulletIds.add(b.uid);
         continue;
       }
+      const owner =
+        b.kind === 'turret' ? tanks.find(({ tank }) => tank.uid === b.owner) : undefined;
+      if (drawMockProjectile(this.projectiles, b, owner && project(owner.tank, owner.offset)))
+        continue;
       if (b.artPose && !b.artPose.placements.length) continue;
       const color = b.enemy ? 0xdf6688 : 0xff503b;
       if (b.kind === 'whip') {

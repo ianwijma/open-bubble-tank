@@ -15,7 +15,7 @@ bun run dev
 
 Open [localhost:3000](http://localhost:3000). Choose your Bubble Tanks 3 `.swf` at the asset screen, or choose **Play with mock assets**. The original game file and artwork are not bundled. Everything is extracted on the device: there is no upload endpoint, Flash player, or execution of ActionScript.
 
-To obtain the game file yourself, open [Bubble Tanks 3 on Internet Archive](https://archive.org/details/bubble-tanks-3). Under **Download Options**, choose **SHOCKWAVE FLASH**, then select the downloaded `.swf` in the game. The asset screen includes the same guide. Mock mode supplies simple synthesized sound effects and quiet looping tones.
+To obtain the game file yourself, open [Bubble Tanks 3 on Internet Archive](https://archive.org/details/bubble-tanks-3). Under **Download Options**, choose **SHOCKWAVE FLASH**, then select the downloaded `.swf` in the game. The asset screen includes the same guide. Mock mode supplies synthesized sound effects and quiet looping tones, translucent bubble bodies, yellow/orange weapons, and procedural projectiles with authored sizes and source-derived colors.
 
 Normal compressed CWS and uncompressed FWS containers are supported. The research repository's already-expanded SWF with a retained CWS header is also recognized after checking its stage dimensions and frame rate. ZWS/LZMA is unsupported.
 
@@ -89,6 +89,7 @@ bun tools/import-hud-geometry.ts ../documented-bubble-tank-3
 bun tools/import-tutorial-art.ts ../documented-bubble-tank-3
 bun tools/import-mine-art.ts ../documented-bubble-tank-3
 bun tools/import-projectile-clips.ts ../documented-bubble-tank-3
+bun tools/import-projectile-geometry.ts ../documented-bubble-tank-3
 bun tools/import-timeline-scripts.ts ../documented-bubble-tank-3
 ```
 

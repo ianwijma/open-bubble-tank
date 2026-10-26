@@ -19,6 +19,9 @@ import projectileArt from '../data/projectile-art.json';
 import effectArt from '../data/effect-art.json';
 import mineArt from '../data/mine-art.json';
 import { buildDisplayList } from './display-list';
+import { mockPart } from './mock-part';
+import { mockProjectileHit } from './mock-projectile';
+import { authoredProjectileBounds } from './projectile-geometry';
 import { INFECTED_ART, INK_ART, STATUS_ART, PROTECTION_ART } from '../data/status-art';
 
 export interface Bounds extends Rect {}
@@ -660,10 +663,7 @@ export class AssetPack {
     return alphaHit(this.part(p.type), local.x, local.y);
   }
   hitProjectile = (b: Projectile, x: number, y: number) => {
-    if (this.mode !== 'swf' || !this.hasSymbol(b.symbol))
-      return (
-        (!b.artPose || !!b.artPose.placements.length) && Math.hypot(x - b.x, y - b.y) <= b.radius
-      );
+    if (this.mode !== 'swf' || !this.hasSymbol(b.symbol)) return mockProjectileHit(b, x, y);
     const scale = b.artScale ?? 1;
     const local = rotate(
       { x: (x - b.x) / scale, y: (y - b.y) / scale },
@@ -714,7 +714,7 @@ export class AssetPack {
     // bounds. Falling back to a mock circle would invent collision geometry.
     if (this.mode === 'swf' && this.hasSymbol(b.symbol))
       return { x: b.x, y: b.y, width: 0, height: 0, empty: true };
-    return mockProjectileBounds(b);
+    return authoredProjectileBounds(b, owner) ?? mockProjectileBounds(b);
   };
   hitPart = (t: Tank, p: TankPart, x: number, y: number) => {
     if (t.hiddenParts.has(p.key) || t.removedParts.has(p.key)) return false;
@@ -797,54 +797,5 @@ async function rasterSvg(svg: string, bounds: Bounds): Promise<Raster> {
     pixels: ctx.getImageData(0, 0, canvas.width, canvas.height).data,
     resolution,
     url,
-  };
-}
-function mockPart(id: number): Raster {
-  const def = partById(id),
-    body = id < 2000;
-  const base = body
-    ? ([7, 12.6, 22.5, 28.75, 39][(id % 10) - 1] ?? 18)
-    : Math.max(8, Math.min(28, 8 + (def?.gp ?? 1) * 3));
-  const radius = body && id >= 1500 ? 32 : base,
-    bounds = { x: -radius - 3, y: -radius - 3, width: radius * 2 + 6, height: radius * 2 + 6 };
-  const canvas = document.createElement('canvas');
-  canvas.width = canvas.height = Math.ceil(bounds.width * 2);
-  const ctx = canvas.getContext('2d', { willReadFrequently: true })!;
-  ctx.scale(2, 2);
-  ctx.translate(-bounds.x, -bounds.y);
-  const drawBubble = (x: number, y: number, r: number, dark: boolean, gold = false) => {
-    const g = ctx.createRadialGradient(x - r * 0.3, y - r * 0.35, 1, x, y, r);
-    g.addColorStop(0, gold ? '#ffe34d' : dark ? '#185575' : '#98e4ef');
-    g.addColorStop(1, gold ? '#d5ad00' : dark ? '#123e55' : '#277e9d');
-    ctx.beginPath();
-    ctx.arc(x, y, r, 0, Math.PI * 2);
-    ctx.fillStyle = g;
-    ctx.fill();
-    ctx.strokeStyle = gold ? '#ffffa0' : dark ? '#54b6ce' : '#bcf9ff';
-    ctx.lineWidth = 0.8;
-    ctx.stroke();
-    ctx.fillStyle = 'rgba(255,255,255,.8)';
-    ctx.beginPath();
-    ctx.ellipse(x - r * 0.4, y - r * 0.42, r * 0.23, r * 0.12, -0.7, 0, Math.PI * 2);
-    ctx.fill();
-  };
-  if (body && id >= 1500)
-    for (let i = 0; i < 5; i++) drawBubble((i - 2) * 10, Math.sin(i) * 9, 8, id < 1200);
-  else if (body) drawBubble(0, 0, radius, id >= 1100 && id < 1200);
-  else {
-    const enemy = id >= 4000 && id < 5000;
-    drawBubble(-2, 0, base * 0.58, enemy, !enemy);
-    drawBubble(base * 0.55, 0, base * 0.28, enemy, !enemy);
-    if ((def?.gp ?? 0) > 2) {
-      drawBubble(-base * 0.5, -base * 0.45, base * 0.25, enemy, !enemy);
-      drawBubble(-base * 0.5, base * 0.45, base * 0.25, enemy, !enemy);
-    }
-  }
-  return {
-    ...bounds,
-    canvas,
-    resolution: 2,
-    pixels: ctx.getImageData(0, 0, canvas.width, canvas.height).data,
-    url: canvas.toDataURL('image/png'),
   };
 }

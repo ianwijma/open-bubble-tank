@@ -55,6 +55,8 @@ import { projectileFlags } from './projectile-flags';
 import mineArt from '../data/mine-art.json';
 import { initializeSapper } from './sapper';
 import { initializeAvatarSeeker } from './avatar-seeker';
+import { mockProjectileHit } from '../assets/mock-projectile';
+import { authoredProjectileBounds } from '../assets/projectile-geometry';
 
 export interface Transit {
   next: Field;
@@ -246,17 +248,17 @@ export class World {
   rng: Random;
   roster: UnitRoster;
   hitTest: CollisionTest = geometricHit;
-  hitProjectile = (b: Projectile, x: number, y: number) =>
-    (!b.artPose || !!b.artPose.placements.length) && Math.hypot(x - b.x, y - b.y) <= b.radius;
+  hitProjectile = mockProjectileHit;
   projectileBounds = (b: Projectile): Rect =>
-    b.artPose && !b.artPose.placements.length
-      ? { x: b.x, y: b.y, width: 0, height: 0, empty: true }
-      : {
-          x: b.x - b.radius,
-          y: b.y - b.radius,
-          width: b.radius * 2,
-          height: b.radius * 2,
-        };
+    authoredProjectileBounds(b) ?? {
+      x: b.x - b.radius,
+      y: b.y - b.radius,
+      width: b.radius * 2,
+      height: b.radius * 2,
+      ...(b.artPose && !b.artPose.placements.length
+        ? { x: b.x, y: b.y, width: 0, height: 0, empty: true }
+        : {}),
+    };
   projectileWidth = (b: Projectile) => this.projectileBounds(b).width;
   hitPart = (t: Tank, p: TankPart, x: number, y: number) => {
     const pt = rotate({ x: x - t.x, y: y - t.y }, -t.rotation);

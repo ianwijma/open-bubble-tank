@@ -226,7 +226,7 @@ test('AssetPack uses morph start bounds and derives width from field bounds with
   });
 });
 
-test('mock bounds cover the drawn mine/turret strokes and rotated dynamic beam', () => {
+test('unknown-symbol fallback bounds cover procedural mine/turret strokes and rotated beam', () => {
   const pack = new AssetPack('mock');
   close(pack.projectileBounds(bullet({ x: 10, y: 20 })), {
     x: 5.75,
