@@ -1,0 +1,7 @@
+node_modules
+.next
+bun.lock
+src/game/data/*.json
+test-results
+playwright-report
+next-env.d.ts

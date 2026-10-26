@@ -1,0 +1,850 @@
+import { PARTS, partById } from '../data/catalog';
+import type { Projectile, Rect, Tank, TankDesign, TankPart } from '../core/types';
+import { Random, rotate } from '../core/math';
+import { SwfClip } from './swf-clip';
+import { mockProjectileBounds, projectileScriptBounds } from './projectile-bounds';
+import { MINIMAP } from '../core/minimap';
+import { HUD } from '../core/hud';
+import { WIN_SCREEN } from '../core/win-screen';
+import { TUTORIAL } from '../core/tutorial';
+import { extractAssets } from './swf.mjs';
+import {
+  extractSymbols,
+  morphShapeAtRatio,
+  parseMorphShapeTag,
+  shapeToSVG,
+} from './swf-symbols.mjs';
+import { rasterMorphSVG } from './morph-raster';
+import projectileArt from '../data/projectile-art.json';
+import effectArt from '../data/effect-art.json';
+import mineArt from '../data/mine-art.json';
+import { buildDisplayList } from './display-list';
+import { INFECTED_ART, INK_ART, STATUS_ART, PROTECTION_ART } from '../data/status-art';
+
+export interface Bounds extends Rect {}
+export interface Raster extends Bounds {
+  canvas: HTMLCanvasElement;
+  pixels: Uint8ClampedArray;
+  resolution: number;
+  url: string;
+  morph?: boolean;
+}
+export interface SwfMatrix {
+  a: number;
+  b: number;
+  c: number;
+  d: number;
+  tx: number;
+  ty: number;
+}
+type Matrix = SwfMatrix;
+export interface Placement {
+  depth: number;
+  charId?: number;
+  matrix?: Matrix;
+  color?: { mult: number[]; add: number[] };
+  frame: number;
+  remove?: boolean;
+  clipDepth?: number;
+  name?: string;
+  ratio?: number;
+}
+export interface DisplayPlacement extends Placement {
+  charId: number;
+  matrix: Matrix;
+  bornFrame: number;
+}
+export interface SpriteInfo {
+  id: number;
+  frameCount: number;
+  placements: Placement[];
+}
+interface ShapeInfo {
+  id: number;
+  bounds?: { xMin: number; yMin: number; xMax: number; yMax: number };
+  startBounds?: { xMin: number; yMin: number; xMax: number; yMax: number };
+}
+interface FontInfo {
+  id: number;
+  name: string;
+  codeTable: number[];
+  glyphs: string[];
+  advances?: number[];
+  ascent?: number;
+  descent?: number;
+}
+interface TextInfo {
+  id: number;
+  bounds: { xMin: number; yMin: number; xMax: number; yMax: number };
+  matrix: Matrix;
+  records: {
+    fontId?: number;
+    color?: number[];
+    x?: number;
+    y?: number;
+    height?: number;
+    glyphs: { index: number; advance: number }[];
+  }[];
+}
+export interface SymbolResult {
+  symbols: {
+    sprites: SpriteInfo[];
+    shapes: ShapeInfo[];
+    morphs: ReturnType<typeof parseMorphShapeTag>[];
+    fonts: FontInfo[];
+    texts: TextInfo[];
+    editTexts: {
+      id: number;
+      bounds: { xMin: number; yMin: number; xMax: number; yMax: number };
+      fontHeight: number;
+      fontId?: number;
+      align: number;
+      text: string;
+    }[];
+    symbolNames: Record<string, string>;
+  };
+  svgByCid: Map<number, string>;
+  errors: string[];
+}
+export interface AssetReport {
+  filename: string;
+  images: number;
+  sounds: number;
+  vectors: number;
+  sprites: number;
+  warnings: string[];
+}
+const identity: Matrix = { a: 1, b: 0, c: 0, d: 1, tx: 0, ty: 0 };
+const escapeXml = (s: string) =>
+  s.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('"', '&quot;');
+const svgUrl = (svg: string) => `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+function union(bounds: Bounds[]): Bounds {
+  if (!bounds.length) return { x: 0, y: 0, width: 1, height: 1 };
+  const x = Math.min(...bounds.map((b) => b.x)),
+    y = Math.min(...bounds.map((b) => b.y));
+  return {
+    x,
+    y,
+    width: Math.max(...bounds.map((b) => b.x + b.width)) - x,
+    height: Math.max(...bounds.map((b) => b.y + b.height)) - y,
+  };
+}
+function intersect(a: Bounds, b: Bounds): Bounds {
+  const x = Math.max(a.x, b.x),
+    y = Math.max(a.y, b.y);
+  return {
+    x,
+    y,
+    width: Math.max(0, Math.min(a.x + a.width, b.x + b.width) - x),
+    height: Math.max(0, Math.min(a.y + a.height, b.y + b.height) - y),
+  };
+}
+function transformBounds(b: Bounds, m: Matrix): Bounds {
+  const ps = [
+    [b.x, b.y],
+    [b.x + b.width, b.y],
+    [b.x, b.y + b.height],
+    [b.x + b.width, b.y + b.height],
+  ].map(([x, y]) => ({ x: x * m.a + y * m.c + m.tx / 20, y: x * m.b + y * m.d + m.ty / 20 }));
+  const x = Math.min(...ps.map((p) => p.x)),
+    y = Math.min(...ps.map((p) => p.y));
+  return {
+    x,
+    y,
+    width: Math.max(...ps.map((p) => p.x)) - x,
+    height: Math.max(...ps.map((p) => p.y)) - y,
+  };
+}
+function matrixAttr(m: Matrix) {
+  return `matrix(${m.a} ${m.b} ${m.c} ${m.d} ${m.tx / 20} ${m.ty / 20})`;
+}
+
+export class AssetPack {
+  readonly mode: 'swf' | 'mock';
+  report: AssetReport | null = null;
+  frames = new Map<number, Raster[]>();
+  extras = new Map<number, Raster>();
+  uiFrames = new Map<number, Raster[]>();
+  leaves = new Map<number, Raster>();
+  sounds = new Map<number, Blob>();
+  private symbols: SymbolResult | null = null;
+  private sprites = new Map<number, SpriteInfo>();
+  private shapes = new Map<number, ShapeInfo>();
+  private morphs = new Map<number, ReturnType<typeof parseMorphShapeTag>>();
+  private morphRasters = new Map<string, Raster>();
+  private morphPixels = 0;
+  static readonly MORPH_CACHE_PIXELS = 8 * 1024 * 1024;
+  private texts = new Map<number, TextInfo>();
+  private fonts = new Map<number, FontInfo>();
+  private sourceUrls: string[] = [];
+  private displayCache = new Map<string, DisplayPlacement[]>();
+  private dynamicWidths = new Map<number, number>();
+  private partClips = new WeakMap<Tank, { design: TankDesign; parts: Map<string, SwfClip> }>();
+  constructor(mode: 'swf' | 'mock') {
+    this.mode = mode;
+  }
+  static async mock(onProgress: (n: number, label: string) => void = () => {}) {
+    const pack = new AssetPack('mock');
+    for (const [i, part] of PARTS.entries()) {
+      pack.frames.set(part.id, [mockPart(part.id)]);
+      onProgress((i + 1) / PARTS.length, 'Drawing mock bubbles');
+    }
+    return pack;
+  }
+  static async fromSWF(file: File, onProgress: (n: number, label: string) => void = () => {}) {
+    if (file.size < 32 || file.size > 20 * 1024 * 1024)
+      throw new Error('Choose a Bubble Tanks 3 SWF smaller than 20 MB.');
+    const raw = new Uint8Array(await file.arrayBuffer());
+    const sig = String.fromCharCode(...raw.slice(0, 3));
+    if (!['CWS', 'FWS'].includes(sig))
+      throw new Error(
+        sig === 'ZWS'
+          ? 'LZMA-compressed SWFs are unsupported. Use the original CWS or an uncompressed FWS file.'
+          : 'This file is not a supported Flash SWF.',
+      );
+    const declared = new DataView(raw.buffer).getUint32(4, true);
+    if (declared > 32 * 1024 * 1024 || declared < 32)
+      throw new Error('The SWF declares an unsupported size.');
+    onProgress(0.03, 'Reading Flash container');
+    // This imports artwork and audio only. ActionScript is never executed.
+    const result = await extractAssets(raw, () => {});
+    if (result.header.stageWidthPx !== 550 || result.header.stageHeightPx !== 450)
+      throw new Error('Expected the 550 × 450 Bubble Tanks 3 game file.');
+    onProgress(0.12, 'Extracting vectors and sprite timelines');
+    const symbols = (await extractSymbols(result.bytes, {
+      images: result.images,
+    })) as unknown as SymbolResult;
+    if (!Object.values(symbols.symbols.symbolNames).some((n) => n.endsWith('.AGunBasicCannon')))
+      throw new Error('This SWF does not contain the expected Bubble Tanks 3 symbols.');
+    const pack = new AssetPack('swf');
+    pack.symbols = symbols;
+    pack.sprites = new Map(symbols.symbols.sprites.map((s) => [s.id, s]));
+    pack.shapes = new Map(
+      [...symbols.symbols.shapes, ...symbols.symbols.morphs].map((s) => [s.id, s]),
+    );
+    pack.morphs = new Map(symbols.symbols.morphs.map((morph) => [morph.id, morph]));
+    pack.fonts = new Map(symbols.symbols.fonts.map((f) => [f.id, f]));
+    pack.texts = new Map(symbols.symbols.texts.map((t) => [t.id, t]));
+    for (const s of result.sounds as { id: number; blob?: Blob }[])
+      if (s.blob) pack.sounds.set(s.id, s.blob);
+    pack.report = {
+      filename: file.name,
+      images: result.images.length,
+      sounds: result.sounds.length,
+      vectors: symbols.svgByCid.size,
+      sprites: symbols.symbols.sprites.length,
+      warnings: [...result.errors, ...symbols.errors],
+    };
+    try {
+      for (const [i, part] of PARTS.entries()) {
+        // Thumbnails and class snapshots are frozen; live views run native timelines.
+        const frames = [2];
+        const rasters: Raster[] = [];
+        for (const f of frames) {
+          const raster = await pack.rasterSymbol(part.symbol, f);
+          if (raster) rasters.push(raster);
+        }
+        pack.frames.set(part.id, rasters.length ? rasters : [mockPart(part.id)]);
+        onProgress(0.2 + (0.35 * (i + 1)) / PARTS.length, `Composing ${part.name}`);
+        if (i % 6 === 0)
+          await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+      }
+      const reachable = new Set<number>();
+      const visit = (id: number) => {
+        if (reachable.has(id)) return;
+        reachable.add(id);
+        for (const p of pack.sprites.get(id)?.placements ?? []) if (p.charId) visit(p.charId);
+      };
+      for (const p of PARTS) visit(p.symbol);
+      for (const art of Object.values(projectileArt)) visit(art.symbol);
+      for (const art of Object.values(effectArt)) visit(art.symbol);
+      for (const art of Object.values(mineArt)) visit(art.symbol);
+      for (const id of [...Object.values(STATUS_ART), INFECTED_ART, INK_ART]) visit(id);
+      for (const id of Object.values(PROTECTION_ART)) visit(id);
+      for (const id of [1816, 1817, 1820, 2173]) visit(id);
+      for (const id of [MINIMAP.symbol, MINIMAP.button, MINIMAP.dot, MINIMAP.connector]) visit(id);
+      for (const id of [HUD.life.symbol, HUD.fire.symbol, HUD.edit.symbol]) visit(id);
+      for (const { symbol } of Object.values(HUD.tactical)) visit(symbol);
+      visit(TUTORIAL.symbol);
+      const leafIds = [...reachable].filter(
+        (id) => (pack.shapes.has(id) && !pack.morphs.has(id)) || pack.texts.has(id),
+      );
+      for (const [i, id] of leafIds.entries()) {
+        const raster = await pack.rasterSymbol(id, 1);
+        if (raster) pack.leaves.set(id, raster);
+        onProgress(0.55 + (0.35 * (i + 1)) / leafIds.length, 'Preparing original sprite timelines');
+        if (i % 12 === 0)
+          await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+      }
+      for (const id of [
+        545, 1537, 1672, 1721, 1717, 492, 494, 498, 500, 496, 1816, 1817, 1820, 1535, 1536, 2034,
+        1626, 1628, 1630, 1633,
+      ]) {
+        const raster = await pack.rasterSymbol(id, id === 545 ? 179 : 1);
+        if (raster) pack.extras.set(id, raster);
+      }
+      for (const piece of [
+        ...HUD.editConfirm,
+        ...HUD.secondaryHelp,
+        ...HUD.tankInfo.pieces.filter((piece) => piece.name !== 'TankImage_mc'),
+        WIN_SCREEN.backdrop,
+        ...WIN_SCREEN.pieces,
+      ]) {
+        const frames: Raster[] = [];
+        const hover = piece.name && (pack.sprites.get(piece.symbol)?.frameCount ?? 1) > 1;
+        for (const frame of hover ? [1, 2] : [1]) {
+          const raster = await pack.rasterSymbol(piece.symbol, frame);
+          if (raster) frames.push(raster);
+        }
+        if (piece.name && !hover && frames[0]) frames.push(frames[0]);
+        pack.uiFrames.set(piece.symbol, frames);
+      }
+      onProgress(1, 'Assets ready');
+      return pack;
+    } catch (e) {
+      pack.dispose();
+      throw e;
+    }
+  }
+  private compile(
+    id: number,
+    frame = 1,
+    seen = new Set<number>(),
+    ratio = 0,
+  ): { body: string; bounds: Bounds } | null {
+    if (seen.has(id) || seen.size > 24) return null;
+    const next = new Set(seen);
+    next.add(id);
+    const morph = this.morphs.get(id);
+    const shape = morph ? morphShapeAtRatio(morph, ratio) : this.shapes.get(id),
+      svg = morph
+        ? shapeToSVG({ ...shape, id: `${id}_${ratio}` }, undefined)
+        : this.symbols?.svgByCid.get(id);
+    if (shape && svg) {
+      const b = shape.bounds!;
+      const bounds = {
+        x: b.xMin / 20,
+        y: b.yMin / 20,
+        width: (b.xMax - b.xMin) / 20,
+        height: (b.yMax - b.yMin) / 20,
+      };
+      const body = svg.replace(/^<svg[^>]*>/, '').replace(/<\/svg>$/, '');
+      return { body: `<g transform="translate(${bounds.x} ${bounds.y})">${body}</g>`, bounds };
+    }
+    const text = this.texts.get(id);
+    if (text) return this.compileText(text);
+    const sp = this.sprites.get(id);
+    if (!sp) return null;
+    const localFrame = ((frame - 1) % sp.frameCount) + 1;
+    const list = new Map<number, Placement>();
+    for (const p of sp.placements) {
+      if (p.frame > localFrame) break;
+      if (p.remove) list.delete(p.depth);
+      else list.set(p.depth, { ...(list.get(p.depth) ?? {}), ...p });
+    }
+    const children: { body: string; bounds: Bounds }[] = [];
+    const masks: { id: string; depth: number; end: number; bounds: Bounds; body: string }[] = [];
+    for (const p of [...list.values()].sort((a, b) => a.depth - b.depth)) {
+      if (p.charId === undefined) continue;
+      const child = this.compile(p.charId, frame, next, p.ratio ?? 0);
+      if (!child) continue;
+      const m = p.matrix ?? identity;
+      if (p.clipDepth !== undefined) {
+        masks.push({
+          id: `mask${id}_${p.depth}_${seen.size}`,
+          depth: p.depth,
+          end: p.clipDepth,
+          bounds: transformBounds(child.bounds, m),
+          body: `<g transform="${matrixAttr(m)}">${child.body}</g>`,
+        });
+        continue;
+      }
+      let attrs = `transform="${matrixAttr(m)}"`,
+        filter = '';
+      if (p.color) {
+        const { mult, add } = p.color;
+        if (mult.slice(0, 3).every((n) => n === 1) && add.every((n) => n === 0))
+          attrs += ` opacity="${mult[3]}"`;
+        else {
+          const fid = `cx${id}_${p.depth}_${seen.size}`;
+          const values = [
+            mult[0],
+            0,
+            0,
+            0,
+            add[0] / 255,
+            0,
+            mult[1],
+            0,
+            0,
+            add[1] / 255,
+            0,
+            0,
+            mult[2],
+            0,
+            add[2] / 255,
+            0,
+            0,
+            0,
+            mult[3],
+            add[3] / 255,
+          ].join(' ');
+          filter = `<defs><filter id="${fid}" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="${values}"/></filter></defs>`;
+          attrs += ` filter="url(#${fid})"`;
+        }
+      }
+      let body = `${filter}<g ${attrs}>${child.body}</g>`,
+        bounds = transformBounds(child.bounds, m);
+      for (const mask of masks.filter((mask) => p.depth > mask.depth && p.depth <= mask.end)) {
+        body = `<g clip-path="url(#${mask.id})">${body}</g>`;
+        bounds = intersect(bounds, mask.bounds);
+      }
+      if (bounds.width > 0 && bounds.height > 0) children.push({ body, bounds });
+    }
+    const definitions = masks.length
+      ? `<defs>${masks.map((mask) => `<clipPath id="${mask.id}" clipPathUnits="userSpaceOnUse">${mask.body}</clipPath>`).join('')}</defs>`
+      : '';
+    return children.length
+      ? {
+          body: definitions + children.map((c) => c.body).join(''),
+          bounds: union(children.map((c) => c.bounds)),
+        }
+      : null;
+  }
+  private compileText(t: TextInfo) {
+    let font: FontInfo | undefined,
+      height = 240,
+      x = 0,
+      y = 0,
+      color = [255, 255, 255, 255];
+    let body = '';
+    for (const rec of t.records) {
+      if (rec.fontId) font = this.fonts.get(rec.fontId);
+      if (rec.height) height = rec.height;
+      if (rec.x !== undefined) x = rec.x;
+      if (rec.y !== undefined) y = rec.y;
+      if (rec.color) color = rec.color;
+      for (const glyph of rec.glyphs) {
+        const path = font?.glyphs[glyph.index];
+        if (path)
+          body += `<path fill="rgb(${color.slice(0, 3).join(',')})" fill-opacity="${(color[3] ?? 255) / 255}" transform="translate(${x / 20} ${y / 20}) scale(${height / 20 / 1024})" d="${path}"/>`;
+        x += glyph.advance;
+      }
+    }
+    const b = t.bounds;
+    return {
+      body: `<g transform="${matrixAttr(t.matrix)}">${body}</g>`,
+      bounds: {
+        x: b.xMin / 20,
+        y: b.yMin / 20,
+        width: (b.xMax - b.xMin) / 20,
+        height: (b.yMax - b.yMin) / 20,
+      },
+    };
+  }
+  async rasterSymbol(id: number, frame = 1, ratio = 0): Promise<Raster | null> {
+    const compiled = this.compile(id, frame, new Set(), ratio);
+    if (!compiled) return null;
+    const b = compiled.bounds;
+    if (b.width <= 0 || b.height <= 0 || b.width > 2500 || b.height > 2500) return null;
+    const pad = 2,
+      bounds = { x: b.x - pad, y: b.y - pad, width: b.width + pad * 2, height: b.height + pad * 2 };
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${bounds.width}" height="${bounds.height}" viewBox="${bounds.x} ${bounds.y} ${bounds.width} ${bounds.height}">${compiled.body}</svg>`;
+    return rasterSvg(svg, bounds);
+  }
+  part(id: number, frame = 0): Raster {
+    const frames = this.frames.get(id === 2013 ? 5003 : id) ?? this.frames.get(1001)!;
+    return frames[Math.floor(frame / 5) % frames.length];
+  }
+  spriteInfo(id: number) {
+    return this.sprites.get(id);
+  }
+  isMorph(id: number) {
+    return this.morphs.has(id);
+  }
+  get morphCachePixels() {
+    return this.morphPixels;
+  }
+  morphRaster(id: number, ratio = 0): Raster | null {
+    const morph = this.morphs.get(id);
+    if (!morph) return null;
+    ratio = Number.isFinite(ratio) ? Math.max(0, Math.min(65535, Math.round(ratio))) : 0;
+    const key = `${id}:${ratio}`;
+    const cached = this.morphRasters.get(key);
+    if (cached) {
+      this.morphRasters.delete(key);
+      this.morphRasters.set(key, cached);
+      return cached;
+    }
+    const shape = morphShapeAtRatio(morph, ratio),
+      b = shape.bounds;
+    const raster = rasterMorphSVG(shapeToSVG(shape, undefined), {
+      x: b.xMin / 20,
+      y: b.yMin / 20,
+      width: (b.xMax - b.xMin) / 20,
+      height: (b.yMax - b.yMin) / 20,
+    });
+    this.morphRasters.set(key, raster);
+    this.morphPixels += raster.canvas.width * raster.canvas.height;
+    while (this.morphPixels > AssetPack.MORPH_CACHE_PIXELS && this.morphRasters.size > 1) {
+      const oldest = this.morphRasters.entries().next().value!;
+      this.morphPixels -= oldest[1].canvas.width * oldest[1].canvas.height;
+      this.morphRasters.delete(oldest[0]);
+    }
+    return raster;
+  }
+  symbolBounds(id: number, frame = 1) {
+    return this.compile(id, frame)?.bounds;
+  }
+  displayList(id: number, age: number): DisplayPlacement[] {
+    const sp = this.sprites.get(id);
+    if (!sp) return [];
+    const frame = ((Math.max(1, Math.floor(age)) - 1) % sp.frameCount) + 1,
+      key = `${id}:${frame}`;
+    const cached = this.displayCache.get(key);
+    if (cached) return cached;
+    const result = buildDisplayList(sp, frame);
+    this.displayCache.set(key, result);
+    return result;
+  }
+  childAge(parentId: number, age: number, p: DisplayPlacement) {
+    const count = this.sprites.get(parentId)?.frameCount ?? 1;
+    const local = count === 1 ? age : ((Math.max(1, Math.floor(age)) - 1) % count) + 1;
+    const phase = this.sprites.get(p.charId)?.frameCount === 40 ? (p.depth + p.charId) % 11 : 0;
+    return Math.max(1, local - p.bornFrame + 1) + phase;
+  }
+  partClip(tank: Tank, part: TankPart) {
+    let owner = this.partClips.get(tank);
+    if (!owner || owner.design !== tank.design) {
+      owner = { design: tank.design, parts: new Map() };
+      this.partClips.set(tank, owner);
+    }
+    const age = tank.age + 1;
+    let clip = owner.parts.get(part.key);
+    if (!clip || clip.age > age) {
+      // Painting/contact queries share a private stream rather than consuming gameplay RNG.
+      let seed = Math.imul(tank.uid + 1, 0x9e3779b1);
+      for (const c of part.key) seed = Math.imul(seed, 31) + c.charCodeAt(0);
+      const random = new Random(seed >>> 0 || 1);
+      clip = new SwfClip(partById(part.type)!.symbol, this, () => random.next());
+      owner.parts.set(part.key, clip);
+    }
+    clip.advance(age, part.y);
+    return clip;
+  }
+  hitClip(clip: SwfClip, x: number, y: number, ratio = 0): boolean {
+    if (this.morphs.has(clip.id)) return alphaHit(this.morphRaster(clip.id, ratio)!, x, y);
+    const leaf = this.leaves.get(clip.id);
+    if (leaf) return alphaHit(leaf, x, y);
+    const hit = (p: DisplayPlacement) => {
+      const child = clip.children.get(p.depth)?.clip;
+      if (!child) return false;
+      const m = p.matrix,
+        det = m.a * m.d - m.b * m.c;
+      if (Math.abs(det) < 1e-9) return false;
+      const dx = x - m.tx / 20,
+        dy = y - m.ty / 20;
+      return this.hitClip(
+        child,
+        (m.d * dx - m.c * dy) / det,
+        (-m.b * dx + m.a * dy) / det,
+        p.ratio ?? 0,
+      );
+    };
+    const masks: DisplayPlacement[] = [];
+    for (const p of clip.placements) {
+      if (p.clipDepth !== undefined) {
+        masks.push(p);
+        continue;
+      }
+      if (p.color && p.color.mult[3] === 0 && p.color.add[3] === 0) continue;
+      if (masks.some((mask) => p.depth > mask.depth && p.depth <= mask.clipDepth! && !hit(mask)))
+        continue;
+      if (hit(p)) return true;
+    }
+    return false;
+  }
+  private symbolHit(
+    id: number,
+    age: number,
+    x: number,
+    y: number,
+    depth = 0,
+    beamLength?: number,
+    ratio = 0,
+  ): boolean {
+    if (depth > 24) return false;
+    if (this.morphs.has(id)) return alphaHit(this.morphRaster(id, ratio)!, x, y);
+    const leaf = this.leaves.get(id);
+    if (leaf) return alphaHit(leaf, x, y);
+    const hitPlacement = (p: DisplayPlacement, matrix = p.matrix) => {
+      const m = matrix,
+        det = m.a * m.d - m.b * m.c;
+      if (Math.abs(det) < 1e-9) return false;
+      const dx = x - m.tx / 20,
+        dy = y - m.ty / 20;
+      return this.symbolHit(
+        p.charId,
+        this.childAge(id, age, p),
+        (m.d * dx - m.c * dy) / det,
+        (-m.b * dx + m.a * dy) / det,
+        depth + 1,
+        undefined,
+        p.ratio ?? 0,
+      );
+    };
+    const masks: DisplayPlacement[] = [];
+    for (const p of this.displayList(id, age)) {
+      if (p.clipDepth !== undefined) {
+        masks.push(p);
+        continue;
+      }
+      if (p.color && p.color.mult[3] === 0 && p.color.add[3] === 0) continue;
+      if (
+        masks.some(
+          (mask) => p.depth > mask.depth && p.depth <= mask.clipDepth! && !hitPlacement(mask),
+        )
+      )
+        continue;
+      let matrix = p.matrix;
+      if (beamLength !== undefined) {
+        if (p.name === 'mask_mc') continue;
+        if (p.name === 'beam_mc' && (x < -4 || x > beamLength)) continue;
+        if (p.name === 'endCap_mc') matrix = { ...matrix, tx: beamLength * 20 };
+        if (p.name === 'line_mc') {
+          let width = this.dynamicWidths.get(p.charId);
+          if (!width) {
+            width = this.compile(p.charId, 1)?.bounds.width || 1;
+            this.dynamicWidths.set(p.charId, width);
+          }
+          matrix = { ...matrix, a: Math.max(0.01, beamLength) / width };
+        }
+      }
+      if (hitPlacement(p, matrix)) return true;
+    }
+    return false;
+  }
+  textSvg(text: string, size: number, color = '#ffffff', fontName = 'Billo'): string | null {
+    const font = [...this.fonts.values()].find(
+      (f) => f.name.startsWith(fontName) && f.advances?.length,
+    );
+    if (!font) return null;
+    let x = 0,
+      body = '';
+    const scale = size / 1024;
+    for (const ch of text) {
+      const index = font.codeTable.indexOf(ch.charCodeAt(0));
+      if (index < 0) {
+        x += size * 0.4;
+        continue;
+      }
+      body += `<path transform="translate(${x} ${size}) scale(${scale})" d="${font.glyphs[index]}"/>`;
+      x += ((font.advances?.[index] ?? 10240) / 20) * scale;
+    }
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="${Math.max(1, x)}" height="${size * 1.4}" viewBox="0 0 ${Math.max(1, x)} ${size * 1.4}"><g fill="${escapeXml(color)}">${body}</g></svg>`;
+  }
+  hasSymbol(id: number) {
+    return this.sprites.has(id) || this.shapes.has(id);
+  }
+  hitTest = (t: Tank, x: number, y: number) => {
+    for (const p of t.design.parts) {
+      if (this.hitPart(t, p, x, y)) return true;
+    }
+    return false;
+  };
+  hitDesignPart(p: TankPart, x: number, y: number, age?: number) {
+    const local = rotate({ x: (x - p.x) / p.scale, y: (y - p.y) / p.scale }, -p.rotation);
+    const symbol = partById(p.type)?.symbol;
+    if (this.mode === 'swf' && age !== undefined && symbol)
+      return this.symbolHit(symbol, age, local.x, local.y);
+    return alphaHit(this.part(p.type), local.x, local.y);
+  }
+  hitProjectile = (b: Projectile, x: number, y: number) => {
+    if (this.mode !== 'swf' || !this.hasSymbol(b.symbol))
+      return (
+        (!b.artPose || !!b.artPose.placements.length) && Math.hypot(x - b.x, y - b.y) <= b.radius
+      );
+    const scale = b.artScale ?? 1;
+    const local = rotate(
+      { x: (x - b.x) / scale, y: (y - b.y) / scale },
+      -(b.kind === 'grow' ? b.heading : b.angle),
+    );
+    if (b.artPose?.id === b.symbol) return this.hitClip(b.artPose, local.x, local.y);
+    return this.symbolHit(
+      b.symbol,
+      b.artFrame ?? b.age + 1,
+      local.x,
+      local.y,
+      0,
+      b.kind === 'beam' || b.kind === 'healBeam' ? (b.beamLength ?? 0) : undefined,
+    );
+  };
+  projectileWidth = (b: Projectile) => {
+    return this.projectileBounds(b).width;
+  };
+  projectileBounds = (b: Projectile, owner?: { x: number; y: number }): Bounds => {
+    const bounds =
+      this.mode === 'swf'
+        ? projectileScriptBounds(
+            {
+              leafBounds: (id) => {
+                // AS3 getBounds/hitTestObject use a morph's declared START bounds,
+                // regardless of its current rendered ratio. Do not use compile(),
+                // whose bounds are clipped for painting.
+                const shape = this.shapes.get(id),
+                  rect = shape?.startBounds ?? shape?.bounds ?? this.texts.get(id)?.bounds;
+                return rect
+                  ? {
+                      x: rect.xMin / 20,
+                      y: rect.yMin / 20,
+                      width: (rect.xMax - rect.xMin) / 20,
+                      height: (rect.yMax - rect.yMin) / 20,
+                    }
+                  : undefined;
+              },
+              displayList: (id, age) => this.displayList(id, age),
+              childAge: (id, age, p) => this.childAge(id, age, p),
+            },
+            b,
+            owner,
+          )
+        : undefined;
+    if (bounds) return bounds;
+    // Empty authored frames (notably the ally mine's blink) have invalid Script
+    // bounds. Falling back to a mock circle would invent collision geometry.
+    if (this.mode === 'swf' && this.hasSymbol(b.symbol))
+      return { x: b.x, y: b.y, width: 0, height: 0, empty: true };
+    return mockProjectileBounds(b);
+  };
+  hitPart = (t: Tank, p: TankPart, x: number, y: number) => {
+    if (t.hiddenParts.has(p.key) || t.removedParts.has(p.key)) return false;
+    const pt = rotate({ x: x - t.x, y: y - t.y }, -t.rotation);
+    const gun = t.guns.find((g) => g.part.key === p.key);
+    const local = rotate(
+      { x: (pt.x - p.x) / p.scale, y: (pt.y - p.y) / p.scale },
+      -(gun?.angle ?? p.rotation),
+    );
+    if (this.mode === 'swf') {
+      const symbol = partById(p.type)?.symbol;
+      if (symbol) return this.hitClip(this.partClip(t, p), local.x, local.y);
+    }
+    return alphaHit(this.part(p.type, t.age + t.phase), local.x, local.y);
+  };
+  preview(design: TankDesign, size = 130): string {
+    const canvas = document.createElement('canvas');
+    canvas.width = canvas.height = size * 2;
+    const ctx = canvas.getContext('2d')!;
+    const extent = Math.max(
+      24,
+      ...design.parts.map((p) => Math.hypot(p.x, p.y) + p.radius * p.scale),
+    );
+    const s = Math.min(1.5, (size - 16) / (extent * 2));
+    ctx.translate(size, size);
+    ctx.scale(s * 2, s * 2);
+    for (const p of design.parts) this.drawPart(ctx, p);
+    return canvas.toDataURL('image/png');
+  }
+  drawPart(ctx: CanvasRenderingContext2D, p: TankPart) {
+    const r = this.part(p.type);
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    ctx.rotate((p.rotation * Math.PI) / 180);
+    ctx.scale(p.scale, p.scale);
+    ctx.drawImage(r.canvas, r.x, r.y, r.width, r.height);
+    ctx.restore();
+  }
+  dispose() {
+    for (const url of this.sourceUrls) URL.revokeObjectURL(url);
+    this.frames.clear();
+    this.leaves.clear();
+    this.displayCache.clear();
+    this.dynamicWidths.clear();
+    this.partClips = new WeakMap();
+    this.morphRasters.clear();
+    this.morphPixels = 0;
+    this.morphs.clear();
+    this.extras.clear();
+    this.uiFrames.clear();
+    this.sounds.clear();
+    this.symbols = null;
+  }
+}
+export function alphaHit(r: Raster, x: number, y: number) {
+  const px = Math.floor((x - r.x) * r.resolution),
+    py = Math.floor((y - r.y) * r.resolution);
+  return (
+    px >= 0 &&
+    py >= 0 &&
+    px < r.canvas.width &&
+    py < r.canvas.height &&
+    (r.pixels[(py * r.canvas.width + px) * 4 + 3] ?? 0) > 16
+  );
+}
+async function rasterSvg(svg: string, bounds: Bounds): Promise<Raster> {
+  const url = svgUrl(svg),
+    img = new Image();
+  img.src = url;
+  await img.decode();
+  const resolution = 2,
+    canvas = document.createElement('canvas');
+  canvas.width = Math.ceil(bounds.width * resolution);
+  canvas.height = Math.ceil(bounds.height * resolution);
+  const ctx = canvas.getContext('2d', { willReadFrequently: true })!;
+  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+  return {
+    ...bounds,
+    canvas,
+    pixels: ctx.getImageData(0, 0, canvas.width, canvas.height).data,
+    resolution,
+    url,
+  };
+}
+function mockPart(id: number): Raster {
+  const def = partById(id),
+    body = id < 2000;
+  const base = body
+    ? ([7, 12.6, 22.5, 28.75, 39][(id % 10) - 1] ?? 18)
+    : Math.max(8, Math.min(28, 8 + (def?.gp ?? 1) * 3));
+  const radius = body && id >= 1500 ? 32 : base,
+    bounds = { x: -radius - 3, y: -radius - 3, width: radius * 2 + 6, height: radius * 2 + 6 };
+  const canvas = document.createElement('canvas');
+  canvas.width = canvas.height = Math.ceil(bounds.width * 2);
+  const ctx = canvas.getContext('2d', { willReadFrequently: true })!;
+  ctx.scale(2, 2);
+  ctx.translate(-bounds.x, -bounds.y);
+  const drawBubble = (x: number, y: number, r: number, dark: boolean, gold = false) => {
+    const g = ctx.createRadialGradient(x - r * 0.3, y - r * 0.35, 1, x, y, r);
+    g.addColorStop(0, gold ? '#ffe34d' : dark ? '#185575' : '#98e4ef');
+    g.addColorStop(1, gold ? '#d5ad00' : dark ? '#123e55' : '#277e9d');
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fillStyle = g;
+    ctx.fill();
+    ctx.strokeStyle = gold ? '#ffffa0' : dark ? '#54b6ce' : '#bcf9ff';
+    ctx.lineWidth = 0.8;
+    ctx.stroke();
+    ctx.fillStyle = 'rgba(255,255,255,.8)';
+    ctx.beginPath();
+    ctx.ellipse(x - r * 0.4, y - r * 0.42, r * 0.23, r * 0.12, -0.7, 0, Math.PI * 2);
+    ctx.fill();
+  };
+  if (body && id >= 1500)
+    for (let i = 0; i < 5; i++) drawBubble((i - 2) * 10, Math.sin(i) * 9, 8, id < 1200);
+  else if (body) drawBubble(0, 0, radius, id >= 1100 && id < 1200);
+  else {
+    const enemy = id >= 4000 && id < 5000;
+    drawBubble(-2, 0, base * 0.58, enemy, !enemy);
+    drawBubble(base * 0.55, 0, base * 0.28, enemy, !enemy);
+    if ((def?.gp ?? 0) > 2) {
+      drawBubble(-base * 0.5, -base * 0.45, base * 0.25, enemy, !enemy);
+      drawBubble(-base * 0.5, base * 0.45, base * 0.25, enemy, !enemy);
+    }
+  }
+  return {
+    ...bounds,
+    canvas,
+    resolution: 2,
+    pixels: ctx.getImageData(0, 0, canvas.width, canvas.height).data,
+    url: canvas.toDataURL('image/png'),
+  };
+}
