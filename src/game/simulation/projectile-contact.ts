@@ -15,6 +15,9 @@ export function projectileCallback(world: World, bullet: Projectile, target?: Ta
 export function projectileTankCallback(world: World, bullet: Projectile, tank: Tank) {
   projectileCallback(world, bullet, tank);
   if (bullet.status) applyProjectileStatus(world, tank, bullet.status);
+  // _-BL's friendly branch and _-Un/_-dp count nominal contact damage, before shields.
+  // The orbital _-JX override deliberately has no DamageDoneIncr call.
+  if (!bullet.enemy && bullet.kind !== 'orbital') world.damageDoneIncr(bullet.damage);
   world.damage(tank, bullet.damage, bullet);
   bullet.hit.add(tank.uid);
 }
@@ -65,7 +68,7 @@ export function projectileTankContact(world: World, bullet: Projectile) {
       return false;
     }
     projectileTankCallback(world, bullet, tank);
-    if (bullet.kind === 'pierce') world.field.enemies = world.field.enemies.filter((t) => !t.dead);
+    if (bullet.kind === 'pierce') world.flushEnemyRemovals();
     return true;
   }
   return false;

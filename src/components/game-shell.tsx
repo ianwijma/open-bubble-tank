@@ -5,7 +5,7 @@ import type { Profile, Settings, TankDesign } from '@/game/core/types';
 import { STARTER } from '@/game/data/catalog';
 import { World } from '@/game/simulation/world';
 import { AudioManager } from '@/game/services/audio';
-import { loadProfile, saveProfile } from '@/game/services/profile';
+import { loadProfile, saveProfile, saveCreatedTank } from '@/game/services/profile';
 import { AssetGate } from './asset-gate';
 import { GameViewport } from './game-viewport';
 import { GameHud } from './game-hud';
@@ -137,17 +137,9 @@ export default function GameShell() {
   }
   function saveTank(design: TankDesign) {
     if (!profile || !editor) return;
-    const mine = design.author === 'You' && design.id.startsWith('L');
-    const tank = { ...design, author: 'You', id: mine ? design.id : `L${profile.nextTankId}` };
-    updateProfile((p) => ({
-      ...p,
-      tanks: [...p.tanks.filter((t) => t.id !== tank.id), tank],
-      nextTankId: mine ? p.nextTankId : p.nextTankId + 1,
-      achievements:
-        !mine && p.tanks.length >= 2
-          ? [...new Set([...p.achievements, 'Tank Creator'])]
-          : p.achievements,
-    }));
+    const saved = saveCreatedTank(profile, design),
+      tank = saved.tank;
+    updateProfile(() => saved.profile);
 
     if (editor.returnTo === 'game' && world) {
       if (editor.upgrade) world.selectUpgrade(tank);

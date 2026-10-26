@@ -177,7 +177,8 @@ export class World {
     initializeAvatarSeeker(this, bullet);
     if (bullet.kind === 'infect' && bullet.targetId === null) expireInfectionTarget(this, bullet);
     this.bullets.push(bullet);
-    if (!bullet.enemy) {
+    if (bullet.enemy) this.stats.enemyShots++;
+    else {
       this.stats.shots++;
       if (this.runtime.shootTimer === -1) {
         this.emit('shoot');
@@ -203,6 +204,8 @@ export class World {
   progression: Progression = { level: 0, history: [STARTER] };
   offers: TankDesign[] = [];
   stats: Stats = {
+    damageDone: 0,
+    enemyShots: 0,
     kills: 0,
     deadheads: 0,
     fighters: 0,
@@ -474,7 +477,7 @@ export class World {
       this.inField(transit.next, transit.offset, () => this.tickField(input, transit.visit));
   }
   private tickField(input: InputFrame, visit: FieldVisit) {
-    this.field.enemies = this.field.enemies.filter((t) => !t.dead);
+    this.flushEnemyRemovals();
     this.allies = this.allies.filter((t) => !t.dead);
     if (this.runtime.lastAllyCount !== this.allies.length) {
       this.runtime.lastAllyCount = this.allies.length;
@@ -570,10 +573,13 @@ export class World {
     }
     // _-MC (symbol 2173) ends at frame 120; _-0D shrinks by 1/204 each frame.
     if (c.age < 120) return;
+    for (const ally of this.allies) this.damage(ally, ally.life);
     for (const enemy of this.field.enemies) {
       enemy.design = { ...enemy.design, reward: Math.floor(enemy.design.reward / 3) };
-      this.kill(enemy);
+      this.damage(enemy, enemy.life);
     }
+    // Destroy replaces arrEnemies without flushing its deletion queue or medal checks.
+    this.runtime.enemyRemovals = [];
     this.field.enemies = [];
     this.field.destroyed = true;
     this.field.cleared = true;
@@ -706,6 +712,10 @@ export class World {
   scheduleShot(owner: Tank, gun: GunState, frames: number) {
     this.pending.push({ owner, gun, total: frames, frame: 1 });
   }
+  /** Source counters record nominal contact damage before Damage applies protection. */
+  damageDoneIncr(amount: number) {
+    this.stats.damageDone += amount;
+  }
   damage(t: Tank, amount: number, bullet?: Projectile) {
     damageTank(this, t, amount, bullet);
   }
@@ -715,12 +725,8 @@ export class World {
     this.emit(t.side === 'ally' ? 'death' : 'pop');
     if (t.side === 'enemy') {
       this.stats.kills++;
-      if (costs(t.design.parts).gp === 0) this.stats.deadheads++;
-      else this.stats.fighters++;
+      this.runtime.enemyRemovals.push(t);
       this.dropBubbles(t, t.design.reward);
-      if (this.stats.deadheads >= 200) this.award('Headhunter');
-      if (this.stats.fighters >= 100) this.award('Dogfighter');
-      if (this.stats.sumo >= 50) this.award('Pro Sumo');
     }
     for (const gun of t.guns)
       if (gun.part.type === 4022) {
@@ -777,6 +783,26 @@ export class World {
     for (const b of this.bullets)
       if (b.owner === t.uid && ['orbital', 'beam', 'whip'].includes(b.kind)) b.dead = true;
   }
+  /** _-0D.RemoveEnemy classifies the birth code only when the queued object detaches. */
+  flushEnemyRemovals() {
+    const runtime = this.runtime;
+    for (const tank of runtime.enemyRemovals) {
+      const index = this.field.enemies.indexOf(tank);
+      if (index < 0) continue;
+      const key = this.roster.lookupKey(tank.rosterIdentity);
+      if (key.includes('DeadHead')) this.stats.deadheads++;
+      if (key.includes('Fighter')) this.stats.fighters++;
+      if (key === 'HeavyMiniBoss' && this.progression.level <= 3) this.award('David and Goliath');
+      // Source equality is intentional: two protected pushes can skip exactly50.
+      if (this.stats.deadheads === 200) this.award('Headhunter');
+      if (this.stats.fighters === 100) this.award('Dogfighter');
+      if (this.stats.sumo === 50) this.award('Pro Sumo');
+      this.field.enemies.splice(index, 1);
+    }
+    runtime.enemyRemovals = [];
+    // External fixtures may mark a tank dead without invoking its callback.
+    this.field.enemies = this.field.enemies.filter((tank) => !tank.dead);
+  }
   dropBubbles(pos: Vec, amount: number) {
     spawnPickups(this, pos, amount, this.runtimeFor(this.currentField).pickups);
   }
@@ -794,16 +820,21 @@ export class World {
     // CompletedABubblefield checks the current wrapper, even if the next one called it.
     if (this.currentField.boss && !this.bossDefeated) {
       this.bossDefeated = true;
-      this.award('Boss Badge');
-      const cells = [...this.fields.values()];
-      const extent = Math.max(...cells.map((f) => Math.max(Math.abs(f.col), Math.abs(f.row))));
-      // The source count excludes the starting field.
-      if (extent === this.stats.visited) this.award('Masochist');
-      // PreWinScreenSetup declines state2, but the source still awards the medals.
       if (this.mode === 'playing') {
         this.mode = 'won';
         this.emit('win');
       }
+      this.award('Boss Badge');
+      const cells = [...this.fields.values()];
+      const col = this.transit?.next.col ?? this.currentField.col,
+        row = this.transit?.next.row ?? this.currentField.row;
+      const extremes = [
+        Math.abs(Math.min(0, col, ...cells.map((f) => f.col))),
+        Math.max(0, col, ...cells.map((f) => f.col)),
+        Math.abs(Math.min(0, row, ...cells.map((f) => f.row))),
+        Math.max(0, row, ...cells.map((f) => f.row)),
+      ];
+      if (extremes.includes(this.stats.visited)) this.award('Masochist');
     }
   }
   private checkProgression() {
@@ -967,7 +998,7 @@ export class World {
       };
       this.fields.set(`${col},${row}`, next);
       this.stats.visited = this.fields.size - 1;
-      if (this.stats.visited >= 100) this.award('Explorer');
+      if (this.stats.visited === 100) this.award('Explorer');
     } else next.boss = false; // Cached enemies do not preserve the wrapper's boss flag.
     // Reattachment constructs a new bfStartDisplay even when the stored field already exists.
     next.tutorial = tutorial;

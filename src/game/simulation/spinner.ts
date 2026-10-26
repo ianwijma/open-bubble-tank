@@ -57,6 +57,7 @@ export function tickSpinner(world: World, b: Projectile) {
       )
         continue;
       world.addCombatEffect(b, 'impact');
+      world.damageDoneIncr(b.damage);
       world.damage(tank, b.damage, b);
       b.hit.add(tank.uid);
       break;

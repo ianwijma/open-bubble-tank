@@ -61,6 +61,7 @@ export async function decodeTankCode(code: string): Promise<TankDesign> {
     h = header.split(',');
   if (h.length !== 11) throw new Error('This tank code has an invalid header.');
   const tank: TankDesign = {
+    sourceCode: code,
     id: h[9],
     name: h[1],
     author: h[0],

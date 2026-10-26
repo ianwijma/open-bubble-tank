@@ -245,5 +245,5 @@ export function explode(
         index--;
       }
     }
-  world.field.enemies = world.field.enemies.filter((tank) => !tank.dead);
+  world.flushEnemyRemovals();
 }

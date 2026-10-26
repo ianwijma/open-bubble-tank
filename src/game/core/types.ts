@@ -20,6 +20,8 @@ export interface TankPart extends Vec {
   radius: number;
 }
 export interface TankDesign {
+  /** Original encoded identity, retained for source wave-roster lookups. */
+  sourceCode?: string;
   id: string;
   name: string;
   author: string;
@@ -69,6 +71,8 @@ export interface GunState {
   mineRefs?: MineReference[];
 }
 export interface Tank extends Vec {
+  /** The source caches strTankCode at birth, independently of mutable live data. */
+  rosterIdentity: string;
   uid: number;
   design: TankDesign;
   side: 'player' | 'enemy' | 'ally';
@@ -230,6 +234,8 @@ export interface InputFrame {
   aim: Vec;
 }
 export interface Stats {
+  damageDone: number;
+  enemyShots: number;
   kills: number;
   deadheads: number;
   fighters: number;

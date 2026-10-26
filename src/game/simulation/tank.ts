@@ -1,6 +1,7 @@
 import type { Tank, TankDesign } from '../core/types';
 import { tankRadius } from '../data/catalog';
 import { createDegradation, degradeTank } from './degradation';
+import { tankRosterIdentity } from '../core/tank-identity';
 export function createTank(
   uid: number,
   design: TankDesign,
@@ -14,6 +15,7 @@ export function createTank(
   const t: Tank = {
     uid,
     design,
+    rosterIdentity: tankRosterIdentity(design),
     side,
     x,
     y,

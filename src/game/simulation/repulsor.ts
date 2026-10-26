@@ -23,9 +23,10 @@ export function tickRepulsor(world: World, b: Projectile) {
       const force = direction(b.angle, (15 - 2 * tank.design.classId) * b.artAlpha * 2);
       tank.velocity.x += force.x;
       tank.velocity.y += force.y;
+      world.damageDoneIncr(b.damage);
       world.damage(tank, b.damage, b);
       b.hit.add(tank.uid);
-      world.field.enemies = world.field.enemies.filter((tank) => !tank.dead);
+      world.flushEnemyRemovals();
       break;
     }
   }

@@ -40,6 +40,7 @@ export function tickWhip(world: World, b: Projectile) {
     const point = points.find((point) => world.hitTest(enemy, point.x, point.y));
     if (!point) continue;
     // BulletCallCollisionDetected is empty. Damage precedes remembering the hit/effect.
+    world.damageDoneIncr(b.damage);
     world.damage(enemy, b.damage, b);
     b.hit.add(enemy.uid);
     // The original passes a global point directly into its field-local effect queue.

@@ -61,13 +61,14 @@ describe('original gameplay contracts', () => {
     w.damage(enemy, 1000);
     expect(w.player.life).toBe(life);
     expect(w.pickups.reduce((sum, p) => sum + p.value, 0)).toBe(5);
+    const pickupCount = w.pickups.length;
     step(w, 1);
     expect(w.field.cleared).toBe(true);
     expect(w.pickups.every((p) => p.forced)).toBe(true);
     expect(w.stats.completed).toBe(1);
     step(w, 60);
     expect(w.player.life).toBe(6);
-    expect(w.stats.collected).toBe(5);
+    expect(w.stats.collected).toBe(pickupCount);
   });
   test('filling health opens the upgrade choice and choosing starts at floor(max/75)+1', () => {
     const w = new World([], [], 1);

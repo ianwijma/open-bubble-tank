@@ -4,6 +4,7 @@ import batches from '../data/roster.json';
 import { ENEMIES, costs, difficulty, isSupport } from '../data/catalog';
 import type { TankDesign } from '../core/types';
 import { Random } from '../core/math';
+import { tankRosterIdentity } from '../core/tank-identity';
 
 export interface WaveOption {
   chance: number;
@@ -86,6 +87,12 @@ export class UnitRoster {
     private localTanks: readonly TankDesign[] = [],
   ) {
     this.load(batches.initial);
+  }
+  /** _-3y._-0 walks the KEY-sorted unit table and returns its first exact DATA match. */
+  lookupKey(identity: string): string {
+    for (const key of [...this.units.keys()].sort())
+      if (this.units.get(key)!.some((tank) => tankRosterIdentity(tank) === identity)) return key;
+    return '';
   }
   private load(keys: readonly string[]) {
     for (const key of keys) {

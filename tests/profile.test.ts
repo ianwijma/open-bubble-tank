@@ -5,6 +5,7 @@ import {
   importDesign,
   loadProfile,
   saveProfile,
+  saveCreatedTank,
   validateDesign,
   validateSettings,
 } from '../src/game/services/profile';
@@ -75,4 +76,40 @@ test('creator uses authored rings, weapon centers, and the large-class selection
   expect(
     validateBuild({ ...STARTER, parts: [{ ...body, x: 36 }, STARTER.parts[1]] }, 1, 2),
   ).toContain('Place every part inside the class 2 ring.');
+});
+
+test('creator saves fresh IDs, preserves previous designs, and awards after three retained custom tanks', () => {
+  const original = { ...STARTER, id: 'imported-one', name: 'Imported avatar' };
+  const enemy = { ...STARTER, id: 'imported-two', name: 'Imported enemy', avatar: false };
+  let profile = { ...defaultProfile(), tanks: [original, enemy] };
+  const saved = saveCreatedTank(profile, { ...original, name: 'Edited copy' });
+  expect(saved.tank.id).toBe('L10000001');
+  expect(saved.tank.sourceCode).toBeUndefined();
+  expect(saved.profile.tanks.map((tank) => tank.id)).toEqual([
+    'imported-one',
+    'imported-two',
+    'L10000001',
+  ]);
+  expect(saved.profile.tanks[0]).toBe(original);
+  expect(saved.profile.achievements).toEqual(['Tank Creator']);
+  profile = saved.profile;
+  const again = saveCreatedTank(profile, saved.tank);
+  expect(again.tank.id).toBe('L10000002');
+  expect(again.profile.tanks).toHaveLength(4);
+  expect(again.profile.achievements).toEqual(['Tank Creator']);
+});
+
+test('creator medal counts retained custom designs and excludes builtin library duplicates', () => {
+  const profile = { ...defaultProfile(), tanks: [STARTER, { ...STARTER, id: 'imported-one' }] };
+  const saved = saveCreatedTank(profile, STARTER);
+  expect(saved.profile.achievements).toEqual([]);
+  const third = saveCreatedTank(saved.profile, STARTER);
+  expect(third.profile.achievements).toEqual(['Tank Creator']);
+});
+
+test('optional original-code identity metadata rejects nonstrings and oversized or malformed input', () => {
+  expect(validateDesign({ ...STARTER, sourceCode: 1 })).toBe(false);
+  expect(validateDesign({ ...STARTER, sourceCode: 'wrong' })).toBe(false);
+  expect(validateDesign({ ...STARTER, sourceCode: 'a'.repeat(200006) })).toBe(false);
+  expect(validateDesign(STARTER)).toBe(true);
 });

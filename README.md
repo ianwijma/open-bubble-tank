@@ -92,6 +92,6 @@ bun tools/import-projectile-clips.ts ../documented-bubble-tank-3
 bun tools/import-timeline-scripts.ts ../documented-bubble-tank-3
 ```
 
-These import numerical definitions, layouts, behavior tables, and recognized MovieClip frame actions. The projectile-clip importer retains numeric display lists for source-polled roots and their children. The timeline importer replays inherited frame registrations and checks that every scripted part and managed projectile clip is covered; unsupported application/effect callbacks are reported. Artwork and audio still come from the player's supplied file. The wave importer reconstructs all 20 / 34 / 44 regular options and the deadhead option from `_-3y.as`, preserving distance branches instead of using the earlier flattened wave JSON.
+These import numerical definitions, layouts, original encoded tank identities, behavior tables, and recognized MovieClip frame actions. The projectile-clip importer retains numeric display lists for source-polled roots and their children. The timeline importer replays inherited frame registrations and checks that every scripted part and managed projectile clip is covered; unsupported application/effect callbacks are reported. Artwork and audio still come from the player's supplied file. The wave importer reconstructs all 20 / 34 / 44 regular options and the deadhead option from `_-3y.as`, preserving distance branches instead of using the earlier flattened wave JSON.
 
 Original Bubble Tanks 3 game and assets: **Hero Interactive**. See [NOTICE](NOTICE.md).

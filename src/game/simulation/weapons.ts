@@ -214,7 +214,7 @@ export function fireGun(world: World, t: Tank, gun: GunState, input: InputFrame)
     if (id === 3003)
       for (const b of world.bullets)
         if (b.enemy && distance(b, pos) <= 145 && b.kind !== 'mine') b.dead = true;
-    if (id === 3003) world.field.enemies = world.field.enemies.filter((e) => !e.dead);
+    if (id === 3003) world.flushEnemyRemovals();
     return;
   }
   if (id === 3006) {

@@ -65,7 +65,7 @@ export function collectPickups(world: World) {
       continue;
     pickup.dead = true;
     healTank(world.player, pickup.value);
-    world.stats.collected += pickup.value;
+    world.stats.collected++;
     if (runtime.collectTimer === -1) {
       world.emit('collect');
       runtime.collectTimer = 4;

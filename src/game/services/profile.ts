@@ -1,7 +1,8 @@
 import { DEFAULT_SETTINGS } from '../core/constants';
 import type { Profile, Settings, TankDesign, TankPart } from '../core/types';
-import { PART_BY_ID } from '../data/catalog';
+import { PART_BY_ID, AVATARS, ENEMIES, BOSSES } from '../data/catalog';
 const KEY = 'open-bubble-tank.profile.v1';
+const builtinIds = new Set([...AVATARS, ...ENEMIES, ...BOSSES].map((tank) => tank.id));
 export function defaultProfile(): Profile {
   return {
     version: 1,
@@ -13,10 +14,36 @@ export function defaultProfile(): Profile {
     nextTankId: 10000001,
   };
 }
+/** A valid creator export is a fresh local design, including edits of saved tanks. */
+export function saveCreatedTank(profile: Profile, design: TankDesign) {
+  const tank: TankDesign = {
+    ...design,
+    sourceCode: undefined,
+    author: 'You',
+    id: `L${profile.nextTankId}`,
+  };
+  const tanks = [...profile.tanks.filter((previous) => previous.id !== tank.id), tank];
+  return {
+    tank,
+    profile: {
+      ...profile,
+      tanks,
+      nextTankId: profile.nextTankId + 1,
+      achievements:
+        tanks.filter((tank) => !builtinIds.has(tank.id)).length >= 3
+          ? [...new Set([...profile.achievements, 'Tank Creator'])]
+          : profile.achievements,
+    },
+  };
+}
 export function validateDesign(value: unknown): value is TankDesign {
   if (!value || typeof value !== 'object') return false;
   const t = value as TankDesign;
   return (
+    (t.sourceCode === undefined ||
+      (typeof t.sourceCode === 'string' &&
+        t.sourceCode.length <= 200000 &&
+        /^([a-f0-9]{3})(?:[a-f0-9]{32})+([a-f0-9]{3})$/i.test(t.sourceCode))) &&
     typeof t.name === 'string' &&
     t.name.length <= 100 &&
     typeof t.id === 'string' &&

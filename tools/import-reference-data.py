@@ -30,7 +30,7 @@ for k,rows in tanks.items():
     v=chunk.split(',')
     if len(v)!=8: continue
     ps.append(dict(key=v[0],type=int(v[1]),twin=v[2],x=float(v[3]),y=float(v[4]),rotation=float(v[5]),scale=float(v[6]),radius=float(v[7])))
-  res[k].append(dict(id=h[9],name=h[1],author=h[0],avatar=h[3]=='1',classId=int(h[4]),life=int(h[5]),reward=int(h[6]),speed=float(h[7]),difficulty=float(h[8]),parts=ps))
+  res[k].append(dict(sourceCode=r['code'],id=h[9],name=h[1],author=h[0],avatar=h[3]=='1',classId=int(h[4]),life=int(h[5]),reward=int(h[6]),speed=float(h[7]),difficulty=float(h[8]),parts=ps))
 write('tanks.json',res)
 src=(p/'export_scripts_deobf/scripts/_-3y.as').read_text()
 write('rules.json',dict(re.findall(r'"KEY":"([^"]+)",\s*"RULE":"([^"]+)"',src)))
