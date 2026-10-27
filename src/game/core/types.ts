@@ -106,6 +106,10 @@ export interface Tank extends Vec {
   forcefieldCounter: number;
   forcefieldFrame: number;
   forcefieldAngle: number;
+  /** APassiveForcefield wrapper identity and its independent stage-clock origin. */
+  forcefieldAttached: boolean;
+  forcefieldGeneration: number;
+  forcefieldStartedAt: number;
   age: number;
   /** Attached artwork stage ticks, independent of gameplay Run. */
   artAge: number;

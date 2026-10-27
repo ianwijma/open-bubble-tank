@@ -35,6 +35,7 @@ import { showGlowProof } from './glows';
 import { showMockPartsProof } from './mock-parts';
 import { showPartSnapshots } from './part-snapshots';
 import { showMountedArt } from './mounted-art';
+import { showForcefieldLifecycle } from './forcefield-lifecycle';
 
 const file = document.querySelector<HTMLInputElement>('#swf')!;
 const fixture = document.querySelector<HTMLSelectElement>('#fixture')!;
@@ -109,6 +110,12 @@ async function reset() {
   world = undefined;
   stage.replaceChildren();
   stage.style.height = '';
+  if (fixture.value === 'forcefield-lifecycle') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    status.dataset.forcefieldLifecycle = JSON.stringify(await showForcefieldLifecycle(pack, stage));
+    status.textContent = 'Ready · forcefield cleanup and passive reconstruction';
+    return;
+  }
   if (fixture.value === 'mounted-art') {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
     status.dataset.mountedArt = JSON.stringify(await showMountedArt(pack, stage));
