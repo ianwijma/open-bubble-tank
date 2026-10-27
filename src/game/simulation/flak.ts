@@ -1,11 +1,11 @@
-import { BULLET_RADIUS } from '../core/constants';
-import { direction, length } from '../core/math';
+import { projectileOutside } from './projectile-boundary';
+import { direction } from '../core/math';
 import type { Projectile } from '../core/types';
 import type { World } from './world';
 
 /** _-cW polls the independent authored clip; paused frame15 can be missed entirely. */
 export function tickFlak(world: World, bullet: Projectile) {
-  if (length(bullet) > BULLET_RADIUS * world.field.scale) {
+  if (projectileOutside(world, bullet)) {
     world.addCombatEffect(bullet, 'impact');
     bullet.dead = true;
     return;

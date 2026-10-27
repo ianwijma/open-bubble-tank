@@ -1,14 +1,15 @@
-import { BULLET_RADIUS } from '../core/constants';
-import { direction, distance, length } from '../core/math';
+import { projectileOutside } from './projectile-boundary';
+import { direction, distance } from '../core/math';
 import type { Projectile, Tank } from '../core/types';
 import type { World } from './world';
 import { projectileImpact } from './effects';
 import { projectileCallback } from './projectile-contact';
 
 function movement(bullet: Projectile) {
+  if (bullet.deflected) return bullet.deflected;
   if (['beam', 'healBeam', 'whip'].includes(bullet.kind)) return { x: 0, y: 0 };
   return bullet.kind === 'turret'
-    ? (bullet.motion ?? { x: 0, y: 0 })
+    ? (bullet.motion ?? direction(bullet.angle, bullet.speed))
     : direction(bullet.angle, bullet.speed);
 }
 
@@ -50,7 +51,7 @@ export function tickTurret(world: World, turret: Projectile, owner: Tank | undef
     }
   }
   if (turret.stopped) return;
-  if (length(turret) > BULLET_RADIUS * world.field.scale) {
+  if (projectileOutside(world, turret)) {
     turret.dead = true;
     projectileImpact(world, turret);
     return;

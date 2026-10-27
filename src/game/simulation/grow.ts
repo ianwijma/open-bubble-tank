@@ -1,5 +1,5 @@
-import { BULLET_RADIUS } from '../core/constants';
-import { direction, length } from '../core/math';
+import { projectileOutside } from './projectile-boundary';
+import { direction } from '../core/math';
 import type { Projectile } from '../core/types';
 import { projectileTankContact } from './projectile-contact';
 import type { World } from './world';
@@ -12,7 +12,7 @@ export function tickGrow(world: World, bullet: Projectile) {
     world.removeBullet(bullet);
     return;
   }
-  if (length(bullet) > BULLET_RADIUS * world.field.scale) {
+  if (projectileOutside(world, bullet)) {
     world.addCombatEffect(bullet, 'impact');
     bullet.dead = true;
     return;

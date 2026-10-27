@@ -1,5 +1,4 @@
-import { BULLET_RADIUS, FIELD_RADIUS } from '../core/constants';
-import { angleTo, deltaAngle, direction, distance, length, rotate } from '../core/math';
+import { angleTo, deltaAngle, direction, distance, rotate } from '../core/math';
 import type { GunState, InputFrame, Projectile, Tank } from '../core/types';
 import type { World } from './world';
 import { tickHealingBeam } from './healing';
@@ -18,6 +17,8 @@ import { tickAvatarSeeker } from './avatar-seeker';
 import { tickWhip } from './whip';
 import { tickGrow } from './grow';
 import { tickFlak } from './flak';
+import { projectileOutside, reportProjectileMiss } from './projectile-boundary';
+import { deflectFirstEnemy, tickDeflected } from './bubble-buster';
 export { starSplit } from './starburst';
 
 export function tickBullet(world: World, b: Projectile, _input: InputFrame) {
@@ -32,14 +33,7 @@ export function tickBullet(world: World, b: Projectile, _input: InputFrame) {
     return;
   }
   if (b.deflected) {
-    // Base Run state2 bypasses subtype homing/contact and checks the wall after movement.
-    b.x += b.deflected.x;
-    b.y += b.deflected.y;
-    const radius = b.kind === 'apocalypse' ? FIELD_RADIUS : BULLET_RADIUS;
-    if (length(b) > radius * world.field.scale) {
-      world.addCombatEffect(b, 'impact');
-      b.dead = true;
-    }
+    tickDeflected(world, b);
     return;
   }
   if (b.kind === 'seekerMine') {
@@ -63,7 +57,12 @@ export function tickBullet(world: World, b: Projectile, _input: InputFrame) {
   if (b.kind === 'spin') return tickSpinner(world, b);
   if (b.kind === 'sapper') return tickSapper(world, b);
   if (b.kind === 'seeker' && !b.enemy) return tickAvatarSeeker(world, b);
-  const owner = world.allTanks().find((t) => t.uid === b.owner);
+  // Turret tests display containment, so a dead but still attached owner remains valid.
+  const owners =
+    b.kind === 'turret'
+      ? [world.player, ...world.field.enemies, ...world.allies]
+      : world.allTanks();
+  const owner = owners.find((t) => t.uid === b.owner);
   if (b.kind === 'healBeam') {
     tickHealingBeam(world, b, owner);
     return;
@@ -77,7 +76,7 @@ export function tickBullet(world: World, b: Projectile, _input: InputFrame) {
       }
       return;
     }
-    if (length(b) > FIELD_RADIUS * world.field.scale) {
+    if (projectileOutside(world, b)) {
       if (
         world.bullets.some(
           (other) => other !== b && !other.dead && other.kind === 'apocalypse' && other.detonating,
@@ -95,13 +94,14 @@ export function tickBullet(world: World, b: Projectile, _input: InputFrame) {
   }
   if (
     !['apocalypse', 'beam', 'healBeam', 'turret'].includes(b.kind) &&
-    length(b) > BULLET_RADIUS * world.field.scale
+    projectileOutside(world, b)
   ) {
     if (b.kind === 'ricochet' && (b.bounces ?? 0) <= 5) {
       b.bounces = (b.bounces ?? 0) + 1;
       b.angle = 2 * angleTo({ x: 0, y: 0 }, b) - b.angle + 180;
     } else {
       world.addCombatEffect(b, 'impact');
+      if (b.kind === 'ricochet') reportProjectileMiss(world, b);
       b.dead = true;
       return;
     }
@@ -166,14 +166,7 @@ export function tickBullet(world: World, b: Projectile, _input: InputFrame) {
       }
   }
   if (b.kind === 'buster') {
-    const other = world.bullets.find(
-      (other) =>
-        other.enemy && !other.dead && distance(other, b) < 11.5 + world.projectileWidth(other) / 2,
-    );
-    if (other) {
-      other.deflected = direction(b.angle, b.speed);
-      other.life = Infinity;
-    }
+    deflectFirstEnemy(world, b);
   }
   if (b.kind !== 'buster') {
     const hit = projectileTankContact(world, b);

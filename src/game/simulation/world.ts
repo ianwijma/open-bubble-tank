@@ -1,5 +1,5 @@
 import { CLASS_SPEED, FIELD_RADIUS, MAX_LIFE, STAGE } from '../core/constants';
-import { clamp, distance, length, Random, rotate } from '../core/math';
+import { clamp, direction, distance, length, Random, rotate } from '../core/math';
 import type {
   CollisionTest,
   Effect,
@@ -174,6 +174,8 @@ export class World {
   /** _-0D.SpawnNewBullet declines new shots while _-5d is set. Timers still run. */
   addBullet(bullet: Projectile) {
     if (this.transit) return false;
+    if (bullet.kind === 'apocalypse') bullet.missExempt ??= true;
+    if (bullet.kind === 'turret') bullet.motion ??= direction(bullet.angle, bullet.speed);
     this.projectileTimelines.initialize(bullet);
     initializeSapper(this, bullet);
     initializeAvatarSeeker(this, bullet);
@@ -208,6 +210,8 @@ export class World {
   stats: Stats = {
     damageDone: 0,
     enemyShots: 0,
+    friendlyMissed: 0,
+    enemyMissed: 0,
     kills: 0,
     deadheads: 0,
     fighters: 0,

@@ -1,5 +1,5 @@
-import { BULLET_RADIUS } from '../core/constants';
-import { direction, length } from '../core/math';
+import { projectileOutside } from './projectile-boundary';
+import { direction } from '../core/math';
 import type { Projectile, Tank } from '../core/types';
 import { createProjectile } from './create-projectile';
 import type { World } from './world';
@@ -8,7 +8,7 @@ const clocks = new WeakMap<Projectile, { counter: number; angle: number }>();
 
 /** _-V3: its collision return is ignored, so contact neither stops nor consumes it. */
 export function tickSpinner(world: World, b: Projectile) {
-  if (length(b) > BULLET_RADIUS * world.field.scale) {
+  if (projectileOutside(world, b)) {
     world.addCombatEffect(b, 'impact');
     b.dead = true;
     return;
@@ -60,6 +60,7 @@ export function tickSpinner(world: World, b: Projectile) {
       world.damageDoneIncr(b.damage);
       world.damage(tank, b.damage, b);
       b.hit.add(tank.uid);
+      b.missExempt = true;
       break;
     }
   }

@@ -1,5 +1,5 @@
-import { BULLET_RADIUS } from '../core/constants';
-import { angleTo, direction, distance, length, rotate } from '../core/math';
+import { projectileOutside } from './projectile-boundary';
+import { angleTo, direction, distance, rotate } from '../core/math';
 import type { Projectile, Tank, Vec } from '../core/types';
 import { tankHitLocation } from './hit-location';
 import type { World } from './world';
@@ -43,7 +43,7 @@ export function tickSapper(world: World, bullet: Projectile) {
   initializeSapper(world, bullet);
   const state = states.get(bullet)!;
   const impact = () => world.addCombatEffect(bullet, 'impact');
-  if (length(bullet) > BULLET_RADIUS * world.field.scale) {
+  if (projectileOutside(world, bullet)) {
     impact();
     bullet.dead = true;
     return;

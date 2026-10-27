@@ -43,6 +43,7 @@ export function tickWhip(world: World, b: Projectile) {
     world.damageDoneIncr(b.damage);
     world.damage(enemy, b.damage, b);
     b.hit.add(enemy.uid);
+    b.missExempt = true;
     // The original passes a global point directly into its field-local effect queue.
     world.addCombatEffect(
       {

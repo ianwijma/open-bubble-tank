@@ -1,5 +1,5 @@
-import { BULLET_RADIUS } from '../core/constants';
-import { angleTo, direction, distance, length } from '../core/math';
+import { projectileOutside } from './projectile-boundary';
+import { angleTo, direction, distance } from '../core/math';
 import type { Projectile, Rect } from '../core/types';
 import type { World } from './world';
 import { projectileCallback, projectileTankContact } from './projectile-contact';
@@ -24,7 +24,7 @@ export function tickSeekerMine(world: World, b: Projectile) {
     b.dead = true;
     return;
   }
-  if (length(b) > BULLET_RADIUS * world.field.scale) {
+  if (projectileOutside(world, b)) {
     world.addCombatEffect(b, 'impact');
     b.dead = true;
     return;

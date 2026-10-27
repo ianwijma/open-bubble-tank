@@ -20,6 +20,9 @@ export function projectileTankCallback(world: World, bullet: Projectile, tank: T
   if (!bullet.enemy && bullet.kind !== 'orbital') world.damageDoneIncr(bullet.damage);
   world.damage(tank, bullet.damage, bullet);
   bullet.hit.add(tank.uid);
+  // _-Un/_-dp set _-MB only after their explicit enemy-removal flush below.
+  if (!bullet.enemy && bullet.kind !== 'orbital' && bullet.kind !== 'pierce')
+    bullet.missExempt = true;
 }
 
 /** _-BL/_-Un and _-dp sample before movement. The layer gate uses no half-step. */
@@ -68,7 +71,10 @@ export function projectileTankContact(world: World, bullet: Projectile) {
       return false;
     }
     projectileTankCallback(world, bullet, tank);
-    if (bullet.kind === 'pierce') world.flushEnemyRemovals();
+    if (bullet.kind === 'pierce') {
+      world.flushEnemyRemovals();
+      if (!bullet.enemy) bullet.missExempt = true;
+    }
     return true;
   }
   return false;

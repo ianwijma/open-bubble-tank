@@ -16,6 +16,7 @@ export function createProjectile(uid: number, options: Spawn): Projectile {
     explode: 0,
     targetId: null,
     hit: new Set(),
+    missExempt: options.kind === 'apocalypse' ? true : undefined,
     dead: false,
     artScale: 1,
     orbit: 0,

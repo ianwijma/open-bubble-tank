@@ -1,12 +1,12 @@
-import { BULLET_RADIUS } from '../core/constants';
-import { direction, distance, length } from '../core/math';
+import { projectileOutside } from './projectile-boundary';
+import { direction, distance } from '../core/math';
 import type { Projectile } from '../core/types';
 import type { World } from './world';
 
 /** _-OE fades only during MoveBullet; its enemy-layer pixel gate precedes the range scan. */
 export function tickRepulsor(world: World, b: Projectile) {
   b.artAlpha = (b.artAlpha ?? 1) - 0.04;
-  if (b.artAlpha <= 0 || length(b) > BULLET_RADIUS * world.field.scale) {
+  if (b.artAlpha <= 0 || projectileOutside(world, b)) {
     b.dead = true;
     return;
   }
@@ -27,6 +27,7 @@ export function tickRepulsor(world: World, b: Projectile) {
       world.damage(tank, b.damage, b);
       b.hit.add(tank.uid);
       world.flushEnemyRemovals();
+      b.missExempt = true;
       break;
     }
   }

@@ -154,6 +154,8 @@ export interface Projectile extends Vec {
   explode: number;
   targetId: number | null;
   hit: Set<number>;
+  /** Source _-MB: wall-miss exemption, independent of remembered contact IDs. */
+  missExempt?: boolean;
   dead: boolean;
   anchor?: GunState;
   symbol: number;
@@ -236,6 +238,8 @@ export interface InputFrame {
 export interface Stats {
   damageDone: number;
   enemyShots: number;
+  friendlyMissed: number;
+  enemyMissed: number;
   kills: number;
   deadheads: number;
   fighters: number;

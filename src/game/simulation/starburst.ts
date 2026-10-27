@@ -1,5 +1,5 @@
-import { BULLET_RADIUS } from '../core/constants';
-import { direction, length } from '../core/math';
+import { projectileOutside } from './projectile-boundary';
+import { direction } from '../core/math';
 import type { Projectile } from '../core/types';
 import type { World } from './world';
 import { projectileTankContact } from './projectile-contact';
@@ -9,7 +9,7 @@ const fuses = new WeakMap<Projectile, number>();
 
 /** _-Hu tests wall/contact before its 45 movement frames and following-Run split. */
 export function tickStarburst(world: World, b: Projectile) {
-  if (length(b) > BULLET_RADIUS * world.field.scale) {
+  if (projectileOutside(world, b)) {
     world.addCombatEffect(b, 'impact');
     b.dead = true;
     return;

@@ -26,6 +26,7 @@ import { showSeekerMineProof } from './seeker-mines';
 import { showSpecialProjectilesProof } from './special-projectiles';
 import { showProjectileClocksProof } from './projectile-clocks';
 import { showMockAssetsProof } from './mock-assets';
+import { showBubbleBusterProof } from './bubble-buster';
 
 const file = document.querySelector<HTMLInputElement>('#swf')!;
 const fixture = document.querySelector<HTMLSelectElement>('#fixture')!;
@@ -99,6 +100,13 @@ async function reset() {
   renderer = undefined;
   world = undefined;
   stage.replaceChildren();
+  if (fixture.value === 'bubble-buster') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    const proof = await showBubbleBusterProof(pack, stage);
+    status.dataset.bubbleBuster = JSON.stringify(proof);
+    status.textContent = 'Ready · Bubble Buster virtual walls and retained projectile state';
+    return;
+  }
   if (fixture.value === 'mock-assets') {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
     const proof = await showMockAssetsProof(pack, stage);

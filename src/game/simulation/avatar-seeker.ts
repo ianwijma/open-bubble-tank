@@ -1,5 +1,5 @@
-import { BULLET_RADIUS } from '../core/constants';
-import { angleTo, direction, length } from '../core/math';
+import { projectileOutside } from './projectile-boundary';
+import { angleTo, direction } from '../core/math';
 import type { Projectile } from '../core/types';
 import { tankHitLocation } from './hit-location';
 import { projectileTankContact } from './projectile-contact';
@@ -24,7 +24,7 @@ export function initializeAvatarSeeker(world: World, b: Projectile) {
 }
 
 export function tickAvatarSeeker(world: World, b: Projectile) {
-  if (length(b) > BULLET_RADIUS * world.field.scale) {
+  if (projectileOutside(world, b)) {
     world.addCombatEffect(b, 'impact');
     b.dead = true;
     return;
