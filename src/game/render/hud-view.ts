@@ -20,8 +20,9 @@ export class HudView {
       this.life = new SwfSymbolView(HUD.life.symbol, assets, textures);
       this.fire = new SwfSymbolView(HUD.fire.symbol, assets, textures);
       this.life.root.scale.x = HUD.life.scaleX;
-      this.life.root.alpha = HUD.life.alpha;
+      this.life.setAlpha(HUD.life.alpha);
       this.fire.root.scale.x = HUD.fire.scaleX;
+      this.fire.setAlpha(HUD.fire.alpha);
       this.root.addChild(this.life.root, this.fire.root);
     } else {
       this.mockLife.addChild(this.mockLifeArt);

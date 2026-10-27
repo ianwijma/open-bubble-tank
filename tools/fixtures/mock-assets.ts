@@ -1,3 +1,4 @@
+import { captureCanvas } from './pixi-capture';
 import { Rectangle } from 'pixi.js';
 import { AssetPack } from '../../src/game/assets/asset-pack';
 import { DEFAULT_SETTINGS } from '../../src/game/core/constants';
@@ -31,7 +32,7 @@ export async function showMockAssetsProof(native: AssetPack, host: HTMLElement) 
     const renderer = renderers[column],
       world = worlds[column];
     renderer.draw(world, DEFAULT_SETTINGS);
-    const frame = renderer.app.renderer.extract.canvas({
+    const frame = captureCanvas(renderer.app.renderer, {
       target: entities
         ? renderer.entities
         : packs[column].mode === 'swf'
