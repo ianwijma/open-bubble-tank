@@ -396,7 +396,7 @@ export class GameRenderer {
     this.minimap?.update(world);
     this.hud?.update(world);
     this.editSlider?.update(world.editSlider);
-    const inkAge = world.player.age - world.player.inkStartedAt + 1;
+    const inkAge = world.player.artAge - world.player.inkStartedAt + 1;
     if (this.assets.mode === 'swf') {
       const inkVisible =
         world.player.status.ink > 0 &&

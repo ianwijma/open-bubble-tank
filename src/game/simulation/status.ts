@@ -9,6 +9,7 @@ export function decorateStatus(world: World, tank: Tank, kind: DecoratedStatus, 
   tank.statusDecoration = {
     kind,
     age: 0,
+    artAge: 0,
     duration,
     marks: Array.from({ length: Math.min(5, parts.length) }, (_, index) => {
       // At five or more parts the original picks with replacement, even if marks overlap.
@@ -25,7 +26,7 @@ export function applyProjectileStatus(world: World, tank: Tank, status: Status, 
     if (tank.status.infect > 0) return;
     tank.status.infect = Infinity;
     tank.infectCounter = 0;
-    tank.infectStartedAt = tank.age;
+    tank.infectStartedAt = tank.artAge;
     tank.infectionAngle = world.rng.int(0, 360);
     return;
   }
@@ -33,7 +34,7 @@ export function applyProjectileStatus(world: World, tank: Tank, status: Status, 
     // InkMe only affects avatars and the projectile does not refresh an existing ink timer.
     if (tank.side === 'player' && tank.status.ink === 0) {
       tank.status.ink = 121;
-      tank.inkStartedAt = tank.age;
+      tank.inkStartedAt = tank.artAge;
       tank.inkEffect = !forcefield;
     }
     return;

@@ -27,6 +27,7 @@ import { showSpecialProjectilesProof } from './special-projectiles';
 import { showProjectileClocksProof } from './projectile-clocks';
 import { showMockAssetsProof } from './mock-assets';
 import { showBubbleBusterProof } from './bubble-buster';
+import { showTankArtProof } from './tank-art';
 
 const file = document.querySelector<HTMLInputElement>('#swf')!;
 const fixture = document.querySelector<HTMLSelectElement>('#fixture')!;
@@ -100,6 +101,13 @@ async function reset() {
   renderer = undefined;
   world = undefined;
   stage.replaceChildren();
+  if (fixture.value === 'tank-art') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    const proof = await showTankArtProof(pack, stage);
+    status.dataset.tankArt = JSON.stringify(proof);
+    status.textContent = 'Ready · tank stage clocks and source protection sizing';
+    return;
+  }
   if (fixture.value === 'bubble-buster') {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
     const proof = await showBubbleBusterProof(pack, stage);

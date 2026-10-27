@@ -63,6 +63,7 @@ export function GameViewport({
           () => world.stopPrimaryFire(),
         );
         world.hitTest = pack.hitTest;
+        world.protectionRadius = pack.protectionRadius;
         world.hitPart = pack.hitPart;
         world.hitProjectile = pack.hitProjectile;
         world.projectileBounds = (b) =>

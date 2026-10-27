@@ -12,42 +12,68 @@ export class SwfProtectionView {
   private hit?: SwfSymbolView;
   private field?: SwfSymbolView;
   private fieldMask?: Container;
-  private maskParts: SwfSymbolView[] = [];
+  private maskParts: { view: SwfSymbolView; part: Tank['design']['parts'][number] }[] = [];
   constructor(
     private assets: AssetPack,
     private textures: RasterTextures,
   ) {}
-  private view(id: number, width: number) {
+  private view(id: number, width: number, uniform = false) {
     const view = new SwfSymbolView(id, this.assets, this.textures);
     view.update(1);
-    const bounds = this.assets.symbolBounds(id);
-    if (bounds)
-      view.root.scale.set(width / Math.max(1, bounds.width), width / Math.max(1, bounds.height));
+    this.size(view, width, uniform);
     this.root.addChild(view.root);
     return view;
+  }
+  private size(view: SwfSymbolView, width: number, uniform = false) {
+    const bounds = this.assets.symbolScriptBounds(view.id);
+    view.root.scale.set(1);
+    // Flash ignores NaN/negative size assignments, retaining authored scale.
+    if (bounds && width >= 0)
+      view.root.scale.set(
+        bounds.width ? width / bounds.width : 1,
+        uniform
+          ? bounds.width
+            ? width / bounds.width
+            : 1
+          : bounds.height
+            ? width / bounds.height
+            : 1,
+      );
   }
   update(tank: Tank) {
     if (tank.shield > 0) {
       const turret = tank.side !== 'player';
+      const diameter = turret
+        ? tank.radius * 2
+        : (tank.shieldDiameter ?? this.assets.protectionRadius(tank) * 2);
       this.shield ??= this.view(
         turret ? PROTECTION_ART.turretShield : PROTECTION_ART.shield,
-        tank.radius * 2,
+        diameter,
       );
       this.hit ??= this.view(
         turret ? PROTECTION_ART.turretShieldHit : PROTECTION_ART.shieldHit,
-        tank.radius * 2,
+        tank.shieldHitDiameter ?? diameter,
       );
+      this.size(this.shield, diameter);
+      this.size(this.hit, tank.shieldHitDiameter ?? diameter);
       this.shield.root.visible = this.hit.root.visible = true;
       this.shield.update(turret ? Math.min(25, tank.shieldAge + 1) : tank.shieldAge + 1);
-      this.hit.update(Math.min(16, tank.shieldHitAge + 1));
-      this.hit.root.angle = tank.shieldHitAngle;
     } else {
       if (this.shield) this.shield.root.visible = false;
-      if (this.hit) this.hit.root.visible = false;
+    }
+    if (this.hit) {
+      // KillShield removes the film only; its attached hit clip finishes independently.
+      this.hit.root.visible = true;
+      this.hit.update(Math.min(16, tank.shieldHitAge + 1));
+      this.hit.root.angle = tank.shieldHitAngle;
     }
     if (tank.design.parts.some((part) => part.type === 5005)) {
       if (!this.field) {
-        this.field = this.view(PROTECTION_ART.forcefield, tank.radius * 2.1);
+        this.field = this.view(
+          PROTECTION_ART.forcefield,
+          this.assets.forcefieldRadius(tank) * 2.1,
+          true,
+        );
         this.fieldMask = new Container();
         this.root.addChild(this.fieldMask);
         // The source clones the complete design once; degradation and aimed gun rotations
@@ -55,17 +81,18 @@ export class SwfProtectionView {
         for (const part of tank.design.parts) {
           const id = partById(part.type)?.symbol;
           if (!id) continue;
-          const view = new SwfSymbolView(id, this.assets, this.textures, { random: Math.random });
+          const view = new SwfSymbolView(id, this.assets, this.textures);
           view.root.position.set(part.x, part.y);
           view.root.scale.set(part.scale);
           view.root.angle = part.rotation;
           this.fieldMask.addChild(view.root);
-          this.maskParts.push(view);
+          this.maskParts.push({ view, part });
         }
         this.field.root.mask = this.fieldMask;
       }
-      for (const part of this.maskParts) part.update(tank.age + 1);
-      this.field.update(tank.age + 1, tank.forcefieldFrame);
+      for (const { view, part } of this.maskParts)
+        view.updatePose(this.assets.forcefieldPartClip(tank, part));
+      this.field.update(tank.artAge + 1, tank.forcefieldFrame);
       this.field.root.angle = tank.forcefieldAngle;
     }
   }
@@ -73,7 +100,7 @@ export class SwfProtectionView {
     this.shield?.destroy();
     this.hit?.destroy();
     this.field?.destroy();
-    for (const part of this.maskParts) part.destroy();
+    for (const { view } of this.maskParts) view.destroy();
     this.root.destroy({ children: true });
   }
 }

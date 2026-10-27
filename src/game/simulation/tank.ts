@@ -52,6 +52,7 @@ export function createTank(
     forcefieldFrame: 1,
     forcefieldAngle: 0,
     age: 0,
+    artAge: 0,
     turnFrames: 0,
     turnRate: 0,
     holdTurn: 0,

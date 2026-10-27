@@ -26,7 +26,7 @@ function patientWorld() {
 
 test('infection ticks twelve active frames after infection, independently of tank age', () => {
   const { world, tank } = patientWorld();
-  tank.age = 11;
+  tank.age = tank.artAge = 11;
   applyProjectileStatus(world, tank, 'infect');
   frames(world, 11);
   expect(tank.life).toBe(100);
@@ -84,7 +84,7 @@ test('ink affects only the avatar and does not refresh until its existing timer 
   const { world, tank } = patientWorld();
   applyProjectileStatus(world, tank, 'ink');
   expect(tank.status.ink).toBe(0);
-  world.player.age = 17;
+  world.player.age = world.player.artAge = 17;
   applyProjectileStatus(world, world.player, 'ink');
   frames(world, 40);
   expect(world.player.status.ink).toBe(81);
@@ -126,7 +126,7 @@ test('forcefield regeneration measures twenty damaged frames rather than tank ag
     50,
     1,
   );
-  world.player.age = 19;
+  world.player.age = world.player.artAge = 19;
   world.damage(world.player, 20);
   frames(world, 1);
   expect(world.player.forcefield).toBe(20);
@@ -166,7 +166,8 @@ test('forcefield impact returns to idle and broken/rearm clips follow the author
   expect(tank.forcefieldFrame).toBe(26);
   expect(tank.forcefieldReady).toBe(false);
   frames(world, 311);
-  expect(tank.forcefieldFrame).toBe(36);
+  // Active recharge selects36; the same stage frame advances the playing clip.
+  expect(tank.forcefieldFrame).toBe(37);
   expect(tank.forcefieldReady).toBe(true);
   frames(world, 29);
   expect(tank.forcefieldFrame).toBe(1);

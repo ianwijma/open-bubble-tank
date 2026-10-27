@@ -1,5 +1,7 @@
 import { CLASS_SPEED, FIELD_RADIUS, MAX_LIFE, STAGE } from '../core/constants';
 import { clamp, direction, distance, length, Random, rotate } from '../core/math';
+import { protectionRadius } from '../core/protection-size';
+import { advanceTankArt } from './tank-art';
 import type {
   CollisionTest,
   Effect,
@@ -252,6 +254,15 @@ export class World {
   rng: Random;
   roster: UnitRoster;
   hitTest: CollisionTest = geometricHit;
+  /** Browser geometry supplies transformed Script bounds; headless callers can inject it. */
+  protectionRadius = (tank: Tank) =>
+    protectionRadius(
+      tank.design.parts.map((part) => ({
+        ...part,
+        width: part.radius * 2,
+        height: part.radius * 2,
+      })),
+    );
   hitProjectile = mockProjectileHit;
   projectileBounds = (b: Projectile): Rect =>
     authoredProjectileBounds(b) ?? {
@@ -341,15 +352,19 @@ export class World {
       this.stepFrame(input);
     } finally {
       // Authored timelines advance even when state1 skips effects-engine polling.
+      const attached = new Set<Tank>([this.player]);
       for (const { runtime } of this.activeFields()) {
         for (const effect of runtime.effects) effect.age++;
         for (const bullet of runtime.bullets)
           if (!bullet.dead) this.projectileTimelines.advance(bullet);
         for (const effect of runtime.pending) {
           effect.frame = (effect.frame % effect.total) + 1;
-          if (effect.kind === 'shield') effect.owner.shieldAge = effect.frame - 1;
         }
       }
+      for (const { field, runtime } of this.activeFields()) {
+        for (const tank of [...field.enemies, ...runtime.allies]) attached.add(tank);
+      }
+      for (const tank of attached) advanceTankArt(tank);
     }
   }
   private stepFrame(input: InputFrame) {
@@ -607,13 +622,6 @@ export class World {
   private tickProtection(t: Tank) {
     if (t.shield > 0 && !t.shieldManaged) {
       t.shield--;
-      t.shieldAge++;
-    }
-    t.shieldHitAge = Math.min(16, t.shieldHitAge + 1);
-    if (t.forcefieldFrame > 1) {
-      t.forcefieldFrame++;
-      if (t.forcefieldFrame === 25 || t.forcefieldFrame > 64) t.forcefieldFrame = 1;
-      else if (t.forcefieldFrame === 35) t.forcefieldFrame = 26;
     }
     if (
       t.forcefield < 40 &&
@@ -1034,7 +1042,6 @@ export class World {
     const tr = this.transit;
     if (!tr) return;
     tr.age++;
-    this.player.age++;
     const dx = tr.target.x - this.player.x,
       dy = tr.target.y - this.player.y;
     if (dx * dx + dy * dy < 25) {

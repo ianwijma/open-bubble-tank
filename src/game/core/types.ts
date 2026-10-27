@@ -52,6 +52,7 @@ export type DecoratedStatus = 'stun' | 'jam' | 'sticky' | 'weaken';
 export interface StatusDecoration {
   kind: DecoratedStatus;
   age: number;
+  artAge: number;
   duration: number;
   marks: (Vec & { angle: number; frame: number })[];
 }
@@ -68,6 +69,7 @@ export interface GunState {
   spawnDesign?: TankDesign;
   patientId?: number;
   beamId?: number;
+  shieldDiameter?: number;
   mineRefs?: MineReference[];
 }
 export interface Tank extends Vec {
@@ -92,6 +94,8 @@ export interface Tank extends Vec {
   stunned: boolean;
   shield: number;
   shieldAge: number;
+  shieldDiameter?: number;
+  shieldHitDiameter?: number;
   shieldManaged?: boolean;
   shieldHitAge: number;
   shieldHitAngle: number;
@@ -103,6 +107,8 @@ export interface Tank extends Vec {
   forcefieldFrame: number;
   forcefieldAngle: number;
   age: number;
+  /** Attached artwork stage ticks, independent of gameplay Run. */
+  artAge: number;
   turnFrames: number;
   turnRate: number;
   holdTurn: number;

@@ -2,7 +2,13 @@ import { PARTS, partById } from '../data/catalog';
 import type { Projectile, Rect, Tank, TankDesign, TankPart } from '../core/types';
 import { Random, rotate } from '../core/math';
 import { SwfClip } from './swf-clip';
-import { mockProjectileBounds, projectileScriptBounds } from './projectile-bounds';
+import {
+  mockProjectileBounds,
+  projectileScriptBounds,
+  scriptBounds,
+  type ScriptBoundsSource,
+} from './projectile-bounds';
+import { protectionRadius } from '../core/protection-size';
 import { MINIMAP } from '../core/minimap';
 import { HUD } from '../core/hud';
 import { WIN_SCREEN } from '../core/win-screen';
@@ -183,6 +189,23 @@ export class AssetPack {
   private displayCache = new Map<string, DisplayPlacement[]>();
   private dynamicWidths = new Map<number, number>();
   private partClips = new WeakMap<Tank, { design: TankDesign; parts: Map<string, SwfClip> }>();
+  private forcefieldClones = new WeakMap<Tank, { parts: Map<string, SwfClip>; radius: number }>();
+  private scriptGeometry: ScriptBoundsSource = {
+    leafBounds: (id) => {
+      const shape = this.shapes.get(id),
+        rect = shape?.startBounds ?? shape?.bounds ?? this.texts.get(id)?.bounds;
+      return rect
+        ? {
+            x: rect.xMin / 20,
+            y: rect.yMin / 20,
+            width: (rect.xMax - rect.xMin) / 20,
+            height: (rect.yMax - rect.yMin) / 20,
+          }
+        : undefined;
+    },
+    displayList: (id, age) => this.displayList(id, age),
+    childAge: (id, age, p) => this.childAge(id, age, p),
+  };
   constructor(mode: 'swf' | 'mock') {
     this.mode = mode;
   }
@@ -499,6 +522,9 @@ export class AssetPack {
   symbolBounds(id: number, frame = 1) {
     return this.compile(id, frame)?.bounds;
   }
+  symbolScriptBounds(id: number, frame = 1) {
+    return scriptBounds(this.scriptGeometry, id, frame);
+  }
   displayList(id: number, age: number): DisplayPlacement[] {
     const sp = this.sprites.get(id);
     if (!sp) return [];
@@ -522,18 +548,88 @@ export class AssetPack {
       owner = { design: tank.design, parts: new Map() };
       this.partClips.set(tank, owner);
     }
-    const age = tank.age + 1;
+    const age = tank.artAge + 1;
     let clip = owner.parts.get(part.key);
     if (!clip || clip.age > age) {
       // Painting/contact queries share a private stream rather than consuming gameplay RNG.
-      let seed = Math.imul(tank.uid + 1, 0x9e3779b1);
-      for (const c of part.key) seed = Math.imul(seed, 31) + c.charCodeAt(0);
-      const random = new Random(seed >>> 0 || 1);
-      clip = new SwfClip(partById(part.type)!.symbol, this, () => random.next());
+      clip = this.newPartClip(tank, part);
       owner.parts.set(part.key, clip);
     }
     clip.advance(age, part.y);
     return clip;
+  }
+  private newPartClip(tank: Tank, part: TankPart, clone = false) {
+    let seed = Math.imul(tank.uid + 1, 0x9e3779b1) ^ (clone ? 0x46f13d : 0);
+    for (const c of part.key) seed = Math.imul(seed, 31) + c.charCodeAt(0);
+    const random = new Random(seed >>> 0 || 1);
+    return new SwfClip(partById(part.type)!.symbol, this, () => random.next());
+  }
+  private partSize(tank: Tank, part: TankPart, pose?: SwfClip, clone = false) {
+    const angle =
+      ((clone
+        ? part.rotation
+        : (tank.guns.find((g) => g.part.key === part.key)?.angle ?? part.rotation)) *
+        Math.PI) /
+      180;
+    const matrix = {
+      a: Math.cos(angle) * part.scale,
+      b: Math.sin(angle) * part.scale,
+      c: -Math.sin(angle) * part.scale,
+      d: Math.cos(angle) * part.scale,
+      tx: 0,
+      ty: 0,
+    };
+    if (this.mode === 'swf') {
+      const bounds = scriptBounds(
+        this.scriptGeometry,
+        partById(part.type)!.symbol,
+        pose?.age ?? 1,
+        matrix,
+        undefined,
+        [],
+        0,
+        pose,
+      );
+      return { width: bounds?.width ?? 0, height: bounds?.height ?? 0 };
+    }
+    const bounds = this.part(part.type);
+    return {
+      width: Math.abs(matrix.a) * bounds.width + Math.abs(matrix.c) * bounds.height,
+      height: Math.abs(matrix.b) * bounds.width + Math.abs(matrix.d) * bounds.height,
+    };
+  }
+  protectionRadius = (tank: Tank) =>
+    protectionRadius(
+      tank.design.parts
+        .filter((p) => !tank.removedParts.has(p.key))
+        .map((p) => ({
+          x: p.x,
+          y: p.y,
+          ...this.partSize(tank, p, this.mode === 'swf' ? this.partClip(tank, p) : undefined),
+        })),
+    );
+  private forcefieldClone(tank: Tank) {
+    let clone = this.forcefieldClones.get(tank);
+    if (!clone) {
+      const parts = new Map<string, SwfClip>();
+      const children = tank.design.parts.map((part) => {
+        const pose = this.mode === 'swf' ? this.newPartClip(tank, part, true) : undefined;
+        pose?.advance(1, part.y);
+        if (pose) parts.set(part.key, pose);
+        return { x: part.x, y: part.y, ...this.partSize(tank, part, pose, true) };
+      });
+      clone = { parts, radius: protectionRadius(children) };
+      this.forcefieldClones.set(tank, clone);
+    }
+    return clone;
+  }
+  forcefieldRadius(tank: Tank) {
+    return this.forcefieldClone(tank).radius;
+  }
+  forcefieldPartClip(tank: Tank, part: TankPart) {
+    const pose = this.forcefieldClone(tank).parts.get(part.key)!;
+    pose.advance(tank.artAge + 1, part.y);
+    return pose;
   }
   hitClip(clip: SwfClip, x: number, y: number, ratio = 0): boolean {
     if (this.morphs.has(clip.id)) return alphaHit(this.morphRaster(clip.id, ratio)!, x, y);
@@ -684,31 +780,7 @@ export class AssetPack {
   };
   projectileBounds = (b: Projectile, owner?: { x: number; y: number }): Bounds => {
     const bounds =
-      this.mode === 'swf'
-        ? projectileScriptBounds(
-            {
-              leafBounds: (id) => {
-                // AS3 getBounds/hitTestObject use a morph's declared START bounds,
-                // regardless of its current rendered ratio. Do not use compile(),
-                // whose bounds are clipped for painting.
-                const shape = this.shapes.get(id),
-                  rect = shape?.startBounds ?? shape?.bounds ?? this.texts.get(id)?.bounds;
-                return rect
-                  ? {
-                      x: rect.xMin / 20,
-                      y: rect.yMin / 20,
-                      width: (rect.xMax - rect.xMin) / 20,
-                      height: (rect.yMax - rect.yMin) / 20,
-                    }
-                  : undefined;
-              },
-              displayList: (id, age) => this.displayList(id, age),
-              childAge: (id, age, p) => this.childAge(id, age, p),
-            },
-            b,
-            owner,
-          )
-        : undefined;
+      this.mode === 'swf' ? projectileScriptBounds(this.scriptGeometry, b, owner) : undefined;
     if (bounds) return bounds;
     // Empty authored frames (notably the ally mine's blink) have invalid Script
     // bounds. Falling back to a mock circle would invent collision geometry.
@@ -728,7 +800,7 @@ export class AssetPack {
       const symbol = partById(p.type)?.symbol;
       if (symbol) return this.hitClip(this.partClip(t, p), local.x, local.y);
     }
-    return alphaHit(this.part(p.type, t.age + t.phase), local.x, local.y);
+    return alphaHit(this.part(p.type, t.artAge + t.phase), local.x, local.y);
   };
   preview(design: TankDesign, size = 130): string {
     const canvas = document.createElement('canvas');
@@ -760,6 +832,7 @@ export class AssetPack {
     this.displayCache.clear();
     this.dynamicWidths.clear();
     this.partClips = new WeakMap();
+    this.forcefieldClones = new WeakMap();
     this.morphRasters.clear();
     this.morphPixels = 0;
     this.morphs.clear();

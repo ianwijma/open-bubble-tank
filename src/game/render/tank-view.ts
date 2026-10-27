@@ -58,11 +58,18 @@ export class TankView {
     if (
       !this.protection &&
       (t.shield > 0 || (t.design.parts.some((p) => p.type === 5005) && t.forcefieldReady))
-    )
+    ) {
+      const diameter =
+        t.shield > 0
+          ? t.side === 'player'
+            ? (t.shieldDiameter ?? this.assets.protectionRadius(t) * 2)
+            : t.radius * 2
+          : this.assets.forcefieldRadius(t) * 2.1;
       this.shield
-        .circle(0, 0, t.radius + 6)
+        .circle(0, 0, Number.isNaN(diameter) ? 65 : diameter / 2)
         .fill({ color: 0xaaddff, alpha: 0.07 })
         .stroke({ color: 0xbbeeff, alpha: 0.65, width: 1.5 });
+    }
     this.status?.update(t);
     this.protection?.update(t);
     this.container.filters = this.status?.infectionFilter ? [this.status.infectionFilter] : null;

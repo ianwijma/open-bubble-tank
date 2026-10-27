@@ -165,6 +165,12 @@ export function fireGun(world: World, t: Tank, gun: GunState, input: InputFrame)
   if (!spec) return;
   if (id === 4017 && !triggerSuppressionCycle(gun)) return;
   if (id === 3010) {
+    // Each AGunShield mount caches its live display-child measurement on first trigger.
+    if (gun.shieldDiameter === undefined) {
+      gun.shieldDiameter = world.protectionRadius(t) * 2;
+      t.shieldHitDiameter = gun.shieldDiameter;
+    }
+    t.shieldDiameter = gun.shieldDiameter;
     t.shield = 25;
     t.shieldAge = 0;
     world.scheduleShield(t, gun);

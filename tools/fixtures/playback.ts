@@ -55,6 +55,7 @@ export async function showPlaybackProof(pack: AssetPack, host: HTMLElement) {
       const observed: number[] = [];
       for (const age of [0, 25, 49, 98]) {
         tank.age = age;
+        tank.artAge = age;
         const pose = pack.partClip(tank, part);
         observed.push(pose.frame);
         view.updatePose(pose);
