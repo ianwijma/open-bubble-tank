@@ -241,7 +241,6 @@ export function TankCreator({
     draw();
   });
   useEffect(() => {
-    if (pack.mode !== 'swf') return;
     let cancelled = false,
       request = 0;
     let renderer: import('@/game/render/creator-artwork').CreatorArtwork | undefined;
@@ -310,6 +309,17 @@ export function TankCreator({
       radii.current.set(id, radius);
     }
     return placementParts(id, radius, pos, symmetric, key);
+  }
+  function beginPlacement(id: number, mode: 'pointer' | 'keyboard', pos: { x: number; y: number }) {
+    pointer.current = pos;
+    radii.current.delete(id);
+    const radius = artwork.current?.beginDraft(
+      placementParts(id, 0, pos, symmetric, 'preview'),
+      artworkFrame.current,
+    );
+    if (radius !== undefined) radii.current.set(id, radius);
+    placement.current = { id, mode };
+    setPlacing(id);
   }
   function finishPlacement(pos: { x: number; y: number }, cancel = false) {
     const gesture = placement.current;
@@ -659,9 +669,7 @@ export function TankCreator({
         aria-label={chosen ? `Drag ${partById(chosen)?.name} into design` : 'Choose a part'}
         onPointerDown={(e) => {
           if (e.button !== 0 || chosen === null) return;
-          placement.current = { id: chosen, mode: 'pointer' };
-          pointer.current = point(e);
-          setPlacing(chosen);
+          beginPlacement(chosen, 'pointer', point(e));
           e.currentTarget.setPointerCapture(e.pointerId);
         }}
         onPointerMove={(e) => {
@@ -674,9 +682,7 @@ export function TankCreator({
         onPointerCancel={() => finishPlacement(pointer.current, true)}
         onClick={(e) => {
           if (e.detail !== 0 || chosen === null) return;
-          placement.current = { id: chosen, mode: 'keyboard' };
-          pointer.current = { x: 0, y: 0 };
-          setPlacing(chosen);
+          beginPlacement(chosen, 'keyboard', { x: 0, y: 0 });
           canvas.current?.focus();
         }}
       >

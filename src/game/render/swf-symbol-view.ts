@@ -166,6 +166,10 @@ export class SwfSymbolView {
   hitTest(x: number, y: number): boolean {
     return this.renderedPose ? this.assets.hitClip(this.renderedPose, x, y) : false;
   }
+  scriptBounds() {
+    const pose = this.renderedPose ?? this.ownedPose;
+    return pose ? this.assets.clipScriptBounds(pose) : undefined;
+  }
   namedChild(name: string): SwfSymbolView | undefined {
     const placement = this.assets.displayList(this.id, this.lastFrame).find((p) => p.name === name);
     return placement ? this.children.get(placement.depth)?.view : undefined;

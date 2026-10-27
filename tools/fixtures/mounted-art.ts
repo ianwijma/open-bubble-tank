@@ -5,7 +5,6 @@ import { TankView } from '../../src/game/render/tank-view';
 import { SwfTextures } from '../../src/game/render/swf-textures';
 import { createTank } from '../../src/game/simulation/tank';
 import { World, emptyInput } from '../../src/game/simulation/world';
-import { massiveChargeFrame } from '../../src/game/core/mounted-art';
 import { captureCanvas } from './pixi-capture';
 
 /** Two real mounted guns, independently fired through a paused production World. */
@@ -83,12 +82,11 @@ export async function showMountedArt(pack: AssetPack, host: HTMLElement) {
       )
         pink++;
     }
-    const frames = tank.guns.map((g) =>
-      pack.mode === 'swf'
-        ? [...pack.partClip(tank, g.part).children.values()].find(
-            (c) => c.placement.name === 'bullet_mc',
-          )!.clip.frame
-        : massiveChargeFrame(g, tank.artAge),
+    const frames = tank.guns.map(
+      (g) =>
+        [...pack.partClip(tank, g.part).children.values()].find(
+          (c) => c.placement.name === 'bullet_mc',
+        )!.clip.frame,
     );
     const extraContact = samples.filter(
       (p, i) => !idle[i] && pack.hitPart(tank, tank.guns[0].part, p.x, p.y),
@@ -124,12 +122,9 @@ export async function showMountedArt(pack: AssetPack, host: HTMLElement) {
     fire(0);
     tick(6);
     capture('First mount · new charge');
-    const cloneFrame =
-      pack.mode === 'swf'
-        ? [...pack.forcefieldPartClip(tank, tank.guns[0].part).children.values()].find(
-            (c) => c.placement.name === 'bullet_mc',
-          )!.clip.frame
-        : 1;
+    const cloneFrame = [...pack.forcefieldPartClip(tank, tank.guns[0].part).children.values()].find(
+      (c) => c.placement.name === 'bullet_mc',
+    )!.clip.frame;
     return {
       mode: pack.mode,
       panels,
