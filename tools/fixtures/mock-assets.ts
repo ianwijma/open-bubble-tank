@@ -183,7 +183,8 @@ export async function showMockAssetsProof(native: AssetPack, host: HTMLElement) 
         values = [0, 0, 0];
       let count = 0;
       for (let i = 0; i < r.pixels.length; i += 4)
-        if (r.pixels[i + 3] > 128 && r.pixels[i] - r.pixels[i + 2] > 30) {
+        // Compare saturated paint; differently sized source rims/glints skew a whole-image average.
+        if (r.pixels[i + 3] > 128 && r.pixels[i] - r.pixels[i + 2] > 100) {
           count++;
           for (let c = 0; c < 3; c++) values[c] += r.pixels[i + c];
         }
