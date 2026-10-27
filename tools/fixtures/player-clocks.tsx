@@ -1,6 +1,8 @@
 import { createRoot } from 'react-dom/client';
 import { useState } from 'react';
 import { GameViewport } from '../../src/components/game-viewport';
+import { MainStage } from '../../src/components/main-stage';
+import { StageRuntime } from '../../src/game/services/stage-runtime';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import type { Settings } from '../../src/game/core/types';
 import { DEFAULT_SETTINGS } from '../../src/game/core/constants';
@@ -10,40 +12,51 @@ import { World } from '../../src/game/simulation/world';
 
 function ClockViewport({ pack, world }: { pack: AssetPack; world: World }) {
   const [settings, setSettings] = useState<Settings>({ ...DEFAULT_SETTINGS }),
+    [stage] = useState(() => {
+      const stage = new StageRuntime(world.mainEffects);
+      stage.random = () => world.rng.next();
+      return stage;
+    }),
     [, render] = useState(0);
   return (
     <div className="site-shell" style={{ position: 'relative', width: 550, height: 450 }}>
-      <GameViewport
-        world={world}
-        pack={pack}
-        settings={settings}
-        audio={null}
-        onChange={() => render((value) => value + 1)}
-      />
-      <div style={{ position: 'absolute', top: 0, right: 0, zIndex: 2 }}>
-        <label>
-          Stage FPS{' '}
-          <select
-            aria-label="Stage FPS"
-            value={settings.fps}
-            onChange={(event) =>
-              setSettings((old) => ({ ...old, fps: Number(event.target.value) as Settings['fps'] }))
-            }
+      <MainStage runtime={stage} fps={settings.fps}>
+        <GameViewport
+          world={world}
+          pack={pack}
+          settings={settings}
+          audio={null}
+          stage={stage}
+          onChange={() => render((value) => value + 1)}
+        />
+        <div style={{ position: 'absolute', top: 0, right: 0, zIndex: 2 }}>
+          <label>
+            Stage FPS{' '}
+            <select
+              aria-label="Stage FPS"
+              value={settings.fps}
+              onChange={(event) =>
+                setSettings((old) => ({
+                  ...old,
+                  fps: Number(event.target.value) as Settings['fps'],
+                }))
+              }
+            >
+              <option value="35">35</option>
+              <option value="50">50</option>
+              <option value="90">90</option>
+            </select>
+          </label>
+          <button
+            onClick={() => {
+              world.resume();
+              render((value) => value + 1);
+            }}
           >
-            <option value="35">35</option>
-            <option value="50">50</option>
-            <option value="90">90</option>
-          </select>
-        </label>
-        <button
-          onClick={() => {
-            world.resume();
-            render((value) => value + 1);
-          }}
-        >
-          Resume fixture
-        </button>
-      </div>
+            Resume fixture
+          </button>
+        </div>
+      </MainStage>
     </div>
   );
 }

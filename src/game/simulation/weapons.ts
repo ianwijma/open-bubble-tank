@@ -202,7 +202,7 @@ export function fireGun(world: World, t: Tank, gun: GunState, input: InputFrame)
     }
     world.addCombatEffect(start, 'teleport');
     world.addCombatEffect(dest, 'teleport');
-    world.flash = 1;
+    world.mainEffects.flash();
     t.x += dest.x - start.x;
     t.y += dest.y - start.y;
     return;

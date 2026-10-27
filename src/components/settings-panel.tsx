@@ -20,7 +20,7 @@ export function SettingsPanel({
 }: {
   settings: Settings;
   pack: AssetPack;
-  onChange: (s: Settings) => void;
+  onChange: (s: Settings, control?: 'shake' | 'efficiency') => void;
   onClose: () => void;
 }) {
   const [binding, setBinding] = useState<keyof Settings | null>(null);
@@ -93,7 +93,9 @@ export function SettingsPanel({
                   [1, 'On'],
                 ]}
                 value={Number(settings[key])}
-                onChange={(value) => onChange({ ...settings, [key]: !!value })}
+                onChange={(value) =>
+                  onChange({ ...settings, [key]: !!value }, key === 'shake' ? 'shake' : undefined)
+                }
               />
             ))}
             <SettingOptions
@@ -105,15 +107,18 @@ export function SettingsPanel({
               ]}
               value={Number(settings.efficient)}
               onChange={(value) =>
-                onChange({
-                  ...settings,
-                  efficient: !!value,
-                  sound: !value,
-                  music: !value,
-                  shake: !value,
-                  quality: value ? 'low' : 'high',
-                  fps: value ? 90 : 50,
-                })
+                onChange(
+                  {
+                    ...settings,
+                    efficient: !!value,
+                    sound: !value,
+                    music: !value,
+                    shake: !value,
+                    quality: value ? 'low' : 'high',
+                    fps: value ? 90 : 50,
+                  },
+                  'efficiency',
+                )
               }
             />
             <button className="hotkey-options" onClick={() => setHotkeys(true)}>

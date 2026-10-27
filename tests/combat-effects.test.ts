@@ -132,7 +132,7 @@ test('teleport uses both authored registration endpoints, boundary clamp, one-pe
     [1769, 100, 0, 12],
   ]);
   expect(world.player.x).toBe(80);
-  expect(world.flash).toBe(1);
+  expect(world.mainEffects.flashes).toEqual([{ color: 0xffffff, fillAlpha: 1, alpha: 1 }]);
   world.fireGun(world.player, guns[3], emptyInput());
   expect(queue(world)).toHaveLength(2);
   world.player.teleportReady = true;

@@ -5,9 +5,11 @@ import type { Profile, Settings, TankDesign } from '@/game/core/types';
 import { STARTER } from '@/game/data/catalog';
 import { World } from '@/game/simulation/world';
 import { AudioManager } from '@/game/services/audio';
+import { StageRuntime } from '@/game/services/stage-runtime';
 import { loadProfile, saveProfile, saveCreatedTank } from '@/game/services/profile';
 import { AssetGate } from './asset-gate';
 import { GameViewport } from './game-viewport';
+import { MainStage } from './main-stage';
 import { GameHud } from './game-hud';
 import { SettingsPanel } from './settings-panel';
 import { TankCreator } from './tank-creator';
@@ -38,8 +40,10 @@ export default function GameShell() {
     [nativeSize, setNativeSize] = useState(false),
     [fullscreen, setFullscreen] = useState(false),
     [audio, setAudio] = useState<AudioManager | null>(null);
+  const [stage] = useState(() => new StageRuntime());
   const frame = useRef<HTMLDivElement>(null),
-    space = useRef<HTMLDivElement>(null);
+    space = useRef<HTMLDivElement>(null),
+    startingWorld = useRef<World | null>(null);
   const refresh = useCallback(() => setRevision((r) => r + 1), []);
   useEffect(() => {
     setProfile(loadProfile());
@@ -106,7 +110,11 @@ export default function GameShell() {
       return next;
     });
   }
-  function settingsChange(settings: Settings) {
+  function settingsChange(settings: Settings, control?: 'shake' | 'efficiency') {
+    // Pause's standalone toggle only gates Massive Cannon. Menu and efficiency
+    // controls also call the source controller's enable/disable methods.
+    if (control === 'efficiency' || (control === 'shake' && screen === 'menu'))
+      stage.effects.setEnabled(settings.shake);
     updateProfile((p) => ({ ...p, settings }));
   }
   function startRun() {
@@ -114,7 +122,13 @@ export default function GameShell() {
     const next = new World(
       localSources ? profile.tanks.filter((t) => !t.avatar) : [],
       continueRun ? profile.progression : [],
+      undefined,
+      stage.effects,
     );
+    const random = next.rng;
+    stage.random = () => random.next();
+    next.screenShake = profile.settings.shake;
+    startingWorld.current = next;
     next.secondaryHelpSeen = profile.secondaryHelpSeen;
     next.onSecondaryHelp = () => updateProfile((p) => ({ ...p, secondaryHelpSeen: true }));
     next.onProgression = (history) => updateProfile((p) => ({ ...p, progression: history }));
@@ -198,333 +212,342 @@ export default function GameShell() {
       </header>
       <div ref={frame} className={`stage-frame ${nativeSize ? 'native-size' : ''}`}>
         <div ref={space} className="stage-space">
-          {!pack ? (
-            <AssetGate
-              onReady={(p) => {
-                setPack(p);
-                setScreen('menu');
-              }}
-            />
-          ) : null}
-          {pack && profile && screen === 'menu' ? (
-            <div className="main-menu stage-background">
-              <div className="menu-guest">
-                <span aria-hidden="true">×</span> Playing as Guest
-              </div>
-              <span className="menu-version">OPEN · 0.1</span>
-              <div className="ambient-bubbles" aria-hidden="true">
-                <i />
-                <i />
-                <i />
-              </div>
-              {pack.extras.get(545) ? (
-                <img
-                  className="original-title"
-                  style={{
-                    left: 55.3 + pack.extras.get(545)!.x,
-                    top: 176.35 + pack.extras.get(545)!.y,
-                    width: pack.extras.get(545)!.width,
-                  }}
-                  src={pack.extras.get(545)!.url}
-                  alt="Bubble Tanks 3"
-                />
-              ) : (
-                <div className="menu-title">
-                  <BubbleText pack={pack} size={57}>
-                    bubble tanks 3
-                  </BubbleText>
+          <MainStage runtime={stage} fps={profile?.settings.fps ?? 50}>
+            {!pack ? (
+              <AssetGate
+                onReady={(p) => {
+                  setPack(p);
+                  setScreen('menu');
+                }}
+              />
+            ) : null}
+            {pack && profile && screen === 'menu' ? (
+              <div className="main-menu stage-background">
+                <div className="menu-guest">
+                  <span aria-hidden="true">×</span> Playing as Guest
                 </div>
-              )}
-              <button
-                className="menu-orb menu-play"
-                aria-label="Play"
-                onClick={() => {
-                  setContinueRun(false);
-                  setOverlay('sources');
-                }}
-              >
-                <MenuArt pack={pack} symbol={492} icon="play" size={78} />
-                <span className="orb-caption">PLAY</span>
-              </button>
-              <button
-                className="menu-orb menu-create"
-                aria-label="Enemy tank creator"
-                onClick={() =>
-                  edit({
-                    ...STARTER,
-                    id: 'new',
-                    name: 'My Enemy Tank',
-                    avatar: false,
-                    life: 1,
-                    reward: 1,
-                    speed: 1,
-                    parts: [],
-                  })
-                }
-              >
-                <MenuArt pack={pack} symbol={500} icon="library" size={26} />
-                <span className="orb-caption">CREATE A TANK</span>
-              </button>
-              <button
-                className="menu-orb menu-library"
-                aria-label="My tanks"
-                onClick={() => setScreen('library')}
-              >
-                <MenuArt pack={pack} symbol={496} icon="plus" size={28} />
-                <span className="orb-caption">MY TANKS</span>
-              </button>
-              <button
-                className="menu-orb menu-settings"
-                aria-label="Settings"
-                onClick={() => setOverlay('settings')}
-              >
-                <MenuArt pack={pack} symbol={494} icon="settings" size={21} />
-                <span className="orb-caption">SETTINGS</span>
-              </button>
-              <button
-                className="menu-orb menu-credits"
-                aria-label="Credits"
-                onClick={() => setOverlay('credits')}
-              >
-                <MenuArt pack={pack} symbol={498} icon="file" size={21} />
-                <span className="orb-caption">CREDITS</span>
-              </button>
-              <button
-                className="menu-orb menu-assets"
-                aria-label="Change assets"
-                onClick={() => {
-                  setWorld(null);
-                  setPack(null);
-                }}
-              >
-                <Icon name="back" size={20} />
-                <span className="orb-caption">CHANGE ASSETS</span>
-              </button>
-              <span className="menu-bottom-left">
-                {pack.mode === 'swf' ? 'Original assets loaded' : 'Mock asset mode'}
-              </span>
-              <span className="menu-bottom-right">All progress saved locally</span>
-            </div>
-          ) : null}
-          {pack &&
-          profile &&
-          (screen === 'game' || (screen === 'creator' && editor?.returnTo === 'game')) &&
-          world ? (
-            <>
-              <GameViewport
-                world={world}
-                pack={pack}
-                settings={profile.settings}
-                audio={audio}
-                onChange={refresh}
-              />
-              <GameHud
-                world={world}
-                onMap={() => {
-                  world.cycleMap();
-                  refresh();
-                }}
-                onPause={() => {
-                  world.pause();
-                  refresh();
-                }}
-                onEdit={() => {
-                  if (!world.canEdit) return;
-                  world.pause();
-                  setOverlay('edit-confirm');
-                  refresh();
-                }}
-              />
-              {screen === 'game' && world.mode === 'paused' && overlay === null ? (
-                <PausePanel
-                  pack={pack}
-                  closeKey={profile.settings.h5}
-                  onResume={() => {
-                    world.resume();
-                    refresh();
-                  }}
-                  onSettings={() => setOverlay('settings')}
-                  onInfo={() => setOverlay('info')}
-                  onMenu={menu}
-                />
-              ) : null}
-              {screen === 'game' && world.mode === 'upgrade' ? (
-                <UpgradePanel
-                  pack={pack}
-                  offers={world.offers}
-                  current={world.player.design}
-                  onSelect={(tank) => {
-                    world.selectUpgrade(tank);
-                    refresh();
-                  }}
-                  onEdit={(tank) => edit(tank, true)}
-                />
-              ) : null}
-              {screen === 'game' && world.mode === 'secondary-help' ? (
-                <SecondaryHelpPanel
-                  pack={pack}
-                  onClose={() => {
-                    world.closeSecondaryHelp();
-                    refresh();
-                  }}
-                />
-              ) : null}
-              {screen === 'game' && overlay === 'edit-confirm' ? (
-                <EditConfirmPanel
-                  pack={pack}
-                  onYes={() => {
-                    world.offers = world.getOffers();
-                    setOverlay('edit-choice');
-                  }}
-                  onNo={() => {
-                    world.resume();
-                    setOverlay(null);
-                    refresh();
-                  }}
-                />
-              ) : null}
-              {screen === 'game' && overlay === 'edit-choice' ? (
-                <UpgradePanel
-                  pack={pack}
-                  offers={world.offers}
-                  current={world.player.design}
-                  onSelect={(tank) => {
-                    world.editPlayer(tank);
-                    world.resume();
-                    setOverlay(null);
-                    refresh();
-                  }}
-                  onEdit={(tank) => edit(tank)}
-                />
-              ) : null}
-              {screen === 'game' && world.mode === 'won' ? (
-                <WinPanel
-                  pack={pack}
-                  fps={profile.settings.fps}
-                  onMenu={menu}
-                  onContinue={() => {
-                    world.mode = 'playing';
-                    refresh();
-                  }}
-                />
-              ) : null}
-            </>
-          ) : null}
-          {pack && profile && screen === 'creator' && editor ? (
-            <TankCreator
-              key={editor.initial.id}
-              pack={pack}
-              fps={profile.settings.fps}
-              overGame={editor.returnTo === 'game'}
-              initial={editor.initial}
-              level={editor.returnTo === 'game' ? (world?.progression.level ?? 1) : 6}
-              maxClass={
-                editor.returnTo === 'game' ? Math.min(6, (world?.progression.level ?? 0) + 1) : 6
-              }
-              onSave={saveTank}
-              onExit={exitEditor}
-            />
-          ) : null}
-          {pack && profile && screen === 'library' ? (
-            <TankLibrary
-              pack={pack}
-              tanks={profile.tanks}
-              onBack={() => setScreen('menu')}
-              onEdit={(t) => edit(t)}
-              onImport={(tank) =>
-                updateProfile((p) => ({
-                  ...p,
-                  tanks: [...p.tanks.filter((t) => t.id !== tank.id), tank],
-                }))
-              }
-              onDelete={(id) =>
-                updateProfile((p) => ({ ...p, tanks: p.tanks.filter((t) => t.id !== id) }))
-              }
-            />
-          ) : null}
-          {pack && settings && overlay === 'settings' ? (
-            <SettingsPanel
-              pack={pack}
-              settings={settings}
-              onChange={settingsChange}
-              onClose={closeOverlay}
-            />
-          ) : null}
-          {pack && overlay === 'credits' ? (
-            <Dialog title="Bubble Tanks 3" onClose={closeOverlay}>
-              <div className="credits">
-                <p>
-                  Original game, artwork, and sound
-                  <br />
-                  <strong>Hero Interactive</strong>
-                </p>
-                <p>
-                  Open Bubble Tank is an independent TypeScript recreation, built from research into
-                  the original Flash game.
-                </p>
-                <p>
-                  Game assets are supplied by you and extracted locally. The Flash file is never
-                  uploaded or executed.
-                </p>
-                {pack.report ? (
-                  <p className="asset-summary">
-                    {pack.report.filename}
-                    <br />
-                    {pack.report.vectors.toLocaleString()} vectors ·{' '}
-                    {pack.report.sprites.toLocaleString()} sprites · {pack.report.sounds} sounds
-                  </p>
+                <span className="menu-version">OPEN · 0.1</span>
+                <div className="ambient-bubbles" aria-hidden="true">
+                  <i />
+                  <i />
+                  <i />
+                </div>
+                {pack.extras.get(545) ? (
+                  <img
+                    className="original-title"
+                    style={{
+                      left: 55.3 + pack.extras.get(545)!.x,
+                      top: 176.35 + pack.extras.get(545)!.y,
+                      width: pack.extras.get(545)!.width,
+                    }}
+                    src={pack.extras.get(545)!.url}
+                    alt="Bubble Tanks 3"
+                  />
                 ) : (
-                  <p className="asset-summary">Playing with procedural mock artwork.</p>
+                  <div className="menu-title">
+                    <BubbleText pack={pack} size={57}>
+                      bubble tanks 3
+                    </BubbleText>
+                  </div>
                 )}
-              </div>
-              <button className="game-button" onClick={closeOverlay}>
-                BACK
-              </button>
-            </Dialog>
-          ) : null}
-          {pack && profile && overlay === 'sources' ? (
-            <Dialog title="Choose your tanks" onClose={closeOverlay}>
-              <p className="source-intro">
-                Explore an endless world of bubblefields with the original built-in tank collection.
-              </p>
-              <label className="source-option">
-                <input type="checkbox" checked readOnly /> Hero Interactive tanks{' '}
-                <span>43 built-in enemies</span>
-              </label>
-              <label className="source-option">
-                <input
-                  type="checkbox"
-                  checked={localSources}
-                  disabled={!profile.tanks.some((t) => !t.avatar)}
-                  onChange={(e) => setLocalSources(e.target.checked)}
-                />{' '}
-                My enemy tanks <span>{profile.tanks.filter((t) => !t.avatar).length} saved</span>
-              </label>
-              <label className="source-option continue-option">
-                <input
-                  type="checkbox"
-                  checked={continueRun}
-                  disabled={!profile.progression.length}
-                  onChange={(e) => setContinueRun(e.target.checked)}
-                />{' '}
-                Use saved avatars from previous game
-              </label>
-              <div className="dialog-actions">
-                <span className="small-note">Everything plays offline.</span>
-                <button className="game-button primary" onClick={startRun}>
-                  PLAY <span aria-hidden="true">→</span>
+                <button
+                  className="menu-orb menu-play"
+                  aria-label="Play"
+                  onClick={() => {
+                    setContinueRun(false);
+                    setOverlay('sources');
+                  }}
+                >
+                  <MenuArt pack={pack} symbol={492} icon="play" size={78} />
+                  <span className="orb-caption">PLAY</span>
                 </button>
+                <button
+                  className="menu-orb menu-create"
+                  aria-label="Enemy tank creator"
+                  onClick={() =>
+                    edit({
+                      ...STARTER,
+                      id: 'new',
+                      name: 'My Enemy Tank',
+                      avatar: false,
+                      life: 1,
+                      reward: 1,
+                      speed: 1,
+                      parts: [],
+                    })
+                  }
+                >
+                  <MenuArt pack={pack} symbol={500} icon="library" size={26} />
+                  <span className="orb-caption">CREATE A TANK</span>
+                </button>
+                <button
+                  className="menu-orb menu-library"
+                  aria-label="My tanks"
+                  onClick={() => setScreen('library')}
+                >
+                  <MenuArt pack={pack} symbol={496} icon="plus" size={28} />
+                  <span className="orb-caption">MY TANKS</span>
+                </button>
+                <button
+                  className="menu-orb menu-settings"
+                  aria-label="Settings"
+                  onClick={() => setOverlay('settings')}
+                >
+                  <MenuArt pack={pack} symbol={494} icon="settings" size={21} />
+                  <span className="orb-caption">SETTINGS</span>
+                </button>
+                <button
+                  className="menu-orb menu-credits"
+                  aria-label="Credits"
+                  onClick={() => setOverlay('credits')}
+                >
+                  <MenuArt pack={pack} symbol={498} icon="file" size={21} />
+                  <span className="orb-caption">CREDITS</span>
+                </button>
+                <button
+                  className="menu-orb menu-assets"
+                  aria-label="Change assets"
+                  onClick={() => {
+                    setWorld(null);
+                    setPack(null);
+                  }}
+                >
+                  <Icon name="back" size={20} />
+                  <span className="orb-caption">CHANGE ASSETS</span>
+                </button>
+                <span className="menu-bottom-left">
+                  {pack.mode === 'swf' ? 'Original assets loaded' : 'Mock asset mode'}
+                </span>
+                <span className="menu-bottom-right">All progress saved locally</span>
               </div>
-            </Dialog>
-          ) : null}
-          {pack && world && profile && overlay === 'info' ? (
-            <TankInfoPanel
-              pack={pack}
-              tank={world.player}
-              fps={profile.settings.fps}
-              onClose={closeOverlay}
-            />
-          ) : null}
+            ) : null}
+            {pack &&
+            profile &&
+            (screen === 'game' || (screen === 'creator' && editor?.returnTo === 'game')) &&
+            world ? (
+              <>
+                <GameViewport
+                  world={world}
+                  pack={pack}
+                  settings={profile.settings}
+                  audio={audio}
+                  stage={stage}
+                  onChange={refresh}
+                  onReady={() => {
+                    if (startingWorld.current !== world) return;
+                    startingWorld.current = null;
+                    stage.effects.flash();
+                  }}
+                />
+                <GameHud
+                  world={world}
+                  onMap={() => {
+                    world.cycleMap();
+                    refresh();
+                  }}
+                  onPause={() => {
+                    world.pause();
+                    refresh();
+                  }}
+                  onEdit={() => {
+                    if (!world.canEdit) return;
+                    world.pause();
+                    setOverlay('edit-confirm');
+                    refresh();
+                  }}
+                />
+                {screen === 'game' && world.mode === 'paused' && overlay === null ? (
+                  <PausePanel
+                    pack={pack}
+                    closeKey={profile.settings.h5}
+                    onResume={() => {
+                      world.resume();
+                      refresh();
+                    }}
+                    onSettings={() => setOverlay('settings')}
+                    onInfo={() => setOverlay('info')}
+                    onMenu={menu}
+                  />
+                ) : null}
+                {screen === 'game' && world.mode === 'upgrade' ? (
+                  <UpgradePanel
+                    pack={pack}
+                    offers={world.offers}
+                    current={world.player.design}
+                    onSelect={(tank) => {
+                      world.selectUpgrade(tank);
+                      refresh();
+                    }}
+                    onEdit={(tank) => edit(tank, true)}
+                  />
+                ) : null}
+                {screen === 'game' && world.mode === 'secondary-help' ? (
+                  <SecondaryHelpPanel
+                    pack={pack}
+                    onClose={() => {
+                      world.closeSecondaryHelp();
+                      refresh();
+                    }}
+                  />
+                ) : null}
+                {screen === 'game' && overlay === 'edit-confirm' ? (
+                  <EditConfirmPanel
+                    pack={pack}
+                    onYes={() => {
+                      world.offers = world.getOffers();
+                      setOverlay('edit-choice');
+                    }}
+                    onNo={() => {
+                      world.resume();
+                      setOverlay(null);
+                      refresh();
+                    }}
+                  />
+                ) : null}
+                {screen === 'game' && overlay === 'edit-choice' ? (
+                  <UpgradePanel
+                    pack={pack}
+                    offers={world.offers}
+                    current={world.player.design}
+                    onSelect={(tank) => {
+                      world.editPlayer(tank);
+                      world.resume();
+                      setOverlay(null);
+                      refresh();
+                    }}
+                    onEdit={(tank) => edit(tank)}
+                  />
+                ) : null}
+                {screen === 'game' && world.mode === 'won' ? (
+                  <WinPanel
+                    pack={pack}
+                    fps={profile.settings.fps}
+                    onMenu={menu}
+                    onContinue={() => {
+                      world.mode = 'playing';
+                      refresh();
+                    }}
+                  />
+                ) : null}
+              </>
+            ) : null}
+            {pack && profile && screen === 'creator' && editor ? (
+              <TankCreator
+                key={editor.initial.id}
+                pack={pack}
+                fps={profile.settings.fps}
+                overGame={editor.returnTo === 'game'}
+                initial={editor.initial}
+                level={editor.returnTo === 'game' ? (world?.progression.level ?? 1) : 6}
+                maxClass={
+                  editor.returnTo === 'game' ? Math.min(6, (world?.progression.level ?? 0) + 1) : 6
+                }
+                onSave={saveTank}
+                onExit={exitEditor}
+              />
+            ) : null}
+            {pack && profile && screen === 'library' ? (
+              <TankLibrary
+                pack={pack}
+                tanks={profile.tanks}
+                onBack={() => setScreen('menu')}
+                onEdit={(t) => edit(t)}
+                onImport={(tank) =>
+                  updateProfile((p) => ({
+                    ...p,
+                    tanks: [...p.tanks.filter((t) => t.id !== tank.id), tank],
+                  }))
+                }
+                onDelete={(id) =>
+                  updateProfile((p) => ({ ...p, tanks: p.tanks.filter((t) => t.id !== id) }))
+                }
+              />
+            ) : null}
+            {pack && settings && overlay === 'settings' ? (
+              <SettingsPanel
+                pack={pack}
+                settings={settings}
+                onChange={settingsChange}
+                onClose={closeOverlay}
+              />
+            ) : null}
+            {pack && overlay === 'credits' ? (
+              <Dialog title="Bubble Tanks 3" onClose={closeOverlay}>
+                <div className="credits">
+                  <p>
+                    Original game, artwork, and sound
+                    <br />
+                    <strong>Hero Interactive</strong>
+                  </p>
+                  <p>
+                    Open Bubble Tank is an independent TypeScript recreation, built from research
+                    into the original Flash game.
+                  </p>
+                  <p>
+                    Game assets are supplied by you and extracted locally. The Flash file is never
+                    uploaded or executed.
+                  </p>
+                  {pack.report ? (
+                    <p className="asset-summary">
+                      {pack.report.filename}
+                      <br />
+                      {pack.report.vectors.toLocaleString()} vectors ·{' '}
+                      {pack.report.sprites.toLocaleString()} sprites · {pack.report.sounds} sounds
+                    </p>
+                  ) : (
+                    <p className="asset-summary">Playing with procedural mock artwork.</p>
+                  )}
+                </div>
+                <button className="game-button" onClick={closeOverlay}>
+                  BACK
+                </button>
+              </Dialog>
+            ) : null}
+            {pack && profile && overlay === 'sources' ? (
+              <Dialog title="Choose your tanks" onClose={closeOverlay}>
+                <p className="source-intro">
+                  Explore an endless world of bubblefields with the original built-in tank
+                  collection.
+                </p>
+                <label className="source-option">
+                  <input type="checkbox" checked readOnly /> Hero Interactive tanks{' '}
+                  <span>43 built-in enemies</span>
+                </label>
+                <label className="source-option">
+                  <input
+                    type="checkbox"
+                    checked={localSources}
+                    disabled={!profile.tanks.some((t) => !t.avatar)}
+                    onChange={(e) => setLocalSources(e.target.checked)}
+                  />{' '}
+                  My enemy tanks <span>{profile.tanks.filter((t) => !t.avatar).length} saved</span>
+                </label>
+                <label className="source-option continue-option">
+                  <input
+                    type="checkbox"
+                    checked={continueRun}
+                    disabled={!profile.progression.length}
+                    onChange={(e) => setContinueRun(e.target.checked)}
+                  />{' '}
+                  Use saved avatars from previous game
+                </label>
+                <div className="dialog-actions">
+                  <span className="small-note">Everything plays offline.</span>
+                  <button className="game-button primary" onClick={startRun}>
+                    PLAY <span aria-hidden="true">→</span>
+                  </button>
+                </div>
+              </Dialog>
+            ) : null}
+            {pack && world && profile && overlay === 'info' ? (
+              <TankInfoPanel
+                pack={pack}
+                tank={world.player}
+                fps={profile.settings.fps}
+                onClose={closeOverlay}
+              />
+            ) : null}
+          </MainStage>
         </div>
       </div>
       <footer className="site-footer">

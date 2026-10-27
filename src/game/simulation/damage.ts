@@ -32,7 +32,6 @@ export function damageTank(world: World, tank: Tank, amount: number, bullet?: Pr
   }
   tank.life -= damage;
   if (tank.side === 'player') {
-    if (damage > 0) world.shake = 8;
     if (tank === world.player && tank.life <= 0 && world.progression.level === 0) {
       world.escapeAtLevelZero();
       return;

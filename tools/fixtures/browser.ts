@@ -29,6 +29,7 @@ import { showMockAssetsProof } from './mock-assets';
 import { showBubbleBusterProof } from './bubble-buster';
 import { showTankArtProof } from './tank-art';
 import { showScreenEffectsProof } from './screen-effects';
+import { showMainEffects } from './main-effects';
 
 const file = document.querySelector<HTMLInputElement>('#swf')!;
 const fixture = document.querySelector<HTMLSelectElement>('#fixture')!;
@@ -102,6 +103,14 @@ async function reset() {
   renderer = undefined;
   world = undefined;
   stage.replaceChildren();
+  if (fixture.value === 'main-effects') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    unmountScreen = showMainEffects(pack, stage, (proof) => {
+      status.dataset.mainEffects = JSON.stringify(proof);
+      status.textContent = 'Ready · Main shake and independent flashes';
+    });
+    return;
+  }
   if (fixture.value === 'screen-effects') {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
     const proof = await showScreenEffectsProof(pack, stage);

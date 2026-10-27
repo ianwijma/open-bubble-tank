@@ -5,22 +5,28 @@ import type { Settings } from '@/game/core/types';
 import { GameInput } from '@/game/core/input';
 import type { World } from '@/game/simulation/world';
 import type { AudioManager } from '@/game/services/audio';
+import type { StageRuntime } from '@/game/services/stage-runtime';
 export function GameViewport({
   world,
   pack,
   settings,
   audio,
+  stage,
   onChange,
+  onReady,
 }: {
   world: World;
   pack: AssetPack;
   settings: Settings;
   audio: AudioManager | null;
+  stage: StageRuntime;
   onChange: () => void;
+  onReady?: () => void;
 }) {
   const host = useRef<HTMLDivElement>(null),
     settingsRef = useRef(settings),
     changeRef = useRef(onChange),
+    readyRef = useRef(onReady),
     [error, setError] = useState('');
   useEffect(() => {
     settingsRef.current = settings;
@@ -28,6 +34,9 @@ export function GameViewport({
   useEffect(() => {
     changeRef.current = onChange;
   }, [onChange]);
+  useEffect(() => {
+    readyRef.current = onReady;
+  }, [onReady]);
   const mode = world.mode;
   useEffect(() => {
     if (mode === 'playing' || mode === 'transit' || mode === 'collapse')
@@ -35,13 +44,13 @@ export function GameViewport({
   }, [mode]);
   useEffect(() => {
     let cancelled = false,
-      frame = 0,
+      unsubscribe: (() => void) | undefined,
       renderer: import('@/game/render/pixi-renderer').GameRenderer | undefined,
       input: GameInput | undefined;
     async function start() {
       const { GameRenderer } = await import('@/game/render/pixi-renderer');
       if (cancelled || !host.current) return;
-      renderer = new GameRenderer(pack);
+      renderer = new GameRenderer(pack, true);
       try {
         await renderer.init(host.current, settingsRef.current);
         if (cancelled) {
@@ -72,30 +81,24 @@ export function GameViewport({
             b.kind === 'turret' ? world.allTanks().find((t) => t.uid === b.owner) : undefined,
           );
         host.current.focus({ preventScroll: true });
-        let last = performance.now(),
-          accumulator = 0,
-          lastRevision = -1;
-        const tick = (now: number) => {
-          if (cancelled) return;
-          const elapsed = Math.max(0, now - last);
-          last = now;
-          world.advanceTime(elapsed);
-          accumulator += Math.min(elapsed, 100);
-          const step = 1000 / settingsRef.current.fps;
-          while (accumulator >= step) {
+        readyRef.current?.();
+        let lastRevision = -1;
+        unsubscribe = stage.subscribe({
+          elapsed: (elapsed) => world.advanceTime(elapsed),
+          step: () => {
             world.viewZoom = settingsRef.current.zoom;
-            world.step(input!.frame(), 0);
+            world.screenShake = settingsRef.current.shake;
+            world.step(input!.frame(), 0, false);
             audio?.playEvents(world.drainEvents(), settingsRef.current);
-            accumulator -= step;
-          }
-          renderer!.draw(world, settingsRef.current);
-          if (world.revision !== lastRevision) {
-            lastRevision = world.revision;
-            changeRef.current();
-          }
-          frame = requestAnimationFrame(tick);
-        };
-        frame = requestAnimationFrame(tick);
+          },
+          draw: () => {
+            renderer!.draw(world, settingsRef.current);
+            if (world.revision !== lastRevision) {
+              lastRevision = world.revision;
+              changeRef.current();
+            }
+          },
+        });
       } catch (e) {
         if (!cancelled) setError(e instanceof Error ? e.message : 'Graphics could not start.');
       }
@@ -103,11 +106,11 @@ export function GameViewport({
     void start();
     return () => {
       cancelled = true;
-      cancelAnimationFrame(frame);
+      unsubscribe?.();
       input?.dispose();
       if (renderer?.app.renderer) renderer.destroy();
     };
-  }, [world, pack, audio]);
+  }, [world, pack, audio, stage]);
   return (
     <div
       ref={host}

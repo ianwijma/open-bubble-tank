@@ -188,6 +188,20 @@ p {
   transform-origin: top left;
   overflow: hidden;
 }
+.main-stage {
+  position: relative;
+  width: 550px;
+  height: 450px;
+}
+.main-flashes {
+  position: absolute;
+  left: -40px;
+  top: -40px;
+  width: 630px;
+  height: 530px;
+  z-index: 30;
+  pointer-events: none;
+}
 .stage-frame:fullscreen {
   width: 100vw;
   height: 100vh;

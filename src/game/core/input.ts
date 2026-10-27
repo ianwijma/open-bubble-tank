@@ -4,9 +4,10 @@ export class GameInput {
   private keys = new Set<string>();
   private fire = false;
   private aim: { x: number; y: number } = { x: STAGE.cx + 100, y: STAGE.cy };
+  private pointer: { x: number; y: number } | null = null;
   private abort = new AbortController();
   constructor(
-    host: HTMLElement,
+    private host: HTMLElement,
     private settings: () => Settings,
     onPause: () => void,
     onLock: () => void,
@@ -16,11 +17,7 @@ export class GameInput {
     host.addEventListener(
       'pointermove',
       (e) => {
-        const r = host.getBoundingClientRect();
-        this.aim = {
-          x: ((e.clientX - r.left) * 550) / r.width,
-          y: ((e.clientY - r.top) * 450) / r.height,
-        };
+        this.pointer = { x: e.clientX, y: e.clientY };
       },
       { signal },
     );
@@ -87,6 +84,15 @@ export class GameInput {
   }
   frame(): InputFrame {
     const s = this.settings();
+    // Main can move under a stationary pointer during shake; Flash mouseX/Y
+    // resolve against its current transform on every stage frame.
+    if (this.pointer) {
+      const r = this.host.getBoundingClientRect();
+      this.aim = {
+        x: ((this.pointer.x - r.left) * 550) / r.width,
+        y: ((this.pointer.y - r.top) * 450) / r.height,
+      };
+    }
     return {
       up: this.keys.has(s.h1),
       down: this.keys.has(s.h2),

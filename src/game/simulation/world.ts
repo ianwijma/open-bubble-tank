@@ -2,6 +2,7 @@ import { CLASS_SPEED, FIELD_RADIUS, MAX_LIFE, STAGE } from '../core/constants';
 import { clamp, direction, distance, length, Random, rotate } from '../core/math';
 import { protectionRadius } from '../core/protection-size';
 import { advanceTankArt } from './tank-art';
+import { MainEffects } from './main-effects';
 import type {
   CollisionTest,
   Effect,
@@ -232,8 +233,7 @@ export class World {
   bossTriggered = false;
   bossDefeated = false;
   secondaryCounter = 0;
-  shake = 0;
-  flash = 0;
+  screenShake = true;
   collapse: {
     age: number;
     angle: number;
@@ -287,6 +287,7 @@ export class World {
     public localTanks: TankDesign[] = [],
     history: TankDesign[] = [],
     seed?: number,
+    readonly mainEffects = new MainEffects(),
   ) {
     this.rng = new Random(seed);
     this.roster = new UnitRoster(this.rng, localTanks);
@@ -322,7 +323,7 @@ export class World {
     return [this.player, ...this.field.enemies, ...this.allies].filter((t) => !t.dead);
   }
   pause() {
-    if (this.mode === 'playing' || this.mode === 'transit' || this.mode === 'collapse') {
+    if (this.mode === 'playing' || this.mode === 'transit') {
       this.pausedMode = this.mode;
       this.mode = 'paused';
       this.revision++;
@@ -346,8 +347,9 @@ export class World {
   advanceTime(milliseconds: number) {
     this.wallTimers.advance(milliseconds);
   }
-  step(input: InputFrame, milliseconds = 20) {
+  step(input: InputFrame, milliseconds = 20, advanceMainEffects = true) {
     this.advanceTime(milliseconds);
+    if (advanceMainEffects) this.mainEffects.tick(() => this.rng.next());
     try {
       this.stepFrame(input);
     } finally {
@@ -372,7 +374,6 @@ export class World {
       // PausePlayerControl selects source state3: effects/ENTER_FRAME shrink continue, HUD Run stops.
       this.tickCollapse();
       this.pollEffects();
-      this.tickEffects();
       return;
     }
     if (this.mode === 'transit') {
@@ -381,7 +382,6 @@ export class World {
       if (this.mode !== 'transit') return;
       this.tickActiveFields(input);
       this.pollEffects();
-      this.tickEffects();
       this.tickTransit();
       return;
     }
@@ -397,7 +397,6 @@ export class World {
     // the following interface frame. Passive weapons also observe the completed field step.
     this.tickAvatar(input);
     this.pollEffects();
-    this.tickEffects();
     if (this.stats.frames % 5 === 0) this.revision++;
   }
   private interfaceFrame(input: InputFrame) {
@@ -483,9 +482,9 @@ export class World {
             effect.owner.shieldManaged = false;
             return false;
           }
+          if (this.screenShake) this.mainEffects.shake(20);
+          this.mainEffects.flash();
           this.spawnVolley(effect.owner, effect.gun, WEAPONS[3008]);
-          this.shake = 20;
-          this.flash = 1;
           return false;
         });
       });
@@ -585,11 +584,11 @@ export class World {
     const c = this.collapse!;
     c.age++;
     if (c.shakeTimer-- <= 0) {
-      this.shake = ++c.shakeCount;
+      this.mainEffects.shake(++c.shakeCount);
       c.shakeTimer = c.shakeCount;
     }
     if (c.flashTimer-- <= 0) {
-      this.flash = 1;
+      this.mainEffects.flash();
       c.flashTimer = this.rng.int(10, 40);
     }
     // _-MC (symbol 2173) ends at frame 120; _-0D shrinks by 1/204 each frame.
@@ -940,8 +939,6 @@ export class World {
     this.player.rotation = old.rotation;
     this.player.velocity = { ...old.velocity };
     this.secondaryCounter = 0;
-    this.shake = 20;
-    this.flash = 0.3;
     this.revision++;
     for (const e of [...this.field.enemies, ...this.allies]) e.targetId = null;
     // PlaceAvatar tests only replacement avatars, including edits and downgrades.
@@ -1104,10 +1101,6 @@ export class World {
   private registerEffect(effect: Effect) {
     if (effect.randomRotation) effect.rotation = Math.round(this.rng.next() * 360);
     this.runtimeFor(this.currentField).effects.push(effect);
-  }
-  private tickEffects() {
-    this.shake = Math.max(0, this.shake - 1);
-    this.flash = Math.max(0, this.flash - 0.05);
   }
   award(name: string) {
     if (this.achievements.has(name)) return;

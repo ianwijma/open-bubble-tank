@@ -48,7 +48,10 @@ export class GameRenderer {
   private background: Sprite | null = null;
   private destroyed = false;
   private quality: Settings['quality'] | null = null;
-  constructor(public assets: AssetPack) {}
+  constructor(
+    public assets: AssetPack,
+    private externalMainEffects = false,
+  ) {}
   async init(host: HTMLElement, settings: Settings) {
     await this.app.init({
       width: 550,
@@ -206,6 +209,11 @@ export class GameRenderer {
       this.app.canvas.style.imageRendering = settings.quality === 'low' ? 'pixelated' : 'auto';
     }
     this.overlay.clear();
+    const main = world.mainEffects;
+    this.app.stage.position.set(
+      this.externalMainEffects ? 0 : main.position.x,
+      this.externalMainEffects ? 0 : main.position.y,
+    );
     this.dust.clear();
     for (const s of settings.efficient ? this.stars.slice(0, 6) : this.stars) {
       const x =
@@ -218,11 +226,6 @@ export class GameRenderer {
     const shrink = settings.zoom * (world.collapse ? 1 - world.collapse.age / 204 : 1);
     this.root.scale.set(shrink);
     this.root.position.set(STAGE.cx - world.player.x * shrink, STAGE.cy - world.player.y * shrink);
-    if (settings.shake && world.shake > 0 && world.stats.frames % 3 === 0) {
-      const amp = world.shake > 10 ? 4 : 2;
-      this.root.x += Math.sin(world.stats.frames * 4) * amp;
-      this.root.y += Math.cos(world.stats.frames * 7) * amp;
-    }
     const activeFields = [world.field, ...(world.transit ? [world.transit.next] : [])];
     this.captions?.update(world);
     for (const [field, node] of this.fieldNodes)
@@ -405,8 +408,12 @@ export class GameRenderer {
     this.minimap?.update(world);
     this.hud?.update(world);
     this.editSlider?.update(world.editSlider);
-    if (world.flash > 0)
-      this.overlay.rect(0, 0, 550, 450).fill({ color: 0xffffff, alpha: world.flash });
+    if (!this.externalMainEffects)
+      for (const flash of main.flashes)
+        this.overlay.rect(-40, -40, 630, 530).fill({
+          color: flash.color,
+          alpha: Math.max(0, flash.alpha) * flash.fillAlpha,
+        });
     this.app.render();
   }
   destroy() {
