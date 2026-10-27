@@ -4,6 +4,8 @@ import { STARTER } from '../src/game/data/catalog';
 import { createTank } from '../src/game/simulation/tank';
 import { World, emptyInput } from '../src/game/simulation/world';
 import { createProjectile } from '../src/game/simulation/create-projectile';
+import { applyProjectileStatus } from '../src/game/simulation/status';
+import { detachForcefield, refreshForcefield } from '../src/game/simulation/forcefield';
 
 function setup() {
   const world = new World([], [], 33);
@@ -150,4 +152,127 @@ test('deadhead death escape and Apocalypse direct exits do not call FinalPartCal
   expect(collapse.tank.forcefieldAttached).toBe(true);
   expect(collapse.tank.forcefieldReady).toBe(false);
   expect(collapse.tank.forcefieldGeneration).toBe(0);
+});
+
+test('a trailing mounted part triggers the initial wrapper reorder, preserving depleted debt', () => {
+  const { world, tank } = setup();
+  tank.design = {
+    ...tank.design,
+    parts: [...tank.design.parts, { ...STARTER.parts[0], key: 'trailing-body' }],
+  };
+  world.player = createTank(world.nextId(), tank.design, 'player', 0, 0, 100, 100);
+  const avatar = world.player;
+  expect(avatar.displayChildren.slice(-3)).toEqual([
+    'part:field',
+    'forcefield',
+    'part:trailing-body',
+  ]);
+  world.damage(avatar, 40);
+  expect([avatar.forcefieldReady, avatar.forcefield]).toEqual([false, -15]);
+  world.step(emptyInput());
+  expect(avatar.displayChildren.at(-1)).toBe('forcefield');
+  expect([avatar.forcefieldReady, avatar.forcefield, avatar.forcefieldCounter]).toEqual([
+    true,
+    -15,
+    1,
+  ]);
+  expect([avatar.forcefieldGeneration, avatar.forcefieldStartedAt, avatar.forcefieldFrame]).toEqual(
+    [0, 0, 27],
+  );
+  world.damage(avatar, 1);
+  // Reordering does not erase the source debt: the recursive overflow is16.
+  expect(avatar.life).toBe(84);
+});
+
+test('a topmost broken forcefield stays broken until a new attachment causes passive reordering', () => {
+  const { world, tank } = setup();
+  world.damage(tank, 40);
+  world.step(emptyInput());
+  expect(tank.forcefieldReady).toBe(false);
+  const cloneGeneration = tank.forcefieldGeneration;
+  applyProjectileStatus(world, tank, 'infect');
+  expect(tank.displayChildren.at(-1)).toBe('infection');
+  world.pause();
+  world.step(emptyInput());
+  expect(tank.forcefieldReady).toBe(false);
+  world.resume();
+  world.step(emptyInput());
+  expect(tank.displayChildren.slice(-2)).toEqual(['infection', 'forcefield']);
+  expect(tank.forcefieldReady).toBe(true);
+  expect(tank.forcefield).toBe(-15);
+  expect(tank.forcefieldGeneration).toBe(cloneGeneration);
+  const order = [...tank.displayChildren];
+  applyProjectileStatus(world, tank, 'infect');
+  expect(tank.displayChildren).toEqual(order);
+});
+
+test('a shield pushes its hit and film above the wrapper, then passive Run reuses the wrapper', () => {
+  const world = new World([], [], 33);
+  const design = {
+    ...STARTER,
+    parts: [
+      STARTER.parts[0],
+      { ...STARTER.parts[1], key: 'shield', type: 3010 },
+      { ...STARTER.parts[1], key: 'field', type: 5005 },
+    ],
+  };
+  world.player = createTank(world.nextId(), design, 'player', 0, 0, 50, 20);
+  world.field.enemies = [];
+  const tank = world.player;
+  world.damage(tank, 40);
+  world.step({ ...emptyInput(), secondary: true });
+  expect(tank.shield).toBeGreaterThan(0);
+  expect(tank.displayChildren.slice(-3)).toEqual(['shield-hit', 'shield-film', 'forcefield']);
+  expect([tank.forcefieldReady, tank.forcefield, tank.forcefieldGeneration]).toEqual([
+    true,
+    -15,
+    0,
+  ]);
+  for (let i = 0; i < 25; i++) world.step(emptyInput());
+  expect(tank.shield).toBe(0);
+  expect(tank.displayChildren).not.toContain('shield-film');
+  expect(tank.displayChildren).toContain('shield-hit');
+  expect(tank.displayChildren.at(-1)).toBe('forcefield');
+  detachForcefield(tank);
+  expect(tank.displayChildren).not.toContain('forcefield');
+  refreshForcefield(tank);
+  expect(tank.displayChildren.at(-1)).toBe('forcefield');
+  expect(tank.forcefieldGeneration).toBe(1);
+});
+
+test('arrival clears shield immunity and its callback but retains the attached film and its clock', () => {
+  const { world, tank } = setup();
+  tank.design = {
+    ...tank.design,
+    parts: [...tank.design.parts, { ...STARTER.parts[1], type: 3010, key: 'shield' }],
+  };
+  world.player = createTank(world.nextId(), tank.design, 'player', 0, 0, 50, 20);
+  const avatar = world.player;
+  world.fireGun(
+    avatar,
+    avatar.guns.find((gun) => gun.part.type === 3010)!,
+    emptyInput(),
+  );
+  world.jump({ x: 1, y: 0 });
+  arrive(world);
+  const age = avatar.shieldAge;
+  expect(avatar.shield).toBe(0);
+  expect(avatar.displayChildren).toContain('shield-film');
+  expect(world.runtimeFor(world.field).pending).toHaveLength(0);
+  world.field.enemies = [];
+  for (let i = 0; i < 30; i++) world.step(emptyInput());
+  expect(avatar.shieldAge).toBe(age + 30);
+  expect(avatar.displayChildren).toContain('shield-film');
+  avatar.forcefieldReady = false;
+  world.damage(avatar, 1);
+  expect(avatar.life).toBe(19);
+  world.fireGun(
+    avatar,
+    avatar.guns.find((gun) => gun.part.type === 3010)!,
+    emptyInput(),
+  );
+  expect(avatar.shieldAge).toBe(0);
+  expect(avatar.displayChildren.filter((key) => key === 'shield-film')).toHaveLength(1);
+  for (let i = 0; i < 25; i++) world.step(emptyInput());
+  expect(avatar.displayChildren).not.toContain('shield-film');
 });

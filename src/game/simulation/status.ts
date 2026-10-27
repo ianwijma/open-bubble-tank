@@ -1,11 +1,13 @@
 import type { DecoratedStatus, Status, Tank } from '../core/types';
 import { WEAPONS } from '../data/weapons';
 import type { World } from './world';
+import { addTankChild, removeTankChild } from './tank-display';
 
 /** _-Zx.EffectMeCrazy replaces the previous set of attached effect clips. */
 export function decorateStatus(world: World, tank: Tank, kind: DecoratedStatus, duration = 80) {
   if (tank.design.parts.some((part) => part.type === 5005)) return;
   const parts = tank.design.parts;
+  removeTankChild(tank, 'status');
   tank.statusDecoration = {
     kind,
     age: 0,
@@ -17,6 +19,7 @@ export function decorateStatus(world: World, tank: Tank, kind: DecoratedStatus, 
       return { x: part.x, y: part.y, angle: world.rng.int(-180, 180), frame: world.rng.int(1, 4) };
     }),
   };
+  if (tank.statusDecoration.marks.length) addTankChild(tank, 'status');
 }
 
 /** Applies the callbacks of _-aw/_-0L/_-Md/_-ar/_-U4, before impact damage. */
@@ -28,6 +31,7 @@ export function applyProjectileStatus(world: World, tank: Tank, status: Status, 
     tank.infectCounter = 0;
     tank.infectStartedAt = tank.artAge;
     tank.infectionAngle = world.rng.int(0, 360);
+    addTankChild(tank, 'infection');
     return;
   }
   if (status === 'ink') {
@@ -49,8 +53,10 @@ export function applyProjectileStatus(world: World, tank: Tank, status: Status, 
 
 /** Attached effects expire even in the stunned branch. */
 export function tickStatusDecoration(tank: Tank) {
-  if (tank.statusDecoration && ++tank.statusDecoration.age > tank.statusDecoration.duration)
+  if (tank.statusDecoration && ++tank.statusDecoration.age > tank.statusDecoration.duration) {
     tank.statusDecoration = undefined;
+    removeTankChild(tank, 'status');
+  }
 }
 
 /** Active Run follows parts/maintenance with ink, infection, then weaken expiry. */

@@ -2,6 +2,7 @@ import type { Tank, TankDesign } from '../core/types';
 import { tankRadius } from '../data/catalog';
 import { createDegradation, degradeTank } from './degradation';
 import { tankRosterIdentity } from '../core/tank-identity';
+import { initialTankChildren } from './tank-display';
 export function createTank(
   uid: number,
   design: TankDesign,
@@ -52,6 +53,7 @@ export function createTank(
     forcefieldAttached: true,
     forcefieldGeneration: 0,
     forcefieldStartedAt: 0,
+    displayChildren: initialTankChildren(design, side),
     age: 0,
     artAge: 0,
     turnFrames: 0,

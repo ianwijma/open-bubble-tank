@@ -1,6 +1,6 @@
 import { ColorMatrixFilter, Container } from 'pixi.js';
 import type { AssetPack } from '../assets/asset-pack';
-import type { StatusDecoration, Tank } from '../core/types';
+import type { StatusDecoration, Tank, TankChild } from '../core/types';
 import { INFECTED_ART, STATUS_ART } from '../data/status-art';
 import { SwfSymbolView, type RasterTextures } from './swf-symbol-view';
 
@@ -79,6 +79,13 @@ export class SwfTankStatusView {
       this.infectionFilter?.destroy();
       this.infectionFilter = null;
     }
+  }
+  /** TankView may mount these direct children alongside parts and protection. */
+  displayEntries(): [TankChild, Container][] {
+    return [
+      ...this.marks.map((view): [TankChild, Container] => ['status', view.root]),
+      ...(this.infected ? [['infection', this.infected.root] as [TankChild, Container]] : []),
+    ];
   }
   destroy() {
     for (const view of this.marks) view.destroy();
