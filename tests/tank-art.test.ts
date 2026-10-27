@@ -78,7 +78,8 @@ test('attached status lifetime and visual origins use separate active and stage 
   w.pause();
   frames(w, 7);
   for (const kind of ['infect', 'ink', 'stun'] as const) applyProjectileStatus(w, t, kind);
-  expect([t.infectStartedAt, t.inkStartedAt]).toEqual([7, 7]);
+  expect(t.infectStartedAt).toBe(7);
+  expect(w.runtimeFor(w.field).effectQueue.filter((e) => e.layer === 'screen')[0].age).toBe(0);
   frames(w, 6);
   expect([t.age, t.artAge, t.infectCounter, t.status.ink]).toEqual([0, 13, 0, 121]);
   expect([t.statusDecoration!.age, t.statusDecoration!.artAge]).toEqual([0, 6]);

@@ -9,7 +9,6 @@ export const STATUS_ART: Record<DecoratedStatus, number> = {
   weaken: symbols['_-It'],
 };
 export const INFECTED_ART = symbols.effect_infected;
-export const INK_ART = symbols.ink_effect;
 export const PROTECTION_ART = {
   shield: symbols['_-BF'],
   shieldHit: symbols['_-Ne'],

@@ -2,14 +2,18 @@ import { Container, Graphics } from 'pixi.js';
 import type { AssetPack } from '../assets/asset-pack';
 import type { Effect } from '../core/types';
 import { Random } from '../core/math';
+import { STAGE } from '../core/constants';
+import screenArt from '../data/screen-effect-art.json';
 import { SwfSymbolView, type RasterTextures } from './swf-symbol-view';
 
 /** Separate under-field and over-projectile layers, sharing the engine's effect identities. */
 export class CombatEffectsView {
   bottom = new Container();
   top = new Container();
+  screen = new Container();
   private mockBottom = new Graphics();
   private mockTop = new Graphics();
+  private mockScreen = new Graphics();
   private nodes = new Map<number, SwfSymbolView>();
   private lines = new Map<number, Graphics>();
   constructor(
@@ -18,13 +22,21 @@ export class CombatEffectsView {
   ) {
     this.bottom.addChild(this.mockBottom);
     this.top.addChild(this.mockTop);
+    this.screen.position.set(STAGE.cx, STAGE.cy);
+    this.screen.addChild(this.mockScreen);
   }
   update(effects: readonly Effect[]) {
     const active = new Set<number>();
     this.mockBottom.clear();
     this.mockTop.clear();
+    this.mockScreen.clear();
     for (const effect of effects) {
-      const layer = effect.layer === 'bottom' ? this.bottom : this.top;
+      const layer =
+        effect.layer === 'screen'
+          ? this.screen
+          : effect.layer === 'bottom'
+            ? this.bottom
+            : this.top;
       if (effect.symbol && this.assets.mode === 'swf' && this.assets.hasSymbol(effect.symbol)) {
         active.add(effect.uid);
         let view = this.nodes.get(effect.uid);
@@ -51,9 +63,22 @@ export class CombatEffectsView {
         }
         continue;
       }
-      const graphics = layer === this.bottom ? this.mockBottom : this.mockTop;
+      const graphics =
+        layer === this.screen
+          ? this.mockScreen
+          : layer === this.bottom
+            ? this.mockBottom
+            : this.mockTop;
       const progress = (effect.age % effect.duration) / Math.max(1, effect.duration - 1);
-      if (effect.symbol === 2175) {
+      const screenClip = Object.values(screenArt).find((clip) => clip.symbol === effect.symbol);
+      if (screenClip) {
+        graphics.rect(-STAGE.cx, -STAGE.cy, STAGE.width, STAGE.height).fill({
+          color: effect.symbol === screenArt.ink.symbol ? 0x101c36 : 0xffffff,
+          alpha:
+            screenClip.opacity[effect.age % effect.duration] *
+            (effect.symbol === screenArt.ink.symbol ? 0.85 : 1),
+        });
+      } else if (effect.symbol === 2175) {
         if (effect.line)
           graphics
             .moveTo(effect.x, effect.y)
@@ -80,5 +105,6 @@ export class CombatEffectsView {
     this.update([]);
     this.bottom.destroy({ children: true });
     this.top.destroy({ children: true });
+    this.screen.destroy({ children: true });
   }
 }

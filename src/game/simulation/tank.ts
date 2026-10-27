@@ -37,8 +37,6 @@ export function createTank(
     infectCounter: 0,
     infectStartedAt: 0,
     infectionAngle: 0,
-    inkStartedAt: 0,
-    inkEffect: false,
     stunned: false,
     shield: 0,
     shieldAge: 0,

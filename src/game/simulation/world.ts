@@ -612,6 +612,7 @@ export class World {
     this.collapse = null;
     this.mode = 'playing';
     this.jump({ x: -1, y: 0 }); // _-Ud's first marker wins the center-position tie.
+    this.addCombatEffect({ x: 0, y: 0 }, 'collapseFlash', {}, true);
   }
   private tickTank(t: Tank, maintainProtection = true) {
     t.age++;

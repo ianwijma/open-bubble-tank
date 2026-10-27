@@ -31,11 +31,10 @@ export function applyProjectileStatus(world: World, tank: Tank, status: Status, 
     return;
   }
   if (status === 'ink') {
-    // InkMe only affects avatars and the projectile does not refresh an existing ink timer.
-    if (tank.side === 'player' && tank.status.ink === 0) {
-      tank.status.ink = 121;
-      tank.inkStartedAt = tank.artAge;
-      tank.inkEffect = !forcefield;
+    // InkMe changes avatars only. The callback's separate screen effect also runs on allies.
+    if (tank.status.ink === 0) {
+      if (tank.design.avatar) tank.status.ink = 121;
+      if (!forcefield) world.addCombatEffect({ x: 0, y: 0 }, 'ink');
     }
     return;
   }

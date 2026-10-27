@@ -23,12 +23,13 @@ import {
 import { rasterMorphSVG } from './morph-raster';
 import projectileArt from '../data/projectile-art.json';
 import effectArt from '../data/effect-art.json';
+import screenEffectArt from '../data/screen-effect-art.json';
 import mineArt from '../data/mine-art.json';
 import { buildDisplayList } from './display-list';
 import { mockPart } from './mock-part';
 import { mockProjectileHit } from './mock-projectile';
 import { authoredProjectileBounds } from './projectile-geometry';
-import { INFECTED_ART, INK_ART, STATUS_ART, PROTECTION_ART } from '../data/status-art';
+import { INFECTED_ART, STATUS_ART, PROTECTION_ART } from '../data/status-art';
 
 export interface Bounds extends Rect {}
 export interface Raster extends Bounds {
@@ -284,8 +285,9 @@ export class AssetPack {
       for (const p of PARTS) visit(p.symbol);
       for (const art of Object.values(projectileArt)) visit(art.symbol);
       for (const art of Object.values(effectArt)) visit(art.symbol);
+      for (const art of Object.values(screenEffectArt)) visit(art.symbol);
       for (const art of Object.values(mineArt)) visit(art.symbol);
-      for (const id of [...Object.values(STATUS_ART), INFECTED_ART, INK_ART]) visit(id);
+      for (const id of [...Object.values(STATUS_ART), INFECTED_ART]) visit(id);
       for (const id of Object.values(PROTECTION_ART)) visit(id);
       for (const id of [1816, 1817, 1820, 2173]) visit(id);
       for (const id of [MINIMAP.symbol, MINIMAP.button, MINIMAP.dot, MINIMAP.connector]) visit(id);

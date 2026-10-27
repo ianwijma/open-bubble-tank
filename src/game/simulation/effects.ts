@@ -1,10 +1,12 @@
 import art from '../data/effect-art.json';
+import screenArt from '../data/screen-effect-art.json';
 import type { Effect, Projectile, Vec } from '../core/types';
 import type { World } from './world';
 
-export type CombatEffect = keyof typeof art;
+const allArt = { ...art, ...screenArt };
+export type CombatEffect = keyof typeof allArt;
 export interface EffectOptions {
-  layer?: 'top' | 'bottom';
+  layer?: Effect['layer'];
   randomRotation?: boolean;
   scale?: number;
   /** Endpoint in the new effect's local coordinates, drawn into line_mc. */
@@ -17,7 +19,7 @@ export function combatEffect(
   kind: CombatEffect,
   options: EffectOptions,
 ): Effect {
-  const clip = art[kind];
+  const clip = allArt[kind];
   return {
     uid,
     x: pos.x,
@@ -28,8 +30,8 @@ export function combatEffect(
     duration: clip.frames,
     radius: kind === 'impact' ? 10 : 60,
     color: 0xffffff,
-    layer: top.has(kind) ? 'top' : 'bottom',
-    randomRotation: top.has(kind),
+    layer: kind in screenArt ? 'screen' : top.has(kind) ? 'top' : 'bottom',
+    randomRotation: kind in screenArt || top.has(kind),
     rotation: 0,
     scale: 1,
     ...options,

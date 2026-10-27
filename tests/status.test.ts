@@ -74,13 +74,15 @@ test('forcefield blocks sticky and jam callbacks, while infection retains its ow
   expect(tank.status.sticky).toBe(0);
   expect(tank.status.jam).toBe(0);
   expect(tank.status.ink).toBe(121);
-  expect(tank.inkEffect).toBe(false);
+  expect(
+    world.runtimeFor(world.field).effectQueue.filter((e) => e.layer === 'screen'),
+  ).toHaveLength(0);
   expect(tank.statusDecoration).toBeUndefined();
   applyProjectileStatus(world, tank, 'infect');
   expect(tank.status.infect).toBe(Infinity);
 });
 
-test('ink affects only the avatar and does not refresh until its existing timer ends', () => {
+test('ink timer affects only the avatar and does not refresh until its existing timer ends', () => {
   const { world, tank } = patientWorld();
   applyProjectileStatus(world, tank, 'ink');
   expect(tank.status.ink).toBe(0);
@@ -90,11 +92,13 @@ test('ink affects only the avatar and does not refresh until its existing timer 
   expect(world.player.status.ink).toBe(81);
   applyProjectileStatus(world, world.player, 'ink');
   expect(world.player.status.ink).toBe(81);
-  expect(world.player.inkStartedAt).toBe(17);
+  expect(world.effects.filter((e) => e.layer === 'screen')).toHaveLength(2);
   frames(world, 81);
   expect(world.player.status.ink).toBe(0);
   applyProjectileStatus(world, world.player, 'ink');
-  expect(world.player.inkStartedAt).toBe(138);
+  expect(
+    world.runtimeFor(world.field).effectQueue.filter((e) => e.layer === 'screen'),
+  ).toHaveLength(1);
 });
 
 test('status artwork covers every part below five and replaces previous marks', () => {

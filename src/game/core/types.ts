@@ -89,8 +89,6 @@ export interface Tank extends Vec {
   infectCounter: number;
   infectStartedAt: number;
   infectionAngle: number;
-  inkStartedAt: number;
-  inkEffect: boolean;
   stunned: boolean;
   shield: number;
   shieldAge: number;
@@ -214,7 +212,7 @@ export interface Effect extends Vec {
   radius: number;
   color: number;
   symbol?: number;
-  layer?: 'top' | 'bottom';
+  layer?: 'top' | 'bottom' | 'screen';
   rotation?: number;
   scale?: number;
   randomRotation?: boolean;

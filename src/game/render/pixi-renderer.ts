@@ -9,7 +9,6 @@ import { drawMockProjectile } from './mock-projectile-view';
 import { SwfSymbolView } from './swf-symbol-view';
 import { SwfTextures } from './swf-textures';
 import { setBeamLength } from './swf-beam-view';
-import { INK_ART } from '../data/status-art';
 import { MinimapView } from './minimap-view';
 import { HudView } from './hud-view';
 import { EditSliderView } from './edit-slider-view';
@@ -43,7 +42,6 @@ export class GameRenderer {
   private bulletNodes = new Map<number, SwfSymbolView>();
   private pickupNodes = new Map<number, SwfSymbolView>();
   private collapseView: SwfSymbolView | null = null;
-  private inkView?: SwfSymbolView;
   private fieldNodes = new Map<Field, Sprite>();
   private stars: { x: number; y: number; v: number; alpha: number }[] = [];
   private fieldTexture: Texture | null = null;
@@ -82,8 +80,8 @@ export class GameRenderer {
       this.background,
       this.dust,
       this.root,
-      this.mapArt,
       this.screenEffects,
+      this.mapArt,
       this.overlay,
     );
     this.minimap = new MinimapView(this.assets, this.rasterTextures);
@@ -96,6 +94,7 @@ export class GameRenderer {
     this.mapArt.addChild(this.tacticalHud.root);
     this.captions = new FieldCaptions(this.assets, this.rasterTextures);
     this.combatEffects = new CombatEffectsView(this.assets, this.rasterTextures);
+    this.screenEffects.addChild(this.combatEffects.screen);
     this.root.addChild(
       this.fields,
       this.captions.root,
@@ -247,6 +246,14 @@ export class GameRenderer {
       );
     }
     const states = world.activeFields();
+    // Setup places HUD last; AttachNewBubblefield raises the screen layer at first crossing.
+    const screenInFront = world.transit !== null || world.connections.size > 0;
+    if (
+      this.app.stage.getChildIndex(this.screenEffects) >
+        this.app.stage.getChildIndex(this.mapArt) !==
+      screenInFront
+    )
+      this.app.stage.swapChildren(this.screenEffects, this.mapArt);
     const tanks = [
       { tank: world.player, offset: { x: 0, y: 0 } },
       ...states.flatMap(({ field, runtime, offset }) =>
@@ -390,30 +397,14 @@ export class GameRenderer {
       this.collapseView = null;
     }
     this.combatEffects?.update(
-      states.flatMap(({ runtime, offset }) => runtime.effects.map((e) => project(e, offset))),
+      states.flatMap(({ runtime, offset }) =>
+        runtime.effects.map((e) => (e.layer === 'screen' ? e : project(e, offset))),
+      ),
     );
     this.tacticalHud?.update(world.tacticalHud);
     this.minimap?.update(world);
     this.hud?.update(world);
     this.editSlider?.update(world.editSlider);
-    const inkAge = world.player.artAge - world.player.inkStartedAt + 1;
-    if (this.assets.mode === 'swf') {
-      const inkVisible =
-        world.player.status.ink > 0 &&
-        world.player.inkEffect &&
-        inkAge <= (this.assets.spriteInfo(INK_ART)?.frameCount ?? 100);
-      if (inkVisible && !this.inkView) {
-        this.inkView = new SwfSymbolView(INK_ART, this.assets, this.rasterTextures);
-        this.screenEffects.addChild(this.inkView.root);
-      }
-      if (this.inkView) {
-        this.inkView.root.visible = inkVisible;
-        if (inkVisible) this.inkView.update(inkAge);
-      }
-    } else if (world.player.status.ink > 0 && world.player.inkEffect)
-      this.overlay
-        .rect(0, 0, 550, 450)
-        .fill({ color: 0x101c36, alpha: 0.85 * Math.min(1, world.player.status.ink / 25) });
     if (world.flash > 0)
       this.overlay.rect(0, 0, 550, 450).fill({ color: 0xffffff, alpha: world.flash });
     this.app.render();
@@ -429,7 +420,6 @@ export class GameRenderer {
     this.captions?.destroy();
     this.tacticalHud?.destroy();
     this.collapseView?.destroy();
-    this.inkView?.destroy();
     this.combatEffects?.destroy();
     for (const tank of this.tankNodes.values()) tank.destroy();
     this.app.destroy({ removeView: true }, { children: true });

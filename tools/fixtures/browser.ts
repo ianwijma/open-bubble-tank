@@ -28,6 +28,7 @@ import { showProjectileClocksProof } from './projectile-clocks';
 import { showMockAssetsProof } from './mock-assets';
 import { showBubbleBusterProof } from './bubble-buster';
 import { showTankArtProof } from './tank-art';
+import { showScreenEffectsProof } from './screen-effects';
 
 const file = document.querySelector<HTMLInputElement>('#swf')!;
 const fixture = document.querySelector<HTMLSelectElement>('#fixture')!;
@@ -101,6 +102,13 @@ async function reset() {
   renderer = undefined;
   world = undefined;
   stage.replaceChildren();
+  if (fixture.value === 'screen-effects') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    const proof = await showScreenEffectsProof(pack, stage);
+    status.dataset.screenEffects = JSON.stringify(proof);
+    status.textContent = 'Ready · independent screen effects, pause looping and arrival cleanup';
+    return;
+  }
   if (fixture.value === 'tank-art') {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
     const proof = await showTankArtProof(pack, stage);

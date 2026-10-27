@@ -2,6 +2,7 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { extractSymbols } from '../src/game/assets/swf-symbols.mjs';
 import { decompressSWF } from '../src/game/assets/swf.mjs';
+import { buildDisplayList } from '../src/game/assets/display-list';
 import type { SymbolResult } from '../src/game/assets/asset-pack';
 const root = process.argv[2] ?? '../documented-bubble-tank-3';
 const classes = {
@@ -36,3 +37,30 @@ const catalog = Object.fromEntries(
 );
 await writeFile('src/game/data/effect-art.json', JSON.stringify(catalog) + '\n');
 console.log(`Imported ${Object.keys(catalog).length} effect timelines.`);
+const screenClasses = { ink: 'ink_effect', collapseFlash: '_-Qw' } as const;
+const screenCatalog = Object.fromEntries(
+  Object.entries(screenClasses).map(([key, name]) => {
+    const symbol = ids[name],
+      sprite = symbols.sprites.find((s) => s.id === symbol);
+    if (!symbol || !sprite) throw new Error(`Missing screen effect ${name}`);
+    return [
+      key,
+      {
+        className: name,
+        symbol,
+        frames: sprite.frameCount,
+        // Procedural fallback uses the authored root alpha; original paths are never exported.
+        opacity: Array.from({ length: sprite.frameCount }, (_, i) =>
+          Math.max(
+            0,
+            ...buildDisplayList(sprite, i + 1).map((p) =>
+              Math.min(1, (p.color?.mult[3] ?? 1) + (p.color?.add[3] ?? 0) / 255),
+            ),
+          ),
+        ),
+      },
+    ];
+  }),
+);
+await writeFile('src/game/data/screen-effect-art.json', JSON.stringify(screenCatalog) + '\n');
+console.log(`Imported ${Object.keys(screenCatalog).length} screen timelines.`);
