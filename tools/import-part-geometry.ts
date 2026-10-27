@@ -71,7 +71,7 @@ const compounds: Record<number, number[][]> = {
   ],
 };
 const circular = new Set([14, 21, 33, 41, 694, 718, 719, 2449]);
-const entries = PARTS.filter((p) => p.id >= 2000).map((part) => {
+function recover(part: { id: number; symbol: number }, chargeFrame?: number, matrix = identity) {
   // effect_Massive_Bullet_94.frame1 stops720 on its empty first frame.
   // A blind frame2 snapshot includes its charging particles around the idle gun.
   // _-KE.frame1 also stops Rotating Machine Gun701 before its alternate frame2.
@@ -130,7 +130,7 @@ const entries = PARTS.filter((p) => p.id >= 2000).map((part) => {
     const sprite = sprites.get(id);
     if (!sprite) throw new Error(`Unknown part symbol ${id}`);
     // Same frozen convention as creator thumbnails, except the stopped charge clip above.
-    for (const p of buildDisplayList(sprite, frame)) {
+    for (const p of buildDisplayList(sprite, id === 720 && chargeFrame ? chargeFrame : frame)) {
       if (p.clipDepth !== undefined || p.filters?.length || p.blendMode)
         throw new Error(`Part ${part.id}: unsupported compositing at ${id}/${p.depth}`);
       const color = p.color;
@@ -156,23 +156,42 @@ const entries = PARTS.filter((p) => p.id >= 2000).map((part) => {
       );
     }
   }
-  visit(part.symbol, identity);
-  const x = Math.min(...xs),
-    y = Math.min(...ys);
+  visit(part.symbol, matrix);
+  const x = xs.length ? Math.min(...xs) : 0,
+    y = ys.length ? Math.min(...ys) : 0;
   return [
     part.id,
     {
       symbol: part.symbol,
-      frame,
-      bounds: { x, y, width: Math.max(...xs) - x, height: Math.max(...ys) - y },
+      frame: chargeFrame ?? frame,
+      bounds: {
+        x,
+        y,
+        width: xs.length ? Math.max(...xs) - x : 0,
+        height: ys.length ? Math.max(...ys) - y : 0,
+      },
       bubbles,
     },
   ];
-});
+}
+const entries = PARTS.filter((p) => p.id >= 2000).map((part) => recover(part));
 await writeFile(
   'src/game/data/part-geometry.json',
   JSON.stringify(Object.fromEntries(entries)) + '\n',
 );
+const massive = PARTS.find((p) => p.id === 3008)!;
+const charge = buildDisplayList(sprites.get(massive.symbol)!, 1).find(
+  (p) => p.name === 'bullet_mc',
+)!;
+await writeFile(
+  'src/game/data/massive-charge-geometry.json',
+  JSON.stringify(
+    Array.from(
+      { length: 26 },
+      (_, i) => recover({ id: massive.id, symbol: charge.charId }, i + 2, charge.matrix)[1],
+    ),
+  ) + '\n',
+);
 console.log(
-  `Imported ${entries.length} numeric gun/module idle layouts; no vector paths or media.`,
+  `Imported ${entries.length} numeric gun/module idle layouts and26 Massive charge frames; no vector paths or media.`,
 );

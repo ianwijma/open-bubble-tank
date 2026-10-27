@@ -9,25 +9,25 @@ import { SwfProtectionView } from './swf-protection-view';
 /** Shared live pose for the world and tank-information portrait. No simulation clocks advance here. */
 export class TankView {
   container = new Container();
-  private parts: { root: Container; animation?: SwfSymbolView }[];
+  private parts: { root: Container; animation?: SwfSymbolView; sprite?: Sprite }[];
   private shield = new Graphics();
   private status?: SwfTankStatusView;
   private protection?: SwfProtectionView;
   constructor(
     readonly design: TankDesign,
     private assets: AssetPack,
-    textures: RasterTextures,
+    private textures: RasterTextures,
   ) {
     this.parts = design.parts.map((p) => {
       const root = new Container(),
         symbol = partById(p.type)?.symbol;
-      let animation: SwfSymbolView | undefined;
+      let animation: SwfSymbolView | undefined, sprite: Sprite | undefined;
       if (assets.mode === 'swf' && symbol) {
         animation = new SwfSymbolView(symbol, assets, textures);
         root.addChild(animation.root);
       } else {
-        const raster = assets.part(p.type),
-          sprite = new Sprite(textures.get(raster));
+        const raster = assets.part(p.type);
+        sprite = new Sprite(textures.get(raster));
         sprite.position.set(raster.x, raster.y);
         sprite.width = raster.width;
         sprite.height = raster.height;
@@ -36,7 +36,7 @@ export class TankView {
       root.position.set(p.x, p.y);
       root.scale.set(p.scale);
       this.container.addChild(root);
-      return { root, animation };
+      return { root, animation, sprite };
     });
     this.container.addChild(this.shield);
     if (assets.mode === 'swf') {
@@ -55,6 +55,13 @@ export class TankView {
       if (view.root.visible) {
         view.animation?.setParentAlpha(t.alpha);
         view.animation?.updatePose(this.assets.partClip(t, part));
+        if (view.sprite) {
+          const raster = this.assets.livePart(t, part);
+          view.sprite.texture = this.textures.get(raster);
+          view.sprite.position.set(raster.x, raster.y);
+          view.sprite.width = raster.width;
+          view.sprite.height = raster.height;
+        }
       }
     }
     this.shield.clear();
