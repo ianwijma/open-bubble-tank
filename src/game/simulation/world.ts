@@ -240,6 +240,8 @@ export class World {
     shakeTimer: number;
     shakeCount: number;
     flashTimer: number;
+    effect: Effect;
+    field: Field;
   } | null = null;
   hud = new HudState();
   tacticalHud = new TacticalHudState();
@@ -372,8 +374,8 @@ export class World {
   private stepFrame(input: InputFrame) {
     if (this.mode === 'collapse') {
       // PausePlayerControl selects source state3: effects/ENTER_FRAME shrink continue, HUD Run stops.
-      this.tickCollapse();
       this.pollEffects();
+      this.tickCollapse();
       return;
     }
     if (this.mode === 'transit') {
@@ -392,7 +394,6 @@ export class World {
     if (length(this.player) > FIELD_RADIUS * this.field.scale) this.jump(nearestExit(this.player));
     this.interfaceFrame(input);
     this.tickActiveFields(input);
-    if (this.collapse) return;
     // Avatar.Run follows Bubblefield.Run; infection cannot promote/demote a tank until
     // the following interface frame. Passive weapons also observe the completed field step.
     this.tickAvatar(input);
@@ -446,7 +447,12 @@ export class World {
     tickStatusDecoration(tank);
     this.tickProtection(tank);
     tickStatusTail(this, tank);
-    this.tacticalHud.updatePassives(tank, this.field.enemies, this.viewZoom);
+    this.tacticalHud.updatePassives(
+      tank,
+      this.field.enemies,
+      this.viewZoom,
+      this.mode === 'collapse',
+    );
   }
   stopPrimaryFire() {
     for (const { runtime } of this.activeFields()) {
@@ -471,7 +477,8 @@ export class World {
     for (const { field, offset, runtime } of this.activeFields())
       this.inField(field, offset, () => {
         runtime.effects = runtime.effects.filter(
-          (effect) => effect.age % effect.duration < effect.duration - 1,
+          (effect) =>
+            effect.frame !== undefined || effect.age % effect.duration < effect.duration - 1,
         );
         runtime.pending = runtime.pending.filter((effect) => {
           if (effect.owner.dead || (effect.owner.side === 'player' && effect.owner !== this.player))
@@ -493,7 +500,7 @@ export class World {
     this.tacticalHud.updateAllies(this.allies, this.player, this.viewZoom);
     this.inField(this.currentField, { x: 0, y: 0 }, () => this.tickField(input, this.fieldVisit));
     const transit = this.transit;
-    if (transit && !this.collapse)
+    if (transit)
       this.inField(transit.next, transit.offset, () => this.tickField(input, transit.visit));
   }
   private tickField(input: InputFrame, visit: FieldVisit) {
@@ -509,7 +516,6 @@ export class World {
     // The source loops the live array: spawned fragments run in this same field frame.
     for (const bullet of this.bullets) {
       this.tickBullet(bullet, input);
-      if (this.collapse) return;
     }
     for (let index = 0; index < this.bullets.length;) {
       const bullet = this.bullets[index];
@@ -575,7 +581,30 @@ export class World {
   beginCollapse(angle: number) {
     if (this.collapse) return;
     this.runtime.apocalypse = false;
-    this.collapse = { age: 0, angle, shakeTimer: 0, shakeCount: 0, flashTimer: 0 };
+    const effect = this.addCombatEffect(
+      {
+        x: -this.player.x * this.viewZoom + this.mainEffects.position.x,
+        y: -this.player.y * this.viewZoom + this.mainEffects.position.y,
+      },
+      'collapse',
+      {
+        frame: 1,
+        rotation: angle,
+        scale: this.field.scale * this.viewZoom,
+        randomRotation: false,
+        blendMode: 'layer',
+      },
+      true,
+    );
+    this.collapse = {
+      age: 0,
+      angle,
+      shakeTimer: 0,
+      shakeCount: 0,
+      flashTimer: 0,
+      effect,
+      field: this.field,
+    };
     this.mode = 'collapse';
     this.tacticalHud.updatePassives(this.player, this.field.enemies, this.viewZoom, true);
     this.revision++;
@@ -583,6 +612,15 @@ export class World {
   private tickCollapse() {
     const c = this.collapse!;
     c.age++;
+    // The script-created clip holds frame1 through its first stage update.
+    c.effect.frame = Math.max(1, c.age);
+    // Engine completion removes the shrink listener before the120th field ENTER_FRAME.
+    if (c.age >= c.effect.duration) {
+      this.finishCollapse();
+      const runtime = this.runtimeFor(c.field);
+      runtime.effects = runtime.effects.filter((effect) => effect !== c.effect);
+      return;
+    }
     if (c.shakeTimer-- <= 0) {
       this.mainEffects.shake(++c.shakeCount);
       c.shakeTimer = c.shakeCount;
@@ -591,8 +629,8 @@ export class World {
       this.mainEffects.flash();
       c.flashTimer = this.rng.int(10, 40);
     }
-    // _-MC (symbol 2173) ends at frame 120; _-0D shrinks by 1/204 each frame.
-    if (c.age < 120) return;
+  }
+  private finishCollapse() {
     for (const ally of this.allies) this.damage(ally, ally.life);
     for (const enemy of this.field.enemies) {
       enemy.design = { ...enemy.design, reward: Math.floor(enemy.design.reward / 3) };

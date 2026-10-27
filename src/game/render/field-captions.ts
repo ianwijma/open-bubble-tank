@@ -3,6 +3,7 @@ import type { AssetPack } from '../assets/asset-pack';
 import { TUTORIAL } from '../core/tutorial';
 import type { Field } from '../core/types';
 import type { World } from '../simulation/world';
+import { fieldTransform } from './field-transform';
 import { SwfSymbolView, type RasterTextures } from './swf-symbol-view';
 
 /** Caption clips live at field-local (0,0), not in the fixed HUD or the scaled bubble background. */
@@ -68,6 +69,7 @@ export class FieldCaptions {
         this.root.addChild(container);
       }
       node.root.visible = !field.destroyed;
+      node.root.scale.set(fieldTransform(world, field).scale);
       node.root.position.set(
         field === world.field ? 0 : world.transit!.offset.x,
         field === world.field ? 0 : world.transit!.offset.y,

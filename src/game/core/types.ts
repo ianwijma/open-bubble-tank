@@ -217,6 +217,9 @@ export interface Effect extends Vec {
   scale?: number;
   randomRotation?: boolean;
   line?: Vec;
+  /** A controller-owned authored frame; ordinary effect clips use their stage age. */
+  frame?: number;
+  blendMode?: 'layer';
 }
 export interface Field {
   col: number;

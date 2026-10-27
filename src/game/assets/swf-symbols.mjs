@@ -743,8 +743,9 @@ function parsePlace(body, isPO3) {
     if (hasRatio) p.ratio = br.bytes(2);
     if (hasName) p.name = br.string();
     if (hasClipDepth) p.clipDepth = br.bytes(2);
-    if (hasFilters) skipFilterList(br);
-    if (hasBlend) br.bytes(1);
+    if (hasFilters) p.filters = readFilterList(br);
+    if (hasBlend) p.blendMode = br.bytes(1);
+    if (hasCache) p.cacheAsBitmap = br.bytes(1);
     if (hasOpaqueBg) br.bytes(4); // SWF11+ — not expected in v10
     if (hasVisible) {
       br.bytes(1);
@@ -779,8 +780,36 @@ function skipFilterList(br) {
   const n = br.bytes(1);
   for (let i = 0; i < n; i++) skipFilter(br);
 }
-function skipFilter(br) {
-  const id = br.bytes(1);
+/** Retain glow metadata; other filter records remain safely consumed. */
+function readFilterList(br) {
+  const count = br.bytes(1),
+    filters = [];
+  for (let i = 0; i < count; i++) {
+    const id = br.bytes(1);
+    if (id !== 2) {
+      skipFilter(br, id);
+      continue;
+    }
+    const color = Array.from({ length: 4 }, () => br.bytes(1)),
+      blurX = (br.bytes(4) | 0) / 65536,
+      blurY = (br.bytes(4) | 0) / 65536,
+      strength = br.bytes(2) / 256,
+      flags = br.bytes(1);
+    filters.push({
+      kind: 'glow',
+      color,
+      blurX,
+      blurY,
+      strength,
+      inner: !!(flags & 0x80),
+      knockout: !!(flags & 0x40),
+      compositeSource: !!(flags & 0x20),
+      passes: flags & 0x1f,
+    });
+  }
+  return filters;
+}
+function skipFilter(br, id = br.bytes(1)) {
   const B = (n) => {
     br.p += n * 8;
   };

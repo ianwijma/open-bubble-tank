@@ -37,7 +37,7 @@ const catalog = Object.fromEntries(
 );
 await writeFile('src/game/data/effect-art.json', JSON.stringify(catalog) + '\n');
 console.log(`Imported ${Object.keys(catalog).length} effect timelines.`);
-const screenClasses = { ink: 'ink_effect', collapseFlash: '_-Qw' } as const;
+const screenClasses = { ink: 'ink_effect', collapseFlash: '_-Qw', collapse: '_-MC' } as const;
 const screenCatalog = Object.fromEntries(
   Object.entries(screenClasses).map(([key, name]) => {
     const symbol = ids[name],

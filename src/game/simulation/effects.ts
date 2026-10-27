@@ -11,6 +11,9 @@ export interface EffectOptions {
   scale?: number;
   /** Endpoint in the new effect's local coordinates, drawn into line_mc. */
   line?: Vec;
+  rotation?: number;
+  frame?: number;
+  blendMode?: Effect['blendMode'];
 }
 const top = new Set<CombatEffect>(['impact', 'seekerExplosion', 'leech']);
 export function combatEffect(

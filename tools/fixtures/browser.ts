@@ -30,6 +30,7 @@ import { showBubbleBusterProof } from './bubble-buster';
 import { showTankArtProof } from './tank-art';
 import { showScreenEffectsProof } from './screen-effects';
 import { showMainEffects } from './main-effects';
+import { showCollapseProof } from './collapse';
 
 const file = document.querySelector<HTMLInputElement>('#swf')!;
 const fixture = document.querySelector<HTMLSelectElement>('#fixture')!;
@@ -103,6 +104,13 @@ async function reset() {
   renderer = undefined;
   world = undefined;
   stage.replaceChildren();
+  if (fixture.value === 'collapse') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    const proof = await showCollapseProof(pack, stage);
+    status.dataset.collapse = JSON.stringify(proof);
+    status.textContent = 'Ready · collapse pivot, frame hold and isolated erase';
+    return;
+  }
   if (fixture.value === 'main-effects') {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
     unmountScreen = showMainEffects(pack, stage, (proof) => {

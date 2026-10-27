@@ -41,6 +41,45 @@ test('PlaceObject3 reads both flag bytes before depth and keeps removal events',
   expect(sprite.placements[0]).toMatchObject({ depth: 513, charId: 729, frame: 1 });
   expect(sprite.placements[1]).toMatchObject({ depth: 513, remove: true, frame: 1 });
 });
+test('PlaceObject3 retains ERASE and cache flags rather than discarding composition metadata', () => {
+  const tag = (70 << 6) | 8;
+  const sprite = parseSpriteTag(
+    Uint8Array.from([5, 0, 1, 0, tag & 255, tag >> 8, 2, 6, 4, 0, 21, 8, 12, 1, 64, 0, 0, 0]),
+  );
+  expect(sprite.placements[0]).toMatchObject({
+    depth: 4,
+    charId: 2069,
+    blendMode: 12,
+    cacheAsBitmap: 1,
+  });
+});
+test('PlaceObject3 retains knockout glow flags and consumes the following blend byte correctly', () => {
+  const placement = [
+    2, 7, 1, 0, 20, 8, 1, 2, 255, 0, 0, 255, 0, 0, 10, 0, 0, 0, 10, 0, 0, 1, 0x61, 12, 1,
+  ];
+  const tag = (70 << 6) | placement.length;
+  const sprite = parseSpriteTag(
+    Uint8Array.from([5, 0, 1, 0, tag & 255, tag >> 8, ...placement, 64, 0, 0, 0]),
+  );
+  expect(sprite.placements[0]).toMatchObject({
+    charId: 2068,
+    blendMode: 12,
+    cacheAsBitmap: 1,
+    filters: [
+      {
+        kind: 'glow',
+        color: [255, 0, 0, 255],
+        blurX: 10,
+        blurY: 10,
+        strength: 1,
+        inner: false,
+        knockout: true,
+        compositeSource: true,
+        passes: 1,
+      },
+    ],
+  });
+});
 test('fill-left fragments reverse and join; same-fill internal edges are omitted', () => {
   const svg = shapeToSVG(
     {
@@ -146,6 +185,22 @@ test.skipIf(!existsSync(file))(
       .find((s) => s.id === 729)!
       .placements.find((p) => p.name === '_-Vk');
     expect(muzzle?.color?.mult[3]).toBe(0);
+    expect(symbols.sprites.find((s) => s.id === 2069)!.placements[0]).toMatchObject({
+      charId: 2068,
+      filters: [
+        {
+          kind: 'glow',
+          color: [255, 0, 0, 255],
+          blurX: 10,
+          blurY: 10,
+          strength: 1,
+          inner: false,
+          knockout: true,
+          compositeSource: true,
+          passes: 1,
+        },
+      ],
+    });
     const reflection = symbols.sprites.find((s) => s.id === 1537)!.placements[0].matrix!;
     expect(reflection.b).toBeLessThan(0);
     expect(reflection.c).toBeGreaterThan(0);

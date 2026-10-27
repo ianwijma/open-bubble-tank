@@ -1,4 +1,4 @@
-import { angleTo, deltaAngle, direction, distance, rotate } from '../core/math';
+import { angleTo, DEG, deltaAngle, direction, distance, rotate } from '../core/math';
 import type { GunState, InputFrame, Projectile, Tank } from '../core/types';
 import type { World } from './world';
 import { tickHealingBeam } from './healing';
@@ -71,7 +71,8 @@ export function tickBullet(world: World, b: Projectile, _input: InputFrame) {
     if (b.detonating) {
       b.artFrame = ++b.detonating + 1;
       if (b.detonating >= 54) {
-        world.beginCollapse(b.angle);
+        const next = direction(b.angle, b.speed);
+        world.beginCollapse(Math.atan2(b.y + next.y, b.x + next.x) / DEG);
         b.dead = true;
       }
       return;

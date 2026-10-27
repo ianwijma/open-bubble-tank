@@ -48,6 +48,17 @@ export interface SwfMatrix {
   ty: number;
 }
 type Matrix = SwfMatrix;
+export interface SwfGlowFilter {
+  kind: 'glow';
+  color: number[];
+  blurX: number;
+  blurY: number;
+  strength: number;
+  inner: boolean;
+  knockout: boolean;
+  compositeSource: boolean;
+  passes: number;
+}
 export interface Placement {
   depth: number;
   charId?: number;
@@ -58,6 +69,9 @@ export interface Placement {
   clipDepth?: number;
   name?: string;
   ratio?: number;
+  blendMode?: number;
+  cacheAsBitmap?: number;
+  filters?: SwfGlowFilter[];
 }
 export interface DisplayPlacement extends Placement {
   charId: number;
@@ -289,7 +303,7 @@ export class AssetPack {
       for (const art of Object.values(mineArt)) visit(art.symbol);
       for (const id of [...Object.values(STATUS_ART), INFECTED_ART]) visit(id);
       for (const id of Object.values(PROTECTION_ART)) visit(id);
-      for (const id of [1816, 1817, 1820, 2173]) visit(id);
+      for (const id of [1816, 1817, 1820, 2173, 1780]) visit(id);
       for (const id of [MINIMAP.symbol, MINIMAP.button, MINIMAP.dot, MINIMAP.connector]) visit(id);
       for (const id of [HUD.life.symbol, HUD.fire.symbol, HUD.edit.symbol]) visit(id);
       for (const { symbol } of Object.values(HUD.tactical)) visit(symbol);

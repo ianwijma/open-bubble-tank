@@ -51,7 +51,8 @@ export class CombatEffectsView {
         view.root.position.set(effect.x, effect.y);
         view.root.angle = effect.rotation ?? 0;
         view.root.scale.set(effect.scale ?? 1);
-        view.update(effect.age + 1);
+        view.setBlendMode(effect.blendMode === 'layer' ? 2 : 1);
+        view.update(effect.frame ?? effect.age + 1);
         const line = view.namedChild('line_mc')?.root;
         if (effect.line && line && !this.lines.has(effect.uid)) {
           const drawing = new Graphics()
@@ -69,27 +70,42 @@ export class CombatEffectsView {
           : layer === this.bottom
             ? this.mockBottom
             : this.mockTop;
-      const progress = (effect.age % effect.duration) / Math.max(1, effect.duration - 1);
+      const age = effect.frame !== undefined ? effect.frame - 1 : effect.age % effect.duration;
+      const progress = age / Math.max(1, effect.duration - 1);
       const screenClip = Object.values(screenArt).find((clip) => clip.symbol === effect.symbol);
-      if (screenClip) {
+      if (effect.symbol === screenArt.collapse.symbol) {
+        // Procedural substitute for the authored isolated erase/glow animation.
+        const scale = effect.scale ?? 1,
+          radius = 423.75 * scale * (0.35 + progress);
+        graphics.circle(effect.x, effect.y, radius).stroke({
+          color: 0xe3fcff,
+          alpha: (1 - progress) * 0.65,
+          width: Math.max(1, 35 * scale * (1 - progress)),
+        });
+      } else if (screenClip) {
         graphics.rect(-STAGE.cx, -STAGE.cy, STAGE.width, STAGE.height).fill({
           color: effect.symbol === screenArt.ink.symbol ? 0x101c36 : 0xffffff,
-          alpha:
-            screenClip.opacity[effect.age % effect.duration] *
-            (effect.symbol === screenArt.ink.symbol ? 0.85 : 1),
+          alpha: screenClip.opacity[age] * (effect.symbol === screenArt.ink.symbol ? 0.85 : 1),
         });
       } else if (effect.symbol === 2175) {
         if (effect.line)
           graphics
             .moveTo(effect.x, effect.y)
-            .lineTo(effect.x + effect.line.x, effect.y + effect.line.y)
-            .stroke({ color: 0xffffff, width: 2, alpha: 0.3 * (1 - progress) });
+            .lineTo(
+              effect.x + effect.line.x * (effect.scale ?? 1),
+              effect.y + effect.line.y * (effect.scale ?? 1),
+            )
+            .stroke({
+              color: 0xffffff,
+              width: 2 * (effect.scale ?? 1),
+              alpha: 0.3 * (1 - progress),
+            });
       } else {
         graphics
           .circle(effect.x, effect.y, Math.max(0.1, effect.radius * progress * (effect.scale ?? 1)))
           .stroke({
             color: effect.color,
-            width: effect.symbol === 1723 ? 2 : 1.3,
+            width: (effect.symbol === 1723 ? 2 : 1.3) * (effect.scale ?? 1),
             alpha: (1 - progress) * 0.7,
           });
       }
