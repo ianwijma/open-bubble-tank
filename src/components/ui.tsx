@@ -122,12 +122,14 @@ export function Dialog({
   onClose,
   className = '',
   closeKey,
+  onShortcutClose,
 }: {
   title: string;
   children: React.ReactNode;
   onClose?: () => void;
   className?: string;
   closeKey?: string;
+  onShortcutClose?: () => void;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -147,11 +149,17 @@ export function Dialog({
         onKeyDown={(e) => {
           if ((e.key === 'Escape' || e.code === closeKey) && onClose) {
             e.stopPropagation();
-            onClose();
+            if (e.code === closeKey && onShortcutClose) onShortcutClose();
+            else onClose();
           }
           if (e.key === 'Tab') {
-            const nodes = ref.current?.querySelectorAll<HTMLElement>(
-              'button:not(:disabled),input:not(:disabled),select,textarea,[tabindex="0"]',
+            const nodes = Array.from(
+              ref.current?.querySelectorAll<HTMLElement>(
+                'button:not(:disabled),input:not(:disabled),select,textarea,[tabindex="0"]',
+              ) ?? [],
+            ).filter(
+              (node) =>
+                node.getClientRects().length && !node.closest('[inert],[aria-hidden="true"]'),
             );
             if (!nodes?.length) return;
             const first = nodes[0],
@@ -168,7 +176,7 @@ export function Dialog({
       >
         <div className="dialog-heading">
           <h2>{title}</h2>
-          {onClose ? (
+          {onClose && !className.split(' ').includes('stage-dialog') ? (
             <button className="icon-button" aria-label="Close" onClick={onClose}>
               <Icon name="close" size={17} />
             </button>

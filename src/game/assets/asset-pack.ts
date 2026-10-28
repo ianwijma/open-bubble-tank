@@ -385,6 +385,9 @@ export class AssetPack {
       for (const piece of [
         ...HUD.editConfirm,
         ...HUD.secondaryHelp,
+        ...HUD.pause.pieces.filter(
+          (piece) => piece.name !== 'rollover_txt' && piece.name !== 'btnPlayMoreGames_mc',
+        ),
         ...HUD.tankInfo.pieces.filter((piece) => piece.name !== 'TankImage_mc'),
         WIN_SCREEN.backdrop,
         ...WIN_SCREEN.pieces,

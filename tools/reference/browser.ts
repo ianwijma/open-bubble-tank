@@ -38,7 +38,7 @@ async function load(bytes: Uint8Array, name: string, url?: string) {
     const lines: string[] = [];
     const observeTrace = (message: string) => {
       lines.push(message);
-      trace.textContent = lines.slice(-20).join('\n');
+      trace.textContent = lines.slice(-128).join('\n');
     };
     await api.load({
       url: url ?? movieUrl,

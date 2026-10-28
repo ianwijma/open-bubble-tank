@@ -2,6 +2,7 @@ import { CLASS_ARMOR, CLASS_SPEED } from './constants';
 import type { TankDesign } from './types';
 import { partById } from '../data/catalog';
 import { HUD } from './hud';
+import { displayPixel } from './display-values';
 
 export const TANK_INFO = HUD.tankInfo;
 
@@ -56,9 +57,10 @@ export class TankInfoMotion {
   }
   private approach(name: string, axis: 'x' | 'y', target?: number, rate = 0.1) {
     const pos = this.positions[name];
-    pos[axis] =
+    pos[axis] = displayPixel(
       pos[axis] * (1 - rate) +
-      (target ?? TANK_INFO.pieces.find((p) => p.name === name)![axis]) * rate;
+        (target ?? TANK_INFO.pieces.find((p) => p.name === name)![axis]) * rate,
+    );
   }
   advance() {
     const p = this.positions,

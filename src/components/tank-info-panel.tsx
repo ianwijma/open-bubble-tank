@@ -5,26 +5,55 @@ import type { Tank } from '@/game/core/types';
 import { TANK_INFO, TankInfoMotion, infoTextLines, tankInfoFields } from '@/game/core/tank-info';
 import { BubbleText, Dialog } from './ui';
 import { TankPortrait } from './tank-portrait';
+import type { StageRuntime } from '@/game/services/stage-runtime';
 
 export function TankInfoPanel({
   pack,
   tank,
   fps,
   onClose,
+  onExitStart,
+  phase,
+  embedded = false,
+  stage,
+  frozen = false,
 }: {
   pack: AssetPack;
   tank: Tank;
   fps: number;
   onClose: () => void;
+  onExitStart?: () => void;
+  phase?: 'closed' | 'open' | 'closing';
+  embedded?: boolean;
+  stage?: StageRuntime;
+  frozen?: boolean;
 }) {
   const [motion] = useState(() => new TankInfoMotion());
-  const [closing, setClosing] = useState(false);
+  const [startedExit, setStartedExit] = useState(false);
+  const closing = phase ? phase !== 'open' : startedExit;
   const nodes = useRef(new Map<string, HTMLElement>());
   const closeRef = useRef(onClose);
   useEffect(() => {
     closeRef.current = onClose;
   }, [onClose]);
   useEffect(() => {
+    if (phase) motion.exiting = phase !== 'open';
+  }, [phase, motion]);
+  useEffect(() => {
+    const paint = () => {
+      for (const [name, node] of nodes.current) {
+        const p = motion.positions[name];
+        node.style.transform = `translate(${p.x}px,${p.y}px)`;
+      }
+      if (motion.finished) closeRef.current();
+    };
+    if (stage)
+      return stage.subscribe({
+        beforeStep: () => {
+          if (!frozen) motion.advance();
+        },
+        draw: paint,
+      });
     let frame = 0,
       last = performance.now(),
       accumulator = 0;
@@ -32,29 +61,26 @@ export function TankInfoPanel({
       accumulator += Math.min(100, now - last);
       last = now;
       while (accumulator >= 1000 / fps) {
-        motion.advance();
+        if (!frozen) motion.advance();
         accumulator -= 1000 / fps;
       }
-      for (const [name, node] of nodes.current) {
-        const p = motion.positions[name];
-        node.style.transform = `translate(${p.x}px,${p.y}px)`;
-      }
+      paint();
       if (motion.finished) {
-        closeRef.current();
         return;
       }
       frame = requestAnimationFrame(tick);
     };
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
-  }, [fps, motion]);
+  }, [fps, motion, stage, frozen]);
   const exit = () => {
     motion.exiting = true;
-    setClosing(true);
+    setStartedExit(true);
+    onExitStart?.();
   };
   const fields = tankInfoFields(tank.design);
-  return (
-    <Dialog title="Tank information" className="stage-dialog tank-info-screen" onClose={exit}>
+  const content = (
+    <>
       <dl className="sr-only">
         {Object.entries(fields).map(([name, value]) => (
           <div key={name}>
@@ -72,6 +98,7 @@ export function TankInfoPanel({
           <div
             key={piece.name}
             className="tank-info-piece"
+            data-info-piece={piece.name}
             ref={(node) => {
               if (node) nodes.current.set(piece.name, node);
               else nodes.current.delete(piece.name);
@@ -96,7 +123,7 @@ export function TankInfoPanel({
             {piece.fields.map((field) => (
               <InfoText key={field.name} pack={pack} field={field} text={fields[field.name]} />
             ))}
-            {image && !closing ? <TankPortrait tank={tank} pack={pack} /> : null}
+            {image && !closing ? <TankPortrait tank={tank} pack={pack} stage={stage} /> : null}
             {button ? (
               <button
                 className={`tank-info-back ${pack.mode === 'swf' ? 'native' : ''}`}
@@ -116,6 +143,15 @@ export function TankInfoPanel({
           </div>
         );
       })}
+    </>
+  );
+  return embedded ? (
+    <div className="tank-info-screen" inert={closing} aria-hidden={phase === 'closed'}>
+      {content}
+    </div>
+  ) : (
+    <Dialog title="Tank information" className="stage-dialog tank-info-screen" onClose={exit}>
+      {content}
     </Dialog>
   );
 }
