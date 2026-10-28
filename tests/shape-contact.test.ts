@@ -6,6 +6,16 @@ import { STARTER, partById } from '../src/game/data/catalog';
 import { createTank } from '../src/game/simulation/tank';
 import { protectionScale } from '../src/game/core/protection-size';
 import { INFECTED_ART } from '../src/game/data/status-art';
+import { geometricHit } from '../src/game/simulation/world';
+
+test('the headless contact fallback keeps hidden attached parts hittable', () => {
+  const tank = createTank(1, { ...STARTER, parts: [STARTER.parts[0]] }, 'enemy'),
+    part = tank.design.parts[0];
+  tank.hiddenParts.add(part.key);
+  expect(geometricHit(tank, part.x, part.y)).toBe(true);
+  tank.removedParts = new Set(tank.design.parts.map((p) => p.key));
+  expect(geometricHit(tank, part.x, part.y)).toBe(false);
+});
 
 test('shape contact retains transparent fills and strokes with original winding and registration', () => {
   const shape = {
