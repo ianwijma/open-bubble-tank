@@ -21,6 +21,7 @@ export function attachMountedShield(tank: Tank, gun: GunState, diameter: () => n
     const hit: ShieldClip = {
       key: `shield-hit:${gun.part.key}`,
       kind: 'hit',
+      style: 'mounted',
       diameter: gun.shieldDiameter,
       age: 16,
       angle: 0,
@@ -35,6 +36,7 @@ export function attachMountedShield(tank: Tank, gun: GunState, diameter: () => n
   const film: ShieldClip = {
     key: `shield-film:${gun.part.key}:${(gun.shieldGeneration = (gun.shieldGeneration ?? 0) + 1)}`,
     kind: 'film',
+    style: 'mounted',
     diameter: gun.shieldDiameter,
     age: 0,
     angle: 0,
@@ -45,4 +47,41 @@ export function attachMountedShield(tank: Tank, gun: GunState, diameter: () => n
   tank.shield = 25;
   tank.shieldAge = 0;
   addTankChild(tank, film.key);
+}
+
+/** _-DO creates a pair only when the tank's shared movShieldHit pointer is null. */
+export function attachTurretShield(tank: Tank, gun: GunState) {
+  const generation = (gun.shieldGeneration = (gun.shieldGeneration ?? 0) + 1);
+  const hit: ShieldClip = {
+    key: `shield-hit:turret:${gun.part.key}:${generation}`,
+    kind: 'hit',
+    style: 'turret',
+    diameter: tank.radius * 2,
+    age: 16,
+    angle: 0,
+  };
+  const film: ShieldClip = {
+    key: `shield-film:turret:${gun.part.key}:${generation}`,
+    kind: 'film',
+    style: 'turret',
+    diameter: hit.diameter,
+    age: 0,
+    angle: 0,
+  };
+  tank.shieldClips.push(hit, film);
+  tank.shieldHitClip = hit;
+  tank.shieldHitDiameter = hit.diameter;
+  tank.shieldHitAge = 16;
+  tank.shieldHitAngle = 0;
+  tank.shieldDiameter = film.diameter;
+  tank.shieldAge = 0;
+  gun.shieldFilm = film;
+  addTankChild(tank, hit.key);
+  addTankChild(tank, film.key);
+}
+
+export function removeTurretShield(tank: Tank, gun: GunState) {
+  killMountedShield(tank, gun);
+  // The old hit remains a display child, but no longer receives impacts.
+  tank.shieldHitClip = undefined;
 }

@@ -2,9 +2,9 @@ import { Container } from 'pixi.js';
 import type { AssetPack } from '../assets/asset-pack';
 import type { Tank, TankChild } from '../core/types';
 import { partById } from '../data/catalog';
-import { PROTECTION_ART } from '../data/status-art';
+import { PROTECTION_ART, shieldClipSymbol } from '../data/status-art';
 import { protectionScale } from '../core/protection-size';
-import { legacyShieldFilm } from '../core/shield-art';
+import { legacyShieldFilm, shieldClipFrame } from '../core/shield-art';
 import { SwfSymbolView, type RasterTextures } from './swf-symbol-view';
 
 /** AGunShield/_-DO display clips and APassiveForcefield's cloned-tank silhouette mask. */
@@ -43,15 +43,12 @@ export class SwfProtectionView {
     for (const clip of tank.shieldClips) {
       let view = this.mounted.get(clip.key);
       if (!view) {
-        view = this.view(
-          clip.kind === 'film' ? PROTECTION_ART.shield : PROTECTION_ART.shieldHit,
-          clip.diameter,
-        );
+        view = this.view(shieldClipSymbol(clip), clip.diameter);
         this.mounted.set(clip.key, view);
       }
       view.root.visible = tank.displayChildren.includes(clip.key);
       view.setParentAlpha(tank.alpha);
-      view.update(clip.kind === 'hit' ? Math.min(16, clip.age + 1) : clip.age + 1);
+      view.update(shieldClipFrame(clip));
       view.root.angle = clip.angle;
     }
     if (legacyShieldFilm(tank)) {

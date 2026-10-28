@@ -9,7 +9,12 @@ export function advanceTankArt(tank: Tank) {
     tank.shieldAge++;
   tank.shieldHitAge = Math.min(16, tank.shieldHitAge + 1);
   for (const clip of tank.shieldClips)
-    clip.age = clip.kind === 'hit' ? Math.min(16, clip.age + 1) : clip.age + 1;
+    clip.age =
+      clip.kind === 'hit'
+        ? Math.min(16, clip.age + 1)
+        : clip.style === 'turret'
+          ? Math.min(25, clip.age + 1)
+          : clip.age + 1;
   if (tank.forcefieldFrame > 1) {
     tank.forcefieldFrame++;
     if (tank.forcefieldFrame === 25 || tank.forcefieldFrame > 64) tank.forcefieldFrame = 1;

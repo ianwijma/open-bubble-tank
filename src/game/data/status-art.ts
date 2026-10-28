@@ -1,5 +1,5 @@
 import symbols from './symbols.json';
-import type { DecoratedStatus } from '../core/types';
+import type { DecoratedStatus, ShieldClip } from '../core/types';
 
 // _-Zx.EffectMeCrazy constructors; numeric IDs are recovered from SymbolClass.
 export const STATUS_ART: Record<DecoratedStatus, number> = {
@@ -16,3 +16,9 @@ export const PROTECTION_ART = {
   turretShieldHit: symbols['_-KJ'],
   forcefield: symbols['BubbleTanks3_fla.forcefieldanimation_551'],
 };
+
+export function shieldClipSymbol(clip: ShieldClip) {
+  if (clip.style === 'turret')
+    return clip.kind === 'film' ? PROTECTION_ART.turretShield : PROTECTION_ART.turretShieldHit;
+  return clip.kind === 'film' ? PROTECTION_ART.shield : PROTECTION_ART.shieldHit;
+}
