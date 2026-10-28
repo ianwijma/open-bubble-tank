@@ -15,6 +15,15 @@ interface LeafFacts {
   }[];
 }
 const leaves = leafFacts as Record<number, LeafFacts>;
+/** Geometric procedural circles, including their rims, independent of paint alpha. */
+export function mockPartLeafHit(id: number, x: number, y: number): boolean | undefined {
+  const facts = leaves[id];
+  return facts?.circles.some((circle) => {
+    const rx = circle.rx + circle.lineWidth / 2,
+      ry = circle.ry + circle.lineWidth / 2;
+    return ((x - circle.x) / rx) ** 2 + ((y - circle.y) / ry) ** 2 <= 1;
+  });
+}
 interface MockPartLayout {
   symbol: number;
   frame: number;

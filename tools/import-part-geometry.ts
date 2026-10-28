@@ -100,7 +100,8 @@ function recover(part: { id: number; symbol: number }) {
           xs.push((matrix.a * x + matrix.c * y + matrix.tx) / 20);
           ys.push((matrix.b * x + matrix.d * y + matrix.ty) / 20);
         }
-      // Invisible green muzzle markers affect Script bounds, but never the paint/hit mask.
+      // Invisible green muzzle markers affect Script bounds and geometric contact,
+      // but never poster paint. Live contact follows the separate retained tree.
       if (alpha <= 0) return;
       if (!compounds[id] && !circular.has(id)) throw new Error(`Unknown visible part leaf ${id}`);
       const edge = shape.edgeBounds ?? b;

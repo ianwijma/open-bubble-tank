@@ -13,3 +13,14 @@ export function protectionRadius(children: readonly (Vec & { width: number; heig
   }
   return maximum + diagonal;
 }
+
+/** Flash width/height assignment on a fresh protection clip; invalid sizes are ignored. */
+export function protectionScale(
+  bounds: { width: number; height: number } | undefined,
+  diameter: number,
+  uniform = false,
+) {
+  if (!bounds || !(diameter >= 0)) return { x: 1, y: 1 };
+  const x = bounds.width ? diameter / bounds.width : 1;
+  return { x, y: uniform ? x : bounds.height ? diameter / bounds.height : 1 };
+}

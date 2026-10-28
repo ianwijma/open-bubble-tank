@@ -36,6 +36,7 @@ import { showMockPartsProof } from './mock-parts';
 import { showPartSnapshots } from './part-snapshots';
 import { showMountedArt } from './mounted-art';
 import { showForcefieldOrder } from './forcefield-order';
+import { showShapeContact } from './shape-contact';
 import { showForcefieldLifecycle } from './forcefield-lifecycle';
 import { showMockPartMotion } from './mock-part-motion';
 
@@ -128,6 +129,12 @@ async function reset() {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
     status.dataset.forcefieldOrder = JSON.stringify(await showForcefieldOrder(pack, stage));
     status.textContent = 'Ready · source child order and retained shield film';
+    return;
+  }
+  if (fixture.value === 'shape-contact') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    status.dataset.shapeContact = JSON.stringify(await showShapeContact(pack, stage));
+    status.textContent = 'Ready · geometric contact and attached artwork';
     return;
   }
   if (fixture.value === 'forcefield-lifecycle') {
