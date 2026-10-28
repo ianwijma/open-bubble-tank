@@ -36,7 +36,7 @@ async function load(bytes: Uint8Array, name: string, url?: string) {
     stage.replaceChildren(player);
     const api = player.ruffle();
     const lines: string[] = [];
-    api.traceObserver = (message) => {
+    const observeTrace = (message: string) => {
       lines.push(message);
       trace.textContent = lines.slice(-20).join('\n');
     };
@@ -52,6 +52,9 @@ async function load(bytes: Uint8Array, name: string, url?: string) {
       preferredRenderer: 'wgpu-webgl',
       quality: 'high',
     });
+    // Ruffle's setter forwards only to an existing runtime instance. Registering
+    // before load silently loses the observer, including first-frame diagnostics.
+    api.traceObserver = observeTrace;
     status.textContent = `Loaded ${name} · Ruffle 0.7.1 · original SWF`;
     status.dataset.ready = 'true';
     pause.disabled = resume.disabled = false;

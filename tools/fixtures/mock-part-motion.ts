@@ -7,8 +7,8 @@ import { SwfTextures } from '../../src/game/render/swf-textures';
 import { createTank } from '../../src/game/simulation/tank';
 import { captureCanvas } from './pixi-capture';
 
-/** All31 user-referenced parts, independently sampled from supplied/native and mock trees. */
-export async function showMockPartMotion(source: AssetPack, host: HTMLElement) {
+/** Independently sampled supplied/native and procedural trees, using production TankView. */
+export async function showMockPartMotion(source: AssetPack, host: HTMLElement, bodies = false) {
   const mock = await AssetPack.mock(),
     packs = [source, mock],
     textures = new SwfTextures();
@@ -23,8 +23,8 @@ export async function showMockPartMotion(source: AssetPack, host: HTMLElement) {
     preserveDrawingBuffer: true,
   });
   host.appendChild(app.canvas);
-  const parts = PARTS.filter(
-    (p) => (p.id >= 4000 && p.id < 5000) || (p.id >= 6001 && p.id <= 6005),
+  const parts = PARTS.filter((p) =>
+    bodies ? p.id < 2000 : (p.id >= 4000 && p.id < 5000) || (p.id >= 6001 && p.id <= 6005),
   );
   const canvas = document.createElement('canvas');
   canvas.width = 1100;
@@ -42,7 +42,11 @@ export async function showMockPartMotion(source: AssetPack, host: HTMLElement) {
       pose: digest(c.clip),
     })),
   });
-  const phases = [1, 10, 20, 25, 40, 60];
+  // The longest body clip is Air Bladder2445 with340 frames. Sample beyond its
+  // loop boundary as well as the shorter tentacle/sliding/wiggle cycles.
+  const phases = bodies
+    ? [1, 10, 25, 40, 80, 121, 180, 240, 270, 340, 360, 400]
+    : [1, 10, 20, 25, 40, 60];
   const results = [];
   try {
     for (const [index, definition] of parts.entries()) {
@@ -58,8 +62,8 @@ export async function showMockPartMotion(source: AssetPack, host: HTMLElement) {
       const tanks = packs.map(() => createTank(500, { ...STARTER, parts: [part] }, 'player'));
       const views = packs.map((pack) => new TankView(tanks[0].design, pack, textures));
       for (const view of views) app.stage.addChild(view.container);
-      const bounds = source.clipScriptBounds(source.partClip(tanks[0], part))!;
-      const previewScale = Math.min(1, 48 / Math.max(bounds.width, bounds.height));
+      const bounds = source.clipScriptBounds(source.partClip(tanks[0], part));
+      const previewScale = bounds ? Math.min(1, 48 / Math.max(bounds.width, bounds.height)) : 1;
       for (const view of views) view.container.scale.set(previewScale);
       const frames = [];
       try {
@@ -103,7 +107,7 @@ export async function showMockPartMotion(source: AssetPack, host: HTMLElement) {
           frames.push({
             age,
             timelineEqual: captures[0].pose === captures[1].pose,
-            iou: intersection / union,
+            iou: union ? intersection / union : 1,
             hashes: captures.map((c) => c.hash),
           });
         }
@@ -153,7 +157,7 @@ export async function showMockPartMotion(source: AssetPack, host: HTMLElement) {
         view.destroy();
       }
     });
-    return { mode: source.mode, results, opacity };
+    return { mode: source.mode, bodies, results, opacity };
   } finally {
     app.destroy({ removeView: true }, { children: true });
     textures.destroy();

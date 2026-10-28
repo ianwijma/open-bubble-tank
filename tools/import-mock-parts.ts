@@ -18,7 +18,7 @@ function visit(id: number) {
   reachable.add(id);
   for (const p of sprites.get(id)?.placements ?? []) if (p.charId !== undefined) visit(p.charId);
 }
-for (const part of PARTS.filter((p) => p.id >= 2000)) visit(part.symbol);
+for (const part of PARTS) visit(part.symbol);
 const selected = [...sprites.values()]
   .filter((s) => reachable.has(s.id))
   .map(({ id, frameCount, placements }) => ({ id, frameCount, placements }));

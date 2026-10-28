@@ -118,6 +118,12 @@ async function reset() {
     status.textContent = 'Ready · all31 weapon and behavior previews with source motion';
     return;
   }
+  if (fixture.value === 'mock-body-motion') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    status.dataset.mockBodyMotion = JSON.stringify(await showMockPartMotion(pack, stage, true));
+    status.textContent = 'Ready · all20 procedural body parts with source motion';
+    return;
+  }
   if (fixture.value === 'forcefield-order') {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
     status.dataset.forcefieldOrder = JSON.stringify(await showForcefieldOrder(pack, stage));
