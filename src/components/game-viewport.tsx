@@ -45,6 +45,7 @@ export function GameViewport({
   useEffect(() => {
     let cancelled = false,
       unsubscribe: (() => void) | undefined,
+      releaseCapture: (() => void) | undefined,
       renderer: import('@/game/render/pixi-renderer').GameRenderer | undefined,
       input: GameInput | undefined;
     async function start() {
@@ -81,6 +82,12 @@ export function GameViewport({
             b.kind === 'turret' ? world.allTanks().find((t) => t.uid === b.owner) : undefined,
           );
         host.current.focus({ preventScroll: true });
+        renderer.draw(world, settingsRef.current);
+        releaseCapture = stage.capture.register({
+          order: 0,
+          base: true,
+          draw: (context) => renderer!.capture(context),
+        });
         readyRef.current?.();
         let lastRevision = -1;
         unsubscribe = stage.subscribe({
@@ -106,6 +113,7 @@ export function GameViewport({
     void start();
     return () => {
       cancelled = true;
+      releaseCapture?.();
       unsubscribe?.();
       input?.dispose();
       if (renderer?.app.renderer) renderer.destroy();

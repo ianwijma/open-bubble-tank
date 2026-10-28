@@ -17,16 +17,23 @@ export function SettingsPanel({
   pack,
   onChange,
   onClose,
+  overPause = false,
 }: {
   settings: Settings;
   pack: AssetPack;
   onChange: (s: Settings, control?: 'shake' | 'efficiency') => void;
   onClose: () => void;
+  overPause?: boolean;
 }) {
   const [binding, setBinding] = useState<keyof Settings | null>(null);
   const [hotkeys, setHotkeys] = useState(false);
   return (
-    <Dialog title="Settings" onClose={onClose} className="stage-dialog settings-screen">
+    <Dialog
+      title="Settings"
+      onClose={onClose}
+      className="stage-dialog settings-screen"
+      scrimClassName={overPause ? 'pause-owned-overlay' : ''}
+    >
       <div className="settings-title">
         <BubbleText pack={pack} size={35}>
           {hotkeys ? 'Hotkeys' : 'settings'}

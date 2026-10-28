@@ -56,6 +56,11 @@ export class GameRenderer {
     public assets: AssetPack,
     private externalMainEffects = false,
   ) {}
+  /** WebGL's default framebuffer may clear between RAFs: render and copy synchronously. */
+  capture(context: CanvasRenderingContext2D) {
+    this.app.render();
+    context.drawImage(this.app.canvas, 0, 0, 550, 450);
+  }
   async init(host: HTMLElement, settings: Settings) {
     await this.app.init({
       width: 550,

@@ -6,6 +6,7 @@ import type { StageRuntime } from '@/game/services/stage-runtime';
 import { PAUSE, PauseMotion } from '@/game/core/pause-motion';
 import { BubbleText, Dialog, Icon } from './ui';
 import { TankInfoPanel } from './tank-info-panel';
+import { PauseBackdrop } from './pause-backdrop';
 
 const buttons = [
   {
@@ -42,6 +43,7 @@ export function PausePanel({
   onResume,
   onSettings,
   onMenu,
+  covered = false,
 }: {
   pack: AssetPack;
   tank: Tank;
@@ -51,6 +53,7 @@ export function PausePanel({
   onResume: () => void;
   onSettings: () => void;
   onMenu: () => void;
+  covered?: boolean;
 }) {
   const [motion] = useState(() => new PauseMotion());
   const [info, setInfo] = useState<'closed' | 'open' | 'closing'>('closed');
@@ -65,6 +68,9 @@ export function PausePanel({
   useEffect(() => {
     resumeRef.current = onResume;
   }, [onResume]);
+  useEffect(() => {
+    if (!closing) motion.phase = covered || info === 'open' ? 'info' : 'menu';
+  }, [covered, closing, info, motion]);
   useEffect(() => {
     if (info !== 'closed')
       (layer.current?.closest('[role="dialog"]') as HTMLElement | null)?.focus();
@@ -138,7 +144,10 @@ export function PausePanel({
       closeKey={closeKey}
       onClose={close}
       onShortcutClose={resume}
+      active={!covered}
+      scrimClassName="pause-bitmap-scrim"
     >
+      <PauseBackdrop stage={stage} motion={motion} />
       <div
         ref={layer}
         className="pause-button-layer"
