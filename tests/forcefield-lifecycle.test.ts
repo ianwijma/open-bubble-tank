@@ -222,7 +222,11 @@ test('a shield pushes its hit and film above the wrapper, then passive Run reuse
   world.damage(tank, 40);
   world.step({ ...emptyInput(), secondary: true });
   expect(tank.shield).toBeGreaterThan(0);
-  expect(tank.displayChildren.slice(-3)).toEqual(['shield-hit', 'shield-film', 'forcefield']);
+  expect(tank.displayChildren.slice(-3)).toEqual([
+    'shield-hit:shield',
+    'shield-film:shield:1',
+    'forcefield',
+  ]);
   expect([tank.forcefieldReady, tank.forcefield, tank.forcefieldGeneration]).toEqual([
     true,
     -15,
@@ -230,8 +234,8 @@ test('a shield pushes its hit and film above the wrapper, then passive Run reuse
   ]);
   for (let i = 0; i < 25; i++) world.step(emptyInput());
   expect(tank.shield).toBe(0);
-  expect(tank.displayChildren).not.toContain('shield-film');
-  expect(tank.displayChildren).toContain('shield-hit');
+  expect(tank.shieldClips.filter((clip) => clip.kind === 'film')).toHaveLength(0);
+  expect(tank.displayChildren).toContain('shield-hit:shield');
   expect(tank.displayChildren.at(-1)).toBe('forcefield');
   detachForcefield(tank);
   expect(tank.displayChildren).not.toContain('forcefield');
@@ -257,12 +261,12 @@ test('arrival clears shield immunity and its callback but retains the attached f
   arrive(world);
   const age = avatar.shieldAge;
   expect(avatar.shield).toBe(0);
-  expect(avatar.displayChildren).toContain('shield-film');
+  expect(avatar.displayChildren).toContain('shield-film:shield:1');
   expect(world.runtimeFor(world.field).pending).toHaveLength(0);
   world.field.enemies = [];
   for (let i = 0; i < 30; i++) world.step(emptyInput());
   expect(avatar.shieldAge).toBe(age + 30);
-  expect(avatar.displayChildren).toContain('shield-film');
+  expect(avatar.displayChildren).toContain('shield-film:shield:1');
   avatar.forcefieldReady = false;
   world.damage(avatar, 1);
   expect(avatar.life).toBe(19);
@@ -272,7 +276,8 @@ test('arrival clears shield immunity and its callback but retains the attached f
     emptyInput(),
   );
   expect(avatar.shieldAge).toBe(0);
-  expect(avatar.displayChildren.filter((key) => key === 'shield-film')).toHaveLength(1);
+  expect(avatar.shieldClips.filter((clip) => clip.kind === 'film')).toHaveLength(1);
+  expect(avatar.displayChildren).toContain('shield-film:shield:2');
   for (let i = 0; i < 25; i++) world.step(emptyInput());
-  expect(avatar.displayChildren).not.toContain('shield-film');
+  expect(avatar.shieldClips.filter((clip) => clip.kind === 'film')).toHaveLength(0);
 });

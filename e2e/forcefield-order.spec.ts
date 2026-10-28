@@ -29,13 +29,21 @@ for (const native of [false, true])
       true,
       true,
     ]);
-    expect(proof.panels[1].order.slice(-3)).toEqual(['forcefield', 'shield-hit', 'shield-film']);
+    expect(proof.panels[1].order.slice(-3)).toEqual([
+      'forcefield',
+      'shield-hit:mount-1',
+      'shield-film:mount-1:1',
+    ]);
     expect(proof.panels[2].order).toEqual(proof.panels[1].order);
-    expect(proof.panels[3].order.slice(-3)).toEqual(['shield-hit', 'shield-film', 'forcefield']);
+    expect(proof.panels[3].order.slice(-3)).toEqual([
+      'shield-hit:mount-1',
+      'shield-film:mount-1:1',
+      'forcefield',
+    ]);
     expect(proof.panels[3].debt).toBe(-15);
     for (const i of [4, 5]) {
       expect(proof.panels[i].shield).toBe(0);
-      expect(proof.panels[i].order).toContain('shield-film');
+      expect(proof.panels[i].order).toContain('shield-film:mount-1:1');
     }
     expect(proof.panels[5].filmAge - proof.panels[4].filmAge).toBe(30);
     expect(proof.panels[6].order.slice(-2)).toEqual(['forcefield', 'infection']);

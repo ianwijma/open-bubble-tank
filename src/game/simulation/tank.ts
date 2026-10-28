@@ -43,6 +43,7 @@ export function createTank(
     shieldAge: 0,
     shieldHitAge: 16,
     shieldHitAngle: 0,
+    shieldClips: [],
     teleportReady: true,
     hurtCounter: -1,
     forcefield: 40,

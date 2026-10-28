@@ -6,7 +6,21 @@ export interface Vec {
 }
 /** Direct _-Zx children; attached status marks form one contiguous group. */
 export type TankChild =
-  `part:${string}` | 'forcefield' | 'shield-hit' | 'shield-film' | 'infection' | 'status';
+  | `part:${string}`
+  | `shield-hit:${string}`
+  | `shield-film:${string}`
+  | 'forcefield'
+  | 'shield-hit'
+  | 'shield-film'
+  | 'infection'
+  | 'status';
+export interface ShieldClip {
+  key: `shield-hit:${string}` | `shield-film:${string}`;
+  kind: 'hit' | 'film';
+  diameter: number;
+  age: number;
+  angle: number;
+}
 export interface Rect extends Vec {
   width: number;
   height: number;
@@ -73,6 +87,8 @@ export interface GunState {
   patientId?: number;
   beamId?: number;
   shieldDiameter?: number;
+  shieldFilm?: ShieldClip;
+  shieldGeneration?: number;
   mineRefs?: MineReference[];
   /** Latest non-overlapping mounted MovieClip.play episode, in stage-art ages. */
   mountedPlay?: { child: string; age: number; frames: number };
@@ -102,6 +118,9 @@ export interface Tank extends Vec {
   shieldManaged?: boolean;
   shieldHitAge: number;
   shieldHitAngle: number;
+  /** AGunShield instances are independent; movShieldHit points to the newest hit. */
+  shieldClips: ShieldClip[];
+  shieldHitClip?: ShieldClip;
   teleportReady: boolean;
   hurtCounter: number;
   forcefield: number;
