@@ -118,3 +118,43 @@ export function orderSelection(parts: TankPart[], selection: PartSelection, fron
     other = parts.filter((p) => !selection.keys.includes(p.key));
   return front ? [...other, ...chosen] : [...chosen, ...other];
 }
+
+/** Left/Right controls change each selected X by one per frame, plus the release click. */
+export function nudgeSelection(parts: TankPart[], selection: PartSelection, delta: number) {
+  return parts.map((p) => (selection.keys.includes(p.key) ? { ...p, x: p.x + delta } : p));
+}
+
+/** _-F1 / DeleteNonDominantTwinObject: center selected objects and retain the opaque twin. */
+export function centerSelection(parts: TankPart[], selection: PartSelection) {
+  let result = parts.map((p) => ({ ...p })),
+    keys = [...selection.keys];
+  for (let i = 0; i < keys.length; i++) {
+    const part = result.find((p) => p.key === keys[i]);
+    if (!part) continue;
+    part.y = 0;
+    const twin = result.find((p) => p.key === part.twin && keys.includes(p.key));
+    if (!twin) continue;
+    const keep =
+        selection.ghosts.includes(part.key) && !selection.ghosts.includes(twin.key) ? twin : part,
+      remove = keep === part ? twin : part;
+    keep.twin = '';
+    result = result.filter((p) => p.key !== remove.key);
+    keys = keys.filter((k) => k !== remove.key);
+  }
+  return {
+    parts: result,
+    selection: { keys, ghosts: selection.ghosts.filter((k) => keys.includes(k)) },
+  };
+}
+
+/** Source slider initialization averages every selected clip, including faded twins. */
+export function selectedTransform(parts: TankPart[], selection: PartSelection) {
+  const selected = parts.filter((p) => selection.keys.includes(p.key));
+  return selected.length
+    ? {
+        scale: selected.reduce((n, p) => n + p.scale, 0) / selected.length,
+        rotation:
+          selected.reduce((n, p) => n + (((p.rotation % 360) + 360) % 360), 0) / selected.length,
+      }
+    : { scale: 1, rotation: 0 };
+}

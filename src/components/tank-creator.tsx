@@ -12,7 +12,8 @@ import {
   affordabilityHint,
   orderedPalette,
 } from '@/game/simulation/editor-palette';
-import { Icon } from './ui';
+import { CreatorButton, CreatorSlider } from './creator-controls';
+import { CREATOR_CONTROLS } from '@/game/core/creator-controls';
 import { TankCodeDialog } from './tank-code-dialog';
 import { weaponSummary } from './game-panels';
 import { CLASS_RINGS, CLASS_SPEED } from '@/game/core/constants';
@@ -29,6 +30,9 @@ import {
   toggleSelection,
   transformSelection,
   unlinkPartialSelection,
+  centerSelection,
+  nudgeSelection,
+  selectedTransform,
   type PartSelection,
 } from '@/game/simulation/editor-selection';
 import {
@@ -85,6 +89,11 @@ export function TankCreator({
   const placement = useRef<{ id: number; mode: 'pointer' | 'keyboard' } | null>(null);
   const nextPart = useRef(0);
   const radii = useRef(new Map<number, number>());
+  const selectionBoxes = useRef<{
+    parts: TankPart[];
+    selection: PartSelection;
+    boxes: Map<string, { x: number; y: number; width: number; height: number }>;
+  } | null>(null);
   const drag = useRef<{
       before: TankDesign;
       from: { x: number; y: number };
@@ -97,9 +106,8 @@ export function TankCreator({
     pointer = useRef({ x: 0, y: 0 }),
     snapLocked = useRef(false);
   const active = design.parts.find(
-      (p) => p.key === selection.keys.find((key) => !selection.ghosts.includes(key)),
-    ),
-    definition = partById(chosen ?? active?.type ?? 1003);
+    (p) => p.key === selection.keys.find((key) => !selection.ghosts.includes(key)),
+  );
   const palette = orderedPalette(
     PARTS.filter((p) => Math.floor(p.id / 1000) === category),
     paletteContext,
@@ -109,11 +117,44 @@ export function TankCreator({
     setDesign(next);
     setMessage('');
   }
+  const controlBefore = useRef<TankDesign | null>(null);
+  const nudge = useRef<{ before: TankDesign; selection: PartSelection; direction: number } | null>(
+    null,
+  );
+  const transform = selectedTransform(design.parts, selection);
+  function beginControl() {
+    controlBefore.current = structuredClone(design);
+  }
+  function endControl(cancel = false) {
+    const before = controlBefore.current;
+    controlBefore.current = null;
+    if (!before) return;
+    if (cancel) setDesign(before);
+    else if (JSON.stringify(design) !== JSON.stringify(before))
+      setUndo((previous) => [...previous.slice(-9), before]);
+  }
+  function beginNudge(direction: number) {
+    nudge.current = { before: structuredClone(design), selection, direction };
+  }
+  function endNudge(click: boolean) {
+    const current = nudge.current;
+    nudge.current = null;
+    if (!current) return;
+    if (click)
+      setDesign((previous) => ({
+        ...previous,
+        parts: nudgeSelection(previous.parts, current.selection, current.direction),
+      }));
+    if (click || JSON.stringify(design.parts) !== JSON.stringify(current.before.parts))
+      setUndo((previous) => [...previous.slice(-9), current.before]);
+  }
   function changePart(change: { rotation?: number; scale?: number }) {
-    commit({
+    const next = {
       ...design,
       parts: unlinkPartialSelection(transformSelection(design.parts, selection, change), selection),
-    });
+    };
+    if (controlBefore.current) setDesign(next);
+    else commit(next);
   }
   function draw() {
     const cv = canvas.current;
@@ -123,26 +164,30 @@ export function TankCreator({
     ctx.save();
     ctx.scale(2, 2);
     ctx.translate(175, 175);
-    for (let i = maxClass; i >= 1; i--) {
-      ctx.strokeStyle = i === maxClass ? 'rgba(160,241,255,.32)' : 'rgba(137,228,249,.12)';
-      ctx.lineWidth = i === classId ? 1.2 : 0.6;
+    const rings = pack.creatorFrames.get(`rings:${maxClass}`);
+    if (rings) ctx.drawImage(rings.canvas, rings.x, rings.y, rings.width, rings.height);
+    else {
+      for (let i = maxClass; i >= 1; i--) {
+        ctx.strokeStyle = i === maxClass ? 'rgba(160,241,255,.32)' : 'rgba(137,228,249,.12)';
+        ctx.lineWidth = i === classId ? 1.2 : 0.6;
+        ctx.beginPath();
+        ctx.arc(0, 0, CLASS_RINGS[i - 1], 0, Math.PI * 2);
+        ctx.stroke();
+      }
+      ctx.strokeStyle = 'rgba(130,227,240,.14)';
       ctx.beginPath();
-      ctx.arc(0, 0, CLASS_RINGS[i - 1], 0, Math.PI * 2);
+      ctx.moveTo(-162, 0);
+      ctx.lineTo(160, 0);
+      ctx.stroke();
+      ctx.fillStyle = '#bceeffaa';
+      ctx.beginPath();
+      ctx.moveTo(162, 0);
+      ctx.lineTo(153, -7);
+      ctx.lineTo(153, 7);
+      ctx.fill();
+      ctx.beginPath();
       ctx.stroke();
     }
-    ctx.strokeStyle = 'rgba(130,227,240,.14)';
-    ctx.beginPath();
-    ctx.moveTo(-162, 0);
-    ctx.lineTo(160, 0);
-    ctx.stroke();
-    ctx.fillStyle = '#bceeffaa';
-    ctx.beginPath();
-    ctx.moveTo(162, 0);
-    ctx.lineTo(153, -7);
-    ctx.lineTo(153, 7);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.stroke();
     if (artwork.current)
       artwork.current.draw(
         ctx,
@@ -153,6 +198,13 @@ export function TankCreator({
         })),
         artworkFrame.current,
       );
+    if (
+      !selectionBoxes.current ||
+      (!controlBefore.current &&
+        (selectionBoxes.current.parts !== design.parts ||
+          selectionBoxes.current.selection !== selection))
+    )
+      selectionBoxes.current = { parts: design.parts, selection, boxes: new Map() };
     for (const p of design.parts) {
       if (!artwork.current) {
         ctx.save();
@@ -161,25 +213,30 @@ export function TankCreator({
         ctx.restore();
       }
       if (selection.keys.includes(p.key) && !drag.current?.moved) {
-        const r = pack.part(p.type),
-          angle = (p.rotation * Math.PI) / 180;
-        const corners = [
-          [r.x, r.y],
-          [r.x + r.width, r.y],
-          [r.x + r.width, r.y + r.height],
-          [r.x, r.y + r.height],
-        ].map(([x, y]) => ({
-          x: p.x + (x * Math.cos(angle) - y * Math.sin(angle)) * p.scale,
-          y: p.y + (x * Math.sin(angle) + y * Math.cos(angle)) * p.scale,
-        }));
+        let box = selectionBoxes.current.boxes.get(p.key);
+        if (!box) {
+          const r = artwork.current?.localBounds(p) ?? pack.part(p.type),
+            angle = (p.rotation * Math.PI) / 180;
+          const corners = [
+            [r.x, r.y],
+            [r.x + r.width, r.y],
+            [r.x + r.width, r.y + r.height],
+            [r.x, r.y + r.height],
+          ].map(([x, y]) => ({
+            x: p.x + (x * Math.cos(angle) - y * Math.sin(angle)) * p.scale,
+            y: p.y + (x * Math.sin(angle) + y * Math.cos(angle)) * p.scale,
+          }));
+          box = {
+            x: Math.min(...corners.map((c) => c.x)),
+            y: Math.min(...corners.map((c) => c.y)),
+            width: Math.max(...corners.map((c) => c.x)) - Math.min(...corners.map((c) => c.x)),
+            height: Math.max(...corners.map((c) => c.y)) - Math.min(...corners.map((c) => c.y)),
+          };
+          selectionBoxes.current.boxes.set(p.key, box);
+        }
         ctx.strokeStyle = '#00cbff';
         ctx.lineWidth = 1;
-        ctx.strokeRect(
-          Math.min(...corners.map((c) => c.x)),
-          Math.min(...corners.map((c) => c.y)),
-          Math.max(...corners.map((c) => c.x)) - Math.min(...corners.map((c) => c.x)),
-          Math.max(...corners.map((c) => c.y)) - Math.min(...corners.map((c) => c.y)),
-        );
+        ctx.strokeRect(box.x, box.y, box.width, box.height);
       }
     }
     if (drag.current?.moved && !drag.current.moving) {
@@ -255,6 +312,7 @@ export function TankCreator({
           return;
         }
         artwork.current = renderer;
+        selectionBoxes.current = null;
         let previous = performance.now(),
           accumulator = 0;
         const tick = (now: number) => {
@@ -263,7 +321,15 @@ export function TankCreator({
           previous = now;
           const step = 1000 / fps;
           if (accumulator >= step) {
-            artworkFrame.current += Math.floor(accumulator / step);
+            const frames = Math.floor(accumulator / step);
+            if (nudge.current) {
+              const { selection, direction } = nudge.current;
+              setDesign((previous) => ({
+                ...previous,
+                parts: nudgeSelection(previous.parts, selection, direction * frames),
+              }));
+            }
+            artworkFrame.current += frames;
             accumulator %= step;
             drawRef.current();
           }
@@ -378,46 +444,52 @@ export function TankCreator({
     draw();
   }
   return (
-    <div className={`creator stage-background ${overGame ? 'over-game' : ''}`}>
-      <div className="creator-top">
-        <label className="creator-symmetry">
+    <div
+      className={`creator stage-background ${overGame ? 'over-game' : ''}`}
+      data-assets={pack.mode}
+    >
+      <CreatorButton
+        pack={pack}
+        name="SymmetricMode_mc"
+        label="Symmetric Mode"
+        checked={symmetric}
+        onClick={() => {
+          setSymmetric(!symmetric);
+          setSelection(emptySelection());
+        }}
+      />
+      <CreatorButton
+        pack={pack}
+        name="LoadTank_mc"
+        label="Load a Tank..."
+        onClick={() => setLoading(true)}
+      />
+      <CreatorButton
+        pack={pack}
+        name="SaveExit_mc"
+        label="SAVE"
+        onClick={() => {
+          if (errors.length) {
+            setMessage(errors[0]);
+            return;
+          }
+          onSave({ ...finalDesign, name: design.name.trim() || 'Untitled Tank' });
+        }}
+      />
+      <CreatorButton pack={pack} name="Exit_mc" label="Exit tank creator" onClick={onExit} />
+      <span className="creator-stats-tab">Stats</span>
+      <div className="creator-name">
+        <label>
+          Tank name{' '}
           <input
-            type="checkbox"
-            checked={symmetric}
-            onChange={(e) => {
-              setSymmetric(e.target.checked);
-              setSelection(emptySelection());
-            }}
+            aria-label="Tank name"
+            maxLength={40}
+            value={design.name}
+            onChange={(e) => setDesign({ ...design, name: e.target.value })}
           />
-          Symmetric Mode
         </label>
-        <button onClick={() => setLoading(true)}>Load a Tank...</button>
-        <button
-          aria-label="SAVE"
-          onClick={() => {
-            if (errors.length) {
-              setMessage(errors[0]);
-              return;
-            }
-            onSave({ ...finalDesign, name: design.name.trim() || 'Untitled Tank' });
-          }}
-        >
-          Save and Exit
-        </button>
-        <button aria-label="Exit tank creator" onClick={onExit}>
-          Exit
-        </button>
-        <span>Stats</span>
+        <button onClick={() => exportDesign(finalDesign)}>Export</button>
       </div>
-      <label className="creator-name">
-        Tank name
-        <input
-          aria-label="Tank name"
-          maxLength={40}
-          value={design.name}
-          onChange={(e) => setDesign({ ...design, name: e.target.value })}
-        />
-      </label>
       <div className="creator-meters">
         <div>
           Class {classId}
@@ -442,6 +514,10 @@ export function TankCreator({
           ref={canvas}
           width="700"
           height="700"
+          style={{
+            left: CREATOR_CONTROLS.workspace.tx / 20 - 175,
+            top: CREATOR_CONTROLS.workspace.ty / 20 - 175,
+          }}
           aria-label="Tank design area. Choose a palette row, then drag its preview here. For keyboard placement, activate the preview, move with arrow keys and press Enter. Click parts to toggle selection. Drag empty space to select a group. Drag selected parts to move them."
           onPointerDown={(e) => {
             if (e.button !== 0) return;
@@ -543,38 +619,10 @@ export function TankCreator({
           </div>
         </aside>
       </div>
-      {active || !design.avatar ? (
+      {!design.avatar ? (
         <details className="creator-inspector">
-          <summary>{active ? `Selected parts (${selection.keys.length})` : 'Enemy stats'}</summary>
+          <summary>Enemy stats</summary>
           <div>
-            {' '}
-            {active ? (
-              <>
-                <label className="part-slider">
-                  Rotation <span>{Math.round(active.rotation)}°</span>
-                  <input
-                    aria-label="Part rotation"
-                    type="range"
-                    min="0"
-                    max="360"
-                    value={((active.y <= 0 ? active.rotation : -active.rotation) + 360) % 360}
-                    onChange={(e) => changePart({ rotation: Number(e.target.value) })}
-                  />
-                </label>
-                <label className="part-slider">
-                  Scale <span>{active.scale.toFixed(2)}</span>
-                  <input
-                    aria-label="Part scale"
-                    type="range"
-                    min="0.5"
-                    max="2"
-                    step="0.05"
-                    value={active.scale}
-                    onChange={(e) => changePart({ scale: Number(e.target.value) })}
-                  />
-                </label>
-              </>
-            ) : null}
             {!design.avatar ? (
               <div className="enemy-stats">
                 {(['life', 'reward', 'speed'] as const).map((key) => (
@@ -599,63 +647,90 @@ export function TankCreator({
           </div>
         </details>
       ) : null}
-      <div className="creator-tools">
-        <button
-          disabled={!undo.length}
-          title="Undo"
-          aria-label="Undo"
-          onClick={() => {
-            setDesign(undo[undo.length - 1]);
-            setUndo(undo.slice(0, -1));
-            setSelection(emptySelection());
-            setMessage('');
-          }}
-        >
-          <Icon name="undo" size={16} />
-        </button>
-        <button
-          disabled={!active}
-          title="Delete selected part"
-          aria-label="Delete selected part"
-          onClick={() => {
-            if (active) {
-              commit({
-                ...design,
-                parts: removeParts(design.parts, selection.keys),
-              });
+      {active ? (
+        <>
+          <span className="sr-only" role="status">
+            Selected parts ({selection.keys.length})
+          </span>
+          <CreatorButton
+            pack={pack}
+            name="DeleteButton_mc"
+            label="Delete selected part"
+            onClick={() => {
+              commit({ ...design, parts: removeParts(design.parts, selection.keys) });
               setSelection(emptySelection());
+            }}
+          />
+          <CreatorButton
+            pack={pack}
+            name="BringFront_mc"
+            label="To front"
+            onClick={() =>
+              commit({ ...design, parts: orderSelection(design.parts, selection, true) })
             }
-          }}
-        >
-          <Icon name="trash" size={16} />
-        </button>
-        <button
-          disabled={!active}
-          onClick={() => {
-            if (active)
-              commit({
-                ...design,
-                parts: orderSelection(design.parts, selection, true),
-              });
-          }}
-        >
-          To front
-        </button>
-        <button
-          disabled={!active}
-          onClick={() => {
-            if (active)
-              commit({
-                ...design,
-                parts: orderSelection(design.parts, selection, false),
-              });
-          }}
-        >
-          To back
-        </button>
-        <button onClick={() => exportDesign(finalDesign)}>Export</button>
-        <span>{definition?.name || 'Select a part to begin'}</span>
-      </div>
+          />
+          <CreatorButton
+            pack={pack}
+            name="SendBack_mc"
+            label="To back"
+            onClick={() =>
+              commit({ ...design, parts: orderSelection(design.parts, selection, false) })
+            }
+          />
+          <CreatorButton
+            pack={pack}
+            name="AlignCenter_mc"
+            label="Align to Center"
+            onClick={() => {
+              const next = centerSelection(design.parts, selection);
+              commit({ ...design, parts: next.parts });
+              setSelection(next.selection);
+            }}
+          />
+          {([-1, 1] as const).map((direction) => (
+            <CreatorButton
+              key={direction}
+              pack={pack}
+              name={direction < 0 ? 'Left_mc' : 'Right_mc'}
+              label={direction < 0 ? 'Move selection left' : 'Move selection right'}
+              onClick={() =>
+                commit({ ...design, parts: nudgeSelection(design.parts, selection, direction) })
+              }
+              onHoldStart={() => beginNudge(direction)}
+              onHoldEnd={endNudge}
+            />
+          ))}
+          {CREATOR_CONTROLS.sliders.map((layout) => (
+            <CreatorSlider
+              key={layout.name}
+              pack={pack}
+              layout={layout}
+              label={layout.name === 'Resize_mc' ? 'Part scale' : 'Part rotation'}
+              value={layout.name === 'Resize_mc' ? transform.scale : transform.rotation}
+              resetKey={selection}
+              min={layout.name === 'Resize_mc' ? 0.5 : 0}
+              max={layout.name === 'Resize_mc' ? 2 : 360}
+              onChange={(value) =>
+                changePart(layout.name === 'Resize_mc' ? { scale: value } : { rotation: value })
+              }
+              onBegin={beginControl}
+              onEnd={endControl}
+            />
+          ))}
+        </>
+      ) : null}
+      <CreatorButton
+        pack={pack}
+        name="Undo_mc"
+        label="Undo"
+        disabled={!undo.length}
+        onClick={() => {
+          setDesign(undo[undo.length - 1]);
+          setUndo(undo.slice(0, -1));
+          setSelection(emptySelection());
+          setMessage('');
+        }}
+      />
       {message ? (
         <p role="alert" className="creator-message">
           {message}

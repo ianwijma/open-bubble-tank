@@ -1080,34 +1080,35 @@ export function parseButtonTag(body, tagCode) {
       if (!(br.p < br.u8.length * 8)) throw new Error('unterminated button records');
       const flags = br.ub(8); // flag bits continue unaligned after the previous matrix
       if (flags === 0) break;
-      states.push({
+      const record = {
         states: { hit: !!(flags & 8), down: !!(flags & 4), over: !!(flags & 2), up: !!(flags & 1) },
         charId: br.bytes(2),
         depth: br.bytes(2),
-      });
-      matrix(br);
+        matrix: matrix(br),
+      };
+      states.push(record);
     }
     return { id, tagCode, states };
   }
   br.ub(7);
-  br.ub(1); // reserved + trackAsMenu
+  const trackAsMenu = !!br.ub(1);
   const actionOffset = br.bytes(2);
   for (;;) {
     if (!(br.p < br.u8.length * 8)) throw new Error('unterminated button records');
     const flags = br.ub(8); // flag bits continue unaligned after the previous matrix
     if (flags === 0) break;
-    states.push({
+    const record = {
       states: { hit: !!(flags & 8), down: !!(flags & 4), over: !!(flags & 2), up: !!(flags & 1) },
       charId: br.bytes(2),
       depth: br.bytes(2),
-    });
-    matrix(br);
-    br.align(); // the record's color transform is byte-aligned (verified 37/37)
-    readCxFormWithAlpha(br); // DefineButton2 records always carry a color transform
-    if (flags & 0x10) skipFilterList(br); // buttonHasFilterList
-    if (flags & 0x20) br.bytes(1); // buttonHasBlendMode
+      matrix: matrix(br),
+      color: readCxFormWithAlpha(br),
+    };
+    if (flags & 0x10) record.filters = readFilterList(br);
+    if (flags & 0x20) record.blendMode = br.bytes(1);
+    states.push(record);
   }
-  return { id, tagCode, states, hasActions: actionOffset > 0 };
+  return { id, tagCode, states, trackAsMenu, hasActions: actionOffset > 0 };
 }
 
 // ---------------------------------------------------------------------------

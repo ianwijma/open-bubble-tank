@@ -9,6 +9,9 @@ import {
   toggleSelection,
   transformSelection,
   unlinkPartialSelection,
+  centerSelection,
+  nudgeSelection,
+  selectedTransform,
 } from '../src/game/simulation/editor-selection';
 import { beginSelectionDrag, advanceSelectionDrag } from '../src/game/simulation/editor-drag';
 const part = (key: string, x: number, y: number, twin = ''): TankPart => ({
@@ -22,6 +25,34 @@ const part = (key: string, x: number, y: number, twin = ''): TankPart => ({
   rotation: 0,
 });
 const parts = [part('a', 0, -30, 'b'), part('b', 0, 30, 'a'), part('c', 50, -10), part('d', 90, 0)];
+
+test('creator center merges selected twins into the opaque owner and preserves unselected links', () => {
+  const centered = centerSelection(parts, { keys: ['a', 'b', 'c'], ghosts: ['b'] });
+  expect(centered.parts.map((p) => [p.key, p.y, p.twin])).toEqual([
+    ['a', 0, ''],
+    ['c', 0, ''],
+    ['d', 0, ''],
+  ]);
+  expect(centered.selection).toEqual({ keys: ['a', 'c'], ghosts: [] });
+  const partial = centerSelection(parts, { keys: ['a'], ghosts: [] });
+  expect(partial.parts.slice(0, 2).map((p) => [p.y, p.twin])).toEqual([
+    [0, 'b'],
+    [30, 'a'],
+  ]);
+  expect(parts[0].y).toBe(-30);
+});
+test('creator X steps retain links while slider initialization averages normalized angles including ghosts', () => {
+  const selected = { keys: ['a', 'b'], ghosts: ['b'] };
+  const changed = parts.map((p, i) => ({ ...p, scale: 1 + i / 10, rotation: i === 1 ? -45 : 45 }));
+  expect(selectedTransform(changed, selected)).toEqual({ scale: 1.05, rotation: 180 });
+  const moved = nudgeSelection(parts, selected, -3);
+  expect(moved.map((p) => [p.x, p.y, p.twin])).toEqual([
+    [-3, -30, 'b'],
+    [-3, 30, 'a'],
+    [50, -10, ''],
+    [90, 0, ''],
+  ]);
+});
 
 test('creator clicks add without modifiers and remove one selected twin at a time', () => {
   let s = toggleSelection(parts, emptySelection(), 'a', true);
