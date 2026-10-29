@@ -192,3 +192,6 @@ The screen container uses the original world origin at stage275,225, outside cam
 
 
 `core/tank-eligibility.ts` shares candidate-class capacity and non-body unlock checks between viewer selection and card warning paint. `ViewerLimits.gunPoints` remains a readout value; it does not constrain another class's loaded design. An optional explicit unlock list takes precedence over the current level/tier adapter, keeping future persistent profile state separate from presentation. Enemy selection bypass remains in the viewer adapter, while the underlying capacity result still supports enemy cautions. Viewer rejection labels follow the source normal capacity/unlock branches.
+
+
+`core/viewer-rejections.ts` models the viewer's independent1557 rejection clips. The importer adds fixed artwork/field placements and91 alpha samples without duplicating raster frames; `AssetPack` prepares only two runtime static layers. `ViewerRejectionEffects` paints imported opacity tracks through refs and publishes only effect insertion/removal to React. Its transient backdrop shields pointer input, while status announcements/keyboard behavior remain accessible additions and normal viewer notifications keep their separate dialog path. Selection failure does not set the viewer's generic modal/covered state.

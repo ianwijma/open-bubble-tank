@@ -83,13 +83,17 @@ for (const native of [false, true])
       [classOnly, 'Exceeds your Class'],
     ] as const) {
       await loadCode(tank);
-      const message = page.getByRole('dialog', { name: 'Tank viewer message', exact: true });
+      const message = page.getByRole('status', {
+        name: `You Cannot Select This Tank: ${expected}`,
+        exact: true,
+      });
       await expect(message).toContainText(expected);
       await expect(
         page.getByRole('dialog', { name: `Load ${tank.name}?`, exact: true }),
       ).toHaveCount(0);
-      await message.getByRole('button', { name: 'Dismiss message', exact: true }).click();
-      await advance();
+      await expect(page.getByRole('dialog', { name: 'Tank viewer message' })).toHaveCount(0);
+      for (let i = 0; i < 5; i++) await advance();
+      await expect(message).toHaveCount(0);
     }
     expect(errors).toEqual([]);
   });

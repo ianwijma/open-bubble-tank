@@ -38,6 +38,8 @@ import {
 } from '@/game/core/viewer-navigation';
 import { ViewerPaneLayer } from './viewer-pane-layer';
 import { useViewerHighlights } from './viewer-highlights';
+import { ViewerRejections } from '@/game/core/viewer-rejections';
+import { ViewerRejectionEffects } from './viewer-rejections';
 import {
   ViewerArt,
   ViewerFields,
@@ -138,6 +140,7 @@ export function TankViewer({
 }) {
   const local = useMemo(() => localViewerTanks(tanks, avatar), [tanks, avatar]);
   const [codeFlow] = useState(() => new ViewerCodeFlow(avatar));
+  const [rejections] = useState(() => new ViewerRejections());
   const panes = codeFlow.panes,
     fades = codeFlow.fades;
   const paneView = useSyncExternalStore(panes.subscribe, panes.getSnapshot, panes.getSnapshot);
@@ -243,7 +246,7 @@ export function TankViewer({
     const error = !deleting && viewerSelectionError(tank, avatar, limits);
     capture();
     if (error) {
-      setMessage(error);
+      rejections.add(error);
       return;
     }
     const index = paneView.cards.findIndex((p) => p?.tank === tank);
@@ -805,6 +808,7 @@ export function TankViewer({
           </button>
         </SourceModal>
       ) : null}
+      <ViewerRejectionEffects pack={pack} stage={stage} model={rejections} />
     </div>
   );
 }

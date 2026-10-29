@@ -2215,6 +2215,17 @@ kbd {
   top: 10px;
   z-index: 30;
 }
+.viewer-rejections {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+}
+.viewer-rejection {
+  position: absolute;
+  inset: 0;
+  pointer-events: auto;
+}
 .viewer-content {
   position: absolute;
   inset: 0;

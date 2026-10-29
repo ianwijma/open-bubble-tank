@@ -40,6 +40,16 @@ export const TANK_VIEWER = data as {
     closed: Rect;
     frames: { age: number; mask: Rect }[];
   };
+  rejection: {
+    symbol: number;
+    x: number;
+    y: number;
+    frameCount: number;
+    fields: ViewerField[];
+    fieldIndex: number;
+    pieces: { symbol: number; index: number; matrix: SwfMatrix; art: CreatorPrimitive[] }[];
+    frames: number[][];
+  };
 };
 const viewerFrameCounts = new Map<number, number>();
 for (const w of TANK_VIEWER.widgets)

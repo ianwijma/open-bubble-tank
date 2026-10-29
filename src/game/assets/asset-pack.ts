@@ -597,6 +597,10 @@ export class AssetPack {
         );
         if (raster) pack.creatorFrames.set(`viewer:${widget.symbol}:${widget.frame}`, raster);
       }
+      for (const piece of TANK_VIEWER.rejection.pieces) {
+        const raster = await pack.rasterSymbol(piece.symbol);
+        if (raster) pack.creatorFrames.set(`viewer:rejection:${piece.symbol}`, raster);
+      }
       for (const { age } of TANK_VIEWER.statistics.frames) {
         const pose = new SwfClip(1137, pack);
         pose.start(2, false);

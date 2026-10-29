@@ -129,6 +129,12 @@ function piece(p: DisplayPlacement) {
   ]);
   return { name: p.name ?? '', symbol: p.charId, matrix: p.matrix, bounds };
 }
+function withFont(p: ReturnType<typeof layout.collect>[number]) {
+  if (p.kind !== 'text') return p;
+  const text = symbols.texts.find((t) => t.id === p.id)!;
+  const font = symbols.fonts.find((f) => f.id === text.records.find((r) => r.fontId)?.fontId)!;
+  return { ...p, font: font.name.replaceAll('\0', ''), bold: !!font.bold, italic: !!font.italic };
+}
 function widget(id: number, frame = 1, omit: number[] = []) {
   const ps = list(id, frame).filter((p) => !omit.includes(p.charId)),
     fields = fieldsFor(ps);
@@ -181,15 +187,7 @@ function widget(id: number, frame = 1, omit: number[] = []) {
       }
       if (id === 1115 && p.id === 1113) return { ...p, kind: 'warning-mark' };
       if (id === 1412 && p.id === 1410) return { ...p, kind: 'right-arrow' };
-      if (p.kind !== 'text') return p;
-      const text = symbols.texts.find((t) => t.id === p.id)!;
-      const font = symbols.fonts.find((f) => f.id === text.records.find((r) => r.fontId)?.fontId)!;
-      return {
-        ...p,
-        font: font.name.replaceAll('\0', ''),
-        bold: !!font.bold,
-        italic: !!font.italic,
-      };
+      return withFont(p);
     });
   return {
     symbol: id,
@@ -318,6 +316,49 @@ const data = {
       ),
     })),
   },
+  rejection: await (async () => {
+    const symbol = 1557,
+      placements = list(symbol),
+      sprite = symbols.sprites.find((s) => s.id === symbol)!;
+    const source = await readFile(
+      `${root}/re/bt3/export_scripts_deobf/scripts/TankViewerScreen.as`,
+      'utf8',
+    );
+    const origin = source.match(/CreateEffect\(new _-4k\(\),(\d+),(\d+),"mainEffects"\)/)!;
+    if (!origin) throw new Error('Cannot locate the viewer rejection effect origin.');
+    return {
+      symbol,
+      x: Number(origin[1]),
+      y: Number(origin[2]),
+      frameCount: sprite.frameCount,
+      fields: fieldsFor(placements),
+      fieldIndex: placements.findIndex((p) => p.name === 'txtErrorOutputText_txt'),
+      pieces: placements
+        .filter((p) => !p.name)
+        .map((p) => ({
+          symbol: p.charId,
+          index: placements.indexOf(p),
+          matrix: p.matrix,
+          art: layout.collect(p.charId, 1, 'up').map(withFont),
+        })),
+      frames: Array.from({ length: sprite.frameCount }, (_, i) => {
+        const ps = list(symbol, i + 1);
+        if (
+          ps.length !== placements.length ||
+          ps.some(
+            (p, j) =>
+              p.charId !== placements[j].charId ||
+              JSON.stringify(p.matrix) !== JSON.stringify(placements[j].matrix) ||
+              (p.color &&
+                (p.color.mult.slice(0, 3).some((v) => v !== 1) ||
+                  p.color.add.some((v) => v !== 0))),
+          )
+        )
+          throw new Error('Viewer rejection has unsupported placement/color motion.');
+        return ps.map((p) => p.color?.mult[3] ?? 1);
+      }),
+    };
+  })(),
 };
 await writeFile('src/game/data/tank-viewer.json', JSON.stringify(data) + '\n');
 console.log(`Imported ${widgets.length} viewer poses without artwork.`);
