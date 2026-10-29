@@ -36,19 +36,20 @@ for (const native of [false, true])
     await expect(departing).toHaveCount(0);
     await page.getByRole('button', { name: 'View tank from code', exact: true }).click();
     const code = page.getByRole('dialog', { name: 'Enter tank code' }),
-      content = page.locator('.viewer-content');
+      toolbar = page.locator('[data-viewer-pane="toolbar:btnNext_mc"]');
     await expect(code).toHaveAttribute('data-viewer-alpha', '0');
     await page.getByRole('button', { name: 'Viewer advance 1 frames', exact: true }).click();
     await expect(code).toHaveAttribute('data-viewer-alpha', '0.2');
-    await expect(content).toHaveAttribute('data-viewer-alpha', '0.8');
+    await expect(toolbar).toHaveAttribute('data-viewer-alpha', '0.8');
     await page.getByRole('button', { name: 'Viewer advance 20 frames', exact: true }).click();
-    await expect(content).toHaveAttribute('data-viewer-alpha', '0');
+    await expect(toolbar).toHaveAttribute('data-viewer-alpha', '0');
+    await expect(page.locator('.viewer-card')).toHaveCount(0);
     await code.getByRole('button', { name: 'Back', exact: true }).click();
     await expect(page.locator('.viewer-modal')).toHaveAttribute('inert', '');
     await page.getByRole('button', { name: 'Viewer advance 1 frames', exact: true }).click();
-    await expect(content).toHaveAttribute('data-viewer-alpha', '0.2');
+    await expect(toolbar).toHaveAttribute('data-viewer-alpha', '0.2');
     await page.getByRole('button', { name: 'Viewer advance 20 frames', exact: true }).click();
-    await expect(content).toHaveAttribute('data-viewer-alpha', '1');
+    await expect(toolbar).toHaveAttribute('data-viewer-alpha', '1');
     await expect(page.locator('.viewer-modal')).toHaveCount(0);
     await page.getByRole('button', { name: 'Search for tanks online', exact: true }).click();
     const message = page.getByRole('dialog', { name: 'Tank viewer message' });

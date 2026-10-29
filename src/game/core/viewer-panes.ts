@@ -74,12 +74,15 @@ export class ViewerPanes {
     this.fades.show('detail');
     this.changed();
   }
-  returnToCards(tanks: readonly TankDesign[]) {
+  rebuildCards(tanks: readonly TankDesign[]) {
     this.setup(tanks);
     for (let i = 0; i < 4; i++) this.fades.state(viewerCardName(i)).alpha = 0;
     for (let i = 0; i < 4; i++) if (tanks[i]) this.fades.show(viewerCardName(i));
-    this.fades.deleteAfterFade('detail');
     this.changed();
+  }
+  returnToCards(tanks: readonly TankDesign[]) {
+    this.rebuildCards(tanks);
+    this.fades.deleteAfterFade('detail');
   }
   /** GoToNextTank/GoBackATank: Setup slot1, reparent it to detail, then hide slot1. */
   replaceDetail(tank: TankDesign) {

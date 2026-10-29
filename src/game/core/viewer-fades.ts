@@ -38,6 +38,10 @@ export class ViewerFades {
   onDelete(name: string, dispose: () => void) {
     this.disposers.set(name, dispose);
   }
+  cancel(name: string) {
+    this.detach(name);
+    this.changed();
+  }
   deleteAfterFade(name: string) {
     this.detach(name);
     this.deleting.push(name);

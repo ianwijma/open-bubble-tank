@@ -29,7 +29,8 @@ import { TankViewerSort } from './tank-viewer-sort';
 import { TankViewerStatistics } from './tank-viewer-statistics';
 import { useViewerFade } from './viewer-fades';
 import { CreatorText } from './creator-text';
-import { ViewerPanes, viewerCardName, type ViewerPane } from '@/game/core/viewer-panes';
+import { viewerCardName, type ViewerPane } from '@/game/core/viewer-panes';
+import { ViewerCodeFlow, viewerToolbarName } from '@/game/core/viewer-code-flow';
 import { ViewerPaneLayer } from './viewer-pane-layer';
 import {
   ViewerArt,
@@ -130,8 +131,9 @@ export function TankViewer({
   onHelpComplete: () => void;
 }) {
   const local = useMemo(() => localViewerTanks(tanks, avatar), [tanks, avatar]);
-  const [panes] = useState(() => new ViewerPanes());
-  const fades = panes.fades;
+  const [codeFlow] = useState(() => new ViewerCodeFlow(avatar));
+  const panes = codeFlow.panes,
+    fades = codeFlow.fades;
   const paneView = useSyncExternalStore(panes.subscribe, panes.getSnapshot, panes.getSnapshot);
   const initialLocal = useRef(local);
   const [guide, setGuide] = useState(helpSeen ? 0 : 1);
@@ -148,6 +150,7 @@ export function TankViewer({
     } | null>(null),
     [codeOpen, setCodeOpen] = useState(false),
     [code, setCode] = useState(''),
+    [codePrompt, setCodePrompt] = useState(true),
     [message, setMessage] = useState(''),
     [busy, setBusy] = useState(false),
     [copied, setCopied] = useState<Set<string>>(() => new Set()),
@@ -160,23 +163,21 @@ export function TankViewer({
   const confirmationLayer = useViewerFade(confirmation, 'confirmation', fades, true),
     codeLayer = useViewerFade(codeOpen ? true : null, 'code', fades),
     messageLayer = useViewerFade(message || null, 'message', fades),
-    contentLayer = useViewerFade(codeOpen ? null : true, 'content', fades, false, 1),
     shownConfirmation = confirmationLayer.value;
   const all = queue ?? local,
     selected = paneView.detail?.tank,
     covered = !!confirmation || codeOpen || !!message || (ready && guide > 0);
-  const jobs: ViewerJob[] =
-    ready && contentLayer.value
-      ? [
-          ...paneView.cards.flatMap((p) => (p?.ownsArt ? [{ pane: p, fit: true }] : [])),
-          ...(paneView.detail?.ownsArt ? [{ pane: paneView.detail, fit: false }] : []),
-        ].map(({ pane, fit }) => ({
-          key: pane.instance,
-          tank: pane.tank,
-          fit,
-          canvas: () => canvases.current.get(pane.instance) ?? null,
-        }))
-      : [];
+  const jobs: ViewerJob[] = ready
+    ? [
+        ...paneView.cards.flatMap((p) => (p?.ownsArt ? [{ pane: p, fit: true }] : [])),
+        ...(paneView.detail?.ownsArt ? [{ pane: paneView.detail, fit: false }] : []),
+      ].map(({ pane, fit }) => ({
+        key: pane.instance,
+        tank: pane.tank,
+        fit,
+        canvas: () => canvases.current.get(pane.instance) ?? null,
+      }))
+    : [];
   if (confirmation)
     jobs.push({
       key: `confirm:${confirmation.instance}`,
@@ -210,6 +211,7 @@ export function TankViewer({
     opener.current = document.activeElement as HTMLElement | null;
   }
   function reset(list: TankDesign[] | null = null) {
+    codeFlow.localPosition();
     setQueue(list);
     setOffset(0);
     setDetail(false);
@@ -256,13 +258,11 @@ export function TankViewer({
       const tank = await decodeTankCode(code);
       if (tank.avatar !== avatar) throw new Error(`Load an ${avatar ? 'avatar' : 'enemy'} tank.`);
       if (mounted.current && request === codeRequest.current) {
-        reset([tank]);
-        setCodeOpen(false);
+        returnFromCode([tank]);
       }
     } catch (e) {
       if (mounted.current && request === codeRequest.current) {
-        reset([]);
-        setCodeOpen(false);
+        returnFromCode([]);
         setMessage(
           e instanceof Error ? e.message : "The tank(s) you've requested could not be loaded.",
         );
@@ -271,12 +271,32 @@ export function TankViewer({
       if (mounted.current && request === codeRequest.current) setBusy(false);
     }
   }
-  function closeCode() {
+  function returnFromCode(imported?: TankDesign[]) {
     codeRequest.current++;
+    const next = imported ?? all;
+    if (imported) setQueue(imported);
     setCodeOpen(false);
     setBusy(false);
-    if (detail && all[offset]) panes.replaceDetail(all[offset]);
-    else panes.setup(all.slice(offset, offset + 4));
+    setOffset(0);
+    setDetail(false);
+    setCopied(new Set());
+    setHover('');
+    setDescription('');
+    if (busy || imported) codeFlow.returnAfterRead(next);
+    else codeFlow.returnToView(next);
+  }
+  function closeCode() {
+    returnFromCode();
+  }
+  function openCode() {
+    capture();
+    codeFlow.open(detail);
+    setCode('');
+    setCodePrompt(true);
+    setSortOpen(false);
+    setHover('');
+    setDescription('');
+    setCodeOpen(true);
   }
   function page(direction: number) {
     const next =
@@ -433,12 +453,7 @@ export function TankViewer({
           {artworkError}
         </p>
       ) : null}
-      <div
-        ref={contentLayer.ref}
-        className="viewer-content"
-        inert={covered}
-        aria-hidden={covered || undefined}
-      >
+      <div className="viewer-content" inert={covered} aria-hidden={covered || undefined}>
         {!ready ? (
           <ViewerGroup matrix={{ a: 1, b: 0, c: 0, d: 1, tx: 5500, ty: 4500 }}>
             <ViewerArt pack={pack} symbol={1431} />
@@ -535,65 +550,82 @@ export function TankViewer({
                     'btnCurrentPoints_mc',
                   ].includes(p.name),
               )
-              .map((p) =>
-                button(
-                  p,
-                  (
-                    {
-                      btnFirst_mc: 'First page',
-                      btnPrev_mc: 'Previous page',
-                      btnNext_mc: 'Next page',
-                      btnMainMenu_mc: 'Return to Tank Creator',
-                      btnSearchForTanks_mc: 'Search for tanks online',
-                      btnEnterTankID_mc: 'Enter tank ID',
-                      btnEnterTankCode_mc: 'View tank from code',
-                      btnViewLocalTanks_mc: 'View local tanks',
-                    } as Record<string, string>
-                  )[p.name],
-                  () => {
-                    if (p.name === 'btnMainMenu_mc') onBack();
-                    else if (p.name === 'btnFirst_mc') page(0);
-                    else if (p.name === 'btnPrev_mc') page(-1);
-                    else if (p.name === 'btnNext_mc') page(1);
-                    else if (p.name === 'btnEnterTankCode_mc') {
-                      capture();
-                      setCode('');
-                      setCodeOpen(true);
-                    } else if (p.name === 'btnViewLocalTanks_mc') reset();
-                    else void unavailable();
-                  },
-                  p.name === 'btnFirst_mc' || p.name === 'btnPrev_mc'
-                    ? offset === 0
-                    : p.name === 'btnNext_mc'
-                      ? offset + (detail ? 1 : 4) >= all.length
-                      : false,
-                ),
-              )
+              .map((p) => (
+                <ViewerPaneLayer
+                  key={p.name}
+                  name={viewerToolbarName(p.name)}
+                  fades={fades}
+                  active={!codeOpen}
+                >
+                  {button(
+                    p,
+                    (
+                      {
+                        btnFirst_mc: 'First page',
+                        btnPrev_mc: 'Previous page',
+                        btnNext_mc: 'Next page',
+                        btnMainMenu_mc: 'Return to Tank Creator',
+                        btnSearchForTanks_mc: 'Search for tanks online',
+                        btnEnterTankID_mc: 'Enter tank ID',
+                        btnEnterTankCode_mc: 'View tank from code',
+                        btnViewLocalTanks_mc: 'View local tanks',
+                      } as Record<string, string>
+                    )[p.name],
+                    () => {
+                      if (p.name === 'btnMainMenu_mc') onBack();
+                      else if (p.name === 'btnFirst_mc') page(0);
+                      else if (p.name === 'btnPrev_mc') page(-1);
+                      else if (p.name === 'btnNext_mc') page(1);
+                      else if (p.name === 'btnEnterTankCode_mc') openCode();
+                      else if (p.name === 'btnViewLocalTanks_mc') reset();
+                      else void unavailable();
+                    },
+                    p.name === 'btnFirst_mc' || p.name === 'btnPrev_mc'
+                      ? offset === 0
+                      : p.name === 'btnNext_mc'
+                        ? offset + (detail ? 1 : 4) >= all.length
+                        : false,
+                  )}
+                </ViewerPaneLayer>
+              ))
           : null}
-        <TankViewerSort
-          pack={pack}
-          stage={stage}
-          open={sortOpen}
-          enabled={ready && !detail}
-          onOpen={setSortOpen}
-          onHover={setDescription}
-          onSort={(sort) => {
-            reset(sortViewerTanks(all, sort));
-          }}
-        />
+        <ViewerPaneLayer
+          name={viewerToolbarName('btnSortTanks_mc')}
+          fades={fades}
+          active={!codeOpen}
+        >
+          <TankViewerSort
+            x={codeFlow.sortX}
+            pack={pack}
+            stage={stage}
+            open={sortOpen}
+            enabled={ready && !detail}
+            onOpen={setSortOpen}
+            onHover={setDescription}
+            onSort={(sort) => {
+              reset(sortViewerTanks(all, sort));
+            }}
+          />
+        </ViewerPaneLayer>
         {ready && avatar ? (
-          <ViewerGroup matrix={viewerRoot('btnCurrentPoints_mc').matrix}>
-            <ViewerArt pack={pack} symbol={1258} />
-            <ViewerFields
-              pack={pack}
-              symbol={1258}
-              values={{
-                txtClass_txt: String(limits.maxClass),
-                txtBBL_txt: '100',
-                txtGP_txt: String(limits.gunPoints),
-              }}
-            />
-          </ViewerGroup>
+          <ViewerPaneLayer
+            name={viewerToolbarName('btnCurrentPoints_mc')}
+            fades={fades}
+            active={!codeOpen}
+          >
+            <ViewerGroup matrix={viewerRoot('btnCurrentPoints_mc').matrix}>
+              <ViewerArt pack={pack} symbol={1258} />
+              <ViewerFields
+                pack={pack}
+                symbol={1258}
+                values={{
+                  txtClass_txt: String(limits.maxClass),
+                  txtBBL_txt: '100',
+                  txtGP_txt: String(limits.gunPoints),
+                }}
+              />
+            </ViewerGroup>
+          </ViewerPaneLayer>
         ) : null}
         {ready ? (
           <ViewerFields
@@ -688,7 +720,8 @@ export function TankViewer({
                     spellCheck={false}
                     className="viewer-code"
                     value={code}
-                    placeholder="Enter Code Here"
+                    placeholder={codePrompt ? 'Enter Code Here' : ''}
+                    onFocus={() => setCodePrompt(false)}
                     onChange={(e) => setCode(e.target.value)}
                     style={{
                       left: f.x,
