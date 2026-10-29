@@ -463,6 +463,9 @@ test('orbital seekers fill six slots without a target, orbit, and disappear with
   expect(first.symbol).toBe(2016);
   w.player.dead = true;
   step(w, 1);
+  expect(first.dead).toBe(false); // _-JX tests display attachment, not the damage flag.
+  w.player = createTank(w.nextId(), STARTER, 'player');
+  step(w, 1);
   expect(first.dead).toBe(true);
 });
 test('Apocalypse uses the visual field wall, waits on its fuse, and collapses the field before escape', () => {

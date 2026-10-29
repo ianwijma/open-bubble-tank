@@ -23,6 +23,7 @@ import { showCrossingProof } from './crossing';
 import { showPickupProof } from './pickups';
 import { showPlayerClocks } from './player-clocks';
 import { showCombatEffectsProof } from './combat-effects';
+import { showHomingProjectiles } from './homing-projectiles';
 import { showProjectileOrderProof } from './projectile-order';
 import { showActorAi } from './actor-ai';
 import { showWeaponTargets } from './weapon-targets';
@@ -325,6 +326,13 @@ async function reset() {
     const proof = await showProjectileOrderProof(pack, stage);
     status.dataset.projectileOrder = JSON.stringify(proof);
     status.textContent = 'Ready · projectile alpha contact order';
+    return;
+  }
+  if (fixture.value === 'homing-projectiles') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    const proof = await showHomingProjectiles(pack, stage);
+    status.dataset.homingProjectiles = JSON.stringify(proof);
+    status.textContent = 'Ready · homing movement, acquisition and close contact';
     return;
   }
   if (fixture.value === 'combat-effects') {

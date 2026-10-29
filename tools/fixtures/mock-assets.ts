@@ -212,6 +212,11 @@ export async function showMockAssetsProof(native: AssetPack, host: HTMLElement) 
       cx = Math.floor(body.canvas.width / 2),
       cy = Math.floor(body.canvas.height / 2);
     const bodyAlpha = body.pixels[(cy * body.canvas.width + cx) * 4 + 3];
+    const referenceBody = native.part(1003),
+      referenceX = Math.floor(referenceBody.canvas.width / 2),
+      referenceY = Math.floor(referenceBody.canvas.height / 2),
+      referenceBodyAlpha =
+        referenceBody.pixels[(referenceY * referenceBody.canvas.width + referenceX) * 4 + 3];
     let galleryHash = 2166136261;
     for (const byte of ctx.getImageData(0, 0, 550, 450).data)
       galleryHash = Math.imul(galleryHash ^ byte, 16777619);
@@ -220,7 +225,7 @@ export async function showMockAssetsProof(native: AssetPack, host: HTMLElement) 
       comparisons,
       intercept,
       panels,
-      palette: { player: palette(2001), enemy: palette(4001), bodyAlpha },
+      palette: { player: palette(2001), enemy: palette(4001), bodyAlpha, referenceBodyAlpha },
       livePalette,
       galleryHash: galleryHash >>> 0,
     };

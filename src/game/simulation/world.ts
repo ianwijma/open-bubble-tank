@@ -2,6 +2,7 @@ import { CLASS_SPEED, FIELD_RADIUS, MAX_LIFE, STAGE } from '../core/constants';
 import { clamp, direction, distance, length, Random, rotate } from '../core/math';
 import { protectionRadius } from '../core/protection-size';
 import { advanceTankArt } from './tank-art';
+import { initializeHomingProjectile } from './homing-projectiles';
 import { detachForcefield } from './forcefield';
 import { removeTankChild } from './tank-display';
 import { killMountedShield } from './shields';
@@ -186,6 +187,7 @@ export class World {
     this.projectileTimelines.initialize(bullet);
     initializeSapper(this, bullet);
     initializeAvatarSeeker(this, bullet);
+    initializeHomingProjectile(this, bullet);
     if (bullet.kind === 'infect' && bullet.targetId === null) expireInfectionTarget(this, bullet);
     this.bullets.push(bullet);
     if (bullet.enemy) this.stats.enemyShots++;
@@ -572,8 +574,7 @@ export class World {
       tank.dead = true;
       this.dropBubbles(tank, tank.design.reward);
       for (const bullet of this.bullets)
-        if (bullet.owner === tank.uid && ['orbital', 'beam', 'whip'].includes(bullet.kind))
-          bullet.dead = true;
+        if (bullet.owner === tank.uid && ['beam', 'whip'].includes(bullet.kind)) bullet.dead = true;
     }
   }
   beginCollapse(angle: number) {
@@ -814,7 +815,7 @@ export class World {
           orbit: 0,
         });
     for (const b of this.bullets)
-      if (b.owner === t.uid && ['orbital', 'beam', 'whip'].includes(b.kind)) b.dead = true;
+      if (b.owner === t.uid && ['beam', 'whip'].includes(b.kind)) b.dead = true;
   }
   /** _-0D.RemoveEnemy classifies the birth code only when the queued object detaches. */
   flushEnemyRemovals() {

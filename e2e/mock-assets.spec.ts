@@ -32,8 +32,9 @@ for (const native of [false, true])
     // Editor previews share the original gold; hostile live mounts receive the tint.
     expect(Math.abs(proof.palette.player.g - proof.palette.enemy.g)).toBeLessThan(10);
     expect(proof.livePalette.player.g).toBeGreaterThan(proof.livePalette.enemy.g + 8);
-    expect(proof.palette.bodyAlpha).toBeGreaterThan(16);
-    expect(proof.palette.bodyAlpha).toBeLessThan(200);
+    // DefineShape683's blue fill is opaque, as is the supplied SWF's body poster.
+    expect(proof.palette.referenceBodyAlpha).toBe(255);
+    expect(proof.palette.bodyAlpha).toBe(proof.palette.referenceBodyAlpha);
     expect(proof.panels).toHaveLength(8);
     expect(
       proof.panels.every((p: { ink: number; painted: number }) => p.ink > 100 && p.painted > 100),

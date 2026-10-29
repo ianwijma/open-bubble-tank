@@ -242,6 +242,7 @@ export interface Projectile extends Vec {
   contactFrames?: number;
   stopped?: boolean;
   motion?: Vec;
+  homing?: { home?: Tank; target?: Tank; avatar: Tank; close: boolean };
   trailCounter?: number;
   trailPoint?: Vec;
   deflected?: Vec;

@@ -1,4 +1,4 @@
-import { angleTo, DEG, deltaAngle, direction, distance, rotate } from '../core/math';
+import { angleTo, DEG, direction, distance, rotate } from '../core/math';
 import type { GunState, InputFrame, Projectile, Tank } from '../core/types';
 import type { World } from './world';
 import { removeTankChild } from './tank-display';
@@ -15,6 +15,7 @@ import { tickRepulsor } from './repulsor';
 import { tickSpinner } from './spinner';
 import { tickSapper } from './sapper';
 import { tickAvatarSeeker } from './avatar-seeker';
+import { tickHomingProjectile } from './homing-projectiles';
 import { tickWhip } from './whip';
 import { tickGrow } from './grow';
 import { tickFlak } from './flak';
@@ -41,6 +42,8 @@ export function tickBullet(world: World, b: Projectile, _input: InputFrame) {
     tickSeekerMine(world, b);
     return;
   }
+  if (b.kind === 'orbital' || (b.kind === 'seeker' && b.enemy))
+    return tickHomingProjectile(world, b);
   if (b.kind === 'mine') {
     tickStaticMine(world, b);
     return;
@@ -115,7 +118,7 @@ export function tickBullet(world: World, b: Projectile, _input: InputFrame) {
   if (b.kind === 'builder' && builderHitsObject(world, b)) return;
   const targets = b.enemy ? [world.player, ...world.allies] : world.field.enemies;
   let target = targets.find((t) => t.uid === b.targetId && !t.dead);
-  if (!target && b.kind !== 'orbital' && b.kind !== 'infect')
+  if (!target && b.kind !== 'infect')
     target = targets.filter((t) => !t.dead).sort((a, c) => distance(a, b) - distance(c, b))[0];
   if (b.kind === 'infect' && !target) expireInfectionTarget(world, b);
   if (b.kind === 'beam') {
@@ -132,41 +135,7 @@ export function tickBullet(world: World, b: Projectile, _input: InputFrame) {
     tickDamageBeam(world, b, targets);
     return;
   }
-  if (['seeker', 'infect'].includes(b.kind) && target) b.angle = angleTo(b, target);
-  if (b.kind === 'orbital') {
-    if (!owner) {
-      b.dead = true;
-      return;
-    }
-    if (target) b.angle = angleTo(b, target);
-    else {
-      if (distance(b, owner) > owner.radius + 20) {
-        const delta = deltaAngle(b.angle, angleTo(b, owner));
-        if (Math.abs(delta) >= 15) b.angle += delta / 20;
-      } else {
-        b.angle += 5;
-        const off = direction(b.angle - 90, owner.radius + 10);
-        b.x = owner.x + off.x;
-        b.y = owner.y + off.y;
-      }
-      b.targetId = targets.find((t) => !t.dead && distance(t, b) - t.radius < 100)?.uid ?? null;
-    }
-  }
-  if ((b.kind === 'seeker' && b.enemy) || b.kind === 'orbital') {
-    for (const shot of world.bullets)
-      if (
-        !shot.dead &&
-        shot.enemy !== b.enemy &&
-        [0, -0.5, 0.5].some((offset) => {
-          const delta = direction(b.angle, b.speed * offset);
-          return world.hitProjectile(shot, b.x + delta.x, b.y + delta.y);
-        })
-      ) {
-        b.dead = true;
-        projectileImpact(world, b);
-        return;
-      }
-  }
+  if (b.kind === 'infect' && target) b.angle = angleTo(b, target);
   if (b.kind === 'buster') {
     deflectFirstEnemy(world, b);
   }
