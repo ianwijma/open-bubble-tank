@@ -31,6 +31,11 @@ import { useViewerFade } from './viewer-fades';
 import { CreatorText } from './creator-text';
 import { viewerCardName, type ViewerPane } from '@/game/core/viewer-panes';
 import { ViewerCodeFlow, viewerToolbarName } from '@/game/core/viewer-code-flow';
+import {
+  initialViewerNavigation,
+  navigateViewer,
+  type ViewerNavigationAction,
+} from '@/game/core/viewer-navigation';
 import { ViewerPaneLayer } from './viewer-pane-layer';
 import {
   ViewerArt,
@@ -137,10 +142,10 @@ export function TankViewer({
   const paneView = useSyncExternalStore(panes.subscribe, panes.getSnapshot, panes.getSnapshot);
   const initialLocal = useRef(local);
   const [guide, setGuide] = useState(helpSeen ? 0 : 1);
+  const [navigation, setNavigation] = useState(() => initialViewerNavigation(local.length));
+  const { offset, detail } = navigation;
   const [queue, setQueue] = useState<TankDesign[] | null>(null),
-    [offset, setOffset] = useState(0),
     [ready, setReady] = useState(false),
-    [detail, setDetail] = useState(false),
     [hover, setHover] = useState(''),
     [description, setDescription] = useState(''),
     [confirmation, setConfirmation] = useState<{
@@ -210,11 +215,15 @@ export function TankViewer({
   function capture() {
     opener.current = document.activeElement as HTMLElement | null;
   }
-  function reset(list: TankDesign[] | null = null) {
+  function navigate(action: ViewerNavigationAction, length = all.length) {
+    const next = navigateViewer(navigation, length, action);
+    setNavigation(next);
+    return next;
+  }
+  function reset(list: TankDesign[] | null = null, sorted = false) {
     codeFlow.localPosition();
     setQueue(list);
-    setOffset(0);
-    setDetail(false);
+    navigate({ type: sorted ? 'sort' : 'local' }, (list ?? local).length);
     const page = (list ?? local).slice(0, 4);
     if (detail) panes.returnToCards(page);
     else panes.setup(page);
@@ -277,8 +286,7 @@ export function TankViewer({
     if (imported) setQueue(imported);
     setCodeOpen(false);
     setBusy(false);
-    setOffset(0);
-    setDetail(false);
+    navigate({ type: 'code' }, next.length);
     setCopied(new Set());
     setHover('');
     setDescription('');
@@ -298,20 +306,13 @@ export function TankViewer({
     setDescription('');
     setCodeOpen(true);
   }
-  function page(direction: number) {
-    const next =
-      direction === 0
-        ? 0
-        : Math.max(
-            0,
-            Math.min(
-              detail ? all.length - 1 : Math.floor((all.length - 1) / 4) * 4,
-              offset + direction * (detail ? 1 : 4),
-            ),
-          );
-    setOffset(next);
-    if (detail && all[next]) panes.replaceDetail(all[next]);
-    else panes.setup(all.slice(next, next + 4));
+  function page(direction: -1 | 0 | 1) {
+    const next = navigate({ type: 'page', direction });
+    if (detail && all[next.offset]) panes.replaceDetail(all[next.offset]);
+    else {
+      panes.setup(all.slice(next.offset, next.offset + 4));
+      if (!all[next.offset]) setMessage("The tank(s) you've requested could not be loaded.");
+    }
     setCopied(new Set());
   }
   function canvas(key: string, tank: TankDesign) {
@@ -426,8 +427,7 @@ export function TankViewer({
                 () => {
                   if (p.name === 'btnDetails_mc') {
                     panes.detail(index);
-                    setOffset(offset + index);
-                    setDetail(true);
+                    navigate({ type: 'detail', index: offset + index });
                     setHover('');
                   } else if (p.name === 'btnCopy_mc') void copy(tank);
                   else if (p.name === 'btnDelete_mc') confirm(tank, true);
@@ -522,10 +522,8 @@ export function TankViewer({
                       : `${p.name === 'btnCopy_mc' ? 'Copy code for' : p.name === 'btnLargeDelete_mc' ? 'Delete' : 'Save locally'} ${selected.name}`,
                     () => {
                       if (p.name === 'btnLargeBack_mc') {
-                        setDetail(false);
-                        setOffset(Math.floor(offset / 4) * 4);
-                        const first = Math.floor(offset / 4) * 4;
-                        panes.returnToCards(all.slice(first, first + 4));
+                        const next = navigate({ type: 'cards' });
+                        panes.returnToCards(all.slice(next.offset, next.offset + 4));
                       } else if (p.name === 'btnCopy_mc') void copy(selected);
                       else if (p.name === 'btnLargeDelete_mc') confirm(selected, true);
                       else onSaveLocal(selected);
@@ -580,11 +578,13 @@ export function TankViewer({
                       else if (p.name === 'btnViewLocalTanks_mc') reset();
                       else void unavailable();
                     },
-                    p.name === 'btnFirst_mc' || p.name === 'btnPrev_mc'
-                      ? offset === 0
-                      : p.name === 'btnNext_mc'
-                        ? offset + (detail ? 1 : 4) >= all.length
-                        : false,
+                    p.name === 'btnFirst_mc'
+                      ? !navigation.first
+                      : p.name === 'btnPrev_mc'
+                        ? !navigation.previous
+                        : p.name === 'btnNext_mc'
+                          ? !navigation.next
+                          : false,
                   )}
                 </ViewerPaneLayer>
               ))
@@ -603,7 +603,7 @@ export function TankViewer({
             onOpen={setSortOpen}
             onHover={setDescription}
             onSort={(sort) => {
-              reset(sortViewerTanks(all, sort));
+              reset(sortViewerTanks(all, sort), true);
             }}
           />
         </ViewerPaneLayer>
@@ -636,7 +636,7 @@ export function TankViewer({
                 ? ''
                 : detail
                   ? `Tank: ${offset + 1} out of: ${all.length}`
-                  : `Page: ${Math.floor(offset / 4) + 1} out of: ${Math.ceil(all.length / 4)}`,
+                  : `Page: ${navigation.page} out of: ${Math.ceil(all.length / 4)}`,
               txtExplination_txt: description,
             }}
           />
