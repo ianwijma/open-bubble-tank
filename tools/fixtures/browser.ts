@@ -516,6 +516,7 @@ async function reset() {
       { 'turret-1': 110, 'turret-2': 200, 'turret-3': 280, 'turret-4': 380 }[fixture.value] ?? 110;
   }
   world.hitTest = pack.hitTest;
+  world.displayWidth = pack.tankDisplayWidth;
   world.hitPart = pack.hitPart;
   world.hitProjectile = pack.hitProjectile;
   world.projectileBounds = (b) =>

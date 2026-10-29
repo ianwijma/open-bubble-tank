@@ -47,6 +47,14 @@ export function tickGuns(world: World, t: Tank, input: InputFrame, categories?: 
       spec = WEAPONS[id];
     if (categories && !categories.includes(category)) continue;
     if (t.side !== 'player' && [4013, 4022].includes(id)) continue;
+    if (t.side !== 'player' && id === 4010) {
+      // _-Vc.Run invokes the standard timer directly, without Aim or a target gate.
+      if (++g.counter >= spec.rate) {
+        world.fireGun(t, g, input);
+        g.counter = 0;
+      }
+      continue;
+    }
     if (t.side !== 'player' && id === 4015) {
       if (advanceRotatingCycle(g) && ++g.counter >= spec.rate) {
         g.counter = 0;
@@ -480,7 +488,7 @@ export function spawnVolley(
         b.wobbleAmplitude = world.rng.int(1, 8) / 10;
       }
       if (kind === 'orbital') {
-        const radius = t.radius + 10;
+        const radius = (gun.part.type === 4010 ? world.displayWidth(t) / 2 : t.radius) + 10;
         const radians = (world.rng.int(0, 360) * Math.PI) / 180;
         b.x = t.x + Math.cos(radians) * radius;
         b.y = t.y + Math.sin(radians) * radius;

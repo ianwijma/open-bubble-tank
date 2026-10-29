@@ -37,6 +37,13 @@ for (const native of [false, true])
     expect(proof.close).toEqual({ paintedContact: false, dead: true, life: 93 });
     expect(proof.panels.every((panel: { ink: number }) => panel.ink > 30)).toBe(true);
     expect(new Set(proof.panels.map((panel: { hash: number }) => panel.hash)).size).toBe(3);
+    expect(proof.launch).toHaveLength(2);
+    expect(Math.abs(proof.launch[0].width - proof.launch[1].width)).toBeGreaterThan(30);
+    for (const launch of proof.launch) expect(launch.distance).toBeCloseTo(launch.width / 2 + 10);
+    expect(proof.status.nextRoot).toBe(proof.status.root);
+    expect(proof.status.nextChild).not.toBe(proof.status.child);
+    if (native) expect(proof.statusPanels[0]).not.toBe(proof.statusPanels[1]);
+    expect(proof.forcefield.withField).toBeGreaterThan(proof.forcefield.withoutField + 20);
     await page
       .locator('#stage')
       .screenshot({ path: `test-results/${native ? 'swf' : 'mock'}-homing-projectiles.png` });

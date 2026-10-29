@@ -36,9 +36,7 @@ export class SwfTankStatusView {
     if (this.decoration)
       for (const [index, view] of this.marks.entries()) {
         view.setParentAlpha(tank.alpha);
-        if (this.decoration.kind === 'stun')
-          view.update(this.decoration.marks[index].frame + this.decoration.artAge);
-        else view.update(this.decoration.artAge + 1, this.decoration.marks[index].frame);
+        view.updatePose(this.assets.statusClip(tank, index));
       }
     if (tank.status.infect > 0) {
       if (!this.infected) {
