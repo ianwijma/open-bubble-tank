@@ -153,6 +153,100 @@ test('burst damage and its clip share the emitter center and exact 145px radius'
   expect(queue(world).map((e) => [e.symbol, e.x, e.y])).toEqual([[1789, pos.x, pos.y]]);
 });
 
+test('Area Burst immediately detaches only hostile destroyable shots, without impact callbacks', () => {
+  const world = setup(3003, 5006),
+    gun = world.player.guns[0],
+    pos = world.muzzle(world.player, gun);
+  function enemyShot(type: number, offset = 0) {
+    const owner = createTank(
+      world.nextId(),
+      { ...STARTER, avatar: false, parts: [STARTER.parts[0], { ...STARTER.parts[1], type }] },
+      'enemy',
+    );
+    const before = world.bullets.length;
+    world.spawnVolley(owner, owner.guns[0], WEAPONS[type]);
+    const bullet = world.bullets[before];
+    Object.assign(bullet, { x: pos.x + offset, y: pos.y });
+    return bullet;
+  }
+  const seeker = enemyShot(4002, 145),
+    orbital = enemyShot(4010),
+    sapper = enemyShot(4012),
+    outside = enemyShot(4002, 145.01),
+    nonfinite = enemyShot(4002, NaN),
+    ordinary = enemyShot(4001),
+    mine = enemyShot(4009),
+    seekerMine = enemyShot(4021),
+    rocket = enemyShot(4020),
+    friendly = shot(world, 5006);
+  Object.assign(friendly, pos);
+  seekerMine.detonating = 1; // Armed/seeking still does not mean destroyable.
+  queue(world).splice(0);
+  world.fireGun(world.player, gun, emptyInput());
+  expect(world.bullets).toEqual([outside, nonfinite, ordinary, mine, seekerMine, rocket, friendly]);
+  expect([seeker, orbital, sapper].every((bullet) => !bullet.dead)).toBe(true);
+  expect(queue(world).map((effect) => effect.symbol)).toEqual([1789]);
+  expect(world.effects).toEqual([]);
+});
+
+test('Area Stun changes state immediately through shields and forcefields, with independent marks', () => {
+  const world = setup(3002),
+    gun = world.player.guns[0],
+    pos = world.muzzle(world.player, gun);
+  const enemies = [0, 145, 145.01, NaN].map((offset, i) =>
+    createTank(
+      100 + i,
+      {
+        ...STARTER,
+        avatar: false,
+        life: 100,
+        parts: [STARTER.parts[0], ...(i === 1 ? [{ ...STARTER.parts[1], type: 5005 }] : [])],
+      },
+      'enemy',
+      pos.x + offset,
+      pos.y,
+    ),
+  );
+  enemies[0].shield = 100;
+  world.field.enemies = enemies;
+  world.fireGun(world.player, gun, emptyInput());
+  expect(enemies.map((enemy) => [enemy.stunned, enemy.status.stun])).toEqual([
+    [true, 101],
+    [true, 101],
+    [false, 0],
+    [false, 0],
+  ]);
+  expect(enemies.map((enemy) => enemy.life)).toEqual([100, 100, 100, 100]);
+  expect(enemies[0].statusDecoration).toMatchObject({ kind: 'stun', duration: 100, artAge: 0 });
+  expect(enemies[1].statusDecoration).toBeUndefined();
+  expect(queue(world).map((effect) => effect.symbol)).toEqual([1789]);
+});
+
+test('Area Burst flushes lethal enemies before returning and preserves their non-destroyable pods', () => {
+  const world = setup(3003),
+    gun = world.player.guns[0],
+    pos = world.muzzle(world.player, gun),
+    enemy = createTank(
+      100,
+      {
+        ...STARTER,
+        avatar: false,
+        life: 25,
+        parts: [STARTER.parts[0], { ...STARTER.parts[1], type: 4022 }],
+      },
+      'enemy',
+      pos.x,
+      pos.y,
+    );
+  world.field.enemies = [enemy];
+  world.fireGun(world.player, gun, emptyInput());
+  expect(world.field.enemies).toEqual([]);
+  expect(world.runtimeFor(world.field).enemyRemovals).toEqual([]);
+  expect(world.stats.kills).toBe(1);
+  expect(world.bullets).toHaveLength(6);
+  expect(world.bullets.every((bullet) => bullet.kind === 'seekerMine' && !bullet.dead)).toBe(true);
+});
+
 test('ripple remains ready until a target is close, then replaces ally force and emits once', () => {
   const world = setup(),
     enemy = createTank(

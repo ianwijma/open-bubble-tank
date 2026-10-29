@@ -235,16 +235,22 @@ export function fireGun(world: World, t: Tank, gun: GunState, input: InputFrame)
     const pos = world.muzzle(t, gun);
     world.addCombatEffect(pos, 'areaBurst');
     for (const e of world.field.enemies)
-      if (!e.dead && distance(pos, e) <= 145) {
+      if (distance(pos, e) <= 145) {
         if (id === 3002) {
           e.status.stun = 101;
+          e.stunned = true; // StunMe changes the state before the next actor Run.
           decorateStatus(world, e, 'stun', 100);
         } else world.damage(e, 25);
       }
-    if (id === 3003)
-      for (const b of world.bullets)
-        if (b.enemy && distance(b, pos) <= 145 && b.kind !== 'mine') b.dead = true;
-    if (id === 3003) world.flushEnemyRemovals();
+    if (id === 3003) {
+      // AreaBurstTest queues only blnEnemy && blnDestroyable, then detaches them
+      // immediately. Removal has no impact callback and must not skip adjacent shots.
+      for (const b of world.bullets.filter(
+        (b) => b.enemy && projectileFlags(b).destroyable && distance(b, pos) <= 145,
+      ))
+        world.removeBullet(b);
+      world.flushEnemyRemovals();
+    }
     return;
   }
   if (id === 3006) {
