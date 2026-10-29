@@ -1,4 +1,5 @@
 import { PARTS, partById } from '../data/catalog';
+import { SETTINGS_SCREEN } from '../core/settings-screen';
 import type { Projectile, Rect, Tank, TankDesign, TankPart } from '../core/types';
 import { Random, rotate } from '../core/math';
 import { SwfClip } from './swf-clip';
@@ -354,6 +355,7 @@ export class AssetPack {
         for (const p of pack.sprites.get(id)?.placements ?? []) if (p.charId) visit(p.charId);
       };
       for (const p of PARTS) visit(p.symbol);
+      for (const id of [487, 545, 492, 494, 496, 498, 500, 502]) visit(id);
       for (const art of Object.values(projectileArt)) visit(art.symbol);
       for (const art of Object.values(effectArt)) visit(art.symbol);
       for (const art of Object.values(screenEffectArt)) visit(art.symbol);
@@ -376,13 +378,21 @@ export class AssetPack {
           await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
       }
       for (const id of [
-        545, 1537, 1672, 1721, 1717, 492, 494, 498, 500, 496, 1816, 1817, 1820, 1535, 1536, 2034,
-        1626, 1628, 1630, 1633,
+        1537, 1672, 1721, 1717, 492, 494, 498, 500, 496, 1816, 1817, 1820, 1535, 1536, 2034, 1626,
+        1628, 1630, 1633,
       ]) {
-        const raster = await pack.rasterSymbol(id, id === 545 ? 179 : 1);
+        const raster = await pack.rasterSymbol(id, 1);
         if (raster) pack.extras.set(id, raster);
       }
+      const settingsArtwork = Object.values(SETTINGS_SCREEN)
+        .flatMap((layouts) =>
+          Object.values(layouts).flatMap((layout) =>
+            layout.pieces.flatMap((piece) => (piece.children.length ? piece.children : [piece])),
+          ),
+        )
+        .filter((piece) => !piece.field);
       for (const piece of [
+        ...settingsArtwork,
         ...HUD.editConfirm,
         ...HUD.secondaryHelp,
         ...HUD.pause.pieces.filter(
@@ -392,6 +402,7 @@ export class AssetPack {
         WIN_SCREEN.backdrop,
         ...WIN_SCREEN.pieces,
       ]) {
+        if (pack.uiFrames.has(piece.symbol)) continue;
         const frames: Raster[] = [];
         const hover = piece.name && (pack.sprites.get(piece.symbol)?.frameCount ?? 1) > 1;
         for (const frame of hover ? [1, 2] : [1]) {

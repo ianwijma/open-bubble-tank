@@ -74,7 +74,7 @@ test('SWF path: extract original artwork, compose menu, start original field and
   await expect(page.getByRole('button', { name: 'Play', exact: true })).toBeVisible({
     timeout: 60000,
   });
-  await expect(page.getByAltText('Bubble Tanks 3', { exact: true })).toBeVisible();
+  await expect(page.getByRole('img', { name: 'Bubble Tanks 3', exact: true })).toBeVisible();
   await page.screenshot({ path: 'test-results/swf-menu.png' });
   await page.getByRole('button', { name: 'Credits', exact: true }).click();
   await expect(page.locator('.asset-summary')).toContainText('1,071 vectors');

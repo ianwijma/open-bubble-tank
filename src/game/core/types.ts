@@ -299,6 +299,8 @@ export interface Settings {
   music: boolean;
   shake: boolean;
   fps: 35 | 50 | 65 | 90;
+  /** Main.mainFPS is saved separately from the live Stage.frameRate. */
+  mainFps: 35 | 50 | 65;
   quality: 'high' | 'medium' | 'low';
   efficient: boolean;
   h1: string;

@@ -77,6 +77,7 @@ test('mock sound, gesture resume, P/Escape, zoom, guide and centered creator but
   await page.keyboard.press('Escape');
   await expect(page.getByRole('dialog', { name: 'Paused', exact: true })).toBeVisible();
   await page.keyboard.press('KeyP');
+  await expect(page.getByRole('dialog', { name: 'Paused', exact: true })).toHaveCount(0);
   const bounds = await page.locator('.game-canvas').boundingBox();
   await page.mouse.move(bounds!.x + bounds!.width * 0.8, bounds!.y + bounds!.height * 0.5);
   await page.mouse.down();
@@ -156,6 +157,7 @@ test('original SWF music resumes and player volleys play extracted audio', async
   );
   await page.getByRole('button', { name: 'PLAY', exact: true }).click();
   await expect.poll(() => musicPlaying(page)).toBe(true);
+  await expect(page.getByRole('dialog', { name: 'Paused', exact: true })).toHaveCount(0);
   const bounds = await page.locator('.game-canvas').boundingBox();
   await page.mouse.move(bounds!.x + bounds!.width * 0.8, bounds!.y + bounds!.height * 0.5);
   await page.mouse.down();

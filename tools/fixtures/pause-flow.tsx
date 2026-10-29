@@ -1,7 +1,6 @@
 import { createRoot } from 'react-dom/client';
 import { StrictMode, useState } from 'react';
 import { PausePanel } from '../../src/components/pause-panel';
-import { SettingsPanel } from '../../src/components/settings-panel';
 import type { Settings } from '../../src/game/core/types';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { DEFAULT_SETTINGS } from '../../src/game/core/constants';
@@ -37,16 +36,10 @@ function PauseFixture({
         onResume={onResume}
         onMenu={() => (host.dataset.pauseAction = 'menu')}
         onSettings={() => setCovered(true)}
+        settings={settings}
+        onSettingsChange={setSettings}
+        onSettingsClose={() => setCovered(false)}
       />
-      {covered ? (
-        <SettingsPanel
-          pack={pack}
-          settings={settings}
-          onChange={setSettings}
-          overPause
-          onClose={() => setCovered(false)}
-        />
-      ) : null}
     </>
   );
 }

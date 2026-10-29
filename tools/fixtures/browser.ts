@@ -43,6 +43,7 @@ import { showForcefieldOrder } from './forcefield-order';
 import { showShapeContact } from './shape-contact';
 import { showForcefieldLifecycle } from './forcefield-lifecycle';
 import { showMockPartMotion } from './mock-part-motion';
+import { showMainMenuFlow } from './main-menu';
 
 const file = document.querySelector<HTMLInputElement>('#swf')!;
 const fixture = document.querySelector<HTMLSelectElement>('#fixture')!;
@@ -117,6 +118,12 @@ async function reset() {
   world = undefined;
   stage.replaceChildren();
   stage.style.height = '';
+  if (fixture.value === 'main-menu') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    unmountScreen = showMainMenuFlow(pack, stage);
+    status.textContent = 'Ready · manually clocked production main menu';
+    return;
+  }
   if (fixture.value === 'pause-flow') {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
     unmountScreen = await showPauseFlow(pack, stage);

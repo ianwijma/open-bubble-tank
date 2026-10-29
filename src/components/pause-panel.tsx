@@ -1,12 +1,13 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import type { AssetPack } from '@/game/assets/asset-pack';
-import type { Tank } from '@/game/core/types';
+import type { Tank, Settings } from '@/game/core/types';
 import type { StageRuntime } from '@/game/services/stage-runtime';
 import { PAUSE, PauseMotion } from '@/game/core/pause-motion';
 import { BubbleText, Dialog, Icon } from './ui';
 import { TankInfoPanel } from './tank-info-panel';
 import { PauseBackdrop } from './pause-backdrop';
+import { SettingsPanel } from './settings-panel';
 
 const buttons = [
   {
@@ -44,6 +45,9 @@ export function PausePanel({
   onSettings,
   onMenu,
   covered = false,
+  settings,
+  onSettingsChange,
+  onSettingsClose,
 }: {
   pack: AssetPack;
   tank: Tank;
@@ -54,9 +58,16 @@ export function PausePanel({
   onSettings: () => void;
   onMenu: () => void;
   covered?: boolean;
+  settings: Settings;
+  onSettingsChange: (settings: Settings, control?: 'shake' | 'efficiency') => void;
+  onSettingsClose: () => void;
 }) {
   const [motion] = useState(() => new PauseMotion());
   const [info, setInfo] = useState<'closed' | 'open' | 'closing'>('closed');
+  const [settingsFrozen, setSettingsFrozen] = useState(false);
+  const [infoFrozen, setInfoFrozen] = useState(false);
+  const [settingsHotkeys, setSettingsHotkeys] = useState(false);
+  const settingsControls = useRef<{ back: () => void }>(null);
   const [closing, setClosing] = useState(false);
   const [caption, setCaption] = useState('');
   const [hovered, setHovered] = useState('');
@@ -71,6 +82,9 @@ export function PausePanel({
   useEffect(() => {
     if (!closing) motion.phase = covered || info === 'open' ? 'info' : 'menu';
   }, [covered, closing, info, motion]);
+  useEffect(() => {
+    if (!covered) (layer.current?.closest('[role="dialog"]') as HTMLElement | null)?.focus();
+  }, [covered]);
   useEffect(() => {
     if (info !== 'closed')
       (layer.current?.closest('[role="dialog"]') as HTMLElement | null)?.focus();
@@ -107,6 +121,10 @@ export function PausePanel({
   );
   const close = () => {
     if (closing) return;
+    if (covered) {
+      settingsControls.current?.back();
+      return;
+    }
     if (info === 'open') {
       motion.phase = 'menu';
       setInfo('closing');
@@ -116,6 +134,7 @@ export function PausePanel({
     }
   };
   const resume = () => {
+    if (covered) onSettingsClose();
     motion.phase = 'closing';
     setClosing(true);
   };
@@ -138,121 +157,144 @@ export function PausePanel({
     };
   };
   return (
-    <Dialog
-      title={info === 'open' ? 'Tank information' : 'Paused'}
-      className="stage-dialog pause-screen"
-      closeKey={closeKey}
-      onClose={close}
-      onShortcutClose={resume}
-      active={!covered}
-      scrimClassName="pause-bitmap-scrim"
-    >
-      <PauseBackdrop stage={stage} motion={motion} />
-      <div
-        ref={layer}
-        className="pause-button-layer"
-        inert={closing}
-        style={{ opacity: motion.layerAlpha }}
-        data-pause-age={motion.age}
-        data-pause-phase={motion.phase}
+    <>
+      <Dialog
+        title={covered ? 'Settings' : info === 'open' ? 'Tank information' : 'Paused'}
+        className="stage-dialog pause-screen"
+        closeKey={covered && settingsHotkeys ? undefined : closeKey}
+        onClose={close}
+        onShortcutClose={resume}
+        scrimClassName="pause-bitmap-scrim"
       >
-        <div inert={info === 'open' || closing} aria-hidden={info === 'open' || closing}>
+        <PauseBackdrop stage={stage} motion={motion} />
+        <div
+          ref={layer}
+          className="pause-button-layer"
+          inert={closing}
+          style={{ opacity: motion.layerAlpha }}
+          data-pause-age={motion.age}
+          data-pause-phase={motion.phase}
+        >
           <div
-            className="pause-title"
-            ref={(node) => {
-              if (node) nodes.current.set(title.name, node);
-              else nodes.current.delete(title.name);
-            }}
-            style={pieceStyle(title)}
+            data-pause-main
+            inert={covered || info === 'open' || closing}
+            aria-hidden={covered || info === 'open' || closing}
           >
-            {titleRaster ? (
-              <img
-                alt="paused"
-                src={titleRaster.url}
-                style={{
-                  position: 'absolute',
-                  left: titleRaster.x - title.bounds.x,
-                  top: titleRaster.y - title.bounds.y,
-                  width: titleRaster.width,
-                  height: titleRaster.height,
-                }}
-              />
-            ) : (
-              <BubbleText pack={pack} size={40}>
-                paused
+            <div
+              className="pause-title"
+              ref={(node) => {
+                if (node) nodes.current.set(title.name, node);
+                else nodes.current.delete(title.name);
+              }}
+              style={pieceStyle(title)}
+            >
+              {titleRaster ? (
+                <img
+                  alt="paused"
+                  src={titleRaster.url}
+                  style={{
+                    position: 'absolute',
+                    left: titleRaster.x - title.bounds.x,
+                    top: titleRaster.y - title.bounds.y,
+                    width: titleRaster.width,
+                    height: titleRaster.height,
+                  }}
+                />
+              ) : (
+                <BubbleText pack={pack} size={40}>
+                  paused
+                </BubbleText>
+              )}
+            </div>
+            {buttons.map((button) => {
+              const piece = PAUSE.pieces.find((piece) => piece.name === button.name)!;
+              const raster = pack.uiFrames.get(piece.symbol)?.[hovered === button.name ? 1 : 0];
+              return (
+                <button
+                  key={button.name}
+                  className="pause-orb"
+                  aria-label={button.label}
+                  data-pause-piece={button.name}
+                  style={pieceStyle(piece)}
+                  ref={(node) => {
+                    if (node) nodes.current.set(button.name, node);
+                    else nodes.current.delete(button.name);
+                  }}
+                  onPointerEnter={() => hover(button.name, button.caption)}
+                  onPointerLeave={() => hover()}
+                  onFocus={() => hover(button.name, button.caption)}
+                  onBlur={() => hover()}
+                  onClick={() => {
+                    hover();
+                    if (button.action === 'resume') close();
+                    else if (button.action === 'info') {
+                      setSettingsFrozen(true);
+                      setInfoFrozen(false);
+                      infoSeen.current = true;
+                      motion.phase = 'info';
+                      setInfo('open');
+                    } else if (button.action === 'settings') {
+                      setSettingsFrozen(false);
+                      setInfoFrozen(true);
+                      onSettings();
+                    } else onMenu();
+                  }}
+                >
+                  {raster ? (
+                    <img
+                      src={raster.url}
+                      alt=""
+                      style={{
+                        position: 'absolute',
+                        left: raster.x - piece.bounds.x,
+                        top: raster.y - piece.bounds.y,
+                        width: raster.width,
+                        height: raster.height,
+                      }}
+                    />
+                  ) : (
+                    <Icon name={button.icon} size={20} />
+                  )}
+                </button>
+              );
+            })}
+            <div className="pause-caption" aria-live="polite">
+              <BubbleText pack={pack} font="Accidental Presidency" size={17}>
+                {caption || ' '}
               </BubbleText>
-            )}
+            </div>
           </div>
-          {buttons.map((button) => {
-            const piece = PAUSE.pieces.find((piece) => piece.name === button.name)!;
-            const raster = pack.uiFrames.get(piece.symbol)?.[hovered === button.name ? 1 : 0];
-            return (
-              <button
-                key={button.name}
-                className="pause-orb"
-                aria-label={button.label}
-                data-pause-piece={button.name}
-                style={pieceStyle(piece)}
-                ref={(node) => {
-                  if (node) nodes.current.set(button.name, node);
-                  else nodes.current.delete(button.name);
-                }}
-                onPointerEnter={() => hover(button.name, button.caption)}
-                onPointerLeave={() => hover()}
-                onFocus={() => hover(button.name, button.caption)}
-                onBlur={() => hover()}
-                onClick={() => {
-                  hover();
-                  if (button.action === 'resume') close();
-                  else if (button.action === 'info') {
-                    infoSeen.current = true;
-                    motion.phase = 'info';
-                    setInfo('open');
-                  } else if (button.action === 'settings') onSettings();
-                  else onMenu();
-                }}
-              >
-                {raster ? (
-                  <img
-                    src={raster.url}
-                    alt=""
-                    style={{
-                      position: 'absolute',
-                      left: raster.x - piece.bounds.x,
-                      top: raster.y - piece.bounds.y,
-                      width: raster.width,
-                      height: raster.height,
-                    }}
-                  />
-                ) : (
-                  <Icon name={button.icon} size={20} />
-                )}
-              </button>
-            );
-          })}
-          <div className="pause-caption" aria-live="polite">
-            <BubbleText pack={pack} font="Accidental Presidency" size={17}>
-              {caption || ' '}
-            </BubbleText>
-          </div>
+          <SettingsPanel
+            pack={pack}
+            settings={settings}
+            stage={stage}
+            overPause
+            embedded
+            controller={settingsControls}
+            onHotkeysChange={setSettingsHotkeys}
+            active={covered}
+            frozen={closing || settingsFrozen}
+            onChange={onSettingsChange}
+            onClose={onSettingsClose}
+          />
+          <TankInfoPanel
+            pack={pack}
+            tank={tank}
+            fps={fps}
+            stage={stage}
+            embedded
+            frozen={closing || infoFrozen || !infoSeen.current}
+            phase={info}
+            onExitStart={() => {
+              motion.phase = 'menu';
+              setInfo('closing');
+            }}
+            onClose={() => {
+              if (info === 'closing') setInfo('closed');
+            }}
+          />
         </div>
-        <TankInfoPanel
-          pack={pack}
-          tank={tank}
-          fps={fps}
-          stage={stage}
-          embedded
-          frozen={closing || !infoSeen.current}
-          phase={info}
-          onExitStart={() => {
-            motion.phase = 'menu';
-            setInfo('closing');
-          }}
-          onClose={() => {
-            if (info === 'closing') setInfo('closed');
-          }}
-        />
-      </div>
-    </Dialog>
+      </Dialog>
+    </>
   );
 }

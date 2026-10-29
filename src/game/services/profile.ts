@@ -1,4 +1,5 @@
 import { DEFAULT_SETTINGS } from '../core/constants';
+import { validHotkey, canonicalHotkey } from '../core/hotkeys';
 import type { Profile, Settings, TankDesign, TankPart } from '../core/types';
 import { PART_BY_ID, AVATARS, ENEMIES, BOSSES } from '../data/catalog';
 const KEY = 'open-bubble-tank.profile.v1';
@@ -87,10 +88,11 @@ export function validateSettings(value: unknown): Settings {
   for (const key of ['sound', 'music', 'shake', 'efficient'] as const)
     if (typeof s[key] === 'boolean') d[key] = s[key];
   if ([35, 50, 65, 90].includes(s.fps)) d.fps = s.fps;
+  if ([35, 50, 65].includes(s.mainFps)) d.mainFps = s.mainFps;
+  else if ([35, 50, 65].includes(s.fps)) d.mainFps = s.fps as Settings['mainFps'];
   if (['low', 'medium', 'high'].includes(s.quality)) d.quality = s.quality;
   for (const key of ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'] as const)
-    if (typeof s[key] === 'string' && /^(Key[A-Z]|Digit\d|Arrow(Up|Down|Left|Right))$/.test(s[key]))
-      d[key] = s[key];
+    if (validHotkey(s[key])) d[key] = canonicalHotkey(s[key]);
   return d;
 }
 export function loadProfile(): Profile {
@@ -102,7 +104,7 @@ export function loadProfile(): Profile {
     return {
       ...defaultProfile(),
       secondaryHelpSeen: p.secondaryHelpSeen === true,
-      settings: validateSettings(p.settings),
+      settings: restoreSettings(p.settings),
       tanks: Array.isArray(p.tanks) ? p.tanks.filter(validateDesign).slice(0, 200) : [],
       progression: Array.isArray(p.progression)
         ? p.progression.filter(validateDesign).slice(0, 7)
@@ -118,11 +120,20 @@ export function loadProfile(): Profile {
 }
 export function saveProfile(profile: Profile): boolean {
   try {
-    localStorage.setItem(KEY, JSON.stringify(profile));
+    // Main.SaveGameData writes mainFPS, not Stage.frameRate; intCurrE is session-only.
+    const { mainFps, ...settings } = profile.settings;
+    localStorage.setItem(
+      KEY,
+      JSON.stringify({ ...profile, settings: { ...settings, fps: mainFps, efficient: false } }),
+    );
     return true;
   } catch {
     return false;
   }
+}
+export function restoreSettings(value: unknown): Settings {
+  const settings = validateSettings(value);
+  return { ...settings, fps: settings.mainFps, efficient: false };
 }
 export function exportDesign(design: TankDesign) {
   const url = URL.createObjectURL(

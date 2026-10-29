@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useRef } from 'react';
 import type { AssetPack } from '@/game/assets/asset-pack';
+import { canonicalHotkey } from '@/game/core/hotkeys';
 export function BubbleText({
   children,
   pack,
@@ -156,9 +157,10 @@ export function Dialog({
         aria-label={title}
         className={`dialog ${className}`}
         onKeyDown={(e) => {
-          if ((e.key === 'Escape' || e.code === closeKey) && onClose) {
+          if ((e.key === 'Escape' || canonicalHotkey(e.code) === closeKey) && onClose) {
+            e.preventDefault();
             e.stopPropagation();
-            if (e.code === closeKey && onShortcutClose) onShortcutClose();
+            if (canonicalHotkey(e.code) === closeKey && onShortcutClose) onShortcutClose();
             else onClose();
           }
           if (e.key === 'Tab') {
