@@ -1,10 +1,12 @@
 import { displayAlpha } from './display-values';
 import geometry from '../data/main-menu-geometry.json';
+import { MenuSeriesMotion } from './menu-series';
 
 export const MAIN_MENU = geometry;
 
 /** _-Sm: Setup, TitleCountdown, _-CL, _-Ze/_-2z and PlayButtonEffect. */
 export class MainMenuMotion {
+  readonly series = new MenuSeriesMotion();
   age = 0;
   parked = true;
   controlAlpha = 0;
@@ -31,6 +33,7 @@ export class MainMenuMotion {
   }
   advance() {
     this.age++;
+    this.series.advance(this.age + 1);
     if (this.titleCounter > 0) this.titleCounter--;
     else if (this.titleCounter === 0) {
       this.titleCounter = -1;

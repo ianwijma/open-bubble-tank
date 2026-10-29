@@ -5,6 +5,9 @@ import { MAIN_MENU, type MainMenuMotion } from '@/game/core/main-menu';
 import type { StageRuntime } from '@/game/services/stage-runtime';
 import type { MainMenuView } from '@/game/render/main-menu-view';
 import { BubbleText, Icon } from './ui';
+import { MENU_SERIES, SERIES_CONTROLS, type SeriesControl } from '@/game/core/menu-series';
+import { MockMenuSeriesView } from '@/game/render/mock-menu-series-view';
+import { legacyWebsites, type LegacyWebsites } from '@/game/services/extensions';
 
 const controls = [
   { name: 'play_btn', label: 'Play', caption: 'PLAY', css: 'play', icon: 'play', size: 78 },
@@ -57,6 +60,7 @@ export function MainMenu({
   covered,
   overlayRoot,
   onAction,
+  websites = legacyWebsites,
 }: {
   pack: AssetPack;
   stage: StageRuntime;
@@ -64,6 +68,7 @@ export function MainMenu({
   covered: boolean;
   overlayRoot: RefObject<HTMLFieldSetElement | null>;
   onAction: (name: (typeof controls)[number]['name']) => void;
+  websites?: LegacyWebsites;
 }) {
   const root = useRef<HTMLDivElement>(null),
     canvasHost = useRef<HTMLDivElement>(null),
@@ -71,6 +76,12 @@ export function MainMenu({
     title = useRef<HTMLDivElement>(null),
     native = useRef<MainMenuView | null>(null),
     isCovered = useRef(covered);
+  const seriesRoot = useRef<HTMLDivElement>(null),
+    seriesHost = useRef<HTMLDivElement>(null),
+    seriesButtons = useRef(new Map<string, HTMLButtonElement>()),
+    mockSeries = useRef<MockMenuSeriesView | null>(null),
+    redraw = useRef<() => void>(() => {});
+  const [seriesMessage, setSeriesMessage] = useState('');
   const [error, setError] = useState(false);
   useEffect(() => {
     isCovered.current = covered;
@@ -90,6 +101,16 @@ export function MainMenu({
       root.current.dataset.menuBusy = String(motion.busy);
       root.current.dataset.controlAlpha = String(motion.controlAlpha);
       root.current.dataset.titleAlpha = String(motion.titleAlpha);
+      const series = seriesRoot.current!;
+      series.dataset.seriesFrame = String(motion.series.pose.frame);
+      series.inert = motion.parked || isCovered.current;
+      series.style.left = `${motion.parked ? -100 : MAIN_MENU.series.matrix.tx / 20}px`;
+      series.style.top = `${motion.parked ? -100 : MAIN_MENU.series.matrix.ty / 20}px`;
+      series.style.width = `${motion.series.width}px`;
+      series.style.opacity = String(Math.max(0, Math.min(1, motion.controlAlpha)));
+      for (const [name, button] of seriesButtons.current)
+        button.hidden = !motion.series.activeControls.includes(name as SeriesControl);
+      mockSeries.current?.draw(motion.series);
       buttons.current.inert = motion.parked || isCovered.current;
       for (const [index, piece] of MAIN_MENU.controls.entries()) {
         const node = buttons.current.children[index] as HTMLElement,
@@ -115,8 +136,18 @@ export function MainMenu({
     };
     async function start() {
       if (pack.mode === 'mock') {
+        const view = new MockMenuSeriesView();
+        mockSeries.current = view;
+        seriesHost.current!.appendChild(view.canvas);
+        redraw.current = present;
         present();
-        dispose = stage.subscribe({ beforeStep: () => motion.advance(), draw: present });
+        const unsubscribe = stage.subscribe({ beforeStep: () => motion.advance(), draw: present });
+        dispose = () => {
+          unsubscribe();
+          redraw.current = () => {};
+          mockSeries.current = null;
+          view.canvas.remove();
+        };
         return;
       }
       const [{ Application }, { MainMenuView }, { SwfTextures }] = await Promise.all([
@@ -158,9 +189,11 @@ export function MainMenu({
         present();
       };
       const unsubscribe = stage.subscribe({ beforeStep: () => motion.advance(), draw });
+      redraw.current = draw;
       dispose = () => {
         unsubscribe();
         native.current = null;
+        redraw.current = () => {};
         view.destroy();
         app.destroy({ removeView: true }, { children: true });
         textures.destroy();
@@ -176,6 +209,22 @@ export function MainMenu({
       release();
     };
   }, [pack, stage, motion, overlayRoot]);
+  const hoverSeries = (over: boolean) => {
+    motion.series.hover(over);
+    setSeriesMessage(over ? 'More Bubbletanks Games' : '');
+    redraw.current();
+  };
+  const caption = MAIN_MENU.rollover,
+    captionFont = caption.font;
+  const captionSvg =
+    seriesMessage &&
+    pack.textSvg(
+      seriesMessage,
+      captionFont.size,
+      '#fff',
+      captionFont.name,
+      captionFont.letterSpacing,
+    );
   return (
     <div ref={root} className="main-menu stage-background" data-assets={pack.mode}>
       <div className="menu-guest">
@@ -221,6 +270,86 @@ export function MainMenu({
           );
         })}
       </div>
+      <div
+        ref={seriesRoot}
+        className="main-menu-series"
+        role="group"
+        aria-label="More Bubbletanks Games"
+        tabIndex={0}
+        style={{ left: -100, top: -100, width: 131, opacity: 0 }}
+        onMouseEnter={() => hoverSeries(true)}
+        onMouseLeave={() => hoverSeries(false)}
+        onFocusCapture={() => hoverSeries(true)}
+        onBlurCapture={(event) => {
+          if (!event.currentTarget.contains(event.relatedTarget)) hoverSeries(false);
+        }}
+        inert
+      >
+        <div ref={seriesHost} className="menu-series-art" />
+        {MENU_SERIES.controls.map((piece) => {
+          const name = piece.name as SeriesControl,
+            control = SERIES_CONTROLS[name];
+          return (
+            <button
+              key={name}
+              ref={(node) => {
+                if (node) seriesButtons.current.set(name, node);
+                else seriesButtons.current.delete(name);
+              }}
+              hidden
+              aria-label={control.label}
+              style={{
+                left: piece.matrix.tx / 20 + piece.bounds.x,
+                top: piece.matrix.ty / 20 + piece.bounds.y,
+                width: piece.bounds.width,
+                height: piece.bounds.height,
+              }}
+              onMouseEnter={() => setSeriesMessage(control.label)}
+              onFocus={() => setSeriesMessage(control.label)}
+              onClick={() => {
+                if (motion.busy || motion.parked || isCovered.current) return;
+                try {
+                  websites.open(control.destination);
+                } catch (error) {
+                  setSeriesMessage(
+                    error instanceof Error ? error.message : 'This game website is not connected.',
+                  );
+                }
+              }}
+            />
+          );
+        })}
+      </div>
+      <p
+        className="menu-series-caption"
+        role="status"
+        style={{
+          left: caption.matrix.tx / 20 + caption.bounds.x,
+          top:
+            caption.matrix.ty / 20 +
+            caption.bounds.y +
+            2 +
+            captionFont.size * (captionFont.ascent / 1024 - 1),
+          width: caption.bounds.width,
+          height: caption.bounds.height,
+          fontSize: captionFont.size,
+          letterSpacing: captionFont.letterSpacing,
+          opacity: (captionFont.color[3] ?? 255) / 255,
+        }}
+      >
+        <span className="sr-only">{seriesMessage}</span>
+        {captionSvg ? (
+          <img
+            alt=""
+            aria-hidden="true"
+            draggable={false}
+            style={{ height: captionFont.size * 1.4 }}
+            src={`data:image/svg+xml;charset=utf-8,${encodeURIComponent(captionSvg)}`}
+          />
+        ) : (
+          <span aria-hidden="true">{seriesMessage}</span>
+        )}
+      </p>
       {error ? <span role="alert">Menu artwork could not start.</span> : null}
     </div>
   );

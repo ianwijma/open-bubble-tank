@@ -374,7 +374,7 @@ export class AssetPack {
         for (const p of pack.sprites.get(id)?.placements ?? []) if (p.charId) visit(p.charId);
       };
       for (const p of PARTS) visit(p.symbol);
-      for (const id of [487, 545, 492, 494, 496, 498, 500, 502]) visit(id);
+      for (const id of [487, 524, 545, 492, 494, 496, 498, 500, 502]) visit(id);
       visit(CREDITS.symbol);
       for (const art of Object.values(projectileArt)) visit(art.symbol);
       for (const art of Object.values(effectArt)) visit(art.symbol);
@@ -947,7 +947,13 @@ export class AssetPack {
     }
     return false;
   }
-  textSvg(text: string, size: number, color = '#ffffff', fontName = 'Billo'): string | null {
+  textSvg(
+    text: string,
+    size: number,
+    color = '#ffffff',
+    fontName = 'Billo',
+    letterSpacing = 0,
+  ): string | null {
     const font = [...this.fonts.values()].find(
       (f) => f.name.startsWith(fontName) && f.advances?.length,
     );
@@ -958,11 +964,11 @@ export class AssetPack {
     for (const ch of text) {
       const index = font.codeTable.indexOf(ch.charCodeAt(0));
       if (index < 0) {
-        x += size * 0.4;
+        x += size * 0.4 + letterSpacing;
         continue;
       }
       body += `<path transform="translate(${x} ${size}) scale(${scale})" d="${font.glyphs[index]}"/>`;
-      x += ((font.advances?.[index] ?? 10240) / 20) * scale;
+      x += ((font.advances?.[index] ?? 10240) / 20) * scale + letterSpacing;
     }
     return `<svg xmlns="http://www.w3.org/2000/svg" width="${Math.max(1, x)}" height="${size * 1.4}" viewBox="0 0 ${Math.max(1, x)} ${size * 1.4}"><g fill="${escapeXml(color)}">${body}</g></svg>`;
   }

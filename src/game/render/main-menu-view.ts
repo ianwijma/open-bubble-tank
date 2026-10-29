@@ -11,12 +11,10 @@ export class MainMenuView {
   private title: SwfSymbolView;
   private titlePose: SwfClip;
   private controls;
-  private background: SwfSymbolView;
   private glow: SwfGlowFilter;
+  private series: SwfSymbolView;
   constructor(pack: AssetPack, textures: RasterTextures) {
-    this.background = new SwfSymbolView(MAIN_MENU.background, pack, textures);
-    this.background.update(1);
-    this.root.addChild(this.background.root);
+    //556 depth1/clipDepth2 makes487 a nonpainting mask. All controls start above depth2.
     this.controls = MAIN_MENU.controls.map((piece) => {
       const view = new SwfSymbolView(piece.symbol, pack, textures),
         pose = new SwfClip(piece.symbol, pack),
@@ -28,6 +26,8 @@ export class MainMenuView {
     });
     this.glow = new SwfGlowFilter(this.glowOptions(0));
     this.controls[0].wrapper.filters = [this.glow];
+    this.series = new SwfSymbolView(MAIN_MENU.series.symbol, pack, textures);
+    this.root.addChild(this.series.root);
     this.title = new SwfSymbolView(MAIN_MENU.title.symbol, pack, textures);
     this.titlePose = new SwfClip(MAIN_MENU.title.symbol, pack);
     const m = MAIN_MENU.title.matrix;
@@ -74,6 +74,14 @@ export class MainMenuView {
       view.updatePose(pose);
     }
     this.glow.setOptions(this.glowOptions(motion.glowStrength));
+    const s = MAIN_MENU.series.matrix;
+    this.series.root.visible = motion.controlAlpha > 0;
+    this.series.root.position.set(
+      motion.parked ? -100 : s.tx / 20,
+      motion.parked ? -100 : s.ty / 20,
+    );
+    this.series.setParentAlpha(motion.controlAlpha);
+    this.series.updatePose(motion.series.pose);
     this.titlePose.advance(motion.age + 1);
     this.title.root.visible = motion.titleAlpha > 0;
     this.title.setParentAlpha(motion.titleAlpha);
@@ -83,8 +91,8 @@ export class MainMenuView {
     return this.titlePose.children.get(1)?.clip.frame;
   }
   destroy() {
-    this.background.destroy();
     this.title.destroy();
+    this.series.destroy();
     for (const control of this.controls) control.view.destroy();
     this.glow.destroy();
     this.root.destroy({ children: true });

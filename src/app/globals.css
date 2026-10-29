@@ -2038,3 +2038,39 @@ kbd {
 .main-menu.stage-background:after {
   display: none;
 }
+.main-menu-series {
+  position: absolute;
+  height: 22px;
+  overflow: hidden;
+  z-index: 2;
+  cursor: pointer;
+}
+.menu-series-art {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.main-menu-series button {
+  position: absolute;
+  padding: 0;
+  background: transparent;
+}
+.menu-series-caption {
+  position: absolute;
+  margin: 0;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  font:
+    20px 'Arial Narrow',
+    Arial,
+    sans-serif;
+  color: #fff;
+  z-index: 2;
+  pointer-events: none;
+}
+.menu-series-caption img {
+  display: inline;
+  max-width: none;
+  vertical-align: top;
+}
