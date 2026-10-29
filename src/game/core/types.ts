@@ -88,6 +88,19 @@ export interface GunState {
   turretRefs?: Projectile[];
   spawnDesign?: TankDesign;
   patientId?: number;
+  behavior?: {
+    targetId: number | null;
+    allies: number;
+    cloak?: number;
+    wall?: {
+      age: number;
+      frequency: number;
+      amplitude: number;
+      point?: Vec;
+      radius?: number;
+      direction?: number;
+    };
+  };
   beamId?: number;
   shieldDiameter?: number;
   shieldFilm?: ShieldClip;
@@ -140,9 +153,17 @@ export interface Tank extends Vec {
   age: number;
   /** Attached artwork stage ticks, independent of gameplay Run. */
   artAge: number;
-  turnFrames: number;
-  turnRate: number;
-  holdTurn: number;
+  movement: {
+    frames: number;
+    rate: number;
+    hold: number;
+    safety: boolean;
+    lastAngle: number;
+    swarmPoint: Vec | null;
+    wallFlower: boolean;
+    skittish: boolean;
+    stationary: boolean;
+  };
   phase: number;
   alpha: number;
   targetId: number | null;

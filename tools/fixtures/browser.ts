@@ -24,6 +24,7 @@ import { showPickupProof } from './pickups';
 import { showPlayerClocks } from './player-clocks';
 import { showCombatEffectsProof } from './combat-effects';
 import { showProjectileOrderProof } from './projectile-order';
+import { showActorAi } from './actor-ai';
 import { showSeekerMineProof } from './seeker-mines';
 import { showSpecialProjectilesProof } from './special-projectiles';
 import { showProjectileClocksProof } from './projectile-clocks';
@@ -294,6 +295,13 @@ async function reset() {
     const proof = await showSeekerMineProof(pack, stage);
     status.dataset.seekerMines = JSON.stringify(proof);
     status.textContent = 'Ready · seeker-mine bounds and independent clocks';
+    return;
+  }
+  if (fixture.value === 'actor-ai') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    const proof = await showActorAi(pack, stage);
+    status.dataset.actorAi = JSON.stringify(proof);
+    status.textContent = 'Ready · source actor movement and behavior clocks';
     return;
   }
   if (fixture.value === 'projectile-order') {

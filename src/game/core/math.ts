@@ -27,7 +27,7 @@ export class Random {
   }
   // The original uses this slightly non-uniform inclusive integer roll.
   int(min: number, max: number) {
-    return clamp(Math.round(this.next() * (max - min + 0.8) + min - 0.4), min, max);
+    return Math.round(this.next() * (max - min + 0.8) + min - 0.4);
   }
   pick<T>(items: readonly T[]): T {
     if (!items.length) throw new Error('Cannot choose from an empty pool');

@@ -27,6 +27,7 @@ import { projectileFlags } from './projectile-flags';
 import { recordLayerMine } from './mine-layers';
 import mineArt from '../data/mine-art.json';
 import { convertDrones } from './converter';
+import { tickBehavior } from './behaviors';
 
 export function tickGuns(world: World, t: Tank, input: InputFrame, categories?: readonly number[]) {
   const target = world.getTarget(t);
@@ -47,7 +48,7 @@ export function tickGuns(world: World, t: Tank, input: InputFrame, categories?: 
     const mount = rotate(g.part, t.rotation),
       pos = { x: t.x + mount.x, y: t.y + mount.y };
     const fixed =
-      [3001, 3008, 3017, 4002, 4008, 4009, 4010, 4012, 4021].includes(id) ||
+      [3001, 3008, 3017, 4002, 4008, 4009, 4010, 4012, 4021, 6001, 6003, 6005].includes(id) ||
       t.design.id.startsWith('B');
     if (![4015, 4032, 5003, 5004, 5006].includes(id))
       g.angle =
@@ -56,6 +57,11 @@ export function tickGuns(world: World, t: Tank, input: InputFrame, categories?: 
           : angleTo(pos, aim) - t.rotation;
     if (id === 6002) {
       tickHealer(world, t, g);
+      tickBehavior(world, t, g);
+      continue;
+    }
+    if (category === 6) {
+      tickBehavior(world, t, g);
       continue;
     }
     if (t.side !== 'player' && g.burst > 0 && --g.burstTimer <= 0) {
@@ -68,7 +74,7 @@ export function tickGuns(world: World, t: Tank, input: InputFrame, categories?: 
       refreshForcefield(t);
       continue;
     }
-    if (!spec || category === 6) continue;
+    if (!spec) continue;
     if (t.side === 'player') {
       if (g.counter >= 0) g.counter--;
       if ([5003, 5004].includes(id)) {
@@ -237,7 +243,9 @@ export function fireGun(world: World, t: Tank, gun: GunState, input: InputFrame)
     const max = t.guns.filter((g) => g.part.type === id).length;
     if (world.allies.filter((a) => a.design.id === key).length >= max) return;
     const pos = world.muzzle(t, gun);
-    world.allies.push(createTank(world.nextId(), design, 'ally', pos.x, pos.y));
+    world.allies.push(
+      createTank(world.nextId(), design, 'ally', pos.x, pos.y, undefined, undefined, world),
+    );
     return;
   }
   if (id === 4003) {
@@ -246,7 +254,18 @@ export function fireGun(world: World, t: Tank, gun: GunState, input: InputFrame)
       ENEMIES.filter((e) => e.name === 'Pew Pew' || e.name === 'Flittering Terror');
     gun.spawnDesign ??= world.rng.pick(candidates);
     const pos = world.muzzle(t, gun);
-    world.field.enemies.push(createTank(world.nextId(), gun.spawnDesign, 'enemy', pos.x, pos.y));
+    world.field.enemies.push(
+      createTank(
+        world.nextId(),
+        gun.spawnDesign,
+        'enemy',
+        pos.x,
+        pos.y,
+        undefined,
+        undefined,
+        world,
+      ),
+    );
     return;
   }
   if (id === 4023) {

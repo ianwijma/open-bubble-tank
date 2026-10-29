@@ -45,7 +45,6 @@ import { createTank } from './tank';
 import { spawnPickups, tickPickups } from './pickups';
 import { damageTank } from './damage';
 import { rollWave, UnitRoster } from './waves';
-import { healerPatient } from './healing';
 import { tickStatusDecoration, tickStatusTail } from './status';
 import fieldGeometry from '../data/field-geometry.json';
 import { nextMapMode, type MapMode } from '../core/minimap';
@@ -319,6 +318,7 @@ export class World {
       0,
       max,
       Math.floor(max / 75) + 1,
+      this,
     );
     this.field = { col: 0, row: 0, scale: 1, enemies: [], cleared: true, boss: false, tutorial: 1 };
     this.fields.set('0,0', this.field);
@@ -555,15 +555,7 @@ export class World {
     }
     const boss = tank.side === 'enemy' && tank.design.id.startsWith('B');
     if (!boss && tank.status.sticky > 0) tank.status.sticky--;
-    const target = this.getTarget(tank);
-    const healer = tank.guns.find((gun) => gun.part.type === 6002);
-    moveEnemy(
-      tank,
-      target,
-      this.currentField.scale,
-      this.rng,
-      healer ? healerPatient(this, tank, healer) : undefined,
-    );
+    moveEnemy(tank, this.currentField.scale, this.rng, this.player);
     if (tank.status.jam > 0) tank.status.jam--;
     if (tank.status.jam === 0) this.tickGuns(tank, input);
     tickStatusDecoration(tank);
@@ -985,6 +977,7 @@ export class World {
       old.y,
       max,
       death ? max - 1 : Math.floor(max / 75) + 1,
+      this,
     );
     this.player.rotation = old.rotation;
     this.player.velocity = { ...old.velocity };
@@ -1054,6 +1047,9 @@ export class World {
             'enemy',
             this.rng.int(-200, 200) * wave.scale,
             this.rng.int(-200, 200) * wave.scale,
+            undefined,
+            undefined,
+            this,
           );
           t.rotation = this.rng.int(-180, 180);
           return t;
