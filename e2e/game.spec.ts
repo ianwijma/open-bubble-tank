@@ -77,8 +77,11 @@ test('SWF path: extract original artwork, compose menu, start original field and
   await expect(page.getByRole('img', { name: 'Bubble Tanks 3', exact: true })).toBeVisible();
   await page.screenshot({ path: 'test-results/swf-menu.png' });
   await page.getByRole('button', { name: 'Credits', exact: true }).click();
+  await expect(page.getByRole('dialog', { name: 'Credits', exact: true })).toBeVisible();
+  await page.getByText('About this recreation', { exact: true }).click();
   await expect(page.locator('.asset-summary')).toContainText('1,071 vectors');
-  await page.getByRole('button', { name: 'BACK', exact: true }).click();
+  await page.getByText('About this recreation', { exact: true }).click();
+  await page.getByRole('button', { name: 'Back', exact: true }).click();
   await page.getByRole('button', { name: 'Play', exact: true }).click();
   await page
     .getByRole('dialog', { name: 'Choose your tanks' })

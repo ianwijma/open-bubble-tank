@@ -1,5 +1,7 @@
 import { PARTS, partById } from '../data/catalog';
 import { SETTINGS_SCREEN } from '../core/settings-screen';
+import { CREDITS } from '../core/credits-screen';
+import { mockCreditsLeaf } from './mock-credits';
 import type { Projectile, Rect, Tank, TankDesign, TankPart } from '../core/types';
 import { Random, rotate } from '../core/math';
 import { SwfClip } from './swf-clip';
@@ -98,6 +100,8 @@ interface ShapeInfo {
 interface FontInfo {
   id: number;
   name: string;
+  bold?: number;
+  italic?: number;
   codeTable: number[];
   glyphs: string[];
   advances?: number[];
@@ -250,6 +254,21 @@ export class AssetPack {
     const pack = new AssetPack('mock');
     pack.sprites = new Map(mockPartTimelines.sprites.map((s) => [s.id, s as SpriteInfo]));
     pack.shapes = new Map(mockPartTimelines.shapes.map((s) => [s.id, s]));
+    for (const sprite of CREDITS.sprites) pack.sprites.set(sprite.id, sprite as SpriteInfo);
+    for (const shape of CREDITS.shapes) pack.shapes.set(shape.id, shape);
+    for (const leaf of [...CREDITS.shapes, ...CREDITS.texts]) {
+      const b = leaf.bounds;
+      const bounds =
+        'xMin' in b
+          ? {
+              x: b.xMin / 20,
+              y: b.yMin / 20,
+              width: (b.xMax - b.xMin) / 20,
+              height: (b.yMax - b.yMin) / 20,
+            }
+          : b;
+      pack.leaves.set(leaf.id, mockCreditsLeaf(leaf.id, bounds));
+    }
     for (const { id, bounds: b } of mockPartTimelines.shapes) {
       const raster = mockPartLeaf(id, {
         x: b.xMin / 20,
@@ -356,6 +375,7 @@ export class AssetPack {
       };
       for (const p of PARTS) visit(p.symbol);
       for (const id of [487, 545, 492, 494, 496, 498, 500, 502]) visit(id);
+      visit(CREDITS.symbol);
       for (const art of Object.values(projectileArt)) visit(art.symbol);
       for (const art of Object.values(effectArt)) visit(art.symbol);
       for (const art of Object.values(screenEffectArt)) visit(art.symbol);

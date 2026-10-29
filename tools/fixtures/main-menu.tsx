@@ -2,7 +2,7 @@ import { StrictMode, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { MainMenu } from '../../src/components/main-menu';
 import { SettingsPanel } from '../../src/components/settings-panel';
-import { Dialog } from '../../src/components/ui';
+import { CreditsPanel } from '../../src/components/credits-panel';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { MainMenuMotion } from '../../src/game/core/main-menu';
 import { DEFAULT_SETTINGS } from '../../src/game/core/constants';
@@ -46,12 +46,7 @@ function MenuFixture({
         {overlay === 'settings' ? (
           <SettingsPanel pack={pack} settings={settings} onChange={setSettings} onClose={close} />
         ) : null}
-        {overlay === 'credits' ? (
-          <Dialog title="Credits" onClose={close}>
-            <div className="credits">Credits transition</div>
-            <button onClick={close}>Back</button>
-          </Dialog>
-        ) : null}
+        {overlay === 'credits' ? <CreditsPanel pack={pack} stage={stage} onClose={close} /> : null}
       </fieldset>
     </>
   );

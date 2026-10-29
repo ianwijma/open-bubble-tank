@@ -12,6 +12,7 @@ import { AssetGate } from './asset-gate';
 import { GameViewport } from './game-viewport';
 import { MainStage } from './main-stage';
 import { MainMenu } from './main-menu';
+import { CreditsPanel } from './credits-panel';
 import { MainMenuMotion } from '@/game/core/main-menu';
 import { GameHud } from './game-hud';
 import { SettingsPanel } from './settings-panel';
@@ -453,36 +454,7 @@ export default function GameShell() {
                 />
               ) : null}
               {pack && overlay === 'credits' ? (
-                <Dialog title="Bubble Tanks 3" onClose={closeOverlay}>
-                  <div className="credits">
-                    <p>
-                      Original game, artwork, and sound
-                      <br />
-                      <strong>Hero Interactive</strong>
-                    </p>
-                    <p>
-                      Open Bubble Tank is an independent TypeScript recreation, built from research
-                      into the original Flash game.
-                    </p>
-                    <p>
-                      Game assets are supplied by you and extracted locally. The Flash file is never
-                      uploaded or executed.
-                    </p>
-                    {pack.report ? (
-                      <p className="asset-summary">
-                        {pack.report.filename}
-                        <br />
-                        {pack.report.vectors.toLocaleString()} vectors ·{' '}
-                        {pack.report.sprites.toLocaleString()} sprites · {pack.report.sounds} sounds
-                      </p>
-                    ) : (
-                      <p className="asset-summary">Playing with procedural mock artwork.</p>
-                    )}
-                  </div>
-                  <button className="game-button" onClick={closeOverlay}>
-                    BACK
-                  </button>
-                </Dialog>
+                <CreditsPanel pack={pack} stage={stage} onClose={closeOverlay} />
               ) : null}
               {pack && profile && overlay === 'sources' ? (
                 <Dialog title="Choose your tanks" onClose={closeOverlay}>
@@ -542,6 +514,31 @@ export default function GameShell() {
         </p>
         <span>{storageError ? 'LOCAL SAVING UNAVAILABLE' : 'LOCAL SAVE'}</span>
       </footer>
+      <details className="recreation-details">
+        <summary>About this recreation</summary>
+        <p>
+          Original game and artwork: Hero Interactive. Music &amp; sound: Brian Hall, Polyphone
+          Music.
+        </p>
+        <p>
+          Open Bubble Tank is an independent TypeScript recreation, built from research into the
+          original Flash game.
+        </p>
+        <p>
+          Game assets are supplied by you and extracted locally. The Flash file is never uploaded or
+          executed.
+        </p>
+        {pack?.report ? (
+          <p className="asset-summary">
+            {pack.report.filename}
+            <br />
+            {pack.report.vectors.toLocaleString()} vectors · {pack.report.sprites.toLocaleString()}{' '}
+            sprites · {pack.report.sounds} sounds
+          </p>
+        ) : pack ? (
+          <p className="asset-summary">Playing with procedural mock artwork.</p>
+        ) : null}
+      </details>
     </main>
   );
 }

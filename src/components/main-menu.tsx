@@ -226,10 +226,6 @@ export function MainMenu({
           );
         })}
       </div>
-      <span className="menu-bottom-left">
-        {pack.mode === 'swf' ? 'Original assets loaded' : 'Mock asset mode'}
-      </span>
-      <span className="menu-bottom-right">All progress saved locally</span>
       {error ? <span role="alert">Menu artwork could not start.</span> : null}
     </div>
   );
