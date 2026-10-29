@@ -37,6 +37,7 @@ import {
   type ViewerNavigationAction,
 } from '@/game/core/viewer-navigation';
 import { ViewerPaneLayer } from './viewer-pane-layer';
+import { useViewerHighlights } from './viewer-highlights';
 import {
   ViewerArt,
   ViewerFields,
@@ -146,7 +147,6 @@ export function TankViewer({
   const { offset, detail } = navigation;
   const [queue, setQueue] = useState<TankDesign[] | null>(null),
     [ready, setReady] = useState(false),
-    [hover, setHover] = useState(''),
     [description, setDescription] = useState(''),
     [confirmation, setConfirmation] = useState<{
       tank: TankDesign;
@@ -172,6 +172,13 @@ export function TankViewer({
   const all = queue ?? local,
     selected = paneView.detail?.tank,
     covered = !!confirmation || codeOpen || !!message || (ready && guide > 0);
+  const highlights = useViewerHighlights(
+    pack,
+    stage,
+    paneView.cards,
+    limits,
+    ready && !detail && !covered,
+  );
   const jobs: ViewerJob[] = ready
     ? [
         ...paneView.cards.flatMap((p) => (p?.ownsArt ? [{ pane: p, fit: true }] : [])),
@@ -181,6 +188,8 @@ export function TankViewer({
         tank: pane.tank,
         fit,
         canvas: () => canvases.current.get(pane.instance) ?? null,
+        highlighted: () =>
+          fit && highlights.model.rows.some((row) => row.instance === pane.instance && row.glow),
       }))
     : [];
   if (confirmation)
@@ -237,8 +246,9 @@ export function TankViewer({
       setMessage(error);
       return;
     }
+    const index = paneView.cards.findIndex((p) => p?.tank === tank);
+    if (index !== -1) highlights.model.clear(index);
     setConfirmation({ tank, deleting, instance: ++instances.current });
-    setHover('');
   }
   async function copy(tank: TankDesign) {
     try {
@@ -288,7 +298,6 @@ export function TankViewer({
     setBusy(false);
     navigate({ type: 'code' }, next.length);
     setCopied(new Set());
-    setHover('');
     setDescription('');
     if (busy || imported) codeFlow.returnAfterRead(next);
     else codeFlow.returnToView(next);
@@ -302,7 +311,6 @@ export function TankViewer({
     setCode('');
     setCodePrompt(true);
     setSortOpen(false);
-    setHover('');
     setDescription('');
     setCodeOpen(true);
   }
@@ -380,7 +388,16 @@ export function TankViewer({
             {pane.ownsArt ? canvas(key, tank) : null}
           </div>
         </div>
-        {hover === tank.id ? <ViewerArt pack={pack} symbol={1173} /> : null}
+        <div
+          className="viewer-group"
+          ref={(node) => {
+            highlights.lines.current[index] = node;
+          }}
+        >
+          <ViewerGroup matrix={row.children.find((p) => p.name === 'lines_mc')!.matrix}>
+            <ViewerArt pack={pack} symbol={1173} />
+          </ViewerGroup>
+        </div>
         <ViewerGroup matrix={selection.matrix}>
           <button
             className="viewer-select-tank"
@@ -388,15 +405,17 @@ export function TankViewer({
             style={{ left: b.x, top: b.y, width: b.width, height: b.height }}
             onClick={() => confirm(tank)}
             onPointerEnter={() => {
-              setHover(tank.id);
               setDescription(error || 'Select this tank');
             }}
             onPointerLeave={() => {
-              setHover('');
               setDescription('');
             }}
-            onFocus={() => setHover(tank.id)}
-            onBlur={() => setHover('')}
+            onFocus={() => {
+              highlights.focused.current = index;
+            }}
+            onBlur={() => {
+              highlights.focused.current = null;
+            }}
           />
         </ViewerGroup>
         <ViewerGroup matrix={row.children.find((p) => p.name === 'ButtonsContainer')!.matrix}>
@@ -426,9 +445,9 @@ export function TankViewer({
                 `${p.name === 'btnDetails_mc' ? 'Details for' : p.name === 'btnCopy_mc' ? 'Copy code for' : p.name === 'btnDelete_mc' ? 'Delete' : 'Save locally'} ${tank.name}`,
                 () => {
                   if (p.name === 'btnDetails_mc') {
+                    highlights.model.clear(index);
                     panes.detail(index);
                     navigate({ type: 'detail', index: offset + index });
-                    setHover('');
                   } else if (p.name === 'btnCopy_mc') void copy(tank);
                   else if (p.name === 'btnDelete_mc') confirm(tank, true);
                   else onSaveLocal(tank);
@@ -437,13 +456,32 @@ export function TankViewer({
                 p.name === 'btnCopy_mc' && copied.has(tank.id),
               );
             })}
+          <div
+            className="viewer-group"
+            ref={(node) => {
+              highlights.cautions.current[index] = node;
+            }}
+          >
+            <ViewerGroup
+              matrix={rowButtons.children.find((p) => p.name === 'CautionSign_mc')!.matrix}
+            >
+              <ViewerArt pack={pack} symbol={1115} />
+            </ViewerGroup>
+          </div>
         </ViewerGroup>
       </ViewerGroup>
     );
   }
   return (
     <div
+      ref={highlights.host}
       className="tank-viewer"
+      onPointerMove={(e) => {
+        highlights.pointer.current = { x: e.clientX, y: e.clientY };
+      }}
+      onPointerLeave={() => {
+        highlights.pointer.current = null;
+      }}
       data-viewer-type={avatar ? 'Avatar' : 'Enemy'}
       data-viewer-ready={String(ready)}
       data-guide-page={ready ? guide : 0}

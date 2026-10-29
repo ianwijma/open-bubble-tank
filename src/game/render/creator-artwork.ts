@@ -6,6 +6,8 @@ import { SwfSymbolView } from './swf-symbol-view';
 import { SwfTextures } from './swf-textures';
 import { creatorThumbnailScale } from '../core/creator-details';
 import { rotate } from '../core/math';
+import { SwfGlowFilter } from './swf-glow-filter';
+import { VIEWER_HOVER_GLOW } from '../core/viewer-highlights';
 
 type Layer = 'design' | 'draft' | 'preview' | 'details' | `viewer:${string}`;
 interface PartView {
@@ -28,6 +30,7 @@ export class CreatorArtwork {
   private textures = new SwfTextures();
   private groups = new Map<Layer, { root: Container; parts: Map<string, PartView> }>();
   private gray = new ColorMatrixFilter();
+  private hoverGlow: SwfGlowFilter | undefined;
   private destroyed = false;
   constructor(
     private pack: AssetPack,
@@ -117,10 +120,13 @@ export class CreatorArtwork {
     parts: ArtworkPart[],
     frame: number,
     scale = 1,
+    highlighted = false,
   ) {
     const group = this.group(layer),
       active = new Set(parts.map(({ part }) => part.key));
     group.root.scale.set(scale);
+    if (highlighted) this.hoverGlow ??= new SwfGlowFilter(VIEWER_HOVER_GLOW);
+    group.root.filters = highlighted ? [this.hoverGlow!] : null;
     for (const [key, node] of group.parts) {
       if (!active.has(key)) {
         node.view.destroy();
@@ -203,6 +209,7 @@ export class CreatorArtwork {
     }
     this.groups.clear();
     this.gray.destroy();
+    this.hoverGlow?.destroy();
     if (this.app.renderer) this.app.destroy({ removeView: true }, { children: true });
     this.textures.destroy();
   }

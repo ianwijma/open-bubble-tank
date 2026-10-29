@@ -5,7 +5,7 @@ import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { StageRuntime } from '../../src/game/services/stage-runtime';
 
 /** Production viewer with an externally stepped stage clock for exact fade observations. */
-export function showViewerFlow(pack: AssetPack, host: HTMLElement) {
+export function showViewerFlow(pack: AssetPack, host: HTMLElement, avatar = false) {
   const stage = new StageRuntime(),
     root = createRoot(host),
     controls = document.createElement('div');
@@ -25,8 +25,12 @@ export function showViewerFlow(pack: AssetPack, host: HTMLElement) {
         pack={pack}
         stage={stage}
         tanks={[]}
-        avatar={false}
-        limits={{ level: 6, maxClass: 6, gunPoints: 100 }}
+        avatar={avatar}
+        limits={
+          avatar
+            ? { level: 1, maxClass: 2, gunPoints: 2 }
+            : { level: 6, maxClass: 6, gunPoints: 100 }
+        }
         helpSeen={true}
         onHelpComplete={() => {}}
         onSelect={(tank) => {

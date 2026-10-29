@@ -201,9 +201,9 @@ async function reset() {
     status.textContent = 'Ready · grouped SVG mask pixels';
     return;
   }
-  if (fixture.value === 'viewer-flow') {
+  if (fixture.value === 'viewer-flow' || fixture.value === 'viewer-flow-avatar') {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
-    unmountScreen = showViewerFlow(pack, stage);
+    unmountScreen = showViewerFlow(pack, stage, fixture.value === 'viewer-flow-avatar');
     status.textContent = 'Ready · manual viewer fade clock';
     return;
   }

@@ -126,13 +126,23 @@ export interface ViewerJob {
   tank: TankDesign;
   fit: boolean;
   canvas: () => HTMLCanvasElement | null;
+  highlighted?: () => boolean;
 }
 /** One renderer retains independent part instances for all four cards and the selection clone. */
 export function useViewerArtwork(pack: AssetPack, stage: StageRuntime, jobs: ViewerJob[]) {
   const [error, setError] = useState('');
   const current = useRef(jobs);
+  const paintCurrent = useRef<(() => void) | null>(null);
   useEffect(() => {
+    const changed =
+      jobs.length !== current.current.length ||
+      jobs.some(
+        (job, index) =>
+          job.key !== current.current[index]?.key || job.fit !== current.current[index]?.fit,
+      );
     current.current = jobs;
+    // Setup/_-VR attach a visible fresh frame immediately, even if the stage has not ticked.
+    if (changed) paintCurrent.current?.();
   });
   useEffect(() => {
     let cancelled = false,
@@ -195,7 +205,15 @@ export function useViewerArtwork(pack: AssetPack, stage: StageRuntime, jobs: Vie
             scales.set(job.key, viewerFit(job.tank, boxes));
             ctx.clearRect(-275, -275, 550, 550);
           }
-          renderer.draw(ctx, layer, parts, age, job.fit ? (scales.get(job.key) ?? 1) : 1);
+          renderer.draw(
+            ctx,
+            layer,
+            parts,
+            age,
+            job.fit ? (scales.get(job.key) ?? 1) : 1,
+            job.highlighted?.() ?? false,
+          );
+          canvas!.dataset.viewerGlow = String(job.highlighted?.() ?? false);
           active.add(job.key);
         }
       }
@@ -205,6 +223,7 @@ export function useViewerArtwork(pack: AssetPack, stage: StageRuntime, jobs: Vie
         },
         draw,
       });
+      paintCurrent.current = draw;
       draw();
     }
     void start().catch((e) => {
@@ -212,6 +231,7 @@ export function useViewerArtwork(pack: AssetPack, stage: StageRuntime, jobs: Vie
     });
     return () => {
       cancelled = true;
+      paintCurrent.current = null;
       unsubscribe?.();
       renderer?.destroy();
     };
