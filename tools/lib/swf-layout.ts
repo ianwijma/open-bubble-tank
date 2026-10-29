@@ -1,3 +1,4 @@
+import { morphShapeAtRatio } from '../../src/game/assets/swf-symbols.mjs';
 import { buildDisplayList } from '../../src/game/assets/display-list';
 import { buttonDisplayList, type ButtonState } from '../../src/game/assets/button-display-list';
 import type { SymbolResult, SwfMatrix } from '../../src/game/assets/asset-pack';
@@ -16,8 +17,17 @@ export function createSwfLayout(symbols: SymbolResult['symbols']) {
       ty: a.b * b.tx + a.d * b.ty + a.ty,
     };
   }
-  function collect(id: number, frame: number, state: ButtonState, matrix = identity): any[] {
-    const shape = symbols.shapes.find((s) => s.id === id) as any;
+  function collect(
+    id: number,
+    frame: number,
+    state: ButtonState,
+    matrix = identity,
+    ratio = 0,
+  ): any[] {
+    const morph = symbols.morphs.find((s) => s.id === id);
+    const shape = (
+      morph ? morphShapeAtRatio(morph, ratio) : symbols.shapes.find((s) => s.id === id)
+    ) as any;
     if (shape)
       return [
         {
@@ -83,7 +93,9 @@ export function createSwfLayout(symbols: SymbolResult['symbols']) {
       : sprite
         ? buildDisplayList(sprite, frame)
         : [];
-    return placements.flatMap((p) => collect(p.charId, 1, state, multiply(matrix, p.matrix)));
+    return placements.flatMap((p) =>
+      collect(p.charId, 1, state, multiply(matrix, p.matrix), p.ratio ?? 0),
+    );
   }
   function bounds(leaves: any[]) {
     const points = leaves.flatMap(({ bounds: b, matrix, boundsMatrix }) => {
@@ -106,5 +118,5 @@ export function createSwfLayout(symbols: SymbolResult['symbols']) {
     };
   }
 
-  return { collect, bounds };
+  return { collect, bounds, multiply };
 }

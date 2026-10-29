@@ -1,4 +1,5 @@
 'use client';
+import { NEW_ENEMY_STATS } from '@/game/core/creator-enemy-stats';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { AssetPack } from '@/game/assets/asset-pack';
 import type { Profile, Settings, TankDesign } from '@/game/core/types';
@@ -271,9 +272,7 @@ export default function GameShell() {
                       id: 'new',
                       name: 'My Enemy Tank',
                       avatar: false,
-                      life: 1,
-                      reward: 1,
-                      speed: 1,
+                      ...NEW_ENEMY_STATS,
                       parts: [],
                     });
                   } else if (name === 'partsPacks_btn') showScreen('library');

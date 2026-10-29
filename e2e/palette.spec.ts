@@ -104,11 +104,11 @@ for (const assets of ['mock', 'SWF'])
     ).toBeVisible();
     await page.screenshot({ path: `test-results/${assets}-palette-complexity.png` });
     const alert = page.locator('.creator').getByRole('alert'),
-      inspector = page.locator('.creator-inspector');
+      inspector = page.getByRole('button', { name: 'Enemy Info', exact: true });
     await expect(alert).toContainText('Exceeds maximum complexity');
     const alertBox = await alert.boundingBox(),
       inspectorBox = await inspector.boundingBox();
-    expect(alertBox!.y + alertBox!.height).toBeLessThan(inspectorBox!.y);
+    expect(alertBox!.x + alertBox!.width).toBeLessThan(inspectorBox!.x);
     await page.getByRole('button', { name: 'Undo', exact: true }).click();
     await expect(alert).toHaveCount(0);
     expect(errors).toEqual([]);

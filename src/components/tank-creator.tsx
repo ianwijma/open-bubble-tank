@@ -4,13 +4,15 @@ import type { AssetPack } from '@/game/assets/asset-pack';
 import { measureClass } from '@/game/assets/class-measurement';
 import type { TankDesign, TankPart } from '@/game/core/types';
 import { costs, gunBudget, PARTS, partById } from '@/game/data/catalog';
-import { canPlacePart, suggestedStats, validateBuild } from '@/game/simulation/designer';
+import { canPlacePart, validateBuild } from '@/game/simulation/designer';
 import { exportDesign } from '@/game/services/profile';
 import { firstAffordablePart, orderedPalette } from '@/game/simulation/editor-palette';
 import { CreatorButton, CreatorSlider } from './creator-controls';
 import { CREATOR_CONTROLS } from '@/game/core/creator-controls';
 import { CreatorPaletteFrame, CreatorPaletteRows } from './creator-palette';
 import { CreatorStats } from './creator-stats';
+import { CreatorEnemyStats, CreatorStatsTab } from './creator-enemy-stats';
+import { creatorSuggestedStats, creatorImportedSuggested } from '@/game/core/creator-enemy-stats';
 import { CREATOR_PALETTE } from '@/game/core/creator-palette';
 import { TankCodeDialog } from './tank-code-dialog';
 import { CLASS_RINGS } from '@/game/core/constants';
@@ -80,6 +82,12 @@ export function TankCreator({
     [symmetric, setSymmetric] = useState(true),
     [message, setMessage] = useState(''),
     [loading, setLoading] = useState(false);
+  const [advanced, setAdvanced] = useState(false),
+    [suggested, setSuggested] = useState(
+      () =>
+        !initial.avatar &&
+        (initial.id === 'new' || creatorImportedSuggested(initial, { parts: [], classId: 1 })),
+    );
   const [undo, setUndo] = useState<TankDesign[]>([]);
   const canvas = useRef<HTMLCanvasElement>(null);
   const previewCanvas = useRef<HTMLCanvasElement>(null);
@@ -479,7 +487,11 @@ export function TankCreator({
             setMessage(errors[0]);
             return;
           }
-          onSave({ ...finalDesign, name: design.name.trim() || 'Untitled Tank' });
+          onSave({
+            ...finalDesign,
+            ...(!design.avatar && suggested ? creatorSuggestedStats(finalDesign, 'save') : {}),
+            name: design.name.trim() || 'Untitled Tank',
+          });
         }}
       />
       <CreatorButton pack={pack} name="Exit_mc" label="Exit tank creator" onClick={onExit} />
@@ -602,35 +614,29 @@ export function TankCreator({
           onPointerUp={() => finishDrag()}
           onPointerCancel={() => finishDrag(true)}
         />
-        <CreatorStats pack={pack} design={design} classId={classId} />
+        {advanced ? (
+          <CreatorStatsTab pack={pack} basic onClick={() => setAdvanced(false)} />
+        ) : (
+          <CreatorStats pack={pack} design={design} classId={classId} />
+        )}
       </div>
       {!design.avatar ? (
-        <details className="creator-inspector">
-          <summary>Enemy stats</summary>
-          <div>
-            {!design.avatar ? (
-              <div className="enemy-stats">
-                {(['life', 'reward', 'speed'] as const).map((key) => (
-                  <label key={key}>
-                    {key === 'reward' ? 'Bubbles' : key}
-                    <input
-                      aria-label={`Enemy ${key}`}
-                      type="number"
-                      min={key === 'speed' ? 0 : 1}
-                      max={key === 'speed' ? 4 : key === 'life' ? 1000 : 500}
-                      step={key === 'speed' ? 0.1 : 1}
-                      value={design[key]}
-                      onChange={(e) => setDesign({ ...design, [key]: Number(e.target.value) })}
-                    />
-                  </label>
-                ))}
-                <button onClick={() => setDesign({ ...design, ...suggestedStats(finalDesign) })}>
-                  Use suggested stats
-                </button>
-              </div>
-            ) : null}
-          </div>
-        </details>
+        <CreatorEnemyStats
+          pack={pack}
+          values={design}
+          suggested={suggested}
+          open={advanced}
+          fps={fps}
+          onOpen={() => {
+            setAdvanced(true);
+            if (suggested) setDesign({ ...design, ...creatorSuggestedStats(finalDesign) });
+          }}
+          onValues={(values) => setDesign({ ...design, ...values })}
+          onSuggested={(enabled) => {
+            setSuggested(enabled);
+            if (enabled) setDesign({ ...design, ...creatorSuggestedStats(finalDesign) });
+          }}
+        />
       ) : null}
       {active ? (
         <>
@@ -743,6 +749,7 @@ export function TankCreator({
         aria-label={chosen ? `Drag ${partById(chosen)?.name} into design` : 'Choose a part'}
         onPointerDown={(e) => {
           if (e.button !== 0 || chosen === null) return;
+          setAdvanced(false);
           beginPlacement(chosen, 'pointer', point(e));
           e.currentTarget.setPointerCapture(e.pointerId);
         }}
@@ -767,6 +774,7 @@ export function TankCreator({
         avatar={design.avatar}
         category={category}
         onCategory={(id) => {
+          setAdvanced(false);
           setCategory(id);
           setChosen(
             firstAffordablePart(
@@ -785,6 +793,7 @@ export function TankCreator({
         context={paletteContext}
         chosen={chosen}
         onChoose={(id) => {
+          setAdvanced(false);
           setChosen(id);
           placement.current = null;
           setPlacing(null);
@@ -799,6 +808,8 @@ export function TankCreator({
               setMessage(`Load an ${design.avatar ? 'avatar' : 'enemy'} tank.`);
               return;
             }
+            if (!design.avatar)
+              setSuggested((current) => creatorImportedSuggested(tank, finalDesign, current));
             commit(tank);
             placement.current = null;
             setSelection(emptySelection());

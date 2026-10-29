@@ -1540,48 +1540,79 @@ kbd {
   line-height: 1;
   white-space: pre;
 }
-.creator-inspector {
+.creator-stats-switch {
   position: absolute;
-  left: 12px;
-  bottom: 33px;
-  z-index: 5;
-  width: 170px;
-  background: #153d54f0;
-  font-size: 9px;
-  border: 1px solid #a1d4e64d;
-}
-.creator-inspector > summary {
-  cursor: pointer;
-  padding: 5px;
-}
-.creator-inspector > div {
-  padding: 0 8px 8px;
-}
-.enemy-stats {
-  font-size: 8px;
-  margin-top: 10px;
-}
-.enemy-stats label {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  text-transform: capitalize;
-  margin: 5px 0;
-}
-.enemy-stats input {
-  background: #356079;
+  z-index: 4;
+  padding: 0;
   border: 0;
-  width: 58px;
-  border-radius: 3px;
-  padding: 3px;
-  color: #fff;
-  font-size: 8px;
+  background: transparent;
 }
-.enemy-stats > button {
-  font-size: 7px;
-  text-decoration: underline;
-  padding: 4px 0;
-  color: #bce3f0;
+.creator-enemy-stats {
+  position: absolute;
+  width: 154px;
+  height: 161px;
+  z-index: 3;
+  pointer-events: none;
+}
+.creator-enemy-stats .creator-transform-slider,
+.creator-enemy-stats .creator-stat-input,
+.creator-enemy-stats .creator-suggested,
+.creator-stat-confirm > button {
+  pointer-events: auto;
+}
+.creator-stat-background {
+  pointer-events: none;
+}
+.creator-suggested {
+  position: absolute;
+  cursor: pointer;
+}
+.creator-suggested > input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.creator-suggested:focus-within {
+  outline: 1px solid white;
+}
+.creator-stat-input {
+  position: absolute;
+  z-index: 2;
+  border: 0;
+  background: transparent;
+  color: transparent;
+  caret-color: white;
+  text-align: right;
+  padding: 2px;
+  line-height: 1;
+  font-family: monospace;
+}
+.creator-stat-input:focus-visible {
+  outline: none;
+}
+.creator-stat-input:read-only {
+  user-select: none;
+  cursor: default;
+}
+.creator-stat-confirm {
+  position: absolute;
+  z-index: 5;
+  width: 0;
+  height: 0;
+}
+.creator-stat-confirm > button {
+  position: absolute;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  opacity: 1;
+}
+.creator-stat-confirm > button:focus-visible {
+  outline: 1px solid white;
 }
 .creator-part-preview {
   position: absolute;
