@@ -8,13 +8,15 @@ import { BubbleText, Icon } from './ui';
 import { MENU_SERIES, SERIES_CONTROLS, type SeriesControl } from '@/game/core/menu-series';
 import { MockMenuSeriesView } from '@/game/render/mock-menu-series-view';
 import { legacyWebsites, type LegacyWebsites } from '@/game/services/extensions';
+import { mockMenuTarget, type MenuTarget } from '@/game/core/menu-hit';
+import { MenuPointer } from '@/game/services/menu-pointer';
 
 const controls = [
-  { name: 'play_btn', label: 'Play', caption: 'PLAY', css: 'play', icon: 'play', size: 78 },
+  { name: 'play_btn', label: 'Play', hint: 'Play / Tutorial', css: 'play', icon: 'play', size: 78 },
   {
     name: 'settings_btn',
     label: 'Settings',
-    caption: 'SETTINGS',
+    hint: 'Settings',
     css: 'settings',
     icon: 'settings',
     size: 21,
@@ -22,7 +24,7 @@ const controls = [
   {
     name: 'partsPacks_btn',
     label: 'My tanks',
-    caption: 'MY TANKS',
+    hint: 'My tanks',
     css: 'library',
     icon: 'plus',
     size: 28,
@@ -30,7 +32,7 @@ const controls = [
   {
     name: 'credits_btn',
     label: 'Credits',
-    caption: 'CREDITS',
+    hint: 'Credits',
     css: 'credits',
     icon: 'file',
     size: 21,
@@ -38,7 +40,7 @@ const controls = [
   {
     name: 'enemyCreator_btn',
     label: 'Enemy tank creator',
-    caption: 'CREATE A TANK',
+    hint: 'Enemy Tank Creator',
     css: 'create',
     icon: 'library',
     size: 26,
@@ -46,7 +48,7 @@ const controls = [
   {
     name: 'pmg_btn',
     label: 'Change assets',
-    caption: 'CHANGE ASSETS',
+    hint: 'Change assets',
     css: 'assets',
     icon: 'back',
     size: 20,
@@ -81,11 +83,31 @@ export function MainMenu({
     seriesButtons = useRef(new Map<string, HTMLButtonElement>()),
     mockSeries = useRef<MockMenuSeriesView | null>(null),
     redraw = useRef<() => void>(() => {});
+  const pointer = useRef<MenuPointer | null>(null),
+    callbacks = useRef({ onAction, websites });
   const [seriesMessage, setSeriesMessage] = useState('');
   const [error, setError] = useState(false);
   useEffect(() => {
     isCovered.current = covered;
   }, [covered]);
+  useEffect(() => {
+    callbacks.current = { onAction, websites };
+  }, [onAction, websites]);
+  const activate = (target: MenuTarget) => {
+    if (motion.busy || motion.parked || isCovered.current) return;
+    if (target.kind === 'control') {
+      const control = controls.find((c) => c.name === target.name);
+      if (control) callbacks.current.onAction(control.name);
+    } else if (target.kind === 'series' && target.name) {
+      try {
+        callbacks.current.websites.open(SERIES_CONTROLS[target.name].destination);
+      } catch (error) {
+        setSeriesMessage(
+          error instanceof Error ? error.message : 'This game website is not connected.',
+        );
+      }
+    }
+  };
   useEffect(() => {
     let cancelled = false,
       dispose: (() => void) | undefined;
@@ -94,6 +116,29 @@ export function MainMenu({
       dispose = undefined;
       cleanup?.();
     };
+    const input = new MenuPointer(root.current!, {
+      enabled: () => !motion.parked && !isCovered.current,
+      pick: (point) =>
+        pack.mode === 'mock' ? mockMenuTarget(point, motion) : native.current?.hit(point, motion),
+      hover: (target, previous) => {
+        if (previous?.kind === 'control') native.current?.hover(previous.name, false);
+        if (previous?.kind === 'series') motion.series.hover(false);
+        if (target?.kind === 'control') native.current?.hover(target.name, true);
+        if (target?.kind === 'series') motion.series.hover(true);
+        const label =
+          target?.kind === 'control'
+            ? controls.find((c) => c.name === target.name)?.hint
+            : target?.kind === 'series'
+              ? target.name
+                ? SERIES_CONTROLS[target.name].label
+                : 'More Bubbletanks Games'
+              : '';
+        setSeriesMessage(label ?? '');
+      },
+      release: activate,
+      paint: () => redraw.current(),
+    });
+    pointer.current = input;
     const present = () => {
       if (!root.current || !buttons.current) return;
       root.current.dataset.menuAge = String(motion.age);
@@ -118,6 +163,9 @@ export function MainMenu({
         node.style.left = `${(motion.parked ? -100 : m.tx / 20) + piece.bounds.x * m.a}px`;
         node.style.top = `${(motion.parked ? -100 : m.ty / 20) + piece.bounds.y * m.d}px`;
         node.style.opacity = String(Math.max(0, Math.min(1, motion.controlAlpha)));
+        node.dataset.menuHovered = String(
+          input.target?.kind === 'control' && input.target.name === piece.name,
+        );
       }
       if (title.current)
         title.current.style.opacity = String(Math.max(0, Math.min(1, motion.titleAlpha)));
@@ -139,9 +187,13 @@ export function MainMenu({
         const view = new MockMenuSeriesView();
         mockSeries.current = view;
         seriesHost.current!.appendChild(view.canvas);
-        redraw.current = present;
-        present();
-        const unsubscribe = stage.subscribe({ beforeStep: () => motion.advance(), draw: present });
+        const draw = () => {
+          input.refresh();
+          present();
+        };
+        redraw.current = draw;
+        draw();
+        const unsubscribe = stage.subscribe({ beforeStep: () => motion.advance(), draw });
         dispose = () => {
           unsubscribe();
           redraw.current = () => {};
@@ -184,6 +236,7 @@ export function MainMenu({
       canvasHost.current?.appendChild(app.canvas);
       const draw = () => {
         view.update(motion);
+        if (input.refresh()) view.update(motion);
         root.current!.dataset.titleFrame = String(view.titleFrame);
         app.render();
         present();
@@ -202,18 +255,17 @@ export function MainMenu({
     }
     void start().catch(() => {
       release();
+      input.dispose();
+      if (pointer.current === input) pointer.current = null;
       if (!cancelled) setError(true);
     });
     return () => {
       cancelled = true;
+      input.dispose();
+      if (pointer.current === input) pointer.current = null;
       release();
     };
   }, [pack, stage, motion, overlayRoot]);
-  const hoverSeries = (over: boolean) => {
-    motion.series.hover(over);
-    setSeriesMessage(over ? 'More Bubbletanks Games' : '');
-    redraw.current();
-  };
   const caption = MAIN_MENU.rollover,
     captionFont = caption.font;
   const captionSvg =
@@ -258,14 +310,16 @@ export function MainMenu({
                 width: piece.bounds.width * piece.matrix.a,
                 height: piece.bounds.height * piece.matrix.d,
               }}
-              onMouseEnter={() => native.current?.hover(control.name, true)}
-              onMouseLeave={() => native.current?.hover(control.name, false)}
-              onFocus={() => native.current?.hover(control.name, true)}
-              onBlur={() => native.current?.hover(control.name, false)}
-              onClick={() => onAction(control.name)}
+              onFocus={(event) => {
+                if (event.currentTarget.matches(':focus-visible'))
+                  pointer.current?.focus({ kind: 'control', name: control.name });
+              }}
+              onBlur={() => pointer.current?.blur()}
+              onClick={(event) => {
+                if (event.detail === 0) activate({ kind: 'control', name: control.name });
+              }}
             >
               {pack.mode === 'mock' ? <Icon name={control.icon} size={control.size} /> : null}
-              <span className="orb-caption">{control.caption}</span>
             </button>
           );
         })}
@@ -277,11 +331,12 @@ export function MainMenu({
         aria-label="More Bubbletanks Games"
         tabIndex={0}
         style={{ left: -100, top: -100, width: 131, opacity: 0 }}
-        onMouseEnter={() => hoverSeries(true)}
-        onMouseLeave={() => hoverSeries(false)}
-        onFocusCapture={() => hoverSeries(true)}
+        onFocusCapture={(event) => {
+          if (event.target === event.currentTarget && event.currentTarget.matches(':focus-visible'))
+            pointer.current?.focus({ kind: 'series' });
+        }}
         onBlurCapture={(event) => {
-          if (!event.currentTarget.contains(event.relatedTarget)) hoverSeries(false);
+          if (!event.currentTarget.contains(event.relatedTarget)) pointer.current?.blur();
         }}
         inert
       >
@@ -304,17 +359,12 @@ export function MainMenu({
                 width: piece.bounds.width,
                 height: piece.bounds.height,
               }}
-              onMouseEnter={() => setSeriesMessage(control.label)}
-              onFocus={() => setSeriesMessage(control.label)}
-              onClick={() => {
-                if (motion.busy || motion.parked || isCovered.current) return;
-                try {
-                  websites.open(control.destination);
-                } catch (error) {
-                  setSeriesMessage(
-                    error instanceof Error ? error.message : 'This game website is not connected.',
-                  );
-                }
+              onFocus={(event) => {
+                if (event.currentTarget.matches(':focus-visible'))
+                  pointer.current?.focus({ kind: 'series', name });
+              }}
+              onClick={(event) => {
+                if (event.detail === 0) activate({ kind: 'series', name });
               }}
             />
           );

@@ -4,6 +4,9 @@ import { SwfClip } from '../assets/swf-clip';
 import { MAIN_MENU, type MainMenuMotion } from '../core/main-menu';
 import { SwfSymbolView, type RasterTextures } from './swf-symbol-view';
 import { SwfGlowFilter } from './swf-glow-filter';
+import { menuLocal, type MenuTarget } from '../core/menu-hit';
+import type { Vec } from '../core/types';
+import type { SeriesControl } from '../core/menu-series';
 
 /** Menu display objects retain independent child timelines, including the title's stop(179). */
 export class MainMenuView {
@@ -13,7 +16,10 @@ export class MainMenuView {
   private controls;
   private glow: SwfGlowFilter;
   private series: SwfSymbolView;
-  constructor(pack: AssetPack, textures: RasterTextures) {
+  constructor(
+    private pack: AssetPack,
+    textures: RasterTextures,
+  ) {
     //556 depth1/clipDepth2 makes487 a nonpainting mask. All controls start above depth2.
     this.controls = MAIN_MENU.controls.map((piece) => {
       const view = new SwfSymbolView(piece.symbol, pack, textures),
@@ -54,6 +60,30 @@ export class MainMenuView {
     );
     if (over) inner?.clip.gotoAndPlay(2);
     else inner?.clip.gotoAndStop(1);
+  }
+  hit(point: Vec, motion: MainMenuMotion): MenuTarget | undefined {
+    const title = menuLocal(point, MAIN_MENU.title.matrix);
+    if (title && this.pack.hitClip(this.titlePose, title.x, title.y)) return { kind: 'blocked' };
+    const series = menuLocal(point, MAIN_MENU.series.matrix)!;
+    for (const p of [...motion.series.pose.placements].reverse()) {
+      if (!p.name) continue;
+      const local = menuLocal(series, p.matrix),
+        child = motion.series.pose.children.get(p.depth)!.clip;
+      if (local && this.pack.hitClip(child, local.x, local.y))
+        return { kind: 'series', name: p.name as SeriesControl };
+    }
+    if (this.pack.hitClip(motion.series.pose, series.x, series.y)) return { kind: 'series' };
+    for (const { piece, pose } of [...this.controls].reverse()) {
+      const local = menuLocal(point, piece.matrix)!;
+      const inner = [...pose.children.values()].find((child) => child.placement.name === 'inner')!;
+      const inInner = menuLocal(local, inner.placement.matrix)!;
+      if (this.pack.hitClip(inner.clip, inInner.x, inInner.y))
+        return { kind: 'control', name: piece.name };
+      // The source dispatches actions only when event.target.parent is the named button.
+      // Icon-only geometry outside inner490 targets the wrapper, which has no action branch.
+      if (this.pack.hitClip(pose, local.x, local.y))
+        return { kind: 'decoration', name: piece.name };
+    }
   }
   update(motion: MainMenuMotion) {
     for (const { piece, view, pose, wrapper } of this.controls) {

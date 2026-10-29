@@ -30,6 +30,8 @@ bun run fixtures      # Gameplay/art/screen fixtures on localhost:3102
 
 The browser tests use Chrome if installed, otherwise a Playwright Chromium installation. To install Chromium, run `bun x playwright install chromium`. SWF integration tests use `BT3_SWF_FILE` or the sibling research fixture, and skip when neither exists. No SWF is committed to this project.
 
+Ordinary navigation tests use `e2e/helpers/main-menu.ts` to wait for the native title intro before selecting a menu control. The title's hit geometry can cover an otherwise visible button. Controlled menu fixtures test input during the intro and on animated hover edges separately.
+
 ## Original runtime reference
 
 The development reference viewer runs the supplied SWF with pinned Ruffle 0.7.1. It is separate from the game application and is excluded from the production bundle. It normalizes the research file's expanded CWS header to FWS and blocks retired external requests. Ruffle is an emulator, so observed differences still need to be checked against the recovered code.

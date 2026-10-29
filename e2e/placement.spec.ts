@@ -1,3 +1,4 @@
+import { waitForMainMenu } from './helpers/main-menu';
 import { test, expect, type Page, type Locator } from '@playwright/test';
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -35,6 +36,7 @@ for (const assets of ['mock', 'SWF'])
     await page.goto('/');
     if (assets === 'SWF') await page.getByLabel('Bubble Tanks 3 Flash file').setInputFiles(swf);
     else await page.getByRole('button', { name: 'Play with mock assets' }).click();
+    await waitForMainMenu(page);
     await page.getByRole('button', { name: 'Enemy tank creator' }).click({ timeout: 60000 });
     expect(await snapshot(page)).toMatchObject({ parts: [], life: 1, reward: 1, speed: 1 });
     const row = page.getByRole('button', { name: 'Place Medium Bubble', exact: true });

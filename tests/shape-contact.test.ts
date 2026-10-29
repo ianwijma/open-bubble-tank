@@ -8,6 +8,19 @@ import { protectionScale } from '../src/game/core/protection-size';
 import { INFECTED_ART } from '../src/game/data/status-art';
 import { geometricHit } from '../src/game/simulation/world';
 
+test('distant native leaves reject declared bounds before allocating browser paths', () => {
+  const pack = new AssetPack('swf');
+  Object.assign(pack, {
+    shapes: new Map([
+      [99000, { id: 99000, bounds: { xMin: 0, xMax: 400, yMin: 0, yMax: 400 }, runs: [] }],
+    ]),
+  });
+  const pose = new SwfClip(99000, pack);
+  pose.advance(1);
+  expect(pack.hitClip(pose, 100, 100)).toBe(false);
+  expect(pack.shapeContactCount).toBe(0);
+});
+
 test('the headless contact fallback keeps hidden attached parts hittable', () => {
   const tank = createTank(1, { ...STARTER, parts: [STARTER.parts[0]] }, 'enemy'),
     part = tank.design.parts[0];

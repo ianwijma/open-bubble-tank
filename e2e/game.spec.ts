@@ -1,3 +1,4 @@
+import { waitForMainMenu } from './helpers/main-menu';
 import { test, expect } from '@playwright/test';
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -22,6 +23,7 @@ test('mock path: menu, local enemy creator, settings, exploration and pause', as
   await dropPreview(page, 5, -10);
   await page.screenshot({ path: 'test-results/mock-creator.png' });
   await page.getByRole('button', { name: 'SAVE', exact: true }).click();
+  await waitForMainMenu(page);
   await page.getByRole('button', { name: 'My tanks', exact: true }).click();
   await expect(page.getByText('Test Minnow', { exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Back to main menu' }).click();
@@ -75,6 +77,7 @@ test('SWF path: extract original artwork, compose menu, start original field and
     timeout: 60000,
   });
   await expect(page.getByRole('img', { name: 'Bubble Tanks 3', exact: true })).toBeVisible();
+  await expect(page.locator('.main-menu')).toHaveAttribute('data-title-frame', '179');
   await page.screenshot({ path: 'test-results/swf-menu.png' });
   await page.getByRole('button', { name: 'Credits', exact: true }).click();
   await expect(page.getByRole('dialog', { name: 'Credits', exact: true })).toBeVisible();
@@ -148,11 +151,13 @@ test('compressed CWS loads locally and original tank-code sharing survives reloa
   await expect(page.getByRole('button', { name: 'Play', exact: true })).toBeVisible({
     timeout: 60000,
   });
+  await expect(page.locator('.main-menu')).toHaveAttribute('data-title-frame', '179');
   await page.getByRole('button', { name: 'Enemy tank creator' }).click();
   await page.getByRole('textbox', { name: 'Tank name' }).fill('Code Minnow');
   await dropPreview(page, 0, 0);
   await page.screenshot({ path: 'test-results/swf-creator.png' });
   await page.getByRole('button', { name: 'SAVE', exact: true }).click();
+  await waitForMainMenu(page);
   await page.getByRole('button', { name: 'My tanks', exact: true }).click();
   await page.getByRole('button', { name: 'Code', exact: true }).click();
   const field = page.getByRole('textbox', { name: 'Tank code' });
@@ -196,6 +201,9 @@ test('saved heavy avatar renders and fires original parts; quality changes apply
   );
   await page.goto('/');
   await page.getByLabel('Bubble Tanks 3 Flash file').setInputFiles(swf);
+  await expect(page.locator('.main-menu')).toHaveAttribute('data-title-frame', '179', {
+    timeout: 60000,
+  });
   await page.getByRole('button', { name: 'Play', exact: true }).click({ timeout: 60000 });
   await page.getByRole('checkbox', { name: 'Use saved avatars from previous game' }).check();
   await page
