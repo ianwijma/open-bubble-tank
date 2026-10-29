@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import type { AssetPack } from '@/game/assets/asset-pack';
 import { measureClass } from '@/game/assets/class-measurement';
 import type { TankDesign, TankPart } from '@/game/core/types';
@@ -10,11 +10,15 @@ import { firstAffordablePart, orderedPalette } from '@/game/simulation/editor-pa
 import { CreatorButton, CreatorSlider } from './creator-controls';
 import { CREATOR_CONTROLS } from '@/game/core/creator-controls';
 import { CreatorPaletteFrame, CreatorPaletteRows } from './creator-palette';
+import { CreatorSelectionInfo } from './creator-selection-info';
+import { creatorWeaponIcons, type CreatorWeaponIcon } from '@/game/core/creator-details';
+import { CreatorPartDetails } from './creator-part-details';
+import { creatorThumbnailScale, type CreatorDetailFocus } from '@/game/core/creator-details';
 import { CreatorStats } from './creator-stats';
 import { CreatorEnemyStats, CreatorStatsTab } from './creator-enemy-stats';
 import { creatorSuggestedStats, creatorImportedSuggested } from '@/game/core/creator-enemy-stats';
 import { CREATOR_PALETTE } from '@/game/core/creator-palette';
-import { TankCodeDialog } from './tank-code-dialog';
+import { CreatorSaveDialog } from './creator-save-dialog';
 import { CLASS_RINGS } from '@/game/core/constants';
 import {
   placementParts,
@@ -49,6 +53,7 @@ export function TankCreator({
   fps,
   onSave,
   onExit,
+  onLoad,
 }: {
   pack: AssetPack;
   overGame?: boolean;
@@ -56,8 +61,9 @@ export function TankCreator({
   level: number;
   maxClass: number;
   fps: number;
-  onSave: (tank: TankDesign) => void;
+  onSave: (tank: TankDesign) => TankDesign | undefined;
   onExit: () => void;
+  onLoad: (limits: { avatar: boolean; level: number; maxClass: number; gunPoints: number }) => void;
 }) {
   const [design, setDesign] = useState<TankDesign>(() => structuredClone(initial));
   const [transformClass, setTransformClass] = useState<number | null>(null);
@@ -80,8 +86,7 @@ export function TankCreator({
     [placing, setPlacing] = useState<number | null>(null),
     [selection, setSelection] = useState<PartSelection>(emptySelection),
     [symmetric, setSymmetric] = useState(true),
-    [message, setMessage] = useState(''),
-    [loading, setLoading] = useState(false);
+    [message, setMessage] = useState('');
   const [advanced, setAdvanced] = useState(false),
     [suggested, setSuggested] = useState(
       () =>
@@ -89,8 +94,16 @@ export function TankCreator({
         (initial.id === 'new' || creatorImportedSuggested(initial, { parts: [], classId: 1 })),
     );
   const [undo, setUndo] = useState<TankDesign[]>([]);
+  const [saveDialog, setSaveDialog] = useState<{ kind: 'save' | 'exit'; tank: TankDesign } | null>(
+    null,
+  );
+  const dialogOpener = useRef<HTMLElement | null>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
   const previewCanvas = useRef<HTMLCanvasElement>(null);
+  const detailCanvas = useRef<HTMLCanvasElement>(null),
+    detailsCounter = useRef(0),
+    detailsId = useId();
+  const [details, setDetails] = useState<CreatorDetailFocus | null>(null);
   const artwork = useRef<import('@/game/render/creator-artwork').CreatorArtwork | null>(null);
   const artworkFrame = useRef(1);
   const drawRef = useRef<() => void>(() => {});
@@ -103,6 +116,8 @@ export function TankCreator({
     selection: PartSelection;
     boxes: Map<string, { x: number; y: number; width: number; height: number }>;
   } | null>(null);
+  const [selectionIcons, setSelectionIcons] = useState<CreatorWeaponIcon[]>([]);
+  const iconSnapshot = useRef<{ boxes: object | null; hidden: boolean } | null>(null);
   const drag = useRef<{
       before: TankDesign;
       from: { x: number; y: number };
@@ -216,6 +231,7 @@ export function TankCreator({
           selectionBoxes.current.selection !== selection))
     )
       selectionBoxes.current = { parts: design.parts, selection, boxes: new Map() };
+    const selectionMoving = !!(drag.current?.moved && drag.current.moving);
     for (const p of design.parts) {
       if (!artwork.current) {
         ctx.save();
@@ -223,7 +239,7 @@ export function TankCreator({
         pack.drawPart(ctx, p);
         ctx.restore();
       }
-      if (selection.keys.includes(p.key) && !drag.current?.moved) {
+      if (selection.keys.includes(p.key) && !selectionMoving) {
         let box = selectionBoxes.current.boxes.get(p.key);
         if (!box) {
           const r = artwork.current?.localBounds(p) ?? pack.part(p.type),
@@ -249,6 +265,18 @@ export function TankCreator({
         ctx.lineWidth = 1;
         ctx.strokeRect(box.x, box.y, box.width, box.height);
       }
+    }
+    const iconsHidden = selectionMoving;
+    if (
+      iconSnapshot.current?.boxes !== selectionBoxes.current ||
+      iconSnapshot.current?.hidden !== iconsHidden
+    ) {
+      iconSnapshot.current = { boxes: selectionBoxes.current, hidden: iconsHidden };
+      setSelectionIcons(
+        iconsHidden
+          ? []
+          : creatorWeaponIcons(design.parts, selection.keys, selectionBoxes.current.boxes),
+      );
     }
     if (drag.current?.moved && !drag.current.moving) {
       ctx.strokeStyle = '#00cbff';
@@ -305,6 +333,32 @@ export function TankCreator({
         artwork.current.draw(pc, 'preview', part ? [{ part }] : [], artworkFrame.current);
       else if (part) pack.drawPart(pc, part);
       pc.restore();
+    }
+    const dc = detailCanvas.current?.getContext('2d');
+    if (!details) artwork.current?.clearLayer('details');
+    else if (dc) {
+      dc.clearRect(0, 0, 98, 98);
+      dc.save();
+      dc.scale(2, 2);
+      dc.translate(24.5, 24.5);
+      const part: TankPart = {
+        key: `details-${details.instance}`,
+        type: details.id,
+        x: 0,
+        y: 0,
+        radius: 0,
+        scale: 1,
+        rotation: 0,
+        twin: '',
+      };
+      if (artwork.current) artwork.current.draw(dc, 'details', [{ part }], artworkFrame.current);
+      else {
+        const raster = pack.part(part.type),
+          padding = pack.mode === 'swf' ? 4 : 6;
+        part.scale = creatorThumbnailScale(raster.width - padding, raster.height - padding);
+        pack.drawPart(dc, part);
+      }
+      dc.restore();
     }
   }
   useEffect(() => {
@@ -462,359 +516,382 @@ export function TankCreator({
       className={`creator stage-background ${overGame ? 'over-game' : ''}`}
       data-assets={pack.mode}
     >
-      <CreatorButton
-        pack={pack}
-        name="SymmetricMode_mc"
-        label="Symmetric Mode"
-        checked={symmetric}
-        onClick={() => {
-          setSymmetric(!symmetric);
-          setSelection(emptySelection());
-        }}
-      />
-      <CreatorButton
-        pack={pack}
-        name="LoadTank_mc"
-        label="Load a Tank..."
-        onClick={() => setLoading(true)}
-      />
-      <CreatorButton
-        pack={pack}
-        name="SaveExit_mc"
-        label="SAVE"
-        onClick={() => {
-          if (errors.length) {
-            setMessage(errors[0]);
-            return;
-          }
-          onSave({
-            ...finalDesign,
-            ...(!design.avatar && suggested ? creatorSuggestedStats(finalDesign, 'save') : {}),
-            name: design.name.trim() || 'Untitled Tank',
-          });
-        }}
-      />
-      <CreatorButton pack={pack} name="Exit_mc" label="Exit tank creator" onClick={onExit} />
-      <div className="creator-name">
-        <label>
-          Tank name{' '}
-          <input
-            aria-label="Tank name"
-            maxLength={40}
-            value={design.name}
-            onChange={(e) => setDesign({ ...design, name: e.target.value })}
-          />
-        </label>
-        <button onClick={() => exportDesign(finalDesign)}>Export</button>
-      </div>
-      <div className="creator-meters">
-        <div>
-          Class {classId}
-          <span className="creator-meter">
-            <i style={{ width: `${(classId / maxClass) * 100}%` }} />
-          </span>
-          <small>Max Class: {maxClass}</small>
-        </div>
-        <div>
-          Complexity
-          <span className={`creator-meter ${bp > 100 ? 'invalid' : ''}`}>
-            <i style={{ width: `${Math.min(100, bp)}%` }} />
-          </span>
-        </div>
-        <div className={gp > budget ? 'invalid' : ''}>
-          GP: {gp}
-          <small>Max GP: {budget}</small>
-        </div>
-      </div>
-      <div className="creator-workspace">
-        <canvas
-          ref={canvas}
-          width="700"
-          height="700"
-          style={{
-            left: CREATOR_CONTROLS.workspace.tx / 20 - 175,
-            top: CREATOR_CONTROLS.workspace.ty / 20 - 175,
+      <div
+        className="creator-editor-content"
+        inert={!!saveDialog}
+        aria-hidden={!!saveDialog || undefined}
+      >
+        <CreatorButton
+          pack={pack}
+          name="SymmetricMode_mc"
+          label="Symmetric Mode"
+          checked={symmetric}
+          onClick={() => {
+            setSymmetric(!symmetric);
+            setSelection(emptySelection());
           }}
-          aria-label="Tank design area. Choose a palette row, then drag its preview here. For keyboard placement, activate the preview, move with arrow keys and press Enter. Click parts to toggle selection. Drag empty space to select a group. Drag selected parts to move them."
-          onPointerDown={(e) => {
-            if (e.button !== 0) return;
-            const pos = point(e);
-            pointer.current = pos;
-            if (placement.current?.mode === 'keyboard') {
-              finishPlacement(pos);
+        />
+        <CreatorButton
+          pack={pack}
+          name="LoadTank_mc"
+          label="Load a Tank..."
+          onClick={() => onLoad({ avatar: design.avatar, level, maxClass, gunPoints: budget })}
+        />
+        <CreatorButton
+          pack={pack}
+          name="SaveExit_mc"
+          label="SAVE"
+          onClick={() => {
+            if (errors.length) {
+              setMessage(errors[0]);
               return;
             }
-            const hit = [...design.parts].reverse().find((p) => hitPart(p, pos.x, pos.y));
-            const moving = design.parts.some(
-              (p) => selection.keys.includes(p.key) && hitPart(p, pos.x, pos.y),
-            );
-            drag.current = {
-              before: structuredClone(design),
-              from: pos,
-              hit: hit?.key,
-              moving,
-              moved: false,
-              selection,
-              session: null,
+            const tank = {
+              ...finalDesign,
+              ...(!design.avatar && suggested ? creatorSuggestedStats(finalDesign, 'save') : {}),
             };
+            setDesign(tank);
+            setDetails(null);
+            dialogOpener.current = document.activeElement as HTMLElement | null;
+            setSaveDialog({ kind: 'save', tank });
+          }}
+        />
+        <CreatorButton
+          pack={pack}
+          name="Exit_mc"
+          label="Exit tank creator"
+          onClick={() => {
+            dialogOpener.current = document.activeElement as HTMLElement | null;
+            setSaveDialog({ kind: 'exit', tank: finalDesign });
+          }}
+        />
+        <div className="creator-name">
+          <label>
+            Tank name{' '}
+            <input
+              aria-label="Tank name"
+              maxLength={40}
+              value={design.name}
+              onChange={(e) => setDesign({ ...design, name: e.target.value })}
+            />
+          </label>
+          <button onClick={() => exportDesign(finalDesign)}>Export</button>
+        </div>
+        <div className="creator-meters">
+          <div>
+            Class {classId}
+            <span className="creator-meter">
+              <i style={{ width: `${(classId / maxClass) * 100}%` }} />
+            </span>
+            <small>Max Class: {maxClass}</small>
+          </div>
+          <div>
+            Complexity
+            <span className={`creator-meter ${bp > 100 ? 'invalid' : ''}`}>
+              <i style={{ width: `${Math.min(100, bp)}%` }} />
+            </span>
+          </div>
+          <div className={gp > budget ? 'invalid' : ''}>
+            GP: {gp}
+            <small>Max GP: {budget}</small>
+          </div>
+        </div>
+        <div className="creator-workspace">
+          <canvas
+            ref={canvas}
+            width="700"
+            height="700"
+            style={{
+              left: CREATOR_CONTROLS.workspace.tx / 20 - 175,
+              top: CREATOR_CONTROLS.workspace.ty / 20 - 175,
+            }}
+            aria-label="Tank design area. Choose a palette row, then drag its preview here. For keyboard placement, activate the preview, move with arrow keys and press Enter. Click parts to toggle selection. Drag empty space to select a group. Drag selected parts to move them."
+            onPointerDown={(e) => {
+              if (e.button !== 0) return;
+              setAdvanced(false);
+              const pos = point(e);
+              pointer.current = pos;
+              if (placement.current?.mode === 'keyboard') {
+                finishPlacement(pos);
+                return;
+              }
+              const hit = [...design.parts].reverse().find((p) => hitPart(p, pos.x, pos.y));
+              const moving = design.parts.some(
+                (p) => selection.keys.includes(p.key) && hitPart(p, pos.x, pos.y),
+              );
+              drag.current = {
+                before: structuredClone(design),
+                from: pos,
+                hit: hit?.key,
+                moving,
+                moved: false,
+                selection,
+                session: null,
+              };
+              e.currentTarget.setPointerCapture(e.pointerId);
+            }}
+            onPointerMove={(e) => {
+              const pos = point(e);
+              pointer.current = pos;
+              const current = drag.current;
+              if (current) {
+                if (Math.hypot(pos.x - current.from.x, pos.y - current.from.y) > 0.25)
+                  current.moved = true;
+                if (current.moved && current.moving) {
+                  current.session = advanceSelectionDrag(
+                    current.session ??
+                      beginSelectionDrag(
+                        current.before.parts,
+                        current.selection,
+                        current.from,
+                        symmetric,
+                        snapLocked.current,
+                        pos,
+                      ),
+                    pos,
+                  );
+                  setDesign({ ...design, parts: current.session.parts });
+                  setSelection(current.session.selection);
+                } else draw();
+              } else if (placing) draw();
+            }}
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (placement.current?.mode !== 'keyboard') return;
+              const delta = {
+                ArrowLeft: [-1, 0],
+                ArrowRight: [1, 0],
+                ArrowUp: [0, -1],
+                ArrowDown: [0, 1],
+              }[e.key];
+              if (delta) {
+                e.preventDefault();
+                const step = e.shiftKey ? 5 : 1;
+                pointer.current = {
+                  x: pointer.current.x + delta[0] * step,
+                  y: pointer.current.y + delta[1] * step,
+                };
+                draw();
+              } else if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                finishPlacement(pointer.current);
+                preview.current?.focus();
+              } else if (e.key === 'Escape') {
+                e.preventDefault();
+                finishPlacement(pointer.current, true);
+                preview.current?.focus();
+              }
+            }}
+            onPointerUp={() => finishDrag()}
+            onPointerCancel={() => finishDrag(true)}
+          />
+          {advanced ? (
+            <CreatorStatsTab pack={pack} basic onClick={() => setAdvanced(false)} />
+          ) : (
+            <CreatorStats pack={pack} design={design} classId={classId} />
+          )}
+        </div>
+        {!design.avatar ? (
+          <CreatorEnemyStats
+            pack={pack}
+            values={design}
+            suggested={suggested}
+            open={advanced}
+            fps={fps}
+            onOpen={() => {
+              setAdvanced(true);
+              if (suggested) setDesign({ ...design, ...creatorSuggestedStats(finalDesign) });
+            }}
+            onValues={(values) => setDesign({ ...design, ...values })}
+            onSuggested={(enabled) => {
+              setSuggested(enabled);
+              if (enabled) setDesign({ ...design, ...creatorSuggestedStats(finalDesign) });
+            }}
+          />
+        ) : null}
+        {active ? (
+          <>
+            <span className="sr-only" role="status">
+              Selected parts ({selection.keys.length})
+            </span>
+            <CreatorButton
+              pack={pack}
+              name="DeleteButton_mc"
+              label="Delete selected part"
+              onClick={() => {
+                commit({ ...design, parts: removeParts(design.parts, selection.keys) });
+                setSelection(emptySelection());
+              }}
+            />
+            <CreatorButton
+              pack={pack}
+              name="BringFront_mc"
+              label="To front"
+              onClick={() =>
+                commit({ ...design, parts: orderSelection(design.parts, selection, true) })
+              }
+            />
+            <CreatorButton
+              pack={pack}
+              name="SendBack_mc"
+              label="To back"
+              onClick={() =>
+                commit({ ...design, parts: orderSelection(design.parts, selection, false) })
+              }
+            />
+            <CreatorButton
+              pack={pack}
+              name="AlignCenter_mc"
+              label="Align to Center"
+              onClick={() => {
+                const next = centerSelection(design.parts, selection);
+                commit({ ...design, parts: next.parts });
+                setSelection(next.selection);
+              }}
+            />
+            {([-1, 1] as const).map((direction) => (
+              <CreatorButton
+                key={direction}
+                pack={pack}
+                name={direction < 0 ? 'Left_mc' : 'Right_mc'}
+                label={direction < 0 ? 'Move selection left' : 'Move selection right'}
+                onClick={() =>
+                  commit({ ...design, parts: nudgeSelection(design.parts, selection, direction) })
+                }
+                onHoldStart={() => beginNudge(direction)}
+                onHoldEnd={endNudge}
+              />
+            ))}
+            {CREATOR_CONTROLS.sliders.map((layout) => (
+              <CreatorSlider
+                key={layout.name}
+                pack={pack}
+                layout={layout}
+                label={layout.name === 'Resize_mc' ? 'Part scale' : 'Part rotation'}
+                value={layout.name === 'Resize_mc' ? transform.scale : transform.rotation}
+                resetKey={selection}
+                min={layout.name === 'Resize_mc' ? 0.5 : 0}
+                max={layout.name === 'Resize_mc' ? 2 : 360}
+                onChange={(value) =>
+                  changePart(layout.name === 'Resize_mc' ? { scale: value } : { rotation: value })
+                }
+                onBegin={beginControl}
+                onEnd={endControl}
+              />
+            ))}
+          </>
+        ) : null}
+        <CreatorButton
+          pack={pack}
+          name="Undo_mc"
+          label="Undo"
+          disabled={!undo.length}
+          onClick={() => {
+            setDesign(undo[undo.length - 1]);
+            setUndo(undo.slice(0, -1));
+            setSelection(emptySelection());
+            setMessage('');
+          }}
+        />
+        {message ? (
+          <p role="alert" className="creator-message">
+            {message}
+          </p>
+        ) : null}
+        <button
+          type="button"
+          ref={preview}
+          className="creator-part-preview"
+          style={{
+            left:
+              CREATOR_PALETTE.origin.tx / 20 +
+              CREATOR_PALETTE.library.matrix.tx / 20 +
+              CREATOR_PALETTE.library.preview.x +
+              CREATOR_PALETTE.library.preview.bounds.x,
+            top:
+              CREATOR_PALETTE.origin.ty / 20 +
+              CREATOR_PALETTE.library.matrix.ty / 20 +
+              CREATOR_PALETTE.library.preview.y +
+              CREATOR_PALETTE.library.preview.bounds.y,
+            width: CREATOR_PALETTE.library.preview.bounds.width,
+            height: CREATOR_PALETTE.library.preview.bounds.height,
+          }}
+          disabled={chosen === null}
+          aria-label={chosen ? `Drag ${partById(chosen)?.name} into design` : 'Choose a part'}
+          onPointerDown={(e) => {
+            if (e.button !== 0 || chosen === null) return;
+            setDetails(null);
+            setAdvanced(false);
+            beginPlacement(chosen, 'pointer', point(e));
             e.currentTarget.setPointerCapture(e.pointerId);
           }}
           onPointerMove={(e) => {
-            const pos = point(e);
-            pointer.current = pos;
-            const current = drag.current;
-            if (current) {
-              if (Math.hypot(pos.x - current.from.x, pos.y - current.from.y) > 0.25)
-                current.moved = true;
-              if (current.moved && current.moving) {
-                current.session = advanceSelectionDrag(
-                  current.session ??
-                    beginSelectionDrag(
-                      current.before.parts,
-                      current.selection,
-                      current.from,
-                      symmetric,
-                      snapLocked.current,
-                      pos,
-                    ),
-                  pos,
-                );
-                setDesign({ ...design, parts: current.session.parts });
-                setSelection(current.session.selection);
-              } else draw();
-            } else if (placing) draw();
-          }}
-          tabIndex={0}
-          onKeyDown={(e) => {
-            if (placement.current?.mode !== 'keyboard') return;
-            const delta = {
-              ArrowLeft: [-1, 0],
-              ArrowRight: [1, 0],
-              ArrowUp: [0, -1],
-              ArrowDown: [0, 1],
-            }[e.key];
-            if (delta) {
-              e.preventDefault();
-              const step = e.shiftKey ? 5 : 1;
-              pointer.current = {
-                x: pointer.current.x + delta[0] * step,
-                y: pointer.current.y + delta[1] * step,
-              };
+            if (placement.current?.mode === 'pointer') {
+              pointer.current = point(e);
               draw();
-            } else if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault();
-              finishPlacement(pointer.current);
-              preview.current?.focus();
-            } else if (e.key === 'Escape') {
-              e.preventDefault();
-              finishPlacement(pointer.current, true);
-              preview.current?.focus();
             }
           }}
-          onPointerUp={() => finishDrag()}
-          onPointerCancel={() => finishDrag(true)}
-        />
-        {advanced ? (
-          <CreatorStatsTab pack={pack} basic onClick={() => setAdvanced(false)} />
-        ) : (
-          <CreatorStats pack={pack} design={design} classId={classId} />
-        )}
-      </div>
-      {!design.avatar ? (
-        <CreatorEnemyStats
+          onPointerUp={(e) => finishPlacement(point(e))}
+          onPointerCancel={() => finishPlacement(pointer.current, true)}
+          onClick={(e) => {
+            if (e.detail !== 0 || chosen === null) return;
+            setDetails(null);
+            beginPlacement(chosen, 'keyboard', { x: 0, y: 0 });
+            canvas.current?.focus();
+          }}
+        >
+          <canvas ref={previewCanvas} width={282} height={134} aria-hidden="true" />
+        </button>
+        <CreatorPaletteFrame
           pack={pack}
-          values={design}
-          suggested={suggested}
-          open={advanced}
-          fps={fps}
-          onOpen={() => {
-            setAdvanced(true);
-            if (suggested) setDesign({ ...design, ...creatorSuggestedStats(finalDesign) });
-          }}
-          onValues={(values) => setDesign({ ...design, ...values })}
-          onSuggested={(enabled) => {
-            setSuggested(enabled);
-            if (enabled) setDesign({ ...design, ...creatorSuggestedStats(finalDesign) });
-          }}
-        />
-      ) : null}
-      {active ? (
-        <>
-          <span className="sr-only" role="status">
-            Selected parts ({selection.keys.length})
-          </span>
-          <CreatorButton
-            pack={pack}
-            name="DeleteButton_mc"
-            label="Delete selected part"
-            onClick={() => {
-              commit({ ...design, parts: removeParts(design.parts, selection.keys) });
-              setSelection(emptySelection());
-            }}
-          />
-          <CreatorButton
-            pack={pack}
-            name="BringFront_mc"
-            label="To front"
-            onClick={() =>
-              commit({ ...design, parts: orderSelection(design.parts, selection, true) })
-            }
-          />
-          <CreatorButton
-            pack={pack}
-            name="SendBack_mc"
-            label="To back"
-            onClick={() =>
-              commit({ ...design, parts: orderSelection(design.parts, selection, false) })
-            }
-          />
-          <CreatorButton
-            pack={pack}
-            name="AlignCenter_mc"
-            label="Align to Center"
-            onClick={() => {
-              const next = centerSelection(design.parts, selection);
-              commit({ ...design, parts: next.parts });
-              setSelection(next.selection);
-            }}
-          />
-          {([-1, 1] as const).map((direction) => (
-            <CreatorButton
-              key={direction}
-              pack={pack}
-              name={direction < 0 ? 'Left_mc' : 'Right_mc'}
-              label={direction < 0 ? 'Move selection left' : 'Move selection right'}
-              onClick={() =>
-                commit({ ...design, parts: nudgeSelection(design.parts, selection, direction) })
-              }
-              onHoldStart={() => beginNudge(direction)}
-              onHoldEnd={endNudge}
-            />
-          ))}
-          {CREATOR_CONTROLS.sliders.map((layout) => (
-            <CreatorSlider
-              key={layout.name}
-              pack={pack}
-              layout={layout}
-              label={layout.name === 'Resize_mc' ? 'Part scale' : 'Part rotation'}
-              value={layout.name === 'Resize_mc' ? transform.scale : transform.rotation}
-              resetKey={selection}
-              min={layout.name === 'Resize_mc' ? 0.5 : 0}
-              max={layout.name === 'Resize_mc' ? 2 : 360}
-              onChange={(value) =>
-                changePart(layout.name === 'Resize_mc' ? { scale: value } : { rotation: value })
-              }
-              onBegin={beginControl}
-              onEnd={endControl}
-            />
-          ))}
-        </>
-      ) : null}
-      <CreatorButton
-        pack={pack}
-        name="Undo_mc"
-        label="Undo"
-        disabled={!undo.length}
-        onClick={() => {
-          setDesign(undo[undo.length - 1]);
-          setUndo(undo.slice(0, -1));
-          setSelection(emptySelection());
-          setMessage('');
-        }}
-      />
-      {message ? (
-        <p role="alert" className="creator-message">
-          {message}
-        </p>
-      ) : null}
-      <button
-        type="button"
-        ref={preview}
-        className="creator-part-preview"
-        style={{
-          left:
-            CREATOR_PALETTE.origin.tx / 20 +
-            CREATOR_PALETTE.library.matrix.tx / 20 +
-            CREATOR_PALETTE.library.preview.x +
-            CREATOR_PALETTE.library.preview.bounds.x,
-          top:
-            CREATOR_PALETTE.origin.ty / 20 +
-            CREATOR_PALETTE.library.matrix.ty / 20 +
-            CREATOR_PALETTE.library.preview.y +
-            CREATOR_PALETTE.library.preview.bounds.y,
-          width: CREATOR_PALETTE.library.preview.bounds.width,
-          height: CREATOR_PALETTE.library.preview.bounds.height,
-        }}
-        disabled={chosen === null}
-        aria-label={chosen ? `Drag ${partById(chosen)?.name} into design` : 'Choose a part'}
-        onPointerDown={(e) => {
-          if (e.button !== 0 || chosen === null) return;
-          setAdvanced(false);
-          beginPlacement(chosen, 'pointer', point(e));
-          e.currentTarget.setPointerCapture(e.pointerId);
-        }}
-        onPointerMove={(e) => {
-          if (placement.current?.mode === 'pointer') {
-            pointer.current = point(e);
-            draw();
-          }
-        }}
-        onPointerUp={(e) => finishPlacement(point(e))}
-        onPointerCancel={() => finishPlacement(pointer.current, true)}
-        onClick={(e) => {
-          if (e.detail !== 0 || chosen === null) return;
-          beginPlacement(chosen, 'keyboard', { x: 0, y: 0 });
-          canvas.current?.focus();
-        }}
-      >
-        <canvas ref={previewCanvas} width={282} height={134} aria-hidden="true" />
-      </button>
-      <CreatorPaletteFrame
-        pack={pack}
-        avatar={design.avatar}
-        category={category}
-        onCategory={(id) => {
-          setAdvanced(false);
-          setCategory(id);
-          setChosen(
-            firstAffordablePart(
-              PARTS.filter((p) => Math.floor(p.id / 1000) === id),
-              paletteContext,
-            ),
-          );
-          placement.current = null;
-          setPlacing(null);
-        }}
-      />
-      <CreatorPaletteRows
-        key={category}
-        pack={pack}
-        parts={palette}
-        context={paletteContext}
-        chosen={chosen}
-        onChoose={(id) => {
-          setAdvanced(false);
-          setChosen(id);
-          placement.current = null;
-          setPlacing(null);
-          setMessage('');
-        }}
-      />
-      {loading ? (
-        <TankCodeDialog
-          onClose={() => setLoading(false)}
-          onImport={(tank) => {
-            if (tank.avatar !== design.avatar) {
-              setMessage(`Load an ${design.avatar ? 'avatar' : 'enemy'} tank.`);
-              return;
-            }
-            if (!design.avatar)
-              setSuggested((current) => creatorImportedSuggested(tank, finalDesign, current));
-            commit(tank);
+          avatar={design.avatar}
+          category={category}
+          onCategory={(id) => {
+            setAdvanced(false);
+            setDetails(null);
+            setCategory(id);
+            setChosen(
+              firstAffordablePart(
+                PARTS.filter((p) => Math.floor(p.id / 1000) === id),
+                paletteContext,
+              ),
+            );
             placement.current = null;
-            setSelection(emptySelection());
             setPlacing(null);
           }}
+        />
+        <CreatorPaletteRows
+          key={category}
+          pack={pack}
+          parts={palette}
+          context={paletteContext}
+          chosen={chosen}
+          detailsId={detailsId}
+          onDetails={(anchor) =>
+            setDetails(anchor ? { ...anchor, instance: ++detailsCounter.current } : null)
+          }
+          onChoose={(id) => {
+            if (details && chosen !== id)
+              setDetails({ ...details, id, selected: true, instance: ++detailsCounter.current });
+            setAdvanced(false);
+            setChosen(id);
+            placement.current = null;
+            setPlacing(null);
+            setMessage('');
+          }}
+        />
+        <CreatorSelectionInfo pack={pack} icons={selectionIcons} />
+        <CreatorPartDetails pack={pack} focus={details} canvas={detailCanvas} id={detailsId} />
+      </div>
+      {saveDialog ? (
+        <CreatorSaveDialog
+          pack={pack}
+          kind={saveDialog.kind}
+          tank={saveDialog.tank}
+          opener={dialogOpener.current}
+          onSave={onSave}
+          onClose={() => setSaveDialog(null)}
+          onExit={onExit}
         />
       ) : null}
     </div>

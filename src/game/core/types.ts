@@ -62,6 +62,7 @@ export interface PartDefinition {
   classCost: number;
   lower: boolean;
   tier: number;
+  damageText: string;
   summary: string;
   flavor: string;
 }
@@ -313,6 +314,7 @@ export interface Settings {
 export interface Profile {
   version: 1;
   secondaryHelpSeen: boolean;
+  tankViewerHelpSeen: boolean;
   progression: TankDesign[];
   tanks: TankDesign[];
   settings: Settings;

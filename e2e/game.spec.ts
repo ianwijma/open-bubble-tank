@@ -4,7 +4,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { DEFAULT_SETTINGS } from '../src/game/core/constants';
 import type { TankDesign } from '../src/game/core/types';
-import { dropPreview } from './helpers/creator';
+import { dropPreview, saveCreator } from './helpers/creator';
 const AVATARS: TankDesign[] = JSON.parse(
   readFileSync(resolve('src/game/data/tanks.json'), 'utf8'),
 ).avatar_defaults;
@@ -22,7 +22,7 @@ test('mock path: menu, local enemy creator, settings, exploration and pause', as
   await page.getByRole('button', { name: 'Place Small Bubble', exact: true }).click();
   await dropPreview(page, 5, -10);
   await page.screenshot({ path: 'test-results/mock-creator.png' });
-  await page.getByRole('button', { name: 'SAVE', exact: true }).click();
+  await saveCreator(page);
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'My tanks', exact: true }).click();
   await expect(page.getByText('Test Minnow', { exact: true })).toBeVisible();
@@ -156,7 +156,7 @@ test('compressed CWS loads locally and original tank-code sharing survives reloa
   await page.getByRole('textbox', { name: 'Tank name' }).fill('Code Minnow');
   await dropPreview(page, 0, 0);
   await page.screenshot({ path: 'test-results/swf-creator.png' });
-  await page.getByRole('button', { name: 'SAVE', exact: true }).click();
+  await saveCreator(page);
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'My tanks', exact: true }).click();
   await page.getByRole('button', { name: 'Code', exact: true }).click();

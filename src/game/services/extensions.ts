@@ -24,7 +24,9 @@ export class ServiceUnavailable extends Error {
   }
 }
 export const community: CommunityTanks = {
-  search: async () => [],
+  search: async () => {
+    throw new ServiceUnavailable('Community tank search');
+  },
   publish: async () => {
     throw new ServiceUnavailable('Community tank sharing');
   },

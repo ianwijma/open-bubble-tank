@@ -2,7 +2,7 @@ import { test, expect, type Page } from '@playwright/test';
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { waitForMainMenu } from './helpers/main-menu';
-import { dropPreview } from './helpers/creator';
+import { dropPreview, saveCreator } from './helpers/creator';
 import type { TankDesign } from '../src/game/core/types';
 const swf =
   process.env.BT3_SWF_FILE ?? resolve('../documented-bubble-tank-3/re/bt3/uncompressed.swf');
@@ -86,7 +86,7 @@ for (const native of [false, true])
     await page
       .locator('.creator')
       .screenshot({ path: `test-results/${native ? 'native' : 'mock'}-enemy-info.png` });
-    await page.getByRole('button', { name: 'SAVE', exact: true }).click();
+    await saveCreator(page);
     const read = () =>
       page.evaluate(
         () =>
@@ -109,7 +109,7 @@ for (const native of [false, true])
     await dropPreview(page, 30, 0);
     const design = await snapshot(page);
     expect(design.life).toBe(1);
-    await page.getByRole('button', { name: 'SAVE', exact: true }).click();
+    await saveCreator(page);
     await expect.poll(async () => (await read()).length).toBe(2);
     expect((await read())[1]).toMatchObject({
       life: Math.round(design.parts.length / 2) * design.classId,

@@ -1,3 +1,4 @@
+import { exitCreator } from './helpers/creator';
 import { waitForMainMenu } from './helpers/main-menu';
 import { expect, test } from '@playwright/test';
 import { existsSync, readFileSync } from 'node:fs';
@@ -24,6 +25,7 @@ for (const native of [false, true])
       (profile) => localStorage.setItem('open-bubble-tank.profile.v1', JSON.stringify(profile)),
       {
         version: 1,
+        tankViewerHelpSeen: true,
         secondaryHelpSeen: true, // The dedicated help flow covers its first-time interruption.
         tanks: [],
         achievements: [],
@@ -85,7 +87,28 @@ for (const native of [false, true])
     await expect(
       page.getByRole('button', { name: 'Exit tank creator', exact: true }),
     ).toBeVisible();
-    await page.getByRole('button', { name: 'Exit tank creator', exact: true }).click();
+    const editorName = await page
+      .getByRole('textbox', { name: 'Tank name', exact: true })
+      .inputValue();
+    await page.getByRole('button', { name: 'Load a Tank...', exact: true }).click();
+    const viewer = page.locator('.tank-viewer');
+    await expect(viewer).toHaveAttribute('data-viewer-type', 'Avatar');
+    await expect(viewer).toHaveAttribute('data-viewer-ready', 'true');
+    await page.getByRole('button', { name: 'Return to Tank Creator', exact: true }).click();
+    await expect(page.getByRole('textbox', { name: 'Tank name', exact: true })).toHaveValue(
+      editorName,
+    );
+    await page.getByRole('button', { name: 'Load a Tank...', exact: true }).click();
+    await expect(viewer).toHaveAttribute('data-viewer-ready', 'true');
+    const first = viewer.locator('.viewer-select-tank').first(),
+      label = await first.getAttribute('aria-label');
+    await first.click();
+    await page
+      .getByRole('dialog', { name: `${label}?`, exact: true })
+      .getByRole('button', { name: 'Yes', exact: true })
+      .click();
+    await expect(page.locator('.creator')).toBeVisible();
+    await exitCreator(page);
     await expect(page.getByRole('dialog')).toHaveCount(0);
     await expect(edit).toBeEnabled();
     await edit.click();

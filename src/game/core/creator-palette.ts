@@ -5,6 +5,8 @@ import type { SwfMatrix } from '../assets/asset-pack';
 import type { TankDesign } from './types';
 import { partById } from '../data/catalog';
 export interface CreatorField {
+  advances?: Record<string, number>;
+  deviceFont?: boolean;
   name: string;
   initialText?: string;
   symbol: number;
@@ -34,6 +36,24 @@ interface Piece {
 }
 export const CREATOR_PALETTE = data as {
   origin: SwfMatrix;
+  selectionInfo: {
+    icon: { symbol: number; bounds: { x: number; y: number; width: number; height: number } };
+    popup: {
+      symbol: number;
+      bounds: { x: number; y: number; width: number; height: number };
+      fields: CreatorField[];
+      static: CreatorPrimitive[];
+    };
+  };
+  details: {
+    symbol: number;
+    origin: SwfMatrix;
+    bounds: { x: number; y: number; width: number; height: number };
+    static: CreatorPrimitive[];
+    fields: CreatorField[];
+    viewer: { matrix: SwfMatrix; mask: { x: number; y: number; width: number; height: number } };
+    arrow: Piece & { mask: { x: number; y: number; width: number; height: number } };
+  };
   advanced: {
     symbol: number;
     origin: SwfMatrix;
@@ -158,7 +178,7 @@ export function creatorGlyphLayout(text: string, field: CreatorField) {
   let width = 0;
   const glyphs = Array.from(text, (char) => {
     const x = width,
-      advance = CREATOR_PALETTE.fonts[field.fontId]?.[char];
+      advance = (field.advances ?? CREATOR_PALETTE.fonts[field.fontId])?.[char];
     width +=
       (advance === undefined ? field.size * 0.4 : (advance * field.size) / 1024) + field.spacing;
     return { char, x };

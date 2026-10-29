@@ -29,7 +29,9 @@ export function CreatorPrimitives({ pieces }: { pieces: CreatorPrimitive[] }) {
               key={j}
               x={g.x}
               y={g.y}
-              fontFamily="monospace"
+              fontFamily={p.font?.startsWith('Arial') ? 'Arial, sans-serif' : 'monospace'}
+              fontWeight={p.bold ? 'bold' : 'normal'}
+              fontStyle={p.italic ? 'italic' : 'normal'}
               fontSize={g.size}
               fill={rgba(g.color)}
             >
@@ -46,6 +48,16 @@ export function CreatorPrimitives({ pieces }: { pieces: CreatorPrimitive[] }) {
               strokeWidth={1}
             />
           </>
+        ) : p.kind === 'detail-panel' ? (
+          <>
+            <rect x={x + 0.5} y={y + 0.5} width={w - 1} height={h - 1} {...style} />
+            <path d="M4 59.75h175.75" fill="none" stroke="white" strokeWidth={1} />
+          </>
+        ) : p.kind === 'detail-arrow' ? (
+          <path
+            d={`M${x} ${y + h / 2}L${x + h / 2} ${y}H${x + w}V${y + h}H${x + h / 2}Z`}
+            {...style}
+          />
         ) : p.kind === 'scroll-grip' ? (
           <>
             <rect x={x} y={y} width={w} height={h} {...style} />
@@ -67,6 +79,11 @@ export function CreatorPrimitives({ pieces }: { pieces: CreatorPrimitive[] }) {
               fill={style.stroke}
             />
           </>
+        ) : p.kind === 'right-arrow' ? (
+          <path
+            d={`M${x} ${y + h * 0.3}H${x + w - h / 2}V${y}L${x + w} ${y + h / 2}L${x + w - h / 2} ${y + h}V${y + h * 0.7}H${x}Z`}
+            {...style}
+          />
         ) : p.kind === 'arrow' ? (
           <path d={`M${x} ${y + h / 2}L${x + w} ${y}v${h}Z`} {...style} />
         ) : (

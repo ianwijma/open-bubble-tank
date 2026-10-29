@@ -1,6 +1,8 @@
 import { PARTS, partById } from '../data/catalog';
 import { SETTINGS_SCREEN } from '../core/settings-screen';
 import { CREDITS } from '../core/credits-screen';
+import { CREATOR_DIALOGS } from '../core/creator-dialogs';
+import { TANK_VIEWER } from '../core/tank-viewer';
 import { mockCreditsLeaf } from './mock-credits';
 import type { Projectile, Rect, Tank, TankDesign, TankPart } from '../core/types';
 import { Random, rotate } from '../core/math';
@@ -41,6 +43,7 @@ import { INFECTED_ART, STATUS_ART, PROTECTION_ART, shieldClipSymbol } from '../d
 import { buttonDisplayList, type ButtonInfo, type ButtonState } from './button-display-list';
 import { CREATOR_CONTROLS } from '../core/creator-controls';
 import { CREATOR_PALETTE } from '../core/creator-palette';
+import { svgMaskDefinition } from './svg-mask';
 
 export interface Bounds extends Rect {}
 export interface Raster extends Bounds {
@@ -142,8 +145,15 @@ export interface SymbolResult {
       text: string;
       color?: number[];
       leading?: number;
+      maxLength?: number;
       margins?: number[];
-      flags?: { wordWrap: boolean; multiline: boolean; readOnly: boolean; html: boolean };
+      flags?: {
+        wordWrap: boolean;
+        multiline: boolean;
+        readOnly: boolean;
+        html: boolean;
+        useOutlines?: boolean;
+      };
     }[];
     symbolNames: Record<string, string>;
   };
@@ -547,6 +557,56 @@ export class AssetPack {
         const raster = await pack.rasterClip(confirmPose);
         if (raster) pack.creatorFrames.set(`enemy:confirm:${frame}`, raster);
       }
+      const detailsPose = new SwfClip(CREATOR_PALETTE.details.symbol, pack);
+      detailsPose.start(1, false);
+      detailsPose.placements = detailsPose.placements.filter((p) => !p.name);
+      const detailsRaster = await pack.rasterClip(detailsPose);
+      if (detailsRaster) pack.creatorFrames.set('details:static', detailsRaster);
+      for (const frame of [1, 2]) {
+        const raster = await pack.rasterSymbol(CREATOR_PALETTE.details.arrow.symbol, frame);
+        if (raster) pack.creatorFrames.set(`details:arrow:${frame}`, raster);
+      }
+      const info = CREATOR_PALETTE.selectionInfo;
+      const infoIcon = await pack.rasterSymbol(info.icon.symbol);
+      if (infoIcon) pack.creatorFrames.set('selection-info:icon', infoIcon);
+      const infoPose = new SwfClip(info.popup.symbol, pack);
+      infoPose.start(1, false);
+      infoPose.placements = infoPose.placements.filter((p) => !p.name);
+      const infoPopup = await pack.rasterClip(infoPose);
+      if (infoPopup) pack.creatorFrames.set('selection-info:popup', infoPopup);
+      for (const screen of CREATOR_DIALOGS.frames) {
+        const pose = new SwfClip(CREATOR_DIALOGS.symbol, pack);
+        pose.start(screen.frame, false);
+        pose.placements = pose.placements.filter((p) => screen.staticIds.includes(p.charId));
+        const raster = await pack.rasterClip(pose);
+        if (raster) pack.creatorFrames.set(`dialog:${screen.frame}`, raster);
+        for (const button of screen.buttons)
+          for (const state of ['up', 'over', 'down'] as const) {
+            const art = await pack.rasterSymbol(button.symbol, 1, 0, state);
+            if (art) pack.creatorFrames.set(`dialog:${button.symbol}:${state}`, art);
+          }
+      }
+      for (const widget of TANK_VIEWER.widgets) {
+        const pose = new SwfClip(widget.symbol, pack);
+        pose.start(widget.frame, false);
+        pose.placements = pose.placements.filter((p) => widget.staticDepths.includes(p.depth));
+        const raster = await pack.rasterClip(
+          pose,
+          'up',
+          widget.clips && new Map(widget.clips.map((c) => [c.symbol, c.bounds])),
+        );
+        if (raster) pack.creatorFrames.set(`viewer:${widget.symbol}:${widget.frame}`, raster);
+      }
+      for (const { age } of TANK_VIEWER.statistics.frames) {
+        const pose = new SwfClip(1137, pack);
+        pose.start(2, false);
+        const mask = pose.children.get(1)?.clip;
+        mask?.gotoAndStop(age);
+        const widget = TANK_VIEWER.widgets.find((w) => w.symbol === 1137 && w.frame === 2)!;
+        pose.placements = pose.placements.filter((p) => widget.staticDepths.includes(p.depth));
+        const raster = await pack.rasterClip(pose);
+        if (raster) pack.creatorFrames.set(`viewer:statistics:${age}`, raster);
+      }
       onProgress(1, 'Assets ready');
       return pack;
     } catch (e) {
@@ -561,6 +621,7 @@ export class AssetPack {
     ratio = 0,
     pose?: SwfClip,
     buttonState: ButtonState = 'up',
+    clips?: ReadonlyMap<number, Bounds>,
   ): { body: string; bounds: Bounds } | null {
     if (seen.has(id) || seen.size > 24) return null;
     const next = new Set(seen);
@@ -608,8 +669,14 @@ export class AssetPack {
     const masks: { id: string; depth: number; end: number; bounds: Bounds; body: string }[] = [];
     for (const p of placements) {
       const childPose = pose?.children.get(p.depth)?.clip;
-      const child = this.compile(p.charId, frame, next, p.ratio ?? 0, childPose, buttonState);
+      let child = this.compile(p.charId, frame, next, p.ratio ?? 0, childPose, buttonState, clips);
       if (!child) continue;
+      const clip = clips?.get(p.charId);
+      if (clip)
+        child = {
+          body: `<svg x="${clip.x}" y="${clip.y}" width="${clip.width}" height="${clip.height}" viewBox="${clip.x} ${clip.y} ${clip.width} ${clip.height}" overflow="hidden">${child.body}</svg>`,
+          bounds: intersect(child.bounds, clip),
+        };
       const m = p.matrix ?? identity;
       if (p.clipDepth !== undefined) {
         masks.push({
@@ -658,13 +725,13 @@ export class AssetPack {
       let body = `${filter}<g ${attrs}>${child.body}</g>`,
         bounds = transformBounds(child.bounds, m);
       for (const mask of masks.filter((mask) => p.depth > mask.depth && p.depth <= mask.end)) {
-        body = `<g clip-path="url(#${mask.id})">${body}</g>`;
+        body = `<g mask="url(#${mask.id})">${body}</g>`;
         bounds = intersect(bounds, mask.bounds);
       }
       if (bounds.width > 0 && bounds.height > 0) children.push({ body, bounds });
     }
     const definitions = masks.length
-      ? `<defs>${masks.map((mask) => `<clipPath id="${mask.id}" clipPathUnits="userSpaceOnUse">${mask.body}</clipPath>`).join('')}</defs>`
+      ? `<defs>${masks.map((mask) => svgMaskDefinition(mask.id, mask.body, mask.bounds)).join('')}</defs>`
       : '';
     return children.length
       ? {
@@ -714,8 +781,14 @@ export class AssetPack {
     return this.rasterCompiled(compiled);
   }
   /** Freeze each retained child at its own frame; raw rasterSymbol remains authored-frame access. */
-  async rasterClip(clip: SwfClip, buttonState: ButtonState = 'up'): Promise<Raster | null> {
-    return this.rasterCompiled(this.compile(clip.id, clip.frame, new Set(), 0, clip, buttonState));
+  async rasterClip(
+    clip: SwfClip,
+    buttonState: ButtonState = 'up',
+    regions?: ReadonlyMap<number, Bounds>,
+  ): Promise<Raster | null> {
+    return this.rasterCompiled(
+      this.compile(clip.id, clip.frame, new Set(), 0, clip, buttonState, regions),
+    );
   }
   private async rasterCompiled(compiled: { body: string; bounds: Bounds } | null) {
     if (!compiled) return null;

@@ -12,3 +12,22 @@ export async function dropPreview(page: Page, x: number, y: number) {
   );
   await page.mouse.up();
 }
+/** Follow TankScreens' name -> locally saved code -> exit path. */
+export async function saveCreator(page: Page) {
+  await page.getByRole('button', { name: 'SAVE', exact: true }).click();
+  await page
+    .getByRole('dialog', { name: 'Save your tank', exact: true })
+    .getByRole('button', { name: 'Continue', exact: true })
+    .click();
+  await page
+    .getByRole('dialog', { name: 'Tank saved', exact: true })
+    .getByRole('button', { name: 'Exit creator', exact: true })
+    .click();
+}
+export async function exitCreator(page: Page) {
+  await page.getByRole('button', { name: 'Exit tank creator', exact: true }).click();
+  await page
+    .getByRole('dialog', { name: 'Exit tank creator?', exact: true })
+    .getByRole('button', { name: 'Exit without saving', exact: true })
+    .click();
+}

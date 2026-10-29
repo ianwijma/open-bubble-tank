@@ -4,15 +4,17 @@ import type { TankPart } from '../core/types';
 import { partById } from '../data/catalog';
 import { SwfSymbolView } from './swf-symbol-view';
 import { SwfTextures } from './swf-textures';
+import { creatorThumbnailScale } from '../core/creator-details';
 import { rotate } from '../core/math';
 
-type Layer = 'design' | 'draft' | 'preview';
+type Layer = 'design' | 'draft' | 'preview' | 'details' | `viewer:${string}`;
 interface PartView {
   type: number;
   born: number;
   wrapper: Container;
   view: SwfSymbolView;
   initialWidth: number;
+  thumbnailScale: number;
 }
 export interface ArtworkPart {
   part: TankPart;
@@ -27,13 +29,16 @@ export class CreatorArtwork {
   private groups = new Map<Layer, { root: Container; parts: Map<string, PartView> }>();
   private gray = new ColorMatrixFilter();
   private destroyed = false;
-  constructor(private pack: AssetPack) {
+  constructor(
+    private pack: AssetPack,
+    private size = 350,
+  ) {
     this.gray.greyscale(1, false);
   }
   async init() {
     await this.app.init({
-      width: 350,
-      height: 350,
+      width: this.size,
+      height: this.size,
       resolution: 2,
       backgroundAlpha: 0,
       antialias: true,
@@ -48,7 +53,7 @@ export class CreatorArtwork {
     let group = this.groups.get(layer);
     if (!group) {
       const root = new Container();
-      root.position.set(175, 175);
+      root.position.set(this.size / 2, this.size / 2);
       group = { root, parts: new Map() };
       this.groups.set(layer, group);
     }
@@ -76,7 +81,17 @@ export class CreatorArtwork {
       view,
       wrapper,
       initialWidth: bounds.width,
+      thumbnailScale: creatorThumbnailScale(bounds.width, bounds.height),
     };
+  }
+  clearLayer(layer: Layer) {
+    const group = this.groups.get(layer);
+    if (!group) return;
+    for (const node of group.parts.values()) {
+      node.view.destroy();
+      node.wrapper.destroy();
+    }
+    group.parts.clear();
   }
   /** Measure the actual newly instantiated drag object, before its animation advances. */
   beginDraft(parts: TankPart[], frame: number) {
@@ -96,9 +111,16 @@ export class CreatorArtwork {
     }
     return radius;
   }
-  draw(ctx: CanvasRenderingContext2D, layer: Layer, parts: ArtworkPart[], frame: number) {
+  draw(
+    ctx: CanvasRenderingContext2D,
+    layer: Layer,
+    parts: ArtworkPart[],
+    frame: number,
+    scale = 1,
+  ) {
     const group = this.group(layer),
       active = new Set(parts.map(({ part }) => part.key));
+    group.root.scale.set(scale);
     for (const [key, node] of group.parts) {
       if (!active.has(key)) {
         node.view.destroy();
@@ -122,7 +144,7 @@ export class CreatorArtwork {
       }
       const { wrapper, view } = node;
       wrapper.position.set(part.x, part.y);
-      wrapper.scale.set(part.scale);
+      wrapper.scale.set(part.scale * (layer === 'details' ? node.thumbnailScale : 1));
       wrapper.rotation = (part.rotation * Math.PI) / 180;
       view.setParentAlpha(alpha);
       wrapper.filters = invalid ? [this.gray] : null;
@@ -132,7 +154,7 @@ export class CreatorArtwork {
     this.app.stage.removeChildren();
     this.app.stage.addChild(group.root);
     this.app.render();
-    ctx.drawImage(this.app.canvas, -175, -175, 350, 350);
+    ctx.drawImage(this.app.canvas, -this.size / 2, -this.size / 2, this.size, this.size);
   }
   /** Dropping moves the existing draft clips into the tank without restarting their timelines. */
   adoptDraft(parts: TankPart[]) {
@@ -157,9 +179,14 @@ export class CreatorArtwork {
     );
     return view.hitTest(local.x, local.y);
   }
-  localBounds(part: TankPart) {
-    const view = this.groups.get('design')?.parts.get(part.key)?.view;
+  localBounds(part: TankPart, layer: Layer = 'design') {
+    const view = this.groups.get(layer)?.parts.get(part.key)?.view;
     return view ? (view.scriptBounds() ?? { x: 0, y: 0, width: 0, height: 0 }) : undefined;
+  }
+  removeLayer(layer: Layer) {
+    this.clearLayer(layer);
+    this.groups.get(layer)?.root.destroy();
+    this.groups.delete(layer);
   }
   restartClusters(parts: TankPart[]) {
     for (const part of parts) {

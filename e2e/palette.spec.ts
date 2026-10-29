@@ -3,7 +3,7 @@ import { test, expect, type Page } from '@playwright/test';
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import type { TankDesign, TankPart } from '../src/game/core/types';
-import { dropPreview } from './helpers/creator';
+import { dropPreview, exitCreator } from './helpers/creator';
 const starter: TankDesign = JSON.parse(readFileSync(resolve('src/game/data/tanks.json'), 'utf8'))
   .avatar_defaults[0];
 const swf =
@@ -90,7 +90,7 @@ for (const assets of ['mock', 'SWF'])
     await page.getByRole('button', { name: 'Undo', exact: true }).click();
     await expect(small).toHaveCSS('opacity', '1');
     await expect(page.locator('.creator').getByRole('alert')).toHaveCount(0);
-    await page.getByRole('button', { name: 'Exit tank creator' }).click();
+    await exitCreator(page);
     await importTank(page, complexity);
     await page.getByRole('button', { name: 'Weapons', exact: true }).click();
     await expect(page.getByRole('button', { name: 'Choose a part', exact: true })).toBeDisabled();

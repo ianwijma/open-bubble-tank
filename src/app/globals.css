@@ -172,7 +172,7 @@ p {
   box-shadow:
     0 20px 70px #0005,
     0 0 0 1px #a3e5ee12;
-  overflow: hidden;
+  overflow: clip;
   background: #0a3b56;
   align-self: center;
 }
@@ -186,7 +186,7 @@ p {
   width: 550px;
   height: 450px;
   transform-origin: top left;
-  overflow: hidden;
+  overflow: clip;
 }
 .main-stage {
   position: relative;
@@ -2107,4 +2107,198 @@ kbd {
   display: inline;
   max-width: none;
   vertical-align: top;
+}
+
+.creator-part-details {
+  position: absolute;
+  z-index: 7;
+  pointer-events: none;
+}
+.creator-details-arrow-mask {
+  position: absolute;
+  overflow: hidden;
+  pointer-events: none;
+}
+.creator-details-thumbnail {
+  position: absolute;
+  pointer-events: none;
+}
+
+.creator-selection-info {
+  position: absolute;
+  z-index: 8;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+.creator-weapon-info-icon {
+  position: absolute;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  pointer-events: auto;
+  cursor: default;
+}
+.creator-weapon-info-popup {
+  position: absolute;
+  z-index: 1;
+  pointer-events: auto;
+}
+.creator-editor-content {
+  display: contents;
+}
+.creator-save-dialog {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  outline: none;
+}
+.creator-save-dialog > svg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.creator-dialog-button {
+  position: absolute;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.creator-dialog-button:focus-visible {
+  outline: 1px solid white;
+}
+.creator-save-dialog .creator-dialog-input {
+  position: absolute;
+  box-sizing: border-box;
+  padding: 2px;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  color: transparent;
+  caret-color: white;
+  font-family: Arial, sans-serif;
+}
+.creator-dialog-input::selection {
+  background: #2980a580;
+  color: transparent;
+}
+.creator-save-dialog .creator-dialog-code {
+  position: absolute;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 2px;
+  border: 0;
+  border-radius: 0;
+  resize: none;
+  background: transparent;
+  color: white;
+  font-family: Arial, sans-serif;
+  overflow-wrap: anywhere;
+}
+.creator-dialog-status {
+  position: absolute;
+  bottom: 3px;
+  left: 10px;
+  margin: 0;
+  font-size: 10px;
+}
+.tank-viewer {
+  z-index: 20;
+  position: absolute;
+  inset: 0;
+  overflow: clip;
+}
+.viewer-art-error {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  z-index: 30;
+}
+.viewer-content {
+  position: absolute;
+  inset: 0;
+}
+.viewer-group {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform-origin: 0 0;
+}
+.viewer-art {
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+.viewer-button,
+.viewer-select-tank {
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.viewer-button:focus-visible,
+.viewer-select-tank:focus-visible {
+  outline: 1px solid white;
+}
+.viewer-button:disabled {
+  cursor: default;
+  opacity: 1;
+}
+.viewer-preview-mask {
+  position: absolute;
+  overflow: hidden;
+  pointer-events: none;
+}
+.viewer-tank-art {
+  position: absolute;
+  left: -275px;
+  top: -275px;
+  width: 550px;
+  height: 550px;
+  max-width: none;
+  pointer-events: none;
+}
+.viewer-modal {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  outline: none;
+}
+.viewer-code {
+  position: absolute;
+  box-sizing: border-box;
+  padding: 2px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: white;
+  font-family: Arial, sans-serif;
+  resize: none;
+  overflow-wrap: anywhere;
+}
+.viewer-code::placeholder {
+  color: white;
+}
+.viewer-sort {
+  z-index: 3;
+}
+.viewer-statistics-window {
+  position: absolute;
+  overflow: clip;
+  pointer-events: none;
+}
+.viewer-notification {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
 }

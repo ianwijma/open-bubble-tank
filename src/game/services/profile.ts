@@ -1,13 +1,14 @@
 import { DEFAULT_SETTINGS } from '../core/constants';
 import { validHotkey, canonicalHotkey } from '../core/hotkeys';
 import type { Profile, Settings, TankDesign, TankPart } from '../core/types';
-import { PART_BY_ID, AVATARS, ENEMIES, BOSSES } from '../data/catalog';
+import { PART_BY_ID, AVATARS, ENEMIES, BOSSES, difficulty } from '../data/catalog';
 const KEY = 'open-bubble-tank.profile.v1';
 const builtinIds = new Set([...AVATARS, ...ENEMIES, ...BOSSES].map((tank) => tank.id));
 export function defaultProfile(): Profile {
   return {
     version: 1,
     secondaryHelpSeen: false,
+    tankViewerHelpSeen: false,
     progression: [],
     tanks: [],
     settings: { ...DEFAULT_SETTINGS },
@@ -20,7 +21,7 @@ export function saveCreatedTank(profile: Profile, design: TankDesign) {
   const tank: TankDesign = {
     ...design,
     sourceCode: undefined,
-    author: 'You',
+    difficulty: difficulty(design),
     id: `L${profile.nextTankId}`,
   };
   const tanks = [...profile.tanks.filter((previous) => previous.id !== tank.id), tank];
@@ -36,6 +37,12 @@ export function saveCreatedTank(profile: Profile, design: TankDesign) {
           : profile.achievements,
     },
   };
+}
+/** _-VM reserves an ID before checking empty fields, including failed submissions. */
+export function submitCreatedTank(profile: Profile, design: TankDesign) {
+  if (!design.parts.length || design.author === '' || design.name === '')
+    return { tank: null, profile: { ...profile, nextTankId: profile.nextTankId + 1 } };
+  return saveCreatedTank(profile, design);
 }
 export function validateDesign(value: unknown): value is TankDesign {
   if (!value || typeof value !== 'object') return false;
@@ -104,6 +111,7 @@ export function loadProfile(): Profile {
     return {
       ...defaultProfile(),
       secondaryHelpSeen: p.secondaryHelpSeen === true,
+      tankViewerHelpSeen: p.tankViewerHelpSeen === true,
       settings: restoreSettings(p.settings),
       tanks: Array.isArray(p.tanks) ? p.tanks.filter(validateDesign).slice(0, 200) : [],
       progression: Array.isArray(p.progression)

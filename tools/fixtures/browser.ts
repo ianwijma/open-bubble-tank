@@ -44,6 +44,8 @@ import { showShapeContact } from './shape-contact';
 import { showForcefieldLifecycle } from './forcefield-lifecycle';
 import { showMockPartMotion } from './mock-part-motion';
 import { showMainMenuFlow } from './main-menu';
+import { showSvgMasks } from './svg-masks';
+import { showViewerFlow } from './viewer-flow';
 
 const file = document.querySelector<HTMLInputElement>('#swf')!;
 const fixture = document.querySelector<HTMLSelectElement>('#fixture')!;
@@ -191,6 +193,18 @@ async function reset() {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
     status.dataset.partSnapshots = JSON.stringify(await showPartSnapshots(pack, stage));
     status.textContent = 'Ready · independent frozen part poses and body-only class counting';
+    return;
+  }
+  if (fixture.value === 'svg-masks') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    status.dataset.svgMasks = JSON.stringify(await showSvgMasks(pack, stage));
+    status.textContent = 'Ready · grouped SVG mask pixels';
+    return;
+  }
+  if (fixture.value === 'viewer-flow') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    unmountScreen = showViewerFlow(pack, stage);
+    status.textContent = 'Ready · manual viewer fade clock';
     return;
   }
   if (fixture.value === 'mock-parts') {

@@ -220,12 +220,46 @@ const advanced = {
     }),
   },
 };
+const detailList = list(865),
+  detailFields = detailList
+    .filter((p) => symbols.editTexts.some((t) => t.id === p.charId))
+    .map(field);
+const details = {
+  symbol: 865,
+  origin: creator.find((p) => p.name === 'Details_mc')!.matrix,
+  bounds: rect(865),
+  static: detailList
+    .filter((p) => !p.name && !p.clipDepth)
+    .flatMap((p) => layout.collect(p.charId, 1, 'up', p.matrix)),
+  fields: detailFields,
+  viewer: { matrix: detailList.find((p) => p.name === 'Viewer_mc')!.matrix, mask: rect(862) },
+  arrow: { ...piece(detailList.find((p) => p.name === 'Arrow_mc')!), mask: rect(856) },
+};
+const infoList = list(1000),
+  infoFields = infoList.filter((p) => symbols.editTexts.some((t) => t.id === p.charId)).map(field);
+const selectionInfo = {
+  icon: { symbol: 1002, bounds: rect(1002) },
+  popup: {
+    symbol: 1000,
+    bounds: rect(1000),
+    fields: infoFields,
+    static: infoList
+      .filter((p) => !p.name)
+      .flatMap((p) => layout.collect(p.charId, 1, 'up', p.matrix)),
+  },
+};
 const fonts = Object.fromEntries(
   [
     ...new Set(
-      [...statsFields, ...rowFields, caption, ...advancedFields, ...confirmFields].map(
-        (f) => f.fontId,
-      ),
+      [
+        ...statsFields,
+        ...rowFields,
+        caption,
+        ...advancedFields,
+        ...confirmFields,
+        ...detailFields,
+        ...infoFields,
+      ].map((f) => f.fontId),
     ),
   ].map((id) => {
     const f = symbols.fonts.find((f) => f.id === id)!;
@@ -241,6 +275,8 @@ const data = {
   origin,
   fonts,
   advanced,
+  details,
+  selectionInfo,
   stats: {
     symbol: 803,
     fields: statsFields,

@@ -1,6 +1,9 @@
 import data from '../data/creator-controls.json';
 import type { SwfMatrix } from '../assets/asset-pack';
 export interface CreatorPrimitive {
+  font?: string;
+  bold?: boolean;
+  italic?: boolean;
   id: number;
   kind: string;
   matrix: SwfMatrix;

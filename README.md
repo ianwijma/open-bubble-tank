@@ -32,6 +32,18 @@ The browser tests use Chrome if installed, otherwise a Playwright Chromium insta
 
 Ordinary navigation tests use `e2e/helpers/main-menu.ts` to wait for the native title intro before selecting a menu control. The title's hit geometry can cover an otherwise visible button. Controlled menu fixtures test input during the intro and on animated hover edges separately.
 
+The repeatable metadata importers read the sibling research checkout without copying artwork:
+
+```sh
+python3 tools/import-reference-data.py --parts-only # Catalog strings, costs and stable IDs
+bun tools/import-creator-controls.ts               # Creator controls and transforms
+bun tools/import-creator-palette.ts                # Palette, stats and rollover layouts
+bun tools/import-creator-dialogs.ts                # Save/exit/code screen layouts
+bun tools/import-tank-viewer.ts                    # Local viewer, sorting and detail layouts
+```
+
+Part strings are decoded directly from the recovered ActionScript table, including quoted flavor text. Generated JSON is committed; the research checkout is needed only when regenerating it.
+
 ## Original runtime reference
 
 The development reference viewer runs the supplied SWF with pinned Ruffle 0.7.1. It is separate from the game application and is excluded from the production bundle. It normalizes the research file's expanded CWS header to FWS and blocks retired external requests. Ruffle is an emulator, so observed differences still need to be checked against the recovered code.
