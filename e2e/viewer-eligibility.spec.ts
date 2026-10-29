@@ -1,26 +1,13 @@
 import { expect, test } from '@playwright/test';
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { execFileSync } from 'node:child_process';
+import { encodeFixtureTank } from './helpers/tank-code';
 import type { TankDesign } from '../src/game/core/types';
 const swf =
   process.env.BT3_SWF_FILE ?? resolve('../documented-bubble-tank-3/re/bt3/uncompressed.swf');
 const avatars: TankDesign[] = JSON.parse(
   readFileSync('src/game/data/tanks.json', 'utf8'),
 ).avatar_defaults;
-// Exercise the production codec in Bun; Playwright's Node ESM loader requires JSON import attributes.
-const encodeFixture = (tank: TankDesign) =>
-  execFileSync(
-    'bun',
-    [
-      '-e',
-      "import { encodeTankCode } from './src/game/services/tank-code'; console.log(await encodeTankCode(await Bun.stdin.json()));",
-    ],
-    {
-      input: JSON.stringify(tank),
-      encoding: 'utf8',
-    },
-  ).trim();
 for (const native of [false, true])
   test(`${native ? 'SWF' : 'mock'} viewer accepts a candidate class budget and reports specific capacity/unlock failures`, async ({
     page,
@@ -43,7 +30,7 @@ for (const native of [false, true])
       await advance();
       await code
         .getByRole('textbox', { name: 'Tank code' })
-        .fill(tank.sourceCode ?? encodeFixture(tank));
+        .fill(tank.sourceCode ?? encodeFixtureTank(tank));
       await code.getByRole('button', { name: 'Submit tank code', exact: true }).click();
       await expect(viewer).toContainText('Page: 1 out of: 1');
       await advance();

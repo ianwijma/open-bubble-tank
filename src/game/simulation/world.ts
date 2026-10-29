@@ -6,6 +6,7 @@ import { detachForcefield } from './forcefield';
 import { removeTankChild } from './tank-display';
 import { killMountedShield } from './shields';
 import { MainEffects } from './main-effects';
+import { RunPartUnlocks, partUnlocked } from '../core/part-unlocks';
 import type {
   CollisionTest,
   Effect,
@@ -24,7 +25,7 @@ import type {
   WorldEvent,
   WorldMode,
 } from '../core/types';
-import { AVATARS, BOSSES, costs, gunBudget, partById, STARTER } from '../data/catalog';
+import { AVATARS, BOSSES, costs, gunBudget, STARTER } from '../data/catalog';
 import { WEAPONS, type WeaponSpec } from '../data/weapons';
 import emitterData from '../data/emitters.json';
 import { moveEnemy } from './ai';
@@ -212,6 +213,10 @@ export class World {
   private upgradeReturnMode: 'playing' | 'transit' = 'playing';
   private secondaryHelpReturnMode: 'playing' | 'transit' = 'playing';
   progression: Progression = { level: 0, history: [STARTER] };
+  private readonly partUnlocks = new RunPartUnlocks();
+  get unlockedParts() {
+    return this.partUnlocks.parts;
+  }
   offers: TankDesign[] = [];
   stats: Stats = {
     damageDone: 0,
@@ -919,6 +924,7 @@ export class World {
   getOffers(): TankDesign[] {
     const current = this.player.design.classId,
       level = this.progression.level;
+    this.partUnlocks.unlockThrough(level);
     const offers: TankDesign[] = [];
     for (const classId of [current - 1, current, current + 1]) {
       if (classId < 1 || classId > 6 || classId > Math.min(6, level + 1)) continue;
@@ -930,7 +936,7 @@ export class World {
           costs(t.parts).gp <= budget &&
           t.parts.every(
             (p) =>
-              (partById(p.type)?.tier ?? 0) <= level &&
+              partUnlocked(p.type, level, this.unlockedParts) &&
               Math.floor(p.type / 1000) !== 4 &&
               Math.floor(p.type / 1000) !== 6,
           ),

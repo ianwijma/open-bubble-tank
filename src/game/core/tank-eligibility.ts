@@ -1,5 +1,6 @@
 import type { TankDesign } from './types';
-import { costs, gunBudget, partById } from '../data/catalog';
+import { costs, gunBudget } from '../data/catalog';
+import { partUnlocked } from './part-unlocks';
 
 export interface TankLoadProfile {
   level: number;
@@ -16,9 +17,7 @@ export function tankLoadEligibility(tank: TankDesign, profile: TankLoadProfile) 
     overClass = tank.classId > classLimit,
     missingParts = tank.parts.some((p) => {
       if (p.type >= 1000 && p.type <= 1999) return false;
-      return profile.unlockedParts
-        ? !profile.unlockedParts.includes(p.type)
-        : (partById(p.type)?.tier ?? Infinity) > profile.level;
+      return !partUnlocked(p.type, profile.level, profile.unlockedParts);
     });
   return {
     budget,

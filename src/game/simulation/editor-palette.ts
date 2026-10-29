@@ -1,4 +1,5 @@
 import type { PartDefinition } from '../core/types';
+import { partUnlocked } from '../core/part-unlocks';
 
 export interface PaletteContext {
   avatar: boolean;
@@ -7,6 +8,7 @@ export interface PaletteContext {
   budget: number;
   gp: number;
   bp: number;
+  unlockedParts?: readonly number[];
 }
 export type AffordabilityReason =
   'complexity' | 'gun-points' | 'minimum-class' | 'maximum-class' | null;
@@ -22,7 +24,8 @@ export function paletteState(part: PartDefinition, context: PaletteContext) {
   )
     reason = part.lower ? 'maximum-class' : 'minimum-class';
   return {
-    locked: context.avatar && part.tier > context.level,
+    locked:
+      context.avatar && !partUnlocked(part.id, context.level, context.unlockedParts, part.tier),
     affordable: reason === null,
     reason,
   };

@@ -46,6 +46,7 @@ import { showMockPartMotion } from './mock-part-motion';
 import { showMainMenuFlow } from './main-menu';
 import { showSvgMasks } from './svg-masks';
 import { showViewerFlow } from './viewer-flow';
+import { showUnlockRetention } from './unlock-retention';
 
 const file = document.querySelector<HTMLInputElement>('#swf')!;
 const fixture = document.querySelector<HTMLSelectElement>('#fixture')!;
@@ -199,6 +200,12 @@ async function reset() {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
     status.dataset.svgMasks = JSON.stringify(await showSvgMasks(pack, stage));
     status.textContent = 'Ready · grouped SVG mask pixels';
+    return;
+  }
+  if (fixture.value === 'unlock-retention') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    unmountScreen = showUnlockRetention(pack, stage);
+    status.textContent = 'Ready · retained run unlocks after two real downgrades';
     return;
   }
   if (['viewer-flow', 'viewer-flow-avatar', 'viewer-flow-eligibility'].includes(fixture.value)) {
