@@ -6,6 +6,7 @@ import type { Rect, TankDesign } from './types';
 import { AVATARS, ENEMIES, costs, partById } from '../data/catalog';
 import { infoWeapons } from './tank-info';
 import { tankLoadEligibility, type TankLoadProfile } from './tank-eligibility';
+import { viewerTankIdentity } from './viewer-storage';
 export interface ViewerField extends CreatorField {
   matrix: SwfMatrix;
 }
@@ -61,9 +62,11 @@ export const viewerWidget = (id: number, frame = 1) =>
 export const viewerRoot = (name: string) => TANK_VIEWER.root.find((p) => p.name === name)!;
 export function localViewerTanks(tanks: readonly TankDesign[], avatar: boolean) {
   const seen = new Set<string>();
-  return [...(avatar ? AVATARS : ENEMIES), ...tanks].filter((t) => {
-    if (t.avatar !== avatar || seen.has(t.id)) return false;
-    seen.add(t.id);
+  return [...(avatar ? AVATARS : ENEMIES), ...tanks].filter((tank) => {
+    if (tank.avatar !== avatar) return false;
+    const identity = viewerTankIdentity(tank);
+    if (seen.has(identity)) return false;
+    seen.add(identity);
     return true;
   });
 }

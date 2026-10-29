@@ -9,13 +9,15 @@ import {
   viewerWidget,
   TANK_VIEWER,
 } from '../src/game/core/tank-viewer';
-test('local viewer retains source builtins then custom designs, filters mode and deduplicates stable IDs', () => {
+test('local viewer retains source builtins then custom designs, filters mode and deduplicates source save identity', () => {
   const custom = { ...STARTER, id: 'L1', name: 'Custom' },
-    duplicate = { ...AVATARS[0], name: 'Duplicate' };
-  const avatars = localViewerTanks([custom, duplicate, ENEMIES[0]], true);
-  expect(avatars).toHaveLength(AVATARS.length + 1);
+    duplicate = { ...AVATARS[0], id: 'different-ID' };
+  const renamed = { ...AVATARS[0], name: 'Different name' };
+  const avatars = localViewerTanks([custom, duplicate, renamed, ENEMIES[0]], true);
+  expect(avatars).toHaveLength(AVATARS.length + 2);
   expect(avatars[0]).toBe(AVATARS[0]);
-  expect(avatars.at(-1)).toBe(custom);
+  expect(avatars.at(-2)).toBe(custom);
+  expect(avatars.at(-1)).toBe(renamed);
   expect(localViewerTanks([custom], false)).toEqual([...ENEMIES]);
 });
 test('source viewer sorting is ascending, case insensitive and stable for ties', () => {

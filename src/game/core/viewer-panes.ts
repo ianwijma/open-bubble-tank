@@ -5,6 +5,8 @@ export interface ViewerPane {
   tank: TankDesign;
   instance: string;
   ownsArt: boolean;
+  /** Source tankType1 is assigned when pulled from the local profile, not after Save. */
+  local: boolean;
 }
 export interface ViewerPaneSnapshot {
   cards: (ViewerPane | null)[];
@@ -47,14 +49,14 @@ export class ViewerPanes {
   private changed() {
     for (const listener of this.listeners) listener();
   }
-  private fresh(tank: TankDesign): ViewerPane {
-    return { tank, instance: `pane:${++this.serial}`, ownsArt: true };
+  private fresh(tank: TankDesign, local: boolean): ViewerPane {
+    return { tank, instance: `pane:${++this.serial}`, ownsArt: true, local };
   }
   /** Setup immediately replaces each slot at alpha1; ordinary paging has no fade. */
-  setup(tanks: readonly TankDesign[]) {
+  setup(tanks: readonly TankDesign[], local = true) {
     this.snapshot = {
       ...this.snapshot,
-      cards: Array.from({ length: 4 }, (_, i) => (tanks[i] ? this.fresh(tanks[i]) : null)),
+      cards: Array.from({ length: 4 }, (_, i) => (tanks[i] ? this.fresh(tanks[i], local) : null)),
     };
     for (let i = 0; i < 4; i++) {
       this.fades.state(viewerCardName(i)).alpha = tanks[i] ? 1 : 0;
@@ -74,21 +76,21 @@ export class ViewerPanes {
     this.fades.show('detail');
     this.changed();
   }
-  rebuildCards(tanks: readonly TankDesign[]) {
-    this.setup(tanks);
+  rebuildCards(tanks: readonly TankDesign[], local = true) {
+    this.setup(tanks, local);
     for (let i = 0; i < 4; i++) this.fades.state(viewerCardName(i)).alpha = 0;
     for (let i = 0; i < 4; i++) if (tanks[i]) this.fades.show(viewerCardName(i));
     this.changed();
   }
-  returnToCards(tanks: readonly TankDesign[]) {
-    this.rebuildCards(tanks);
+  returnToCards(tanks: readonly TankDesign[], local = true) {
+    this.rebuildCards(tanks, local);
     this.fades.deleteAfterFade('detail');
   }
   /** GoToNextTank/GoBackATank: Setup slot1, reparent it to detail, then hide slot1. */
-  replaceDetail(tank: TankDesign) {
+  replaceDetail(tank: TankDesign, local = true) {
     this.snapshot = {
       ...this.snapshot,
-      cards: this.snapshot.cards.map((p, i) => (i === 0 ? this.fresh(tank) : p)),
+      cards: this.snapshot.cards.map((p, i) => (i === 0 ? this.fresh(tank, local) : p)),
     };
     this.fades.state(viewerCardName(0)).alpha = 1;
     this.detail(0);

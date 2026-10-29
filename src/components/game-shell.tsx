@@ -22,6 +22,7 @@ import { TankLibrary } from './tank-library';
 import { TankViewer } from './tank-viewer';
 import type { ViewerLimits } from '@/game/core/tank-viewer';
 import { ProfileClassAllowance } from '@/game/core/profile-class';
+import { appendViewerTank, removeViewerTank } from '@/game/core/viewer-storage';
 import { UpgradePanel, EditConfirmPanel, SecondaryHelpPanel } from './game-panels';
 import { PausePanel } from './pause-panel';
 import { WinPanel } from './win-panel';
@@ -463,13 +464,10 @@ export default function GameShell() {
                 onBack={() => loadEditorTank()}
                 onSelect={loadEditorTank}
                 onSaveLocal={(tank) =>
-                  updateProfile((p) => ({
-                    ...p,
-                    tanks: [...p.tanks.filter((t) => t.id !== tank.id), tank],
-                  }))
+                  updateProfile((p) => ({ ...p, tanks: appendViewerTank(p.tanks, tank) }))
                 }
-                onDelete={(id) =>
-                  updateProfile((p) => ({ ...p, tanks: p.tanks.filter((t) => t.id !== id) }))
+                onDelete={(tank) =>
+                  updateProfile((p) => ({ ...p, tanks: removeViewerTank(p.tanks, tank) }))
                 }
               />
             ) : null}
@@ -480,13 +478,10 @@ export default function GameShell() {
                 onBack={() => showScreen('menu')}
                 onEdit={(t) => edit(t)}
                 onImport={(tank) =>
-                  updateProfile((p) => ({
-                    ...p,
-                    tanks: [...p.tanks.filter((t) => t.id !== tank.id), tank],
-                  }))
+                  updateProfile((p) => ({ ...p, tanks: appendViewerTank(p.tanks, tank) }))
                 }
-                onDelete={(id) =>
-                  updateProfile((p) => ({ ...p, tanks: p.tanks.filter((t) => t.id !== id) }))
+                onDelete={(tank) =>
+                  updateProfile((p) => ({ ...p, tanks: removeViewerTank(p.tanks, tank) }))
                 }
               />
             ) : null}

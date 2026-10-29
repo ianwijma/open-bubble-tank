@@ -3,6 +3,7 @@ import { useState } from 'react';
 import type { AssetPack } from '@/game/assets/asset-pack';
 import type { TankDesign } from '@/game/core/types';
 import { exportDesign, importDesign } from '@/game/services/profile';
+import { viewerTankIdentity } from '@/game/core/viewer-storage';
 import { TankCodeDialog } from './tank-code-dialog';
 import { TankPreview } from './tank-preview';
 import { Icon } from './ui';
@@ -18,11 +19,11 @@ export function TankLibrary({
   tanks: TankDesign[];
   onEdit: (t: TankDesign) => void;
   onImport: (t: TankDesign) => void;
-  onDelete: (id: string) => void;
+  onDelete: (tank: TankDesign) => void;
   onBack: () => void;
 }) {
   const [error, setError] = useState(''),
-    [deleting, setDeleting] = useState<string | null>(null),
+    [deleting, setDeleting] = useState<TankDesign | null>(null),
     [codeTank, setCodeTank] = useState<TankDesign | null | undefined>(undefined);
   return (
     <div className="tank-library stage-background">
@@ -63,7 +64,7 @@ export function TankLibrary({
       {tanks.length ? (
         <div className="saved-tanks">
           {tanks.map((t) => (
-            <article key={t.id}>
+            <article key={`${t.id}:${t.avatar}:${viewerTankIdentity(t)}`}>
               <button className="saved-tank-image" onClick={() => onEdit(t)}>
                 <TankPreview tank={t} pack={pack} size={110} />
                 <strong>{t.name}</strong>
@@ -75,17 +76,17 @@ export function TankLibrary({
                 <button onClick={() => onEdit(t)}>Edit</button>
                 <button onClick={() => exportDesign(t)}>JSON</button>
                 <button onClick={() => setCodeTank(t)}>Code</button>
-                {deleting === t.id ? (
+                {deleting === t ? (
                   <button
                     onClick={() => {
-                      onDelete(t.id);
+                      onDelete(t);
                       setDeleting(null);
                     }}
                   >
                     Confirm delete
                   </button>
                 ) : (
-                  <button onClick={() => setDeleting(t.id)}>Delete</button>
+                  <button onClick={() => setDeleting(t)}>Delete</button>
                 )}
               </div>
             </article>

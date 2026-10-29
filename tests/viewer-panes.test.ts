@@ -3,6 +3,20 @@ import { ENEMIES } from '../src/game/data/catalog';
 import { ViewerFades } from '../src/game/core/viewer-fades';
 import { ViewerPanes, viewerCardName } from '../src/game/core/viewer-panes';
 
+test('local/code provenance stays with retained panes through detail fades and changes only on fresh setup', () => {
+  const panes = new ViewerPanes();
+  panes.setup(ENEMIES.slice(0, 4), false);
+  panes.detail(0);
+  expect(panes.getSnapshot().detail!.local).toBe(false);
+  for (let i = 0; i < 10; i++) panes.fades.step();
+  panes.returnToCards(ENEMIES.slice(0, 4), true);
+  expect(panes.getSnapshot().detail!.local).toBe(false);
+  expect(panes.getSnapshot().cards[0]!.local).toBe(true);
+  for (let i = 0; i < 10; i++) panes.fades.step();
+  panes.replaceDetail(ENEMIES[4], false);
+  expect(panes.getSnapshot().detail!.local).toBe(false);
+});
+
 test('detail reparents one retained preview while the other cards keep fading previews until deletion', () => {
   const fades = new ViewerFades(),
     panes = new ViewerPanes(fades);
