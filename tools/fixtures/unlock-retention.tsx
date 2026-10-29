@@ -15,9 +15,13 @@ export function showUnlockRetention(pack: AssetPack, host: HTMLElement) {
     controls = document.createElement('div');
   controls.id = 'unlock-retention-controls';
   host.before(controls);
-  let world = new World([], [STARTER, STARTER, STARTER, STARTER], 1),
+  let world = new World([], [], 1),
     generation = 0;
-  world.getOffers();
+  for (let upgrade = 0; upgrade < 3; upgrade++) {
+    world.player.life = world.player.maxLife;
+    world.step(emptyInput());
+    world.selectUpgrade(STARTER);
+  }
   for (let death = 0; death < 2; death++) {
     world.damage(world.player, 100000);
     for (let i = 0; i < 25; i++) world.step(emptyInput());
@@ -25,6 +29,7 @@ export function showUnlockRetention(pack: AssetPack, host: HTMLElement) {
   function report() {
     controls.dataset.unlockLevel = String(world.progression.level);
     controls.dataset.radarUnlocked = String(world.unlockedParts.includes(5001));
+    controls.dataset.profileClass = String(world.profileClass.value);
   }
   function editor(initial = STARTER) {
     report();
@@ -39,6 +44,7 @@ export function showUnlockRetention(pack: AssetPack, host: HTMLElement) {
           level={world.progression.level}
           maxClass={Math.min(6, world.progression.level + 1)}
           unlockedParts={world.unlockedParts}
+          profileMaxClass={world.profileClass.value}
           onSave={(tank) => tank}
           onExit={() => {}}
           onLoad={viewer}
@@ -68,7 +74,7 @@ export function showUnlockRetention(pack: AssetPack, host: HTMLElement) {
   const fresh = document.createElement('button');
   fresh.textContent = 'Start fresh unlock session';
   fresh.onclick = () => {
-    world = new World([], [], 1);
+    world = new World([], [], 1, undefined, world.profileClass);
     world.player.life = world.player.maxLife;
     world.step(emptyInput()); // First upgrade creates its menu and unlocks tier1.
     world.selectUpgrade(STARTER);
@@ -79,7 +85,15 @@ export function showUnlockRetention(pack: AssetPack, host: HTMLElement) {
   advance.onclick = () => {
     for (let i = 0; i < 20; i++) stage.advance(20, 50);
   };
-  controls.append(fresh, advance);
+  const upgrade = document.createElement('button');
+  upgrade.textContent = 'Re-earn next unlock level';
+  upgrade.onclick = () => {
+    world.player.life = world.player.maxLife;
+    world.step(emptyInput());
+    if (world.mode === 'upgrade') world.selectUpgrade(STARTER);
+    editor();
+  };
+  controls.append(fresh, upgrade, advance);
   editor();
   return () => {
     root.unmount();

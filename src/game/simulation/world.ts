@@ -7,6 +7,7 @@ import { removeTankChild } from './tank-display';
 import { killMountedShield } from './shields';
 import { MainEffects } from './main-effects';
 import { RunPartUnlocks, partUnlocked } from '../core/part-unlocks';
+import { ProfileClassAllowance } from '../core/profile-class';
 import type {
   CollisionTest,
   Effect,
@@ -299,6 +300,7 @@ export class World {
     history: TankDesign[] = [],
     seed?: number,
     readonly mainEffects = new MainEffects(),
+    readonly profileClass = new ProfileClassAllowance(),
   ) {
     this.rng = new Random(seed);
     this.roster = new UnitRoster(this.rng, localTanks);
@@ -910,6 +912,7 @@ export class World {
     }
     if (p.life === p.maxLife && this.progression.level < 6) {
       this.progression.level++;
+      this.profileClass.recordUpgrade(this.progression.level);
       this.emit('upgrade');
       const design = this.progression.history[this.progression.level];
       if (design) this.rebuildPlayer(design);

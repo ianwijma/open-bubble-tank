@@ -52,6 +52,7 @@ export function TankCreator({
   level,
   maxClass,
   unlockedParts,
+  profileMaxClass,
   fps,
   onSave,
   onExit,
@@ -63,6 +64,7 @@ export function TankCreator({
   level: number;
   maxClass: number;
   unlockedParts?: readonly number[];
+  profileMaxClass?: number;
   fps: number;
   onSave: (tank: TankDesign) => TankDesign | undefined;
   onExit: () => void;
@@ -539,7 +541,14 @@ export function TankCreator({
           name="LoadTank_mc"
           label="Load a Tank..."
           onClick={() =>
-            onLoad({ avatar: design.avatar, level, maxClass, gunPoints: budget, unlockedParts })
+            onLoad({
+              avatar: design.avatar,
+              level,
+              maxClass,
+              gunPoints: budget,
+              unlockedParts,
+              profileMaxClass,
+            })
           }
         />
         <CreatorButton

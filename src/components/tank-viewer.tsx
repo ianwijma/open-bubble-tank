@@ -660,7 +660,7 @@ export function TankViewer({
                 pack={pack}
                 symbol={1258}
                 values={{
-                  txtClass_txt: String(limits.maxClass),
+                  txtClass_txt: String(limits.profileMaxClass ?? limits.maxClass),
                   txtBBL_txt: '100',
                   txtGP_txt: String(limits.gunPoints),
                 }}
