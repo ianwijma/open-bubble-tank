@@ -40,6 +40,7 @@ import { authoredProjectileBounds } from './projectile-geometry';
 import { INFECTED_ART, STATUS_ART, PROTECTION_ART, shieldClipSymbol } from '../data/status-art';
 import { buttonDisplayList, type ButtonInfo, type ButtonState } from './button-display-list';
 import { CREATOR_CONTROLS } from '../core/creator-controls';
+import { CREATOR_PALETTE } from '../core/creator-palette';
 
 export interface Bounds extends Rect {}
 export interface Raster extends Bounds {
@@ -109,6 +110,7 @@ interface FontInfo {
   advances?: number[];
   ascent?: number;
   descent?: number;
+  leading?: number;
 }
 interface TextInfo {
   id: number;
@@ -138,6 +140,10 @@ export interface SymbolResult {
       fontId?: number;
       align: number;
       text: string;
+      color?: number[];
+      leading?: number;
+      margins?: number[];
+      flags?: { wordWrap: boolean; multiline: boolean; readOnly: boolean; html: boolean };
     }[];
     symbolNames: Record<string, string>;
   };
@@ -465,6 +471,40 @@ export class AssetPack {
         const raster = await pack.rasterSymbol(819, frame);
         if (raster) pack.creatorFrames.set(`rings:${frame}`, raster);
       }
+      for (const [key, symbol] of [
+        ['stats', CREATOR_PALETTE.stats.symbol],
+        ['base', CREATOR_PALETTE.library.symbol],
+      ] as const) {
+        const pose = new SwfClip(symbol, pack);
+        pose.start(1, false);
+        pose.placements = pose.placements.filter((p) => !p.name && p.charId !== 770);
+        const raster = await pack.rasterClip(pose);
+        if (raster) pack.creatorFrames.set(`palette:${key}`, raster);
+      }
+      for (const piece of [...CREATOR_PALETTE.tabs, ...CREATOR_PALETTE.scroll.pieces])
+        for (const frame of [1, 2, 3]) {
+          const pose = new SwfClip(piece.symbol, pack);
+          pose.start(Math.min(frame, pack.spriteInfo(piece.symbol)!.frameCount), false);
+          const raster = await pack.rasterClip(pose);
+          if (raster) pack.creatorFrames.set(`palette:${piece.name}:${frame}`, raster);
+        }
+      for (const frame of [1, 2, 3, 4])
+        for (const body of [false, true])
+          for (const code of [1, 3]) {
+            const pose = new SwfClip(CREATOR_PALETTE.row.symbol, pack);
+            pose.start(frame, false);
+            pose.placements = pose.placements.filter(
+              (p) =>
+                !['name_txt', 'cost_txt'].includes(p.name ?? '') &&
+                (!body || p.name !== 'circleclip'),
+            );
+            [...pose.children.values()]
+              .find((c) => c.placement.name === 'indicatorClip')
+              ?.clip.gotoAndStop(code);
+            const raster = await pack.rasterClip(pose);
+            if (raster)
+              pack.creatorFrames.set(`palette:row:${frame}:${Number(body)}:${code}`, raster);
+          }
       onProgress(1, 'Assets ready');
       return pack;
     } catch (e) {
@@ -1002,10 +1042,11 @@ export class AssetPack {
     color = '#ffffff',
     fontName = 'Billo',
     letterSpacing = 0,
+    fontId?: number,
   ): string | null {
-    const font = [...this.fonts.values()].find(
-      (f) => f.name.startsWith(fontName) && f.advances?.length,
-    );
+    const font =
+      (fontId === undefined ? undefined : this.fonts.get(fontId)) ??
+      [...this.fonts.values()].find((f) => f.name.startsWith(fontName) && f.advances?.length);
     if (!font) return null;
     let x = 0,
       body = '';

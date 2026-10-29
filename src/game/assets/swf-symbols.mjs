@@ -971,7 +971,7 @@ export function parseEditTextTag(body) {
   if (hasLayout) {
     e.align = br.bytes(1);
     e.margins = [br.bytes(2), br.bytes(2), br.bytes(2)];
-    e.leading = br.sb(16);
+    e.leading = (br.bytes(2) << 16) >> 16;
   }
   e.variableName = br.string();
   if (hasText) e.text = br.string();

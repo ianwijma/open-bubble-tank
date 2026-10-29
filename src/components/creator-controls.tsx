@@ -9,7 +9,7 @@ import {
 const rgba = (c: number[]) => `rgba(${c.slice(0, 3).join(',')},${(c[3] ?? 255) / 255})`;
 const matrix = (m: CreatorPrimitive['matrix']) =>
   `matrix(${m.a} ${m.b} ${m.c} ${m.d} ${m.tx / 20} ${m.ty / 20})`;
-function Primitives({ pieces }: { pieces: CreatorPrimitive[] }) {
+export function CreatorPrimitives({ pieces }: { pieces: CreatorPrimitive[] }) {
   return pieces.map((p, i) => {
     const b = p.bounds,
       x = b.xMin / 20,
@@ -46,6 +46,27 @@ function Primitives({ pieces }: { pieces: CreatorPrimitive[] }) {
               strokeWidth={1}
             />
           </>
+        ) : p.kind === 'scroll-grip' ? (
+          <>
+            <rect x={x} y={y} width={w} height={h} {...style} />
+            {[8, 13, 18].map((offset) => (
+              <path
+                key={offset}
+                d={`M${x + 2.5} ${y + offset}h${w - 5}`}
+                stroke="#73b2ce"
+                strokeWidth={1}
+                fill="none"
+              />
+            ))}
+          </>
+        ) : p.kind === 'up-arrow' ? (
+          <>
+            <rect x={x} y={y} width={w} height={h} {...style} />
+            <path
+              d={`M${x + w / 2} ${y + h * 0.22}L${x + w * 0.8} ${y + h * 0.78}H${x + w * 0.2}Z`}
+              fill={style.stroke}
+            />
+          </>
         ) : p.kind === 'arrow' ? (
           <path d={`M${x} ${y + h / 2}L${x + w} ${y}v${h}Z`} {...style} />
         ) : (
@@ -55,7 +76,7 @@ function Primitives({ pieces }: { pieces: CreatorPrimitive[] }) {
     );
   });
 }
-function RasterArt({
+export function CreatorRasterArt({
   raster,
   offsetX = 0,
   offsetY = 0,
@@ -117,7 +138,7 @@ export function CreatorButton({
     height: b.height,
   };
   const art = raster ? (
-    <RasterArt raster={raster} offsetX={-b.x} offsetY={-b.y} />
+    <CreatorRasterArt raster={raster} offsetX={-b.x} offsetY={-b.y} />
   ) : (
     <svg
       aria-hidden="true"
@@ -126,7 +147,7 @@ export function CreatorButton({
       height={b.height}
       style={{ overflow: 'visible' }}
     >
-      <Primitives pieces={p.variants[`${frame}:${state}`]} />
+      <CreatorPrimitives pieces={p.variants[`${frame}:${state}`]} />
     </svg>
   );
   const events = {
@@ -248,7 +269,7 @@ export function CreatorSlider({
       style={{ left: layout.matrix.tx / 20, top: layout.matrix.ty / 20 }}
     >
       {track ? (
-        <RasterArt raster={track} />
+        <CreatorRasterArt raster={track} />
       ) : (
         <svg
           aria-hidden="true"
@@ -257,11 +278,11 @@ export function CreatorSlider({
           height="36"
           style={{ position: 'absolute', left: -65, top: -18, overflow: 'visible' }}
         >
-          <Primitives pieces={layout.track} />
+          <CreatorPrimitives pieces={layout.track} />
         </svg>
       )}
       {handle ? (
-        <RasterArt raster={handle} offsetX={x} offsetY={y} />
+        <CreatorRasterArt raster={handle} offsetX={x} offsetY={y} />
       ) : (
         <span
           className="creator-mock-handle"

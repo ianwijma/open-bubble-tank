@@ -12,7 +12,6 @@ interface PartView {
   born: number;
   wrapper: Container;
   view: SwfSymbolView;
-  previewScale: number;
   initialWidth: number;
 }
 export interface ArtworkPart {
@@ -77,7 +76,6 @@ export class CreatorArtwork {
       view,
       wrapper,
       initialWidth: bounds.width,
-      previewScale: Math.min(1, 48 / Math.max(bounds.width, bounds.height)),
     };
   }
   /** Measure the actual newly instantiated drag object, before its animation advances. */
@@ -124,7 +122,7 @@ export class CreatorArtwork {
       }
       const { wrapper, view } = node;
       wrapper.position.set(part.x, part.y);
-      wrapper.scale.set(part.scale * (layer === 'preview' ? node.previewScale : 1));
+      wrapper.scale.set(part.scale);
       wrapper.rotation = (part.rotation * Math.PI) / 180;
       view.setParentAlpha(alpha);
       wrapper.filters = invalid ? [this.gray] : null;

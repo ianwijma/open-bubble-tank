@@ -6,17 +6,14 @@ import type { TankDesign, TankPart } from '@/game/core/types';
 import { costs, gunBudget, PARTS, partById } from '@/game/data/catalog';
 import { canPlacePart, suggestedStats, validateBuild } from '@/game/simulation/designer';
 import { exportDesign } from '@/game/services/profile';
-import {
-  paletteState,
-  firstAffordablePart,
-  affordabilityHint,
-  orderedPalette,
-} from '@/game/simulation/editor-palette';
+import { firstAffordablePart, orderedPalette } from '@/game/simulation/editor-palette';
 import { CreatorButton, CreatorSlider } from './creator-controls';
 import { CREATOR_CONTROLS } from '@/game/core/creator-controls';
+import { CreatorPaletteFrame, CreatorPaletteRows } from './creator-palette';
+import { CreatorStats } from './creator-stats';
+import { CREATOR_PALETTE } from '@/game/core/creator-palette';
 import { TankCodeDialog } from './tank-code-dialog';
-import { weaponSummary } from './game-panels';
-import { CLASS_RINGS, CLASS_SPEED } from '@/game/core/constants';
+import { CLASS_RINGS } from '@/game/core/constants';
 import {
   placementParts,
   acceptedPlacement,
@@ -276,10 +273,13 @@ export function TankCreator({
     ctx.restore();
     const pc = previewCanvas.current?.getContext('2d');
     if (pc) {
-      pc.clearRect(0, 0, 284, 140);
+      pc.clearRect(0, 0, 282, 134);
       pc.save();
       pc.scale(2, 2);
-      pc.translate(71, 35);
+      pc.translate(
+        -CREATOR_PALETTE.library.preview.bounds.x,
+        -CREATOR_PALETTE.library.preview.bounds.y,
+      );
       const part: TankPart | null =
         chosen === null
           ? null
@@ -483,7 +483,6 @@ export function TankCreator({
         }}
       />
       <CreatorButton pack={pack} name="Exit_mc" label="Exit tank creator" onClick={onExit} />
-      <span className="creator-stats-tab">Stats</span>
       <div className="creator-name">
         <label>
           Tank name{' '}
@@ -603,27 +602,7 @@ export function TankCreator({
           onPointerUp={() => finishDrag()}
           onPointerCancel={() => finishDrag(true)}
         />
-        <aside className="creator-stats">
-          <div className="creator-summary">
-            <p>Speed: {Math.round(CLASS_SPEED[classId - 1] * 100)}%</p>
-            {(design.avatar
-              ? [
-                  ['Primary Weapons', 2],
-                  ['Secondary Weapons', 3],
-                  ['Passive Weapons', 5],
-                ]
-              : [
-                  ['Weapons', 4],
-                  ['Behavior', 6],
-                ]
-            ).map(([label, cat]) => (
-              <p key={label}>
-                {label}:<br />
-                {weaponSummary(design, Number(cat))}
-              </p>
-            ))}
-          </div>
-        </aside>
+        <CreatorStats pack={pack} design={design} classId={classId} />
       </div>
       {!design.avatar ? (
         <details className="creator-inspector">
@@ -746,6 +725,20 @@ export function TankCreator({
         type="button"
         ref={preview}
         className="creator-part-preview"
+        style={{
+          left:
+            CREATOR_PALETTE.origin.tx / 20 +
+            CREATOR_PALETTE.library.matrix.tx / 20 +
+            CREATOR_PALETTE.library.preview.x +
+            CREATOR_PALETTE.library.preview.bounds.x,
+          top:
+            CREATOR_PALETTE.origin.ty / 20 +
+            CREATOR_PALETTE.library.matrix.ty / 20 +
+            CREATOR_PALETTE.library.preview.y +
+            CREATOR_PALETTE.library.preview.bounds.y,
+          width: CREATOR_PALETTE.library.preview.bounds.width,
+          height: CREATOR_PALETTE.library.preview.bounds.height,
+        }}
         disabled={chosen === null}
         aria-label={chosen ? `Drag ${partById(chosen)?.name} into design` : 'Choose a part'}
         onPointerDown={(e) => {
@@ -767,69 +760,37 @@ export function TankCreator({
           canvas.current?.focus();
         }}
       >
-        <canvas ref={previewCanvas} width={284} height={140} aria-hidden="true" />
-        <span>Click and Drag Object</span>
+        <canvas ref={previewCanvas} width={282} height={134} aria-hidden="true" />
       </button>
-      <div className="palette-tabs">
-        {(design.avatar
-          ? [
-              [1, 'Body'],
-              [2, 'Primary'],
-              [3, 'Secondary'],
-              [5, 'Interface'],
-            ]
-          : [
-              [1, 'Body'],
-              [4, 'Weapons'],
-              [6, 'Behavior'],
-            ]
-        ).map(([id, label]) => (
-          <button
-            key={id}
-            className={category === id ? 'active' : ''}
-            onClick={() => {
-              setCategory(Number(id));
-              setChosen(
-                firstAffordablePart(
-                  PARTS.filter((p) => Math.floor(p.id / 1000) === Number(id)),
-                  paletteContext,
-                ),
-              );
-              placement.current = null;
-              setPlacing(null);
-            }}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
-      <div className="part-palette">
-        {palette.map((p) => {
-          const state = paletteState(p, paletteContext),
-            locked = state.locked;
-          const hint = affordabilityHint(p, state.reason);
-          return (
-            <button
-              disabled={locked}
-              key={p.id}
-              aria-label={locked ? `${p.name}, unlocks at level ${p.tier}` : `Place ${p.name}`}
-              title={`${p.name} · ${p.gp} GP · ${p.bp} BP${locked ? ` · unlocks at level ${p.tier}` : hint ? ` · ${hint}` : ''}`}
-              aria-description={hint || undefined}
-              className={`${chosen === p.id ? 'selected' : ''} ${!state.affordable ? 'unaffordable' : ''}`}
-              aria-pressed={chosen === p.id}
-              onClick={() => {
-                setChosen(p.id);
-                placement.current = null;
-                setPlacing(null);
-                setMessage('');
-              }}
-            >
-              {p.id >= 2000 ? <span className="palette-cost">{locked ? '?' : p.gp}</span> : null}
-              {locked ? '???' : p.name}
-            </button>
+      <CreatorPaletteFrame
+        pack={pack}
+        avatar={design.avatar}
+        category={category}
+        onCategory={(id) => {
+          setCategory(id);
+          setChosen(
+            firstAffordablePart(
+              PARTS.filter((p) => Math.floor(p.id / 1000) === id),
+              paletteContext,
+            ),
           );
-        })}
-      </div>
+          placement.current = null;
+          setPlacing(null);
+        }}
+      />
+      <CreatorPaletteRows
+        key={category}
+        pack={pack}
+        parts={palette}
+        context={paletteContext}
+        chosen={chosen}
+        onChoose={(id) => {
+          setChosen(id);
+          placement.current = null;
+          setPlacing(null);
+          setMessage('');
+        }}
+      />
       {loading ? (
         <TankCodeDialog
           onClose={() => setLoading(false)}
