@@ -85,5 +85,21 @@ for (const native of [false, true])
     await creator.screenshot({
       path: `test-results/${native ? 'native' : 'mock'}-creator-controls.png`,
     });
+    await page.getByRole('button', { name: 'Place Huge Base Bubble', exact: true }).click();
+    await dropPreview(page, 0, 0);
+    await page.mouse.click(box.x + (175 * box.width) / 350, box.y + (175 * box.height) / 350);
+    const readClass = async () =>
+      Number(
+        (await creator.locator('.creator-meters > div').first().innerText()).match(
+          /Class\s+(\d+)/,
+        )![1],
+      );
+    const beforeClass = await readClass();
+    await page.mouse.move(r.x - 19 * factor, r.y + 2.25 * factor);
+    await page.mouse.down();
+    await page.mouse.move(r.x + 57 * factor, r.y + 2.25 * factor, { steps: 8 });
+    expect(await readClass()).toBe(beforeClass); // _-CI changes art; _-1N updates class on release.
+    await page.mouse.up();
+    await expect.poll(readClass).toBeGreaterThan(beforeClass);
     expect(errors).toEqual([]);
   });
