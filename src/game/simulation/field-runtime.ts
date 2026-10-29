@@ -10,7 +10,6 @@ export class FieldRuntime {
   effectQueue: Effect[] = [];
   allies: Tank[] = [];
   pending: { kind?: 'shield'; owner: Tank; gun: GunState; frame: number; total: number }[] = [];
-  lastAllyCount = 0;
   collectTimer = -1;
   shootTimer = -1;
   apocalypse = false;

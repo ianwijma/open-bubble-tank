@@ -25,6 +25,7 @@ import { showPlayerClocks } from './player-clocks';
 import { showCombatEffectsProof } from './combat-effects';
 import { showProjectileOrderProof } from './projectile-order';
 import { showActorAi } from './actor-ai';
+import { showWeaponTargets } from './weapon-targets';
 import { showSeekerMineProof } from './seeker-mines';
 import { showSpecialProjectilesProof } from './special-projectiles';
 import { showProjectileClocksProof } from './projectile-clocks';
@@ -295,6 +296,13 @@ async function reset() {
     const proof = await showSeekerMineProof(pack, stage);
     status.dataset.seekerMines = JSON.stringify(proof);
     status.textContent = 'Ready · seeker-mine bounds and independent clocks';
+    return;
+  }
+  if (fixture.value === 'weapon-targets') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    const proof = await showWeaponTargets(pack, stage);
+    status.dataset.weaponTargets = JSON.stringify(proof);
+    status.textContent = 'Ready · per-mount targeting and delayed retarget aim';
     return;
   }
   if (fixture.value === 'actor-ai') {

@@ -88,6 +88,9 @@ export interface GunState {
   turretRefs?: Projectile[];
   spawnDesign?: TankDesign;
   patientId?: number;
+  /** EBehaviorHealer retains movTarget even after that patient's parent detaches. */
+  patientRef?: Tank;
+  targeting?: { targetId: number | null; allies: number };
   behavior?: {
     targetId: number | null;
     allies: number;
@@ -166,7 +169,6 @@ export interface Tank extends Vec {
   };
   phase: number;
   alpha: number;
-  targetId: number | null;
   hiddenParts: Set<string>;
   removedParts: Set<string>;
   degradation: { debt: number; total: number; minimum: number };

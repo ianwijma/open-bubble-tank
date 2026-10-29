@@ -28,13 +28,9 @@ import { recordLayerMine } from './mine-layers';
 import mineArt from '../data/mine-art.json';
 import { convertDrones } from './converter';
 import { tickBehavior } from './behaviors';
+import { weaponAimPoint, finishWeaponAim } from './weapon-targets';
 
 export function tickGuns(world: World, t: Tank, input: InputFrame, categories?: readonly number[]) {
-  const target = world.getTarget(t);
-  const aim =
-    t.side === 'player'
-      ? { x: input.aim.x - STAGE.cx + t.x, y: input.aim.y - STAGE.cy + t.y }
-      : target;
   const guns =
     t.side === 'player'
       ? t.guns
@@ -44,19 +40,27 @@ export function tickGuns(world: World, t: Tank, input: InputFrame, categories?: 
       category = Math.floor(id / 1000),
       spec = WEAPONS[id];
     if (categories && !categories.includes(category)) continue;
+    if (t.side !== 'player' && [4013, 4022].includes(id)) continue;
     if (id === 4032) tickTurretBehavior(world, t, g);
+    const aim =
+      t.side === 'player'
+        ? { x: input.aim.x - STAGE.cx + t.x, y: input.aim.y - STAGE.cy + t.y }
+        : id === 4032
+          ? null
+          : weaponAimPoint(world, t, g);
     const mount = rotate(g.part, t.rotation),
       pos = { x: t.x + mount.x, y: t.y + mount.y };
     const fixed =
       [3001, 3008, 3017, 4002, 4008, 4009, 4010, 4012, 4021, 6001, 6003, 6005].includes(id) ||
       t.design.id.startsWith('B');
-    if (![4015, 4032, 5003, 5004, 5006].includes(id))
+    if (aim && ![4015, 4032, 5003, 5004, 5006].includes(id))
       g.angle =
         (t.side === 'player' && t.design.classId <= 3) || fixed
           ? g.part.rotation
           : angleTo(pos, aim) - t.rotation;
+    const target = t.side === 'player' || id === 4032 ? null : finishWeaponAim(world, t, g);
     if (id === 6002) {
-      tickHealer(world, t, g);
+      if (target) tickHealer(world, t, g);
       tickBehavior(world, t, g);
       continue;
     }
@@ -64,6 +68,7 @@ export function tickGuns(world: World, t: Tank, input: InputFrame, categories?: 
       tickBehavior(world, t, g);
       continue;
     }
+    if (t.side !== 'player' && id !== 4032 && !target) continue;
     if (t.side !== 'player' && g.burst > 0 && --g.burstTimer <= 0) {
       g.burst--;
       g.burstTimer = 6;
@@ -89,7 +94,6 @@ export function tickGuns(world: World, t: Tank, input: InputFrame, categories?: 
         }
       }
     } else {
-      if ([4013, 4022].includes(id)) continue;
       if (id === 4015 && !advanceRotatingCycle(g)) continue;
       if (id === 4023) {
         if (world.runtimeFor(world.currentWrapper).apocalypse && ++g.counter >= spec.rate) {
@@ -447,10 +451,7 @@ export function spawnVolley(
         status: spec.status,
         explode: spec.explode ?? 0,
         splashDamage: spec.splashDamage,
-        targetId:
-          kind === 'infect' || (kind === 'seeker' && t.side !== 'enemy')
-            ? null
-            : world.getTarget(t).uid,
+        targetId: kind === 'seeker' && t.side === 'enemy' ? world.player.uid : null,
         hit: new Set(),
         dead: false,
         anchor: kind === 'beam' || kind === 'whip' || kind === 'sapper' ? gun : undefined,

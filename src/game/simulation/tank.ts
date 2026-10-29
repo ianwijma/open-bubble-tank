@@ -3,7 +3,7 @@ import { tankRadius } from '../data/catalog';
 import { createDegradation, degradeTank } from './degradation';
 import { tankRosterIdentity } from '../core/tank-identity';
 import { initialTankChildren } from './tank-display';
-import { initializeBehaviors } from './behaviors';
+import { initializeTankWeapons } from './behaviors';
 import type { World } from './world';
 export function createTank(
   uid: number,
@@ -82,13 +82,12 @@ export function createTank(
     },
     phase: uid % 50,
     alpha: 1,
-    targetId: null,
     hiddenParts: new Set(),
     removedParts: new Set(),
     degradation: createDegradation(design),
     dead: false,
   };
-  initializeBehaviors(t, world);
+  initializeTankWeapons(t, world);
   return t;
 }
 export function healTank(t: Tank, value: number) {

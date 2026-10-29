@@ -516,10 +516,6 @@ export class World {
   private tickField(input: InputFrame, visit: FieldVisit) {
     this.flushEnemyRemovals();
     this.allies = this.allies.filter((t) => !t.dead);
-    if (this.runtime.lastAllyCount !== this.allies.length) {
-      this.runtime.lastAllyCount = this.allies.length;
-      for (const e of this.field.enemies) e.targetId = null;
-    }
     // Separate live arrays match _-0D.Run: a spawner's newly appended enemies run now.
     for (const enemy of this.field.enemies) this.tickActor(enemy, input);
     for (const ally of this.allies) this.tickActor(ally, input);
@@ -699,23 +695,6 @@ export class World {
     this.onCameraMove(p.velocity.x, p.velocity.y);
   }
 
-  getTarget(t: Tank): Tank {
-    if (t.side === 'player') return this.nearestEnemy(t) || t;
-    const choices = t.side === 'enemy' ? [this.player, ...this.allies] : this.field.enemies;
-    let target = choices.find((c) => c.uid === t.targetId && !c.dead);
-    if (!target) {
-      target =
-        t.side === 'enemy'
-          ? this.allies.length && this.rng.int(1, 2) === 1
-            ? this.rng.pick(this.allies)
-            : this.player
-          : choices.length
-            ? this.rng.pick(choices)
-            : this.player;
-      t.targetId = target.uid;
-    }
-    return target;
-  }
   nearestEnemy(from: Vec): Tank | undefined {
     return this.field.enemies
       .filter((t) => !t.dead)
@@ -983,7 +962,7 @@ export class World {
     this.player.velocity = { ...old.velocity };
     this.secondaryCounter = 0;
     this.revision++;
-    for (const e of [...this.field.enemies, ...this.allies]) e.targetId = null;
+
     // PlaceAvatar tests only replacement avatars, including edits and downgrades.
     if (
       !this.secondaryHelpSeen &&

@@ -2,6 +2,7 @@ import { expect, test } from 'bun:test';
 import { moveEnemy } from '../src/game/simulation/ai';
 import { tickBehavior } from '../src/game/simulation/behaviors';
 import { createTank } from '../src/game/simulation/tank';
+import { tickGuns } from '../src/game/simulation/weapons';
 import { World, emptyInput } from '../src/game/simulation/world';
 import { Random, direction, length } from '../src/game/core/math';
 import { STARTER } from '../src/game/data/catalog';
@@ -222,12 +223,12 @@ test('behavior target acquisition retains the source inclusive ally-index miss i
   world.allies = [createTank(world.nextId(), design(), 'ally', 50, 0)];
   gun.behavior!.targetId = null;
   gun.behavior!.allies = 1;
-  const draws = [0, 0.999];
+  const draws = [0, 0.999, 0, 0.999];
   world.rng.next = () => draws.shift() ?? 0.5;
-  tickBehavior(world, tank, gun);
+  tickGuns(world, tank, emptyInput());
   expect(gun.behavior!.targetId).toBeNull();
   expect(tank.movement.swarmPoint).toBeNull();
-  tickBehavior(world, tank, gun);
+  tickGuns(world, tank, emptyInput());
   expect(gun.behavior!.targetId as number | null).toBe(world.player.uid);
 });
 test('a destination behavior retains an attached outgoing ally and transforms its point into the destination parent', () => {

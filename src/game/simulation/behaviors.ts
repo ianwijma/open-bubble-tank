@@ -1,67 +1,31 @@
-import type { GunState, Tank, Vec } from '../core/types';
+import type { GunState, Tank } from '../core/types';
 import { angleTo, direction, distance, length, Random } from '../core/math';
 import { actorAngle } from './ai';
 import type { World } from './world';
+import { acquireWeaponTarget, weaponTarget } from './weapon-targets';
+import { actorTargetPoint } from './actor-targets';
 
 /** Constructors/Setup retain one registered behavior of each ID, in authored part order. */
-export function initializeBehaviors(tank: Tank, world?: World) {
+export function initializeTankWeapons(tank: Tank, world?: World) {
   const rng = world?.rng ?? new Random(tank.uid || 1);
   for (const gun of tank.guns) {
     const id = gun.part.type;
-    if (id < 6000 || id >= 7000) continue;
-    gun.behavior = { targetId: null, allies: 0 };
+    if (tank.side === 'player') continue;
+    gun.targeting = { targetId: null, allies: 0 };
+    if (id >= 6000 && id < 7000) gun.behavior = gun.targeting;
     if (id === 6003) tank.movement.skittish = true;
-    if (id === 6004) gun.behavior.cloak = rng.int(0, 50);
+    if (id === 6004) gun.behavior!.cloak = rng.int(0, 50);
     if (id === 6005)
-      gun.behavior.wall = { age: 0, frequency: rng.int(2, 10) / 100, amplitude: rng.int(10, 20) };
-    if (world && id !== 6002) acquire(world, tank, gun);
+      gun.behavior!.wall = { age: 0, frequency: rng.int(2, 10) / 100, amplitude: rng.int(10, 20) };
+    if (world && ![4022, 4032].includes(id)) acquireWeaponTarget(world, tank, gun);
   }
-}
-function acquire(world: World, tank: Tank, gun: GunState) {
-  const state = gun.behavior!,
-    allies = world.runtimeFor(world.currentWrapper).allies,
-    enemies = world.currentWrapper.enemies;
-  state.targetId = null;
-  if (tank.side === 'enemy') {
-    state.targetId = world.player.uid;
-    if (world.rng.int(1, 2) === 1 && allies.length)
-      state.targetId = allies[world.rng.int(0, allies.length)]?.uid ?? null;
-  } else if (enemies.length)
-    state.targetId = enemies[world.rng.int(0, enemies.length - 1)]?.uid ?? null;
-}
-function findAttached(world: World, uid: number | null | undefined) {
-  return [
-    world.player,
-    ...world.activeFields().flatMap(({ field, runtime }) => [...field.enemies, ...runtime.allies]),
-  ].find((t) => t.uid === uid);
-}
-/** Behavior target points are transformed between parents, including both transit populations. */
-export function behaviorPoint(world: World, target: Tank): Vec {
-  if (target === world.player) return { x: target.x, y: target.y }; // inField already projects it.
-  const fields = world.activeFields(),
-    parent = fields.find(
-      ({ field, runtime }) => field.enemies.includes(target) || runtime.allies.includes(target),
-    ),
-    owner = fields.find(({ field }) => field === world.field);
-  return {
-    x: target.x + (parent?.offset.x ?? 0) - (owner?.offset.x ?? 0),
-    y: target.y + (parent?.offset.y ?? 0) - (owner?.offset.y ?? 0),
-  };
 }
 export function tickBehavior(world: World, tank: Tank, gun: GunState) {
   const id = gun.part.type;
   if (!gun.behavior) return;
   const state = gun.behavior,
-    allies = world.runtimeFor(world.currentWrapper).allies.length;
-  if (id !== 6002) {
-    if (!findAttached(world, state.targetId)) acquire(world, tank, gun);
-    if (tank.side === 'enemy' && state.allies !== allies) {
-      acquire(world, tank, gun);
-      state.allies = allies;
-    }
-  }
-  const target = findAttached(world, id === 6002 ? gun.patientId : state.targetId),
-    point = target ? behaviorPoint(world, target) : null,
+    target = weaponTarget(world, gun),
+    point = target ? actorTargetPoint(world, target) : null,
     movement = tank.movement;
   if (id === 6001 || id === 6002) {
     movement.swarmPoint = point;
