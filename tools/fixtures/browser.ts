@@ -201,9 +201,14 @@ async function reset() {
     status.textContent = 'Ready · grouped SVG mask pixels';
     return;
   }
-  if (fixture.value === 'viewer-flow' || fixture.value === 'viewer-flow-avatar') {
+  if (['viewer-flow', 'viewer-flow-avatar', 'viewer-flow-eligibility'].includes(fixture.value)) {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
-    unmountScreen = showViewerFlow(pack, stage, fixture.value === 'viewer-flow-avatar');
+    unmountScreen = showViewerFlow(
+      pack,
+      stage,
+      fixture.value !== 'viewer-flow',
+      fixture.value === 'viewer-flow-eligibility' ? 2 : 1,
+    );
     status.textContent = 'Ready · manual viewer fade clock';
     return;
   }

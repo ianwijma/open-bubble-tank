@@ -1,7 +1,7 @@
 import type { SwfGlowFilter } from '../assets/asset-pack';
 import type { TankDesign } from './types';
 import type { ViewerLimits } from './tank-viewer';
-import { costs, gunBudget, partById } from '../data/catalog';
+import { tankLoadEligibility } from './tank-eligibility';
 
 /** HighlightTanks: new GlowFilter(0xffffff, 0.1, 28, 28, 3, 3). */
 export const VIEWER_HOVER_GLOW: SwfGlowFilter = {
@@ -17,15 +17,8 @@ export const VIEWER_HOVER_GLOW: SwfGlowFilter = {
 };
 /** TankLoadingBox.Setup: capacity and unlocked non-body parts, including enemy warning checks. */
 export function viewerCardWarning(tank: TankDesign, limits: ViewerLimits) {
-  const budget = gunBudget(tank.classId, tank.avatar ? limits.level : 6);
-  return (
-    costs(tank.parts).gp > (tank.avatar ? budget : Math.floor(budget * 1.5)) ||
-    tank.classId > (tank.avatar ? limits.maxClass : 6) ||
-    tank.parts.some(
-      (p) =>
-        !(p.type >= 1000 && p.type <= 1999) && (partById(p.type)?.tier ?? Infinity) > limits.level,
-    )
-  );
+  const { overGunPoints, overClass, missingParts } = tankLoadEligibility(tank, limits);
+  return overGunPoints || overClass || missingParts;
 }
 export interface ViewerHighlight {
   instance: string | null;

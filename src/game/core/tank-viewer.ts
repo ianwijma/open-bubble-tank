@@ -5,6 +5,7 @@ import type { SwfMatrix } from '../assets/asset-pack';
 import type { Rect, TankDesign } from './types';
 import { AVATARS, ENEMIES, costs, partById } from '../data/catalog';
 import { infoWeapons } from './tank-info';
+import { tankLoadEligibility, type TankLoadProfile } from './tank-eligibility';
 export interface ViewerField extends CreatorField {
   matrix: SwfMatrix;
 }
@@ -77,22 +78,23 @@ export function sortViewerTanks(tanks: readonly TankDesign[], sort: ViewerSort) 
     })
     .map((p) => p.tank);
 }
-export interface ViewerLimits {
-  level: number;
-  maxClass: number;
+export interface ViewerLimits extends TankLoadProfile {
+  /** Current-points readout; selection uses the loaded tank's class-specific budget. */
   gunPoints: number;
 }
 export function viewerSelectionError(tank: TankDesign, avatar: boolean, limits: ViewerLimits) {
   if (!avatar) return '';
-  const { gp, bp } = costs(tank.parts),
-    over = tank.classId > limits.maxClass || gp > limits.gunPoints || bp > 100;
-  const missing = tank.parts.some((p) => (partById(p.type)?.tier ?? Infinity) > limits.level);
-  return missing
+  const { overGunPoints, overClass, missingParts, capacityLabel } = tankLoadEligibility(
+      tank,
+      limits,
+    ),
+    over = overGunPoints || overClass;
+  return missingParts
     ? over
-      ? 'Do not have the parts and exceeds Class, Gun, or Bubble Points'
+      ? `Do not have the parts and exceeds ${capacityLabel}`
       : 'Do not have all the parts for this tank'
     : over
-      ? 'Exceeds your Class, Gun, or Bubble Points'
+      ? `Exceeds your ${capacityLabel}`
       : '';
 }
 export function viewerPartSummary(tank: TankDesign) {

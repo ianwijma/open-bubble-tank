@@ -36,11 +36,14 @@ test('viewer enemy selection bypasses avatar locks, while avatar limits and lock
   const limits = { level: 1, maxClass: 1, gunPoints: 0 };
   expect(viewerSelectionError(tank, false, limits)).toBe('');
   expect(viewerSelectionError(tank, true, limits)).toBe(
-    'Do not have the parts and exceeds Class, Gun, or Bubble Points',
+    'Do not have the parts and exceeds Gun Points, Class',
   );
-  expect(viewerSelectionError({ ...tank, classId: 1 }, true, { ...limits, gunPoints: 100 })).toBe(
-    'Do not have all the parts for this tank',
-  );
+  expect(
+    viewerSelectionError({ ...tank, classId: 1, parts: [{ ...tank.parts[0], type: 5001 }] }, true, {
+      ...limits,
+      gunPoints: 100,
+    }),
+  ).toBe('Do not have all the parts for this tank');
 });
 test('viewer fit includes invisible source helpers at extreme mount positions without using stored radii', () => {
   const tank = { ...STARTER, parts: [{ ...STARTER.parts[0], x: 120, y: 0, radius: 1000 }] };
