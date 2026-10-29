@@ -184,11 +184,6 @@ export function MainMenu({
       <span className="menu-version">OPEN · 0.1</span>
       {pack.mode === 'mock' ? (
         <>
-          <div className="ambient-bubbles" aria-hidden="true">
-            <i />
-            <i />
-            <i />
-          </div>
           <div ref={title} className="menu-title">
             <BubbleText pack={pack} size={57}>
               bubble tanks 3

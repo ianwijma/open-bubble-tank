@@ -17,6 +17,22 @@ for (const native of [false, true]) {
     const menu = page.locator('.main-menu'),
       overlay = page.locator('.main-menu-overlay');
     await expect(menu).toHaveAttribute('data-menu-age', '0', { timeout: 60000 });
+    const background = page.locator('.main-background canvas');
+    const bitmap = () => background.evaluate((canvas) => (canvas as HTMLCanvasElement).toDataURL());
+    await expect(background).toBeVisible();
+    const samples = await background.evaluate((canvas) => {
+      const ctx = (canvas as HTMLCanvasElement).getContext('2d')!;
+      return [0, 449].map((y) => [...ctx.getImageData(0, y, 1, 1).data]);
+    });
+    const endpoints = [
+      [7, 163, 180, 255],
+      [6, 61, 96, 255],
+    ];
+    // Pixel centers lie inside the authored endpoints; browser interpolation rounds channels.
+    for (const [i, sample] of samples.entries())
+      for (const [c, channel] of sample.entries())
+        expect(Math.abs(channel - endpoints[i][c])).toBeLessThanOrEqual(1);
+    const initialBackground = await bitmap();
     const advance = async (count: number) => {
       await page.getByRole('button', { name: `Menu advance ${count} frames`, exact: true }).click();
     };
@@ -26,6 +42,7 @@ for (const native of [false, true]) {
       .locator('#stage')
       .screenshot({ path: `test-results/${native ? 'native' : 'mock'}-menu-intro.png` });
     await advance(95);
+    expect(await bitmap()).not.toBe(initialBackground);
     await expect(menu).toHaveAttribute('data-menu-parked', 'true');
     expect(Number(await menu.getAttribute('data-control-alpha'))).toBeGreaterThanOrEqual(1);
     await advance(1);
@@ -77,6 +94,23 @@ for (const native of [false, true]) {
     await advance(1);
     await expect(menu).toHaveAttribute('data-menu-parked', 'false');
     if (native) await expect(menu).toHaveAttribute('data-title-frame', '179');
+    await advance(20);
+    await page.getByRole('button', { name: 'Settings', exact: true }).click();
+    await advance(20);
+    await advance(5);
+    await advance(5);
+    await advance(1);
+    const efficiency = page.getByRole('group', {
+      name: 'Efficiency Mode (Slow Computers)',
+      exact: true,
+    });
+    await efficiency.getByRole('radio', { name: 'On', exact: true }).check();
+    const frozenBackground = await bitmap();
+    await advance(100);
+    expect(await bitmap()).toBe(frozenBackground);
+    await efficiency.getByRole('radio', { name: 'Off', exact: true }).check();
+    await advance(20);
+    expect(await bitmap()).not.toBe(frozenBackground);
     expect(errors).toEqual([]);
   });
 }

@@ -39,6 +39,11 @@ for (const native of [false, true]) {
     );
     await efficiency(page, true).check();
     await stageRate(page, 90, 35);
+    const backgroundBitmap = () =>
+      page
+        .locator('.main-background canvas')
+        .evaluate((node) => (node as HTMLCanvasElement).toDataURL());
+    const efficientBackground = await backgroundBitmap();
     await expect(page.getByRole('radio', { name: '65 FPS' })).toBeChecked();
     const saved = () =>
       page.evaluate(
@@ -62,8 +67,12 @@ for (const native of [false, true]) {
     await stageRate(page, 90, 35);
     for (const fps of [35, 50, 65])
       await expect(page.getByRole('radio', { name: `${fps} FPS` })).not.toBeChecked();
+    expect(await backgroundBitmap()).toBe(efficientBackground);
     await efficiency(page, false).check();
     await stageRate(page, 50, 35);
+    // PauseMenu._-UF(false) calls _-KD(true), so particles run while the game stays paused.
+    await expect.poll(backgroundBitmap).not.toBe(efficientBackground);
+    await expect(page.locator('.pause-button-layer')).toHaveCount(1);
     await expect(page.getByRole('radio', { name: '50 FPS' })).toBeChecked();
     await page.getByRole('button', { name: 'DONE' }).click();
     await page.getByRole('button', { name: 'Main menu', exact: true }).click();

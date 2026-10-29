@@ -8,6 +8,7 @@ import { MainMenuMotion } from '../../src/game/core/main-menu';
 import { DEFAULT_SETTINGS } from '../../src/game/core/constants';
 import type { Settings } from '../../src/game/core/types';
 import { StageRuntime } from '../../src/game/services/stage-runtime';
+import { MainBackground } from '../../src/components/main-background';
 
 function MenuFixture({
   pack,
@@ -26,6 +27,7 @@ function MenuFixture({
   };
   return (
     <>
+      <MainBackground stage={stage} />
       <MainMenu
         pack={pack}
         stage={stage}
@@ -44,7 +46,15 @@ function MenuFixture({
         data-menu-busy={String(motion.busy)}
       >
         {overlay === 'settings' ? (
-          <SettingsPanel pack={pack} settings={settings} onChange={setSettings} onClose={close} />
+          <SettingsPanel
+            pack={pack}
+            settings={settings}
+            onChange={(next, control) => {
+              if (control === 'efficiency') stage.background.efficient = next.efficient;
+              setSettings(next);
+            }}
+            onClose={close}
+          />
         ) : null}
         {overlay === 'credits' ? <CreditsPanel pack={pack} stage={stage} onClose={close} /> : null}
       </fieldset>

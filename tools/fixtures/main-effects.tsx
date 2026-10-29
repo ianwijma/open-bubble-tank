@@ -20,7 +20,17 @@ function MainEffectsFixture({
   const [menu, setMenu] = useState(false),
     [fps, setFps] = useState<Settings['fps']>(50);
   return (
-    <div className="site-shell" style={{ position: 'relative', width: 550, height: 450 }}>
+    <div
+      className="site-shell"
+      style={{
+        position: 'relative',
+        width: 550,
+        height: 450,
+        minHeight: 0,
+        padding: 0,
+        display: 'block',
+      }}
+    >
       <MainStage runtime={runtime} fps={fps}>
         {menu ? (
           <div
