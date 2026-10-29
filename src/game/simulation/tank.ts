@@ -5,6 +5,7 @@ import { tankRosterIdentity } from '../core/tank-identity';
 import { initialTankChildren } from './tank-display';
 import { initializeTankWeapons } from './behaviors';
 import type { World } from './world';
+import { weaponAimFlags } from '../core/weapon-aim';
 export function createTank(
   uid: number,
   design: TankDesign,
@@ -43,6 +44,7 @@ export function createTank(
         part,
         counter: side === 'player' ? -1 : part.type === 4023 ? 240 : 0,
         angle: part.rotation,
+        aim: weaponAimFlags(part.type, design.classId),
         burst: 0,
         burstTimer: 0,
       })),

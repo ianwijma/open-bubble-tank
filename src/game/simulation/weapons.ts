@@ -29,18 +29,35 @@ import mineArt from '../data/mine-art.json';
 import { convertDrones } from './converter';
 import { tickBehavior } from './behaviors';
 import { weaponAimPoint, finishWeaponAim } from './weapon-targets';
+import { weaponAimFlags } from '../core/weapon-aim';
+import { tickSpike } from './spikes';
 
 export function tickGuns(world: World, t: Tank, input: InputFrame, categories?: readonly number[]) {
   const guns =
     t.side === 'player'
       ? t.guns
-      : [...t.guns].sort((a, b) => Math.floor(a.part.type / 1000) - Math.floor(b.part.type / 1000));
+      : [...t.guns].sort(
+          (a, b) =>
+            Number(Math.floor(a.part.type / 1000) === 6) -
+            Number(Math.floor(b.part.type / 1000) === 6),
+        );
   for (const g of guns) {
     const id = g.part.type,
       category = Math.floor(id / 1000),
       spec = WEAPONS[id];
     if (categories && !categories.includes(category)) continue;
     if (t.side !== 'player' && [4013, 4022].includes(id)) continue;
+    if (t.side !== 'player' && id === 4015) {
+      if (advanceRotatingCycle(g) && ++g.counter >= spec.rate) {
+        g.counter = 0;
+        world.fireGun(t, g, input);
+      }
+      continue;
+    }
+    if (t.side !== 'player' && id === 4026) {
+      tickSpike(world, t, g);
+      continue;
+    }
     if (id === 4032) tickTurretBehavior(world, t, g);
     const aim =
       t.side === 'player'
@@ -50,14 +67,9 @@ export function tickGuns(world: World, t: Tank, input: InputFrame, categories?: 
           : weaponAimPoint(world, t, g);
     const mount = rotate(g.part, t.rotation),
       pos = { x: t.x + mount.x, y: t.y + mount.y };
-    const fixed =
-      [3001, 3008, 3017, 4002, 4008, 4009, 4010, 4012, 4021, 6001, 6003, 6005].includes(id) ||
-      t.design.id.startsWith('B');
-    if (aim && ![4015, 4032, 5003, 5004, 5006].includes(id))
-      g.angle =
-        (t.side === 'player' && t.design.classId <= 3) || fixed
-          ? g.part.rotation
-          : angleTo(pos, aim) - t.rotation;
+    const flags = (g.aim ??= weaponAimFlags(id, t.design.classId));
+    if (aim && (t.side === 'player' ? flags.avatar : flags.rotates) && id !== 4032)
+      g.angle = angleTo(pos, aim) - t.rotation;
     const target = t.side === 'player' || id === 4032 ? null : finishWeaponAim(world, t, g);
     if (id === 6002) {
       if (target) tickHealer(world, t, g);
@@ -94,7 +106,6 @@ export function tickGuns(world: World, t: Tank, input: InputFrame, categories?: 
         }
       }
     } else {
-      if (id === 4015 && !advanceRotatingCycle(g)) continue;
       if (id === 4023) {
         if (world.runtimeFor(world.currentWrapper).apocalypse && ++g.counter >= spec.rate) {
           world.fireGun(t, g, input);
@@ -314,14 +325,7 @@ export function fireGun(world: World, t: Tank, gun: GunState, input: InputFrame)
     return;
   }
   if (id === 4026) {
-    const pos = world.muzzle(t, gun);
-    for (const e of [world.player, ...world.allies])
-      if (world.hitTest(e, pos.x, pos.y)) {
-        world.damage(e, 3);
-        const d = direction(angleTo(t, e), 8 - e.design.classId);
-        e.velocity.x += d.x;
-        e.velocity.y += d.y;
-      }
+    // Spike has an empty PartCallTrigger; its contacts belong to BehaviorRun.
     return;
   }
   if (id === 4032) {

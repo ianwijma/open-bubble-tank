@@ -79,6 +79,8 @@ export interface GunState {
   part: TankPart;
   counter: number;
   angle: number;
+  aim?: { avatar: boolean; rotates: boolean };
+  spikeContacts?: { uid: number; remaining: number }[];
   burst: number;
   burstTimer: number;
   autoTargetId?: number | null;

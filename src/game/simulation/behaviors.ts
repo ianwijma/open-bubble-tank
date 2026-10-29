@@ -17,7 +17,7 @@ export function initializeTankWeapons(tank: Tank, world?: World) {
     if (id === 6004) gun.behavior!.cloak = rng.int(0, 50);
     if (id === 6005)
       gun.behavior!.wall = { age: 0, frequency: rng.int(2, 10) / 100, amplitude: rng.int(10, 20) };
-    if (world && ![4022, 4032].includes(id)) acquireWeaponTarget(world, tank, gun);
+    if (world && ![4022, 4026, 4032].includes(id)) acquireWeaponTarget(world, tank, gun);
   }
 }
 export function tickBehavior(world: World, tank: Tank, gun: GunState) {

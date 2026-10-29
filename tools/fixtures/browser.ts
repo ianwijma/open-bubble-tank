@@ -26,6 +26,7 @@ import { showCombatEffectsProof } from './combat-effects';
 import { showProjectileOrderProof } from './projectile-order';
 import { showActorAi } from './actor-ai';
 import { showWeaponTargets } from './weapon-targets';
+import { showAimContracts } from './aim-contracts';
 import { showSeekerMineProof } from './seeker-mines';
 import { showSpecialProjectilesProof } from './special-projectiles';
 import { showProjectileClocksProof } from './projectile-clocks';
@@ -296,6 +297,13 @@ async function reset() {
     const proof = await showSeekerMineProof(pack, stage);
     status.dataset.seekerMines = JSON.stringify(proof);
     status.textContent = 'Ready · seeker-mine bounds and independent clocks';
+    return;
+  }
+  if (fixture.value === 'aim-contracts') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    const proof = await showAimContracts(pack, stage);
+    status.dataset.aimContracts = JSON.stringify(proof);
+    status.textContent = 'Ready · fixed/rotating mounts and seven-point Spike contact';
     return;
   }
   if (fixture.value === 'weapon-targets') {

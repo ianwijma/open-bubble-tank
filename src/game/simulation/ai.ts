@@ -55,6 +55,9 @@ export function moveEnemy(t: Tank, fieldScale: number, rng: Random, avatar?: Vec
   if (t.side === 'enemy' && t.design.id.startsWith('B')) {
     if (t.design.id.charAt(1) !== '1') return;
     t.x = t.y = 0;
+    const primaries = t.guns.filter((gun) => [4, 7].includes(Math.floor(gun.part.type / 1000)));
+    if (primaries[0]?.aim?.rotates)
+      for (const gun of primaries) if (gun.aim) gun.aim.rotates = false;
     m.frames--;
     t.rotation = actorAngle(t.rotation + m.rate);
     m.lastAngle = 0;
