@@ -1,3 +1,4 @@
+import { waitForMainMenu } from './helpers/main-menu';
 import { expect, test } from '@playwright/test';
 import { existsSync } from 'node:fs';
 import { writeFileSync } from 'node:fs';
@@ -52,6 +53,7 @@ test('mock creator previews animate Skittish and Phasing before and after placem
 }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await waitForMainMenu(page);
   await page.getByRole('button', { name: 'Enemy tank creator' }).click();
   await page.getByRole('button', { name: 'Behavior', exact: true }).click();
   await page.getByLabel('Symmetric Mode').uncheck();

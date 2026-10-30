@@ -1,6 +1,8 @@
 import type { Page } from '@playwright/test';
 /** Coordinates are relative to the creator's tank registration point. */
 export async function dropPreview(page: Page, x: number, y: number) {
+  // This action also lets the ordinary-flow onboarding handler finish before raw mouse input.
+  await page.locator('.creator-part-preview').hover();
   const preview = (await page.locator('.creator-part-preview').boundingBox())!;
   const canvas = (await page.locator('.creator-workspace canvas').boundingBox())!;
   await page.mouse.move(preview.x + preview.width / 2, preview.y + preview.height / 2);

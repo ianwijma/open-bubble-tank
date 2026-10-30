@@ -20,6 +20,7 @@ import { CreatorEnemyStats, CreatorStatsTab } from './creator-enemy-stats';
 import { creatorSuggestedStats, creatorImportedSuggested } from '@/game/core/creator-enemy-stats';
 import { CREATOR_PALETTE } from '@/game/core/creator-palette';
 import { CreatorSaveDialog } from './creator-save-dialog';
+import { CreatorGuide } from './creator-guide';
 import { CLASS_RINGS } from '@/game/core/constants';
 import {
   placementParts,
@@ -57,6 +58,8 @@ export function TankCreator({
   onSave,
   onExit,
   onLoad,
+  helpSeen = true,
+  onHelpStart,
 }: {
   pack: AssetPack;
   overGame?: boolean;
@@ -69,8 +72,11 @@ export function TankCreator({
   onSave: (tank: TankDesign) => TankDesign | undefined;
   onExit: () => void;
   onLoad: (limits: ViewerLimits & { avatar: boolean }) => void;
+  helpSeen?: boolean;
+  onHelpStart?: () => void;
 }) {
   const [design, setDesign] = useState<TankDesign>(() => structuredClone(initial));
+  const [guideActive, setGuideActive] = useState(() => !helpSeen);
   const [transformClass, setTransformClass] = useState<number | null>(null);
   const classId = useMemo(
     () => transformClass ?? measureClass(design, pack),
@@ -113,6 +119,11 @@ export function TankCreator({
   const artworkFrame = useRef(1);
   const drawRef = useRef<() => void>(() => {});
   const preview = useRef<HTMLButtonElement>(null);
+  const guideWasOpen = useRef(guideActive);
+  useEffect(() => {
+    if (guideWasOpen.current && !guideActive) preview.current?.focus({ preventScroll: true });
+    guideWasOpen.current = guideActive;
+  }, [guideActive]);
   const placement = useRef<{ id: number; mode: 'pointer' | 'keyboard' } | null>(null);
   const nextPart = useRef(0);
   const radii = useRef(new Map<number, number>());
@@ -523,8 +534,8 @@ export function TankCreator({
     >
       <div
         className="creator-editor-content"
-        inert={!!saveDialog}
-        aria-hidden={!!saveDialog || undefined}
+        inert={!!saveDialog || guideActive}
+        aria-hidden={!!saveDialog || guideActive || undefined}
       >
         <CreatorButton
           pack={pack}
@@ -897,6 +908,14 @@ export function TankCreator({
         <CreatorSelectionInfo pack={pack} icons={selectionIcons} />
         <CreatorPartDetails pack={pack} focus={details} canvas={detailCanvas} id={detailsId} />
       </div>
+      {guideActive ? (
+        <CreatorGuide
+          pack={pack}
+          seen={false}
+          onStart={onHelpStart}
+          onClose={() => setGuideActive(false)}
+        />
+      ) : null}
       {saveDialog ? (
         <CreatorSaveDialog
           pack={pack}

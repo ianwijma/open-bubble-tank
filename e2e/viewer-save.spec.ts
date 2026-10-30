@@ -24,7 +24,13 @@ for (const native of [false, true])
       if (!localStorage.getItem(key))
         localStorage.setItem(
           key,
-          JSON.stringify({ version: 1, tankViewerHelpSeen: true, tanks: [], settings: {} }),
+          JSON.stringify({
+            version: 1,
+            tankViewerHelpSeen: true,
+            creatorHelpSeen: true,
+            tanks: [],
+            settings: {},
+          }),
         );
     });
     const assets = async () => {

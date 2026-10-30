@@ -445,6 +445,8 @@ export default function GameShell() {
                   editor.returnTo === 'game' ? Math.min(6, (world?.progression.level ?? 0) + 1) : 6
                 }
                 onSave={saveTank}
+                helpSeen={profile.creatorHelpSeen}
+                onHelpStart={() => updateProfile((p) => ({ ...p, creatorHelpSeen: true }))}
                 onExit={exitEditor}
                 onLoad={(limits) => {
                   setViewer(limits);

@@ -1,3 +1,4 @@
+import { waitForMainMenu } from './helpers/main-menu';
 import { expect, test } from '@playwright/test';
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -54,6 +55,7 @@ test('mock creator previews distinct guns and behaviors and places their authore
 }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await waitForMainMenu(page);
   await page.getByRole('button', { name: 'Enemy tank creator' }).click();
   await page.getByLabel('Symmetric Mode').uncheck();
   const preview = page.locator('.creator-part-preview canvas');

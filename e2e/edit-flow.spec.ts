@@ -26,6 +26,7 @@ for (const native of [false, true])
       {
         version: 1,
         tankViewerHelpSeen: true,
+        creatorHelpSeen: true,
         secondaryHelpSeen: true, // The dedicated help flow covers its first-time interruption.
         tanks: [],
         achievements: [],

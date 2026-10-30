@@ -17,6 +17,7 @@ test('mock path: menu, local enemy creator, settings, exploration and pause', as
   await page.goto('/');
   await expect(page.getByRole('heading', { name: 'Your game. Original artwork.' })).toBeVisible();
   await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await waitForMainMenu(page);
   await page.getByRole('button', { name: 'Enemy tank creator' }).click();
   await page.getByRole('textbox', { name: 'Tank name' }).fill('Test Minnow');
   await page.getByRole('button', { name: 'Place Small Bubble', exact: true }).click();
@@ -151,7 +152,7 @@ test('compressed CWS loads locally and original tank-code sharing survives reloa
   await expect(page.getByRole('button', { name: 'Play', exact: true })).toBeVisible({
     timeout: 60000,
   });
-  await expect(page.locator('.main-menu')).toHaveAttribute('data-title-frame', '179');
+  await waitForMainMenu(page);
   await page.getByRole('button', { name: 'Enemy tank creator' }).click();
   await page.getByRole('textbox', { name: 'Tank name' }).fill('Code Minnow');
   await dropPreview(page, 0, 0);

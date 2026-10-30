@@ -31,6 +31,7 @@ for (const native of [false, true])
           JSON.stringify({
             version: 1,
             tankViewerHelpSeen: true,
+            creatorHelpSeen: true,
             tanks: [tank],
             achievements: [],
             progression: [],

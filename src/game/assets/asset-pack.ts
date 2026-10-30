@@ -2,6 +2,7 @@ import { PARTS, partById } from '../data/catalog';
 import { SETTINGS_SCREEN } from '../core/settings-screen';
 import { CREDITS } from '../core/credits-screen';
 import { CREATOR_DIALOGS } from '../core/creator-dialogs';
+import { CREATOR_GUIDE } from '../core/creator-guide';
 import { TANK_VIEWER } from '../core/tank-viewer';
 import { mockCreditsLeaf } from './mock-credits';
 import type { Projectile, Rect, Tank, TankDesign, TankPart } from '../core/types';
@@ -410,7 +411,8 @@ export class AssetPack {
       for (const art of Object.values(effectArt)) visit(art.symbol);
       for (const art of Object.values(screenEffectArt)) visit(art.symbol);
       for (const art of Object.values(mineArt)) visit(art.symbol);
-      for (const id of [...Object.values(STATUS_ART), INFECTED_ART]) visit(id);
+      for (const id of [...Object.values(STATUS_ART), INFECTED_ART, CREATOR_GUIDE.symbol])
+        visit(id);
       for (const id of Object.values(PROTECTION_ART)) visit(id);
       for (const id of [1816, 1817, 1820, 2173, 1780]) visit(id);
       for (const id of [MINIMAP.symbol, MINIMAP.button, MINIMAP.dot, MINIMAP.connector]) visit(id);
@@ -582,6 +584,18 @@ export class AssetPack {
       infoPose.placements = infoPose.placements.filter((p) => !p.name);
       const infoPopup = await pack.rasterClip(infoPose);
       if (infoPopup) pack.creatorFrames.set('selection-info:popup', infoPopup);
+      for (const page of CREATOR_GUIDE.frames) {
+        const pose = new SwfClip(CREATOR_GUIDE.symbol, pack);
+        pose.start(page.frame, false);
+        pose.placements = pose.placements.filter((p) => page.staticIds.includes(p.charId));
+        const raster = await pack.rasterClip(pose);
+        if (raster) pack.creatorFrames.set(`guide:${page.frame}`, raster);
+        for (const button of page.buttons)
+          for (const frame of [1, 2]) {
+            const art = await pack.rasterSymbol(button.symbol, frame);
+            if (art) pack.creatorFrames.set(`guide-button:${button.symbol}:${frame}`, art);
+          }
+      }
       for (const screen of CREATOR_DIALOGS.frames) {
         const pose = new SwfClip(CREATOR_DIALOGS.symbol, pack);
         pose.start(screen.frame, false);

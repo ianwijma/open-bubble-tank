@@ -4,6 +4,7 @@ import { mkdir } from 'node:fs/promises';
 import { dirname } from 'node:path';
 const [command, ...raw] = process.argv.slice(2),
   values = raw.map(Number);
+const referenceOrigin = new URL(process.env.BT3_REFERENCE_URL ?? 'http://127.0.0.1:3103').origin;
 const browser = await chromium.connectOverCDP(
   `http://127.0.0.1:${process.env.BT3_REFERENCE_CDP_PORT ?? 9223}`,
   { timeout: 10000 },
@@ -13,7 +14,7 @@ try {
   const page = browser
     .contexts()
     .flatMap((c) => c.pages())
-    .find((p) => new URL(p.url()).origin === 'http://127.0.0.1:3103');
+    .find((p) => new URL(p.url()).origin === referenceOrigin);
   if (!page) throw new Error('Open the local original reference viewer first.');
   if (command === 'reload' && raw.length === 1) await page.reload();
   if ((command === 'load' || command === 'reload') && raw.length === 1) {
@@ -35,7 +36,8 @@ try {
     console.log(await page.locator('#trace').innerText());
   } else if (command === 'click' && values.length === 2) {
     const p = point(values[0], values[1]);
-    await page.mouse.click(p.x, p.y);
+    // Keep down/up in separate Flash frames; a zero-duration click can miss MOUSE_DOWN.
+    await page.mouse.click(p.x, p.y, { delay: 50 });
   } else if (command === 'hold' && values.length === 3) {
     const p = point(values[0], values[1]);
     await page.mouse.move(p.x, p.y);

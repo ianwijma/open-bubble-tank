@@ -1,3 +1,4 @@
+import { waitForMainMenu } from './helpers/main-menu';
 import { expect, test } from '@playwright/test';
 import { existsSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -45,6 +46,7 @@ for (const native of [false, true])
 test('mock creator body previews and placed clusters stay animated', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await waitForMainMenu(page);
   await page.getByRole('button', { name: 'Enemy tank creator' }).click();
   await page.getByLabel('Symmetric Mode').uncheck();
   const preview = page.locator('.creator-part-preview canvas');
