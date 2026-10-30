@@ -2,8 +2,7 @@ import { waitForMainMenu } from './helpers/main-menu';
 import { expect, test } from '@playwright/test';
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { dropPreview } from './helpers/creator';
-import type { TankDesign } from '../src/game/core/types';
+import { readCreatorDesign, dropPreview } from './helpers/creator';
 const layouts = JSON.parse(
   readFileSync(resolve('src/game/data/part-geometry.json'), 'utf8'),
 ) as Record<number, { bounds: { width: number } }>;
@@ -87,9 +86,7 @@ test('mock creator previews distinct guns and behaviors and places their authore
       }),
     );
     await dropPreview(page, x, -30);
-    const download = page.waitForEvent('download');
-    await page.getByRole('button', { name: 'Export', exact: true }).click();
-    const design: TankDesign = JSON.parse(readFileSync((await (await download).path())!, 'utf8'));
+    const design = await readCreatorDesign(page);
     expect(design.parts.at(-1)?.type).toBe(id);
     expect(design.parts.at(-1)?.radius).toBeCloseTo(
       (layouts as Record<number, { bounds: { width: number } }>)[id].bounds.width / 2,

@@ -413,6 +413,7 @@ export class AssetPack {
       for (const art of Object.values(mineArt)) visit(art.symbol);
       for (const id of [...Object.values(STATUS_ART), INFECTED_ART, CREATOR_GUIDE.symbol])
         visit(id);
+      visit(CREATOR_DIALOGS.alert.symbol);
       for (const id of Object.values(PROTECTION_ART)) visit(id);
       for (const id of [1816, 1817, 1820, 2173, 1780]) visit(id);
       for (const id of [MINIMAP.symbol, MINIMAP.button, MINIMAP.dot, MINIMAP.connector]) visit(id);
@@ -596,6 +597,13 @@ export class AssetPack {
             if (art) pack.creatorFrames.set(`guide-button:${button.symbol}:${frame}`, art);
           }
       }
+      const alert = new SwfClip(CREATOR_DIALOGS.alert.symbol, pack);
+      alert.start(1, false);
+      alert.placements = alert.placements.filter((p) =>
+        CREATOR_DIALOGS.alert.staticIds.includes(p.charId),
+      );
+      const alertRaster = await pack.rasterClip(alert);
+      if (alertRaster) pack.creatorFrames.set('alert', alertRaster);
       for (const screen of CREATOR_DIALOGS.frames) {
         const pose = new SwfClip(CREATOR_DIALOGS.symbol, pack);
         pose.start(screen.frame, false);

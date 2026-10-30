@@ -1,4 +1,4 @@
-import { exitCreator } from './helpers/creator';
+import { readCreatorDesign, exitCreator } from './helpers/creator';
 import { waitForMainMenu } from './helpers/main-menu';
 import { expect, test } from '@playwright/test';
 import { existsSync, readFileSync } from 'node:fs';
@@ -88,17 +88,13 @@ for (const native of [false, true])
     await expect(
       page.getByRole('button', { name: 'Exit tank creator', exact: true }),
     ).toBeVisible();
-    const editorName = await page
-      .getByRole('textbox', { name: 'Tank name', exact: true })
-      .inputValue();
+    const editorName = (await readCreatorDesign(page)).name;
     await page.getByRole('button', { name: 'Load a Tank...', exact: true }).click();
     const viewer = page.locator('.tank-viewer');
     await expect(viewer).toHaveAttribute('data-viewer-type', 'Avatar');
     await expect(viewer).toHaveAttribute('data-viewer-ready', 'true');
     await page.getByRole('button', { name: 'Return to Tank Creator', exact: true }).click();
-    await expect(page.getByRole('textbox', { name: 'Tank name', exact: true })).toHaveValue(
-      editorName,
-    );
+    expect((await readCreatorDesign(page)).name).toBe(editorName);
     await page.getByRole('button', { name: 'Load a Tank...', exact: true }).click();
     await expect(viewer).toHaveAttribute('data-viewer-ready', 'true');
     const first = viewer.locator('.viewer-select-tank').first(),

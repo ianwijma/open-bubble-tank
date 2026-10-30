@@ -5,8 +5,8 @@ import { measureClass } from '@/game/assets/class-measurement';
 import type { TankDesign, TankPart } from '@/game/core/types';
 import type { ViewerLimits } from '@/game/core/tank-viewer';
 import { costs, gunBudget, PARTS, partById } from '@/game/data/catalog';
-import { canPlacePart, validateBuild } from '@/game/simulation/designer';
-import { exportDesign } from '@/game/services/profile';
+import { canPlacePart } from '@/game/simulation/designer';
+import { creatorSavePrerequisite } from '@/game/core/creator-save';
 import { firstAffordablePart, orderedPalette } from '@/game/simulation/editor-palette';
 import { CreatorButton, CreatorSlider } from './creator-controls';
 import { CREATOR_CONTROLS } from '@/game/core/creator-controls';
@@ -21,6 +21,7 @@ import { creatorSuggestedStats, creatorImportedSuggested } from '@/game/core/cre
 import { CREATOR_PALETTE } from '@/game/core/creator-palette';
 import { CreatorSaveDialog } from './creator-save-dialog';
 import { CreatorGuide } from './creator-guide';
+import { CreatorAlert } from './creator-alert';
 import { CLASS_RINGS } from '@/game/core/constants';
 import {
   placementParts,
@@ -60,6 +61,7 @@ export function TankCreator({
   onLoad,
   helpSeen = true,
   onHelpStart,
+  initialSaveName = initial.name,
 }: {
   pack: AssetPack;
   overGame?: boolean;
@@ -74,9 +76,12 @@ export function TankCreator({
   onLoad: (limits: ViewerLimits & { avatar: boolean }) => void;
   helpSeen?: boolean;
   onHelpStart?: () => void;
+  initialSaveName?: string;
 }) {
   const [design, setDesign] = useState<TankDesign>(() => structuredClone(initial));
   const [guideActive, setGuideActive] = useState(() => !helpSeen);
+  const [alertRequest, setAlertRequest] = useState<{ message: string } | null>(null),
+    [alertActive, setAlertActive] = useState(false);
   const [transformClass, setTransformClass] = useState<number | null>(null);
   const classId = useMemo(
     () => transformClass ?? measureClass(design, pack),
@@ -85,7 +90,6 @@ export function TankCreator({
   const finalDesign = useMemo(() => ({ ...design, classId }), [design, classId]);
   const { gp, bp } = costs(design.parts),
     budget = design.avatar ? gunBudget(classId, level) : Math.floor(gunBudget(classId, 6) * 1.5);
-  const errors = validateBuild(finalDesign, level, maxClass, unlockedParts);
   const paletteContext = { avatar: design.avatar, level, classId, budget, gp, bp, unlockedParts };
   const [category, setCategory] = useState(1),
     [chosen, setChosen] = useState<number | null>(() =>
@@ -120,6 +124,11 @@ export function TankCreator({
   const drawRef = useRef<() => void>(() => {});
   const preview = useRef<HTMLButtonElement>(null);
   const guideWasOpen = useRef(guideActive);
+  const alertWasOpen = useRef(false);
+  useEffect(() => {
+    if (alertWasOpen.current && !alertActive) dialogOpener.current?.focus({ preventScroll: true });
+    alertWasOpen.current = alertActive;
+  }, [alertActive]);
   useEffect(() => {
     if (guideWasOpen.current && !guideActive) preview.current?.focus({ preventScroll: true });
     guideWasOpen.current = guideActive;
@@ -531,11 +540,12 @@ export function TankCreator({
     <div
       className={`creator stage-background ${overGame ? 'over-game' : ''}`}
       data-assets={pack.mode}
+      data-design={JSON.stringify(finalDesign)}
     >
       <div
         className="creator-editor-content"
-        inert={!!saveDialog || guideActive}
-        aria-hidden={!!saveDialog || guideActive || undefined}
+        inert={!!saveDialog || guideActive || alertActive}
+        aria-hidden={!!saveDialog || guideActive || alertActive || undefined}
       >
         <CreatorButton
           pack={pack}
@@ -567,8 +577,15 @@ export function TankCreator({
           name="SaveExit_mc"
           label="SAVE"
           onClick={() => {
-            if (errors.length) {
-              setMessage(errors[0]);
+            const error = creatorSavePrerequisite(finalDesign);
+            if (error) {
+              dialogOpener.current = document.activeElement as HTMLElement | null;
+              setSelection(emptySelection);
+              setDetails(null);
+              nudge.current = null;
+              artwork.current?.clearLayer('design');
+              setAlertActive(true);
+              setAlertRequest({ message: error });
               return;
             }
             const tank = {
@@ -590,18 +607,6 @@ export function TankCreator({
             setSaveDialog({ kind: 'exit', tank: finalDesign });
           }}
         />
-        <div className="creator-name">
-          <label>
-            Tank name{' '}
-            <input
-              aria-label="Tank name"
-              maxLength={40}
-              value={design.name}
-              onChange={(e) => setDesign({ ...design, name: e.target.value })}
-            />
-          </label>
-          <button onClick={() => exportDesign(finalDesign)}>Export</button>
-        </div>
         <div className="creator-meters">
           <div>
             Class {classId}
@@ -916,11 +921,13 @@ export function TankCreator({
           onClose={() => setGuideActive(false)}
         />
       ) : null}
+      <CreatorAlert pack={pack} fps={fps} request={alertRequest} onActiveChange={setAlertActive} />
       {saveDialog ? (
         <CreatorSaveDialog
           pack={pack}
           kind={saveDialog.kind}
           tank={saveDialog.tank}
+          initialName={initialSaveName}
           opener={dialogOpener.current}
           onSave={onSave}
           onClose={() => setSaveDialog(null)}

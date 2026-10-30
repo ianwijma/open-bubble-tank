@@ -2,6 +2,7 @@ import { expect, test } from '@playwright/test';
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { waitForMainMenu } from './helpers/main-menu';
+import type { TankPart } from '../src/game/core/types';
 const starter = JSON.parse(readFileSync(resolve('src/game/data/tanks.json'), 'utf8'))
   .avatar_defaults[0];
 const swf =
@@ -38,10 +39,28 @@ for (const native of [false, true])
       name: 'fixture.json',
       mimeType: 'application/json',
       buffer: Buffer.from(
-        JSON.stringify({ ...starter, id: 'saved-fixture', name: 'Save fixture' }),
+        JSON.stringify({
+          ...starter,
+          id: 'saved-fixture',
+          name: 'Save fixture',
+          avatar: false,
+          // Imported designs are not passed through _-AA by SaveExitMouseUp.
+          // Twenty basic cannons exceed this body's class1 enemy budget of19.
+          parts: [
+            starter.parts[0],
+            ...Array.from({ length: 20 }, (_, i): TankPart => ({
+              ...starter.parts[0],
+              key: `over-budget-${i}`,
+              type: 4001,
+              x: 0,
+              y: 0,
+            })),
+          ],
+        }),
       ),
     });
     await page.getByRole('button', { name: 'Edit', exact: true }).click();
+    await expect(page.locator('.creator-meters > div').last()).toContainText('GP: 20');
     const read = () =>
       page.evaluate(() => JSON.parse(localStorage.getItem('open-bubble-tank.profile.v1')!));
     await page.getByRole('button', { name: 'Exit tank creator', exact: true }).click();
@@ -62,6 +81,8 @@ for (const native of [false, true])
       name = form.getByRole('textbox', { name: 'Tank name', exact: true });
     await expect(author).toHaveAttribute('maxlength', '20');
     await expect(name).toHaveAttribute('maxlength', '25');
+    await expect(author).toHaveValue('BubbleTanks3');
+    await expect(name).toHaveValue('Save fixture');
     await author.fill("Alice O'Brien");
     await name.fill('Faithful Tank');
     await name.press('End');

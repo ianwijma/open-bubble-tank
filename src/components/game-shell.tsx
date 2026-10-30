@@ -32,6 +32,7 @@ type Screen = 'menu' | 'game' | 'creator' | 'library' | 'viewer';
 type Overlay = 'settings' | 'credits' | 'sources' | 'edit-confirm' | 'edit-choice' | null;
 interface EditorContext {
   initial: TankDesign;
+  saveName: string;
   returnTo: Screen;
   upgrade: boolean;
   saved?: boolean;
@@ -178,7 +179,12 @@ export default function GameShell() {
   }
   function edit(initial: TankDesign, upgrade = false) {
     world?.pause();
-    setEditor({ initial, returnTo: screen, upgrade });
+    setEditor({
+      initial,
+      saveName: screen === 'menu' ? '' : initial.name,
+      returnTo: screen,
+      upgrade,
+    });
     showScreen('creator');
     setOverlay(null);
   }
@@ -220,7 +226,11 @@ export default function GameShell() {
             ...NEW_ENEMY_STATS,
             parts: [],
           });
-    setEditor({ ...editor, initial: structuredClone(initial) });
+    setEditor({
+      ...editor,
+      initial: structuredClone(initial),
+      saveName: editor.returnTo === 'game' ? initial.name : '',
+    });
     setViewer(null);
     showScreen('creator');
   }
@@ -438,6 +448,7 @@ export default function GameShell() {
                 fps={profile.settings.fps}
                 overGame={editor.returnTo === 'game'}
                 initial={editor.initial}
+                initialSaveName={editor.saveName}
                 level={editor.returnTo === 'game' ? (world?.progression.level ?? 1) : 6}
                 unlockedParts={editor.returnTo === 'game' ? world?.unlockedParts : undefined}
                 profileMaxClass={profileClass.value}

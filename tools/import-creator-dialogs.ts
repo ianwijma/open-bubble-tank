@@ -13,6 +13,17 @@ const { bytes } = await decompressSWF(
 const { symbols } = (await extractSymbols(bytes, { svg: false })) as unknown as SymbolResult;
 const layout = createSwfLayout(symbols),
   sprite = symbols.sprites.find((s) => s.id === 1070)!;
+function withFont(piece: ReturnType<typeof layout.collect>[number]) {
+  if (piece.kind !== 'text') return piece;
+  const text = symbols.texts.find((t) => t.id === piece.id)!,
+    font = symbols.fonts.find((f) => f.id === text.records.find((r) => r.fontId)?.fontId)!;
+  return {
+    ...piece,
+    font: font.name.replaceAll('\0', ''),
+    bold: !!font.bold,
+    italic: !!font.italic,
+  };
+}
 function fieldsFor(placements: DisplayPlacement[]) {
   return placements.flatMap((p) => {
     const t = symbols.editTexts.find((t) => t.id === p.charId);
@@ -123,23 +134,34 @@ const frames = [1, 2, 3, 7].map((frame) => {
           };
         });
       })
-      .map((piece) => {
-        if (piece.kind !== 'text') return piece;
-        const text = symbols.texts.find((t) => t.id === piece.id)!;
-        const font = symbols.fonts.find(
-          (f) => f.id === text.records.find((r) => r.fontId)?.fontId,
-        )!;
-        return {
-          ...piece,
-          font: font.name.replaceAll('\0', ''),
-          bold: !!font.bold,
-          italic: !!font.italic,
-        };
-      }),
+      .map(withFont),
   };
 });
+const placement = buildDisplayList(
+    symbols.sprites.find((s) => s.id === 969)!,
+    1,
+  ).find((p) => p.name === 'alert_mc')!,
+  alertParts = buildDisplayList(
+    symbols.sprites.find((s) => s.id === placement.charId)!,
+    1,
+  ),
+  alertFields = fieldsFor(alertParts),
+  staticIds = alertParts
+    .filter((p) => !alertFields.some((f) => f.symbol === p.charId))
+    .map((p) => p.charId),
+  alert = {
+    symbol: placement.charId,
+    matrix: placement.matrix,
+    fields: alertFields,
+    staticIds,
+    art: alertParts
+      .filter((p) => staticIds.includes(p.charId))
+      .flatMap((p) => layout.collect(p.charId, 1, 'up', p.matrix).map(withFont)),
+  };
 await writeFile(
   'src/game/data/creator-dialogs.json',
-  JSON.stringify({ symbol: 1070, frames }) + '\n',
+  JSON.stringify({ symbol: 1070, frames, alert }) + '\n',
 );
-console.log(`Imported ${frames.length} creator dialog frames without artwork.`);
+console.log(
+  `Imported ${frames.length} creator dialog frames and alert${alert.symbol} without artwork.`,
+);

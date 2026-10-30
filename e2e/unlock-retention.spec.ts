@@ -1,16 +1,11 @@
-import { expect, test, type Page } from '@playwright/test';
-import { existsSync, readFileSync } from 'node:fs';
+import { expect, test } from '@playwright/test';
+import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
-import type { TankDesign } from '../src/game/core/types';
-import { dropPreview } from './helpers/creator';
+import { readCreatorDesign, dropPreview } from './helpers/creator';
 import { encodeFixtureTank } from './helpers/tank-code';
 const swf =
   process.env.BT3_SWF_FILE ?? resolve('../documented-bubble-tank-3/re/bt3/uncompressed.swf');
-async function design(page: Page): Promise<TankDesign> {
-  const download = page.waitForEvent('download');
-  await page.getByRole('button', { name: 'Export', exact: true }).click();
-  return JSON.parse(readFileSync((await (await download).path())!, 'utf8'));
-}
+const design = readCreatorDesign;
 for (const native of [false, true])
   test(`${native ? 'SWF' : 'mock'} unlocked Radar survives real downgrades through creator and viewer, then resets in a fresh session`, async ({
     page,

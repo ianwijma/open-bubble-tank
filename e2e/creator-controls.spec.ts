@@ -1,9 +1,8 @@
 import { test, expect } from '@playwright/test';
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { waitForMainMenu } from './helpers/main-menu';
-import { dropPreview } from './helpers/creator';
-import type { TankDesign } from '../src/game/core/types';
+import { readCreatorDesign, dropPreview } from './helpers/creator';
 const swf =
   process.env.BT3_SWF_FILE ?? resolve('../documented-bubble-tank-3/re/bt3/uncompressed.swf');
 for (const native of [false, true])
@@ -28,11 +27,7 @@ for (const native of [false, true])
     await expect(page.getByRole('status')).toContainText('Selected parts (2)');
     await expect(page.getByLabel('Part scale')).toBeVisible();
     await expect(page.getByLabel('Part rotation')).toBeVisible();
-    const snapshot = async (): Promise<TankDesign> => {
-      const downloading = page.waitForEvent('download');
-      await page.getByRole('button', { name: 'Export', exact: true }).click();
-      return JSON.parse(readFileSync((await (await downloading).path())!, 'utf8'));
-    };
+    const snapshot = () => readCreatorDesign(page);
     const before = await snapshot();
     const slider = page.locator('[data-creator-slider="Resize_mc"]'),
       r = (await slider.boundingBox())!;

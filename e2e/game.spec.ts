@@ -19,11 +19,10 @@ test('mock path: menu, local enemy creator, settings, exploration and pause', as
   await page.getByRole('button', { name: 'Play with mock assets' }).click();
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'Enemy tank creator' }).click();
-  await page.getByRole('textbox', { name: 'Tank name' }).fill('Test Minnow');
   await page.getByRole('button', { name: 'Place Small Bubble', exact: true }).click();
   await dropPreview(page, 5, -10);
   await page.screenshot({ path: 'test-results/mock-creator.png' });
-  await saveCreator(page);
+  await saveCreator(page, 'Test Minnow');
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'My tanks', exact: true }).click();
   await expect(page.getByText('Test Minnow', { exact: true })).toBeVisible();
@@ -154,10 +153,9 @@ test('compressed CWS loads locally and original tank-code sharing survives reloa
   });
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'Enemy tank creator' }).click();
-  await page.getByRole('textbox', { name: 'Tank name' }).fill('Code Minnow');
   await dropPreview(page, 0, 0);
   await page.screenshot({ path: 'test-results/swf-creator.png' });
-  await saveCreator(page);
+  await saveCreator(page, 'Code Minnow');
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'My tanks', exact: true }).click();
   await page.getByRole('button', { name: 'Code', exact: true }).click();

@@ -1,5 +1,6 @@
 import { waitForMainMenu } from './helpers/main-menu';
-import { test, expect, type Page } from '@playwright/test';
+import { readCreatorDesign } from './helpers/creator';
+import { test, expect } from '@playwright/test';
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import type { TankDesign, TankPart } from '../src/game/core/types';
@@ -25,12 +26,7 @@ const seed: TankDesign = {
   avatar: false,
   parts: [part('a', -40, -30, 'b'), part('b', -40, 30, 'a'), part('c', 35, -30), part('d', 90, 0)],
 };
-async function snapshot(page: Page): Promise<TankDesign> {
-  const downloading = page.waitForEvent('download');
-  await page.getByRole('button', { name: 'Export', exact: true }).click();
-  const download = await downloading;
-  return JSON.parse(readFileSync((await download.path())!, 'utf8'));
-}
+const snapshot = readCreatorDesign;
 for (const assets of ['mock', 'SWF'])
   test(`${assets} creator: additive selection, marquee, mirrored group edits and undo`, async ({
     page,

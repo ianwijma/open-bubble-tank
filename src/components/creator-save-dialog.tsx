@@ -10,6 +10,7 @@ import {
   type CreatorDialogButton,
   type CreatorDialogFrame,
 } from '@/game/core/creator-dialogs';
+import { CREATOR_AUTHOR } from '@/game/core/creator-save';
 import { community } from '@/game/services/extensions';
 import { encodeTankCode } from '@/game/services/tank-code';
 import { CreatorRasterArt, CreatorPrimitives } from './creator-controls';
@@ -82,6 +83,7 @@ export function CreatorSaveDialog({
   pack,
   kind,
   tank,
+  initialName,
   opener,
   onSave,
   onClose,
@@ -90,14 +92,15 @@ export function CreatorSaveDialog({
   pack: AssetPack;
   kind: 'save' | 'exit';
   tank: TankDesign;
+  initialName: string;
   opener: HTMLElement | null;
   onSave: (tank: TankDesign) => TankDesign | undefined;
   onClose: () => void;
   onExit: () => void;
 }) {
   const [frame, setFrame] = useState<CreatorDialogFrame>(kind === 'save' ? 2 : 1),
-    [author, setAuthor] = useState('You'),
-    [name, setName] = useState(tank.name),
+    [author, setAuthor] = useState(CREATOR_AUTHOR),
+    [name, setName] = useState(initialName),
     [saved, setSaved] = useState<TankDesign | null>(null),
     [code, setCode] = useState(''),
     [error, setError] = useState(''),

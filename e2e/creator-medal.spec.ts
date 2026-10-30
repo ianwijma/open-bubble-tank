@@ -41,8 +41,7 @@ for (const native of [false, true])
     await expect.poll(async () => (await read()).tanks.length).toBe(2);
     expect((await read()).achievements).not.toContain('Tank Creator');
     await page.getByRole('button', { name: 'Edit', exact: true }).first().click();
-    await page.getByRole('textbox', { name: 'Tank name' }).fill('Edited copy');
-    await saveCreator(page);
+    await saveCreator(page, 'Edited copy');
     await expect.poll(async () => (await read()).tanks.length).toBe(3);
     const profile = await read();
     expect(profile.tanks.map((tank: { id: string }) => tank.id)).toEqual([

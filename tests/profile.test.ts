@@ -65,7 +65,7 @@ test('creator enforces budgets, required bodies and unlock tiers', () => {
   expect(validateBuild(STARTER, 1, 2)).toEqual([]);
   const invalid = { ...STARTER, parts: [{ ...STARTER.parts[1], type: 3017 }] };
   const errors = validateBuild(invalid, 1, 2);
-  expect(errors.some((e) => e.includes('body'))).toBe(true);
+  expect(errors).toContain('You must have at least 1 bubble to save a tank');
   expect(errors.some((e) => e.includes('Gun Points'))).toBe(true);
   expect(errors.some((e) => e.includes('unlocks'))).toBe(true);
 });

@@ -100,7 +100,7 @@ for (const native of [false, true])
     await expect(popup).toHaveCount(0);
     await icon.press('Enter');
     await expect(popup).toBeVisible();
-    await page.getByRole('button', { name: 'Export', exact: true }).focus();
+    await page.getByRole('button', { name: 'SAVE', exact: true }).focus();
     await expect(popup).toHaveCount(0);
     const range = page.getByLabel('Part scale'),
       r = (await range.boundingBox())!,

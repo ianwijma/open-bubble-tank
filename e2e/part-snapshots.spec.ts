@@ -1,3 +1,4 @@
+import { readCreatorDesign } from './helpers/creator';
 import { waitForMainMenu } from './helpers/main-menu';
 import { expect, test } from '@playwright/test';
 import { existsSync, readFileSync } from 'node:fs';
@@ -101,9 +102,7 @@ for (const native of [false, true]) {
     });
     await page.getByRole('button', { name: 'Edit', exact: true }).click();
     await expect(page.locator('.creator-meters > div').first()).toContainText('Class 3');
-    const pending = page.waitForEvent('download');
-    await page.getByRole('button', { name: 'Export', exact: true }).click();
-    const exported: TankDesign = JSON.parse(readFileSync((await (await pending).path())!, 'utf8'));
+    const exported = await readCreatorDesign(page);
     expect(exported.classId).toBe(3);
     expect(exported.parts).toHaveLength(5);
     await page.screenshot({

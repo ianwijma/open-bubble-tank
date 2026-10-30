@@ -58,3 +58,17 @@ Adobe rendering parity, original frame timing, complete event ordering or a
 synchronized playthrough. Screenshots, SWFs and extracted media stay outside
 source control. Remaining creator differences are tracked in
 [the fidelity ledger](fidelity.md).
+
+The follow-up alert/save checkpoint restores the full-stage alert, its retained
+fade, fresh-name/profile-author defaults and source save prerequisites, and
+removes the extra in-editor name/export row. Run the corresponding browser
+comparisons with:
+
+```sh
+bun run test:e2e e2e/creator-alert.spec.ts e2e/creator-save.spec.ts
+```
+
+The current alert and fresh-form screenshots are retained locally under the
+ignored `reference-captures/recreation-save` directory. The tests also cover
+source category ordering, selection cleanup after an avatar error, and an
+imported over-budget design reaching the actual name/code submission path.

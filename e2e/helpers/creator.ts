@@ -1,4 +1,11 @@
 import type { Page } from '@playwright/test';
+import type { TankDesign } from '../../src/game/core/types';
+/** Read-only observer: geometry checks must not depend on an extra in-game export control. */
+export async function readCreatorDesign(page: Page): Promise<TankDesign> {
+  const value = await page.locator('.creator').getAttribute('data-design');
+  if (!value) throw new Error('The tank creator is not mounted.');
+  return JSON.parse(value);
+}
 /** Coordinates are relative to the creator's tank registration point. */
 export async function dropPreview(page: Page, x: number, y: number) {
   // This action also lets the ordinary-flow onboarding handler finish before raw mouse input.
@@ -15,8 +22,12 @@ export async function dropPreview(page: Page, x: number, y: number) {
   await page.mouse.up();
 }
 /** Follow TankScreens' name -> locally saved code -> exit path. */
-export async function saveCreator(page: Page) {
+export async function saveCreator(page: Page, name?: string) {
   await page.getByRole('button', { name: 'SAVE', exact: true }).click();
+  const field = page
+    .getByRole('dialog', { name: 'Save your tank', exact: true })
+    .getByRole('textbox', { name: 'Tank name', exact: true });
+  if (name !== undefined || !(await field.inputValue())) await field.fill(name ?? 'Test tank');
   await page
     .getByRole('dialog', { name: 'Save your tank', exact: true })
     .getByRole('button', { name: 'Continue', exact: true })

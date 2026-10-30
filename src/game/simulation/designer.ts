@@ -2,6 +2,7 @@ import { CLASS_PIXELS, CLASS_RINGS } from '../core/constants';
 import { costs, gunBudget, partById } from '../data/catalog';
 import { partUnlocked } from '../core/part-unlocks';
 import type { TankDesign, TankPart } from '../core/types';
+import { creatorSavePrerequisite } from '../core/creator-save';
 // _-7q checks the rectangular selection area for classes 5/6; save validation
 // separately checks the max-class ring for classes 1..5 (_-AA).
 export function canPlacePart(part: TankPart, currentClass: number, maxClass: number) {
@@ -22,13 +23,8 @@ export function validateBuild(
 ) {
   const { gp, bp } = costs(design.parts),
     errors: string[] = [];
-  if (!design.parts.some((p) => p.type < 2000))
-    errors.push('Your tank needs at least one body bubble.');
-  if (
-    design.avatar &&
-    !design.parts.some((p) => Math.floor(p.type / 1000) === 2 || Math.floor(p.type / 1000) === 3)
-  )
-    errors.push('Your avatar needs at least one weapon.');
+  const prerequisite = creatorSavePrerequisite(design);
+  if (prerequisite) errors.push(prerequisite);
   if (design.classId > maxClass) errors.push(`This build exceeds class ${maxClass}.`);
   if (maxClass < 6 && design.parts.some((p) => partExtent(p) > CLASS_RINGS[maxClass - 1]))
     errors.push(`Place every part inside the class ${maxClass} ring.`);
