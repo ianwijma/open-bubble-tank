@@ -12,6 +12,7 @@ export class SwfProtectionView {
   private hit?: SwfSymbolView;
   private field?: SwfSymbolView;
   private fieldMask?: Container;
+  private fieldGeneration = -1;
   private maskParts: { view: SwfSymbolView; part: Tank['design']['parts'][number] }[] = [];
   constructor(
     private assets: AssetPack,
@@ -70,7 +71,21 @@ export class SwfProtectionView {
       this.hit.root.angle = tank.shieldHitAngle;
     }
     if (tank.design.parts.some((part) => part.type === 5005)) {
+      if (!tank.forcefieldAttached) {
+        if (this.field) this.field.root.visible = false;
+        return;
+      }
+      if (this.field && this.fieldGeneration !== tank.forcefieldGeneration) {
+        this.field.root.mask = null;
+        this.field.destroy();
+        for (const { view } of this.maskParts) view.destroy();
+        this.fieldMask?.destroy({ children: true });
+        this.field = undefined;
+        this.fieldMask = undefined;
+        this.maskParts = [];
+      }
       if (!this.field) {
+        this.fieldGeneration = tank.forcefieldGeneration;
         this.field = this.view(
           PROTECTION_ART.forcefield,
           this.assets.forcefieldRadius(tank) * 2.1,
@@ -78,7 +93,7 @@ export class SwfProtectionView {
         );
         this.fieldMask = new Container();
         this.root.addChild(this.fieldMask);
-        // The source clones the complete design once; degradation and aimed gun rotations
+        // Each Setup clones the complete design; degradation and aimed gun rotations
         // on the live tank do not change that silhouette.
         for (const part of tank.design.parts) {
           const id = partById(part.type)?.symbol;
@@ -92,10 +107,11 @@ export class SwfProtectionView {
         }
         this.field.root.mask = this.fieldMask;
       }
+      this.field.root.visible = true;
       for (const { view, part } of this.maskParts)
         view.updatePose(this.assets.forcefieldPartClip(tank, part));
       this.field.setParentAlpha(tank.alpha);
-      this.field.update(tank.artAge + 1, tank.forcefieldFrame);
+      this.field.update(tank.artAge - tank.forcefieldStartedAt + 1, tank.forcefieldFrame);
       this.field.root.angle = tank.forcefieldAngle;
     }
   }

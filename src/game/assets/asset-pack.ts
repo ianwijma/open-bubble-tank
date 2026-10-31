@@ -211,7 +211,15 @@ export class AssetPack {
   private positivePosters = new Map<number, Raster>();
   private partClips = new WeakMap<Tank, { design: TankDesign; parts: Map<string, PartPlayback> }>();
   private mockMountedFrames = new Map<number, Raster>();
-  private forcefieldClones = new WeakMap<Tank, { parts: Map<string, SwfClip>; radius: number }>();
+  private forcefieldClones = new WeakMap<
+    Tank,
+    {
+      design: TankDesign;
+      generation: number;
+      parts: Map<string, SwfClip>;
+      radius: number;
+    }
+  >();
   private scriptGeometry: ScriptBoundsSource = {
     leafBounds: (id) => {
       const shape = this.shapes.get(id),
@@ -644,6 +652,7 @@ export class AssetPack {
   }
   private newPartClip(tank: Tank, part: TankPart, clone = false) {
     let seed = Math.imul(tank.uid + 1, 0x9e3779b1) ^ (clone ? 0x46f13d : 0);
+    if (clone) seed ^= Math.imul(tank.forcefieldGeneration, 0x85ebca6b);
     for (const c of part.key) seed = Math.imul(seed, 31) + c.charCodeAt(0);
     const random = new Random(seed >>> 0 || 1);
     return new SwfClip(partById(part.type)!.symbol, this, () => random.next());
@@ -694,7 +703,7 @@ export class AssetPack {
     );
   private forcefieldClone(tank: Tank) {
     let clone = this.forcefieldClones.get(tank);
-    if (!clone) {
+    if (!clone || clone.design !== tank.design || clone.generation !== tank.forcefieldGeneration) {
       const parts = new Map<string, SwfClip>();
       const children = tank.design.parts.map((part) => {
         const pose = this.mode === 'swf' ? this.newPartClip(tank, part, true) : undefined;
@@ -702,7 +711,12 @@ export class AssetPack {
         if (pose) parts.set(part.key, pose);
         return { x: part.x, y: part.y, ...this.partSize(tank, part, pose, true) };
       });
-      clone = { parts, radius: protectionRadius(children) };
+      clone = {
+        design: tank.design,
+        generation: tank.forcefieldGeneration,
+        parts,
+        radius: protectionRadius(children),
+      };
       this.forcefieldClones.set(tank, clone);
     }
     return clone;
@@ -712,7 +726,7 @@ export class AssetPack {
   }
   forcefieldPartClip(tank: Tank, part: TankPart) {
     const pose = this.forcefieldClone(tank).parts.get(part.key)!;
-    pose.advance(tank.artAge + 1, part.y);
+    pose.advance(tank.artAge - tank.forcefieldStartedAt + 1, part.y);
     return pose;
   }
   hitClip(clip: SwfClip, x: number, y: number, ratio = 0): boolean {

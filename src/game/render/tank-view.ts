@@ -67,7 +67,8 @@ export class TankView {
     this.shield.clear();
     if (
       !this.protection &&
-      (t.shield > 0 || (t.design.parts.some((p) => p.type === 5005) && t.forcefieldReady))
+      (t.shield > 0 ||
+        (t.design.parts.some((p) => p.type === 5005) && t.forcefieldReady && t.forcefieldAttached))
     ) {
       const diameter =
         t.shield > 0
