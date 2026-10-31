@@ -58,6 +58,7 @@ export class MainMenuView {
   update(motion: MainMenuMotion) {
     for (const { piece, view, pose, wrapper } of this.controls) {
       const m = piece.matrix;
+      wrapper.visible = motion.controlAlpha > 0;
       wrapper.setFromMatrix(
         new Matrix(
           m.a,
@@ -74,6 +75,7 @@ export class MainMenuView {
     }
     this.glow.setOptions(this.glowOptions(motion.glowStrength));
     this.titlePose.advance(motion.age + 1);
+    this.title.root.visible = motion.titleAlpha > 0;
     this.title.setParentAlpha(motion.titleAlpha);
     this.title.updatePose(this.titlePose);
   }
