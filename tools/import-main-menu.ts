@@ -11,7 +11,7 @@ const { bytes } = await decompressSWF(
 const { symbols } = (await extractSymbols(bytes, { svg: false })) as unknown as SymbolResult;
 const sprites = new Map(symbols.sprites.map((s) => [s.id, s]));
 function bounds(id: number): { x: number; y: number; width: number; height: number } {
-  const leaf = [...symbols.shapes, ...symbols.texts].find((s) => s.id === id);
+  const leaf = [...symbols.shapes, ...symbols.texts, ...symbols.editTexts].find((s) => s.id === id);
   if (leaf?.bounds)
     return {
       x: leaf.bounds.xMin / 20,
@@ -45,7 +45,26 @@ const piece = (name: string) => {
 };
 const data = {
   background: rootList.find((p) => p.depth === 1)!.charId,
+  backgroundClipDepth: rootList.find((p) => p.depth === 1)!.clipDepth,
   title: piece('title'),
+  series: piece('bubbletanks_mc'),
+  rollover: (() => {
+    const pieceLayout = piece('rollover_txt');
+    const field = symbols.editTexts.find(
+      (t) => t.id === pieceLayout.symbol,
+    )! as (typeof symbols.editTexts)[number] & { color: number[] };
+    const font = symbols.fonts.find((f) => f.id === field.fontId)!;
+    return {
+      ...pieceLayout,
+      font: {
+        name: font.name.replaceAll('\0', ''),
+        size: field.fontHeight / 20,
+        ascent: (font.ascent ?? 20480) / 20,
+        color: field.color,
+        letterSpacing: Number(/letterSpacing="([\d.]+)"/.exec(field.text)?.[1] ?? 0),
+      },
+    };
+  })(),
   controls: [
     'play_btn',
     'settings_btn',
