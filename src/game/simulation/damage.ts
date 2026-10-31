@@ -11,6 +11,10 @@ export function damageTank(world: World, tank: Tank, amount: number, bullet?: Pr
     if (bullet) {
       tank.shieldHitAngle = angleTo(tank, bullet) - tank.rotation;
       if (tank.shieldHitAge >= 16) tank.shieldHitAge = 0;
+      if (tank.shieldHitClip) {
+        tank.shieldHitClip.angle = tank.shieldHitAngle;
+        if (tank.shieldHitClip.age >= 16) tank.shieldHitClip.age = 0;
+      }
     }
     return;
   }

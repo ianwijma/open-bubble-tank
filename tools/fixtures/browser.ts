@@ -35,6 +35,7 @@ import { showGlowProof } from './glows';
 import { showMockPartsProof } from './mock-parts';
 import { showPartSnapshots } from './part-snapshots';
 import { showMountedArt } from './mounted-art';
+import { showShieldOwnership } from './shield-ownership';
 import { showForcefieldOrder } from './forcefield-order';
 import { showShapeContact } from './shape-contact';
 import { showForcefieldLifecycle } from './forcefield-lifecycle';
@@ -123,6 +124,12 @@ async function reset() {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
     status.dataset.mockBodyMotion = JSON.stringify(await showMockPartMotion(pack, stage, true));
     status.textContent = 'Ready · all20 procedural body parts with source motion';
+    return;
+  }
+  if (fixture.value === 'shield-ownership') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    status.dataset.shieldOwnership = JSON.stringify(await showShieldOwnership(pack, stage));
+    status.textContent = 'Ready · independent shield mounts and callbacks';
     return;
   }
   if (fixture.value === 'forcefield-order') {

@@ -4,6 +4,7 @@ import type { Tank, TankChild } from '../core/types';
 import { partById } from '../data/catalog';
 import { PROTECTION_ART } from '../data/status-art';
 import { protectionScale } from '../core/protection-size';
+import { legacyShieldFilm } from '../core/shield-art';
 import { SwfSymbolView, type RasterTextures } from './swf-symbol-view';
 
 /** AGunShield/_-DO display clips and APassiveForcefield's cloned-tank silhouette mask. */
@@ -11,6 +12,7 @@ export class SwfProtectionView {
   root = new Container();
   private shield?: SwfSymbolView;
   private hit?: SwfSymbolView;
+  private mounted = new Map<TankChild, SwfSymbolView>();
   private field?: SwfSymbolView;
   private fieldMask?: Container;
   private fieldGeneration = -1;
@@ -32,7 +34,27 @@ export class SwfProtectionView {
     view.root.scale.set(scale.x, scale.y);
   }
   update(tank: Tank) {
-    if (tank.shield > 0 || tank.displayChildren.includes('shield-film')) {
+    const attached = new Set<TankChild>(tank.shieldClips.map((clip) => clip.key));
+    for (const [key, view] of this.mounted) {
+      if (attached.has(key)) continue;
+      view.destroy();
+      this.mounted.delete(key);
+    }
+    for (const clip of tank.shieldClips) {
+      let view = this.mounted.get(clip.key);
+      if (!view) {
+        view = this.view(
+          clip.kind === 'film' ? PROTECTION_ART.shield : PROTECTION_ART.shieldHit,
+          clip.diameter,
+        );
+        this.mounted.set(clip.key, view);
+      }
+      view.root.visible = tank.displayChildren.includes(clip.key);
+      view.setParentAlpha(tank.alpha);
+      view.update(clip.kind === 'hit' ? Math.min(16, clip.age + 1) : clip.age + 1);
+      view.root.angle = clip.angle;
+    }
+    if (legacyShieldFilm(tank)) {
       const turret = tank.side !== 'player';
       const diameter = turret
         ? tank.radius * 2
@@ -110,6 +132,7 @@ export class SwfProtectionView {
     const entries: [TankChild, Container][] = [];
     if (this.hit) entries.push(['shield-hit', this.hit.root]);
     if (this.shield) entries.push(['shield-film', this.shield.root]);
+    for (const [key, view] of this.mounted) entries.push([key, view.root]);
     if (this.field) entries.push(['forcefield', this.field.root]);
     if (this.fieldMask) entries.push(['forcefield', this.fieldMask]);
     return entries;
@@ -117,6 +140,7 @@ export class SwfProtectionView {
   destroy() {
     this.shield?.destroy();
     this.hit?.destroy();
+    for (const view of this.mounted.values()) view.destroy();
     this.field?.destroy();
     for (const { view } of this.maskParts) view.destroy();
     this.root.destroy({ children: true });

@@ -4,6 +4,7 @@ import { protectionRadius } from '../core/protection-size';
 import { advanceTankArt } from './tank-art';
 import { detachForcefield } from './forcefield';
 import { removeTankChild } from './tank-display';
+import { killMountedShield } from './shields';
 import { MainEffects } from './main-effects';
 import type {
   CollisionTest,
@@ -487,9 +488,7 @@ export class World {
             return false;
           if (effect.frame < effect.total) return true;
           if (effect.kind === 'shield') {
-            effect.owner.shield = 0;
-            effect.owner.shieldManaged = false;
-            removeTankChild(effect.owner, 'shield-film');
+            killMountedShield(effect.owner, effect.gun);
             return false;
           }
           if (this.screenShake) this.mainEffects.shake(20);
@@ -760,10 +759,7 @@ export class World {
   }
   scheduleShield(owner: Tank, gun: GunState) {
     owner.shieldManaged = true;
-    // Re-triggering a shield replaces its earlier cleanup effect.
-    this.pending = this.pending.filter(
-      (effect) => effect.kind !== 'shield' || effect.owner !== owner,
-    );
+    // Every trigger queues a callback bound to that mount, without cancelling earlier ones.
     this.pending.push({ kind: 'shield', owner, gun, frame: 1, total: 25 });
   }
   scheduleShot(owner: Tank, gun: GunState, frames: number) {

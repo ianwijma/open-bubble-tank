@@ -2,7 +2,7 @@ import { FIELD_RADIUS, STAGE } from '../core/constants';
 import { angleTo, direction, distance, length, rotate } from '../core/math';
 import { triggerMassiveCharge } from '../core/mounted-art';
 import { refreshForcefield } from './forcefield';
-import { addTankChild } from './tank-display';
+import { attachMountedShield } from './shields';
 import type {
   GunState,
   InputFrame,
@@ -172,16 +172,7 @@ export function fireGun(world: World, t: Tank, gun: GunState, input: InputFrame)
   if (!spec) return;
   if (id === 4017 && !triggerSuppressionCycle(gun)) return;
   if (id === 3010) {
-    // Each AGunShield mount caches its live display-child measurement on first trigger.
-    if (gun.shieldDiameter === undefined) {
-      gun.shieldDiameter = world.protectionRadius(t) * 2;
-      t.shieldHitDiameter = gun.shieldDiameter;
-      addTankChild(t, 'shield-hit');
-    }
-    t.shieldDiameter = gun.shieldDiameter;
-    t.shield = 25;
-    t.shieldAge = 0;
-    addTankChild(t, 'shield-film');
+    attachMountedShield(t, gun, () => world.protectionRadius(t) * 2);
     world.scheduleShield(t, gun);
     gun.counter = spec.rate;
     return;

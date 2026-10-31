@@ -9,6 +9,7 @@ import { SwfProtectionView } from '../../src/game/render/swf-protection-view';
 import { SwfTextures } from '../../src/game/render/swf-textures';
 import { createTank } from '../../src/game/simulation/tank';
 import { World, emptyInput } from '../../src/game/simulation/world';
+import { killMountedShield } from '../../src/game/simulation/shields';
 
 /** Production tank/protection views, retained bounds and clocks through a paused World. */
 export async function showTankArtProof(pack: AssetPack, host: HTMLElement) {
@@ -71,12 +72,22 @@ export async function showTankArtProof(pack: AssetPack, host: HTMLElement) {
       const view = new SwfProtectionView(pack, textures);
       app.stage.addChild(view.root);
       dispose.push(() => view.destroy());
-      return { root: view.root, update: () => view.update(tank) };
+      return {
+        root: view.root,
+        update: () => view.update(tank),
+        filmScale: () =>
+          view.displayEntries().find(([key]) => key.startsWith('shield-film:'))?.[1].scale.x,
+      };
     }
     const view = tankView(tank);
     return {
-      root: view.container.children[tank.design.parts.length] as Container,
-      update: () => view.update(tank),
+      root: view.container,
+      update: () => {
+        view.update(tank);
+        for (const child of view.container.children)
+          if (child.label?.startsWith('part:')) child.visible = false;
+      },
+      filmScale: () => null,
     };
   };
   const capture = (label: string, root: Container) => {
@@ -126,6 +137,7 @@ export async function showTankArtProof(pack: AssetPack, host: HTMLElement) {
     const shield = make([1003, 3010]);
     world.fireGun(shield, shield.guns[0], emptyInput());
     shield.shieldHitAge = 0;
+    shield.shieldHitClip!.age = 0;
     const shieldView = protectionView(shield);
     shieldView.update();
     capture('Shield · cached display-child size', shieldView.root);
@@ -133,8 +145,8 @@ export async function showTankArtProof(pack: AssetPack, host: HTMLElement) {
       pack.mode === 'swf'
         ? shield.shieldDiameter! / pack.symbolScriptBounds(PROTECTION_ART.shield)!.width
         : null;
-    const actualScale = pack.mode === 'swf' ? shieldView.root.children[0].scale.x : null;
-    shield.shield = 0;
+    const actualScale = shieldView.filmScale();
+    killMountedShield(shield, shield.guns[0]);
     pause(3);
     shieldView.update();
     const remainingHitInk = capture('Immunity ended · hit clip remains', shieldView.root);
@@ -167,7 +179,7 @@ export async function showTankArtProof(pack: AssetPack, host: HTMLElement) {
       world.fireGun(centered, centered.guns[0], emptyInput());
       const centeredView = protectionView(centered);
       centeredView.update();
-      centeredScale = centeredView.root.children[0].scale.x;
+      centeredScale = centeredView.filmScale() ?? null;
     }
     let galleryHash = 2166136261;
     for (const byte of ctx.getImageData(0, 0, 550, 450).data)
