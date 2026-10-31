@@ -1,3 +1,4 @@
+import { showMainMenuFlow } from './main-menu';
 import { showHotkeyInput } from './hotkey-input';
 import { FieldVisit } from '../../src/game/core/field-visit';
 import { AssetPack } from '../../src/game/assets/asset-pack';
@@ -122,6 +123,12 @@ async function reset() {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
     unmountScreen = showHotkeyInput(stage);
     status.textContent = 'Ready · production keyboard input and profile validation';
+    return;
+  }
+  if (fixture.value === 'main-menu') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    unmountScreen = showMainMenuFlow(pack, stage);
+    status.textContent = 'Ready · manually clocked production main-menu flow';
     return;
   }
   if (fixture.value === 'pause-flow') {

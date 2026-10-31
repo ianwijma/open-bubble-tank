@@ -361,6 +361,7 @@ export class AssetPack {
         for (const p of pack.sprites.get(id)?.placements ?? []) if (p.charId) visit(p.charId);
       };
       for (const p of PARTS) visit(p.symbol);
+      for (const id of [487, 545, 492, 494, 496, 498, 500, 502]) visit(id);
       for (const art of Object.values(projectileArt)) visit(art.symbol);
       for (const art of Object.values(effectArt)) visit(art.symbol);
       for (const art of Object.values(screenEffectArt)) visit(art.symbol);
@@ -383,10 +384,10 @@ export class AssetPack {
           await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
       }
       for (const id of [
-        545, 1537, 1672, 1721, 1717, 492, 494, 498, 500, 496, 1816, 1817, 1820, 1535, 1536, 2034,
-        1626, 1628, 1630, 1633,
+        1537, 1672, 1721, 1717, 492, 494, 498, 500, 496, 1816, 1817, 1820, 1535, 1536, 2034, 1626,
+        1628, 1630, 1633,
       ]) {
-        const raster = await pack.rasterSymbol(id, id === 545 ? 179 : 1);
+        const raster = await pack.rasterSymbol(id, 1);
         if (raster) pack.extras.set(id, raster);
       }
       const settingsArtwork = Object.values(SETTINGS_SCREEN)

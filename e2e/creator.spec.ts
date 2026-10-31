@@ -48,18 +48,23 @@ for (const assets of ['mock', 'SWF'])
     });
     await page.getByRole('button', { name: 'Edit', exact: true }).click();
     const canvas = page.locator('.creator-workspace canvas');
-    const bounds = (await canvas.boundingBox())!;
-    const at = (x: number, y: number) => ({
-      x: bounds.x + ((x + 175) * bounds.width) / 350,
-      y: bounds.y + ((y + 175) * bounds.height) / 350,
-    });
+    // Exact drag coordinates need an unscaled workspace; fitted pointer events lose precision.
+    await page.getByRole('button', { name: 'Original game size', exact: true }).click();
+    await expect.poll(async () => (await canvas.boundingBox())?.width).toBe(350);
+    const at = async (x: number, y: number) => {
+      const bounds = (await canvas.boundingBox())!;
+      return {
+        x: bounds.x + ((x + 175) * bounds.width) / 350,
+        y: bounds.y + ((y + 175) * bounds.height) / 350,
+      };
+    };
     const click = async (x: number, y: number) => {
-      const p = at(x, y);
+      const p = await at(x, y);
       await page.mouse.click(p.x, p.y);
     };
     const drag = async (x: number, y: number, dx: number, dy: number) => {
-      const from = at(x, y),
-        to = at(x + dx, y + dy);
+      const from = await at(x, y),
+        to = await at(x + dx, y + dy);
       await page.mouse.move(from.x, from.y);
       await page.mouse.down();
       await page.mouse.move(to.x, to.y, { steps: 8 });
@@ -114,9 +119,9 @@ for (const assets of ['mock', 'SWF'])
     const inspector = page.locator('details.creator-inspector');
     if ((await inspector.getAttribute('open')) !== null) await inspector.locator('summary').click();
     await click(-30, -45);
-    const from = at(-30, -45),
-      axis = at(-30, 0),
-      merge = at(-29, 0);
+    const from = await at(-30, -45),
+      axis = await at(-30, 0),
+      merge = await at(-29, 0);
     await page.mouse.move(from.x, from.y);
     await page.mouse.down();
     await page.mouse.move(axis.x, axis.y, { steps: 8 });
@@ -143,7 +148,7 @@ for (const assets of ['mock', 'SWF'])
     await click(-29, 0);
     await page.mouse.move(merge.x, merge.y);
     await page.mouse.down();
-    const canceled = at(-29, 20);
+    const canceled = await at(-29, 20);
     await page.mouse.move(canceled.x, canceled.y, { steps: 8 });
     await canvas.dispatchEvent('pointercancel', { pointerId: 1 });
     await page.mouse.up();
