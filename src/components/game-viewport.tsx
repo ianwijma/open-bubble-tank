@@ -71,10 +71,10 @@ export function GameViewport({
           },
           () => world.stopPrimaryFire(),
         );
-        world.hitTest = pack.hitTest;
+        world.hitTest = (t, x, y) => pack.hitTest(t, x, y, settingsRef.current.zoom);
         world.protectionRadius = pack.protectionRadius;
-        world.hitPart = pack.hitPart;
-        world.hitProjectile = pack.hitProjectile;
+        world.hitPart = (t, p, x, y) => pack.hitPart(t, p, x, y, settingsRef.current.zoom);
+        world.hitProjectile = (b, x, y) => pack.hitProjectile(b, x, y, settingsRef.current.zoom);
         world.projectileBounds = (b) =>
           pack.projectileBounds(
             b,

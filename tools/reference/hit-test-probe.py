@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Emit a project-authored AVM2 shape-hit probe (no game code or artwork).
 Usage: python3 tools/reference/hit-test-probe.py /tmp/bt3-hit-test-probe.swf
+Add --thin-strokes to include scale-dependent stroke-width cases.
 Load the output in `bun run reference`. Ruffle evidence is not Adobe execution.
 """
 import struct, hashlib, sys
@@ -15,16 +16,23 @@ def u(n):
     return bytes(b + [n])
 
 
+thin_strokes = '--thin-strokes' in sys.argv
+
 strings = ['', 'Probe', 'flash.display', 'Sprite', 'trace', 'graphics', 'beginFill',
            'drawRect', 'endFill', 'addChild', 'hitTestPoint', 'visible', 'alpha',
            'mask', 'removeChild', 'clear', 'lineStyle', 'x', 'y']
 labels = ['opaque root', 'opaque child', 'hidden root', 'hidden child', 'alpha0 root',
           'alpha0 child', 'fillAlpha0 root', 'strokeAlpha0 outside', 'masked inside',
           'masked outside', 'mask excluded', 'removed child', 'removed root', 'probe complete']
+if thin_strokes:
+    strings += ['scaleX', 'scaleY']
+    labels[-1:-1] = ['thin full hit', 'thin full miss', 'thin half hit', 'thin half bounds', 'thin half miss']
 strings += labels
 si = {s: i for i, s in enumerate(strings)}
 names = ['Probe', 'Sprite', 'trace', 'graphics', 'beginFill', 'drawRect', 'endFill',
          'addChild', 'hitTestPoint', 'visible', 'alpha', 'mask', 'removeChild', 'clear', 'lineStyle', 'x', 'y']
+if thin_strokes:
+    names += ['scaleX', 'scaleY']
 q = {n: i + 1 for i, n in enumerate(names)}
 cp = u(1) + u(1) + u(1) + u(len(strings)) + b''.join(u(len(s.encode())) + s.encode() for s in strings[1:])
 cp += u(3) + bytes([0x16]) + u(0) + bytes([0x16]) + u(si['flash.display']) + u(1)
@@ -32,7 +40,14 @@ cp += u(len(names) + 1) + b''.join(bytes([7]) + u(2 if n == 'Sprite' else 1) + u
 
 
 def op(n, *args): return bytes([n]) + b''.join(u(a) for a in args)
-def num(n): return op(0x24, n)
+def num(n):
+    if isinstance(n, float):
+        from fractions import Fraction
+        fraction = Fraction(str(n))
+        return num(fraction.numerator) + num(fraction.denominator) + bytes([0xa3])
+    if not 0 <= n <= 127:
+        raise ValueError(n)
+    return op(0x24, n)
 def get(n): return bytes([0xd0 + n])
 def prop(n): return op(0x66, q[n])
 def call(n, c): return op(0x4f, q[n], c)
@@ -60,6 +75,14 @@ code += get(1) + prop('graphics') + call('clear', 0) + get(1) + prop('graphics')
 code += get(1) + prop('graphics') + call('clear', 0) + draw(1, 20, 20, 40, 40) + sprite(2) + draw(2, 20, 20, 10, 40) + get(0) + get(2) + call('addChild', 1) + get(1) + get(2) + setp('mask')
 code += test('masked inside', 0, 25, 40) + test('masked outside', 0, 45, 40)
 code += get(0) + get(1) + call('removeChild', 1) + test('mask excluded', 0, 25, 40) + test('removed child', 1) + test('removed root', 0)
+if thin_strokes:
+    code += get(0) + get(2) + call('removeChild', 1) + sprite(1)
+    code += get(1) + prop('graphics') + num(0.25) + num(0) + num(0) + call('lineStyle', 3)
+    code += get(1) + prop('graphics') + b''.join(num(n) for n in [20, 20, 40, 40]) + call('drawRect', 4)
+    code += get(0) + get(1) + call('addChild', 1)
+    code += test('thin full hit', 1, 20.25, 40) + test('thin full miss', 1, 20.75, 40)
+    code += get(1) + num(0.5) + setp('scaleX') + get(1) + num(0.5) + setp('scaleY')
+    code += test('thin half hit', 1, 10.375, 20) + test('thin half bounds', 1, 9.875, 20) + test('thin half miss', 1, 10.625, 20)
 code += op(0x5d, q['trace']) + op(0x2c, si['probe complete']) + call('trace', 1) + bytes([0x47])
 
 # One Sprite document class; constructor, class initializer, script initializer.
@@ -87,6 +110,7 @@ def tag(t, p=b''):
 
 payload = rect + bytes([0, 50]) + struct.pack('<H', 1) + tag(69, struct.pack('<I', 8)) + tag(82, struct.pack('<I', 0) + b'probe\0' + abc) + tag(76, struct.pack('<HH', 1, 0) + b'Probe\0') + tag(1) + tag(0)
 swf = b'FWS' + bytes([10]) + struct.pack('<I', 8 + len(payload)) + payload
-path = sys.argv[1] if len(sys.argv) > 1 else '/tmp/bt3-hit-test-probe.swf'
+paths = [arg for arg in sys.argv[1:] if arg != '--thin-strokes']
+path = paths[0] if paths else '/tmp/bt3-hit-test-probe.swf'
 Path(path).write_bytes(swf)
 print(path, len(swf), hashlib.sha256(swf).hexdigest())

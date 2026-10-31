@@ -30,6 +30,12 @@ import mineArt from '../data/mine-art.json';
 import { buildDisplayList } from './display-list';
 import { mockPart, mockPartLeaf, mockPartLeafHit } from './mock-part';
 import { ShapeContact } from './shape-contact';
+import {
+  CONTACT_IDENTITY,
+  contactTransform,
+  descendContact,
+  type ContactMatrix,
+} from './contact-transform';
 import mockPartTimelines from '../data/mock-part-timelines.json';
 import { mockProjectileHit } from './mock-projectile';
 import { authoredProjectileBounds } from './projectile-geometry';
@@ -796,7 +802,13 @@ export class AssetPack {
     state.clip.advance(age);
     return state.clip;
   }
-  private leafContact(id: number, x: number, y: number, ratio = 0): boolean | undefined {
+  private leafContact(
+    id: number,
+    x: number,
+    y: number,
+    ratio: number,
+    inverse: ContactMatrix,
+  ): boolean | undefined {
     if (this.mode === 'mock') {
       const hit = mockPartLeafHit(id, x, y);
       if (hit !== undefined) return hit;
@@ -816,10 +828,16 @@ export class AssetPack {
         this.shapeContacts.delete(this.shapeContacts.keys().next().value!);
     }
     this.contactContext ??= document.createElement('canvas').getContext('2d')!;
-    return contact.hit(this.contactContext, x, y);
+    return contact.hit(this.contactContext, x, y, inverse);
   }
-  hitClip(clip: SwfClip, x: number, y: number, ratio = 0): boolean {
-    const geometric = this.leafContact(clip.id, x, y, ratio);
+  hitClip(
+    clip: SwfClip,
+    x: number,
+    y: number,
+    ratio = 0,
+    inverse: ContactMatrix = CONTACT_IDENTITY,
+  ): boolean {
+    const geometric = this.leafContact(clip.id, x, y, ratio, inverse);
     if (geometric !== undefined) return geometric;
     if (this.morphs.has(clip.id)) return alphaHit(this.morphRaster(clip.id, ratio)!, x, y);
     const leaf = this.leaves.get(clip.id);
@@ -828,8 +846,9 @@ export class AssetPack {
       const child = clip.children.get(p.depth)?.clip;
       if (!child) return false;
       const m = p.matrix,
-        det = m.a * m.d - m.b * m.c;
-      if (Math.abs(det) < 1e-9) return false;
+        det = m.a * m.d - m.b * m.c,
+        childInverse = descendContact(inverse, m);
+      if (!childInverse) return false;
       const dx = x - m.tx / 20,
         dy = y - m.ty / 20;
       return this.hitClip(
@@ -837,6 +856,7 @@ export class AssetPack {
         (m.d * dx - m.c * dy) / det,
         (-m.b * dx + m.a * dy) / det,
         p.ratio ?? 0,
+        childInverse,
       );
     };
     const masks: DisplayPlacement[] = [];
@@ -859,17 +879,19 @@ export class AssetPack {
     depth = 0,
     beamLength?: number,
     ratio = 0,
+    inverse: ContactMatrix = CONTACT_IDENTITY,
   ): boolean {
     if (depth > 24) return false;
-    const geometric = this.leafContact(id, x, y, ratio);
+    const geometric = this.leafContact(id, x, y, ratio, inverse);
     if (geometric !== undefined) return geometric;
     if (this.morphs.has(id)) return alphaHit(this.morphRaster(id, ratio)!, x, y);
     const leaf = this.leaves.get(id);
     if (leaf) return alphaHit(leaf, x, y);
     const hitPlacement = (p: DisplayPlacement, matrix = p.matrix) => {
       const m = matrix,
-        det = m.a * m.d - m.b * m.c;
-      if (Math.abs(det) < 1e-9) return false;
+        det = m.a * m.d - m.b * m.c,
+        childInverse = descendContact(inverse, m);
+      if (!childInverse) return false;
       const dx = x - m.tx / 20,
         dy = y - m.ty / 20;
       return this.symbolHit(
@@ -880,6 +902,7 @@ export class AssetPack {
         depth + 1,
         undefined,
         p.ratio ?? 0,
+        childInverse,
       );
     };
     const masks: DisplayPlacement[] = [];
@@ -934,19 +957,23 @@ export class AssetPack {
   hasSymbol(id: number) {
     return this.sprites.has(id) || this.shapes.has(id);
   }
-  hitTest = (t: Tank, x: number, y: number) => {
+  hitTest = (t: Tank, x: number, y: number, stageScale = 1) => {
+    const inverse = descendContact(CONTACT_IDENTITY, contactTransform(t.rotation, stageScale));
+    if (!inverse) return false;
     for (const p of t.design.parts) {
-      if (this.hitPart(t, p, x, y)) return true;
+      if (this.hitPart(t, p, x, y, stageScale)) return true;
     }
     const local = rotate({ x: x - t.x, y: y - t.y }, -t.rotation);
-    return this.hitAttachments(t, local.x, local.y);
+    return this.hitAttachments(t, local.x, local.y, inverse);
   };
-  private hitAttachments(tank: Tank, x: number, y: number) {
+  private hitAttachments(tank: Tank, x: number, y: number, inverse: ContactMatrix) {
     const scaled = (id: number, age: number, angle: number, diameter: number, uniform = false) => {
       const point = rotate({ x, y }, -angle);
       const scale = protectionScale(this.symbolScriptBounds(id), diameter, uniform);
+      const childInverse = descendContact(inverse, contactTransform(angle, scale.x, scale.y));
       return (
-        !!scale.x && !!scale.y && this.symbolHit(id, age, point.x / scale.x, point.y / scale.y)
+        !!childInverse &&
+        this.symbolHit(id, age, point.x / scale.x, point.y / scale.y, 0, undefined, 0, childInverse)
       );
     };
     const film = tank.shield > 0 || tank.displayChildren.includes('shield-film');
@@ -962,13 +989,31 @@ export class AssetPack {
         for (const mark of decoration.marks) {
           const point = rotate({ x: x - mark.x, y: y - mark.y }, -mark.angle);
           const age = decoration.kind === 'stun' ? mark.frame + decoration.artAge : mark.frame;
-          if (this.symbolHit(STATUS_ART[decoration.kind], age, point.x, point.y)) return true;
+          const childInverse = descendContact(inverse, contactTransform(mark.angle));
+          if (
+            childInverse &&
+            this.symbolHit(
+              STATUS_ART[decoration.kind],
+              age,
+              point.x,
+              point.y,
+              0,
+              undefined,
+              0,
+              childInverse,
+            )
+          )
+            return true;
         }
       }
       if (tank.status.infect > 0) {
         const point = rotate({ x, y }, -tank.infectionAngle),
           scale = (tank.radius * 1.5) / 36;
-        if (scale && this.hitClip(this.infectionClip(tank), point.x / scale, point.y / scale))
+        const childInverse = descendContact(inverse, contactTransform(tank.infectionAngle, scale));
+        if (
+          childInverse &&
+          this.hitClip(this.infectionClip(tank), point.x / scale, point.y / scale, 0, childInverse)
+        )
           return true;
       }
       const turret = tank.side !== 'player';
@@ -1000,7 +1045,11 @@ export class AssetPack {
           { x: (x - part.x) / part.scale, y: (y - part.y) / part.scale },
           -part.rotation,
         );
-        return this.hitClip(this.forcefieldPartClip(tank, part), point.x, point.y);
+        const childInverse = descendContact(inverse, contactTransform(part.rotation, part.scale));
+        return (
+          !!childInverse &&
+          this.hitClip(this.forcefieldPartClip(tank, part), point.x, point.y, 0, childInverse)
+        );
       });
       if (maskHit) {
         const diameter = this.forcefieldRadius(tank) * 2.1;
@@ -1020,18 +1069,20 @@ export class AssetPack {
   hitDesignPart(p: TankPart, x: number, y: number, age?: number) {
     const local = rotate({ x: (x - p.x) / p.scale, y: (y - p.y) / p.scale }, -p.rotation);
     const symbol = partById(p.type)?.symbol;
-    if (this.mode === 'swf' && age !== undefined && symbol)
-      return this.symbolHit(symbol, age, local.x, local.y);
+    if (this.mode === 'swf' && age !== undefined && symbol) {
+      const inverse = descendContact(CONTACT_IDENTITY, contactTransform(p.rotation, p.scale));
+      return !!inverse && this.symbolHit(symbol, age, local.x, local.y, 0, undefined, 0, inverse);
+    }
     return alphaHit(this.part(p.type, 0, p.y), local.x, local.y);
   }
-  hitProjectile = (b: Projectile, x: number, y: number) => {
+  hitProjectile = (b: Projectile, x: number, y: number, stageScale = 1) => {
     if (this.mode !== 'swf' || !this.hasSymbol(b.symbol)) return mockProjectileHit(b, x, y);
     const scale = b.artScale ?? 1;
-    const local = rotate(
-      { x: (x - b.x) / scale, y: (y - b.y) / scale },
-      -(b.kind === 'grow' ? b.heading : b.angle),
-    );
-    if (b.artPose?.id === b.symbol) return this.hitClip(b.artPose, local.x, local.y);
+    const angle = b.kind === 'grow' ? b.heading : b.angle;
+    const inverse = descendContact(CONTACT_IDENTITY, contactTransform(angle, scale * stageScale));
+    if (!inverse) return false;
+    const local = rotate({ x: (x - b.x) / scale, y: (y - b.y) / scale }, -angle);
+    if (b.artPose?.id === b.symbol) return this.hitClip(b.artPose, local.x, local.y, 0, inverse);
     return this.symbolHit(
       b.symbol,
       b.artFrame ?? b.age + 1,
@@ -1039,6 +1090,8 @@ export class AssetPack {
       local.y,
       0,
       b.kind === 'beam' || b.kind === 'healBeam' ? (b.beamLength ?? 0) : undefined,
+      0,
+      inverse,
     );
   };
   projectileWidth = (b: Projectile) => {
@@ -1054,17 +1107,22 @@ export class AssetPack {
       return { x: b.x, y: b.y, width: 0, height: 0, empty: true };
     return authoredProjectileBounds(b, owner) ?? mockProjectileBounds(b);
   };
-  hitPart = (t: Tank, p: TankPart, x: number, y: number) => {
+  hitPart = (t: Tank, p: TankPart, x: number, y: number, stageScale = 1) => {
     if (t.removedParts.has(p.key)) return false;
     const pt = rotate({ x: x - t.x, y: y - t.y }, -t.rotation);
     const gun = t.guns.find((g) => g.part.key === p.key);
+    const tankInverse = descendContact(CONTACT_IDENTITY, contactTransform(t.rotation, stageScale));
+    const inverse =
+      tankInverse &&
+      descendContact(tankInverse, contactTransform(gun?.angle ?? p.rotation, p.scale));
+    if (!inverse) return false;
     const local = rotate(
       { x: (pt.x - p.x) / p.scale, y: (pt.y - p.y) / p.scale },
       -(gun?.angle ?? p.rotation),
     );
     if (this.mode === 'swf' || this.hasPartTimeline(p.type)) {
       const symbol = partById(p.type)?.symbol;
-      if (symbol) return this.hitClip(this.partClip(t, p), local.x, local.y);
+      if (symbol) return this.hitClip(this.partClip(t, p), local.x, local.y, 0, inverse);
     }
     return alphaHit(this.livePart(t, p), local.x, local.y);
   };

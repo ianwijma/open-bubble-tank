@@ -29,6 +29,32 @@ for (const native of [false, true])
       maskOnly: false,
       removed: false,
     });
+    expect(proof.primitives.strokes).toEqual({
+      fullHit: true,
+      fullMiss: false,
+      halfHit: true,
+      halfBounds: false,
+      halfMiss: false,
+      enlargedHit: true,
+      enlargedMiss: false,
+      nestedHit: true,
+      nestedMiss: false,
+      reflectedHit: true,
+      singular: false,
+      roundCap: true,
+      outsideRoundCap: false,
+    });
+    expect(proof.primitives.providers).toEqual({
+      partHit: true,
+      partMiss: false,
+      zoomHit: true,
+      zoomMiss: false,
+      designHit: true,
+      projectileHit: true,
+      projectileMiss: false,
+      retainedProjectileHit: true,
+      retainedProjectileMiss: false,
+    });
     expect(proof.primitives.transparentInk).toBe(0);
     expect(proof.primitives.cacheSize).toBe(256);
     expect(proof.primitives.releasedCache).toBe(0);
