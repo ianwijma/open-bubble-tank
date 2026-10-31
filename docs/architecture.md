@@ -185,3 +185,6 @@ The procedural import now includes body timelines and fitted body leaves. Mock b
 
 
 `services/menu-pointer.ts` owns client-to-550×450 coordinates, current physical/keyboard hover, captured left mouse-up dispatch and listener cleanup. Each draw refreshes picking after retained poses change, so stationary pointers can acquire newly revealed art. Native draws update again after hover commands before rendering. React retains accessible focus and detail-zero keyboard clicks; callbacks and overlay guards update in the layout phase without rebuilding the renderer. Registered release targets clear the caption before the busy gate; title blockers have no release handler.
+
+
+`assets/button-display-list.ts` converts parsed SimpleButton state records into ordinary depth-sorted static placements. The parser retains matrices, color and supported filter metadata; hit-only geometry stays separate from up/over/down painting. This module does not execute button actions or own browser input. Creator views consume it in a following slice.
