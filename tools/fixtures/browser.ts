@@ -33,6 +33,7 @@ import { showMainEffects } from './main-effects';
 import { showCollapseProof } from './collapse';
 import { showGlowProof } from './glows';
 import { showMockPartsProof } from './mock-parts';
+import { showPartSnapshots } from './part-snapshots';
 
 const file = document.querySelector<HTMLInputElement>('#swf')!;
 const fixture = document.querySelector<HTMLSelectElement>('#fixture')!;
@@ -107,6 +108,12 @@ async function reset() {
   world = undefined;
   stage.replaceChildren();
   stage.style.height = '';
+  if (fixture.value === 'part-snapshots') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    status.dataset.partSnapshots = JSON.stringify(await showPartSnapshots(pack, stage));
+    status.textContent = 'Ready · independent frozen part poses and body-only class counting';
+    return;
+  }
   if (fixture.value === 'mock-parts') {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
     status.dataset.mockParts = JSON.stringify(await showMockPartsProof(pack, stage));

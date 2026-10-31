@@ -2,7 +2,7 @@ import { AssetPack, type Raster } from '../../src/game/assets/asset-pack';
 import { mockPartLayout } from '../../src/game/assets/mock-part';
 import { PARTS, STARTER } from '../../src/game/data/catalog';
 
-/** All catalog silhouettes, at the same scale/registration as supplied-SWF thumbnails. */
+/** All catalog silhouettes, compared with the same authored frame/scale/registration. */
 export async function showMockPartsProof(source: AssetPack, host: HTMLElement) {
   const mock = await AssetPack.mock();
   const parts = PARTS.filter((p) => p.id >= 2000);
@@ -29,7 +29,7 @@ export async function showMockPartsProof(source: AssetPack, host: HTMLElement) {
     parts.map(async (part, index) => {
       const layout = mockPartLayout(part.id)!;
       const original =
-          source.mode === 'swf' && layout.frame !== 2
+          source.mode === 'swf'
             ? (await source.rasterSymbol(part.symbol, layout.frame))!
             : source.part(part.id),
         procedural = mock.part(part.id);
