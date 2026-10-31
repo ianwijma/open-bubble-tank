@@ -71,6 +71,8 @@ export interface GunState {
   beamId?: number;
   shieldDiameter?: number;
   mineRefs?: MineReference[];
+  /** Latest non-overlapping mounted MovieClip.play episode, in stage-art ages. */
+  mountedPlay?: { child: string; age: number; frames: number };
 }
 export interface Tank extends Vec {
   /** The source caches strTankCode at birth, independently of mutable live data. */

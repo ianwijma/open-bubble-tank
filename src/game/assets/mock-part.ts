@@ -1,10 +1,12 @@
 import layouts from '../data/part-geometry.json';
+import chargeLayouts from '../data/massive-charge-geometry.json';
 import type { Bounds, Raster, SwfMatrix } from './asset-pack';
 
 const PALETTE = {
   primary: { light: '#ffeda6', middle: '#d2a800', spot: '#fbc900', rim: '#ffffff' },
   enemy: { light: '#ffe1ad', middle: '#dc922c', spot: '#ffc367', rim: '#fff5de' },
   accent: { light: '#ffd9b3', middle: '#d15503', spot: '#f78311', rim: '#ffffff' },
+  charge: { light: '#dda2b4', middle: '#ff6699', spot: '#9c3857', rim: '#ffffff' },
 };
 interface MockPartLayout {
   symbol: number;
@@ -24,14 +26,37 @@ interface MockPartLayout {
   }[];
 }
 /** Frozen authored layout facts, separate from procedural paint and simulation. */
-export function mockPartLayout(id: number): MockPartLayout | undefined {
-  return (layouts as Record<number, MockPartLayout>)[id === 2013 ? 5003 : id];
+export function mockPartLayout(id: number, chargeFrame = 1): MockPartLayout | undefined {
+  const idle = (layouts as Record<number, MockPartLayout>)[id === 2013 ? 5003 : id];
+  if (id !== 3008 || chargeFrame <= 1) return idle;
+  const charge = chargeLayouts[Math.min(25, chargeFrame - 2)] as MockPartLayout;
+  //720's frame27 removes every particle before wrapping to stopped frame1.
+  if (!charge.bubbles.length) return idle;
+  const x = Math.min(idle.bounds.x, charge.bounds.x),
+    y = Math.min(idle.bounds.y, charge.bounds.y);
+  return {
+    ...idle,
+    bounds: {
+      x,
+      y,
+      width: Math.max(idle.bounds.x + idle.bounds.width, charge.bounds.x + charge.bounds.width) - x,
+      height:
+        Math.max(idle.bounds.y + idle.bounds.height, charge.bounds.y + charge.bounds.height) - y,
+    },
+    bubbles: [...idle.bubbles, ...charge.bubbles],
+  };
 }
 
 function paintWeapon(ctx: CanvasRenderingContext2D, layout: MockPartLayout, enemy: boolean) {
   for (const bubble of layout.bubbles) {
     const { matrix: m, x, y, rx, ry, tint, alpha } = bubble;
-    const palette = bubble.accent ? PALETTE.accent : enemy ? PALETTE.enemy : PALETTE.primary;
+    const palette = [718, 719].includes(bubble.leaf)
+      ? PALETTE.charge
+      : bubble.accent
+        ? PALETTE.accent
+        : enemy
+          ? PALETTE.enemy
+          : PALETTE.primary;
     const color = (hex: string) => {
       const n = Number.parseInt(hex.slice(1), 16);
       return `rgb(${[n >> 16, (n >> 8) & 255, n & 255].map((c) => Math.max(0, Math.min(255, c * tint[0] + tint[1]))).join(',')})`;
@@ -64,9 +89,9 @@ function paintWeapon(ctx: CanvasRenderingContext2D, layout: MockPartLayout, enem
 }
 
 /** Procedural fallback only; original SWF artwork continues through AssetPack unchanged. */
-export function mockPart(id: number): Raster {
+export function mockPart(id: number, chargeFrame = 1): Raster {
   const body = id < 2000;
-  const layout = body ? undefined : (mockPartLayout(id) ?? mockPartLayout(2001));
+  const layout = body ? undefined : (mockPartLayout(id, chargeFrame) ?? mockPartLayout(2001));
   const base = [7, 12.6, 22.5, 28.75, 39][(id % 10) - 1] ?? 18;
   const radius = body && id >= 1500 ? 32 : base,
     bounds = layout

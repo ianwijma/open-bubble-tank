@@ -1,5 +1,6 @@
 import { FIELD_RADIUS, STAGE } from '../core/constants';
 import { angleTo, direction, distance, length, rotate } from '../core/math';
+import { triggerMassiveCharge } from '../core/mounted-art';
 import type {
   GunState,
   InputFrame,
@@ -178,8 +179,9 @@ export function fireGun(world: World, t: Tank, gun: GunState, input: InputFrame)
     return;
   }
   if (id === 3008) {
-    gun.counter = spec.rate;
+    triggerMassiveCharge(gun, t.artAge);
     world.scheduleShot(t, gun, 26);
+    gun.counter = spec.rate;
     return;
   }
   if (id === 3011 || id === 3012) {

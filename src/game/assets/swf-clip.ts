@@ -56,6 +56,9 @@ export class SwfClip {
     this.timeline.goto(frame, true, y);
     this.sync();
   }
+  play() {
+    this.timeline?.play();
+  }
   gotoAndStop(frame: number, y = 0) {
     if (!this.timeline) return;
     this.timeline.goto(frame, false, y);
