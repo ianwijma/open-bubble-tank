@@ -1,0 +1,142 @@
+{
+  "runtime": "Ruffle 0.7.1 / Chromium",
+  "limitation": "Root mouse-event observer on an original-game copy; not Adobe Flash execution.",
+  "originalInputSha256": "f5827841c682f988f23dcf470ab4ab59c1ffc497acb4ca0f21077d03f942c153",
+  "probeSha256": "cadbdfa5e02efe4c4fc74a5ab8548055691bbd17b06379a4438919161f585ca3",
+  "settleMilliseconds": 3000,
+  "hoverMilliseconds": 250,
+  "observations": [
+    {
+      "label": "empty",
+      "x": 400,
+      "y": 410,
+      "trace": "POINTER_PROBE mouseOver instance3397 root1",
+      "target": {
+        "name": "instance3397",
+        "parent": "root1"
+      }
+    },
+    {
+      "label": "plus-icon-only",
+      "x": 181,
+      "y": 225,
+      "trace": "POINTER_PROBE mouseOut instance3397 root1\nPOINTER_PROBE mouseOver partsPacks_btn instance3442",
+      "target": {
+        "name": "partsPacks_btn",
+        "parent": "instance3442"
+      }
+    },
+    {
+      "label": "plus-inner",
+      "x": 166,
+      "y": 244,
+      "trace": "POINTER_PROBE mouseOut partsPacks_btn instance3442\nPOINTER_PROBE mouseOver inner partsPacks_btn",
+      "target": {
+        "name": "inner",
+        "parent": "partsPacks_btn"
+      }
+    },
+    {
+      "label": "plus-grown-edge",
+      "x": 144.5,
+      "y": 244,
+      "trace": "",
+      "target": {
+        "name": "inner",
+        "parent": "partsPacks_btn"
+      }
+    },
+    {
+      "label": "reset",
+      "x": 400,
+      "y": 410,
+      "trace": "POINTER_PROBE mouseOut inner partsPacks_btn\nPOINTER_PROBE mouseOver instance3397 root1",
+      "target": {
+        "name": "instance3397",
+        "parent": "root1"
+      }
+    },
+    {
+      "label": "plus-idle-edge",
+      "x": 144.5,
+      "y": 244,
+      "trace": "",
+      "target": {
+        "name": "instance3397",
+        "parent": "root1"
+      }
+    },
+    {
+      "label": "plus-bounds-corner",
+      "x": 146.5,
+      "y": 229.5,
+      "trace": "",
+      "target": {
+        "name": "instance3397",
+        "parent": "root1"
+      }
+    },
+    {
+      "label": "play-inner",
+      "x": 275,
+      "y": 225,
+      "trace": "POINTER_PROBE mouseOut instance3397 root1\nPOINTER_PROBE mouseOver inner play_btn",
+      "target": {
+        "name": "inner",
+        "parent": "play_btn"
+      }
+    },
+    {
+      "label": "play-grown-edge",
+      "x": 202,
+      "y": 226,
+      "trace": "",
+      "target": {
+        "name": "inner",
+        "parent": "play_btn"
+      }
+    },
+    {
+      "label": "reset-play",
+      "x": 400,
+      "y": 410,
+      "trace": "POINTER_PROBE mouseOut inner play_btn\nPOINTER_PROBE mouseOver instance3397 root1",
+      "target": {
+        "name": "instance3397",
+        "parent": "root1"
+      }
+    },
+    {
+      "label": "play-idle-edge",
+      "x": 202,
+      "y": 226,
+      "trace": "",
+      "target": {
+        "name": "instance3397",
+        "parent": "root1"
+      }
+    },
+    {
+      "label": "plus-icon-release",
+      "x": 181,
+      "y": 225,
+      "trace": "B10000001\nPOINTER_PROBE mouseOver instance3377 root1\nPOINTER_PROBE mouseOver next_mc instance3380\nPOINTER_PROBE mouseUp next_mc instance3380\nPOINTER_PROBE mouseUp next_mc instance3380\nPOINTER_PROBE mouseUp next_mc instance3380\nPOINTER_PROBE mouseOver instance3397 root1\nPOINTER_PROBE mouseOut instance3397 root1\nPOINTER_PROBE mouseOver partsPacks_btn instance3442\nPOINTER_PROBE mouseOut partsPacks_btn instance3442\nPOINTER_PROBE mouseOver inner partsPacks_btn\nPOINTER_PROBE mouseOut inner partsPacks_btn\nPOINTER_PROBE mouseOver instance3397 root1\nPOINTER_PROBE mouseOut instance3397 root1\nPOINTER_PROBE mouseOver inner play_btn\nPOINTER_PROBE mouseOut inner play_btn\nPOINTER_PROBE mouseOver instance3397 root1\nPOINTER_PROBE mouseOut instance3397 root1\nPOINTER_PROBE mouseOver partsPacks_btn instance3442\nPOINTER_PROBE mouseUp partsPacks_btn instance3442",
+      "menuVisible": true
+    },
+    {
+      "label": "press-outside-release-settings",
+      "x": 203.9,
+      "y": 299.4,
+      "press": {
+        "x": 400,
+        "y": 410
+      },
+      "trace": "B10000001\nPOINTER_PROBE mouseOver instance3377 root1\nPOINTER_PROBE mouseOver next_mc instance3380\nPOINTER_PROBE mouseUp next_mc instance3380\nPOINTER_PROBE mouseUp next_mc instance3380\nPOINTER_PROBE mouseUp next_mc instance3380\nPOINTER_PROBE mouseOver instance3397 root1\nPOINTER_PROBE mouseOut instance3397 root1\nPOINTER_PROBE mouseOver partsPacks_btn instance3442\nPOINTER_PROBE mouseOut partsPacks_btn instance3442\nPOINTER_PROBE mouseOver inner partsPacks_btn\nPOINTER_PROBE mouseOut inner partsPacks_btn\nPOINTER_PROBE mouseOver instance3397 root1\nPOINTER_PROBE mouseOut instance3397 root1\nPOINTER_PROBE mouseOver inner play_btn\nPOINTER_PROBE mouseOut inner play_btn\nPOINTER_PROBE mouseOver instance3397 root1\nPOINTER_PROBE mouseOut instance3397 root1\nPOINTER_PROBE mouseOver partsPacks_btn instance3442\nPOINTER_PROBE mouseUp partsPacks_btn instance3442\nPOINTER_PROBE mouseOut partsPacks_btn instance3442\nPOINTER_PROBE mouseOver instance3397 root1\nPOINTER_PROBE mouseOut instance3397 root1\nPOINTER_PROBE mouseOut instance3397 root1\nPOINTER_PROBE mouseOver inner settings_btn\nPOINTER_PROBE mouseUp inner settings_btn\nPOINTER_PROBE mouseOver inner settings_btn",
+      "target": {
+        "name": "inner",
+        "parent": "settings_btn"
+      },
+      "menuVisible": false
+    }
+  ]
+}
