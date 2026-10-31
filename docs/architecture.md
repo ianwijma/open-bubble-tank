@@ -194,3 +194,6 @@ The procedural import now includes body timelines and fitted body leaves. Mock b
 
 
 `AssetPack.creatorFrames` owns precomposed native creator controls, separate tracks/handles and ring frames. `rasterSymbol`/`rasterClip` accept an explicit button display state and recursively preserve placement transforms and color while excluding hit-only records from ordinary states. The loader creates these local artwork resources and `dispose` releases their maps; creator input/state ownership remains outside the asset service.
+
+
+`simulation/editor-selection.ts` keeps creator control arithmetic outside browser handlers: X nudges, source-ordered centering/twin removal and ghost-inclusive slider initialization. The centering helper deliberately retains the source's mutation-sensitive indexed walk. Callers own held/click scheduling, validation, class recalculation and undo; the new helpers are wired by the following screen slice.
