@@ -44,6 +44,7 @@ import mockPartTimelines from '../data/mock-part-timelines.json';
 import { mockProjectileHit } from './mock-projectile';
 import { authoredProjectileBounds } from './projectile-geometry';
 import { INFECTED_ART, STATUS_ART, PROTECTION_ART, shieldClipSymbol } from '../data/status-art';
+import type { ButtonInfo } from './button-display-list';
 
 export interface Bounds extends Rect {}
 export interface Raster extends Bounds {
@@ -130,6 +131,7 @@ interface TextInfo {
 export interface SymbolResult {
   symbols: {
     sprites: SpriteInfo[];
+    buttons?: ButtonInfo[];
     shapes: ShapeInfo[];
     morphs: ReturnType<typeof parseMorphShapeTag>[];
     fonts: FontInfo[];
