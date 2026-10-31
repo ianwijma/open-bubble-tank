@@ -12,6 +12,8 @@ interface PartView {
   born: number;
   wrapper: Container;
   view: SwfSymbolView;
+  previewScale: number;
+  initialWidth: number;
 }
 export interface ArtworkPart {
   part: TankPart;
@@ -53,6 +55,45 @@ export class CreatorArtwork {
     }
     return group;
   }
+  private createPart(part: TankPart, frame: number): PartView | undefined {
+    const symbol = partById(part.type)?.symbol;
+    if (!symbol) return;
+    const view = new SwfSymbolView(symbol, this.pack, this.textures, { random: Math.random }),
+      wrapper = new Container();
+    view.update(1, undefined, 0, part.y);
+    const raster = this.pack.part(part.type);
+    const bounds = view.scriptBounds() ?? {
+      width: raster.width - (this.pack.mode === 'swf' ? 4 : 6),
+      height: raster.height - (this.pack.mode === 'swf' ? 4 : 6),
+    };
+    wrapper.addChild(view.root);
+    return {
+      type: part.type,
+      born: frame,
+      view,
+      wrapper,
+      initialWidth: bounds.width,
+      previewScale: Math.min(1, 48 / Math.max(bounds.width, bounds.height)),
+    };
+  }
+  /** Measure the actual newly instantiated drag object, before its animation advances. */
+  beginDraft(parts: TankPart[], frame: number) {
+    const group = this.group('draft');
+    for (const node of group.parts.values()) {
+      node.view.destroy();
+      node.wrapper.destroy();
+    }
+    group.parts.clear();
+    let radius: number | undefined;
+    for (const part of parts) {
+      const node = this.createPart(part, frame);
+      if (!node) continue;
+      group.parts.set(part.key, node);
+      group.root.addChild(node.wrapper);
+      radius ??= (node.initialWidth * part.scale) / 2;
+    }
+    return radius;
+  }
   draw(ctx: CanvasRenderingContext2D, layer: Layer, parts: ArtworkPart[], frame: number) {
     const group = this.group(layer),
       active = new Set(parts.map(({ part }) => part.key));
@@ -72,18 +113,14 @@ export class CreatorArtwork {
         node = undefined;
       }
       if (!node) {
-        const symbol = partById(part.type)?.symbol;
-        if (!symbol) continue;
-        const view = new SwfSymbolView(symbol, this.pack, this.textures, { random: Math.random }),
-          wrapper = new Container();
-        wrapper.addChild(view.root);
-        group.root.addChild(wrapper);
-        node = { type: part.type, born: frame, view, wrapper };
+        node = this.createPart(part, frame);
+        if (!node) continue;
+        group.root.addChild(node.wrapper);
         group.parts.set(part.key, node);
       }
       const { wrapper, view } = node;
       wrapper.position.set(part.x, part.y);
-      wrapper.scale.set(part.scale);
+      wrapper.scale.set(part.scale * (layer === 'preview' ? node.previewScale : 1));
       wrapper.rotation = (part.rotation * Math.PI) / 180;
       view.setParentAlpha(alpha);
       wrapper.filters = invalid ? [this.gray] : null;
