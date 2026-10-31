@@ -98,6 +98,7 @@ test('mock sound, gesture resume, P/Escape, zoom, guide and centered creator but
   await page.keyboard.press('KeyP');
   await expect(page.getByRole('dialog', { name: 'Paused', exact: true })).toBeVisible();
   await page.keyboard.press('KeyP');
+  await expect(page.getByRole('dialog', { name: 'Paused', exact: true })).toHaveCount(0);
   await page.keyboard.press('Escape');
   await expect(page.getByRole('dialog', { name: 'Paused', exact: true })).toBeVisible();
   await page.evaluate(() =>
