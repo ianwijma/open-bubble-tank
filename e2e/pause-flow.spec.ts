@@ -7,6 +7,9 @@ for (const native of [false, true])
   test(`${native ? 'SWF' : 'mock'} pause and Info retain one layer and share source transition frames`, async ({
     page,
   }) => {
+    // Software-rendered CI recorded 16s presentation/action waits per visit.
+    // Keep the complete two-visit pointer/focus proof within one test budget.
+    test.setTimeout(120000);
     const errors: string[] = [];
     test.skip(native && !existsSync(swf), 'A local research SWF is required.');
     page.on('pageerror', (error) => errors.push(error.message));
