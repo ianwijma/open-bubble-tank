@@ -1,6 +1,7 @@
 import { FIELD_RADIUS, STAGE } from '../core/constants';
 import { angleTo, direction, distance, length, rotate } from '../core/math';
 import { triggerMassiveCharge } from '../core/mounted-art';
+import { refreshForcefield } from './forcefield';
 import type {
   GunState,
   InputFrame,
@@ -59,6 +60,10 @@ export function tickGuns(world: World, t: Tank, input: InputFrame, categories?: 
       g.burstTimer = 6;
       const index = [0, 4, 3, 2, 1][4 - g.burst];
       world.spawnVolley(t, g, { ...spec, angles: [world.rng.int(-10, 10)] }, index);
+    }
+    if (id === 5005 && t.side === 'player') {
+      refreshForcefield(t);
+      continue;
     }
     if (!spec || category === 6) continue;
     if (t.side === 'player') {

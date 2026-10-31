@@ -2,6 +2,7 @@ import { CLASS_SPEED, FIELD_RADIUS, MAX_LIFE, STAGE } from '../core/constants';
 import { clamp, direction, distance, length, Random, rotate } from '../core/math';
 import { protectionRadius } from '../core/protection-size';
 import { advanceTankArt } from './tank-art';
+import { detachForcefield } from './forcefield';
 import { MainEffects } from './main-effects';
 import type {
   CollisionTest,
@@ -648,7 +649,8 @@ export class World {
     this.player.x = this.player.y = 0;
     this.collapse = null;
     this.mode = 'playing';
-    this.jump({ x: -1, y: 0 }); // _-Ud's first marker wins the center-position tie.
+    // Destroy calls _-1E directly; only ordinary boundary exits run FinalPartCall.
+    this.jump({ x: -1, y: 0 }, false, { finalizeParts: false });
     this.addCombatEffect({ x: 0, y: 0 }, 'collapseFlash', {}, true);
   }
   private tickTank(t: Tank, maintainProtection = true) {
@@ -1003,12 +1005,13 @@ export class World {
     this.player.life = 1;
     if (!this.transit) this.jump(nearestExit(this.player), true);
   }
-  jump(dir: Vec, deadhead = false) {
+  jump(dir: Vec, deadhead = false, { finalizeParts = true }: { finalizeParts?: boolean } = {}) {
     if (this.mode === 'transit') return;
     if (!deadhead) {
       this.wallTimers.cancel(this.player.uid);
       this.stopPrimaryFire();
       this.tacticalHud.clearPassives();
+      if (finalizeParts) detachForcefield(this.player);
     }
     const tutorial = tutorialForAttachment(this.stats.visited);
     let col = this.currentField.col + dir.x,
