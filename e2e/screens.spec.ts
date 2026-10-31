@@ -4,6 +4,40 @@ import { resolve } from 'node:path';
 const swf =
   process.env.BT3_SWF_FILE ?? resolve('../documented-bubble-tank-3/re/bt3/uncompressed.swf');
 
+test('mock Info exit keeps the immediate pause key on the returned dialog', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play', exact: true }).click();
+  await page
+    .getByRole('dialog', { name: 'Choose your tanks' })
+    .getByRole('button', { name: 'PLAY', exact: true })
+    .click();
+  const game = page.locator('.game-canvas');
+  await expect(game.locator('canvas')).toBeVisible();
+  await game.focus();
+  await page.keyboard.press('KeyP');
+  await page.getByRole('button', { name: 'Tank info', exact: true }).click();
+  const info = page.getByRole('dialog', { name: 'Tank information', exact: true });
+  await expect(info.locator('.tank-portrait canvas')).toBeVisible();
+  await info.evaluate((element) => {
+    // Deliver the next key in the first microtask after Info is removed. This
+    // exposes the commit-to-passive-effect focus gap without clock sleeps.
+    const observer = new MutationObserver(() => {
+      if (element.isConnected) return;
+      observer.disconnect();
+      const target = document.activeElement!;
+      document.body.dataset.infoReturnFocus = target.getAttribute('aria-label') ?? target.tagName;
+      for (const type of ['keydown', 'keyup'])
+        target.dispatchEvent(new KeyboardEvent(type, { key: 'p', code: 'KeyP', bubbles: true }));
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+  });
+  await page.keyboard.press('Escape');
+  await expect(info).toHaveCount(0);
+  await expect(page.getByRole('dialog')).toHaveCount(0);
+  await expect(page.locator('body')).toHaveAttribute('data-info-return-focus', 'Paused');
+});
+
 for (const native of [false, true]) {
   test(`${native ? 'SWF' : 'mock'} tank information shows native class attributes and returns to a frozen pause`, async ({
     page,

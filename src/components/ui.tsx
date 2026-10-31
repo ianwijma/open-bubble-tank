@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useRef } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 import type { AssetPack } from '@/game/assets/asset-pack';
 export function BubbleText({
   children,
@@ -130,7 +130,9 @@ export function Dialog({
   closeKey?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
+  // Swapping dialogs must transfer keyboard focus in the same DOM commit.
+  // A passive effect leaves a gap where the next key is delivered to BODY.
+  useLayoutEffect(() => {
     const previous = document.activeElement as HTMLElement | null;
     ref.current?.focus();
     return () => previous?.focus({ preventScroll: true });
