@@ -79,7 +79,9 @@ for (const native of [false, true]) {
   test(`${native ? 'SWF' : 'mock'} paused settings retain row identities and gate hotkeys on the shared stage`, async ({
     page,
   }) => {
-    test.setTimeout(90000);
+    // CI records 15–19s pointer/presentation waits across these Settings/Info visits.
+    // Keep the complete shared-clock and focus proof within one measured budget.
+    test.setTimeout(150000);
     test.skip(native && !existsSync(swf), 'A local research SWF is required.');
     const errors: string[] = [];
     page.on('pageerror', (e) => errors.push(e.message));
