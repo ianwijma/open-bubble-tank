@@ -39,3 +39,13 @@ test('CT wrapping preserves source overflow instead of clamping the concatenated
     add: [-32515, 32640, 0, 0],
   });
 });
+
+test('runtime alpha assignment saturates the signed fixed range and normalizes nonfinite values', () => {
+  expect([128, -129, NaN, Infinity, -Infinity].map(fixedColorMultiplier)).toEqual([
+    32767 / 256,
+    -128,
+    0,
+    32767 / 256,
+    -128,
+  ]);
+});

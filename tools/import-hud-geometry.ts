@@ -162,6 +162,43 @@ const secondaryHelp = list(1876).map((p) => {
     },
   };
 });
+const pausePieces = list(1636);
+const pause = {
+  out: Object.fromEntries(
+    pausePieces
+      .filter((p) => p.charId === 439)
+      .map((p) => [p.name!, { x: p.matrix.tx / 20, y: p.matrix.ty / 20 }]),
+  ),
+  pieces: pausePieces
+    .filter((p) =>
+      [
+        'Paused_mc',
+        'btnPlay_mc',
+        'btnSettings_mc',
+        'btn3_mc',
+        'btn5_mc',
+        'btnPlayMoreGames_mc',
+        'rollover_txt',
+      ].includes(p.name ?? ''),
+    )
+    .map((p) => {
+      const b = bounds(p.charId);
+      return {
+        name: p.name!,
+        symbol: p.charId,
+        x: p.matrix.tx / 20,
+        y: p.matrix.ty / 20,
+        scaleX: p.matrix.a,
+        scaleY: p.matrix.d,
+        bounds: {
+          x: b.xMin / 20,
+          y: b.yMin / 20,
+          width: (b.xMax - b.xMin) / 20,
+          height: (b.yMax - b.yMin) / 20,
+        },
+      };
+    }),
+};
 const infoPieces = list(1609);
 const tankInfo = {
   out: Object.fromEntries(
@@ -224,6 +261,7 @@ await writeFile(
     editConfirm: confirm,
     secondaryHelp,
     tankInfo,
+    pause,
     tactical: {
       radar: geometry(116),
       enemyLife: geometry(1999),
