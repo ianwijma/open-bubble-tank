@@ -191,3 +191,6 @@ The procedural import now includes body timelines and fitted body leaves. Mock b
 
 
 `core/creator-controls.ts` exposes generated numeric control/slider layout from `tools/import-creator-controls.ts`. Text leaves retain separate paint and declared-bounds matrices so internal text transforms are applied once in each use. The import contains representative primitive data and glyph advances, without source paths/media. This slice supplies metadata; browser gesture ownership and creator rendering remain separate.
+
+
+`AssetPack.creatorFrames` owns precomposed native creator controls, separate tracks/handles and ring frames. `rasterSymbol`/`rasterClip` accept an explicit button display state and recursively preserve placement transforms and color while excluding hit-only records from ordinary states. The loader creates these local artwork resources and `dispose` releases their maps; creator input/state ownership remains outside the asset service.

@@ -44,7 +44,8 @@ import mockPartTimelines from '../data/mock-part-timelines.json';
 import { mockProjectileHit } from './mock-projectile';
 import { authoredProjectileBounds } from './projectile-geometry';
 import { INFECTED_ART, STATUS_ART, PROTECTION_ART, shieldClipSymbol } from '../data/status-art';
-import type { ButtonInfo } from './button-display-list';
+import { buttonDisplayList, type ButtonInfo, type ButtonState } from './button-display-list';
+import { CREATOR_CONTROLS } from '../core/creator-controls';
 
 export interface Bounds extends Rect {}
 export interface Raster extends Bounds {
@@ -208,10 +209,12 @@ export class AssetPack {
   frames = new Map<number, Raster[]>();
   extras = new Map<number, Raster>();
   uiFrames = new Map<number, Raster[]>();
+  creatorFrames = new Map<string, Raster>();
   leaves = new Map<number, Raster>();
   sounds = new Map<number, Blob>();
   private symbols: SymbolResult | null = null;
   private sprites = new Map<number, SpriteInfo>();
+  private buttons = new Map<number, ButtonInfo>();
   private shapes = new Map<number, ShapeInfo>();
   private morphs = new Map<number, ReturnType<typeof parseMorphShapeTag>>();
   private morphRasters = new Map<string, Raster>();
@@ -335,6 +338,7 @@ export class AssetPack {
     const pack = new AssetPack('swf');
     pack.symbols = symbols;
     pack.sprites = new Map(symbols.symbols.sprites.map((s) => [s.id, s]));
+    pack.buttons = new Map((symbols.symbols.buttons ?? []).map((s) => [s.id, s]));
     pack.shapes = new Map(
       [...symbols.symbols.shapes, ...symbols.symbols.morphs].map((s) => [s.id, s]),
     );
@@ -440,6 +444,33 @@ export class AssetPack {
         if (piece.name && !hover && frames[0]) frames.push(frames[0]);
         pack.uiFrames.set(piece.symbol, frames);
       }
+      for (const control of CREATOR_CONTROLS.controls) {
+        const frames =
+          control.name === 'SymmetricMode_mc' || control.name === 'Undo_mc' ? [1, 2] : [1];
+        for (const frame of frames)
+          for (const state of ['up', 'over', 'down'] as const) {
+            const pose = new SwfClip(control.symbol, pack);
+            pose.start(frame, false);
+            const raster = await pack.rasterClip(pose, state);
+            if (raster) pack.creatorFrames.set(`${control.name}:${frame}:${state}`, raster);
+          }
+      }
+      for (const slider of CREATOR_CONTROLS.sliders) {
+        const pose = new SwfClip(slider.symbol, pack);
+        pose.advance(1);
+        pose.placements = pose.placements.filter((p) => !p.name);
+        const track = await pack.rasterClip(pose);
+        if (track) pack.creatorFrames.set(`${slider.name}:track`, track);
+      }
+      for (const frame of [1, 2]) {
+        const slider = CREATOR_CONTROLS.sliders[0];
+        const raster = await pack.rasterSymbol(slider.handle.symbol, frame);
+        if (raster) pack.creatorFrames.set(`handle:${frame}`, raster);
+      }
+      for (let frame = 1; frame <= 6; frame++) {
+        const raster = await pack.rasterSymbol(819, frame);
+        if (raster) pack.creatorFrames.set(`rings:${frame}`, raster);
+      }
       onProgress(1, 'Assets ready');
       return pack;
     } catch (e) {
@@ -453,6 +484,7 @@ export class AssetPack {
     seen = new Set<number>(),
     ratio = 0,
     pose?: SwfClip,
+    buttonState: ButtonState = 'up',
   ): { body: string; bounds: Bounds } | null {
     if (seen.has(id) || seen.size > 24) return null;
     const next = new Set(seen);
@@ -491,13 +523,16 @@ export class AssetPack {
     const text = this.texts.get(id);
     if (text) return this.compileText(text);
     const sp = this.sprites.get(id);
-    if (!sp) return null;
-    const placements = pose?.placements ?? this.displayList(id, frame);
+    const button = this.buttons.get(id);
+    if (!sp && !button) return null;
+    const placements = button
+      ? buttonDisplayList(button, buttonState)
+      : (pose?.placements ?? this.displayList(id, frame));
     const children: { body: string; bounds: Bounds }[] = [];
     const masks: { id: string; depth: number; end: number; bounds: Bounds; body: string }[] = [];
     for (const p of placements) {
       const childPose = pose?.children.get(p.depth)?.clip;
-      const child = this.compile(p.charId, frame, next, p.ratio ?? 0, childPose);
+      const child = this.compile(p.charId, frame, next, p.ratio ?? 0, childPose, buttonState);
       if (!child) continue;
       const m = p.matrix ?? identity;
       if (p.clipDepth !== undefined) {
@@ -593,13 +628,18 @@ export class AssetPack {
       },
     };
   }
-  async rasterSymbol(id: number, frame = 1, ratio = 0): Promise<Raster | null> {
-    const compiled = this.compile(id, frame, new Set(), ratio);
+  async rasterSymbol(
+    id: number,
+    frame = 1,
+    ratio = 0,
+    buttonState: ButtonState = 'up',
+  ): Promise<Raster | null> {
+    const compiled = this.compile(id, frame, new Set(), ratio, undefined, buttonState);
     return this.rasterCompiled(compiled);
   }
   /** Freeze each retained child at its own frame; raw rasterSymbol remains authored-frame access. */
-  async rasterClip(clip: SwfClip): Promise<Raster | null> {
-    return this.rasterCompiled(this.compile(clip.id, clip.frame, new Set(), 0, clip));
+  async rasterClip(clip: SwfClip, buttonState: ButtonState = 'up'): Promise<Raster | null> {
+    return this.rasterCompiled(this.compile(clip.id, clip.frame, new Set(), 0, clip, buttonState));
   }
   private async rasterCompiled(compiled: { body: string; bounds: Bounds } | null) {
     if (!compiled) return null;
@@ -1223,6 +1263,8 @@ export class AssetPack {
     this.morphs.clear();
     this.extras.clear();
     this.uiFrames.clear();
+    this.creatorFrames.clear();
+    this.buttons.clear();
     this.sounds.clear();
     this.symbols = null;
   }
