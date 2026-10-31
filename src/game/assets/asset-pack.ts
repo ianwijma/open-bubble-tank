@@ -854,6 +854,13 @@ export class AssetPack {
     ratio = Number.isFinite(ratio) ? Math.max(0, Math.min(65535, Math.round(ratio))) : 0;
     const shape = morph ? undefined : this.shapes.get(id);
     if (!morph && !shape?.runs) return undefined;
+    const bounds = shape?.bounds;
+    // Same declared-bounds gate as ShapeContact, before allocating paths for distant UI glyphs.
+    if (
+      bounds &&
+      (x < bounds.xMin / 20 || x > bounds.xMax / 20 || y < bounds.yMin / 20 || y > bounds.yMax / 20)
+    )
+      return false;
     const key = `${id}:${morph ? ratio : 0}`;
     let contact = this.shapeContacts.get(key);
     if (!contact) {

@@ -179,3 +179,6 @@ The procedural import now includes body timelines and fitted body leaves. Mock b
 
 
 `MainMenuMotion.series` owns the retained19-frame strip independently of its native/mock view. Native painting shares the main menu's renderer; mock painting uses numeric primitive/text layout and applies parent alpha per leaf. DOM event targets route through the isolated `LegacyWebsites` adapter, with bubbling hover transitions retaining source child recreation. The separate caption uses plain-text default formatting rather than the imported initial HTML run style. Captions update only on input; stage presentation mutates refs/styles without per-frame React state.
+
+
+`MainMenuView.hit` exposes retained native target geometry without dispatching input or advancing time. Queries convert stage points and preserve the full inverse matrix for minimum-width strokes, returning inner controls, decoration, strip targets or a title blocker. The following browser pointer service consumes this API; simulation stays separate. Static shape bounds reject distant queries before path allocation using the same predicate as the contact backend.

@@ -1,4 +1,5 @@
 import { showMainMenuFlow } from './main-menu';
+import { showNativeMenuPicking } from './native-menu-picking';
 import { showHotkeyInput } from './hotkey-input';
 import { FieldVisit } from '../../src/game/core/field-visit';
 import { AssetPack } from '../../src/game/assets/asset-pack';
@@ -123,6 +124,12 @@ async function reset() {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
     unmountScreen = showHotkeyInput(stage);
     status.textContent = 'Ready · production keyboard input and profile validation';
+    return;
+  }
+  if (fixture.value === 'native-menu-picking') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    unmountScreen = await showNativeMenuPicking(pack, stage);
+    status.textContent = 'Ready · production native menu geometry';
     return;
   }
   if (fixture.value === 'main-menu') {
