@@ -1251,8 +1251,9 @@ kbd {
   height: 100%;
   object-fit: contain;
 }
-.pause-orb:hover {
-  filter: drop-shadow(0 0 5px #fff9);
+.pause-button-layer {
+  position: absolute;
+  inset: 0;
 }
 .pause-orb:not(:has(img)) {
   background: #a6d2e42e;
