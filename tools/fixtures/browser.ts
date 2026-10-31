@@ -15,6 +15,7 @@ import { showMinimapProof } from './minimap';
 import { showHudProof } from './hud';
 import { showFieldOverlayProof } from './field-overlays';
 import { showTacticalHudProof } from './tactical-hud';
+import { runPlaythrough } from '../playthrough/browser';
 import { showWinScreen } from './screens';
 import { showDegradationProof } from './degradation';
 import { showCrossingProof } from './crossing';
@@ -115,6 +116,15 @@ async function reset() {
   world = undefined;
   stage.replaceChildren();
   stage.style.height = '';
+  if (fixture.value === 'playthrough') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    const run = await runPlaythrough(pack, stage, (text) => (status.textContent = text));
+    renderer = run.renderer;
+    unmountScreen = run.unmount;
+    status.dataset.playthrough = JSON.stringify(run.proof);
+    status.textContent = 'Ready · complete control-only run through boss and win';
+    return;
+  }
   if (fixture.value === 'mock-part-motion') {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
     status.dataset.mockPartMotion = JSON.stringify(await showMockPartMotion(pack, stage));
