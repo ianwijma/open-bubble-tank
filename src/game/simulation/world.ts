@@ -3,6 +3,7 @@ import { clamp, direction, distance, length, Random, rotate } from '../core/math
 import { protectionRadius } from '../core/protection-size';
 import { advanceTankArt } from './tank-art';
 import { detachForcefield } from './forcefield';
+import { removeTankChild } from './tank-display';
 import { MainEffects } from './main-effects';
 import type {
   CollisionTest,
@@ -488,6 +489,7 @@ export class World {
           if (effect.kind === 'shield') {
             effect.owner.shield = 0;
             effect.owner.shieldManaged = false;
+            removeTankChild(effect.owner, 'shield-film');
             return false;
           }
           if (this.screenShake) this.mainEffects.shake(20);
@@ -662,6 +664,7 @@ export class World {
   private tickProtection(t: Tank) {
     if (t.shield > 0 && !t.shieldManaged) {
       t.shield--;
+      if (t.shield === 0) removeTankChild(t, 'shield-film');
     }
     if (
       t.forcefield < 40 &&
@@ -1106,6 +1109,8 @@ export class World {
       this.fieldVisit = tr.visit;
       this.player.shield = 0;
       this.player.shieldManaged = false;
+      // CleanUpShield clears immunity only; clearing the effects engine skips
+      // KillShield, so the old film remains attached until another trigger.
       for (const g of this.player.guns) g.counter = 0;
       this.transit = null;
       this.mode = 'playing';

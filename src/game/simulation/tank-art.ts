@@ -4,7 +4,7 @@ import type { Tank } from '../core/types';
 export function advanceTankArt(tank: Tank) {
   tank.artAge++;
   if (tank.statusDecoration) tank.statusDecoration.artAge++;
-  if (tank.shield > 0) tank.shieldAge++;
+  if (tank.shield > 0 || tank.displayChildren.includes('shield-film')) tank.shieldAge++;
   tank.shieldHitAge = Math.min(16, tank.shieldHitAge + 1);
   if (tank.forcefieldFrame > 1) {
     tank.forcefieldFrame++;

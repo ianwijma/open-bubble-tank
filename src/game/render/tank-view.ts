@@ -1,6 +1,6 @@
 import { Container, Graphics, Sprite } from 'pixi.js';
 import type { AssetPack } from '../assets/asset-pack';
-import type { Tank, TankDesign } from '../core/types';
+import type { Tank, TankChild, TankDesign } from '../core/types';
 import { partById } from '../data/catalog';
 import { SwfSymbolView, type RasterTextures } from './swf-symbol-view';
 import { SwfTankStatusView } from './swf-tank-status-view';
@@ -72,17 +72,17 @@ export class TankView {
       }
     }
     this.shield.clear();
+    const shieldFilm = t.shield > 0 || t.displayChildren.includes('shield-film');
     if (
       !this.protection &&
-      (t.shield > 0 ||
+      (shieldFilm ||
         (t.design.parts.some((p) => p.type === 5005) && t.forcefieldReady && t.forcefieldAttached))
     ) {
-      const diameter =
-        t.shield > 0
-          ? t.side === 'player'
-            ? (t.shieldDiameter ?? this.assets.protectionRadius(t) * 2)
-            : t.radius * 2
-          : this.assets.forcefieldRadius(t) * 2.1;
+      const diameter = shieldFilm
+        ? t.side === 'player'
+          ? (t.shieldDiameter ?? this.assets.protectionRadius(t) * 2)
+          : t.radius * 2
+        : this.assets.forcefieldRadius(t) * 2.1;
       this.shield
         .circle(0, 0, Number.isNaN(diameter) ? 65 : diameter / 2)
         .fill({ color: 0xaaddff, alpha: 0.07 })
@@ -90,6 +90,7 @@ export class TankView {
     }
     this.status?.update(t);
     this.protection?.update(t);
+    this.orderChildren(t);
     this.container.filters = this.status?.infectionFilter ? [this.status.infectionFilter] : null;
     if (!this.status && t.status.stun > 0)
       this.shield.star(0, -t.radius - 6, 5, 5, 2).fill(0xffffff);
@@ -97,6 +98,29 @@ export class TankView {
     else if (t.status.infect > 0) this.container.tint = 0xb1ed80;
     else if (t.status.sticky > 0) this.container.tint = 0xbbb0ff;
     else this.container.tint = 0xffffff;
+  }
+  private orderChildren(tank: Tank) {
+    const entries: [TankChild, Container][] = this.parts.map((view, i) => [
+      `part:${tank.design.parts[i].key}`,
+      view.root,
+    ]);
+    entries.push(...(this.status?.displayEntries() ?? []));
+    entries.push(...(this.protection?.displayEntries() ?? []));
+    if (!this.protection)
+      entries.push([
+        tank.shield > 0 || tank.displayChildren.includes('shield-film')
+          ? 'shield-film'
+          : 'forcefield',
+        this.shield,
+      ]);
+    const order = new Map(tank.displayChildren.map((key, i) => [key, i]));
+    entries.sort((a, b) => (order.get(a[0]) ?? Infinity) - (order.get(b[0]) ?? Infinity));
+    for (const [index, [, child]] of entries.entries()) {
+      child.label = entries[index][0];
+      if (child.parent !== this.container) this.container.addChildAt(child, index);
+      else if (this.container.getChildIndex(child) !== index)
+        this.container.setChildIndex(child, index);
+    }
   }
   destroy() {
     this.container.filters = null;
