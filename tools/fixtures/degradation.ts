@@ -44,7 +44,9 @@ export async function showDegradationProof(pack: AssetPack, host: HTMLElement) {
         key: `gun${i}`,
         type: 4001,
         x: -110 + i * 110,
-        y: 0,
+        // Keep part of the smallest body visible: the recovered cannon is now
+        // wider than that body and would otherwise hide its entire damage change.
+        y: -12,
       })),
     ],
   };

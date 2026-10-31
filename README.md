@@ -90,6 +90,7 @@ bun tools/import-tutorial-art.ts ../documented-bubble-tank-3
 bun tools/import-mine-art.ts ../documented-bubble-tank-3
 bun tools/import-projectile-clips.ts ../documented-bubble-tank-3
 bun tools/import-projectile-geometry.ts ../documented-bubble-tank-3
+bun tools/import-part-geometry.ts ../documented-bubble-tank-3
 bun tools/import-timeline-scripts.ts ../documented-bubble-tank-3
 ```
 

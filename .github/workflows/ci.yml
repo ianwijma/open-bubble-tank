@@ -30,7 +30,7 @@ jobs:
       - run: bun run check
       - run: bunx playwright install --with-deps chromium
       - name: Production build and offline browser smoke
-        run: bun run test:e2e e2e/game.spec.ts e2e/creator.spec.ts e2e/glows.spec.ts --grep 'mock|synthetic'
+        run: bun run test:e2e --grep 'mock|synthetic'
       - name: Retain failed browser traces
         if: failure()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
