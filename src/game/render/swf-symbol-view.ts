@@ -1,3 +1,4 @@
+import { CONTACT_IDENTITY, type ContactMatrix } from '../assets/contact-transform';
 import { AlphaFilter, Container, Matrix, Sprite, type Texture, type BLEND_MODES } from 'pixi.js';
 import type { AssetPack, DisplayPlacement, Raster } from '../assets/asset-pack';
 import { SwfClip } from '../assets/swf-clip';
@@ -163,8 +164,8 @@ export class SwfSymbolView {
     this.lastFrame = -1;
     this.updatePose(this.ownedPose);
   }
-  hitTest(x: number, y: number): boolean {
-    return this.renderedPose ? this.assets.hitClip(this.renderedPose, x, y) : false;
+  hitTest(x: number, y: number, inverse: ContactMatrix = CONTACT_IDENTITY): boolean {
+    return this.renderedPose ? this.assets.hitClip(this.renderedPose, x, y, 0, inverse) : false;
   }
   scriptBounds() {
     const pose = this.renderedPose ?? this.ownedPose;

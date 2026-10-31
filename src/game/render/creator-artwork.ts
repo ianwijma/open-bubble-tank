@@ -1,3 +1,4 @@
+import { CONTACT_IDENTITY, contactTransform, descendContact } from '../assets/contact-transform';
 import { Application, ColorMatrixFilter, Container } from 'pixi.js';
 import type { AssetPack } from '../assets/asset-pack';
 import type { TankPart } from '../core/types';
@@ -157,7 +158,8 @@ export class CreatorArtwork {
       { x: (x - part.x) / part.scale, y: (y - part.y) / part.scale },
       -part.rotation,
     );
-    return view.hitTest(local.x, local.y);
+    const inverse = descendContact(CONTACT_IDENTITY, contactTransform(part.rotation, part.scale));
+    return !!inverse && view.hitTest(local.x, local.y, inverse);
   }
   restartClusters(parts: TankPart[]) {
     for (const part of parts) {

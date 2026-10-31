@@ -49,6 +49,20 @@ function primitiveProof() {
       shape(90001, true),
       shape(90002, true, true),
       {
+        ...shape(90004, true, true),
+        bounds: { xMin: 398, yMin: 398, xMax: 1202, yMax: 1202 },
+        lines: [{ width: 5, color: [0, 0, 0, 0] }],
+      },
+      {
+        ...shape(90005, true, true),
+        bounds: { xMin: 160, yMin: 360, xMax: 1240, yMax: 1240 },
+        lines: [{ width: 80, color: [0, 0, 0, 0], startCap: 1, endCap: 1, join: 2 }],
+        runs: [
+          { start: [400, 400], ops: [['L', 1200, 400]], f0: 0, f1: 0, line: 1 },
+          { start: [200, 800], ops: [['L', 200, 1200]], f0: 0, f1: 0, line: 1 },
+        ],
+      },
+      {
         ...shape(90003),
         bounds: { xMin: 400, yMin: 400, xMax: 600, yMax: 1200 },
         runs: [
@@ -98,6 +112,21 @@ function primitiveProof() {
       placements: [{ charId: 90003, depth: 1, frame: 1, matrix, clipDepth: 2 }],
     },
   ];
+  const placement = (charId: number, a: number, b = 0, c = 0, d = a) => ({
+    charId,
+    depth: 1,
+    frame: 1,
+    matrix: { ...matrix, a, b, c, d },
+  });
+  const r = Math.SQRT1_2;
+  sprites.push(
+    { id: 91003, frameCount: 1, placements: [placement(90004, 0.5)] },
+    { id: 91004, frameCount: 1, placements: [placement(90004, 4)] },
+    { id: 91005, frameCount: 1, placements: [placement(90004, 2 * r, 2 * r, -0.5 * r, 0.5 * r)] },
+    { id: 91006, frameCount: 1, placements: [placement(91005, 0.5, 0, 0, 2)] },
+    { id: 91007, frameCount: 1, placements: [placement(90004, -0.5, 0, 0, 0.5)] },
+    { id: 91008, frameCount: 1, placements: [placement(90004, 0)] },
+  );
   Object.assign(pack, { shapes, sprites: new Map(sprites.map((s) => [s.id, s])) });
   const clip = (id: number) => {
     const c = new SwfClip(id, pack);
@@ -119,6 +148,69 @@ function primitiveProof() {
   results.maskOnly = pack.hitClip(clip(91002), 25, 40);
   tank.removedParts.add(body.key);
   results.removed = pack.hitTest(tank, 40, 40);
+  // Match the controlled AVM2 probe, then exercise nested transforms and reflection.
+  const nested = (x: number) => pack.hitClip(clip(91006), r * x - 10 * r, 4 * r * x + 40 * r);
+  const strokes = {
+    fullHit: pack.hitClip(clip(90004), 20.25, 40),
+    fullMiss: pack.hitClip(clip(90004), 20.75, 40),
+    halfHit: pack.hitClip(clip(91003), 10.375, 20),
+    halfBounds: pack.hitClip(clip(91003), 9.875, 20),
+    halfMiss: pack.hitClip(clip(91003), 10.625, 20),
+    enlargedHit: pack.hitClip(clip(91004), 80.4, 160),
+    enlargedMiss: pack.hitClip(clip(91004), 80.8, 160),
+    nestedHit: nested(21.3),
+    nestedMiss: nested(21.7),
+    reflectedHit: pack.hitClip(clip(91007), -10.375, 20),
+    singular: pack.hitClip(clip(91008), 0, 0),
+    roundCap: pack.hitClip(clip(90005), 19, 20),
+    outsideRoundCap: pack.hitClip(clip(90005), 18.5, 18.5),
+  };
+  sprites[0] = { ...sprites[0], placements: [placement(90004, 1)] };
+  // Use a fresh pack: the earlier opaque proof has already cached root680's display list.
+  const provider = new AssetPack('swf');
+  Object.assign(provider, { shapes, sprites: new Map(sprites.map((s) => [s.id, s])) });
+  const thinPart = { ...body, scale: 0.5, rotation: 45, x: 8, y: -6 };
+  const thinTank = createTank(2, { ...STARTER, parts: [thinPart] }, 'enemy');
+  thinTank.rotation = 30;
+  thinTank.x = 80;
+  thinTank.y = 90;
+  const point = (x: number) => {
+    const p = rotate({ x: x * thinPart.scale, y: 40 * thinPart.scale }, thinPart.rotation);
+    const t = rotate({ x: p.x + thinPart.x, y: p.y + thinPart.y }, thinTank.rotation);
+    return { x: t.x + thinTank.x, y: t.y + thinTank.y };
+  };
+  const sample = (x: number, zoom = 1) => {
+    const p = point(x);
+    return provider.hitTest(thinTank, p.x, p.y, zoom);
+  };
+  const local = rotate({ x: 10.375, y: 20 }, thinPart.rotation);
+  const shot = createProjectile(3, {
+    owner: 1,
+    enemy: false,
+    kind: 'shell',
+    symbol: 91003,
+    x: 0,
+    y: 0,
+    angle: 0,
+    speed: 0,
+    damage: 1,
+    artScale: 0.5,
+  });
+  const providers = {
+    partHit: sample(20.75),
+    partMiss: sample(21.25),
+    zoomHit: sample(21.5, 0.5),
+    zoomMiss: sample(21.5),
+    designHit: provider.hitDesignPart(thinPart, local.x + thinPart.x, local.y + thinPart.y, 1),
+    projectileHit: provider.hitProjectile(shot, 5.375, 10),
+    projectileMiss: provider.hitProjectile(shot, 5.625, 10),
+  };
+  shot.artPose = clip(shot.symbol);
+  Object.assign(providers, {
+    retainedProjectileHit: provider.hitProjectile(shot, 5.375, 10),
+    retainedProjectileMiss: provider.hitProjectile(shot, 5.625, 10),
+  });
+  provider.dispose();
   const emptyPaint = rasterMorphSVG(shapeToSVG(shapes.get(90001), undefined), {
     x: 20,
     y: 20,
@@ -136,7 +228,14 @@ function primitiveProof() {
   }
   const cacheSize = pack.shapeContactCount;
   pack.dispose();
-  return { results, transparentInk, cacheSize, releasedCache: pack.shapeContactCount };
+  return {
+    results,
+    strokes,
+    providers,
+    transparentInk,
+    cacheSize,
+    releasedCache: pack.shapeContactCount,
+  };
 }
 
 export async function showShapeContact(pack: AssetPack, host: HTMLElement) {

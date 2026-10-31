@@ -1,3 +1,9 @@
+import {
+  CONTACT_IDENTITY,
+  contactTransform,
+  descendContact,
+  contactStrokeWidth,
+} from '../src/game/assets/contact-transform';
 import { expect, test } from 'bun:test';
 import { shapeHitGeometry } from '../src/game/assets/swf-symbols.mjs';
 import { AssetPack, type SpriteInfo } from '../src/game/assets/asset-pack';
@@ -159,4 +165,17 @@ test('infection retains independent scripted child phases and shares a stable st
   expect(clip.age).toBe(13);
   tank.infectStartedAt = 12;
   expect(pack.infectionClip(tank)).not.toBe(clip);
+});
+
+test('nested contact transforms retain anisotropic rotation instead of multiplying scalar maxima', () => {
+  const parent = descendContact(CONTACT_IDENTITY, contactTransform(0, 0.5, 2))!;
+  const leaf = descendContact(parent, contactTransform(45, 2, 0.5))!;
+  // Invert D(.5,2) R(45) D(2,.5) independently: columns (.5√2,-2√2), (√2/8,√2/2).
+  expect(leaf.a).toBeCloseTo(Math.SQRT1_2);
+  expect(leaf.b).toBeCloseTo(-2 * Math.SQRT2);
+  expect(leaf.c).toBeCloseTo(Math.SQRT2 / 8);
+  expect(leaf.d).toBeCloseTo(Math.SQRT1_2);
+  expect(contactStrokeWidth(0.25, leaf)).toBeCloseTo(Math.sqrt(8.5));
+  expect(contactStrokeWidth(4, leaf)).toBe(4);
+  expect(descendContact(parent, contactTransform(0, 0))).toBeNull();
 });
