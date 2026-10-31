@@ -3,6 +3,7 @@ import { angleTo, direction, distance, length, rotate } from '../core/math';
 import { triggerMassiveCharge } from '../core/mounted-art';
 import { refreshForcefield } from './forcefield';
 import { attachMountedShield } from './shields';
+import { tickTurretBehavior } from './turrets';
 import type {
   GunState,
   InputFrame,
@@ -42,12 +43,13 @@ export function tickGuns(world: World, t: Tank, input: InputFrame, categories?: 
       category = Math.floor(id / 1000),
       spec = WEAPONS[id];
     if (categories && !categories.includes(category)) continue;
+    if (id === 4032) tickTurretBehavior(world, t, g);
     const mount = rotate(g.part, t.rotation),
       pos = { x: t.x + mount.x, y: t.y + mount.y };
     const fixed =
       [3001, 3008, 3017, 4002, 4008, 4009, 4010, 4012, 4021].includes(id) ||
       t.design.id.startsWith('B');
-    if (![4015, 5003, 5004, 5006].includes(id))
+    if (![4015, 4032, 5003, 5004, 5006].includes(id))
       g.angle =
         (t.side === 'player' && t.design.classId <= 3) || fixed
           ? g.part.rotation
@@ -300,16 +302,14 @@ export function fireGun(world: World, t: Tank, gun: GunState, input: InputFrame)
     return;
   }
   if (id === 4032) {
-    const turret = world.bullets.find(
-      (b) => b.uid === gun.turretId && !b.dead && (b.build ?? 1) < 4,
-    );
+    const turret = world.bullets.find((b) => b.uid === gun.turretId && (b.build ?? 1) < 4);
     const pos = world.muzzle(t, gun, 0),
       angle = angleTo(pos, turret ?? { x: 0, y: 0 });
     gun.angle = angle - t.rotation;
     const bullet: Projectile = {
       uid: world.nextId(),
       owner: t.uid,
-      enemy: t.side === 'enemy',
+      enemy: true,
       x: pos.x,
       y: pos.y,
       angle,
@@ -333,7 +333,10 @@ export function fireGun(world: World, t: Tank, gun: GunState, input: InputFrame)
       origin: { ...pos },
     };
     world.addBullet(bullet);
-    if (!turret) gun.turretId = bullet.uid;
+    if (!turret) {
+      gun.turretId = bullet.uid;
+      (gun.turretRefs ??= []).push(bullet);
+    }
     return;
   }
   if (id === 3015) {
