@@ -35,6 +35,7 @@ import { showGlowProof } from './glows';
 import { showMockPartsProof } from './mock-parts';
 import { showPartSnapshots } from './part-snapshots';
 import { showMountedArt } from './mounted-art';
+import { showTurretProtection } from './turret-protection';
 import { showShieldOwnership } from './shield-ownership';
 import { showForcefieldOrder } from './forcefield-order';
 import { showShapeContact } from './shape-contact';
@@ -124,6 +125,12 @@ async function reset() {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
     status.dataset.mockBodyMotion = JSON.stringify(await showMockPartMotion(pack, stage, true));
     status.textContent = 'Ready · all20 procedural body parts with source motion';
+    return;
+  }
+  if (fixture.value === 'turret-protection') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    status.dataset.turretProtection = JSON.stringify(await showTurretProtection(pack, stage));
+    status.textContent = 'Ready · turret protection lifecycle and retained hits';
     return;
   }
   if (fixture.value === 'shield-ownership') {

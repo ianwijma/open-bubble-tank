@@ -11,7 +11,7 @@ import {
   type ScriptBoundsSource,
 } from './projectile-bounds';
 import { protectionRadius, protectionScale } from '../core/protection-size';
-import { legacyShieldFilm } from '../core/shield-art';
+import { legacyShieldFilm, shieldClipFrame } from '../core/shield-art';
 import { MINIMAP } from '../core/minimap';
 import { HUD } from '../core/hud';
 import { WIN_SCREEN } from '../core/win-screen';
@@ -40,7 +40,7 @@ import {
 import mockPartTimelines from '../data/mock-part-timelines.json';
 import { mockProjectileHit } from './mock-projectile';
 import { authoredProjectileBounds } from './projectile-geometry';
-import { INFECTED_ART, STATUS_ART, PROTECTION_ART } from '../data/status-art';
+import { INFECTED_ART, STATUS_ART, PROTECTION_ART, shieldClipSymbol } from '../data/status-art';
 
 export interface Bounds extends Rect {}
 export interface Raster extends Bounds {
@@ -987,14 +987,7 @@ export class AssetPack {
     for (const clip of tank.shieldClips) {
       if (!tank.displayChildren.includes(clip.key)) continue;
       if (this.mode === 'swf') {
-        if (
-          scaled(
-            clip.kind === 'film' ? PROTECTION_ART.shield : PROTECTION_ART.shieldHit,
-            clip.kind === 'hit' ? Math.min(16, clip.age + 1) : clip.age + 1,
-            clip.angle,
-            clip.diameter,
-          )
-        )
+        if (scaled(shieldClipSymbol(clip), shieldClipFrame(clip), clip.angle, clip.diameter))
           return true;
       } else if (
         clip.kind === 'film' &&

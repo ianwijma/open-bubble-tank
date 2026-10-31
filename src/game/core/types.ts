@@ -17,6 +17,7 @@ export type TankChild =
 export interface ShieldClip {
   key: `shield-hit:${string}` | `shield-film:${string}`;
   kind: 'hit' | 'film';
+  style: 'mounted' | 'turret';
   diameter: number;
   age: number;
   angle: number;
@@ -83,6 +84,7 @@ export interface GunState {
   rotatingCycle?: { remaining: number; active: boolean };
   suppressionCycle?: { delay: number; spacing: number };
   turretId?: number;
+  turretRefs?: Projectile[];
   spawnDesign?: TankDesign;
   patientId?: number;
   beamId?: number;
