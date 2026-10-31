@@ -58,3 +58,25 @@ export interface Advertisements {
 }
 export const platformStats: PlatformStats = { report: async () => {} };
 export const advertisements: Advertisements = { show: async () => false };
+
+/** Historical Credits destinations, intentionally not opened by the offline build. */
+export type CreditWebsite = 'studio' | 'composer' | 'social';
+// Historical destinations from GameData._-Yf/_-ZS and Main.URL_OPEN(7), not active URLs.
+export const CREDIT_WEBSITE_URLS: Record<CreditWebsite, string> = {
+  studio: 'http://www.herointeractive.com/',
+  composer: 'http://www.polyphonemusic.com/',
+  social: 'http://www.facebook.com/#!/pages/Hero-Interactive/58398819916',
+};
+export interface LegacyWebsites {
+  open(destination: CreditWebsite): void;
+}
+export const legacyWebsites: LegacyWebsites = {
+  open: (destination) => {
+    const label = {
+      studio: 'Hero Interactive website',
+      composer: 'Polyphone Music website',
+      social: 'Hero Interactive Facebook page',
+    }[destination];
+    throw new ServiceUnavailable(label);
+  },
+};
