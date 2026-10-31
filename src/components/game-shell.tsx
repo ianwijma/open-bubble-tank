@@ -14,13 +14,13 @@ import { GameHud } from './game-hud';
 import { SettingsPanel } from './settings-panel';
 import { TankCreator } from './tank-creator';
 import { TankLibrary } from './tank-library';
-import { PausePanel, UpgradePanel, EditConfirmPanel, SecondaryHelpPanel } from './game-panels';
-import { TankInfoPanel } from './tank-info-panel';
+import { UpgradePanel, EditConfirmPanel, SecondaryHelpPanel } from './game-panels';
+import { PausePanel } from './pause-panel';
 import { WinPanel } from './win-panel';
 import { BubbleText, Dialog, Icon } from './ui';
 
 type Screen = 'menu' | 'game' | 'creator' | 'library';
-type Overlay = 'settings' | 'credits' | 'sources' | 'info' | 'edit-confirm' | 'edit-choice' | null;
+type Overlay = 'settings' | 'credits' | 'sources' | 'edit-confirm' | 'edit-choice' | null;
 interface EditorContext {
   initial: TankDesign;
   returnTo: Screen;
@@ -365,7 +365,9 @@ export default function GameShell() {
                       refresh();
                     }}
                     onSettings={() => setOverlay('settings')}
-                    onInfo={() => setOverlay('info')}
+                    tank={world.player}
+                    stage={stage}
+                    fps={profile.settings.fps}
                     onMenu={menu}
                   />
                 ) : null}
@@ -538,14 +540,6 @@ export default function GameShell() {
                   </button>
                 </div>
               </Dialog>
-            ) : null}
-            {pack && world && profile && overlay === 'info' ? (
-              <TankInfoPanel
-                pack={pack}
-                tank={world.player}
-                fps={profile.settings.fps}
-                onClose={closeOverlay}
-              />
             ) : null}
           </MainStage>
         </div>

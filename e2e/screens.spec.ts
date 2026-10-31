@@ -20,17 +20,22 @@ test('mock Info exit keeps the immediate pause key on the returned dialog', asyn
   const info = page.getByRole('dialog', { name: 'Tank information', exact: true });
   await expect(info.locator('.tank-portrait canvas')).toBeVisible();
   await info.evaluate((element) => {
-    // Deliver the next key in the first microtask after Info is removed. This
-    // exposes the commit-to-passive-effect focus gap without clock sleeps.
+    // Deliver the next key in the first microtask after returning from Info,
+    // including the retained dialog changing its title. No clock sleeps.
     const observer = new MutationObserver(() => {
-      if (element.isConnected) return;
+      if (element.isConnected && element.getAttribute('aria-label') !== 'Paused') return;
       observer.disconnect();
       const target = document.activeElement!;
       document.body.dataset.infoReturnFocus = target.getAttribute('aria-label') ?? target.tagName;
       for (const type of ['keydown', 'keyup'])
         target.dispatchEvent(new KeyboardEvent(type, { key: 'p', code: 'KeyP', bubbles: true }));
     });
-    observer.observe(document.body, { childList: true, subtree: true });
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['aria-label'],
+    });
   });
   await page.keyboard.press('Escape');
   await expect(info).toHaveCount(0);

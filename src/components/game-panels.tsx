@@ -3,7 +3,7 @@ import { useState } from 'react';
 import type { AssetPack } from '@/game/assets/asset-pack';
 import type { TankDesign } from '@/game/core/types';
 import { partById } from '@/game/data/catalog';
-import { BubbleText, Dialog, Icon } from './ui';
+import { BubbleText, Dialog } from './ui';
 import { TankPreview } from './tank-preview';
 import { HUD } from '@/game/core/hud';
 
@@ -161,95 +161,6 @@ export function weaponSummary(tank: TankDesign, category: number) {
   }
   return (
     [...counts].map(([id, count]) => `${count} ${partById(id)?.name ?? id}`).join(', ') || 'N/A'
-  );
-}
-
-export function PausePanel({
-  pack,
-  closeKey,
-  onResume,
-  onSettings,
-  onInfo,
-  onMenu,
-}: {
-  pack: AssetPack;
-  closeKey: string;
-  onResume: () => void;
-  onSettings: () => void;
-  onInfo: () => void;
-  onMenu: () => void;
-}) {
-  const [caption, setCaption] = useState('');
-  const buttons = [
-    {
-      label: 'PLAY',
-      caption: 'Continue Playing',
-      symbol: 492,
-      icon: 'play',
-      action: onResume,
-      className: 'pause-play',
-    },
-    {
-      label: 'Main menu',
-      caption: 'Quit Playing',
-      symbol: 0,
-      icon: 'quit',
-      action: onMenu,
-      className: 'pause-quit',
-    },
-    {
-      label: 'Tank info',
-      caption: 'Tank Information',
-      symbol: 1633,
-      icon: 'info',
-      action: onInfo,
-      className: 'pause-info',
-    },
-    {
-      label: 'Settings',
-      caption: 'Settings',
-      symbol: 494,
-      icon: 'settings',
-      action: onSettings,
-      className: 'pause-settings',
-    },
-  ] as const;
-  return (
-    <Dialog
-      title="Paused"
-      className="stage-dialog pause-screen"
-      closeKey={closeKey}
-      onClose={onResume}
-    >
-      <div className="pause-title">
-        <BubbleText pack={pack} size={40}>
-          paused
-        </BubbleText>
-      </div>
-      {buttons.map((button) => (
-        <button
-          key={button.label}
-          className={`pause-orb ${button.className}`}
-          aria-label={button.label}
-          onClick={button.action}
-          onMouseEnter={() => setCaption(button.caption)}
-          onMouseLeave={() => setCaption('')}
-          onFocus={() => setCaption(button.caption)}
-          onBlur={() => setCaption('')}
-        >
-          {pack.extras.get(button.symbol) ? (
-            <img src={pack.extras.get(button.symbol)!.url} alt="" />
-          ) : (
-            <Icon name={button.icon} size={button.symbol === 492 ? 75 : 20} />
-          )}
-        </button>
-      ))}
-      <div className="pause-caption" aria-live="polite">
-        <BubbleText pack={pack} font="Accidental Presidency" size={17}>
-          {caption || ' '}
-        </BubbleText>
-      </div>
-    </Dialog>
   );
 }
 

@@ -16,6 +16,7 @@ import { showHudProof } from './hud';
 import { showFieldOverlayProof } from './field-overlays';
 import { showTacticalHudProof } from './tactical-hud';
 import { runPlaythrough } from '../playthrough/browser';
+import { showPauseFlow } from './pause-flow';
 import { showWinScreen } from './screens';
 import { showDegradationProof } from './degradation';
 import { showCrossingProof } from './crossing';
@@ -116,6 +117,12 @@ async function reset() {
   world = undefined;
   stage.replaceChildren();
   stage.style.height = '';
+  if (fixture.value === 'pause-flow') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    unmountScreen = await showPauseFlow(pack, stage);
+    status.textContent = 'Ready · manually clocked production pause/Info flow';
+    return;
+  }
   if (fixture.value === 'playthrough') {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
     const run = await runPlaythrough(pack, stage, (text) => (status.textContent = text));

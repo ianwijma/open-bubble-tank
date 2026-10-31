@@ -2,9 +2,18 @@
 import { useEffect, useRef, useState } from 'react';
 import type { AssetPack } from '@/game/assets/asset-pack';
 import type { Tank } from '@/game/core/types';
+import type { StageRuntime } from '@/game/services/stage-runtime';
 
-/** A frozen copy of the current live pose, at the original scale, above the blurred field. */
-export function TankPortrait({ pack, tank }: { pack: AssetPack; tank: Tank }) {
+/** The current mounted tank above the blurred field; source child clips keep their stage clock. */
+export function TankPortrait({
+  pack,
+  tank,
+  stage,
+}: {
+  pack: AssetPack;
+  tank: Tank;
+  stage?: StageRuntime;
+}) {
   const host = useRef<HTMLSpanElement>(null);
   const [error, setError] = useState(false);
   useEffect(() => {
@@ -36,7 +45,14 @@ export function TankPortrait({ pack, tank }: { pack: AssetPack; tank: Tank }) {
         preserveDrawingBuffer: true,
       });
       const view = new TankView(tank.design, pack, textures);
+      const unsubscribe = stage?.subscribe({
+        draw: () => {
+          view.update(tank);
+          app.render();
+        },
+      });
       dispose = () => {
+        unsubscribe?.();
         view.destroy();
         app.destroy({ removeView: true }, { children: true });
         textures.destroy();
@@ -62,7 +78,7 @@ export function TankPortrait({ pack, tank }: { pack: AssetPack; tank: Tank }) {
       cancelled = true;
       release();
     };
-  }, [pack, tank]);
+  }, [pack, tank, stage]);
   return (
     <span
       ref={host}
