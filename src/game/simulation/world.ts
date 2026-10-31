@@ -1160,8 +1160,6 @@ export function geometricHit(t: Tank, x: number, y: number) {
   const local = rotate({ x: x - t.x, y: y - t.y }, -t.rotation);
   return t.design.parts.some(
     (p) =>
-      !t.hiddenParts.has(p.key) &&
-      !t.removedParts.has(p.key) &&
-      Math.hypot(local.x - p.x, local.y - p.y) < p.radius * p.scale,
+      !t.removedParts.has(p.key) && Math.hypot(local.x - p.x, local.y - p.y) < p.radius * p.scale,
   );
 }
