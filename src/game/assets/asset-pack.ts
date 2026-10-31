@@ -10,7 +10,7 @@ import {
   scriptBounds,
   type ScriptBoundsSource,
 } from './projectile-bounds';
-import { protectionRadius } from '../core/protection-size';
+import { protectionRadius, protectionScale } from '../core/protection-size';
 import { MINIMAP } from '../core/minimap';
 import { HUD } from '../core/hud';
 import { WIN_SCREEN } from '../core/win-screen';
@@ -28,7 +28,8 @@ import effectArt from '../data/effect-art.json';
 import screenEffectArt from '../data/screen-effect-art.json';
 import mineArt from '../data/mine-art.json';
 import { buildDisplayList } from './display-list';
-import { mockPart, mockPartLeaf } from './mock-part';
+import { mockPart, mockPartLeaf, mockPartLeafHit } from './mock-part';
+import { ShapeContact } from './shape-contact';
 import mockPartTimelines from '../data/mock-part-timelines.json';
 import { mockProjectileHit } from './mock-projectile';
 import { authoredProjectileBounds } from './projectile-geometry';
@@ -90,6 +91,7 @@ interface ShapeInfo {
   id: number;
   bounds?: { xMin: number; yMin: number; xMax: number; yMax: number };
   startBounds?: { xMin: number; yMin: number; xMax: number; yMax: number };
+  runs?: unknown[];
 }
 interface FontInfo {
   id: number;
@@ -200,6 +202,9 @@ export class AssetPack {
   private morphs = new Map<number, ReturnType<typeof parseMorphShapeTag>>();
   private morphRasters = new Map<string, Raster>();
   private morphPixels = 0;
+  private shapeContacts = new Map<string, ShapeContact>();
+  private contactContext?: CanvasRenderingContext2D;
+  static readonly SHAPE_CONTACT_LIMIT = 256;
   static readonly MORPH_CACHE_PIXELS = 8 * 1024 * 1024;
   private texts = new Map<number, TextInfo>();
   private fonts = new Map<number, FontInfo>();
@@ -210,6 +215,7 @@ export class AssetPack {
   private classPoses = new Map<number, SwfClip>();
   private positivePosters = new Map<number, Raster>();
   private partClips = new WeakMap<Tank, { design: TankDesign; parts: Map<string, PartPlayback> }>();
+  private infections = new WeakMap<Tank, { startedAt: number; clip: SwfClip }>();
   private forcefieldClones = new WeakMap<
     Tank,
     {
@@ -609,6 +615,9 @@ export class AssetPack {
   get morphCachePixels() {
     return this.morphPixels;
   }
+  get shapeContactCount() {
+    return this.shapeContacts.size;
+  }
   morphRaster(id: number, ratio = 0): Raster | null {
     const morph = this.morphs.get(id);
     if (!morph) return null;
@@ -770,7 +779,48 @@ export class AssetPack {
   clipScriptBounds(pose: SwfClip) {
     return scriptBounds(this.scriptGeometry, pose.id, pose.age, undefined, undefined, [], 0, pose);
   }
+  /** Nine independently initialized infectedbubblepop_398 clips share paint/contact identity. */
+  infectionClip(tank: Tank) {
+    const age = tank.artAge - tank.infectStartedAt + 1;
+    let state = this.infections.get(tank);
+    if (!state || state.startedAt !== tank.infectStartedAt || state.clip.age > age) {
+      const random = new Random(
+        (Math.imul(tank.uid + 1, 0x9e3779b1) ^ tank.infectStartedAt ^ 0x1f3ec7ed) >>> 0 || 1,
+      );
+      state = {
+        startedAt: tank.infectStartedAt,
+        clip: new SwfClip(INFECTED_ART, this, () => random.next()),
+      };
+      this.infections.set(tank, state);
+    }
+    state.clip.advance(age);
+    return state.clip;
+  }
+  private leafContact(id: number, x: number, y: number, ratio = 0): boolean | undefined {
+    if (this.mode === 'mock') {
+      const hit = mockPartLeafHit(id, x, y);
+      if (hit !== undefined) return hit;
+      // Invisible green muzzle helper23 has geometry despite its zero-alpha placement.
+      if (id === 23) return Math.hypot(x, y) <= 1.45;
+    }
+    const morph = this.morphs.get(id);
+    ratio = Number.isFinite(ratio) ? Math.max(0, Math.min(65535, Math.round(ratio))) : 0;
+    const shape = morph ? undefined : this.shapes.get(id);
+    if (!morph && !shape?.runs) return undefined;
+    const key = `${id}:${morph ? ratio : 0}`;
+    let contact = this.shapeContacts.get(key);
+    if (!contact) {
+      contact = new ShapeContact(morph ? morphShapeAtRatio(morph, ratio) : shape);
+      this.shapeContacts.set(key, contact);
+      if (this.shapeContacts.size > AssetPack.SHAPE_CONTACT_LIMIT)
+        this.shapeContacts.delete(this.shapeContacts.keys().next().value!);
+    }
+    this.contactContext ??= document.createElement('canvas').getContext('2d')!;
+    return contact.hit(this.contactContext, x, y);
+  }
   hitClip(clip: SwfClip, x: number, y: number, ratio = 0): boolean {
+    const geometric = this.leafContact(clip.id, x, y, ratio);
+    if (geometric !== undefined) return geometric;
     if (this.morphs.has(clip.id)) return alphaHit(this.morphRaster(clip.id, ratio)!, x, y);
     const leaf = this.leaves.get(clip.id);
     if (leaf) return alphaHit(leaf, x, y);
@@ -795,7 +845,6 @@ export class AssetPack {
         masks.push(p);
         continue;
       }
-      if (p.color && p.color.mult[3] === 0 && p.color.add[3] === 0) continue;
       if (masks.some((mask) => p.depth > mask.depth && p.depth <= mask.clipDepth! && !hit(mask)))
         continue;
       if (hit(p)) return true;
@@ -812,6 +861,8 @@ export class AssetPack {
     ratio = 0,
   ): boolean {
     if (depth > 24) return false;
+    const geometric = this.leafContact(id, x, y, ratio);
+    if (geometric !== undefined) return geometric;
     if (this.morphs.has(id)) return alphaHit(this.morphRaster(id, ratio)!, x, y);
     const leaf = this.leaves.get(id);
     if (leaf) return alphaHit(leaf, x, y);
@@ -837,7 +888,6 @@ export class AssetPack {
         masks.push(p);
         continue;
       }
-      if (p.color && p.color.mult[3] === 0 && p.color.add[3] === 0) continue;
       if (
         masks.some(
           (mask) => p.depth > mask.depth && p.depth <= mask.clipDepth! && !hitPlacement(mask),
@@ -888,8 +938,85 @@ export class AssetPack {
     for (const p of t.design.parts) {
       if (this.hitPart(t, p, x, y)) return true;
     }
-    return false;
+    const local = rotate({ x: x - t.x, y: y - t.y }, -t.rotation);
+    return this.hitAttachments(t, local.x, local.y);
   };
+  private hitAttachments(tank: Tank, x: number, y: number) {
+    const scaled = (id: number, age: number, angle: number, diameter: number, uniform = false) => {
+      const point = rotate({ x, y }, -angle);
+      const scale = protectionScale(this.symbolScriptBounds(id), diameter, uniform);
+      return (
+        !!scale.x && !!scale.y && this.symbolHit(id, age, point.x / scale.x, point.y / scale.y)
+      );
+    };
+    const film = tank.shield > 0 || tank.displayChildren.includes('shield-film');
+    const hasHit = film || tank.displayChildren.includes('shield-hit');
+    const diameter = !hasHit
+      ? 0
+      : tank.side === 'player'
+        ? (tank.shieldDiameter ?? this.protectionRadius(tank) * 2)
+        : tank.radius * 2;
+    if (this.mode === 'swf') {
+      if (tank.statusDecoration) {
+        const decoration = tank.statusDecoration;
+        for (const mark of decoration.marks) {
+          const point = rotate({ x: x - mark.x, y: y - mark.y }, -mark.angle);
+          const age = decoration.kind === 'stun' ? mark.frame + decoration.artAge : mark.frame;
+          if (this.symbolHit(STATUS_ART[decoration.kind], age, point.x, point.y)) return true;
+        }
+      }
+      if (tank.status.infect > 0) {
+        const point = rotate({ x, y }, -tank.infectionAngle),
+          scale = (tank.radius * 1.5) / 36;
+        if (scale && this.hitClip(this.infectionClip(tank), point.x / scale, point.y / scale))
+          return true;
+      }
+      const turret = tank.side !== 'player';
+      if (
+        film &&
+        scaled(
+          turret ? PROTECTION_ART.turretShield : PROTECTION_ART.shield,
+          turret ? Math.min(25, tank.shieldAge + 1) : tank.shieldAge + 1,
+          0,
+          diameter,
+        )
+      )
+        return true;
+      if (
+        hasHit &&
+        scaled(
+          turret ? PROTECTION_ART.turretShieldHit : PROTECTION_ART.shieldHit,
+          Math.min(16, tank.shieldHitAge + 1),
+          tank.shieldHitAngle,
+          tank.shieldHitDiameter ?? diameter,
+        )
+      )
+        return true;
+    } else if (film && Math.hypot(x, y) <= (Number.isNaN(diameter) ? 130 : diameter) / 2)
+      return true;
+    if (tank.forcefieldAttached && tank.design.parts.some((part) => part.type === 5005)) {
+      const maskHit = tank.design.parts.some((part) => {
+        const point = rotate(
+          { x: (x - part.x) / part.scale, y: (y - part.y) / part.scale },
+          -part.rotation,
+        );
+        return this.hitClip(this.forcefieldPartClip(tank, part), point.x, point.y);
+      });
+      if (maskHit) {
+        const diameter = this.forcefieldRadius(tank) * 2.1;
+        if (this.mode === 'swf')
+          return scaled(
+            PROTECTION_ART.forcefield,
+            tank.forcefieldFrame,
+            tank.forcefieldAngle,
+            diameter,
+            true,
+          );
+        return Math.hypot(x, y) <= (Number.isNaN(diameter) ? 130 : diameter) / 2;
+      }
+    }
+    return false;
+  }
   hitDesignPart(p: TankPart, x: number, y: number, age?: number) {
     const local = rotate({ x: (x - p.x) / p.scale, y: (y - p.y) / p.scale }, -p.rotation);
     const symbol = partById(p.type)?.symbol;
@@ -928,7 +1055,7 @@ export class AssetPack {
     return authoredProjectileBounds(b, owner) ?? mockProjectileBounds(b);
   };
   hitPart = (t: Tank, p: TankPart, x: number, y: number) => {
-    if (t.hiddenParts.has(p.key) || t.removedParts.has(p.key)) return false;
+    if (t.removedParts.has(p.key)) return false;
     const pt = rotate({ x: x - t.x, y: y - t.y }, -t.rotation);
     const gun = t.guns.find((g) => g.part.key === p.key);
     const local = rotate(
@@ -974,8 +1101,11 @@ export class AssetPack {
     this.classPoses.clear();
     this.positivePosters.clear();
     this.partClips = new WeakMap();
+    this.infections = new WeakMap();
     this.forcefieldClones = new WeakMap();
     this.morphRasters.clear();
+    this.shapeContacts.clear();
+    this.contactContext = undefined;
     this.morphPixels = 0;
     this.morphs.clear();
     this.extras.clear();

@@ -4,6 +4,7 @@ import type { Projectile, Tank } from '../core/types';
 import type { World } from './world';
 import { projectileImpact } from './effects';
 import { projectileCallback } from './projectile-contact';
+import { addTankChild } from './tank-display';
 
 function movement(bullet: Projectile) {
   if (bullet.deflected) return bullet.deflected;
@@ -35,6 +36,11 @@ export function tickTurret(world: World, turret: Projectile, owner: Tank | undef
   }
   turret.artFrame = turret.build ?? 1;
   if (turret.artFrame === 4) {
+    if (!owner.displayChildren.includes('shield-hit')) {
+      owner.shieldHitDiameter = owner.radius * 2;
+      addTankChild(owner, 'shield-hit');
+    }
+    if (!owner.displayChildren.includes('shield-film')) addTankChild(owner, 'shield-film');
     if (owner.shield === 0) owner.shieldAge = 0;
     owner.shield = 2;
   }

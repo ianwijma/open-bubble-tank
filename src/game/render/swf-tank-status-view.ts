@@ -72,7 +72,7 @@ export class SwfTankStatusView {
       this.infected.root.scale.set((tank.radius * 1.5) / 36);
       this.infected.setParentAlpha(tank.alpha);
       this.infected.root.angle = tank.infectionAngle;
-      this.infected.update(tank.artAge - tank.infectStartedAt + 1);
+      this.infected.updatePose(this.assets.infectionClip(tank));
     } else if (this.infected) {
       this.infected.destroy();
       this.infected = undefined;

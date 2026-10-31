@@ -3,6 +3,7 @@ import type { AssetPack } from '../assets/asset-pack';
 import type { Tank, TankChild } from '../core/types';
 import { partById } from '../data/catalog';
 import { PROTECTION_ART } from '../data/status-art';
+import { protectionScale } from '../core/protection-size';
 import { SwfSymbolView, type RasterTextures } from './swf-symbol-view';
 
 /** AGunShield/_-DO display clips and APassiveForcefield's cloned-tank silhouette mask. */
@@ -27,19 +28,8 @@ export class SwfProtectionView {
   }
   private size(view: SwfSymbolView, width: number, uniform = false) {
     const bounds = this.assets.symbolScriptBounds(view.id);
-    view.root.scale.set(1);
-    // Flash ignores NaN/negative size assignments, retaining authored scale.
-    if (bounds && width >= 0)
-      view.root.scale.set(
-        bounds.width ? width / bounds.width : 1,
-        uniform
-          ? bounds.width
-            ? width / bounds.width
-            : 1
-          : bounds.height
-            ? width / bounds.height
-            : 1,
-      );
+    const scale = protectionScale(bounds, width, uniform);
+    view.root.scale.set(scale.x, scale.y);
   }
   update(tank: Tank) {
     if (tank.shield > 0 || tank.displayChildren.includes('shield-film')) {
