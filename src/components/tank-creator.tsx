@@ -1,14 +1,10 @@
 'use client';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { AssetPack } from '@/game/assets/asset-pack';
+import { measureClass } from '@/game/assets/class-measurement';
 import type { TankDesign, TankPart } from '@/game/core/types';
 import { costs, gunBudget, PARTS, partById } from '@/game/data/catalog';
-import {
-  canPlacePart,
-  classFromPixelCount,
-  suggestedStats,
-  validateBuild,
-} from '@/game/simulation/designer';
+import { canPlacePart, suggestedStats, validateBuild } from '@/game/simulation/designer';
 import { exportDesign } from '@/game/services/profile';
 import {
   paletteState,
@@ -764,21 +760,4 @@ export function TankCreator({
       ) : null}
     </div>
   );
-}
-export function measureClass(design: TankDesign, pack: AssetPack) {
-  if (!design.parts.length) return 1;
-  const extent = Math.min(
-    1000,
-    Math.ceil(Math.max(...design.parts.map((p) => Math.hypot(p.x, p.y) + p.radius * p.scale)) + 5),
-  );
-  const cv = document.createElement('canvas');
-  cv.width = cv.height = extent * 2;
-  const ctx = cv.getContext('2d', { willReadFrequently: true })!;
-  ctx.translate(extent, extent);
-  for (const p of design.parts) pack.drawPart(ctx, p);
-  const data = ctx.getImageData(0, 0, cv.width, cv.height).data;
-  let pixels = 0;
-  for (let i = 0; i < data.length; i += 4)
-    if (data[i + 3] > 0 && (data[i] || data[i + 1] || data[i + 2])) pixels++;
-  return classFromPixelCount(pixels);
 }

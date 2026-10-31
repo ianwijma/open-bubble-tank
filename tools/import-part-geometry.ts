@@ -74,7 +74,8 @@ const circular = new Set([14, 21, 33, 41, 694, 718, 719, 2449]);
 const entries = PARTS.filter((p) => p.id >= 2000).map((part) => {
   // effect_Massive_Bullet_94.frame1 stops720 on its empty first frame.
   // A blind frame2 snapshot includes its charging particles around the idle gun.
-  const frame = part.id === 3008 ? 1 : 2;
+  // _-KE.frame1 also stops Rotating Machine Gun701 before its alternate frame2.
+  const frame = part.id === 3008 || part.id === 4015 ? 1 : 2;
   const bubbles: {
     leaf: number;
     matrix: SwfMatrix;

@@ -2,6 +2,7 @@ import { PARTS, partById } from '../data/catalog';
 import type { Projectile, Rect, Tank, TankDesign, TankPart } from '../core/types';
 import { Random, rotate } from '../core/math';
 import { SwfClip } from './swf-clip';
+import { partSnapshot } from './part-snapshot';
 import {
   mockProjectileBounds,
   projectileScriptBounds,
@@ -203,6 +204,9 @@ export class AssetPack {
   private sourceUrls: string[] = [];
   private displayCache = new Map<string, DisplayPlacement[]>();
   private dynamicWidths = new Map<number, number>();
+  private classFrames = new Map<number, Raster>();
+  private classPoses = new Map<number, SwfClip>();
+  private positivePosters = new Map<number, Raster>();
   private partClips = new WeakMap<Tank, { design: TankDesign; parts: Map<string, SwfClip> }>();
   private forcefieldClones = new WeakMap<Tank, { parts: Map<string, SwfClip>; radius: number }>();
   private scriptGeometry: ScriptBoundsSource = {
@@ -278,14 +282,22 @@ export class AssetPack {
     };
     try {
       for (const [i, part] of PARTS.entries()) {
-        // Thumbnails and class snapshots are frozen; live views run native timelines.
-        const frames = [2];
-        const rasters: Raster[] = [];
-        for (const f of frames) {
-          const raster = await pack.rasterSymbol(part.symbol, f);
-          if (raster) rasters.push(raster);
+        const pose = partSnapshot(part, pack),
+          raster = await pack.rasterClip(pose);
+        pack.frames.set(part.id, [raster ?? mockPart(part.id)]);
+        // Wiggle Cluster's root branches on its own Y. Child Y is already retained
+        // in the pose, so only a different root frame needs another cached poster.
+        const positive = partSnapshot(part, pack, 'poster', 1);
+        if (positive.frame !== pose.frame) {
+          const variant = await pack.rasterClip(positive);
+          if (variant) pack.positivePosters.set(part.id, variant);
         }
-        pack.frames.set(part.id, rasters.length ? rasters : [mockPart(part.id)]);
+        if (part.id < 2000) {
+          const classPose = partSnapshot(part, pack, 'class');
+          pack.classPoses.set(part.id, classPose);
+          const sample = await pack.rasterClip(classPose);
+          if (sample) pack.classFrames.set(part.id, sample);
+        }
         onProgress(0.2 + (0.35 * (i + 1)) / PARTS.length, `Composing ${part.name}`);
         if (i % 6 === 0)
           await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
@@ -353,6 +365,7 @@ export class AssetPack {
     frame = 1,
     seen = new Set<number>(),
     ratio = 0,
+    pose?: SwfClip,
   ): { body: string; bounds: Bounds } | null {
     if (seen.has(id) || seen.size > 24) return null;
     const next = new Set(seen);
@@ -377,18 +390,12 @@ export class AssetPack {
     if (text) return this.compileText(text);
     const sp = this.sprites.get(id);
     if (!sp) return null;
-    const localFrame = ((frame - 1) % sp.frameCount) + 1;
-    const list = new Map<number, Placement>();
-    for (const p of sp.placements) {
-      if (p.frame > localFrame) break;
-      if (p.remove) list.delete(p.depth);
-      else list.set(p.depth, { ...(list.get(p.depth) ?? {}), ...p });
-    }
+    const placements = pose?.placements ?? this.displayList(id, frame);
     const children: { body: string; bounds: Bounds }[] = [];
     const masks: { id: string; depth: number; end: number; bounds: Bounds; body: string }[] = [];
-    for (const p of [...list.values()].sort((a, b) => a.depth - b.depth)) {
-      if (p.charId === undefined) continue;
-      const child = this.compile(p.charId, frame, next, p.ratio ?? 0);
+    for (const p of placements) {
+      const childPose = pose?.children.get(p.depth)?.clip;
+      const child = this.compile(p.charId, frame, next, p.ratio ?? 0, childPose);
       if (!child) continue;
       const m = p.matrix ?? identity;
       if (p.clipDepth !== undefined) {
@@ -486,6 +493,13 @@ export class AssetPack {
   }
   async rasterSymbol(id: number, frame = 1, ratio = 0): Promise<Raster | null> {
     const compiled = this.compile(id, frame, new Set(), ratio);
+    return this.rasterCompiled(compiled);
+  }
+  /** Freeze each retained child at its own frame; raw rasterSymbol remains authored-frame access. */
+  async rasterClip(clip: SwfClip): Promise<Raster | null> {
+    return this.rasterCompiled(this.compile(clip.id, clip.frame, new Set(), 0, clip));
+  }
+  private async rasterCompiled(compiled: { body: string; bounds: Bounds } | null) {
     if (!compiled) return null;
     const b = compiled.bounds;
     if (b.width <= 0 || b.height <= 0 || b.width > 2500 || b.height > 2500) return null;
@@ -494,9 +508,40 @@ export class AssetPack {
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${bounds.width}" height="${bounds.height}" viewBox="${bounds.x} ${bounds.y} ${bounds.width} ${bounds.height}">${compiled.body}</svg>`;
     return rasterSvg(svg, bounds);
   }
-  part(id: number, frame = 0): Raster {
-    const frames = this.frames.get(id === 2013 ? 5003 : id) ?? this.frames.get(1001)!;
+  part(id: number, frame = 0, y = 0): Raster {
+    id = id === 2013 ? 5003 : id;
+    const variant = y > 0 && this.positivePosters.get(id);
+    if (variant) return variant;
+    const frames = this.frames.get(id) ?? this.frames.get(1001)!;
     return frames[Math.floor(frame / 5) % frames.length];
+  }
+  classBody(id: number) {
+    return this.classFrames.get(id) ?? this.part(id);
+  }
+  classBodyBounds(part: TankPart) {
+    const angle = (part.rotation * Math.PI) / 180;
+    const matrix = {
+      a: Math.cos(angle) * part.scale,
+      b: Math.sin(angle) * part.scale,
+      c: -Math.sin(angle) * part.scale,
+      d: Math.cos(angle) * part.scale,
+      tx: part.x * 20,
+      ty: part.y * 20,
+    };
+    const pose = this.classPoses.get(part.type);
+    if (pose)
+      return scriptBounds(this.scriptGeometry, pose.id, pose.age, matrix, undefined, [], 0, pose);
+    const raster = this.classBody(part.type),
+      pad = this.mode === 'swf' ? 2 : 3;
+    return transformBounds(
+      {
+        x: raster.x + pad,
+        y: raster.y + pad,
+        width: raster.width - pad * 2,
+        height: raster.height - pad * 2,
+      },
+      matrix,
+    );
   }
   spriteInfo(id: number) {
     return this.sprites.get(id);
@@ -772,7 +817,7 @@ export class AssetPack {
     const symbol = partById(p.type)?.symbol;
     if (this.mode === 'swf' && age !== undefined && symbol)
       return this.symbolHit(symbol, age, local.x, local.y);
-    return alphaHit(this.part(p.type), local.x, local.y);
+    return alphaHit(this.part(p.type, 0, p.y), local.x, local.y);
   }
   hitProjectile = (b: Projectile, x: number, y: number) => {
     if (this.mode !== 'swf' || !this.hasSymbol(b.symbol)) return mockProjectileHit(b, x, y);
@@ -832,8 +877,8 @@ export class AssetPack {
     for (const p of design.parts) this.drawPart(ctx, p);
     return canvas.toDataURL('image/png');
   }
-  drawPart(ctx: CanvasRenderingContext2D, p: TankPart) {
-    const r = this.part(p.type);
+  drawPart(ctx: CanvasRenderingContext2D, p: TankPart, purpose: 'poster' | 'class' = 'poster') {
+    const r = purpose === 'class' ? this.classBody(p.type) : this.part(p.type, 0, p.y);
     ctx.save();
     ctx.translate(p.x, p.y);
     ctx.rotate((p.rotation * Math.PI) / 180);
@@ -847,6 +892,9 @@ export class AssetPack {
     this.leaves.clear();
     this.displayCache.clear();
     this.dynamicWidths.clear();
+    this.classFrames.clear();
+    this.classPoses.clear();
+    this.positivePosters.clear();
     this.partClips = new WeakMap();
     this.forcefieldClones = new WeakMap();
     this.morphRasters.clear();
