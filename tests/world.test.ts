@@ -359,6 +359,7 @@ describe('advanced parts', () => {
     };
     step(w, 5, { fire: true });
     expect(carrier.removedParts.has(part.key)).toBe(true);
+    expect(carrier.displayChildren).not.toContain(`part:${part.key}`);
     expect(carrier.dead).toBe(true);
     expect(new Set(released).size).toBe(6);
     // Live-array children also run immediately and can already have been shot down.

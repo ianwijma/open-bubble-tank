@@ -1,6 +1,7 @@
 import { angleTo, DEG, deltaAngle, direction, distance, rotate } from '../core/math';
 import type { GunState, InputFrame, Projectile, Tank } from '../core/types';
 import type { World } from './world';
+import { removeTankChild } from './tank-display';
 import { tickHealingBeam } from './healing';
 import { tickDamageBeam } from './beams';
 import { tickTurret, builderHitsObject } from './turrets';
@@ -206,6 +207,7 @@ export function releaseCarrier(world: World, t: Tank, gun: GunState) {
     }
   }
   t.removedParts.add(gun.part.key);
+  removeTankChild(t, `part:${gun.part.key}`);
   t.guns = t.guns.filter((g) => g !== gun);
   if (t.design.parts.every((p) => p.type === 4013) && !t.guns.some((g) => g.part.type === 4013))
     world.kill(t);
