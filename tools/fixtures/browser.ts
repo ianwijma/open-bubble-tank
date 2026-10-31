@@ -35,6 +35,7 @@ import { showGlowProof } from './glows';
 import { showMockPartsProof } from './mock-parts';
 import { showPartSnapshots } from './part-snapshots';
 import { showMountedArt } from './mounted-art';
+import { showForcefieldOrder } from './forcefield-order';
 import { showForcefieldLifecycle } from './forcefield-lifecycle';
 import { showMockPartMotion } from './mock-part-motion';
 
@@ -115,6 +116,12 @@ async function reset() {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
     status.dataset.mockPartMotion = JSON.stringify(await showMockPartMotion(pack, stage));
     status.textContent = 'Ready · all31 weapon and behavior previews with source motion';
+    return;
+  }
+  if (fixture.value === 'forcefield-order') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    status.dataset.forcefieldOrder = JSON.stringify(await showForcefieldOrder(pack, stage));
+    status.textContent = 'Ready · source child order and retained shield film';
     return;
   }
   if (fixture.value === 'forcefield-lifecycle') {

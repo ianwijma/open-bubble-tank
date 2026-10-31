@@ -4,6 +4,9 @@ export interface Vec {
   x: number;
   y: number;
 }
+/** Direct _-Zx children; attached status marks form one contiguous group. */
+export type TankChild =
+  `part:${string}` | 'forcefield' | 'shield-hit' | 'shield-film' | 'infection' | 'status';
 export interface Rect extends Vec {
   width: number;
   height: number;
@@ -110,6 +113,8 @@ export interface Tank extends Vec {
   forcefieldAttached: boolean;
   forcefieldGeneration: number;
   forcefieldStartedAt: number;
+  /** Source direct-child order; browser objects remain renderer-owned. */
+  displayChildren: TankChild[];
   age: number;
   /** Attached artwork stage ticks, independent of gameplay Run. */
   artAge: number;

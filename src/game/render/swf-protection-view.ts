@@ -1,6 +1,6 @@
 import { Container } from 'pixi.js';
 import type { AssetPack } from '../assets/asset-pack';
-import type { Tank } from '../core/types';
+import type { Tank, TankChild } from '../core/types';
 import { partById } from '../data/catalog';
 import { PROTECTION_ART } from '../data/status-art';
 import { SwfSymbolView, type RasterTextures } from './swf-symbol-view';
@@ -42,7 +42,7 @@ export class SwfProtectionView {
       );
   }
   update(tank: Tank) {
-    if (tank.shield > 0) {
+    if (tank.shield > 0 || tank.displayChildren.includes('shield-film')) {
       const turret = tank.side !== 'player';
       const diameter = turret
         ? tank.radius * 2
@@ -114,6 +114,15 @@ export class SwfProtectionView {
       this.field.update(tank.artAge - tank.forcefieldStartedAt + 1, tank.forcefieldFrame);
       this.field.root.angle = tank.forcefieldAngle;
     }
+  }
+  /** The splash and its silhouette mask move together as one source wrapper. */
+  displayEntries(): [TankChild, Container][] {
+    const entries: [TankChild, Container][] = [];
+    if (this.hit) entries.push(['shield-hit', this.hit.root]);
+    if (this.shield) entries.push(['shield-film', this.shield.root]);
+    if (this.field) entries.push(['forcefield', this.field.root]);
+    if (this.fieldMask) entries.push(['forcefield', this.fieldMask]);
+    return entries;
   }
   destroy() {
     this.shield?.destroy();
