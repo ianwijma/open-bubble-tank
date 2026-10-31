@@ -1,6 +1,8 @@
 import { CLASS_PIXELS, CLASS_RINGS } from '../core/constants';
 import { costs, gunBudget, partById } from '../data/catalog';
+import { partUnlocked } from '../core/part-unlocks';
 import type { TankDesign, TankPart } from '../core/types';
+import { creatorSavePrerequisite } from '../core/creator-save';
 // _-7q checks the rectangular selection area for classes 5/6; save validation
 // separately checks the max-class ring for classes 1..5 (_-AA).
 export function canPlacePart(part: TankPart, currentClass: number, maxClass: number) {
@@ -13,16 +15,16 @@ function partExtent(part: TankPart) {
 export function classFromPixelCount(count: number) {
   return CLASS_PIXELS.findIndex((max) => count <= max) + 1;
 }
-export function validateBuild(design: TankDesign, level: number, maxClass: number) {
+export function validateBuild(
+  design: TankDesign,
+  level: number,
+  maxClass: number,
+  unlockedParts?: readonly number[],
+) {
   const { gp, bp } = costs(design.parts),
     errors: string[] = [];
-  if (!design.parts.some((p) => p.type < 2000))
-    errors.push('Your tank needs at least one body bubble.');
-  if (
-    design.avatar &&
-    !design.parts.some((p) => Math.floor(p.type / 1000) === 2 || Math.floor(p.type / 1000) === 3)
-  )
-    errors.push('Your avatar needs at least one weapon.');
+  const prerequisite = creatorSavePrerequisite(design);
+  if (prerequisite) errors.push(prerequisite);
   if (design.classId > maxClass) errors.push(`This build exceeds class ${maxClass}.`);
   if (maxClass < 6 && design.parts.some((p) => partExtent(p) > CLASS_RINGS[maxClass - 1]))
     errors.push(`Place every part inside the class ${maxClass} ring.`);
@@ -43,19 +45,9 @@ export function validateBuild(design: TankDesign, level: number, maxClass: numbe
       (def.lower ? design.classId > def.classCost : design.classId < def.classCost)
     )
       errors.push(`${def.name} requires a ${def.lower ? 'smaller' : 'larger'} class.`);
-    if (design.avatar && def.tier > level)
+    if (design.avatar && !partUnlocked(def.id, level, unlockedParts))
       errors.push(`${def.name} unlocks at tank level ${def.tier}.`);
   }
   return [...new Set(errors)];
 }
-export function suggestedStats(design: TankDesign) {
-  const { gp, bp } = costs(design.parts),
-    c = design.classId;
-  const life = Math.max(1, Math.round((bp / 2 + gp * 3) * c));
-  const reward = Math.max(
-    1,
-    Math.round(life * (0.3 * ((7 - c) / 6) + 0.005 * gp + 0.1 - Math.min(0.1, 0.0005 * life))),
-  );
-  const speed = Math.max(0.1, Math.floor((3 * ((6 - c) / 6) + 0.5 - gp * 0.1) * 100) / 100);
-  return { life, reward, speed };
-}
+export { creatorSuggestedStats as suggestedStats } from '../core/creator-enemy-stats';

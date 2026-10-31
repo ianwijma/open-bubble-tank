@@ -24,10 +24,15 @@ test('secondary help migrates unseen and persists only a real Boolean', () => {
   });
   try {
     expect(loadProfile().secondaryHelpSeen).toBe(false);
+    expect(loadProfile().tankViewerHelpSeen).toBe(false);
     stored = JSON.stringify({ version: 1, secondaryHelpSeen: 'true' });
     expect(loadProfile().secondaryHelpSeen).toBe(false);
     expect(saveProfile({ ...defaultProfile(), secondaryHelpSeen: true })).toBe(true);
     expect(loadProfile().secondaryHelpSeen).toBe(true);
+    stored = JSON.stringify({ version: 1, tankViewerHelpSeen: 'true' });
+    expect(loadProfile().tankViewerHelpSeen).toBe(false);
+    expect(saveProfile({ ...defaultProfile(), tankViewerHelpSeen: true })).toBe(true);
+    expect(loadProfile().tankViewerHelpSeen).toBe(true);
   } finally {
     if (previous) Object.defineProperty(globalThis, 'localStorage', previous);
     else Reflect.deleteProperty(globalThis, 'localStorage');
@@ -60,7 +65,7 @@ test('creator enforces budgets, required bodies and unlock tiers', () => {
   expect(validateBuild(STARTER, 1, 2)).toEqual([]);
   const invalid = { ...STARTER, parts: [{ ...STARTER.parts[1], type: 3017 }] };
   const errors = validateBuild(invalid, 1, 2);
-  expect(errors.some((e) => e.includes('body'))).toBe(true);
+  expect(errors).toContain('You must have at least 1 bubble to save a tank');
   expect(errors.some((e) => e.includes('Gun Points'))).toBe(true);
   expect(errors.some((e) => e.includes('unlocks'))).toBe(true);
 });

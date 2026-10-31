@@ -2,7 +2,13 @@ import { CLASS_SPEED, FIELD_RADIUS, MAX_LIFE, STAGE } from '../core/constants';
 import { clamp, direction, distance, length, Random, rotate } from '../core/math';
 import { protectionRadius } from '../core/protection-size';
 import { advanceTankArt } from './tank-art';
+import { initializeHomingProjectile } from './homing-projectiles';
+import { detachForcefield } from './forcefield';
+import { removeTankChild } from './tank-display';
+import { killMountedShield } from './shields';
 import { MainEffects } from './main-effects';
+import { RunPartUnlocks, partUnlocked } from '../core/part-unlocks';
+import { ProfileClassAllowance } from '../core/profile-class';
 import type {
   CollisionTest,
   Effect,
@@ -21,7 +27,7 @@ import type {
   WorldEvent,
   WorldMode,
 } from '../core/types';
-import { AVATARS, BOSSES, costs, gunBudget, partById, STARTER } from '../data/catalog';
+import { AVATARS, BOSSES, costs, gunBudget, STARTER } from '../data/catalog';
 import { WEAPONS, type WeaponSpec } from '../data/weapons';
 import emitterData from '../data/emitters.json';
 import { moveEnemy } from './ai';
@@ -40,7 +46,6 @@ import { createTank } from './tank';
 import { spawnPickups, tickPickups } from './pickups';
 import { damageTank } from './damage';
 import { rollWave, UnitRoster } from './waves';
-import { healerPatient } from './healing';
 import { tickStatusDecoration, tickStatusTail } from './status';
 import fieldGeometry from '../data/field-geometry.json';
 import { nextMapMode, type MapMode } from '../core/minimap';
@@ -182,6 +187,7 @@ export class World {
     this.projectileTimelines.initialize(bullet);
     initializeSapper(this, bullet);
     initializeAvatarSeeker(this, bullet);
+    initializeHomingProjectile(this, bullet);
     if (bullet.kind === 'infect' && bullet.targetId === null) expireInfectionTarget(this, bullet);
     this.bullets.push(bullet);
     if (bullet.enemy) this.stats.enemyShots++;
@@ -209,6 +215,10 @@ export class World {
   private upgradeReturnMode: 'playing' | 'transit' = 'playing';
   private secondaryHelpReturnMode: 'playing' | 'transit' = 'playing';
   progression: Progression = { level: 0, history: [STARTER] };
+  private readonly partUnlocks = new RunPartUnlocks();
+  get unlockedParts() {
+    return this.partUnlocks.parts;
+  }
   offers: TankDesign[] = [];
   stats: Stats = {
     damageDone: 0,
@@ -256,6 +266,8 @@ export class World {
   rng: Random;
   roster: UnitRoster;
   hitTest: CollisionTest = geometricHit;
+  /** Runtime artwork supplies Script width; headless callers can inject its geometry. */
+  displayWidth = (tank: Tank) => tank.radius * 2;
   /** Browser geometry supplies transformed Script bounds; headless callers can inject it. */
   protectionRadius = (tank: Tank) =>
     protectionRadius(
@@ -283,6 +295,7 @@ export class World {
   };
   onProgression: (history: TankDesign[]) => void = () => {};
   onAchievement: (name: string) => void = () => {};
+  onCameraMove: (x: number, y: number) => void = () => {};
   secondaryHelpSeen = false;
   onSecondaryHelp: () => void = () => {};
   constructor(
@@ -290,6 +303,7 @@ export class World {
     history: TankDesign[] = [],
     seed?: number,
     readonly mainEffects = new MainEffects(),
+    readonly profileClass = new ProfileClassAllowance(),
   ) {
     this.rng = new Random(seed);
     this.roster = new UnitRoster(this.rng, localTanks);
@@ -308,6 +322,7 @@ export class World {
       0,
       max,
       Math.floor(max / 75) + 1,
+      this,
     );
     this.field = { col: 0, row: 0, scale: 1, enemies: [], cleared: true, boss: false, tutorial: 1 };
     this.fields.set('0,0', this.field);
@@ -485,8 +500,7 @@ export class World {
             return false;
           if (effect.frame < effect.total) return true;
           if (effect.kind === 'shield') {
-            effect.owner.shield = 0;
-            effect.owner.shieldManaged = false;
+            killMountedShield(effect.owner, effect.gun);
             return false;
           }
           if (this.screenShake) this.mainEffects.shake(20);
@@ -506,10 +520,6 @@ export class World {
   private tickField(input: InputFrame, visit: FieldVisit) {
     this.flushEnemyRemovals();
     this.allies = this.allies.filter((t) => !t.dead);
-    if (this.runtime.lastAllyCount !== this.allies.length) {
-      this.runtime.lastAllyCount = this.allies.length;
-      for (const e of this.field.enemies) e.targetId = null;
-    }
     // Separate live arrays match _-0D.Run: a spawner's newly appended enemies run now.
     for (const enemy of this.field.enemies) this.tickActor(enemy, input);
     for (const ally of this.allies) this.tickActor(ally, input);
@@ -545,15 +555,7 @@ export class World {
     }
     const boss = tank.side === 'enemy' && tank.design.id.startsWith('B');
     if (!boss && tank.status.sticky > 0) tank.status.sticky--;
-    const target = this.getTarget(tank);
-    const healer = tank.guns.find((gun) => gun.part.type === 6002);
-    moveEnemy(
-      tank,
-      target,
-      this.currentField.scale,
-      this.rng,
-      healer ? healerPatient(this, tank, healer) : undefined,
-    );
+    moveEnemy(tank, this.currentField.scale, this.rng, this.player);
     if (tank.status.jam > 0) tank.status.jam--;
     if (tank.status.jam === 0) this.tickGuns(tank, input);
     tickStatusDecoration(tank);
@@ -574,8 +576,7 @@ export class World {
       tank.dead = true;
       this.dropBubbles(tank, tank.design.reward);
       for (const bullet of this.bullets)
-        if (bullet.owner === tank.uid && ['orbital', 'beam', 'whip'].includes(bullet.kind))
-          bullet.dead = true;
+        if (bullet.owner === tank.uid && ['beam', 'whip'].includes(bullet.kind)) bullet.dead = true;
     }
   }
   beginCollapse(angle: number) {
@@ -648,7 +649,8 @@ export class World {
     this.player.x = this.player.y = 0;
     this.collapse = null;
     this.mode = 'playing';
-    this.jump({ x: -1, y: 0 }); // _-Ud's first marker wins the center-position tie.
+    // Destroy calls _-1E directly; only ordinary boundary exits run FinalPartCall.
+    this.jump({ x: -1, y: 0 }, false, { finalizeParts: false });
     this.addCombatEffect({ x: 0, y: 0 }, 'collapseFlash', {}, true);
   }
   private tickTank(t: Tank, maintainProtection = true) {
@@ -660,6 +662,7 @@ export class World {
   private tickProtection(t: Tank) {
     if (t.shield > 0 && !t.shieldManaged) {
       t.shield--;
+      if (t.shield === 0) removeTankChild(t, 'shield-film');
     }
     if (
       t.forcefield < 40 &&
@@ -692,25 +695,9 @@ export class World {
       p.velocity[axis] = v;
       p[axis] += v;
     }
+    this.onCameraMove(p.velocity.x, p.velocity.y);
   }
 
-  getTarget(t: Tank): Tank {
-    if (t.side === 'player') return this.nearestEnemy(t) || t;
-    const choices = t.side === 'enemy' ? [this.player, ...this.allies] : this.field.enemies;
-    let target = choices.find((c) => c.uid === t.targetId && !c.dead);
-    if (!target) {
-      target =
-        t.side === 'enemy'
-          ? this.allies.length && this.rng.int(1, 2) === 1
-            ? this.rng.pick(this.allies)
-            : this.player
-          : choices.length
-            ? this.rng.pick(choices)
-            : this.player;
-      t.targetId = target.uid;
-    }
-    return target;
-  }
   nearestEnemy(from: Vec): Tank | undefined {
     return this.field.enemies
       .filter((t) => !t.dead)
@@ -755,10 +742,7 @@ export class World {
   }
   scheduleShield(owner: Tank, gun: GunState) {
     owner.shieldManaged = true;
-    // Re-triggering a shield replaces its earlier cleanup effect.
-    this.pending = this.pending.filter(
-      (effect) => effect.kind !== 'shield' || effect.owner !== owner,
-    );
+    // Every trigger queues a callback bound to that mount, without cancelling earlier ones.
     this.pending.push({ kind: 'shield', owner, gun, frame: 1, total: 25 });
   }
   scheduleShot(owner: Tank, gun: GunState, frames: number) {
@@ -833,7 +817,7 @@ export class World {
           orbit: 0,
         });
     for (const b of this.bullets)
-      if (b.owner === t.uid && ['orbital', 'beam', 'whip'].includes(b.kind)) b.dead = true;
+      if (b.owner === t.uid && ['beam', 'whip'].includes(b.kind)) b.dead = true;
   }
   /** _-0D.RemoveEnemy classifies the birth code only when the queued object detaches. */
   flushEnemyRemovals() {
@@ -902,6 +886,7 @@ export class World {
     }
     if (p.life === p.maxLife && this.progression.level < 6) {
       this.progression.level++;
+      this.profileClass.recordUpgrade(this.progression.level);
       this.emit('upgrade');
       const design = this.progression.history[this.progression.level];
       if (design) this.rebuildPlayer(design);
@@ -916,6 +901,7 @@ export class World {
   getOffers(): TankDesign[] {
     const current = this.player.design.classId,
       level = this.progression.level;
+    this.partUnlocks.unlockThrough(level);
     const offers: TankDesign[] = [];
     for (const classId of [current - 1, current, current + 1]) {
       if (classId < 1 || classId > 6 || classId > Math.min(6, level + 1)) continue;
@@ -927,7 +913,7 @@ export class World {
           costs(t.parts).gp <= budget &&
           t.parts.every(
             (p) =>
-              (partById(p.type)?.tier ?? 0) <= level &&
+              partUnlocked(p.type, level, this.unlockedParts) &&
               Math.floor(p.type / 1000) !== 4 &&
               Math.floor(p.type / 1000) !== 6,
           ),
@@ -973,12 +959,13 @@ export class World {
       old.y,
       max,
       death ? max - 1 : Math.floor(max / 75) + 1,
+      this,
     );
     this.player.rotation = old.rotation;
     this.player.velocity = { ...old.velocity };
     this.secondaryCounter = 0;
     this.revision++;
-    for (const e of [...this.field.enemies, ...this.allies]) e.targetId = null;
+
     // PlaceAvatar tests only replacement avatars, including edits and downgrades.
     if (
       !this.secondaryHelpSeen &&
@@ -1003,12 +990,13 @@ export class World {
     this.player.life = 1;
     if (!this.transit) this.jump(nearestExit(this.player), true);
   }
-  jump(dir: Vec, deadhead = false) {
+  jump(dir: Vec, deadhead = false, { finalizeParts = true }: { finalizeParts?: boolean } = {}) {
     if (this.mode === 'transit') return;
     if (!deadhead) {
       this.wallTimers.cancel(this.player.uid);
       this.stopPrimaryFire();
       this.tacticalHud.clearPassives();
+      if (finalizeParts) detachForcefield(this.player);
     }
     const tutorial = tutorialForAttachment(this.stats.visited);
     let col = this.currentField.col + dir.x,
@@ -1041,6 +1029,9 @@ export class World {
             'enemy',
             this.rng.int(-200, 200) * wave.scale,
             this.rng.int(-200, 200) * wave.scale,
+            undefined,
+            undefined,
+            this,
           );
           t.rotation = this.rng.int(-180, 180);
           return t;
@@ -1103,6 +1094,8 @@ export class World {
       this.fieldVisit = tr.visit;
       this.player.shield = 0;
       this.player.shieldManaged = false;
+      // CleanUpShield clears immunity only; clearing the effects engine skips
+      // KillShield, so the old film remains attached until another trigger.
       for (const g of this.player.guns) g.counter = 0;
       this.transit = null;
       this.mode = 'playing';
@@ -1110,6 +1103,7 @@ export class World {
     } else {
       this.player.x += dx * 0.09;
       this.player.y += dy * 0.09;
+      this.onCameraMove(dx * 0.09, dy * 0.09);
     }
   }
   addEffect(pos: Vec, kind: Effect['kind'], radius: number, color: number, duration: number) {
@@ -1156,8 +1150,6 @@ export function geometricHit(t: Tank, x: number, y: number) {
   const local = rotate({ x: x - t.x, y: y - t.y }, -t.rotation);
   return t.design.parts.some(
     (p) =>
-      !t.hiddenParts.has(p.key) &&
-      !t.removedParts.has(p.key) &&
-      Math.hypot(local.x - p.x, local.y - p.y) < p.radius * p.scale,
+      !t.removedParts.has(p.key) && Math.hypot(local.x - p.x, local.y - p.y) < p.radius * p.scale,
   );
 }

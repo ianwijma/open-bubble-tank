@@ -4,6 +4,7 @@ out/
 *.tsbuildinfo
 test-results/
 playwright-report/
+reference-captures/
 *.swf
 .env*
 !.env.example

@@ -566,6 +566,53 @@ export function shapeToSVG(shape, bitmapByCid, { morph = false, usesFillWinding 
   return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${fmt(w)}px" height="${fmt(h)}px" viewBox="0 0 ${fmt(w)} ${fmt(h)}">${defsXml}${bodies.join('')}</svg>`;
 }
 
+/** Geometric fill/stroke contours for AVM hitTestPoint; paint alpha is irrelevant.
+ * Kept separate from SVG paint, filters, bitmap sampling and raster antialiasing.
+ * Coordinates stay in the shape's registration space, in original pixels.
+ */
+export function shapeHitGeometry(shape) {
+  const fills = [],
+    strokes = [];
+  for (const layer of [...new Set(shape.runs.map((run) => run.layer ?? 0))]) {
+    const fillBuckets = new Map(),
+      strokeBuckets = new Map();
+    for (const run of shape.runs.filter((run) => (run.layer ?? 0) === layer)) {
+      if (run.f0 !== run.f1) {
+        if (run.f0 > 0) {
+          if (!fillBuckets.has(run.f0)) fillBuckets.set(run.f0, []);
+          fillBuckets.get(run.f0).push(reverseRun(run));
+        }
+        if (run.f1 > 0) {
+          if (!fillBuckets.has(run.f1)) fillBuckets.set(run.f1, []);
+          fillBuckets.get(run.f1).push(run);
+        }
+      }
+      if (run.line > 0) {
+        if (!strokeBuckets.has(run.line)) strokeBuckets.set(run.line, []);
+        strokeBuckets.get(run.line).push(opsToPath(run, 0, 0));
+      }
+    }
+    for (const [index, runs] of fillBuckets)
+      if (shape.fills[index - 1])
+        fills.push({
+          path: fillPath(runs, 0, 0),
+          rule: shape.usesFillWinding ? 'nonzero' : 'evenodd',
+        });
+    for (const [index, paths] of strokeBuckets) {
+      const line = shape.lines[index - 1];
+      if (!line) continue;
+      strokes.push({
+        path: paths.join(' '),
+        width: px(line.width ?? line.startWidth ?? 0),
+        cap: { 0: 'round', 1: 'butt', 2: 'square' }[line.startCap ?? 0] ?? 'round',
+        join: { 0: 'round', 1: 'bevel', 2: 'miter' }[line.join ?? 0] ?? 'round',
+        miter: line.miterLimit ?? 10,
+      });
+    }
+  }
+  return { fills, strokes };
+}
+
 // ---------------------------------------------------------------------------
 // Tag parsers
 // ---------------------------------------------------------------------------
@@ -924,7 +971,7 @@ export function parseEditTextTag(body) {
   if (hasLayout) {
     e.align = br.bytes(1);
     e.margins = [br.bytes(2), br.bytes(2), br.bytes(2)];
-    e.leading = br.sb(16);
+    e.leading = (br.bytes(2) << 16) >> 16;
   }
   e.variableName = br.string();
   if (hasText) e.text = br.string();
@@ -1033,34 +1080,35 @@ export function parseButtonTag(body, tagCode) {
       if (!(br.p < br.u8.length * 8)) throw new Error('unterminated button records');
       const flags = br.ub(8); // flag bits continue unaligned after the previous matrix
       if (flags === 0) break;
-      states.push({
+      const record = {
         states: { hit: !!(flags & 8), down: !!(flags & 4), over: !!(flags & 2), up: !!(flags & 1) },
         charId: br.bytes(2),
         depth: br.bytes(2),
-      });
-      matrix(br);
+        matrix: matrix(br),
+      };
+      states.push(record);
     }
     return { id, tagCode, states };
   }
   br.ub(7);
-  br.ub(1); // reserved + trackAsMenu
+  const trackAsMenu = !!br.ub(1);
   const actionOffset = br.bytes(2);
   for (;;) {
     if (!(br.p < br.u8.length * 8)) throw new Error('unterminated button records');
     const flags = br.ub(8); // flag bits continue unaligned after the previous matrix
     if (flags === 0) break;
-    states.push({
+    const record = {
       states: { hit: !!(flags & 8), down: !!(flags & 4), over: !!(flags & 2), up: !!(flags & 1) },
       charId: br.bytes(2),
       depth: br.bytes(2),
-    });
-    matrix(br);
-    br.align(); // the record's color transform is byte-aligned (verified 37/37)
-    readCxFormWithAlpha(br); // DefineButton2 records always carry a color transform
-    if (flags & 0x10) skipFilterList(br); // buttonHasFilterList
-    if (flags & 0x20) br.bytes(1); // buttonHasBlendMode
+      matrix: matrix(br),
+      color: readCxFormWithAlpha(br),
+    };
+    if (flags & 0x10) record.filters = readFilterList(br);
+    if (flags & 0x20) record.blendMode = br.bytes(1);
+    states.push(record);
   }
-  return { id, tagCode, states, hasActions: actionOffset > 0 };
+  return { id, tagCode, states, trackAsMenu, hasActions: actionOffset > 0 };
 }
 
 // ---------------------------------------------------------------------------

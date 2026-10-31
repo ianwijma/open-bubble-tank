@@ -4,6 +4,24 @@ export interface Vec {
   x: number;
   y: number;
 }
+/** Direct _-Zx children; attached status marks form one contiguous group. */
+export type TankChild =
+  | `part:${string}`
+  | `shield-hit:${string}`
+  | `shield-film:${string}`
+  | 'forcefield'
+  | 'shield-hit'
+  | 'shield-film'
+  | 'infection'
+  | 'status';
+export interface ShieldClip {
+  key: `shield-hit:${string}` | `shield-film:${string}`;
+  kind: 'hit' | 'film';
+  style: 'mounted' | 'turret';
+  diameter: number;
+  age: number;
+  angle: number;
+}
 export interface Rect extends Vec {
   width: number;
   height: number;
@@ -44,6 +62,7 @@ export interface PartDefinition {
   classCost: number;
   lower: boolean;
   tier: number;
+  damageText: string;
   summary: string;
   flavor: string;
 }
@@ -60,17 +79,40 @@ export interface GunState {
   part: TankPart;
   counter: number;
   angle: number;
+  aim?: { avatar: boolean; rotates: boolean };
+  spikeContacts?: { uid: number; remaining: number }[];
   burst: number;
   burstTimer: number;
   autoTargetId?: number | null;
   rotatingCycle?: { remaining: number; active: boolean };
   suppressionCycle?: { delay: number; spacing: number };
   turretId?: number;
+  turretRefs?: Projectile[];
   spawnDesign?: TankDesign;
   patientId?: number;
+  /** EBehaviorHealer retains movTarget even after that patient's parent detaches. */
+  patientRef?: Tank;
+  targeting?: { targetId: number | null; allies: number };
+  behavior?: {
+    targetId: number | null;
+    allies: number;
+    cloak?: number;
+    wall?: {
+      age: number;
+      frequency: number;
+      amplitude: number;
+      point?: Vec;
+      radius?: number;
+      direction?: number;
+    };
+  };
   beamId?: number;
   shieldDiameter?: number;
+  shieldFilm?: ShieldClip;
+  shieldGeneration?: number;
   mineRefs?: MineReference[];
+  /** Latest non-overlapping mounted MovieClip.play episode, in stage-art ages. */
+  mountedPlay?: { child: string; age: number; frames: number };
 }
 export interface Tank extends Vec {
   /** The source caches strTankCode at birth, independently of mutable live data. */
@@ -97,6 +139,9 @@ export interface Tank extends Vec {
   shieldManaged?: boolean;
   shieldHitAge: number;
   shieldHitAngle: number;
+  /** AGunShield instances are independent; movShieldHit points to the newest hit. */
+  shieldClips: ShieldClip[];
+  shieldHitClip?: ShieldClip;
   teleportReady: boolean;
   hurtCounter: number;
   forcefield: number;
@@ -104,15 +149,28 @@ export interface Tank extends Vec {
   forcefieldCounter: number;
   forcefieldFrame: number;
   forcefieldAngle: number;
+  /** APassiveForcefield wrapper identity and its independent stage-clock origin. */
+  forcefieldAttached: boolean;
+  forcefieldGeneration: number;
+  forcefieldStartedAt: number;
+  /** Source direct-child order; browser objects remain renderer-owned. */
+  displayChildren: TankChild[];
   age: number;
   /** Attached artwork stage ticks, independent of gameplay Run. */
   artAge: number;
-  turnFrames: number;
-  turnRate: number;
-  holdTurn: number;
+  movement: {
+    frames: number;
+    rate: number;
+    hold: number;
+    safety: boolean;
+    lastAngle: number;
+    swarmPoint: Vec | null;
+    wallFlower: boolean;
+    skittish: boolean;
+    stationary: boolean;
+  };
   phase: number;
   alpha: number;
-  targetId: number | null;
   hiddenParts: Set<string>;
   removedParts: Set<string>;
   degradation: { debt: number; total: number; minimum: number };
@@ -184,6 +242,7 @@ export interface Projectile extends Vec {
   contactFrames?: number;
   stopped?: boolean;
   motion?: Vec;
+  homing?: { home?: Tank; target?: Tank; avatar: Tank; close: boolean };
   trailCounter?: number;
   trailPoint?: Vec;
   deflected?: Vec;
@@ -267,6 +326,8 @@ export interface Settings {
   music: boolean;
   shake: boolean;
   fps: 35 | 50 | 65 | 90;
+  /** Main.mainFPS is saved separately from the live Stage.frameRate. */
+  mainFps: 35 | 50 | 65;
   quality: 'high' | 'medium' | 'low';
   efficient: boolean;
   h1: string;
@@ -279,6 +340,8 @@ export interface Settings {
 export interface Profile {
   version: 1;
   secondaryHelpSeen: boolean;
+  tankViewerHelpSeen: boolean;
+  creatorHelpSeen: boolean;
   progression: TankDesign[];
   tanks: TankDesign[];
   settings: Settings;

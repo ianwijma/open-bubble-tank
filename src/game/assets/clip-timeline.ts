@@ -40,6 +40,10 @@ export class ClipTimeline {
     }
     return this.frame;
   }
+  /** MovieClip.play resumes without jumping or rerunning the current script. */
+  play() {
+    this.playing = true;
+  }
   private clamp(frame: number) {
     return Math.max(1, Math.min(this.count, Math.floor(frame)));
   }

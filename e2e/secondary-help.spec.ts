@@ -1,3 +1,5 @@
+import { saveCreator } from './helpers/creator';
+import { waitForMainMenu } from './helpers/main-menu';
 import { expect, test } from '@playwright/test';
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -39,6 +41,7 @@ for (const native of [false, true])
       await page.goto('/');
       if (native) await page.getByLabel('Bubble Tanks 3 Flash file').setInputFiles(swf);
       else await page.getByRole('button', { name: 'Play with mock assets' }).click();
+      await waitForMainMenu(page);
       await page.getByRole('button', { name: 'Play', exact: true }).click({ timeout: 60000 });
       await page.getByRole('button', { name: 'Original game size', exact: true }).click();
       await page.getByRole('checkbox', { name: 'Use saved avatars from previous game' }).check();
@@ -60,7 +63,7 @@ for (const native of [false, true])
       await page.getByRole('button', { name: 'Edit your tank', exact: true }).click();
       await page.getByRole('button', { name: 'YES', exact: true }).click();
       await page.getByRole('button', { name: 'Edit Your Current Tank', exact: true }).click();
-      await page.getByRole('button', { name: 'SAVE', exact: true }).click();
+      await saveCreator(page);
     };
     await enter();
     const help = page.getByRole('dialog', { name: 'Secondary weapon help' });

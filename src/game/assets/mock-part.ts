@@ -1,56 +1,112 @@
-import { partById } from '../data/catalog';
-import type { Raster } from './asset-pack';
+import layouts from '../data/part-geometry.json';
+import leafFacts from '../data/mock-part-leaves.json';
+import type { Bounds, Raster, SwfMatrix } from './asset-pack';
 
-const PALETTE = {
-  primary: { light: '#fff193', middle: '#e8c51c', edge: '#c59c08', rim: '#fff8c0' },
-  utility: { light: '#ffe9aa', middle: '#dcb84d', edge: '#ae8129', rim: '#fff3cb' },
-  enemy: { light: '#ffdc91', middle: '#eea144', edge: '#c36e24', rim: '#ffe8bf' },
-};
-type WarmPalette = (typeof PALETTE)[keyof typeof PALETTE];
+interface LeafFacts {
+  colors: { base: number; light: number; spot: number };
+  rim: number;
+  circles: {
+    x: number;
+    y: number;
+    rx: number;
+    ry: number;
+    lineWidth: number;
+    glints: { x: number; y: number; rx: number; ry: number; rotation: number; color: number }[];
+  }[];
+}
+const leaves = leafFacts as Record<number, LeafFacts>;
+/** Geometric procedural circles, including their rims, independent of paint alpha. */
+export function mockPartLeafHit(id: number, x: number, y: number): boolean | undefined {
+  const facts = leaves[id];
+  return facts?.circles.some((circle) => {
+    const rx = circle.rx + circle.lineWidth / 2,
+      ry = circle.ry + circle.lineWidth / 2;
+    return ((x - circle.x) / rx) ** 2 + ((y - circle.y) / ry) ** 2 <= 1;
+  });
+}
+interface MockPartLayout {
+  symbol: number;
+  frame: number;
+  bounds: Bounds;
+  bubbles: {
+    leaf: number;
+    matrix: SwfMatrix;
+    x: number;
+    y: number;
+    rx: number;
+    ry: number;
+    lineWidth: number;
+    alpha: number;
+    tint: number[];
+    accent: boolean;
+  }[];
+}
+/** Frozen authored layout facts, separate from procedural paint and simulation. */
+export function mockPartLayout(id: number): MockPartLayout | undefined {
+  return (layouts as Record<number, MockPartLayout>)[id === 2013 ? 5003 : id];
+}
+
+function paintWeapon(ctx: CanvasRenderingContext2D, layout: MockPartLayout) {
+  for (const bubble of layout.bubbles) {
+    const { matrix: m, x, y, rx, ry, tint, alpha } = bubble;
+    const facts = leaves[bubble.leaf];
+    const circle = facts.circles.reduce((a, b) =>
+      Math.hypot(a.x - x, a.y - y) < Math.hypot(b.x - x, b.y - y) ? a : b,
+    );
+    const color = (n: number) => {
+      return `rgb(${[n >> 16, (n >> 8) & 255, n & 255].map((c) => Math.max(0, Math.min(255, c * tint[0] + tint[1]))).join(',')})`;
+    };
+    ctx.save();
+    ctx.transform(m.a, m.b, m.c, m.d, m.tx / 20, m.ty / 20);
+    ctx.globalAlpha = alpha;
+    ctx.beginPath();
+    ctx.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2);
+    ctx.fillStyle = color(facts.colors.base);
+    ctx.fill();
+    ctx.lineWidth = bubble.lineWidth;
+    ctx.strokeStyle = color(facts.rim);
+    if (bubble.lineWidth > 0) ctx.stroke();
+    // Source-derived area/covariance ellipses approximate each visible glint.
+    for (const glint of circle.glints) {
+      ctx.beginPath();
+      ctx.ellipse(glint.x, glint.y, glint.rx, glint.ry, glint.rotation, 0, Math.PI * 2);
+      ctx.fillStyle = color(glint.color);
+      ctx.fill();
+    }
+    ctx.restore();
+  }
+}
 
 /** Procedural fallback only; original SWF artwork continues through AssetPack unchanged. */
 export function mockPart(id: number): Raster {
-  const definition = partById(id),
-    body = id < 2000;
-  // Keep the existing fallback silhouettes and radii; this pass changes their paint only.
-  const base = body
-    ? ([7, 12.6, 22.5, 28.75, 39][(id % 10) - 1] ?? 18)
-    : Math.max(8, Math.min(28, 8 + (definition?.gp ?? 1) * 3));
+  const body = id < 2000;
+  const layout = body ? undefined : (mockPartLayout(id) ?? mockPartLayout(2001));
+  const base = [7, 12.6, 22.5, 28.75, 39][(id % 10) - 1] ?? 18;
   const radius = body && id >= 1500 ? 32 : base,
-    bounds = { x: -radius - 3, y: -radius - 3, width: radius * 2 + 6, height: radius * 2 + 6 };
-  const canvas = document.createElement('canvas');
-  canvas.width = canvas.height = Math.ceil(bounds.width * 2);
-  const ctx = canvas.getContext('2d', { willReadFrequently: true })!;
-  ctx.scale(2, 2);
-  ctx.translate(-bounds.x, -bounds.y);
-
-  function bubble(x: number, y: number, r: number, warm?: WarmPalette, armored = false) {
-    const fill = ctx.createRadialGradient(x - r * 0.18, y - r * 0.22, 0, x, y, r);
-    if (warm) {
-      fill.addColorStop(0, warm.light);
-      fill.addColorStop(0.5, warm.middle);
-      fill.addColorStop(1, warm.edge);
-    } else {
+    bounds = layout
+      ? {
+          x: layout.bounds.x - 3,
+          y: layout.bounds.y - 3,
+          width: layout.bounds.width + 6,
+          height: layout.bounds.height + 6,
+        }
+      : { x: -radius - 3, y: -radius - 3, width: radius * 2 + 6, height: radius * 2 + 6 };
+  return proceduralRaster(bounds, (ctx) => {
+    function bubble(x: number, y: number, r: number, armored = false) {
+      const fill = ctx.createRadialGradient(x - r * 0.18, y - r * 0.22, 0, x, y, r);
       // Native bodies have a blue film, not an empty center. Keep enough translucency
       // to pick up the field beneath, with filled collision coverage throughout.
       fill.addColorStop(0, armored ? 'rgba(15,114,157,.64)' : 'rgba(15,140,190,.65)');
       fill.addColorStop(0.72, armored ? 'rgba(12,104,147,.65)' : 'rgba(15,137,187,.64)');
       fill.addColorStop(1, armored ? 'rgba(10,91,135,.7)' : 'rgba(11,119,165,.68)');
-    }
-    ctx.beginPath();
-    ctx.arc(x, y, r, 0, Math.PI * 2);
-    ctx.fillStyle = fill;
-    ctx.fill();
-    ctx.strokeStyle = warm ? warm.rim : armored ? '#bdebf4' : '#e1fbff';
-    ctx.lineWidth = 0.8;
-    ctx.stroke();
-
-    if (warm) {
-      ctx.fillStyle = 'rgba(255,255,240,.88)';
       ctx.beginPath();
-      ctx.ellipse(x - r * 0.36, y - r * 0.39, r * 0.19, r * 0.095, -0.7, 0, Math.PI * 2);
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fillStyle = fill;
       ctx.fill();
-    } else {
+      ctx.strokeStyle = armored ? '#bdebf4' : '#e1fbff';
+      ctx.lineWidth = 0.8;
+      ctx.stroke();
+
       const glints =
         r >= 18
           ? [
@@ -71,24 +127,44 @@ export function mockPart(id: number): Raster {
         ctx.fill();
       }
     }
-  }
 
-  if (body && id >= 1500) for (let i = 0; i < 5; i++) bubble((i - 2) * 10, Math.sin(i) * 9, 8);
-  else if (body) bubble(0, 0, radius, undefined, id >= 1100 && id < 1200);
-  else {
-    const palette =
-      (id >= 4000 && id < 5000) || id >= 6000
-        ? PALETTE.enemy
-        : id >= 2000 && id < 3000
-          ? PALETTE.primary
-          : PALETTE.utility;
-    bubble(-2, 0, base * 0.58, palette);
-    bubble(base * 0.55, 0, base * 0.28, palette);
-    if ((definition?.gp ?? 0) > 2) {
-      bubble(-base * 0.5, -base * 0.45, base * 0.25, palette);
-      bubble(-base * 0.5, base * 0.45, base * 0.25, palette);
-    }
-  }
+    if (body && id >= 1500) for (let i = 0; i < 5; i++) bubble((i - 2) * 10, Math.sin(i) * 9, 8);
+    else if (body) bubble(0, 0, radius, id >= 1100 && id < 1200);
+    else if (layout) paintWeapon(ctx, layout);
+  });
+}
+
+export function mockPartLeaf(id: number, bounds: Bounds): Raster | undefined {
+  const facts = leaves[id];
+  if (!facts) return;
+  return proceduralRaster(
+    { x: bounds.x - 2, y: bounds.y - 2, width: bounds.width + 4, height: bounds.height + 4 },
+    (ctx) => {
+      paintWeapon(ctx, {
+        symbol: id,
+        frame: 1,
+        bounds,
+        bubbles: facts.circles.map((c) => ({
+          ...c,
+          leaf: id,
+          matrix: { a: 1, b: 0, c: 0, d: 1, tx: 0, ty: 0 },
+          alpha: 1,
+          tint: [1, 0],
+          accent: id === 14,
+        })),
+      });
+    },
+  );
+}
+
+function proceduralRaster(bounds: Bounds, paint: (ctx: CanvasRenderingContext2D) => void): Raster {
+  const canvas = document.createElement('canvas');
+  canvas.width = Math.ceil(bounds.width * 2);
+  canvas.height = Math.ceil(bounds.height * 2);
+  const ctx = canvas.getContext('2d', { willReadFrequently: true })!;
+  ctx.scale(2, 2);
+  ctx.translate(-bounds.x, -bounds.y);
+  paint(ctx);
   return {
     ...bounds,
     canvas,

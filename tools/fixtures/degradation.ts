@@ -44,7 +44,9 @@ export async function showDegradationProof(pack: AssetPack, host: HTMLElement) {
         key: `gun${i}`,
         type: 4001,
         x: -110 + i * 110,
-        y: 0,
+        // Keep the weapon outside the body sample: enemy mounts now have a
+        // deliberate warm tint, while this proof compares body loss and healing.
+        y: -40,
       })),
     ],
   };

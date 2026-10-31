@@ -13,7 +13,7 @@ export interface ClipChild {
   born: number;
 }
 
-/** A retained MovieClip tree shared by painting and pixel contact; no DOM or Pixi dependency. */
+/** A retained MovieClip tree shared by painting and geometric contact; no DOM or Pixi dependency. */
 export class SwfClip {
   age = 0;
   placements: DisplayPlacement[] = [];
@@ -55,6 +55,9 @@ export class SwfClip {
     if (!this.timeline) return;
     this.timeline.goto(frame, true, y);
     this.sync();
+  }
+  play() {
+    this.timeline?.play();
   }
   gotoAndStop(frame: number, y = 0) {
     if (!this.timeline) return;

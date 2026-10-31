@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useRef } from 'react';
 import type { AssetPack } from '@/game/assets/asset-pack';
+import { canonicalHotkey } from '@/game/core/hotkeys';
 export function BubbleText({
   children,
   pack,
@@ -122,36 +123,54 @@ export function Dialog({
   onClose,
   className = '',
   closeKey,
+  onShortcutClose,
+  active = true,
+  scrimClassName = '',
 }: {
   title: string;
   children: React.ReactNode;
   onClose?: () => void;
   className?: string;
   closeKey?: string;
+  onShortcutClose?: () => void;
+  active?: boolean;
+  scrimClassName?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
+    if (!active) return;
     const previous = document.activeElement as HTMLElement | null;
     ref.current?.focus();
     return () => previous?.focus({ preventScroll: true });
-  }, []);
+  }, [active]);
   return (
-    <div className="modal-scrim">
+    <div
+      className={`modal-scrim ${scrimClassName}`}
+      aria-hidden={!active || undefined}
+      inert={!active}
+    >
       <div
         ref={ref}
         tabIndex={-1}
-        role="dialog"
-        aria-modal="true"
+        role={active ? 'dialog' : undefined}
+        aria-modal={active || undefined}
         aria-label={title}
         className={`dialog ${className}`}
         onKeyDown={(e) => {
-          if ((e.key === 'Escape' || e.code === closeKey) && onClose) {
+          if ((e.key === 'Escape' || canonicalHotkey(e.code) === closeKey) && onClose) {
+            e.preventDefault();
             e.stopPropagation();
-            onClose();
+            if (canonicalHotkey(e.code) === closeKey && onShortcutClose) onShortcutClose();
+            else onClose();
           }
           if (e.key === 'Tab') {
-            const nodes = ref.current?.querySelectorAll<HTMLElement>(
-              'button:not(:disabled),input:not(:disabled),select,textarea,[tabindex="0"]',
+            const nodes = Array.from(
+              ref.current?.querySelectorAll<HTMLElement>(
+                'button:not(:disabled),input:not(:disabled),select,textarea,[tabindex="0"]',
+              ) ?? [],
+            ).filter(
+              (node) =>
+                node.getClientRects().length && !node.closest('[inert],[aria-hidden="true"]'),
             );
             if (!nodes?.length) return;
             const first = nodes[0],
@@ -168,7 +187,7 @@ export function Dialog({
       >
         <div className="dialog-heading">
           <h2>{title}</h2>
-          {onClose ? (
+          {onClose && !className.split(' ').includes('stage-dialog') ? (
             <button className="icon-button" aria-label="Close" onClick={onClose}>
               <Icon name="close" size={17} />
             </button>

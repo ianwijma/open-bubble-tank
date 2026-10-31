@@ -1,15 +1,11 @@
-import { test, expect, type Page, type Locator } from '@playwright/test';
-import { existsSync, readFileSync } from 'node:fs';
+import { waitForMainMenu } from './helpers/main-menu';
+import { test, expect, type Locator } from '@playwright/test';
+import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
-import type { TankDesign } from '../src/game/core/types';
-import { dropPreview } from './helpers/creator';
+import { readCreatorDesign, dropPreview } from './helpers/creator';
 const swf =
   process.env.BT3_SWF_FILE ?? resolve('../documented-bubble-tank-3/re/bt3/uncompressed.swf');
-async function snapshot(page: Page): Promise<TankDesign> {
-  const waiting = page.waitForEvent('download');
-  await page.getByRole('button', { name: 'Export', exact: true }).click();
-  return JSON.parse(readFileSync((await (await waiting).path())!, 'utf8'));
-}
+const snapshot = readCreatorDesign;
 async function animatedPixels(canvas: Locator) {
   const signature = () =>
     canvas.evaluate((element) => {
@@ -35,8 +31,9 @@ for (const assets of ['mock', 'SWF'])
     await page.goto('/');
     if (assets === 'SWF') await page.getByLabel('Bubble Tanks 3 Flash file').setInputFiles(swf);
     else await page.getByRole('button', { name: 'Play with mock assets' }).click();
+    await waitForMainMenu(page);
     await page.getByRole('button', { name: 'Enemy tank creator' }).click({ timeout: 60000 });
-    expect(await snapshot(page)).toMatchObject({ parts: [], life: 1, reward: 1, speed: 1 });
+    expect(await snapshot(page)).toMatchObject({ parts: [], life: 20, reward: 20, speed: 2 });
     const row = page.getByRole('button', { name: 'Place Medium Bubble', exact: true });
     await row.click();
     await expect(row).toHaveAttribute('aria-pressed', 'true');

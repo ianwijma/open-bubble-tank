@@ -1,3 +1,4 @@
+import { captureCanvas } from './pixi-capture';
 import { Container, Graphics, Point, Rectangle } from 'pixi.js';
 import { AssetPack, type Raster, type SpriteInfo } from '../../src/game/assets/asset-pack';
 import { buildDisplayList } from '../../src/game/assets/display-list';
@@ -190,7 +191,7 @@ export async function showCollapseProof(pack: AssetPack, host: HTMLElement) {
     view.root.position.set(50, 50);
     view.setBlendMode(2);
     view.update(1);
-    const image = renderer.app.renderer.extract.canvas({
+    const image = captureCanvas(renderer.app.renderer, {
       target: scene,
       frame: new Rectangle(0, 0, 100, 100),
       resolution: 1,
@@ -201,7 +202,7 @@ export async function showCollapseProof(pack: AssetPack, host: HTMLElement) {
     // Exercise inherited ERASE on a filtered child, as in2173→2069→2068.
     sprite.placements[1].charId = 30003;
     view.update(2);
-    const glowImage = renderer.app.renderer.extract.canvas({
+    const glowImage = captureCanvas(renderer.app.renderer, {
       target: scene,
       frame: new Rectangle(0, 0, 100, 100),
       resolution: 1,

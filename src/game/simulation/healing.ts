@@ -4,24 +4,9 @@ import type { GunState, Projectile, Tank } from '../core/types';
 import { healTank } from './tank';
 import type { World } from './world';
 
-/** EBehaviorHealer owns a patient independently of the tank's offensive weapons. */
-export function healerPatient(world: World, owner: Tank, gun: GunState): Tank | undefined {
-  const team = owner.side === 'enemy' ? world.field.enemies : [world.player, ...world.allies];
-  let patient = team.find((tank) => tank.uid === gun.patientId && !tank.dead);
-  if (!patient) {
-    const injured = team.filter((tank) => tank !== owner && !tank.dead && tank.life < tank.maxLife);
-    // Enemy healers take the first patient; allied healers prioritize the avatar.
-    // The shipped ally Array[1..length] bug is bounded to valid injured allies.
-    patient =
-      owner.side === 'enemy' || injured[0] === world.player
-        ? injured[0]
-        : injured.length
-          ? world.rng.pick(injured)
-          : undefined;
-    gun.patientId = patient?.uid;
-  }
-  return patient;
-}
+export { healerPatient } from './healer-target';
+import { healerPatient } from './healer-target';
+import { actorTargetPoint, attachedTarget } from './actor-targets';
 
 export function tickHealer(world: World, owner: Tank, gun: GunState) {
   const patient = healerPatient(world, owner, gun);
@@ -31,12 +16,23 @@ export function tickHealer(world: World, owner: Tank, gun: GunState) {
     gun.beamId = undefined;
     return;
   }
-  const mount = rotate(gun.part, owner.rotation);
-  gun.angle = angleTo({ x: owner.x + mount.x, y: owner.y + mount.y }, patient) - owner.rotation;
-  const origin = world.muzzle(owner, gun);
-  if (patient.life >= patient.maxLife || distance(origin, patient) > 400) {
+  if (!attachedTarget(world, patient.uid)) {
+    // PartCallRun's parent.localToGlobal throws, then its catch clears and reacquires.
     if (oldBeam) oldBeam.dead = true;
     gun.beamId = gun.patientId = undefined;
+    gun.patientRef = undefined;
+    healerPatient(world, owner, gun);
+    return;
+  }
+  const mount = rotate(gun.part, owner.rotation);
+  gun.angle =
+    angleTo({ x: owner.x + mount.x, y: owner.y + mount.y }, actorTargetPoint(world, patient)) -
+    owner.rotation;
+  const origin = world.muzzle(owner, gun);
+  if (patient.life >= patient.maxLife || distance(origin, actorTargetPoint(world, patient)) > 400) {
+    if (oldBeam) oldBeam.dead = true;
+    gun.beamId = gun.patientId = undefined;
+    gun.patientRef = undefined;
     healerPatient(world, owner, gun);
     return;
   }

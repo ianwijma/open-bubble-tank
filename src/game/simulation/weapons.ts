@@ -1,5 +1,9 @@
 import { FIELD_RADIUS, STAGE } from '../core/constants';
 import { angleTo, direction, distance, length, rotate } from '../core/math';
+import { triggerMassiveCharge } from '../core/mounted-art';
+import { refreshForcefield } from './forcefield';
+import { attachMountedShield } from './shields';
+import { tickTurretBehavior } from './turrets';
 import type {
   GunState,
   InputFrame,
@@ -23,43 +27,79 @@ import { projectileFlags } from './projectile-flags';
 import { recordLayerMine } from './mine-layers';
 import mineArt from '../data/mine-art.json';
 import { convertDrones } from './converter';
+import { tickBehavior } from './behaviors';
+import { weaponAimPoint, finishWeaponAim } from './weapon-targets';
+import { weaponAimFlags } from '../core/weapon-aim';
+import { tickSpike } from './spikes';
 
 export function tickGuns(world: World, t: Tank, input: InputFrame, categories?: readonly number[]) {
-  const target = world.getTarget(t);
-  const aim =
-    t.side === 'player'
-      ? { x: input.aim.x - STAGE.cx + t.x, y: input.aim.y - STAGE.cy + t.y }
-      : target;
   const guns =
     t.side === 'player'
       ? t.guns
-      : [...t.guns].sort((a, b) => Math.floor(a.part.type / 1000) - Math.floor(b.part.type / 1000));
+      : [...t.guns].sort(
+          (a, b) =>
+            Number(Math.floor(a.part.type / 1000) === 6) -
+            Number(Math.floor(b.part.type / 1000) === 6),
+        );
   for (const g of guns) {
     const id = g.part.type,
       category = Math.floor(id / 1000),
       spec = WEAPONS[id];
     if (categories && !categories.includes(category)) continue;
-    const mount = rotate(g.part, t.rotation),
-      pos = { x: t.x + mount.x, y: t.y + mount.y };
-    const fixed =
-      [3001, 3008, 3017, 4002, 4008, 4009, 4010, 4012, 4021].includes(id) ||
-      t.design.id.startsWith('B');
-    if (![4015, 5003, 5004, 5006].includes(id))
-      g.angle =
-        (t.side === 'player' && t.design.classId <= 3) || fixed
-          ? g.part.rotation
-          : angleTo(pos, aim) - t.rotation;
-    if (id === 6002) {
-      tickHealer(world, t, g);
+    if (t.side !== 'player' && [4013, 4022].includes(id)) continue;
+    if (t.side !== 'player' && id === 4010) {
+      // _-Vc.Run invokes the standard timer directly, without Aim or a target gate.
+      if (++g.counter >= spec.rate) {
+        world.fireGun(t, g, input);
+        g.counter = 0;
+      }
       continue;
     }
+    if (t.side !== 'player' && id === 4015) {
+      if (advanceRotatingCycle(g) && ++g.counter >= spec.rate) {
+        g.counter = 0;
+        world.fireGun(t, g, input);
+      }
+      continue;
+    }
+    if (t.side !== 'player' && id === 4026) {
+      tickSpike(world, t, g);
+      continue;
+    }
+    if (id === 4032) tickTurretBehavior(world, t, g);
+    const aim =
+      t.side === 'player'
+        ? { x: input.aim.x - STAGE.cx + t.x, y: input.aim.y - STAGE.cy + t.y }
+        : id === 4032
+          ? null
+          : weaponAimPoint(world, t, g);
+    const mount = rotate(g.part, t.rotation),
+      pos = { x: t.x + mount.x, y: t.y + mount.y };
+    const flags = (g.aim ??= weaponAimFlags(id, t.design.classId));
+    if (aim && (t.side === 'player' ? flags.avatar : flags.rotates) && id !== 4032)
+      g.angle = angleTo(pos, aim) - t.rotation;
+    const target = t.side === 'player' || id === 4032 ? null : finishWeaponAim(world, t, g);
+    if (id === 6002) {
+      if (target) tickHealer(world, t, g);
+      tickBehavior(world, t, g);
+      continue;
+    }
+    if (category === 6) {
+      tickBehavior(world, t, g);
+      continue;
+    }
+    if (t.side !== 'player' && id !== 4032 && !target) continue;
     if (t.side !== 'player' && g.burst > 0 && --g.burstTimer <= 0) {
       g.burst--;
       g.burstTimer = 6;
       const index = [0, 4, 3, 2, 1][4 - g.burst];
       world.spawnVolley(t, g, { ...spec, angles: [world.rng.int(-10, 10)] }, index);
     }
-    if (!spec || category === 6) continue;
+    if (id === 5005 && t.side === 'player') {
+      refreshForcefield(t);
+      continue;
+    }
+    if (!spec) continue;
     if (t.side === 'player') {
       if (g.counter >= 0) g.counter--;
       if ([5003, 5004].includes(id)) {
@@ -74,8 +114,6 @@ export function tickGuns(world: World, t: Tank, input: InputFrame, categories?: 
         }
       }
     } else {
-      if ([4013, 4022].includes(id)) continue;
-      if (id === 4015 && !advanceRotatingCycle(g)) continue;
       if (id === 4023) {
         if (world.runtimeFor(world.currentWrapper).apocalypse && ++g.counter >= spec.rate) {
           world.fireGun(t, g, input);
@@ -165,21 +203,15 @@ export function fireGun(world: World, t: Tank, gun: GunState, input: InputFrame)
   if (!spec) return;
   if (id === 4017 && !triggerSuppressionCycle(gun)) return;
   if (id === 3010) {
-    // Each AGunShield mount caches its live display-child measurement on first trigger.
-    if (gun.shieldDiameter === undefined) {
-      gun.shieldDiameter = world.protectionRadius(t) * 2;
-      t.shieldHitDiameter = gun.shieldDiameter;
-    }
-    t.shieldDiameter = gun.shieldDiameter;
-    t.shield = 25;
-    t.shieldAge = 0;
+    attachMountedShield(t, gun, () => world.protectionRadius(t) * 2);
     world.scheduleShield(t, gun);
     gun.counter = spec.rate;
     return;
   }
   if (id === 3008) {
-    gun.counter = spec.rate;
+    triggerMassiveCharge(gun, t.artAge);
     world.scheduleShot(t, gun, 26);
+    gun.counter = spec.rate;
     return;
   }
   if (id === 3011 || id === 3012) {
@@ -211,16 +243,22 @@ export function fireGun(world: World, t: Tank, gun: GunState, input: InputFrame)
     const pos = world.muzzle(t, gun);
     world.addCombatEffect(pos, 'areaBurst');
     for (const e of world.field.enemies)
-      if (!e.dead && distance(pos, e) <= 145) {
+      if (distance(pos, e) <= 145) {
         if (id === 3002) {
           e.status.stun = 101;
+          e.stunned = true; // StunMe changes the state before the next actor Run.
           decorateStatus(world, e, 'stun', 100);
         } else world.damage(e, 25);
       }
-    if (id === 3003)
-      for (const b of world.bullets)
-        if (b.enemy && distance(b, pos) <= 145 && b.kind !== 'mine') b.dead = true;
-    if (id === 3003) world.flushEnemyRemovals();
+    if (id === 3003) {
+      // AreaBurstTest queues only blnEnemy && blnDestroyable, then detaches them
+      // immediately. Removal has no impact callback and must not skip adjacent shots.
+      for (const b of world.bullets.filter(
+        (b) => b.enemy && projectileFlags(b).destroyable && distance(b, pos) <= 145,
+      ))
+        world.removeBullet(b);
+      world.flushEnemyRemovals();
+    }
     return;
   }
   if (id === 3006) {
@@ -234,7 +272,9 @@ export function fireGun(world: World, t: Tank, gun: GunState, input: InputFrame)
     const max = t.guns.filter((g) => g.part.type === id).length;
     if (world.allies.filter((a) => a.design.id === key).length >= max) return;
     const pos = world.muzzle(t, gun);
-    world.allies.push(createTank(world.nextId(), design, 'ally', pos.x, pos.y));
+    world.allies.push(
+      createTank(world.nextId(), design, 'ally', pos.x, pos.y, undefined, undefined, world),
+    );
     return;
   }
   if (id === 4003) {
@@ -243,7 +283,18 @@ export function fireGun(world: World, t: Tank, gun: GunState, input: InputFrame)
       ENEMIES.filter((e) => e.name === 'Pew Pew' || e.name === 'Flittering Terror');
     gun.spawnDesign ??= world.rng.pick(candidates);
     const pos = world.muzzle(t, gun);
-    world.field.enemies.push(createTank(world.nextId(), gun.spawnDesign, 'enemy', pos.x, pos.y));
+    world.field.enemies.push(
+      createTank(
+        world.nextId(),
+        gun.spawnDesign,
+        'enemy',
+        pos.x,
+        pos.y,
+        undefined,
+        undefined,
+        world,
+      ),
+    );
     return;
   }
   if (id === 4023) {
@@ -288,27 +339,18 @@ export function fireGun(world: World, t: Tank, gun: GunState, input: InputFrame)
     return;
   }
   if (id === 4026) {
-    const pos = world.muzzle(t, gun);
-    for (const e of [world.player, ...world.allies])
-      if (world.hitTest(e, pos.x, pos.y)) {
-        world.damage(e, 3);
-        const d = direction(angleTo(t, e), 8 - e.design.classId);
-        e.velocity.x += d.x;
-        e.velocity.y += d.y;
-      }
+    // Spike has an empty PartCallTrigger; its contacts belong to BehaviorRun.
     return;
   }
   if (id === 4032) {
-    const turret = world.bullets.find(
-      (b) => b.uid === gun.turretId && !b.dead && (b.build ?? 1) < 4,
-    );
+    const turret = world.bullets.find((b) => b.uid === gun.turretId && (b.build ?? 1) < 4);
     const pos = world.muzzle(t, gun, 0),
       angle = angleTo(pos, turret ?? { x: 0, y: 0 });
     gun.angle = angle - t.rotation;
     const bullet: Projectile = {
       uid: world.nextId(),
       owner: t.uid,
-      enemy: t.side === 'enemy',
+      enemy: true,
       x: pos.x,
       y: pos.y,
       angle,
@@ -332,7 +374,10 @@ export function fireGun(world: World, t: Tank, gun: GunState, input: InputFrame)
       origin: { ...pos },
     };
     world.addBullet(bullet);
-    if (!turret) gun.turretId = bullet.uid;
+    if (!turret) {
+      gun.turretId = bullet.uid;
+      (gun.turretRefs ??= []).push(bullet);
+    }
     return;
   }
   if (id === 3015) {
@@ -424,10 +469,7 @@ export function spawnVolley(
         status: spec.status,
         explode: spec.explode ?? 0,
         splashDamage: spec.splashDamage,
-        targetId:
-          kind === 'infect' || (kind === 'seeker' && t.side !== 'enemy')
-            ? null
-            : world.getTarget(t).uid,
+        targetId: kind === 'seeker' && t.side === 'enemy' ? world.player.uid : null,
         hit: new Set(),
         dead: false,
         anchor: kind === 'beam' || kind === 'whip' || kind === 'sapper' ? gun : undefined,
@@ -446,7 +488,7 @@ export function spawnVolley(
         b.wobbleAmplitude = world.rng.int(1, 8) / 10;
       }
       if (kind === 'orbital') {
-        const radius = t.radius + 10;
+        const radius = (gun.part.type === 4010 ? world.displayWidth(t) / 2 : t.radius) + 10;
         const radians = (world.rng.int(0, 360) * Math.PI) / 180;
         b.x = t.x + Math.cos(radians) * radius;
         b.y = t.y + Math.sin(radians) * radius;

@@ -15,13 +15,19 @@ import { showMinimapProof } from './minimap';
 import { showHudProof } from './hud';
 import { showFieldOverlayProof } from './field-overlays';
 import { showTacticalHudProof } from './tactical-hud';
+import { runPlaythrough } from '../playthrough/browser';
+import { showPauseFlow } from './pause-flow';
 import { showWinScreen } from './screens';
 import { showDegradationProof } from './degradation';
 import { showCrossingProof } from './crossing';
 import { showPickupProof } from './pickups';
 import { showPlayerClocks } from './player-clocks';
 import { showCombatEffectsProof } from './combat-effects';
+import { showHomingProjectiles } from './homing-projectiles';
 import { showProjectileOrderProof } from './projectile-order';
+import { showActorAi } from './actor-ai';
+import { showWeaponTargets } from './weapon-targets';
+import { showAimContracts } from './aim-contracts';
 import { showSeekerMineProof } from './seeker-mines';
 import { showSpecialProjectilesProof } from './special-projectiles';
 import { showProjectileClocksProof } from './projectile-clocks';
@@ -31,6 +37,20 @@ import { showTankArtProof } from './tank-art';
 import { showScreenEffectsProof } from './screen-effects';
 import { showMainEffects } from './main-effects';
 import { showCollapseProof } from './collapse';
+import { showGlowProof } from './glows';
+import { showMockPartsProof } from './mock-parts';
+import { showPartSnapshots } from './part-snapshots';
+import { showMountedArt } from './mounted-art';
+import { showTurretProtection } from './turret-protection';
+import { showShieldOwnership } from './shield-ownership';
+import { showForcefieldOrder } from './forcefield-order';
+import { showShapeContact } from './shape-contact';
+import { showForcefieldLifecycle } from './forcefield-lifecycle';
+import { showMockPartMotion } from './mock-part-motion';
+import { showMainMenuFlow } from './main-menu';
+import { showSvgMasks } from './svg-masks';
+import { showViewerFlow } from './viewer-flow';
+import { showUnlockRetention } from './unlock-retention';
 
 const file = document.querySelector<HTMLInputElement>('#swf')!;
 const fixture = document.querySelector<HTMLSelectElement>('#fixture')!;
@@ -104,6 +124,118 @@ async function reset() {
   renderer = undefined;
   world = undefined;
   stage.replaceChildren();
+  stage.style.height = '';
+  if (fixture.value === 'main-menu') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    unmountScreen = showMainMenuFlow(pack, stage);
+    status.textContent = 'Ready · manually clocked production main menu';
+    return;
+  }
+  if (fixture.value === 'pause-flow') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    unmountScreen = await showPauseFlow(pack, stage);
+    status.textContent = 'Ready · manually clocked production pause/Info flow';
+    return;
+  }
+  if (fixture.value === 'playthrough') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    const run = await runPlaythrough(pack, stage, (text) => (status.textContent = text));
+    renderer = run.renderer;
+    unmountScreen = run.unmount;
+    status.dataset.playthrough = JSON.stringify(run.proof);
+    status.textContent = 'Ready · complete control-only run through boss and win';
+    return;
+  }
+  if (fixture.value === 'mock-part-motion') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    status.dataset.mockPartMotion = JSON.stringify(await showMockPartMotion(pack, stage));
+    status.textContent = 'Ready · all31 weapon and behavior previews with source motion';
+    return;
+  }
+  if (fixture.value === 'mock-body-motion') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    status.dataset.mockBodyMotion = JSON.stringify(await showMockPartMotion(pack, stage, true));
+    status.textContent = 'Ready · all20 procedural body parts with source motion';
+    return;
+  }
+  if (fixture.value === 'turret-protection') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    status.dataset.turretProtection = JSON.stringify(await showTurretProtection(pack, stage));
+    status.textContent = 'Ready · turret protection lifecycle and retained hits';
+    return;
+  }
+  if (fixture.value === 'shield-ownership') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    status.dataset.shieldOwnership = JSON.stringify(await showShieldOwnership(pack, stage));
+    status.textContent = 'Ready · independent shield mounts and callbacks';
+    return;
+  }
+  if (fixture.value === 'forcefield-order') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    status.dataset.forcefieldOrder = JSON.stringify(await showForcefieldOrder(pack, stage));
+    status.textContent = 'Ready · source child order and retained shield film';
+    return;
+  }
+  if (fixture.value === 'shape-contact') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    status.dataset.shapeContact = JSON.stringify(await showShapeContact(pack, stage));
+    status.textContent = 'Ready · geometric contact and attached artwork';
+    return;
+  }
+  if (fixture.value === 'forcefield-lifecycle') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    status.dataset.forcefieldLifecycle = JSON.stringify(await showForcefieldLifecycle(pack, stage));
+    status.textContent = 'Ready · forcefield cleanup and passive reconstruction';
+    return;
+  }
+  if (fixture.value === 'mounted-art') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    status.dataset.mountedArt = JSON.stringify(await showMountedArt(pack, stage));
+    status.textContent = 'Ready · independent mounted charge playback and contact';
+    return;
+  }
+  if (fixture.value === 'part-snapshots') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    status.dataset.partSnapshots = JSON.stringify(await showPartSnapshots(pack, stage));
+    status.textContent = 'Ready · independent frozen part poses and body-only class counting';
+    return;
+  }
+  if (fixture.value === 'svg-masks') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    status.dataset.svgMasks = JSON.stringify(await showSvgMasks(pack, stage));
+    status.textContent = 'Ready · grouped SVG mask pixels';
+    return;
+  }
+  if (fixture.value === 'unlock-retention') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    unmountScreen = showUnlockRetention(pack, stage);
+    status.textContent = 'Ready · retained run unlocks after two real downgrades';
+    return;
+  }
+  if (['viewer-flow', 'viewer-flow-avatar', 'viewer-flow-eligibility'].includes(fixture.value)) {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    unmountScreen = showViewerFlow(
+      pack,
+      stage,
+      fixture.value !== 'viewer-flow',
+      fixture.value === 'viewer-flow-eligibility' ? 2 : 1,
+    );
+    status.textContent = 'Ready · manual viewer fade clock';
+    return;
+  }
+  if (fixture.value === 'mock-parts') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    status.dataset.mockParts = JSON.stringify(await showMockPartsProof(pack, stage));
+    status.textContent = 'Ready · all gun and behavior module silhouettes';
+    return;
+  }
+  if (fixture.value === 'glows') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    const proof = await showGlowProof(pack, stage);
+    status.dataset.glows = JSON.stringify(proof);
+    status.textContent = 'Ready · authored glows, ordered filters and post-filter color';
+    return;
+  }
   if (fixture.value === 'collapse') {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
     const proof = await showCollapseProof(pack, stage);
@@ -168,11 +300,39 @@ async function reset() {
     status.textContent = 'Ready · seeker-mine bounds and independent clocks';
     return;
   }
+  if (fixture.value === 'aim-contracts') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    const proof = await showAimContracts(pack, stage);
+    status.dataset.aimContracts = JSON.stringify(proof);
+    status.textContent = 'Ready · fixed/rotating mounts and seven-point Spike contact';
+    return;
+  }
+  if (fixture.value === 'weapon-targets') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    const proof = await showWeaponTargets(pack, stage);
+    status.dataset.weaponTargets = JSON.stringify(proof);
+    status.textContent = 'Ready · per-mount targeting and delayed retarget aim';
+    return;
+  }
+  if (fixture.value === 'actor-ai') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    const proof = await showActorAi(pack, stage);
+    status.dataset.actorAi = JSON.stringify(proof);
+    status.textContent = 'Ready · source actor movement and behavior clocks';
+    return;
+  }
   if (fixture.value === 'projectile-order') {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
     const proof = await showProjectileOrderProof(pack, stage);
     status.dataset.projectileOrder = JSON.stringify(proof);
     status.textContent = 'Ready · projectile alpha contact order';
+    return;
+  }
+  if (fixture.value === 'homing-projectiles') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    const proof = await showHomingProjectiles(pack, stage);
+    status.dataset.homingProjectiles = JSON.stringify(proof);
+    status.textContent = 'Ready · homing movement, acquisition and close contact';
     return;
   }
   if (fixture.value === 'combat-effects') {
@@ -356,6 +516,7 @@ async function reset() {
       { 'turret-1': 110, 'turret-2': 200, 'turret-3': 280, 'turret-4': 380 }[fixture.value] ?? 110;
   }
   world.hitTest = pack.hitTest;
+  world.displayWidth = pack.tankDisplayWidth;
   world.hitPart = pack.hitPart;
   world.hitProjectile = pack.hitProjectile;
   world.projectileBounds = (b) =>

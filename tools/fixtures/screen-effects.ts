@@ -1,3 +1,4 @@
+import { captureCanvas } from './pixi-capture';
 import { Rectangle } from 'pixi.js';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import type { Effect } from '../../src/game/core/types';
@@ -26,7 +27,7 @@ export async function showScreenEffectsProof(pack: AssetPack, host: HTMLElement)
   const panels: { label: string; ink: number; hash: number }[] = [];
   const draw = (zoom = 1) => renderer.draw(world, { ...DEFAULT_SETTINGS, zoom });
   const sample = () => {
-    const frame = renderer.app.renderer.extract.canvas({
+    const frame = captureCanvas(renderer.app.renderer, {
       target: renderer.screenEffects,
       frame: new Rectangle(0, 0, 550, 450),
       resolution: 1,

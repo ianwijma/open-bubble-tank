@@ -1,3 +1,4 @@
+import { waitForMainMenu } from './helpers/main-menu';
 import { test, expect, type Page } from '@playwright/test';
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -17,6 +18,7 @@ async function watchAudio(page: Page) {
   });
 }
 async function play(page: Page) {
+  await waitForMainMenu(page);
   await page.getByRole('button', { name: 'Play', exact: true }).click();
   await page
     .getByRole('dialog', { name: 'Choose your tanks' })
@@ -77,6 +79,7 @@ test('mock sound, gesture resume, P/Escape, zoom, guide and centered creator but
   await page.keyboard.press('Escape');
   await expect(page.getByRole('dialog', { name: 'Paused', exact: true })).toBeVisible();
   await page.keyboard.press('KeyP');
+  await expect(page.getByRole('dialog', { name: 'Paused', exact: true })).toHaveCount(0);
   const bounds = await page.locator('.game-canvas').boundingBox();
   await page.mouse.move(bounds!.x + bounds!.width * 0.8, bounds!.y + bounds!.height * 0.5);
   await page.mouse.down();
@@ -156,6 +159,7 @@ test('original SWF music resumes and player volleys play extracted audio', async
   );
   await page.getByRole('button', { name: 'PLAY', exact: true }).click();
   await expect.poll(() => musicPlaying(page)).toBe(true);
+  await expect(page.getByRole('dialog', { name: 'Paused', exact: true })).toHaveCount(0);
   const bounds = await page.locator('.game-canvas').boundingBox();
   await page.mouse.move(bounds!.x + bounds!.width * 0.8, bounds!.y + bounds!.height * 0.5);
   await page.mouse.down();

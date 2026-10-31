@@ -359,6 +359,7 @@ describe('advanced parts', () => {
     };
     step(w, 5, { fire: true });
     expect(carrier.removedParts.has(part.key)).toBe(true);
+    expect(carrier.displayChildren).not.toContain(`part:${part.key}`);
     expect(carrier.dead).toBe(true);
     expect(new Set(released).size).toBe(6);
     // Live-array children also run immediately and can already have been shot down.
@@ -461,6 +462,9 @@ test('orbital seekers fill six slots without a target, orbit, and disappear with
   expect(first.angle).toBeCloseTo(angle + 5);
   expect(first.symbol).toBe(2016);
   w.player.dead = true;
+  step(w, 1);
+  expect(first.dead).toBe(false); // _-JX tests display attachment, not the damage flag.
+  w.player = createTank(w.nextId(), STARTER, 'player');
   step(w, 1);
   expect(first.dead).toBe(true);
 });

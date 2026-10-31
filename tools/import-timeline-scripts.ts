@@ -7,6 +7,7 @@ import { decompressSWF } from '../src/game/assets/swf.mjs';
 import { extractSymbols } from '../src/game/assets/swf-symbols.mjs';
 import parts from '../src/game/data/parts.json';
 import projectileClips from '../src/game/data/projectile-clips.json';
+import { STATUS_ART, PROTECTION_ART, INFECTED_ART } from '../src/game/data/status-art';
 
 const root = resolve(process.argv[2] ?? '../documented-bubble-tank-3', 're/bt3');
 const symbols = JSON.parse(readFileSync(resolve(root, 'symbol_map.json'), 'utf8')) as Record<
@@ -150,6 +151,11 @@ function visit(id: number) {
 }
 for (const part of parts) visit(part.symbol);
 const partScripts = [...reachable].filter((id) => scriptedIds.has(id));
+for (const id of [...Object.values(STATUS_ART), ...Object.values(PROTECTION_ART), INFECTED_ART])
+  visit(id);
+const attachmentScripts = [...reachable].filter(
+  (id) => scriptedIds.has(id) && !partScripts.includes(id),
+);
 // Replay binding registration around super(), rather than assuming the derived
 // table wins. _-Rx registers stop(1) BEFORE _-BL replaces that slot with random play.
 const own = { ...scripts };
@@ -184,6 +190,7 @@ for (const id of Object.values(projectileClips.roots)) {
   scripts[id] = effective(name);
 }
 const missing = partScripts.filter((id) => !scripts[id]);
+missing.push(...attachmentScripts.filter((id) => !scripts[id]));
 for (const id of Object.keys(projectileClips.sprites).map(Number))
   if (scriptedIds.has(id) && !scripts[id]) missing.push(id);
 if (missing.length)
@@ -193,6 +200,7 @@ console.log(
   JSON.stringify({
     imported: Object.keys(scripts).length,
     partClips: partScripts.length,
+    attachmentClips: attachmentScripts.length,
     unsupported: unsupported.length,
     skipped: unsupported,
   }),

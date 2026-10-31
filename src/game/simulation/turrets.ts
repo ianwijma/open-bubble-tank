@@ -1,9 +1,31 @@
 import { projectileOutside } from './projectile-boundary';
-import { direction, distance } from '../core/math';
-import type { Projectile, Tank } from '../core/types';
+import { angleTo, direction, distance } from '../core/math';
+import type { GunState, Projectile, Tank } from '../core/types';
 import type { World } from './world';
 import { projectileImpact } from './effects';
 import { projectileCallback } from './projectile-contact';
+import { attachTurretShield, removeTurretShield } from './shields';
+
+/** _-DO.Run polls only its own attached turrets before aiming and PartCallRun. */
+export function tickTurretBehavior(world: World, owner: Tank, gun: GunState) {
+  const wasShielded = owner.shield > 0;
+  owner.shield = 0;
+  gun.turretRefs = (gun.turretRefs ?? []).filter((turret) => world.bullets.includes(turret));
+  for (const turret of gun.turretRefs) {
+    if ((turret.build ?? 1) !== 4) continue;
+    owner.shield = 1;
+    owner.shieldManaged = true;
+    if (!owner.shieldHitClip) attachTurretShield(owner, gun);
+  }
+  if (wasShielded && owner.shield === 0) removeTurretShield(owner, gun);
+  let target = world.bullets.find((turret) => turret.uid === gun.turretId);
+  if (!target || (target.build ?? 1) === 4) {
+    gun.turretId = undefined;
+    target = undefined;
+  }
+  const position = world.muzzle(owner, gun, 0);
+  gun.angle = angleTo(position, target ?? { x: 0, y: 0 }) - owner.rotation;
+}
 
 function movement(bullet: Projectile) {
   if (bullet.deflected) return bullet.deflected;
@@ -34,10 +56,6 @@ export function tickTurret(world: World, turret: Projectile, owner: Tank | undef
     return;
   }
   turret.artFrame = turret.build ?? 1;
-  if (turret.artFrame === 4) {
-    if (owner.shield === 0) owner.shieldAge = 0;
-    owner.shield = 2;
-  }
   for (const shot of world.bullets) {
     if (shot.dead || shot.enemy === turret.enemy || !touches(world, turret, shot)) continue;
     turret.health = (turret.health ?? 10) - shot.damage;

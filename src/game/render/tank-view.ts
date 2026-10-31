@@ -1,33 +1,35 @@
 import { Container, Graphics, Sprite } from 'pixi.js';
 import type { AssetPack } from '../assets/asset-pack';
-import type { Tank, TankDesign } from '../core/types';
+import type { Tank, TankChild, TankDesign } from '../core/types';
 import { partById } from '../data/catalog';
 import { SwfSymbolView, type RasterTextures } from './swf-symbol-view';
 import { SwfTankStatusView } from './swf-tank-status-view';
 import { SwfProtectionView } from './swf-protection-view';
+import { legacyShieldFilm } from '../core/shield-art';
 
 /** Shared live pose for the world and tank-information portrait. No simulation clocks advance here. */
 export class TankView {
   container = new Container();
-  private parts: { root: Container; animation?: SwfSymbolView }[];
+  private parts: { root: Container; animation?: SwfSymbolView; sprite?: Sprite }[];
   private shield = new Graphics();
+  private mountedShields = new Map<TankChild, Graphics>();
   private status?: SwfTankStatusView;
   private protection?: SwfProtectionView;
   constructor(
     readonly design: TankDesign,
     private assets: AssetPack,
-    textures: RasterTextures,
+    private textures: RasterTextures,
   ) {
     this.parts = design.parts.map((p) => {
       const root = new Container(),
         symbol = partById(p.type)?.symbol;
-      let animation: SwfSymbolView | undefined;
-      if (assets.mode === 'swf' && symbol) {
+      let animation: SwfSymbolView | undefined, sprite: Sprite | undefined;
+      if (assets.hasPartTimeline(p.type) && symbol) {
         animation = new SwfSymbolView(symbol, assets, textures);
         root.addChild(animation.root);
       } else {
-        const raster = assets.part(p.type),
-          sprite = new Sprite(textures.get(raster));
+        const raster = assets.part(p.type);
+        sprite = new Sprite(textures.get(raster));
         sprite.position.set(raster.x, raster.y);
         sprite.width = raster.width;
         sprite.height = raster.height;
@@ -36,7 +38,7 @@ export class TankView {
       root.position.set(p.x, p.y);
       root.scale.set(p.scale);
       this.container.addChild(root);
-      return { root, animation };
+      return { root, animation, sprite };
     });
     this.container.addChild(this.shield);
     if (assets.mode === 'swf') {
@@ -47,24 +49,64 @@ export class TankView {
   }
   update(t: Tank) {
     this.container.angle = t.rotation;
-    this.container.alpha = t.alpha;
+    this.container.alpha = 1;
+    this.shield.alpha = t.alpha;
     for (const [i, part] of t.design.parts.entries()) {
       const view = this.parts[i];
       view.root.visible = !t.hiddenParts.has(part.key) && !t.removedParts.has(part.key);
       view.root.angle = t.guns.find((g) => g.part.key === part.key)?.angle ?? part.rotation;
-      if (view.root.visible) view.animation?.updatePose(this.assets.partClip(t, part));
+      if (view.root.visible) {
+        view.animation?.setParentAlpha(t.alpha);
+        view.animation?.updatePose(this.assets.partClip(t, part));
+        if (view.sprite) {
+          view.sprite.alpha = t.alpha;
+          const raster = this.assets.livePart(t, part);
+          view.sprite.texture = this.textures.get(raster);
+          view.sprite.position.set(raster.x, raster.y);
+          view.sprite.width = raster.width;
+          view.sprite.height = raster.height;
+        }
+        // Editor leaves keep the shared source gold; hostile live mounts get a mild warm tint.
+        view.root.tint =
+          this.assets.mode === 'mock' && t.side === 'enemy' && part.type >= 2000
+            ? 0xffe6cc
+            : 0xffffff;
+      }
     }
     this.shield.clear();
+    const shieldFilm = legacyShieldFilm(t);
+    if (!this.protection) {
+      const films = t.shieldClips.filter((clip) => clip.kind === 'film');
+      const keys = new Set<TankChild>(films.map((clip) => clip.key));
+      for (const [key, view] of this.mountedShields)
+        if (!keys.has(key)) {
+          view.destroy();
+          this.mountedShields.delete(key);
+        }
+      for (const clip of films) {
+        let view = this.mountedShields.get(clip.key);
+        if (!view) {
+          view = new Graphics();
+          view
+            .circle(0, 0, Number.isNaN(clip.diameter) ? 65 : clip.diameter / 2)
+            .fill({ color: 0xaaddff, alpha: 0.07 })
+            .stroke({ color: 0xbbeeff, alpha: 0.65, width: 1.5 });
+          this.mountedShields.set(clip.key, view);
+        }
+        view.alpha = t.alpha;
+        view.visible = t.displayChildren.includes(clip.key);
+      }
+    }
     if (
       !this.protection &&
-      (t.shield > 0 || (t.design.parts.some((p) => p.type === 5005) && t.forcefieldReady))
+      (shieldFilm ||
+        (t.design.parts.some((p) => p.type === 5005) && t.forcefieldReady && t.forcefieldAttached))
     ) {
-      const diameter =
-        t.shield > 0
-          ? t.side === 'player'
-            ? (t.shieldDiameter ?? this.assets.protectionRadius(t) * 2)
-            : t.radius * 2
-          : this.assets.forcefieldRadius(t) * 2.1;
+      const diameter = shieldFilm
+        ? t.side === 'player'
+          ? (t.shieldDiameter ?? this.assets.protectionRadius(t) * 2)
+          : t.radius * 2
+        : this.assets.forcefieldRadius(t) * 2.1;
       this.shield
         .circle(0, 0, Number.isNaN(diameter) ? 65 : diameter / 2)
         .fill({ color: 0xaaddff, alpha: 0.07 })
@@ -72,6 +114,7 @@ export class TankView {
     }
     this.status?.update(t);
     this.protection?.update(t);
+    this.orderChildren(t);
     this.container.filters = this.status?.infectionFilter ? [this.status.infectionFilter] : null;
     if (!this.status && t.status.stun > 0)
       this.shield.star(0, -t.radius - 6, 5, 5, 2).fill(0xffffff);
@@ -79,6 +122,25 @@ export class TankView {
     else if (t.status.infect > 0) this.container.tint = 0xb1ed80;
     else if (t.status.sticky > 0) this.container.tint = 0xbbb0ff;
     else this.container.tint = 0xffffff;
+  }
+  private orderChildren(tank: Tank) {
+    const entries: [TankChild, Container][] = this.parts.map((view, i) => [
+      `part:${tank.design.parts[i].key}`,
+      view.root,
+    ]);
+    entries.push(...(this.status?.displayEntries() ?? []));
+    entries.push(...(this.protection?.displayEntries() ?? []));
+    entries.push(...this.mountedShields);
+    if (!this.protection)
+      entries.push([legacyShieldFilm(tank) ? 'shield-film' : 'forcefield', this.shield]);
+    const order = new Map(tank.displayChildren.map((key, i) => [key, i]));
+    entries.sort((a, b) => (order.get(a[0]) ?? Infinity) - (order.get(b[0]) ?? Infinity));
+    for (const [index, [, child]] of entries.entries()) {
+      child.label = entries[index][0];
+      if (child.parent !== this.container) this.container.addChildAt(child, index);
+      else if (this.container.getChildIndex(child) !== index)
+        this.container.setChildIndex(child, index);
+    }
   }
   destroy() {
     this.container.filters = null;

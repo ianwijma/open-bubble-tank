@@ -1,19 +1,30 @@
 """Rebuild data from the sibling research repository; no artwork/SWF is copied."""
 import json, re, sys
 from pathlib import Path
-root=Path(sys.argv[1]) if len(sys.argv)>1 else Path('../documented-bubble-tank-3')
+roots=[arg for arg in sys.argv[1:] if arg!='--parts-only']
+root=Path(roots[0]) if roots else Path('../documented-bubble-tank-3')
 p=root/'re/bt3'
 out=Path('src/game/data')
 def write(name,data): (out/name).write_text(json.dumps(data,separators=(',',':'))+'\n')
 raw=json.loads((p/'parts_database.json').read_text())
 symbols=json.loads((p/'symbol_map.json').read_text())
 by_name={v['class'].split('.')[-1]:int(k) for k,v in symbols.items()}
+source_text=(p/'export_scripts_deobf/scripts/_-HJ.as').read_text()
+source_rows=dict(re.findall(r'"intObjID":(\d+),(.*?)(?="intObjID":|\Z)',source_text,re.S))
+def text(row,key):
+ # Decode the ActionScript string once; the old intermediate JSON kept escape syntax.
+ match=re.search(r'"'+key+r'":("(?:\\.|[^"\\])*")',source_rows[str(row['intObjID'])])
+ if not match: raise ValueError(f"Missing source text {row['intObjID']} {key}")
+ return json.loads(match.group(1).replace("\\'", "'"))
 parts=[]
 for bucket,rows in raw['arrays'].items():
  for r in rows:
   if 'intObjID' not in r: continue
-  parts.append(dict(id=r['intObjID'],name=r['strName'].replace("\\'", "'"),pluralName=r['strPluralName'].replace("\\'", "'"),shortName=r['strShortName'].replace("\\'", "'"),symbol=by_name.get(r['claType'].split('.')[-1],0),gp=r['intGunCost'],bp=r['intBubbleCost'],classCost=r['intClassCost'],lower=r['blnLower'],summary=r['strSummaryText'].replace("\\'", "'"),flavor=r['strFlavorText'].replace("\\'", "'"),tier=next((i+1 for i,t in enumerate(raw['tiers']) if r['intObjID'] in t),0)))
+  parts.append(dict(id=r['intObjID'],name=text(r,'strName'),pluralName=text(r,'strPluralName'),shortName=text(r,'strShortName'),symbol=by_name.get(r['claType'].split('.')[-1],0),gp=r['intGunCost'],bp=r['intBubbleCost'],classCost=r['intClassCost'],lower=r['blnLower'],damageText=text(r,'strDamageText'),summary=text(r,'strSummaryText'),flavor=text(r,'strFlavorText'),tier=next((i+1 for i,t in enumerate(raw['tiers']) if r['intObjID'] in t),0)))
 write('parts.json',parts)
+if '--parts-only' in sys.argv:
+ print('Imported',len(parts),'part definitions only; no artwork.')
+ sys.exit(0)
 tanks=json.loads((p/'builtin_tanks.json').read_text())
 res={}
 for k,rows in tanks.items():

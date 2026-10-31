@@ -4,6 +4,7 @@ import { STARTER, partById } from '../src/game/data/catalog';
 import { AssetPack } from '../src/game/assets/asset-pack';
 import { createTank } from '../src/game/simulation/tank';
 import { World, emptyInput } from '../src/game/simulation/world';
+import { detachForcefield, refreshForcefield } from '../src/game/simulation/forcefield';
 
 test('protection uses successive axis records and the last record child dimensions, including ties', () => {
   const small = { x: 10, y: 0, width: 20, height: 20 };
@@ -100,4 +101,26 @@ test('player shields cache live diameter per mount, including NaN, and preserve 
   world.fireGun(world.player, b, emptyInput());
   expect(world.player.shieldDiameter).toBeNaN();
   expect(calls).toBe(2);
+});
+
+test('Setup replaces the clone and restarts its age without rewinding live mounted art', () => {
+  const { pack, tank, part } = geometry();
+  tank.design.parts.push({ ...part, key: 'forcefield', type: 5005, x: 0, y: 0 });
+  const old = pack.forcefieldPartClip(tank, part),
+    live = pack.partClip(tank, part);
+  tank.artAge = 9;
+  expect(pack.forcefieldPartClip(tank, part)).toBe(old);
+  expect(old.age).toBe(10);
+  detachForcefield(tank);
+  refreshForcefield(tank);
+  const fresh = pack.forcefieldPartClip(tank, part);
+  expect(fresh).not.toBe(old);
+  expect(fresh.age).toBe(1);
+  expect(fresh.frame).toBe(1);
+  expect(pack.partClip(tank, part)).toBe(live);
+  expect(live.age).toBe(10);
+  tank.artAge++;
+  expect(pack.forcefieldPartClip(tank, part)).toBe(fresh);
+  expect(fresh.age).toBe(2);
+  expect(fresh.frame).toBe(2);
 });

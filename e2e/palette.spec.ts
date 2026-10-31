@@ -1,8 +1,9 @@
+import { waitForMainMenu } from './helpers/main-menu';
 import { test, expect, type Page } from '@playwright/test';
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import type { TankDesign, TankPart } from '../src/game/core/types';
-import { dropPreview } from './helpers/creator';
+import { dropPreview, exitCreator } from './helpers/creator';
 const starter: TankDesign = JSON.parse(readFileSync(resolve('src/game/data/tanks.json'), 'utf8'))
   .avatar_defaults[0];
 const swf =
@@ -53,6 +54,7 @@ for (const assets of ['mock', 'SWF'])
     await page.goto('/');
     if (assets === 'SWF') await page.getByLabel('Bubble Tanks 3 Flash file').setInputFiles(swf);
     else await page.getByRole('button', { name: 'Play with mock assets' }).click();
+    await waitForMainMenu(page);
     await page.getByRole('button', { name: 'My tanks', exact: true }).click({ timeout: 60000 });
     await importTank(page, budget);
     await page.getByRole('button', { name: 'Weapons', exact: true }).click();
@@ -88,7 +90,7 @@ for (const assets of ['mock', 'SWF'])
     await page.getByRole('button', { name: 'Undo', exact: true }).click();
     await expect(small).toHaveCSS('opacity', '1');
     await expect(page.locator('.creator').getByRole('alert')).toHaveCount(0);
-    await page.getByRole('button', { name: 'Exit tank creator' }).click();
+    await exitCreator(page);
     await importTank(page, complexity);
     await page.getByRole('button', { name: 'Weapons', exact: true }).click();
     await expect(page.getByRole('button', { name: 'Choose a part', exact: true })).toBeDisabled();
@@ -102,11 +104,11 @@ for (const assets of ['mock', 'SWF'])
     ).toBeVisible();
     await page.screenshot({ path: `test-results/${assets}-palette-complexity.png` });
     const alert = page.locator('.creator').getByRole('alert'),
-      inspector = page.locator('.creator-inspector');
+      inspector = page.getByRole('button', { name: 'Enemy Info', exact: true });
     await expect(alert).toContainText('Exceeds maximum complexity');
     const alertBox = await alert.boundingBox(),
       inspectorBox = await inspector.boundingBox();
-    expect(alertBox!.y + alertBox!.height).toBeLessThan(inspectorBox!.y);
+    expect(alertBox!.x + alertBox!.width).toBeLessThan(inspectorBox!.x);
     await page.getByRole('button', { name: 'Undo', exact: true }).click();
     await expect(alert).toHaveCount(0);
     expect(errors).toEqual([]);

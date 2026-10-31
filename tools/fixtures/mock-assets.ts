@@ -1,3 +1,4 @@
+import { captureCanvas } from './pixi-capture';
 import { Rectangle } from 'pixi.js';
 import { AssetPack } from '../../src/game/assets/asset-pack';
 import { DEFAULT_SETTINGS } from '../../src/game/core/constants';
@@ -27,11 +28,12 @@ export async function showMockAssetsProof(native: AssetPack, host: HTMLElement) 
   ctx.fillStyle = '#0b3c5a';
   ctx.fillRect(0, 0, 550, 450);
   const panels: { row: number; column: number; ink: number; painted: number }[] = [];
+  let livePalette: { player: { g: number }; enemy: { g: number } } | undefined;
   const capture = (column: number, row: number, label: string, entities = false) => {
     const renderer = renderers[column],
       world = worlds[column];
     renderer.draw(world, DEFAULT_SETTINGS);
-    const frame = renderer.app.renderer.extract.canvas({
+    const frame = captureCanvas(renderer.app.renderer, {
       target: entities
         ? renderer.entities
         : packs[column].mode === 'swf'
@@ -41,6 +43,23 @@ export async function showMockAssetsProof(native: AssetPack, host: HTMLElement) 
       resolution: 2,
     }) as HTMLCanvasElement;
     const pixels = frame.getContext('2d')!.getImageData(0, 0, frame.width, frame.height).data;
+    if (row === 0 && column === 1) {
+      const mean = (right: boolean) => {
+        let green = 0,
+          count = 0;
+        for (let i = 0; i < pixels.length; i += 4)
+          if (
+            (i / 4) % frame.width >= frame.width / 2 === right &&
+            pixels[i + 3] > 128 &&
+            pixels[i] - pixels[i + 2] > 100
+          ) {
+            green += pixels[i + 1];
+            count++;
+          }
+        return { g: green / count };
+      };
+      livePalette = { player: mean(false), enemy: mean(true) };
+    }
     let ink = 0;
     for (let i = 3; i < pixels.length; i += 4) if (pixels[i]) ink++;
     const x = column * 275,
@@ -182,7 +201,8 @@ export async function showMockAssetsProof(native: AssetPack, host: HTMLElement) 
         values = [0, 0, 0];
       let count = 0;
       for (let i = 0; i < r.pixels.length; i += 4)
-        if (r.pixels[i + 3] > 128 && r.pixels[i] - r.pixels[i + 2] > 30) {
+        // Compare saturated paint; differently sized source rims/glints skew a whole-image average.
+        if (r.pixels[i + 3] > 128 && r.pixels[i] - r.pixels[i + 2] > 100) {
           count++;
           for (let c = 0; c < 3; c++) values[c] += r.pixels[i + c];
         }
@@ -192,6 +212,11 @@ export async function showMockAssetsProof(native: AssetPack, host: HTMLElement) 
       cx = Math.floor(body.canvas.width / 2),
       cy = Math.floor(body.canvas.height / 2);
     const bodyAlpha = body.pixels[(cy * body.canvas.width + cx) * 4 + 3];
+    const referenceBody = native.part(1003),
+      referenceX = Math.floor(referenceBody.canvas.width / 2),
+      referenceY = Math.floor(referenceBody.canvas.height / 2),
+      referenceBodyAlpha =
+        referenceBody.pixels[(referenceY * referenceBody.canvas.width + referenceX) * 4 + 3];
     let galleryHash = 2166136261;
     for (const byte of ctx.getImageData(0, 0, 550, 450).data)
       galleryHash = Math.imul(galleryHash ^ byte, 16777619);
@@ -200,7 +225,8 @@ export async function showMockAssetsProof(native: AssetPack, host: HTMLElement) 
       comparisons,
       intercept,
       panels,
-      palette: { player: palette(2001), enemy: palette(4001), bodyAlpha },
+      palette: { player: palette(2001), enemy: palette(4001), bodyAlpha, referenceBodyAlpha },
+      livePalette,
       galleryHash: galleryHash >>> 0,
     };
   } finally {

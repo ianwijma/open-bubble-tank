@@ -1,6 +1,6 @@
 import { ColorMatrixFilter, Container } from 'pixi.js';
 import type { AssetPack } from '../assets/asset-pack';
-import type { StatusDecoration, Tank } from '../core/types';
+import type { StatusDecoration, Tank, TankChild } from '../core/types';
 import { INFECTED_ART, STATUS_ART } from '../data/status-art';
 import { SwfSymbolView, type RasterTextures } from './swf-symbol-view';
 
@@ -34,10 +34,10 @@ export class SwfTankStatusView {
         }
     }
     if (this.decoration)
-      for (const [index, view] of this.marks.entries())
-        if (this.decoration.kind === 'stun')
-          view.update(this.decoration.marks[index].frame + this.decoration.artAge);
-        else view.update(this.decoration.artAge + 1, this.decoration.marks[index].frame);
+      for (const [index, view] of this.marks.entries()) {
+        view.setParentAlpha(tank.alpha);
+        view.updatePose(this.assets.statusClip(tank, index));
+      }
     if (tank.status.infect > 0) {
       if (!this.infected) {
         this.infected = new SwfSymbolView(INFECTED_ART, this.assets, this.textures);
@@ -68,14 +68,22 @@ export class SwfTankStatusView {
         ];
       }
       this.infected.root.scale.set((tank.radius * 1.5) / 36);
+      this.infected.setParentAlpha(tank.alpha);
       this.infected.root.angle = tank.infectionAngle;
-      this.infected.update(tank.artAge - tank.infectStartedAt + 1);
+      this.infected.updatePose(this.assets.infectionClip(tank));
     } else if (this.infected) {
       this.infected.destroy();
       this.infected = undefined;
       this.infectionFilter?.destroy();
       this.infectionFilter = null;
     }
+  }
+  /** TankView may mount these direct children alongside parts and protection. */
+  displayEntries(): [TankChild, Container][] {
+    return [
+      ...this.marks.map((view): [TankChild, Container] => ['status', view.root]),
+      ...(this.infected ? [['infection', this.infected.root] as [TankChild, Container]] : []),
+    ];
   }
   destroy() {
     for (const view of this.marks) view.destroy();

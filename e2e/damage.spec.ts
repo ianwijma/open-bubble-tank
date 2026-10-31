@@ -5,7 +5,7 @@ const swf =
   process.env.BT3_SWF_FILE ?? resolve('../documented-bubble-tank-3/re/bt3/uncompressed.swf');
 
 for (const native of [false, true])
-  test(`${native ? 'SWF' : 'mock'} body damage changes enemy artwork and collision while retaining the complete avatar`, async ({
+  test(`${native ? 'SWF' : 'mock'} body damage hides enemy artwork while attached geometry still hits`, async ({
     page,
   }) => {
     test.skip(native && !existsSync(swf), 'A local research SWF is required.');
@@ -19,7 +19,7 @@ for (const native of [false, true])
     await expect(status).toContainText('Ready', { timeout: 60000 });
     const proof = JSON.parse((await status.getAttribute('data-degradation'))!);
     expect(proof.hidden).toEqual([[], ['body2'], [], []]);
-    expect(proof.hits).toEqual([true, false, true, true]);
+    expect(proof.hits).toEqual([true, true, true, true]);
     expect(proof.hashes[1]).not.toBe(proof.hashes[0]);
     expect(proof.hashes[2]).toBe(proof.hashes[0]);
     expect(proof.hashes[3]).toBe(proof.hashes[0]);

@@ -1,4 +1,5 @@
 'use client';
+import { NEW_ENEMY_STATS } from '@/game/core/creator-enemy-stats';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { AssetPack } from '@/game/assets/asset-pack';
 import type { Profile, Settings, TankDesign } from '@/game/core/types';
@@ -6,25 +7,35 @@ import { STARTER } from '@/game/data/catalog';
 import { World } from '@/game/simulation/world';
 import { AudioManager } from '@/game/services/audio';
 import { StageRuntime } from '@/game/services/stage-runtime';
-import { loadProfile, saveProfile, saveCreatedTank } from '@/game/services/profile';
+import { MenuSettingsState } from '@/game/core/settings-screen';
+import { loadProfile, saveProfile, submitCreatedTank } from '@/game/services/profile';
 import { AssetGate } from './asset-gate';
 import { GameViewport } from './game-viewport';
 import { MainStage } from './main-stage';
+import { MainMenu } from './main-menu';
+import { CreditsPanel } from './credits-panel';
+import { MainMenuMotion } from '@/game/core/main-menu';
 import { GameHud } from './game-hud';
 import { SettingsPanel } from './settings-panel';
 import { TankCreator } from './tank-creator';
 import { TankLibrary } from './tank-library';
-import { PausePanel, UpgradePanel, EditConfirmPanel, SecondaryHelpPanel } from './game-panels';
-import { TankInfoPanel } from './tank-info-panel';
+import { TankViewer } from './tank-viewer';
+import type { ViewerLimits } from '@/game/core/tank-viewer';
+import { ProfileClassAllowance } from '@/game/core/profile-class';
+import { appendViewerTank, removeViewerTank } from '@/game/core/viewer-storage';
+import { UpgradePanel, EditConfirmPanel, SecondaryHelpPanel } from './game-panels';
+import { PausePanel } from './pause-panel';
 import { WinPanel } from './win-panel';
-import { BubbleText, Dialog, Icon } from './ui';
+import { Dialog, Icon } from './ui';
 
-type Screen = 'menu' | 'game' | 'creator' | 'library';
-type Overlay = 'settings' | 'credits' | 'sources' | 'info' | 'edit-confirm' | 'edit-choice' | null;
+type Screen = 'menu' | 'game' | 'creator' | 'library' | 'viewer';
+type Overlay = 'settings' | 'credits' | 'sources' | 'edit-confirm' | 'edit-choice' | null;
 interface EditorContext {
   initial: TankDesign;
+  saveName: string;
   returnTo: Screen;
   upgrade: boolean;
+  saved?: boolean;
 }
 export default function GameShell() {
   const [pack, setPack] = useState<AssetPack | null>(null),
@@ -36,18 +47,26 @@ export default function GameShell() {
     [localSources, setLocalSources] = useState(false),
     [continueRun, setContinueRun] = useState(false),
     [editor, setEditor] = useState<EditorContext | null>(null),
+    [viewer, setViewer] = useState<(ViewerLimits & { avatar: boolean }) | null>(null),
     [storageError, setStorageError] = useState(false),
     [nativeSize, setNativeSize] = useState(false),
     [fullscreen, setFullscreen] = useState(false),
     [audio, setAudio] = useState<AudioManager | null>(null);
   const [stage] = useState(() => new StageRuntime());
+  const [profileClass] = useState(() => new ProfileClassAllowance());
+  const [menuMotion, setMenuMotion] = useState(() => new MainMenuMotion());
+  const menuOverlay = useRef<HTMLFieldSetElement>(null);
+  const [menuSettings, setMenuSettings] = useState(() => new MenuSettingsState(50));
   const frame = useRef<HTMLDivElement>(null),
     space = useRef<HTMLDivElement>(null),
     startingWorld = useRef<World | null>(null);
   const refresh = useCallback(() => setRevision((r) => r + 1), []);
   useEffect(() => {
-    setProfile(loadProfile());
-  }, []);
+    const loaded = loadProfile();
+    stage.background.efficient = loaded.settings.efficient;
+    setMenuSettings(new MenuSettingsState(loaded.settings.mainFps));
+    setProfile(loaded);
+  }, [stage]);
   useEffect(() => {
     let wasFullscreen = document.fullscreenElement === frame.current;
     const changed = () => {
@@ -93,7 +112,8 @@ export default function GameShell() {
     if (profile) {
       audio?.setFrameRate(profile.settings.fps);
       audio?.setMusic(
-        screen === 'game' || (screen === 'creator' && editor?.returnTo === 'game')
+        screen === 'game' ||
+          ((screen === 'creator' || screen === 'viewer') && editor?.returnTo === 'game')
           ? 'game'
           : 'menu',
         profile.settings.music,
@@ -102,20 +122,33 @@ export default function GameShell() {
     }
   }, [screen, profile, pack, editor, audio]);
   useEffect(() => () => pack?.dispose(), [pack]);
-  function updateProfile(update: (p: Profile) => Profile) {
+  function updateProfile(update: (p: Profile) => Profile, persist = true) {
     setProfile((previous) => {
       if (!previous) return previous;
       const next = update(previous);
-      setStorageError(!saveProfile(next));
+      if (persist) setStorageError(!saveProfile(next));
       return next;
     });
   }
+  function showScreen(next: Screen) {
+    if (next === 'menu' && screen !== 'menu' && profile) {
+      setMenuSettings(new MenuSettingsState(profile.settings.mainFps));
+      setMenuMotion(new MainMenuMotion());
+    }
+    setScreen(next);
+  }
   function settingsChange(settings: Settings, control?: 'shake' | 'efficiency') {
+    if (control === 'efficiency') stage.background.efficient = settings.efficient;
     // Pause's standalone toggle only gates Massive Cannon. Menu and efficiency
     // controls also call the source controller's enable/disable methods.
     if (control === 'efficiency' || (control === 'shake' && screen === 'menu'))
       stage.effects.setEnabled(settings.shake);
-    updateProfile((p) => ({ ...p, settings }));
+    // Efficiency calls SaveGameData. Normal settings stay live until RemoveSettings
+    // (or another source save); requested camera zoom saves immediately.
+    updateProfile(
+      (p) => ({ ...p, settings }),
+      control === 'efficiency' || settings.zoom !== profile?.settings.zoom,
+    );
   }
   function startRun() {
     if (!profile) return;
@@ -124,6 +157,7 @@ export default function GameShell() {
       continueRun ? profile.progression : [],
       undefined,
       stage.effects,
+      profileClass,
     );
     const random = next.rng;
     stage.random = () => random.next();
@@ -135,43 +169,75 @@ export default function GameShell() {
     next.onAchievement = (name) =>
       updateProfile((p) => ({ ...p, achievements: [...new Set([...p.achievements, name])] }));
     setWorld(next);
-    setScreen('game');
+    showScreen('game');
     setOverlay(null);
   }
   function menu() {
     world?.pause();
-    setScreen('menu');
+    showScreen('menu');
     setOverlay(null);
   }
   function edit(initial: TankDesign, upgrade = false) {
     world?.pause();
-    setEditor({ initial, returnTo: screen, upgrade });
-    setScreen('creator');
+    setEditor({
+      initial,
+      saveName: screen === 'menu' ? '' : initial.name,
+      returnTo: screen,
+      upgrade,
+    });
+    showScreen('creator');
     setOverlay(null);
   }
   function saveTank(design: TankDesign) {
     if (!profile || !editor) return;
-    const saved = saveCreatedTank(profile, design),
+    const saved = submitCreatedTank(profile, design),
       tank = saved.tank;
     updateProfile(() => saved.profile);
-
+    if (!tank) return;
     if (editor.returnTo === 'game' && world) {
-      if (editor.upgrade) world.selectUpgrade(tank);
+      if (editor.upgrade && !editor.saved) world.selectUpgrade(tank);
       else world.editPlayer(tank);
-      world.resume();
+      world.pause();
     }
-    setScreen(editor.returnTo);
-    setEditor(null);
+    setEditor({ ...editor, saved: true });
     refresh();
+    return tank;
   }
   function exitEditor() {
     if (editor) {
-      setScreen(editor.returnTo);
+      showScreen(editor.returnTo);
       setEditor(null);
-      if (editor.returnTo === 'game' && !editor.upgrade) world?.resume();
+      if (editor.returnTo === 'game' && (!editor.upgrade || editor.saved)) world?.resume();
     }
   }
+  function loadEditorTank(tank?: TankDesign) {
+    if (!editor || !viewer) return;
+    const initial =
+      tank ??
+      (viewer.avatar
+        ? editor.returnTo === 'game' && world
+          ? world.player.design
+          : editor.initial
+        : {
+            ...STARTER,
+            id: 'new',
+            name: 'My Enemy Tank',
+            avatar: false,
+            ...NEW_ENEMY_STATS,
+            parts: [],
+          });
+    setEditor({
+      ...editor,
+      initial: structuredClone(initial),
+      saveName: editor.returnTo === 'game' ? initial.name : '',
+    });
+    setViewer(null);
+    showScreen('creator');
+  }
   function closeOverlay() {
+    if (screen === 'menu' && !menuMotion.back()) return;
+    if (overlay === 'settings' && screen === 'menu' && profile)
+      setStorageError(!saveProfile(profile));
     setOverlay(null);
   }
   const settings = profile?.settings;
@@ -217,113 +283,49 @@ export default function GameShell() {
               <AssetGate
                 onReady={(p) => {
                   setPack(p);
-                  setScreen('menu');
+                  setMenuMotion(new MainMenuMotion());
+                  setMenuSettings(new MenuSettingsState(profile?.settings.mainFps ?? 50));
+                  showScreen('menu');
                 }}
               />
             ) : null}
             {pack && profile && screen === 'menu' ? (
-              <div className="main-menu stage-background">
-                <div className="menu-guest">
-                  <span aria-hidden="true">×</span> Playing as Guest
-                </div>
-                <span className="menu-version">OPEN · 0.1</span>
-                <div className="ambient-bubbles" aria-hidden="true">
-                  <i />
-                  <i />
-                  <i />
-                </div>
-                {pack.extras.get(545) ? (
-                  <img
-                    className="original-title"
-                    style={{
-                      left: 55.3 + pack.extras.get(545)!.x,
-                      top: 176.35 + pack.extras.get(545)!.y,
-                      width: pack.extras.get(545)!.width,
-                    }}
-                    src={pack.extras.get(545)!.url}
-                    alt="Bubble Tanks 3"
-                  />
-                ) : (
-                  <div className="menu-title">
-                    <BubbleText pack={pack} size={57}>
-                      bubble tanks 3
-                    </BubbleText>
-                  </div>
-                )}
-                <button
-                  className="menu-orb menu-play"
-                  aria-label="Play"
-                  onClick={() => {
+              <MainMenu
+                pack={pack}
+                stage={stage}
+                motion={menuMotion}
+                covered={overlay !== null}
+                overlayRoot={menuOverlay}
+                onAction={(name) => {
+                  if (menuMotion.busy) return;
+                  if (name === 'play_btn') {
+                    if (!menuMotion.open()) return;
                     setContinueRun(false);
                     setOverlay('sources');
-                  }}
-                >
-                  <MenuArt pack={pack} symbol={492} icon="play" size={78} />
-                  <span className="orb-caption">PLAY</span>
-                </button>
-                <button
-                  className="menu-orb menu-create"
-                  aria-label="Enemy tank creator"
-                  onClick={() =>
+                  } else if (name === 'settings_btn' || name === 'credits_btn') {
+                    if (!menuMotion.open()) return;
+                    setOverlay(name === 'settings_btn' ? 'settings' : 'credits');
+                  } else if (name === 'enemyCreator_btn') {
                     edit({
                       ...STARTER,
                       id: 'new',
                       name: 'My Enemy Tank',
                       avatar: false,
-                      life: 1,
-                      reward: 1,
-                      speed: 1,
+                      ...NEW_ENEMY_STATS,
                       parts: [],
-                    })
-                  }
-                >
-                  <MenuArt pack={pack} symbol={500} icon="library" size={26} />
-                  <span className="orb-caption">CREATE A TANK</span>
-                </button>
-                <button
-                  className="menu-orb menu-library"
-                  aria-label="My tanks"
-                  onClick={() => setScreen('library')}
-                >
-                  <MenuArt pack={pack} symbol={496} icon="plus" size={28} />
-                  <span className="orb-caption">MY TANKS</span>
-                </button>
-                <button
-                  className="menu-orb menu-settings"
-                  aria-label="Settings"
-                  onClick={() => setOverlay('settings')}
-                >
-                  <MenuArt pack={pack} symbol={494} icon="settings" size={21} />
-                  <span className="orb-caption">SETTINGS</span>
-                </button>
-                <button
-                  className="menu-orb menu-credits"
-                  aria-label="Credits"
-                  onClick={() => setOverlay('credits')}
-                >
-                  <MenuArt pack={pack} symbol={498} icon="file" size={21} />
-                  <span className="orb-caption">CREDITS</span>
-                </button>
-                <button
-                  className="menu-orb menu-assets"
-                  aria-label="Change assets"
-                  onClick={() => {
+                    });
+                  } else if (name === 'partsPacks_btn') showScreen('library');
+                  else if (name === 'pmg_btn') {
                     setWorld(null);
                     setPack(null);
-                  }}
-                >
-                  <Icon name="back" size={20} />
-                  <span className="orb-caption">CHANGE ASSETS</span>
-                </button>
-                <span className="menu-bottom-left">
-                  {pack.mode === 'swf' ? 'Original assets loaded' : 'Mock asset mode'}
-                </span>
-                <span className="menu-bottom-right">All progress saved locally</span>
-              </div>
+                  }
+                }}
+              />
             ) : null}
             {pack &&
             profile &&
-            (screen === 'game' || (screen === 'creator' && editor?.returnTo === 'game')) &&
+            (screen === 'game' ||
+              ((screen === 'creator' || screen === 'viewer') && editor?.returnTo === 'game')) &&
             world ? (
               <>
                 <GameViewport
@@ -356,7 +358,9 @@ export default function GameShell() {
                     refresh();
                   }}
                 />
-                {screen === 'game' && world.mode === 'paused' && overlay === null ? (
+                {screen === 'game' &&
+                world.mode === 'paused' &&
+                (overlay === null || overlay === 'settings') ? (
                   <PausePanel
                     pack={pack}
                     closeKey={profile.settings.h5}
@@ -365,7 +369,13 @@ export default function GameShell() {
                       refresh();
                     }}
                     onSettings={() => setOverlay('settings')}
-                    onInfo={() => setOverlay('info')}
+                    tank={world.player}
+                    stage={stage}
+                    fps={profile.settings.fps}
+                    covered={overlay === 'settings'}
+                    settings={profile.settings}
+                    onSettingsChange={settingsChange}
+                    onSettingsClose={closeOverlay}
                     onMenu={menu}
                   />
                 ) : null}
@@ -438,115 +448,118 @@ export default function GameShell() {
                 fps={profile.settings.fps}
                 overGame={editor.returnTo === 'game'}
                 initial={editor.initial}
+                initialSaveName={editor.saveName}
                 level={editor.returnTo === 'game' ? (world?.progression.level ?? 1) : 6}
+                unlockedParts={editor.returnTo === 'game' ? world?.unlockedParts : undefined}
+                profileMaxClass={profileClass.value}
                 maxClass={
                   editor.returnTo === 'game' ? Math.min(6, (world?.progression.level ?? 0) + 1) : 6
                 }
                 onSave={saveTank}
+                helpSeen={profile.creatorHelpSeen}
+                onHelpStart={() => updateProfile((p) => ({ ...p, creatorHelpSeen: true }))}
                 onExit={exitEditor}
+                onLoad={(limits) => {
+                  setViewer(limits);
+                  showScreen('viewer');
+                }}
+              />
+            ) : null}
+            {pack && profile && screen === 'viewer' && viewer && editor ? (
+              <TankViewer
+                pack={pack}
+                stage={stage}
+                tanks={profile.tanks}
+                avatar={viewer.avatar}
+                limits={viewer}
+                helpSeen={profile.tankViewerHelpSeen}
+                onHelpComplete={() => updateProfile((p) => ({ ...p, tankViewerHelpSeen: true }))}
+                onBack={() => loadEditorTank()}
+                onSelect={loadEditorTank}
+                onSaveLocal={(tank) =>
+                  updateProfile((p) => ({ ...p, tanks: appendViewerTank(p.tanks, tank) }))
+                }
+                onDelete={(tank) =>
+                  updateProfile((p) => ({ ...p, tanks: removeViewerTank(p.tanks, tank) }))
+                }
               />
             ) : null}
             {pack && profile && screen === 'library' ? (
               <TankLibrary
                 pack={pack}
                 tanks={profile.tanks}
-                onBack={() => setScreen('menu')}
+                onBack={() => showScreen('menu')}
                 onEdit={(t) => edit(t)}
                 onImport={(tank) =>
-                  updateProfile((p) => ({
-                    ...p,
-                    tanks: [...p.tanks.filter((t) => t.id !== tank.id), tank],
-                  }))
+                  updateProfile((p) => ({ ...p, tanks: appendViewerTank(p.tanks, tank) }))
                 }
-                onDelete={(id) =>
-                  updateProfile((p) => ({ ...p, tanks: p.tanks.filter((t) => t.id !== id) }))
+                onDelete={(tank) =>
+                  updateProfile((p) => ({ ...p, tanks: removeViewerTank(p.tanks, tank) }))
                 }
               />
             ) : null}
-            {pack && settings && overlay === 'settings' ? (
-              <SettingsPanel
-                pack={pack}
-                settings={settings}
-                onChange={settingsChange}
-                onClose={closeOverlay}
-              />
-            ) : null}
-            {pack && overlay === 'credits' ? (
-              <Dialog title="Bubble Tanks 3" onClose={closeOverlay}>
-                <div className="credits">
-                  <p>
-                    Original game, artwork, and sound
-                    <br />
-                    <strong>Hero Interactive</strong>
+            <fieldset
+              ref={menuOverlay}
+              className="main-menu-overlay"
+              disabled={screen === 'menu' && menuMotion.busy}
+              data-menu-busy={screen === 'menu' ? String(menuMotion.busy) : undefined}
+              onClickCapture={(event) => {
+                if (screen === 'menu' && menuMotion.busy) {
+                  event.preventDefault();
+                  event.stopPropagation();
+                }
+              }}
+            >
+              {pack && settings && overlay === 'settings' && screen !== 'game' ? (
+                <SettingsPanel
+                  menuState={menuSettings}
+                  pack={pack}
+                  settings={settings}
+                  onChange={settingsChange}
+                  onClose={closeOverlay}
+                />
+              ) : null}
+              {pack && overlay === 'credits' ? (
+                <CreditsPanel pack={pack} stage={stage} onClose={closeOverlay} />
+              ) : null}
+              {pack && profile && overlay === 'sources' ? (
+                <Dialog title="Choose your tanks" onClose={closeOverlay}>
+                  <p className="source-intro">
+                    Explore an endless world of bubblefields with the original built-in tank
+                    collection.
                   </p>
-                  <p>
-                    Open Bubble Tank is an independent TypeScript recreation, built from research
-                    into the original Flash game.
-                  </p>
-                  <p>
-                    Game assets are supplied by you and extracted locally. The Flash file is never
-                    uploaded or executed.
-                  </p>
-                  {pack.report ? (
-                    <p className="asset-summary">
-                      {pack.report.filename}
-                      <br />
-                      {pack.report.vectors.toLocaleString()} vectors ·{' '}
-                      {pack.report.sprites.toLocaleString()} sprites · {pack.report.sounds} sounds
-                    </p>
-                  ) : (
-                    <p className="asset-summary">Playing with procedural mock artwork.</p>
-                  )}
-                </div>
-                <button className="game-button" onClick={closeOverlay}>
-                  BACK
-                </button>
-              </Dialog>
-            ) : null}
-            {pack && profile && overlay === 'sources' ? (
-              <Dialog title="Choose your tanks" onClose={closeOverlay}>
-                <p className="source-intro">
-                  Explore an endless world of bubblefields with the original built-in tank
-                  collection.
-                </p>
-                <label className="source-option">
-                  <input type="checkbox" checked readOnly /> Hero Interactive tanks{' '}
-                  <span>43 built-in enemies</span>
-                </label>
-                <label className="source-option">
-                  <input
-                    type="checkbox"
-                    checked={localSources}
-                    disabled={!profile.tanks.some((t) => !t.avatar)}
-                    onChange={(e) => setLocalSources(e.target.checked)}
-                  />{' '}
-                  My enemy tanks <span>{profile.tanks.filter((t) => !t.avatar).length} saved</span>
-                </label>
-                <label className="source-option continue-option">
-                  <input
-                    type="checkbox"
-                    checked={continueRun}
-                    disabled={!profile.progression.length}
-                    onChange={(e) => setContinueRun(e.target.checked)}
-                  />{' '}
-                  Use saved avatars from previous game
-                </label>
-                <div className="dialog-actions">
-                  <span className="small-note">Everything plays offline.</span>
-                  <button className="game-button primary" onClick={startRun}>
-                    PLAY <span aria-hidden="true">→</span>
-                  </button>
-                </div>
-              </Dialog>
-            ) : null}
-            {pack && world && profile && overlay === 'info' ? (
-              <TankInfoPanel
-                pack={pack}
-                tank={world.player}
-                fps={profile.settings.fps}
-                onClose={closeOverlay}
-              />
-            ) : null}
+                  <label className="source-option">
+                    <input type="checkbox" checked readOnly /> Hero Interactive tanks{' '}
+                    <span>43 built-in enemies</span>
+                  </label>
+                  <label className="source-option">
+                    <input
+                      type="checkbox"
+                      checked={localSources}
+                      disabled={!profile.tanks.some((t) => !t.avatar)}
+                      onChange={(e) => setLocalSources(e.target.checked)}
+                    />{' '}
+                    My enemy tanks{' '}
+                    <span>{profile.tanks.filter((t) => !t.avatar).length} saved</span>
+                  </label>
+                  <label className="source-option continue-option">
+                    <input
+                      type="checkbox"
+                      checked={continueRun}
+                      disabled={!profile.progression.length}
+                      onChange={(e) => setContinueRun(e.target.checked)}
+                    />{' '}
+                    Use saved avatars from previous game
+                  </label>
+                  <div className="dialog-actions">
+                    <span className="small-note">Everything plays offline.</span>
+                    <button className="game-button primary" onClick={startRun}>
+                      PLAY <span aria-hidden="true">→</span>
+                    </button>
+                  </div>
+                </Dialog>
+              ) : null}
+            </fieldset>
           </MainStage>
         </div>
       </div>
@@ -567,24 +580,31 @@ export default function GameShell() {
         </p>
         <span>{storageError ? 'LOCAL SAVING UNAVAILABLE' : 'LOCAL SAVE'}</span>
       </footer>
+      <details className="recreation-details">
+        <summary>About this recreation</summary>
+        <p>
+          Original game and artwork: Hero Interactive. Music &amp; sound: Brian Hall, Polyphone
+          Music.
+        </p>
+        <p>
+          Open Bubble Tank is an independent TypeScript recreation, built from research into the
+          original Flash game.
+        </p>
+        <p>
+          Game assets are supplied by you and extracted locally. The Flash file is never uploaded or
+          executed.
+        </p>
+        {pack?.report ? (
+          <p className="asset-summary">
+            {pack.report.filename}
+            <br />
+            {pack.report.vectors.toLocaleString()} vectors · {pack.report.sprites.toLocaleString()}{' '}
+            sprites · {pack.report.sounds} sounds
+          </p>
+        ) : pack ? (
+          <p className="asset-summary">Playing with procedural mock artwork.</p>
+        ) : null}
+      </details>
     </main>
-  );
-}
-function MenuArt({
-  pack,
-  symbol,
-  icon,
-  size,
-}: {
-  pack: AssetPack;
-  symbol: number;
-  icon: React.ComponentProps<typeof Icon>['name'];
-  size: number;
-}) {
-  const raster = pack.extras.get(symbol);
-  return raster ? (
-    <img className="menu-original-art" src={raster.url} alt="" />
-  ) : (
-    <Icon name={icon} size={size} />
   );
 }

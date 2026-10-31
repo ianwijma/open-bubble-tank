@@ -43,8 +43,18 @@ export function GameViewport({
       host.current?.focus({ preventScroll: true });
   }, [mode]);
   useEffect(() => {
+    let backgroundMode: World['mode'] | undefined;
+    const backgroundState = () => {
+      if (backgroundMode === world.mode) return;
+      backgroundMode = world.mode;
+      if (world.mode === 'playing' || world.mode === 'transit' || world.mode === 'collapse')
+        stage.background.resume();
+      else stage.background.stop();
+    };
+    backgroundState();
     let cancelled = false,
       unsubscribe: (() => void) | undefined,
+      releaseCapture: (() => void) | undefined,
       renderer: import('@/game/render/pixi-renderer').GameRenderer | undefined,
       input: GameInput | undefined;
     async function start() {
@@ -71,8 +81,10 @@ export function GameViewport({
           },
           () => world.stopPrimaryFire(),
         );
+        world.onCameraMove = (x, y) => stage.background.move(x, y);
         world.hitTest = pack.hitTest;
         world.protectionRadius = pack.protectionRadius;
+        world.displayWidth = pack.tankDisplayWidth;
         world.hitPart = pack.hitPart;
         world.hitProjectile = pack.hitProjectile;
         world.projectileBounds = (b) =>
@@ -81,6 +93,12 @@ export function GameViewport({
             b.kind === 'turret' ? world.allTanks().find((t) => t.uid === b.owner) : undefined,
           );
         host.current.focus({ preventScroll: true });
+        renderer.draw(world, settingsRef.current);
+        releaseCapture = stage.capture.register({
+          order: 0,
+          base: true,
+          draw: (context) => renderer!.capture(context),
+        });
         readyRef.current?.();
         let lastRevision = -1;
         unsubscribe = stage.subscribe({
@@ -89,6 +107,7 @@ export function GameViewport({
             world.viewZoom = settingsRef.current.zoom;
             world.screenShake = settingsRef.current.shake;
             world.step(input!.frame(), 0, false);
+            backgroundState();
             audio?.playEvents(world.drainEvents(), settingsRef.current);
           },
           draw: () => {
@@ -106,8 +125,11 @@ export function GameViewport({
     void start();
     return () => {
       cancelled = true;
+      releaseCapture?.();
       unsubscribe?.();
       input?.dispose();
+      world.onCameraMove = () => {};
+      stage.background.resume();
       if (renderer?.app.renderer) renderer.destroy();
     };
   }, [world, pack, audio, stage]);

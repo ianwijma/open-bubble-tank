@@ -1,14 +1,23 @@
 import { PARTS, partById } from '../data/catalog';
+import { SETTINGS_SCREEN } from '../core/settings-screen';
+import { CREDITS } from '../core/credits-screen';
+import { CREATOR_DIALOGS } from '../core/creator-dialogs';
+import { CREATOR_GUIDE } from '../core/creator-guide';
+import { TANK_VIEWER } from '../core/tank-viewer';
+import { mockCreditsLeaf } from './mock-credits';
 import type { Projectile, Rect, Tank, TankDesign, TankPart } from '../core/types';
 import { Random, rotate } from '../core/math';
 import { SwfClip } from './swf-clip';
+import { partSnapshot } from './part-snapshot';
+import { PartPlayback } from './part-playback';
 import {
   mockProjectileBounds,
   projectileScriptBounds,
   scriptBounds,
   type ScriptBoundsSource,
 } from './projectile-bounds';
-import { protectionRadius } from '../core/protection-size';
+import { protectionRadius, protectionScale } from '../core/protection-size';
+import { legacyShieldFilm, shieldClipFrame } from '../core/shield-art';
 import { MINIMAP } from '../core/minimap';
 import { HUD } from '../core/hud';
 import { WIN_SCREEN } from '../core/win-screen';
@@ -26,10 +35,19 @@ import effectArt from '../data/effect-art.json';
 import screenEffectArt from '../data/screen-effect-art.json';
 import mineArt from '../data/mine-art.json';
 import { buildDisplayList } from './display-list';
-import { mockPart } from './mock-part';
+import { mockPart, mockPartLeaf, mockPartLeafHit } from './mock-part';
+import { ShapeContact } from './shape-contact';
+import mockPartTimelines from '../data/mock-part-timelines.json';
+import attachmentGeometry from '../data/attachment-geometry.json';
+import { tankScriptBounds } from './tank-bounds';
+import { StatusPlayback } from './status-playback';
 import { mockProjectileHit } from './mock-projectile';
 import { authoredProjectileBounds } from './projectile-geometry';
-import { INFECTED_ART, STATUS_ART, PROTECTION_ART } from '../data/status-art';
+import { INFECTED_ART, STATUS_ART, PROTECTION_ART, shieldClipSymbol } from '../data/status-art';
+import { buttonDisplayList, type ButtonInfo, type ButtonState } from './button-display-list';
+import { CREATOR_CONTROLS } from '../core/creator-controls';
+import { CREATOR_PALETTE } from '../core/creator-palette';
+import { svgMaskDefinition } from './svg-mask';
 
 export interface Bounds extends Rect {}
 export interface Raster extends Bounds {
@@ -87,15 +105,19 @@ interface ShapeInfo {
   id: number;
   bounds?: { xMin: number; yMin: number; xMax: number; yMax: number };
   startBounds?: { xMin: number; yMin: number; xMax: number; yMax: number };
+  runs?: unknown[];
 }
 interface FontInfo {
   id: number;
   name: string;
+  bold?: number;
+  italic?: number;
   codeTable: number[];
   glyphs: string[];
   advances?: number[];
   ascent?: number;
   descent?: number;
+  leading?: number;
 }
 interface TextInfo {
   id: number;
@@ -113,6 +135,7 @@ interface TextInfo {
 export interface SymbolResult {
   symbols: {
     sprites: SpriteInfo[];
+    buttons?: ButtonInfo[];
     shapes: ShapeInfo[];
     morphs: ReturnType<typeof parseMorphShapeTag>[];
     fonts: FontInfo[];
@@ -124,6 +147,17 @@ export interface SymbolResult {
       fontId?: number;
       align: number;
       text: string;
+      color?: number[];
+      leading?: number;
+      maxLength?: number;
+      margins?: number[];
+      flags?: {
+        wordWrap: boolean;
+        multiline: boolean;
+        readOnly: boolean;
+        html: boolean;
+        useOutlines?: boolean;
+      };
     }[];
     symbolNames: Record<string, string>;
   };
@@ -189,22 +223,40 @@ export class AssetPack {
   frames = new Map<number, Raster[]>();
   extras = new Map<number, Raster>();
   uiFrames = new Map<number, Raster[]>();
+  creatorFrames = new Map<string, Raster>();
   leaves = new Map<number, Raster>();
   sounds = new Map<number, Blob>();
   private symbols: SymbolResult | null = null;
   private sprites = new Map<number, SpriteInfo>();
+  private buttons = new Map<number, ButtonInfo>();
   private shapes = new Map<number, ShapeInfo>();
   private morphs = new Map<number, ReturnType<typeof parseMorphShapeTag>>();
   private morphRasters = new Map<string, Raster>();
   private morphPixels = 0;
+  private shapeContacts = new Map<string, ShapeContact>();
+  private contactContext?: CanvasRenderingContext2D;
+  static readonly SHAPE_CONTACT_LIMIT = 256;
   static readonly MORPH_CACHE_PIXELS = 8 * 1024 * 1024;
   private texts = new Map<number, TextInfo>();
   private fonts = new Map<number, FontInfo>();
   private sourceUrls: string[] = [];
   private displayCache = new Map<string, DisplayPlacement[]>();
   private dynamicWidths = new Map<number, number>();
-  private partClips = new WeakMap<Tank, { design: TankDesign; parts: Map<string, SwfClip> }>();
-  private forcefieldClones = new WeakMap<Tank, { parts: Map<string, SwfClip>; radius: number }>();
+  private classFrames = new Map<number, Raster>();
+  private classPoses = new Map<number, SwfClip>();
+  private positivePosters = new Map<number, Raster>();
+  private partClips = new WeakMap<Tank, { design: TankDesign; parts: Map<string, PartPlayback> }>();
+  private infections = new WeakMap<Tank, { startedAt: number; clip: SwfClip }>();
+  private statuses = new StatusPlayback(this);
+  private forcefieldClones = new WeakMap<
+    Tank,
+    {
+      design: TankDesign;
+      generation: number;
+      parts: Map<string, SwfClip>;
+      radius: number;
+    }
+  >();
   private scriptGeometry: ScriptBoundsSource = {
     leafBounds: (id) => {
       const shape = this.shapes.get(id),
@@ -226,8 +278,53 @@ export class AssetPack {
   }
   static async mock(onProgress: (n: number, label: string) => void = () => {}) {
     const pack = new AssetPack('mock');
+    pack.sprites = new Map(mockPartTimelines.sprites.map((s) => [s.id, s as SpriteInfo]));
+    pack.shapes = new Map(mockPartTimelines.shapes.map((s) => [s.id, s]));
+    // Bounds/playback only. Mock painting continues to use its procedural fallback.
+    for (const sprite of attachmentGeometry.sprites)
+      pack.sprites.set(sprite.id, sprite as SpriteInfo);
+    for (const shape of attachmentGeometry.shapes) pack.shapes.set(shape.id, shape);
+    for (const sprite of CREDITS.sprites) pack.sprites.set(sprite.id, sprite as SpriteInfo);
+    for (const shape of CREDITS.shapes) pack.shapes.set(shape.id, shape);
+    for (const leaf of [...CREDITS.shapes, ...CREDITS.texts]) {
+      const b = leaf.bounds;
+      const bounds =
+        'xMin' in b
+          ? {
+              x: b.xMin / 20,
+              y: b.yMin / 20,
+              width: (b.xMax - b.xMin) / 20,
+              height: (b.yMax - b.yMin) / 20,
+            }
+          : b;
+      pack.leaves.set(leaf.id, mockCreditsLeaf(leaf.id, bounds));
+    }
+    for (const { id, bounds: b } of mockPartTimelines.shapes) {
+      const raster = mockPartLeaf(id, {
+        x: b.xMin / 20,
+        y: b.yMin / 20,
+        width: (b.xMax - b.xMin) / 20,
+        height: (b.yMax - b.yMin) / 20,
+      });
+      if (raster) pack.leaves.set(id, raster);
+    }
     for (const [i, part] of PARTS.entries()) {
-      pack.frames.set(part.id, [mockPart(part.id)]);
+      if (part.id < 2000) {
+        const pose = partSnapshot(part, pack),
+          poster = await pack.rasterClip(pose);
+        if (!poster && pose.placements.length)
+          throw new Error(`No procedural body poster for ${part.id}.`);
+        pack.frames.set(part.id, [poster ?? emptyRaster()]);
+        const positive = partSnapshot(part, pack, 'poster', 1);
+        if (positive.frame !== pose.frame) {
+          const variant = await pack.rasterClip(positive);
+          if (variant) pack.positivePosters.set(part.id, variant);
+        }
+        const classPose = partSnapshot(part, pack, 'class');
+        pack.classPoses.set(part.id, classPose);
+        const sample = await pack.rasterClip(classPose);
+        if (sample) pack.classFrames.set(part.id, sample);
+      } else pack.frames.set(part.id, [mockPart(part.id)]);
       onProgress((i + 1) / PARTS.length, 'Drawing mock bubbles');
     }
     return pack;
@@ -260,6 +357,7 @@ export class AssetPack {
     const pack = new AssetPack('swf');
     pack.symbols = symbols;
     pack.sprites = new Map(symbols.symbols.sprites.map((s) => [s.id, s]));
+    pack.buttons = new Map((symbols.symbols.buttons ?? []).map((s) => [s.id, s]));
     pack.shapes = new Map(
       [...symbols.symbols.shapes, ...symbols.symbols.morphs].map((s) => [s.id, s]),
     );
@@ -278,14 +376,24 @@ export class AssetPack {
     };
     try {
       for (const [i, part] of PARTS.entries()) {
-        // Thumbnails and class snapshots are frozen; live views run native timelines.
-        const frames = [2];
-        const rasters: Raster[] = [];
-        for (const f of frames) {
-          const raster = await pack.rasterSymbol(part.symbol, f);
-          if (raster) rasters.push(raster);
+        const pose = partSnapshot(part, pack),
+          raster = await pack.rasterClip(pose);
+        pack.frames.set(part.id, [
+          raster ?? (pose.placements.length ? mockPart(part.id) : emptyRaster()),
+        ]);
+        // Wiggle Cluster's root branches on its own Y. Child Y is already retained
+        // in the pose, so only a different root frame needs another cached poster.
+        const positive = partSnapshot(part, pack, 'poster', 1);
+        if (positive.frame !== pose.frame) {
+          const variant = await pack.rasterClip(positive);
+          if (variant) pack.positivePosters.set(part.id, variant);
         }
-        pack.frames.set(part.id, rasters.length ? rasters : [mockPart(part.id)]);
+        if (part.id < 2000) {
+          const classPose = partSnapshot(part, pack, 'class');
+          pack.classPoses.set(part.id, classPose);
+          const sample = await pack.rasterClip(classPose);
+          if (sample) pack.classFrames.set(part.id, sample);
+        }
         onProgress(0.2 + (0.35 * (i + 1)) / PARTS.length, `Composing ${part.name}`);
         if (i % 6 === 0)
           await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
@@ -297,11 +405,15 @@ export class AssetPack {
         for (const p of pack.sprites.get(id)?.placements ?? []) if (p.charId) visit(p.charId);
       };
       for (const p of PARTS) visit(p.symbol);
+      for (const id of [487, 524, 545, 492, 494, 496, 498, 500, 502]) visit(id);
+      visit(CREDITS.symbol);
       for (const art of Object.values(projectileArt)) visit(art.symbol);
       for (const art of Object.values(effectArt)) visit(art.symbol);
       for (const art of Object.values(screenEffectArt)) visit(art.symbol);
       for (const art of Object.values(mineArt)) visit(art.symbol);
-      for (const id of [...Object.values(STATUS_ART), INFECTED_ART]) visit(id);
+      for (const id of [...Object.values(STATUS_ART), INFECTED_ART, CREATOR_GUIDE.symbol])
+        visit(id);
+      visit(CREATOR_DIALOGS.alert.symbol);
       for (const id of Object.values(PROTECTION_ART)) visit(id);
       for (const id of [1816, 1817, 1820, 2173, 1780]) visit(id);
       for (const id of [MINIMAP.symbol, MINIMAP.button, MINIMAP.dot, MINIMAP.connector]) visit(id);
@@ -319,19 +431,31 @@ export class AssetPack {
           await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
       }
       for (const id of [
-        545, 1537, 1672, 1721, 1717, 492, 494, 498, 500, 496, 1816, 1817, 1820, 1535, 1536, 2034,
-        1626, 1628, 1630, 1633,
+        1537, 1672, 1721, 1717, 492, 494, 498, 500, 496, 1816, 1817, 1820, 1535, 1536, 2034, 1626,
+        1628, 1630, 1633,
       ]) {
-        const raster = await pack.rasterSymbol(id, id === 545 ? 179 : 1);
+        const raster = await pack.rasterSymbol(id, 1);
         if (raster) pack.extras.set(id, raster);
       }
+      const settingsArtwork = Object.values(SETTINGS_SCREEN)
+        .flatMap((layouts) =>
+          Object.values(layouts).flatMap((layout) =>
+            layout.pieces.flatMap((piece) => (piece.children.length ? piece.children : [piece])),
+          ),
+        )
+        .filter((piece) => !piece.field);
       for (const piece of [
+        ...settingsArtwork,
         ...HUD.editConfirm,
         ...HUD.secondaryHelp,
+        ...HUD.pause.pieces.filter(
+          (piece) => piece.name !== 'rollover_txt' && piece.name !== 'btnPlayMoreGames_mc',
+        ),
         ...HUD.tankInfo.pieces.filter((piece) => piece.name !== 'TankImage_mc'),
         WIN_SCREEN.backdrop,
         ...WIN_SCREEN.pieces,
       ]) {
+        if (pack.uiFrames.has(piece.symbol)) continue;
         const frames: Raster[] = [];
         const hover = piece.name && (pack.sprites.get(piece.symbol)?.frameCount ?? 1) > 1;
         for (const frame of hover ? [1, 2] : [1]) {
@@ -340,6 +464,187 @@ export class AssetPack {
         }
         if (piece.name && !hover && frames[0]) frames.push(frames[0]);
         pack.uiFrames.set(piece.symbol, frames);
+      }
+      for (const control of CREATOR_CONTROLS.controls) {
+        const frames =
+          control.name === 'SymmetricMode_mc' || control.name === 'Undo_mc' ? [1, 2] : [1];
+        for (const frame of frames)
+          for (const state of ['up', 'over', 'down'] as const) {
+            const pose = new SwfClip(control.symbol, pack);
+            pose.start(frame, false);
+            const raster = await pack.rasterClip(pose, state);
+            if (raster) pack.creatorFrames.set(`${control.name}:${frame}:${state}`, raster);
+          }
+      }
+      for (const slider of CREATOR_CONTROLS.sliders) {
+        const pose = new SwfClip(slider.symbol, pack);
+        pose.advance(1);
+        pose.placements = pose.placements.filter((p) => !p.name);
+        const track = await pack.rasterClip(pose);
+        if (track) pack.creatorFrames.set(`${slider.name}:track`, track);
+      }
+      for (const frame of [1, 2]) {
+        const slider = CREATOR_CONTROLS.sliders[0];
+        const raster = await pack.rasterSymbol(slider.handle.symbol, frame);
+        if (raster) pack.creatorFrames.set(`handle:${frame}`, raster);
+      }
+      for (let frame = 1; frame <= 6; frame++) {
+        const raster = await pack.rasterSymbol(819, frame);
+        if (raster) pack.creatorFrames.set(`rings:${frame}`, raster);
+      }
+      for (const [key, symbol] of [
+        ['stats', CREATOR_PALETTE.stats.symbol],
+        ['base', CREATOR_PALETTE.library.symbol],
+      ] as const) {
+        const pose = new SwfClip(symbol, pack);
+        pose.start(1, false);
+        pose.placements = pose.placements.filter((p) => !p.name && p.charId !== 770);
+        const raster = await pack.rasterClip(pose);
+        if (raster) pack.creatorFrames.set(`palette:${key}`, raster);
+      }
+      for (const piece of [...CREATOR_PALETTE.tabs, ...CREATOR_PALETTE.scroll.pieces])
+        for (const frame of [1, 2, 3]) {
+          const pose = new SwfClip(piece.symbol, pack);
+          pose.start(Math.min(frame, pack.spriteInfo(piece.symbol)!.frameCount), false);
+          const raster = await pack.rasterClip(pose);
+          if (raster) pack.creatorFrames.set(`palette:${piece.name}:${frame}`, raster);
+        }
+      for (const frame of [1, 2, 3, 4])
+        for (const body of [false, true])
+          for (const code of [1, 3]) {
+            const pose = new SwfClip(CREATOR_PALETTE.row.symbol, pack);
+            pose.start(frame, false);
+            pose.placements = pose.placements.filter(
+              (p) =>
+                !['name_txt', 'cost_txt'].includes(p.name ?? '') &&
+                (!body || p.name !== 'circleclip'),
+            );
+            [...pose.children.values()]
+              .find((c) => c.placement.name === 'indicatorClip')
+              ?.clip.gotoAndStop(code);
+            const raster = await pack.rasterClip(pose);
+            if (raster)
+              pack.creatorFrames.set(`palette:row:${frame}:${Number(body)}:${code}`, raster);
+          }
+      const enemy = CREATOR_PALETTE.advanced;
+      const advancedPose = new SwfClip(enemy.symbol, pack);
+      advancedPose.start(2, false);
+      advancedPose.placements = advancedPose.placements.filter((p) => !p.name);
+      const advancedRaster = await pack.rasterClip(advancedPose);
+      if (advancedRaster) pack.creatorFrames.set('enemy:static', advancedRaster);
+      for (const [key, piece] of [
+        ['tab', enemy.tab],
+        ['basic', enemy.basicTab],
+      ] as const)
+        for (const state of ['up', 'over', 'down'] as const) {
+          const raster = await pack.rasterSymbol(piece.symbol, 1, 0, state);
+          if (raster) pack.creatorFrames.set(`enemy:${key}:${state}`, raster);
+        }
+      for (const frame of [1, 2]) {
+        const raster = await pack.rasterSymbol(enemy.suggested.symbol, frame);
+        if (raster) pack.creatorFrames.set(`enemy:suggested:${frame}`, raster);
+      }
+      const sliderPose = new SwfClip(enemy.sliders[0].symbol, pack);
+      sliderPose.start(1, false);
+      sliderPose.placements = sliderPose.placements.filter((p) => !p.name);
+      const track = await pack.rasterClip(sliderPose);
+      if (track)
+        for (const slider of enemy.sliders) pack.creatorFrames.set(`${slider.name}:track`, track);
+      for (const button of enemy.confirm.buttons)
+        for (const state of ['over', 'down'] as const) {
+          const raster = await pack.rasterSymbol(button.symbol, 11, 0, state);
+          if (raster) pack.creatorFrames.set(`enemy:confirm:${button.name}:${state}`, raster);
+        }
+      const confirmPose = new SwfClip(enemy.confirm.symbol, pack);
+      confirmPose.start(1, false);
+      confirmPose.gotoAndPlay(2);
+      for (let frame = 2; frame <= 22; frame++) {
+        if (frame === 13) confirmPose.play();
+        confirmPose.advance(frame - 1);
+        if (frame === 12) {
+          confirmPose.gotoAndStop(12);
+          for (const child of confirmPose.children.values()) child.clip.gotoAndStop(11);
+        }
+        const raster = await pack.rasterClip(confirmPose);
+        if (raster) pack.creatorFrames.set(`enemy:confirm:${frame}`, raster);
+      }
+      const detailsPose = new SwfClip(CREATOR_PALETTE.details.symbol, pack);
+      detailsPose.start(1, false);
+      detailsPose.placements = detailsPose.placements.filter((p) => !p.name);
+      const detailsRaster = await pack.rasterClip(detailsPose);
+      if (detailsRaster) pack.creatorFrames.set('details:static', detailsRaster);
+      for (const frame of [1, 2]) {
+        const raster = await pack.rasterSymbol(CREATOR_PALETTE.details.arrow.symbol, frame);
+        if (raster) pack.creatorFrames.set(`details:arrow:${frame}`, raster);
+      }
+      const info = CREATOR_PALETTE.selectionInfo;
+      const infoIcon = await pack.rasterSymbol(info.icon.symbol);
+      if (infoIcon) pack.creatorFrames.set('selection-info:icon', infoIcon);
+      const infoPose = new SwfClip(info.popup.symbol, pack);
+      infoPose.start(1, false);
+      infoPose.placements = infoPose.placements.filter((p) => !p.name);
+      const infoPopup = await pack.rasterClip(infoPose);
+      if (infoPopup) pack.creatorFrames.set('selection-info:popup', infoPopup);
+      for (const page of CREATOR_GUIDE.frames) {
+        const pose = new SwfClip(CREATOR_GUIDE.symbol, pack);
+        pose.start(page.frame, false);
+        pose.placements = pose.placements.filter((p) => page.staticIds.includes(p.charId));
+        const raster = await pack.rasterClip(pose);
+        if (raster) pack.creatorFrames.set(`guide:${page.frame}`, raster);
+        for (const button of page.buttons)
+          for (const frame of [1, 2]) {
+            const art = await pack.rasterSymbol(button.symbol, frame);
+            if (art) pack.creatorFrames.set(`guide-button:${button.symbol}:${frame}`, art);
+          }
+      }
+      const alert = new SwfClip(CREATOR_DIALOGS.alert.symbol, pack);
+      alert.start(1, false);
+      alert.placements = alert.placements.filter((p) =>
+        CREATOR_DIALOGS.alert.staticIds.includes(p.charId),
+      );
+      const alertRaster = await pack.rasterClip(alert);
+      if (alertRaster) {
+        // Paint the prepared bitmap in DOM too: the SVG image lost its static
+        // text after a keyboard resize rejection despite decoding correctly in Canvas2D.
+        alertRaster.url = alertRaster.canvas.toDataURL();
+        pack.creatorFrames.set('alert', alertRaster);
+      }
+      for (const screen of CREATOR_DIALOGS.frames) {
+        const pose = new SwfClip(CREATOR_DIALOGS.symbol, pack);
+        pose.start(screen.frame, false);
+        pose.placements = pose.placements.filter((p) => screen.staticIds.includes(p.charId));
+        const raster = await pack.rasterClip(pose);
+        if (raster) pack.creatorFrames.set(`dialog:${screen.frame}`, raster);
+        for (const button of screen.buttons)
+          for (const state of ['up', 'over', 'down'] as const) {
+            const art = await pack.rasterSymbol(button.symbol, 1, 0, state);
+            if (art) pack.creatorFrames.set(`dialog:${button.symbol}:${state}`, art);
+          }
+      }
+      for (const widget of TANK_VIEWER.widgets) {
+        const pose = new SwfClip(widget.symbol, pack);
+        pose.start(widget.frame, false);
+        pose.placements = pose.placements.filter((p) => widget.staticDepths.includes(p.depth));
+        const raster = await pack.rasterClip(
+          pose,
+          'up',
+          widget.clips && new Map(widget.clips.map((c) => [c.symbol, c.bounds])),
+        );
+        if (raster) pack.creatorFrames.set(`viewer:${widget.symbol}:${widget.frame}`, raster);
+      }
+      for (const piece of TANK_VIEWER.rejection.pieces) {
+        const raster = await pack.rasterSymbol(piece.symbol);
+        if (raster) pack.creatorFrames.set(`viewer:rejection:${piece.symbol}`, raster);
+      }
+      for (const { age } of TANK_VIEWER.statistics.frames) {
+        const pose = new SwfClip(1137, pack);
+        pose.start(2, false);
+        const mask = pose.children.get(1)?.clip;
+        mask?.gotoAndStop(age);
+        const widget = TANK_VIEWER.widgets.find((w) => w.symbol === 1137 && w.frame === 2)!;
+        pose.placements = pose.placements.filter((p) => widget.staticDepths.includes(p.depth));
+        const raster = await pack.rasterClip(pose);
+        if (raster) pack.creatorFrames.set(`viewer:statistics:${age}`, raster);
       }
       onProgress(1, 'Assets ready');
       return pack;
@@ -353,10 +658,28 @@ export class AssetPack {
     frame = 1,
     seen = new Set<number>(),
     ratio = 0,
+    pose?: SwfClip,
+    buttonState: ButtonState = 'up',
+    clips?: ReadonlyMap<number, Bounds>,
   ): { body: string; bounds: Bounds } | null {
     if (seen.has(id) || seen.size > 24) return null;
     const next = new Set(seen);
     next.add(id);
+    const procedural = this.mode === 'mock' && this.leaves.get(id);
+    if (procedural) {
+      const b = this.shapes.get(id)?.bounds;
+      return {
+        body: `<image x="${procedural.x}" y="${procedural.y}" width="${procedural.width}" height="${procedural.height}" xlink:href="${procedural.url}"/>`,
+        bounds: b
+          ? {
+              x: b.xMin / 20,
+              y: b.yMin / 20,
+              width: (b.xMax - b.xMin) / 20,
+              height: (b.yMax - b.yMin) / 20,
+            }
+          : procedural,
+      };
+    }
     const morph = this.morphs.get(id);
     const shape = morph ? morphShapeAtRatio(morph, ratio) : this.shapes.get(id),
       svg = morph
@@ -376,20 +699,23 @@ export class AssetPack {
     const text = this.texts.get(id);
     if (text) return this.compileText(text);
     const sp = this.sprites.get(id);
-    if (!sp) return null;
-    const localFrame = ((frame - 1) % sp.frameCount) + 1;
-    const list = new Map<number, Placement>();
-    for (const p of sp.placements) {
-      if (p.frame > localFrame) break;
-      if (p.remove) list.delete(p.depth);
-      else list.set(p.depth, { ...(list.get(p.depth) ?? {}), ...p });
-    }
+    const button = this.buttons.get(id);
+    if (!sp && !button) return null;
+    const placements = button
+      ? buttonDisplayList(button, buttonState)
+      : (pose?.placements ?? this.displayList(id, frame));
     const children: { body: string; bounds: Bounds }[] = [];
     const masks: { id: string; depth: number; end: number; bounds: Bounds; body: string }[] = [];
-    for (const p of [...list.values()].sort((a, b) => a.depth - b.depth)) {
-      if (p.charId === undefined) continue;
-      const child = this.compile(p.charId, frame, next, p.ratio ?? 0);
+    for (const p of placements) {
+      const childPose = pose?.children.get(p.depth)?.clip;
+      let child = this.compile(p.charId, frame, next, p.ratio ?? 0, childPose, buttonState, clips);
       if (!child) continue;
+      const clip = clips?.get(p.charId);
+      if (clip)
+        child = {
+          body: `<svg x="${clip.x}" y="${clip.y}" width="${clip.width}" height="${clip.height}" viewBox="${clip.x} ${clip.y} ${clip.width} ${clip.height}" overflow="hidden">${child.body}</svg>`,
+          bounds: intersect(child.bounds, clip),
+        };
       const m = p.matrix ?? identity;
       if (p.clipDepth !== undefined) {
         masks.push({
@@ -438,13 +764,13 @@ export class AssetPack {
       let body = `${filter}<g ${attrs}>${child.body}</g>`,
         bounds = transformBounds(child.bounds, m);
       for (const mask of masks.filter((mask) => p.depth > mask.depth && p.depth <= mask.end)) {
-        body = `<g clip-path="url(#${mask.id})">${body}</g>`;
+        body = `<g mask="url(#${mask.id})">${body}</g>`;
         bounds = intersect(bounds, mask.bounds);
       }
       if (bounds.width > 0 && bounds.height > 0) children.push({ body, bounds });
     }
     const definitions = masks.length
-      ? `<defs>${masks.map((mask) => `<clipPath id="${mask.id}" clipPathUnits="userSpaceOnUse">${mask.body}</clipPath>`).join('')}</defs>`
+      ? `<defs>${masks.map((mask) => svgMaskDefinition(mask.id, mask.body, mask.bounds)).join('')}</defs>`
       : '';
     return children.length
       ? {
@@ -484,8 +810,26 @@ export class AssetPack {
       },
     };
   }
-  async rasterSymbol(id: number, frame = 1, ratio = 0): Promise<Raster | null> {
-    const compiled = this.compile(id, frame, new Set(), ratio);
+  async rasterSymbol(
+    id: number,
+    frame = 1,
+    ratio = 0,
+    buttonState: ButtonState = 'up',
+  ): Promise<Raster | null> {
+    const compiled = this.compile(id, frame, new Set(), ratio, undefined, buttonState);
+    return this.rasterCompiled(compiled);
+  }
+  /** Freeze each retained child at its own frame; raw rasterSymbol remains authored-frame access. */
+  async rasterClip(
+    clip: SwfClip,
+    buttonState: ButtonState = 'up',
+    regions?: ReadonlyMap<number, Bounds>,
+  ): Promise<Raster | null> {
+    return this.rasterCompiled(
+      this.compile(clip.id, clip.frame, new Set(), 0, clip, buttonState, regions),
+    );
+  }
+  private async rasterCompiled(compiled: { body: string; bounds: Bounds } | null) {
     if (!compiled) return null;
     const b = compiled.bounds;
     if (b.width <= 0 || b.height <= 0 || b.width > 2500 || b.height > 2500) return null;
@@ -494,18 +838,56 @@ export class AssetPack {
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${bounds.width}" height="${bounds.height}" viewBox="${bounds.x} ${bounds.y} ${bounds.width} ${bounds.height}">${compiled.body}</svg>`;
     return rasterSvg(svg, bounds);
   }
-  part(id: number, frame = 0): Raster {
-    const frames = this.frames.get(id === 2013 ? 5003 : id) ?? this.frames.get(1001)!;
+  part(id: number, frame = 0, y = 0): Raster {
+    id = id === 2013 ? 5003 : id;
+    const variant = y > 0 && this.positivePosters.get(id);
+    if (variant) return variant;
+    const frames = this.frames.get(id) ?? this.frames.get(1001)!;
     return frames[Math.floor(frame / 5) % frames.length];
+  }
+  classBody(id: number) {
+    return this.classFrames.get(id) ?? this.part(id);
+  }
+  classBodyBounds(part: TankPart) {
+    const angle = (part.rotation * Math.PI) / 180;
+    const matrix = {
+      a: Math.cos(angle) * part.scale,
+      b: Math.sin(angle) * part.scale,
+      c: -Math.sin(angle) * part.scale,
+      d: Math.cos(angle) * part.scale,
+      tx: part.x * 20,
+      ty: part.y * 20,
+    };
+    const pose = this.classPoses.get(part.type);
+    if (pose)
+      return scriptBounds(this.scriptGeometry, pose.id, pose.age, matrix, undefined, [], 0, pose);
+    const raster = this.classBody(part.type),
+      pad = this.mode === 'swf' ? 2 : 3;
+    return transformBounds(
+      {
+        x: raster.x + pad,
+        y: raster.y + pad,
+        width: raster.width - pad * 2,
+        height: raster.height - pad * 2,
+      },
+      matrix,
+    );
   }
   spriteInfo(id: number) {
     return this.sprites.get(id);
+  }
+  hasPartTimeline(id: number) {
+    const symbol = partById(id)?.symbol;
+    return symbol !== undefined && this.sprites.has(symbol);
   }
   isMorph(id: number) {
     return this.morphs.has(id);
   }
   get morphCachePixels() {
     return this.morphPixels;
+  }
+  get shapeContactCount() {
+    return this.shapeContacts.size;
   }
   morphRaster(id: number, ratio = 0): Raster | null {
     const morph = this.morphs.get(id);
@@ -565,17 +947,24 @@ export class AssetPack {
       this.partClips.set(tank, owner);
     }
     const age = tank.artAge + 1;
-    let clip = owner.parts.get(part.key);
-    if (!clip || clip.age > age) {
+    let playback = owner.parts.get(part.key);
+    if (!playback || playback.clip.age > age) {
       // Painting/contact queries share a private stream rather than consuming gameplay RNG.
-      clip = this.newPartClip(tank, part);
-      owner.parts.set(part.key, clip);
+      playback = new PartPlayback(this.newPartClip(tank, part));
+      owner.parts.set(part.key, playback);
     }
-    clip.advance(age, part.y);
-    return clip;
+    return playback.advance(
+      age,
+      part.y,
+      tank.guns.find((g) => g.part.key === part.key)?.mountedPlay,
+    );
+  }
+  livePart(tank: Tank, part: TankPart) {
+    return this.part(part.type, tank.artAge + tank.phase, part.y);
   }
   private newPartClip(tank: Tank, part: TankPart, clone = false) {
     let seed = Math.imul(tank.uid + 1, 0x9e3779b1) ^ (clone ? 0x46f13d : 0);
+    if (clone) seed ^= Math.imul(tank.forcefieldGeneration, 0x85ebca6b);
     for (const c of part.key) seed = Math.imul(seed, 31) + c.charCodeAt(0);
     const random = new Random(seed >>> 0 || 1);
     return new SwfClip(partById(part.type)!.symbol, this, () => random.next());
@@ -595,7 +984,7 @@ export class AssetPack {
       tx: 0,
       ty: 0,
     };
-    if (this.mode === 'swf') {
+    if (this.mode === 'swf' || this.hasPartTimeline(part.type)) {
       const bounds = scriptBounds(
         this.scriptGeometry,
         partById(part.type)!.symbol,
@@ -608,7 +997,7 @@ export class AssetPack {
       );
       return { width: bounds?.width ?? 0, height: bounds?.height ?? 0 };
     }
-    const bounds = this.part(part.type);
+    const bounds = clone ? this.part(part.type) : this.livePart(tank, part);
     return {
       width: Math.abs(matrix.a) * bounds.width + Math.abs(matrix.c) * bounds.height,
       height: Math.abs(matrix.b) * bounds.width + Math.abs(matrix.d) * bounds.height,
@@ -621,20 +1010,31 @@ export class AssetPack {
         .map((p) => ({
           x: p.x,
           y: p.y,
-          ...this.partSize(tank, p, this.mode === 'swf' ? this.partClip(tank, p) : undefined),
+          ...this.partSize(
+            tank,
+            p,
+            this.hasPartTimeline(p.type) ? this.partClip(tank, p) : undefined,
+          ),
         })),
     );
   private forcefieldClone(tank: Tank) {
     let clone = this.forcefieldClones.get(tank);
-    if (!clone) {
+    if (!clone || clone.design !== tank.design || clone.generation !== tank.forcefieldGeneration) {
       const parts = new Map<string, SwfClip>();
       const children = tank.design.parts.map((part) => {
-        const pose = this.mode === 'swf' ? this.newPartClip(tank, part, true) : undefined;
+        const pose = this.hasPartTimeline(part.type)
+          ? this.newPartClip(tank, part, true)
+          : undefined;
         pose?.advance(1, part.y);
         if (pose) parts.set(part.key, pose);
         return { x: part.x, y: part.y, ...this.partSize(tank, part, pose, true) };
       });
-      clone = { parts, radius: protectionRadius(children) };
+      clone = {
+        design: tank.design,
+        generation: tank.forcefieldGeneration,
+        parts,
+        radius: protectionRadius(children),
+      };
       this.forcefieldClones.set(tank, clone);
     }
     return clone;
@@ -644,10 +1044,75 @@ export class AssetPack {
   }
   forcefieldPartClip(tank: Tank, part: TankPart) {
     const pose = this.forcefieldClone(tank).parts.get(part.key)!;
-    pose.advance(tank.artAge + 1, part.y);
+    pose.advance(tank.artAge - tank.forcefieldStartedAt + 1, part.y);
     return pose;
   }
+  clipScriptBounds(pose: SwfClip) {
+    return scriptBounds(this.scriptGeometry, pose.id, pose.age, undefined, undefined, [], 0, pose);
+  }
+  tankDisplayBounds = (tank: Tank) =>
+    tankScriptBounds(tank, this.scriptGeometry, {
+      part: (t, p) => (this.hasPartTimeline(p.type) ? this.partClip(t, p) : undefined),
+      status: (t, i) => this.statusClip(t, i),
+      infection: (t) => this.infectionClip(t),
+      forcefieldPart: (t, p) => this.forcefieldPartClip(t, p),
+      forcefieldRadius: (t) => this.forcefieldRadius(t),
+      protectionRadius: (t) => this.protectionRadius(t),
+    });
+  tankDisplayWidth = (tank: Tank) => this.tankDisplayBounds(tank)?.width ?? 0;
+  /** EffectMeCrazy holds only the root frame; descendants retain their own clocks. */
+  statusClip(tank: Tank, index: number) {
+    return this.statuses.clip(tank, index);
+  }
+  /** Nine independently initialized infectedbubblepop_398 clips share paint/contact identity. */
+  infectionClip(tank: Tank) {
+    const age = tank.artAge - tank.infectStartedAt + 1;
+    let state = this.infections.get(tank);
+    if (!state || state.startedAt !== tank.infectStartedAt || state.clip.age > age) {
+      const random = new Random(
+        (Math.imul(tank.uid + 1, 0x9e3779b1) ^ tank.infectStartedAt ^ 0x1f3ec7ed) >>> 0 || 1,
+      );
+      state = {
+        startedAt: tank.infectStartedAt,
+        clip: new SwfClip(INFECTED_ART, this, () => random.next()),
+      };
+      this.infections.set(tank, state);
+    }
+    state.clip.advance(age);
+    return state.clip;
+  }
+  private leafContact(id: number, x: number, y: number, ratio = 0): boolean | undefined {
+    if (this.mode === 'mock') {
+      const hit = mockPartLeafHit(id, x, y);
+      if (hit !== undefined) return hit;
+      // Invisible green muzzle helper23 has geometry despite its zero-alpha placement.
+      if (id === 23) return Math.hypot(x, y) <= 1.45;
+    }
+    const morph = this.morphs.get(id);
+    ratio = Number.isFinite(ratio) ? Math.max(0, Math.min(65535, Math.round(ratio))) : 0;
+    const shape = morph ? undefined : this.shapes.get(id);
+    if (!morph && !shape?.runs) return undefined;
+    const bounds = shape?.bounds;
+    // Same declared-bounds gate as ShapeContact, before allocating paths for distant UI glyphs.
+    if (
+      bounds &&
+      (x < bounds.xMin / 20 || x > bounds.xMax / 20 || y < bounds.yMin / 20 || y > bounds.yMax / 20)
+    )
+      return false;
+    const key = `${id}:${morph ? ratio : 0}`;
+    let contact = this.shapeContacts.get(key);
+    if (!contact) {
+      contact = new ShapeContact(morph ? morphShapeAtRatio(morph, ratio) : shape);
+      this.shapeContacts.set(key, contact);
+      if (this.shapeContacts.size > AssetPack.SHAPE_CONTACT_LIMIT)
+        this.shapeContacts.delete(this.shapeContacts.keys().next().value!);
+    }
+    this.contactContext ??= document.createElement('canvas').getContext('2d')!;
+    return contact.hit(this.contactContext, x, y);
+  }
   hitClip(clip: SwfClip, x: number, y: number, ratio = 0): boolean {
+    const geometric = this.leafContact(clip.id, x, y, ratio);
+    if (geometric !== undefined) return geometric;
     if (this.morphs.has(clip.id)) return alphaHit(this.morphRaster(clip.id, ratio)!, x, y);
     const leaf = this.leaves.get(clip.id);
     if (leaf) return alphaHit(leaf, x, y);
@@ -672,7 +1137,6 @@ export class AssetPack {
         masks.push(p);
         continue;
       }
-      if (p.color && p.color.mult[3] === 0 && p.color.add[3] === 0) continue;
       if (masks.some((mask) => p.depth > mask.depth && p.depth <= mask.clipDepth! && !hit(mask)))
         continue;
       if (hit(p)) return true;
@@ -689,6 +1153,8 @@ export class AssetPack {
     ratio = 0,
   ): boolean {
     if (depth > 24) return false;
+    const geometric = this.leafContact(id, x, y, ratio);
+    if (geometric !== undefined) return geometric;
     if (this.morphs.has(id)) return alphaHit(this.morphRaster(id, ratio)!, x, y);
     const leaf = this.leaves.get(id);
     if (leaf) return alphaHit(leaf, x, y);
@@ -714,7 +1180,6 @@ export class AssetPack {
         masks.push(p);
         continue;
       }
-      if (p.color && p.color.mult[3] === 0 && p.color.add[3] === 0) continue;
       if (
         masks.some(
           (mask) => p.depth > mask.depth && p.depth <= mask.clipDepth! && !hitPlacement(mask),
@@ -739,10 +1204,17 @@ export class AssetPack {
     }
     return false;
   }
-  textSvg(text: string, size: number, color = '#ffffff', fontName = 'Billo'): string | null {
-    const font = [...this.fonts.values()].find(
-      (f) => f.name.startsWith(fontName) && f.advances?.length,
-    );
+  textSvg(
+    text: string,
+    size: number,
+    color = '#ffffff',
+    fontName = 'Billo',
+    letterSpacing = 0,
+    fontId?: number,
+  ): string | null {
+    const font =
+      (fontId === undefined ? undefined : this.fonts.get(fontId)) ??
+      [...this.fonts.values()].find((f) => f.name.startsWith(fontName) && f.advances?.length);
     if (!font) return null;
     let x = 0,
       body = '';
@@ -750,11 +1222,11 @@ export class AssetPack {
     for (const ch of text) {
       const index = font.codeTable.indexOf(ch.charCodeAt(0));
       if (index < 0) {
-        x += size * 0.4;
+        x += size * 0.4 + letterSpacing;
         continue;
       }
       body += `<path transform="translate(${x} ${size}) scale(${scale})" d="${font.glyphs[index]}"/>`;
-      x += ((font.advances?.[index] ?? 10240) / 20) * scale;
+      x += ((font.advances?.[index] ?? 10240) / 20) * scale + letterSpacing;
     }
     return `<svg xmlns="http://www.w3.org/2000/svg" width="${Math.max(1, x)}" height="${size * 1.4}" viewBox="0 0 ${Math.max(1, x)} ${size * 1.4}"><g fill="${escapeXml(color)}">${body}</g></svg>`;
   }
@@ -765,14 +1237,101 @@ export class AssetPack {
     for (const p of t.design.parts) {
       if (this.hitPart(t, p, x, y)) return true;
     }
-    return false;
+    const local = rotate({ x: x - t.x, y: y - t.y }, -t.rotation);
+    return this.hitAttachments(t, local.x, local.y);
   };
+  private hitAttachments(tank: Tank, x: number, y: number) {
+    const scaled = (id: number, age: number, angle: number, diameter: number, uniform = false) => {
+      const point = rotate({ x, y }, -angle);
+      const scale = protectionScale(this.symbolScriptBounds(id), diameter, uniform);
+      return (
+        !!scale.x && !!scale.y && this.symbolHit(id, age, point.x / scale.x, point.y / scale.y)
+      );
+    };
+    const film = legacyShieldFilm(tank);
+    const hasHit = film || tank.displayChildren.includes('shield-hit');
+    const diameter = !hasHit
+      ? 0
+      : tank.side === 'player'
+        ? (tank.shieldDiameter ?? this.protectionRadius(tank) * 2)
+        : tank.radius * 2;
+    for (const clip of tank.shieldClips) {
+      if (!tank.displayChildren.includes(clip.key)) continue;
+      if (this.mode === 'swf') {
+        if (scaled(shieldClipSymbol(clip), shieldClipFrame(clip), clip.angle, clip.diameter))
+          return true;
+      } else if (
+        clip.kind === 'film' &&
+        Math.hypot(x, y) <= (Number.isNaN(clip.diameter) ? 130 : clip.diameter) / 2
+      )
+        return true;
+    }
+    if (this.mode === 'swf') {
+      if (tank.statusDecoration) {
+        const decoration = tank.statusDecoration;
+        for (const [index, mark] of decoration.marks.entries()) {
+          const point = rotate({ x: x - mark.x, y: y - mark.y }, -mark.angle);
+          if (this.hitClip(this.statusClip(tank, index), point.x, point.y)) return true;
+        }
+      }
+      if (tank.status.infect > 0) {
+        const point = rotate({ x, y }, -tank.infectionAngle),
+          scale = (tank.radius * 1.5) / 36;
+        if (scale && this.hitClip(this.infectionClip(tank), point.x / scale, point.y / scale))
+          return true;
+      }
+      const turret = tank.side !== 'player';
+      if (
+        film &&
+        scaled(
+          turret ? PROTECTION_ART.turretShield : PROTECTION_ART.shield,
+          turret ? Math.min(25, tank.shieldAge + 1) : tank.shieldAge + 1,
+          0,
+          diameter,
+        )
+      )
+        return true;
+      if (
+        hasHit &&
+        scaled(
+          turret ? PROTECTION_ART.turretShieldHit : PROTECTION_ART.shieldHit,
+          Math.min(16, tank.shieldHitAge + 1),
+          tank.shieldHitAngle,
+          tank.shieldHitDiameter ?? diameter,
+        )
+      )
+        return true;
+    } else if (film && Math.hypot(x, y) <= (Number.isNaN(diameter) ? 130 : diameter) / 2)
+      return true;
+    if (tank.forcefieldAttached && tank.design.parts.some((part) => part.type === 5005)) {
+      const maskHit = tank.design.parts.some((part) => {
+        const point = rotate(
+          { x: (x - part.x) / part.scale, y: (y - part.y) / part.scale },
+          -part.rotation,
+        );
+        return this.hitClip(this.forcefieldPartClip(tank, part), point.x, point.y);
+      });
+      if (maskHit) {
+        const diameter = this.forcefieldRadius(tank) * 2.1;
+        if (this.mode === 'swf')
+          return scaled(
+            PROTECTION_ART.forcefield,
+            tank.forcefieldFrame,
+            tank.forcefieldAngle,
+            diameter,
+            true,
+          );
+        return Math.hypot(x, y) <= (Number.isNaN(diameter) ? 130 : diameter) / 2;
+      }
+    }
+    return false;
+  }
   hitDesignPart(p: TankPart, x: number, y: number, age?: number) {
     const local = rotate({ x: (x - p.x) / p.scale, y: (y - p.y) / p.scale }, -p.rotation);
     const symbol = partById(p.type)?.symbol;
     if (this.mode === 'swf' && age !== undefined && symbol)
       return this.symbolHit(symbol, age, local.x, local.y);
-    return alphaHit(this.part(p.type), local.x, local.y);
+    return alphaHit(this.part(p.type, 0, p.y), local.x, local.y);
   }
   hitProjectile = (b: Projectile, x: number, y: number) => {
     if (this.mode !== 'swf' || !this.hasSymbol(b.symbol)) return mockProjectileHit(b, x, y);
@@ -805,18 +1364,18 @@ export class AssetPack {
     return authoredProjectileBounds(b, owner) ?? mockProjectileBounds(b);
   };
   hitPart = (t: Tank, p: TankPart, x: number, y: number) => {
-    if (t.hiddenParts.has(p.key) || t.removedParts.has(p.key)) return false;
+    if (t.removedParts.has(p.key)) return false;
     const pt = rotate({ x: x - t.x, y: y - t.y }, -t.rotation);
     const gun = t.guns.find((g) => g.part.key === p.key);
     const local = rotate(
       { x: (pt.x - p.x) / p.scale, y: (pt.y - p.y) / p.scale },
       -(gun?.angle ?? p.rotation),
     );
-    if (this.mode === 'swf') {
+    if (this.mode === 'swf' || this.hasPartTimeline(p.type)) {
       const symbol = partById(p.type)?.symbol;
       if (symbol) return this.hitClip(this.partClip(t, p), local.x, local.y);
     }
-    return alphaHit(this.part(p.type, t.artAge + t.phase), local.x, local.y);
+    return alphaHit(this.livePart(t, p), local.x, local.y);
   };
   preview(design: TankDesign, size = 130): string {
     const canvas = document.createElement('canvas');
@@ -832,8 +1391,8 @@ export class AssetPack {
     for (const p of design.parts) this.drawPart(ctx, p);
     return canvas.toDataURL('image/png');
   }
-  drawPart(ctx: CanvasRenderingContext2D, p: TankPart) {
-    const r = this.part(p.type);
+  drawPart(ctx: CanvasRenderingContext2D, p: TankPart, purpose: 'poster' | 'class' = 'poster') {
+    const r = purpose === 'class' ? this.classBody(p.type) : this.part(p.type, 0, p.y);
     ctx.save();
     ctx.translate(p.x, p.y);
     ctx.rotate((p.rotation * Math.PI) / 180);
@@ -847,13 +1406,21 @@ export class AssetPack {
     this.leaves.clear();
     this.displayCache.clear();
     this.dynamicWidths.clear();
+    this.classFrames.clear();
+    this.classPoses.clear();
+    this.positivePosters.clear();
     this.partClips = new WeakMap();
+    this.infections = new WeakMap();
     this.forcefieldClones = new WeakMap();
     this.morphRasters.clear();
+    this.shapeContacts.clear();
+    this.contactContext = undefined;
     this.morphPixels = 0;
     this.morphs.clear();
     this.extras.clear();
     this.uiFrames.clear();
+    this.creatorFrames.clear();
+    this.buttons.clear();
     this.sounds.clear();
     this.symbols = null;
   }
@@ -868,6 +1435,21 @@ export function alphaHit(r: Raster, x: number, y: number) {
     py < r.canvas.height &&
     (r.pixels[(py * r.canvas.width + px) * 4 + 3] ?? 0) > 16
   );
+}
+/** An authored empty frame stays empty; never substitute a generic body. */
+function emptyRaster(): Raster {
+  const canvas = document.createElement('canvas');
+  canvas.width = canvas.height = 1;
+  return {
+    canvas,
+    x: 0,
+    y: 0,
+    width: 0,
+    height: 0,
+    pixels: new Uint8ClampedArray(4),
+    resolution: 1,
+    url: canvas.toDataURL(),
+  };
 }
 async function rasterSvg(svg: string, bounds: Bounds): Promise<Raster> {
   const url = svgUrl(svg),

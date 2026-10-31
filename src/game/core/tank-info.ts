@@ -2,11 +2,12 @@ import { CLASS_ARMOR, CLASS_SPEED } from './constants';
 import type { TankDesign } from './types';
 import { partById } from '../data/catalog';
 import { HUD } from './hud';
+import { displayPixel } from './display-values';
 
 export const TANK_INFO = HUD.tankInfo;
 
 /** PauseMenu._-Bz: sort IDs, then abbreviate each category independently. */
-export function infoWeapons(tank: TankDesign, category: 2 | 3 | 5) {
+export function infoWeapons(tank: TankDesign, category: 2 | 3 | 4 | 5 | 6) {
   const counts = new Map<number, number>();
   for (const part of tank.parts)
     if (Math.floor(part.type / 1000) === category)
@@ -56,9 +57,10 @@ export class TankInfoMotion {
   }
   private approach(name: string, axis: 'x' | 'y', target?: number, rate = 0.1) {
     const pos = this.positions[name];
-    pos[axis] =
+    pos[axis] = displayPixel(
       pos[axis] * (1 - rate) +
-      (target ?? TANK_INFO.pieces.find((p) => p.name === name)![axis]) * rate;
+        (target ?? TANK_INFO.pieces.find((p) => p.name === name)![axis]) * rate,
+    );
   }
   advance() {
     const p = this.positions,
