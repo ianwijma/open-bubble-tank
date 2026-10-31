@@ -380,7 +380,7 @@ export class AssetPack {
         for (const p of pack.sprites.get(id)?.placements ?? []) if (p.charId) visit(p.charId);
       };
       for (const p of PARTS) visit(p.symbol);
-      for (const id of [487, 545, 492, 494, 496, 498, 500, 502]) visit(id);
+      for (const id of [487, 524, 545, 492, 494, 496, 498, 500, 502]) visit(id);
       visit(CREDITS.symbol);
       for (const art of Object.values(projectileArt)) visit(art.symbol);
       for (const art of Object.values(effectArt)) visit(art.symbol);
