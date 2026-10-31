@@ -22,7 +22,7 @@ export class TankView {
       const root = new Container(),
         symbol = partById(p.type)?.symbol;
       let animation: SwfSymbolView | undefined, sprite: Sprite | undefined;
-      if (assets.mode === 'swf' && symbol) {
+      if (assets.hasPartTimeline(p.type) && symbol) {
         animation = new SwfSymbolView(symbol, assets, textures);
         root.addChild(animation.root);
       } else {
@@ -47,7 +47,8 @@ export class TankView {
   }
   update(t: Tank) {
     this.container.angle = t.rotation;
-    this.container.alpha = this.assets.mode === 'swf' ? 1 : t.alpha;
+    this.container.alpha = 1;
+    this.shield.alpha = t.alpha;
     for (const [i, part] of t.design.parts.entries()) {
       const view = this.parts[i];
       view.root.visible = !t.hiddenParts.has(part.key) && !t.removedParts.has(part.key);
@@ -56,12 +57,18 @@ export class TankView {
         view.animation?.setParentAlpha(t.alpha);
         view.animation?.updatePose(this.assets.partClip(t, part));
         if (view.sprite) {
+          view.sprite.alpha = t.alpha;
           const raster = this.assets.livePart(t, part);
           view.sprite.texture = this.textures.get(raster);
           view.sprite.position.set(raster.x, raster.y);
           view.sprite.width = raster.width;
           view.sprite.height = raster.height;
         }
+        // Editor leaves keep the shared source gold; hostile live mounts get a mild warm tint.
+        view.root.tint =
+          this.assets.mode === 'mock' && t.side === 'enemy' && part.type >= 2000
+            ? 0xffe6cc
+            : 0xffffff;
       }
     }
     this.shield.clear();

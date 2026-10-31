@@ -5,7 +5,7 @@ import { STARTER } from '../src/game/data/catalog';
 import { createTank } from '../src/game/simulation/tank';
 import { World, emptyInput } from '../src/game/simulation/world';
 import { massiveChargeFrame } from '../src/game/core/mounted-art';
-import { mockPartLayout } from '../src/game/assets/mock-part';
+import mockData from '../src/game/data/mock-part-timelines.json';
 
 const matrix = { a: 1, b: 0, c: 0, d: 1, tx: 0, ty: 0 };
 const sprites: SpriteInfo[] = [
@@ -53,14 +53,25 @@ test('play resumes a stopped script without rerunning it or restarting an active
   expect(clip.playing).toBe(false);
 });
 
-test('mock charge layouts retain finite authored geometry and the empty final frame', () => {
-  const idle = mockPartLayout(3008)!;
-  for (let frame = 2; frame <= 26; frame++) {
-    const pose = mockPartLayout(3008, frame)!;
-    expect(pose.bubbles.length).toBeGreaterThan(idle.bubbles.length);
-    expect(Object.values(pose.bounds).every(Number.isFinite)).toBe(true);
-  }
-  expect(mockPartLayout(3008, 27)).toBe(idle);
+test('mock charge uses the shared mounted timeline and removes particles on frame27', () => {
+  const mock = new AssetPack('mock');
+  Object.assign(mock, { sprites: new Map(mockData.sprites.map((s) => [s.id, s])) });
+  const { tank, fire } = setup(),
+    part = tank.guns[0].part;
+  const charge = mock.partClip(tank, part).children.get(19)!.clip;
+  expect(charge.placements).toHaveLength(0);
+  fire();
+  tank.artAge = 1;
+  mock.partClip(tank, part);
+  expect(charge.frame).toBe(2);
+  expect(charge.placements.length).toBeGreaterThan(0);
+  tank.artAge = 26;
+  mock.partClip(tank, part);
+  expect(charge.frame).toBe(27);
+  expect(charge.placements).toHaveLength(0);
+  tank.artAge = 27;
+  mock.partClip(tank, part);
+  expect(charge.frame).toBe(1);
 });
 
 test('each mount resumes after its initialized frame1 and lazy/dense reads agree', () => {
