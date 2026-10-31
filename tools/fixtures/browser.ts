@@ -1,3 +1,4 @@
+import { showHotkeyInput } from './hotkey-input';
 import { FieldVisit } from '../../src/game/core/field-visit';
 import { AssetPack } from '../../src/game/assets/asset-pack';
 import { DEFAULT_SETTINGS } from '../../src/game/core/constants';
@@ -117,6 +118,12 @@ async function reset() {
   world = undefined;
   stage.replaceChildren();
   stage.style.height = '';
+  if (fixture.value === 'hotkey-input') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    unmountScreen = showHotkeyInput(stage);
+    status.textContent = 'Ready · production keyboard input and profile validation';
+    return;
+  }
   if (fixture.value === 'pause-flow') {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
     unmountScreen = await showPauseFlow(pack, stage);

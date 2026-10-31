@@ -1,4 +1,5 @@
 import { DEFAULT_SETTINGS } from '../core/constants';
+import { validHotkey, canonicalHotkey } from '../core/hotkeys';
 import type { Profile, Settings, TankDesign, TankPart } from '../core/types';
 import { PART_BY_ID, AVATARS, ENEMIES, BOSSES } from '../data/catalog';
 const KEY = 'open-bubble-tank.profile.v1';
@@ -89,8 +90,7 @@ export function validateSettings(value: unknown): Settings {
   if ([35, 50, 65, 90].includes(s.fps)) d.fps = s.fps;
   if (['low', 'medium', 'high'].includes(s.quality)) d.quality = s.quality;
   for (const key of ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'] as const)
-    if (typeof s[key] === 'string' && /^(Key[A-Z]|Digit\d|Arrow(Up|Down|Left|Right))$/.test(s[key]))
-      d[key] = s[key];
+    if (validHotkey(s[key])) d[key] = canonicalHotkey(s[key]);
   return d;
 }
 export function loadProfile(): Profile {
