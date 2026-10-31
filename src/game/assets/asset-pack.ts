@@ -104,6 +104,8 @@ interface ShapeInfo {
 interface FontInfo {
   id: number;
   name: string;
+  bold?: number;
+  italic?: number;
   codeTable: number[];
   glyphs: string[];
   advances?: number[];
