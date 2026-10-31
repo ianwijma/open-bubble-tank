@@ -1,4 +1,5 @@
 import { PARTS, partById } from '../data/catalog';
+import { SETTINGS_SCREEN } from '../core/settings-screen';
 import type { Projectile, Rect, Tank, TankDesign, TankPart } from '../core/types';
 import { Random, rotate } from '../core/math';
 import { SwfClip } from './swf-clip';
@@ -388,7 +389,15 @@ export class AssetPack {
         const raster = await pack.rasterSymbol(id, id === 545 ? 179 : 1);
         if (raster) pack.extras.set(id, raster);
       }
+      const settingsArtwork = Object.values(SETTINGS_SCREEN)
+        .flatMap((layouts) =>
+          Object.values(layouts).flatMap((layout) =>
+            layout.pieces.flatMap((piece) => (piece.children.length ? piece.children : [piece])),
+          ),
+        )
+        .filter((piece) => !piece.field);
       for (const piece of [
+        ...settingsArtwork,
         ...HUD.editConfirm,
         ...HUD.secondaryHelp,
         ...HUD.pause.pieces.filter(
@@ -398,6 +407,7 @@ export class AssetPack {
         WIN_SCREEN.backdrop,
         ...WIN_SCREEN.pieces,
       ]) {
+        if (pack.uiFrames.has(piece.symbol)) continue;
         const frames: Raster[] = [];
         const hover = piece.name && (pack.sprites.get(piece.symbol)?.frameCount ?? 1) > 1;
         for (const frame of hover ? [1, 2] : [1]) {
