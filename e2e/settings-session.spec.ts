@@ -15,7 +15,7 @@ const efficiency = (page: Page, on: boolean) =>
     .getByRole('group', { name: 'Efficiency Mode (Slow Computers)', exact: true })
     .getByRole('radio', { name: on ? 'On' : 'Off', exact: true });
 const stageRate = async (page: Page, live: number, configured: number) => {
-  const layer = page.locator('.settings-title');
+  const layer = page.locator('.settings-layers');
   await expect(layer).toHaveAttribute('data-stage-fps', String(live));
   await expect(layer).toHaveAttribute('data-configured-fps', String(configured));
 };

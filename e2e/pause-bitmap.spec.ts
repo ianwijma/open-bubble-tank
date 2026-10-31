@@ -51,7 +51,7 @@ for (const native of [false, true])
     const settings = page.getByRole('dialog', { name: 'Settings', exact: true });
     await expect(settings).toBeVisible();
     await expect(page.getByRole('dialog')).toHaveCount(1);
-    await expect(page.locator('.pause-bitmap-scrim')).toHaveAttribute('inert', '');
+    await expect(page.locator('[data-pause-main]')).toHaveAttribute('inert', '');
     expect(
       await settings.evaluate((node) => getComputedStyle(node.parentElement!).backdropFilter),
     ).toBe('none');

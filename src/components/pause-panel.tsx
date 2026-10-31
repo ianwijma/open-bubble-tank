@@ -1,12 +1,13 @@
 'use client';
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import type { AssetPack } from '@/game/assets/asset-pack';
-import type { Tank } from '@/game/core/types';
+import type { Tank, Settings } from '@/game/core/types';
 import type { StageRuntime } from '@/game/services/stage-runtime';
 import { PAUSE, PauseMotion } from '@/game/core/pause-motion';
 import { BubbleText, Dialog, Icon } from './ui';
 import { TankInfoPanel } from './tank-info-panel';
 import { PauseBackdrop } from './pause-backdrop';
+import { SettingsPanel } from './settings-panel';
 
 const buttons = [
   {
@@ -44,6 +45,9 @@ export function PausePanel({
   onSettings,
   onMenu,
   covered = false,
+  settings,
+  onSettingsChange,
+  onSettingsClose,
 }: {
   pack: AssetPack;
   tank: Tank;
@@ -54,9 +58,16 @@ export function PausePanel({
   onSettings: () => void;
   onMenu: () => void;
   covered?: boolean;
+  settings: Settings;
+  onSettingsChange: (settings: Settings, control?: 'shake' | 'efficiency') => void;
+  onSettingsClose: () => void;
 }) {
   const [motion] = useState(() => new PauseMotion());
   const [info, setInfo] = useState<'closed' | 'open' | 'closing'>('closed');
+  const [settingsFrozen, setSettingsFrozen] = useState(false);
+  const [infoFrozen, setInfoFrozen] = useState(false);
+  const [settingsHotkeys, setSettingsHotkeys] = useState(false);
+  const settingsControls = useRef<{ back: () => void }>(null);
   const [closing, setClosing] = useState(false);
   const [caption, setCaption] = useState('');
   const [hovered, setHovered] = useState('');
@@ -72,10 +83,13 @@ export function PausePanel({
     if (!closing) motion.phase = covered || info === 'open' ? 'info' : 'menu';
   }, [covered, closing, info, motion]);
   useLayoutEffect(() => {
+    if (!covered) (layer.current?.closest('[role="dialog"]') as HTMLElement | null)?.focus();
+  }, [covered]);
+  useLayoutEffect(() => {
     if (info !== 'closed')
       (layer.current?.closest('[role="dialog"]') as HTMLElement | null)?.focus();
   }, [info]);
-  useEffect(
+  useLayoutEffect(
     () =>
       stage.subscribe({
         beforeStep: () => motion.advance(),
@@ -107,6 +121,10 @@ export function PausePanel({
   );
   const close = () => {
     if (closing) return;
+    if (covered) {
+      settingsControls.current?.back();
+      return;
+    }
     if (info === 'open') {
       motion.phase = 'menu';
       setInfo('closing');
@@ -116,6 +134,7 @@ export function PausePanel({
     }
   };
   const resume = () => {
+    if (covered) onSettingsClose();
     motion.phase = 'closing';
     setClosing(true);
   };
@@ -139,12 +158,11 @@ export function PausePanel({
   };
   return (
     <Dialog
-      title={info === 'open' ? 'Tank information' : 'Paused'}
+      title={covered ? 'Settings' : info === 'open' ? 'Tank information' : 'Paused'}
       className="stage-dialog pause-screen"
-      closeKey={closeKey}
+      closeKey={covered && settingsHotkeys ? undefined : closeKey}
       onClose={close}
       onShortcutClose={resume}
-      active={!covered}
       scrimClassName="pause-bitmap-scrim"
     >
       <PauseBackdrop stage={stage} motion={motion} />
@@ -156,7 +174,11 @@ export function PausePanel({
         data-pause-age={motion.age}
         data-pause-phase={motion.phase}
       >
-        <div inert={info === 'open' || closing} aria-hidden={info === 'open' || closing}>
+        <div
+          data-pause-main
+          inert={covered || info === 'open' || closing}
+          aria-hidden={covered || info === 'open' || closing}
+        >
           <div
             className="pause-title"
             ref={(node) => {
@@ -205,11 +227,16 @@ export function PausePanel({
                   hover();
                   if (button.action === 'resume') close();
                   else if (button.action === 'info') {
+                    setSettingsFrozen(true);
+                    setInfoFrozen(false);
                     infoSeen.current = true;
                     motion.phase = 'info';
                     setInfo('open');
-                  } else if (button.action === 'settings') onSettings();
-                  else onMenu();
+                  } else if (button.action === 'settings') {
+                    setSettingsFrozen(false);
+                    setInfoFrozen(true);
+                    onSettings();
+                  } else onMenu();
                 }}
               >
                 {raster ? (
@@ -236,13 +263,26 @@ export function PausePanel({
             </BubbleText>
           </div>
         </div>
+        <SettingsPanel
+          pack={pack}
+          settings={settings}
+          stage={stage}
+          overPause
+          embedded
+          controller={settingsControls}
+          onHotkeysChange={setSettingsHotkeys}
+          active={covered}
+          frozen={closing || settingsFrozen}
+          onChange={onSettingsChange}
+          onClose={onSettingsClose}
+        />
         <TankInfoPanel
           pack={pack}
           tank={tank}
           fps={fps}
           stage={stage}
           embedded
-          frozen={closing || !infoSeen.current}
+          frozen={closing || infoFrozen || !infoSeen.current}
           phase={info}
           onExitStart={() => {
             motion.phase = 'menu';

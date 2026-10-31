@@ -776,19 +776,6 @@ kbd {
   border-radius: 6px;
   word-break: break-word;
 }
-.settings-title {
-  position: absolute;
-  left: 100px;
-  top: 23px;
-  width: 350px;
-}
-.original-settings {
-  position: absolute;
-  left: 200px;
-  top: 81px;
-  width: 280px;
-  text-align: left;
-}
 .camera-zoom {
   position: absolute;
   left: 33px;
@@ -827,102 +814,6 @@ kbd {
   margin: 15px auto 0;
   padding: 5px;
   text-decoration: underline;
-}
-.setting-options {
-  border: 0;
-  padding: 0;
-  margin: 0 0 12px;
-  min-width: 0;
-}
-.setting-options legend {
-  font:
-    12px Arial,
-    sans-serif;
-  padding: 0;
-  margin-bottom: 2px;
-}
-.setting-options > div {
-  display: flex;
-}
-.setting-options label {
-  width: 75px;
-  height: 23px;
-  display: grid;
-  place-items: center;
-  position: relative;
-  border: 1px solid #c8e2ed;
-  background: #a1bfd240;
-  cursor: pointer;
-}
-.setting-options label + label {
-  border-left: 0;
-}
-.setting-options label.selected {
-  background: #b5d9ee66;
-}
-.setting-options label:hover {
-  background: #c5e7f077;
-}
-.setting-options label:has(input:focus-visible) {
-  outline: 2px solid white;
-  outline-offset: 2px;
-}
-.setting-options input {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  margin: 0;
-  cursor: pointer;
-}
-.hotkey-options {
-  margin-top: 5px;
-  font:
-    16px Arial,
-    sans-serif;
-  color: #c7d2df;
-  padding: 3px 12px;
-}
-.settings-back {
-  position: absolute;
-  bottom: 25px;
-  left: 33px;
-  width: 53px;
-  height: 37px;
-  border-radius: 50%;
-  background: #a7bdd633;
-  font:
-    12px Arial,
-    sans-serif;
-}
-.settings-back:hover {
-  background: #a7bdd666;
-}
-.settings-screen .key-grid {
-  position: absolute;
-  top: 100px;
-  left: 180px;
-  width: 250px;
-  display: grid;
-  gap: 12px;
-}
-.key-binding {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 12px;
-  color: #e7f5fa;
-}
-.key-binding button {
-  font-size: 12px;
-  min-width: 85px;
-  background: #91b8ca55;
-  border: 1px solid #c8e2ed;
-  padding: 6px;
-}
-.key-binding button.binding {
-  background: #6c9fac;
-  color: #fff;
 }
 .restore-hotkeys {
   position: absolute;
@@ -1262,8 +1153,7 @@ kbd {
   height: 450px;
   pointer-events: none;
 }
-.modal-scrim.pause-bitmap-scrim,
-.modal-scrim.pause-owned-overlay {
+.modal-scrim.pause-bitmap-scrim {
   background: transparent;
   backdrop-filter: none;
 }
@@ -1965,4 +1855,189 @@ kbd {
 }
 .menu-orb:has(.menu-original-art):hover {
   filter: drop-shadow(0 0 7px #eaffff88);
+}
+
+.modal-scrim[inert] {
+  pointer-events: none;
+}
+
+/* Authored Settings645 and PauseMenu Settings1584/HotKeys1624 placements. */
+.authored-settings .settings-layers {
+  position: absolute;
+  inset: 0;
+}
+.authored-settings .settings-page {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+.authored-settings .settings-piece,
+.authored-settings .settings-static,
+.authored-settings .authored-option,
+.authored-settings .authored-key,
+.authored-settings .authored-action {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  transform-origin: 0 0;
+}
+.authored-settings .settings-row,
+.authored-settings .settings-single-group {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+  width: 0;
+  height: 0;
+}
+.authored-settings img {
+  max-width: none;
+}
+.authored-settings .authored-option input,
+.authored-settings .settings-hit {
+  position: absolute;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.authored-settings .authored-key:focus-visible,
+.authored-settings .authored-action:focus-visible {
+  outline: 0;
+}
+.authored-settings .authored-key:focus-visible .settings-hit,
+.authored-settings .authored-action:focus-visible .settings-hit,
+.authored-settings .authored-option:has(input:focus-visible) {
+  outline: 1px solid white;
+  opacity: 1;
+}
+.authored-settings .settings-field {
+  position: absolute;
+  cursor: pointer;
+  color: white;
+  pointer-events: none;
+  white-space: nowrap;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+  text-align: left;
+}
+.authored-settings .mock-option,
+.authored-settings .mock-key {
+  position: absolute;
+  border: 1px solid #c8e2ed;
+  background: #a1bfd240;
+  text-align: center;
+  color: white;
+  font:
+    16px/28px Arial,
+    sans-serif;
+  white-space: nowrap;
+}
+.authored-settings .selected .mock-option,
+.authored-settings .binding {
+  background: #b5d9ee66;
+}
+.authored-settings .authored-option:hover .mock-option,
+.authored-settings .authored-key:hover .mock-key {
+  background: #c5e7f077;
+}
+.authored-settings .mock-action {
+  position: absolute;
+  font:
+    16px/24px Arial,
+    sans-serif;
+  color: #c7d2df;
+  white-space: nowrap;
+}
+.authored-settings .authored-action:has(.mock-action):hover {
+  filter: brightness(1.2);
+}
+.authored-settings .settings-mock-copy {
+  position: absolute;
+  color: white;
+  font:
+    12px Arial,
+    sans-serif;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.authored-settings .settings-mock-title {
+  position: absolute;
+  white-space: nowrap;
+}
+.authored-settings .camera-zoom {
+  left: 24px;
+  width: 132px;
+}
+.authored-settings .back-orb .mock-action {
+  border-radius: 50%;
+  background: #a7bdd633;
+  font:
+    12px/37px Arial,
+    sans-serif;
+}
+.authored-settings .settings-mock-title {
+  pointer-events: none;
+}
+.authored-settings .authored-option:has(input:focus-visible) input {
+  opacity: 1;
+  outline: 1px solid white;
+}
+.authored-settings .settings-field .bubble-text {
+  margin: 0;
+}
+.authored-settings .settings-field .mock-lettering {
+  font-family: Arial, sans-serif;
+  font-weight: 400;
+  letter-spacing: normal;
+  text-shadow: none;
+}
+/* PausedMenuButtons1636 direct-child depths: title3, Settings7, Info79,
+   HotKeys117 and main buttons164+. These panes share the source parent alpha. */
+.pause-screen .settings-page[data-settings-page='settings'] {
+  z-index: 7;
+}
+.pause-screen .tank-info-screen {
+  position: absolute;
+  inset: 0;
+  z-index: 79;
+}
+.pause-screen .tank-info-screen[inert] {
+  pointer-events: none;
+}
+.pause-screen .settings-page[data-settings-page='hotkeys'] {
+  z-index: 117;
+}
+.pause-screen .pause-title {
+  z-index: 3;
+}
+.pause-screen .pause-orb {
+  z-index: 164;
+}
+.pause-screen [data-pause-piece='btnSettings_mc'] {
+  z-index: 167;
+}
+.pause-screen [data-pause-piece='btn3_mc'] {
+  z-index: 170;
+}
+.pause-screen [data-pause-piece='btn5_mc'] {
+  z-index: 173;
+}
+.pause-screen .settings-layers {
+  position: absolute;
+  inset: 0;
+  outline: none;
+}
+.pause-screen .settings-layers[inert] {
+  pointer-events: none;
+}
+.pause-screen .settings-layers .camera-zoom,
+.pause-screen .settings-layers .restore-hotkeys {
+  z-index: 118;
 }

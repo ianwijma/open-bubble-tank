@@ -386,6 +386,9 @@ export default function GameShell() {
                     stage={stage}
                     fps={profile.settings.fps}
                     covered={overlay === 'settings'}
+                    settings={profile.settings}
+                    onSettingsChange={settingsChange}
+                    onSettingsClose={closeOverlay}
                     onMenu={menu}
                   />
                 ) : null}
@@ -483,10 +486,9 @@ export default function GameShell() {
                 }
               />
             ) : null}
-            {pack && settings && overlay === 'settings' ? (
+            {pack && settings && overlay === 'settings' && screen !== 'game' ? (
               <SettingsPanel
                 menuState={menuSettings}
-                overPause={screen === 'game' && world?.mode === 'paused'}
                 pack={pack}
                 settings={settings}
                 onChange={settingsChange}
