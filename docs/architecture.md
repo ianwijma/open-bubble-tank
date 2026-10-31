@@ -197,3 +197,6 @@ The procedural import now includes body timelines and fitted body leaves. Mock b
 
 
 `simulation/editor-selection.ts` keeps creator control arithmetic outside browser handlers: X nudges, source-ordered centering/twin removal and ghost-inclusive slider initialization. The centering helper deliberately retains the source's mutation-sensitive indexed walk. Callers own held/click scheduling, validation, class recalculation and undo; the new helpers are wired by the following screen slice.
+
+
+`components/creator-controls.tsx` supplies positioned native/mock buttons and transform sliders, while the editor owns parts, selection, frame stepping and history. A selection key refreshes slider initialization in the layout phase; an active handle retains its chosen value. Pointer capture supports motion outside the input, and cancellation reports rollback once. The isolated fixture exercises this boundary before production screen wiring.
