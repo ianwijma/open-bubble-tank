@@ -115,7 +115,7 @@ for (const native of [false, true]) {
     await expect(series).toHaveAttribute('data-series-frame', '1');
     expect(await series.evaluate((node) => node.style.left)).toBe('5px');
     // The keyboard route reveals the same retained strip and activates its offline adapter.
-    await series.focus();
+    await page.getByRole('button', { name: 'Change assets', exact: true }).press('Tab');
     await expect(series).toHaveAttribute('data-series-frame', '2');
     await advance(20);
     await page.keyboard.press('Tab');

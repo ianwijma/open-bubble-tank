@@ -1,3 +1,4 @@
+import { waitForMainMenu } from './helpers/main-menu';
 import { expect, test } from './helpers/frame-paced-test';
 import { visitAdjacentFieldAndReturn } from './helpers/field-travel';
 import { existsSync, readFileSync } from 'node:fs';
@@ -40,6 +41,7 @@ for (const native of [false, true])
       await page.goto('/');
       if (native) await page.getByLabel('Bubble Tanks 3 Flash file').setInputFiles(swf);
       else await page.getByRole('button', { name: 'Play with mock assets' }).click();
+      await waitForMainMenu(page);
       await page.getByRole('button', { name: 'Play', exact: true }).click({ timeout: 60000 });
       await page.getByRole('button', { name: 'Original game size', exact: true }).click();
       await page.getByRole('checkbox', { name: 'Use saved avatars from previous game' }).check();
