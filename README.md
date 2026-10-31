@@ -2,7 +2,7 @@
 
 A modular TypeScript reconstruction of **Bubble Tanks 3**, built with **Bun, Next.js, Tailwind CSS, and PixiJS**. The implementation uses the recovered game rules and data in the sibling [`documented-bubble-tank-3`](../documented-bubble-tank-3) repository.
 
-**The one-to-one recreation is still in progress.** This repository contains a playable offline implementation, not a claim of completed pixel or behavioral parity. The remaining differences are tracked in [the fidelity ledger](docs/fidelity.md).
+**The one-to-one recreation is still in progress.** This repository contains a playable offline implementation, not a claim of completed pixel or behavioral parity. The remaining differences are tracked in [the fidelity ledger](docs/fidelity.md). For continuation in another chat, start with the [current handoff](docs/handoff.md).
 
 ## Run
 
@@ -73,7 +73,7 @@ The helper also accepts `reload PATH`, `hold X Y MS`, `keyhold KEY MS`, `drag X 
 
 The menu also provides the enemy tank creator and local tank library. Avatar designs can be edited during upgrades and after clearing a field. Designs can be saved, imported/exported as JSON, and shared using the **original encrypted tank-code format**. Settings, progression designs, and the secondary-weapon help flag are saved locally. The help appears on the first eligible tank replacement and pauses play until Close. As in the original, continuing restores the design progression, not a complete serialized world.
 
-In the creator, select a palette row, then drag its preview into the design area. The selected row stays available for repeated drops. With a supplied SWF, previews, dragged objects, and placed parts animate using the native display lists. Dimmed rows exceed the current budget or class limits but remain selectable, as in the original; saving checks the finished design. New enemy designs start empty. For keyboard placement, focus and activate the preview, position it with the arrow keys (Shift moves five pixels), then press Enter to place or Escape to cancel.
+In the creator, select a palette row, then drag its preview into the design area. The selected row stays available for repeated drops. With a supplied SWF, previews, dragged objects, and placed parts animate using the native display lists. Dimmed rows exceed the current budget or class limits but remain selectable, as in the original. Completed edits validate the design and revert rejected changes; Save separately checks the required body and avatar attachment categories. New enemy designs start empty. For keyboard placement, focus and activate the preview, position it with the arrow keys (Shift moves five pixels), then press Enter to place or Escape to cancel.
 
 Click placed parts to toggle selection, drag empty space to select a group, and drag selected parts to move them. Symmetric Mode selects a faded linked twin and mirrors group movement; parts meeting on the center line can merge and respawn a twin when moved away. Scale, rotation, layering, delete, and undo apply to the selection. Turning Symmetric Mode on or off clears the selection.
 

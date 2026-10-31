@@ -57,6 +57,13 @@ test('mock creator previews distinct guns and behaviors and places their authore
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'Enemy tank creator' }).click();
   await page.getByLabel('Symmetric Mode').uncheck();
+  // 5 Parallel requires class2. Build a legal hull before checking its placement artwork.
+  await page.getByRole('button', { name: 'Place Huge Bubble', exact: true }).click();
+  await dropPreview(page, 0, 55);
+  const canvas = (await page.locator('.creator-workspace canvas').boundingBox())!;
+  await page.mouse.click(canvas.x + canvas.width / 2, canvas.y + (230 * canvas.height) / 350);
+  await page.getByLabel('Part scale').press('End');
+  expect((await readCreatorDesign(page)).classId).toBeGreaterThanOrEqual(2);
   const preview = page.locator('.creator-part-preview canvas');
   const hashes: number[] = [];
   for (const [tab, name, id, x] of [

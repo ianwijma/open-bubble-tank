@@ -48,7 +48,9 @@ for (const native of [false, true])
     await page.mouse.click(box.x + (155 * box.width) / 350, box.y + (150 * box.height) / 350);
     await page.mouse.click(r.x - 19 * factor, r.y + 2.25 * factor);
     await page.getByRole('button', { name: 'Undo', exact: true }).click();
-    expect((await snapshot()).parts).toHaveLength(0); // A no-op handle press adds no undo state.
+    expect((await snapshot()).parts).toHaveLength(2); // Source records the accepted no-op release.
+    await page.getByRole('button', { name: 'Undo', exact: true }).click();
+    expect((await snapshot()).parts).toHaveLength(0);
     await dropPreview(page, -20, -25);
     await page.mouse.click(box.x + (155 * box.width) / 350, box.y + (150 * box.height) / 350);
     const right = page.getByRole('button', { name: 'Move selection right', exact: true });

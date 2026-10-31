@@ -109,6 +109,9 @@ for (const native of [false, true])
     await alert.press('Enter');
     await expect(alert).toHaveCount(0);
     await expect(page.getByLabel('Part scale')).toHaveCount(0);
+    await expect(page.getByRole('button', { name: 'Undo', exact: true })).toBeEnabled();
+    await page.getByRole('button', { name: 'Undo', exact: true }).click();
+    expect((await readCreatorDesign(page)).parts).toHaveLength(0);
     await expect(page.getByRole('button', { name: 'Undo', exact: true })).toBeDisabled();
     expect(errors).toEqual([]);
   });

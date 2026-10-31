@@ -72,3 +72,38 @@ The current alert and fresh-form screenshots are retained locally under the
 ignored `reference-captures/recreation-save` directory. The tests also cover
 source category ordering, selection cleanup after an avatar error, and an
 imported over-budget design reaching the actual name/code submission path.
+
+For the original aggregate-validation sequence, select the validation scenario:
+
+```sh
+BT3_REFERENCE_PORT=3104 bun run reference
+# In a separate terminal:
+BT3_REFERENCE_SCENARIO=validation bun tools/capture-creator-reference.ts
+```
+
+The 2026-10-31 run produced15 images with no page errors under the same SWF,
+browser and Ruffle configuration above. Inspect
+`reference-captures/creator-validation/manifest.json` and the named captures:
+
+- `nine-accepted-cannon-pairs`:18 Basic Cannons,18GP,19GP limit.
+- `symmetric-overspend-reverted`:tenth pair rejected, original18 retained.
+- `undo-after-rejection`:Undo removes the preceding accepted pair, leaving16.
+- `duplicate-aggressors-accepted`:two copies of the same behavior are allowed.
+- `mixed-behaviors-reverted`:Skittish is rejected while both Aggressors remain.
+
+The tool performs the canvas actions through owned coordinate input. These
+captures are distinct from the earlier REA boot evidence and do not supply
+complete event coverage or Adobe timing evidence.
+
+Recreate the aggregate-validation browser comparisons with:
+
+```sh
+bun run test:e2e e2e/creator-validation.spec.ts e2e/creator-alert.spec.ts
+```
+
+The resize cases verify the heading in an actual page screenshot as well as
+rollback, accepted no-op/import history and focus. Current native/mock captures
+are retained locally, ignored, under
+`reference-captures/recreation-editor-validation`. The native alert uses the
+already-composed runtime bitmap to preserve its static heading/caption in DOM
+painting; the source media still comes only from the supplied SWF.

@@ -603,7 +603,12 @@ export class AssetPack {
         CREATOR_DIALOGS.alert.staticIds.includes(p.charId),
       );
       const alertRaster = await pack.rasterClip(alert);
-      if (alertRaster) pack.creatorFrames.set('alert', alertRaster);
+      if (alertRaster) {
+        // Paint the prepared bitmap in DOM too: the SVG image lost its static
+        // text after a keyboard resize rejection despite decoding correctly in Canvas2D.
+        alertRaster.url = alertRaster.canvas.toDataURL();
+        pack.creatorFrames.set('alert', alertRaster);
+      }
       for (const screen of CREATOR_DIALOGS.frames) {
         const pose = new SwfClip(CREATOR_DIALOGS.symbol, pack);
         pose.start(screen.frame, false);
