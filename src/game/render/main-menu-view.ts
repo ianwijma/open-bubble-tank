@@ -11,12 +11,9 @@ export class MainMenuView {
   private title: SwfSymbolView;
   private titlePose: SwfClip;
   private controls;
-  private background: SwfSymbolView;
   private glow: SwfGlowFilter;
   constructor(pack: AssetPack, textures: RasterTextures) {
-    this.background = new SwfSymbolView(MAIN_MENU.background, pack, textures);
-    this.background.update(1);
-    this.root.addChild(this.background.root);
+    //556 depth1/clipDepth2 makes487 a nonpainting mask. All controls start above depth2.
     this.controls = MAIN_MENU.controls.map((piece) => {
       const view = new SwfSymbolView(piece.symbol, pack, textures),
         pose = new SwfClip(piece.symbol, pack),
@@ -83,7 +80,6 @@ export class MainMenuView {
     return this.titlePose.children.get(1)?.clip.frame;
   }
   destroy() {
-    this.background.destroy();
     this.title.destroy();
     for (const control of this.controls) control.view.destroy();
     this.glow.destroy();
