@@ -39,6 +39,11 @@ for (const native of [false, true]) {
     );
     await efficiency(page, true).check();
     await stageRate(page, 90, 35);
+    const backgroundBitmap = () =>
+      page
+        .locator('.main-background canvas')
+        .evaluate((node) => (node as HTMLCanvasElement).toDataURL());
+    const efficientBackground = await backgroundBitmap();
     await expect(page.getByRole('radio', { name: '65 FPS' })).toBeChecked();
     const saved = () =>
       page.evaluate(
@@ -61,8 +66,12 @@ for (const native of [false, true]) {
     await page.getByRole('button', { name: 'Settings', exact: true }).click();
     await stageRate(page, 90, 35);
     await expect(page.getByRole('radio', { name: '35 FPS' })).toBeChecked();
+    expect(await backgroundBitmap()).toBe(efficientBackground);
     await efficiency(page, false).check();
     await stageRate(page, 50, 35);
+    // Forced efficiency Off resumes particles while the existing pause layer stays mounted.
+    await expect.poll(backgroundBitmap).not.toBe(efficientBackground);
+    await expect(page.locator('.pause-button-layer')).toHaveCount(1);
     await expect(page.getByRole('radio', { name: '35 FPS' })).toBeChecked();
     await page.getByRole('button', { name: 'DONE' }).click();
     await page.getByRole('button', { name: 'Main menu', exact: true }).click();

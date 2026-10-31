@@ -1,3 +1,5 @@
+import { StageRuntime } from '../src/game/services/stage-runtime';
+import { World, emptyInput } from '../src/game/simulation/world';
 import { expect, test } from 'bun:test';
 import { BackgroundParticles, MainBackground } from '../src/game/core/main-background';
 import paint from '../src/game/data/main-background.json';
@@ -131,4 +133,28 @@ test('source efficiency Off forcibly resumes a paused background, including repe
   background.efficient = false;
   background.advance();
   expect(background.revision).toBe(3);
+});
+
+test('stage runs the background after Main listeners, and movement reports no arrival teleport', () => {
+  const stage = new StageRuntime();
+  stage.subscribe({
+    step: () => {
+      expect(stage.background.revision).toBe(0);
+      stage.background.move(1, 2);
+    },
+  });
+  stage.advance(20, 50);
+  expect(stage.background.revision).toBe(1);
+  const world = new World([], [], 123);
+  const moves: { x: number; y: number }[] = [];
+  world.onCameraMove = (x, y) => moves.push({ x, y });
+  world.step({ ...emptyInput(), right: true });
+  expect(moves).toEqual([{ x: 0.6, y: 0 }]);
+  world.jump({ x: 1, y: 0 });
+  while (world.transit) world.step(emptyInput());
+  expect(moves.every((p) => Math.abs(p.x) < 100 && Math.abs(p.y) < 100)).toBe(true);
+  const count = moves.length;
+  world.pause();
+  world.step(emptyInput());
+  expect(moves).toHaveLength(count);
 });

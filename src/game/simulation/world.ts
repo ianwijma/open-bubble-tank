@@ -286,6 +286,7 @@ export class World {
   };
   onProgression: (history: TankDesign[]) => void = () => {};
   onAchievement: (name: string) => void = () => {};
+  onCameraMove: (x: number, y: number) => void = () => {};
   secondaryHelpSeen = false;
   onSecondaryHelp: () => void = () => {};
   constructor(
@@ -696,6 +697,7 @@ export class World {
       p.velocity[axis] = v;
       p[axis] += v;
     }
+    this.onCameraMove(p.velocity.x, p.velocity.y);
   }
 
   getTarget(t: Tank): Tank {
@@ -1114,6 +1116,7 @@ export class World {
     } else {
       this.player.x += dx * 0.09;
       this.player.y += dy * 0.09;
+      this.onCameraMove(dx * 0.09, dy * 0.09);
     }
   }
   addEffect(pos: Vec, kind: Effect['kind'], radius: number, color: number, duration: number) {

@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { AssetPack } from '@/game/assets/asset-pack';
 import type { Settings } from '@/game/core/types';
 import { GameInput } from '@/game/core/input';
@@ -42,7 +42,16 @@ export function GameViewport({
     if (mode === 'playing' || mode === 'transit' || mode === 'collapse')
       host.current?.focus({ preventScroll: true });
   }, [mode]);
-  useEffect(() => {
+  useLayoutEffect(() => {
+    let backgroundMode: World['mode'] | undefined;
+    const backgroundState = () => {
+      if (backgroundMode === world.mode) return;
+      backgroundMode = world.mode;
+      if (world.mode === 'playing' || world.mode === 'transit' || world.mode === 'collapse')
+        stage.background.resume();
+      else stage.background.stop();
+    };
+    backgroundState();
     let cancelled = false,
       unsubscribe: (() => void) | undefined,
       releaseCapture: (() => void) | undefined,
@@ -72,6 +81,7 @@ export function GameViewport({
           },
           () => world.stopPrimaryFire(),
         );
+        world.onCameraMove = (x, y) => stage.background.move(x, y);
         world.hitTest = (t, x, y) => pack.hitTest(t, x, y, settingsRef.current.zoom);
         world.protectionRadius = pack.protectionRadius;
         world.hitPart = (t, p, x, y) => pack.hitPart(t, p, x, y, settingsRef.current.zoom);
@@ -96,6 +106,7 @@ export function GameViewport({
             world.viewZoom = settingsRef.current.zoom;
             world.screenShake = settingsRef.current.shake;
             world.step(input!.frame(), 0, false);
+            backgroundState();
             audio?.playEvents(world.drainEvents(), settingsRef.current);
           },
           draw: () => {
@@ -116,6 +127,8 @@ export function GameViewport({
       releaseCapture?.();
       unsubscribe?.();
       input?.dispose();
+      world.onCameraMove = () => {};
+      stage.background.resume();
       if (renderer?.app.renderer) renderer.destroy();
     };
   }, [world, pack, audio, stage]);

@@ -18,6 +18,9 @@ for (const native of [false, true])
     const status = page.getByRole('status');
     await expect(status).toContainText('Ready', { timeout: 60000 });
     await expect(page.locator('.game-canvas canvas')).toBeVisible();
+    const background = page.locator('.main-background canvas');
+    const bitmap = () => background.evaluate((node) => (node as HTMLCanvasElement).toDataURL());
+    const pausedBackground = await bitmap();
     const read = async () => JSON.parse((await status.getAttribute('data-main-effects'))!);
     await page.getByRole('button', { name: 'Shake 12', exact: true }).click();
     await expect
@@ -35,6 +38,7 @@ for (const native of [false, true])
     expect(proof.main).toEqual({ x: 0, y: 0 });
     expect(proof.gameFrames).toBe(0);
     expect(proof.mode).toBe('paused');
+    expect(await bitmap()).toBe(pausedBackground);
     await page.getByRole('button', { name: 'Resume game', exact: true }).click();
     const box = await page.locator('.game-canvas').boundingBox();
     await page.mouse.move(box!.x + 400, box!.y + 150);

@@ -1,7 +1,8 @@
 import { Application, Container, Graphics, Sprite, Texture } from 'pixi.js';
 import type { AssetPack, Raster } from '../assets/asset-pack';
 import { STAGE } from '../core/constants';
-import { DEG, Random } from '../core/math';
+import { DEG } from '../core/math';
+import { MainBackgroundView } from './main-background-view';
 import type { Field, Settings, Tank } from '../core/types';
 import type { World } from '../simulation/world';
 import { whipSamples } from '../simulation/whip';
@@ -38,7 +39,6 @@ export class GameRenderer {
   private tacticalHud?: TacticalHudView;
   overlay = new Graphics();
   screenEffects = new Container();
-  dust = new Graphics();
   private rasterTextures = new SwfTextures();
   private ownedTextures: Texture[] = [];
   private tankNodes = new Map<number, TankView>();
@@ -47,7 +47,6 @@ export class GameRenderer {
   private fieldNodes = new Map<Field, Sprite>();
   highlights = new Container();
   private highlightNodes = new Map<Field, SwfSymbolView>();
-  private stars: { x: number; y: number; v: number; alpha: number }[] = [];
   private fieldTexture: Texture | null = null;
   private background: Sprite | null = null;
   private destroyed = false;
@@ -76,26 +75,13 @@ export class GameRenderer {
     this.app.canvas.setAttribute('aria-hidden', 'true');
     host.appendChild(this.app.canvas);
     this.quality = settings.quality;
-    const backgroundCanvas = document.createElement('canvas');
-    backgroundCanvas.width = 550;
-    backgroundCanvas.height = 450;
-    const ctx = backgroundCanvas.getContext('2d')!;
-    const gradient = ctx.createLinearGradient(0, 0, 0, 450);
-    gradient.addColorStop(0, '#079fb0');
-    gradient.addColorStop(1, '#0b3c5a');
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, 550, 450);
-    const texture = Texture.from(backgroundCanvas);
-    this.ownedTextures.push(texture);
-    this.background = new Sprite(texture);
-    this.app.stage.addChild(
-      this.background,
-      this.dust,
-      this.root,
-      this.screenEffects,
-      this.mapArt,
-      this.overlay,
-    );
+    if (!this.externalMainEffects) {
+      const texture = Texture.from(new MainBackgroundView().canvas);
+      this.ownedTextures.push(texture);
+      this.background = new Sprite(texture);
+      this.app.stage.addChild(this.background);
+    }
+    this.app.stage.addChild(this.root, this.screenEffects, this.mapArt, this.overlay);
     this.minimap = new MinimapView(this.assets, this.rasterTextures);
     this.mapArt.addChild(this.minimap.root);
     this.hud = new HudView(this.assets, this.rasterTextures);
@@ -119,13 +105,6 @@ export class GameRenderer {
       this.combatEffects.top,
       this.highlights,
     );
-    const rng = new Random(390541);
-    this.stars = Array.from({ length: 30 }, () => ({
-      x: rng.next() * 550,
-      y: rng.next() * 450,
-      v: rng.next() * 0.3 + 0.1,
-      alpha: rng.next() * 0.35 + 0.15,
-    }));
     const field = this.assets.extras.get(1537);
     if (field) this.fieldTexture = this.texture(field);
     else {
@@ -226,14 +205,6 @@ export class GameRenderer {
       this.externalMainEffects ? 0 : main.position.x,
       this.externalMainEffects ? 0 : main.position.y,
     );
-    this.dust.clear();
-    for (const s of settings.efficient ? this.stars.slice(0, 6) : this.stars) {
-      const x =
-        (((s.x - world.player.x * 0.15 + world.stats.frames * s.v * 0.15) % 550) + 550) % 550;
-      const y =
-        (((s.y - world.player.y * 0.15 + world.stats.frames * s.v * 0.1) % 450) + 450) % 450;
-      this.dust.rect(x, y, 0.7, 0.7).fill({ color: 0xe3fdff, alpha: s.alpha });
-    }
     this.root.position.set(STAGE.cx - world.player.x, STAGE.cy - world.player.y);
     this.root.scale.set(settings.zoom);
     this.root.position.set(

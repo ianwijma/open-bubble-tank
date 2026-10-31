@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useRef, type ReactNode } from 'react';
 import type { StageRuntime } from '@/game/services/stage-runtime';
+import { MainBackground } from './main-background';
 
 /** Main includes game pixels, HUD, menus and independent flash rectangles. */
 export function MainStage({
@@ -63,6 +64,7 @@ export function MainStage({
   }, [runtime]);
   return (
     <div ref={main} className="main-stage">
+      <MainBackground stage={runtime} />
       {children}
       <canvas ref={canvas} className="main-flashes" width={630} height={530} aria-hidden="true" />
     </div>
