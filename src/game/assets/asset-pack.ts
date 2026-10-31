@@ -252,10 +252,22 @@ export class AssetPack {
       if (raster) pack.leaves.set(id, raster);
     }
     for (const [i, part] of PARTS.entries()) {
-      const raster = mockPart(part.id);
-      pack.frames.set(part.id, [raster]);
-      // Body fallback remains procedural; it can share the creator's live scene.
-      if (part.id < 2000) pack.leaves.set(part.symbol, raster);
+      if (part.id < 2000) {
+        const pose = partSnapshot(part, pack),
+          poster = await pack.rasterClip(pose);
+        if (!poster && pose.placements.length)
+          throw new Error(`No procedural body poster for ${part.id}.`);
+        pack.frames.set(part.id, [poster ?? emptyRaster()]);
+        const positive = partSnapshot(part, pack, 'poster', 1);
+        if (positive.frame !== pose.frame) {
+          const variant = await pack.rasterClip(positive);
+          if (variant) pack.positivePosters.set(part.id, variant);
+        }
+        const classPose = partSnapshot(part, pack, 'class');
+        pack.classPoses.set(part.id, classPose);
+        const sample = await pack.rasterClip(classPose);
+        if (sample) pack.classFrames.set(part.id, sample);
+      } else pack.frames.set(part.id, [mockPart(part.id)]);
       onProgress((i + 1) / PARTS.length, 'Drawing mock bubbles');
     }
     return pack;
@@ -308,7 +320,9 @@ export class AssetPack {
       for (const [i, part] of PARTS.entries()) {
         const pose = partSnapshot(part, pack),
           raster = await pack.rasterClip(pose);
-        pack.frames.set(part.id, [raster ?? mockPart(part.id)]);
+        pack.frames.set(part.id, [
+          raster ?? (pose.placements.length ? mockPart(part.id) : emptyRaster()),
+        ]);
         // Wiggle Cluster's root branches on its own Y. Child Y is already retained
         // in the pose, so only a different root frame needs another cached poster.
         const positive = partSnapshot(part, pack, 'poster', 1);
@@ -394,6 +408,21 @@ export class AssetPack {
     if (seen.has(id) || seen.size > 24) return null;
     const next = new Set(seen);
     next.add(id);
+    const procedural = this.mode === 'mock' && this.leaves.get(id);
+    if (procedural) {
+      const b = this.shapes.get(id)?.bounds;
+      return {
+        body: `<image x="${procedural.x}" y="${procedural.y}" width="${procedural.width}" height="${procedural.height}" xlink:href="${procedural.url}"/>`,
+        bounds: b
+          ? {
+              x: b.xMin / 20,
+              y: b.yMin / 20,
+              width: (b.xMax - b.xMin) / 20,
+              height: (b.yMax - b.yMin) / 20,
+            }
+          : procedural,
+      };
+    }
     const morph = this.morphs.get(id);
     const shape = morph ? morphShapeAtRatio(morph, ratio) : this.shapes.get(id),
       svg = morph
@@ -965,6 +994,21 @@ export function alphaHit(r: Raster, x: number, y: number) {
     py < r.canvas.height &&
     (r.pixels[(py * r.canvas.width + px) * 4 + 3] ?? 0) > 16
   );
+}
+/** An authored empty frame stays empty; never substitute a generic body. */
+function emptyRaster(): Raster {
+  const canvas = document.createElement('canvas');
+  canvas.width = canvas.height = 1;
+  return {
+    canvas,
+    x: 0,
+    y: 0,
+    width: 0,
+    height: 0,
+    pixels: new Uint8ClampedArray(4),
+    resolution: 1,
+    url: canvas.toDataURL(),
+  };
 }
 async function rasterSvg(svg: string, bounds: Bounds): Promise<Raster> {
   const url = svgUrl(svg),
