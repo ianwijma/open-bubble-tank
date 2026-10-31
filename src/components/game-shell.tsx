@@ -6,6 +6,7 @@ import { STARTER } from '@/game/data/catalog';
 import { World } from '@/game/simulation/world';
 import { AudioManager } from '@/game/services/audio';
 import { StageRuntime } from '@/game/services/stage-runtime';
+import { MenuSettingsState } from '@/game/core/settings-screen';
 import { loadProfile, saveProfile, saveCreatedTank } from '@/game/services/profile';
 import { AssetGate } from './asset-gate';
 import { GameViewport } from './game-viewport';
@@ -41,12 +42,15 @@ export default function GameShell() {
     [fullscreen, setFullscreen] = useState(false),
     [audio, setAudio] = useState<AudioManager | null>(null);
   const [stage] = useState(() => new StageRuntime());
+  const [menuSettings, setMenuSettings] = useState(() => new MenuSettingsState(50));
   const frame = useRef<HTMLDivElement>(null),
     space = useRef<HTMLDivElement>(null),
     startingWorld = useRef<World | null>(null);
   const refresh = useCallback(() => setRevision((r) => r + 1), []);
   useEffect(() => {
-    setProfile(loadProfile());
+    const loaded = loadProfile();
+    setMenuSettings(new MenuSettingsState(loaded.settings.mainFps));
+    setProfile(loaded);
   }, []);
   useEffect(() => {
     let wasFullscreen = document.fullscreenElement === frame.current;
@@ -102,20 +106,29 @@ export default function GameShell() {
     }
   }, [screen, profile, pack, editor, audio]);
   useEffect(() => () => pack?.dispose(), [pack]);
-  function updateProfile(update: (p: Profile) => Profile) {
+  function updateProfile(update: (p: Profile) => Profile, persist = true) {
     setProfile((previous) => {
       if (!previous) return previous;
       const next = update(previous);
-      setStorageError(!saveProfile(next));
+      if (persist) setStorageError(!saveProfile(next));
       return next;
     });
+  }
+  function showScreen(next: Screen) {
+    if (next === 'menu' && screen !== 'menu' && profile)
+      setMenuSettings(new MenuSettingsState(profile.settings.mainFps));
+    setScreen(next);
   }
   function settingsChange(settings: Settings, control?: 'shake' | 'efficiency') {
     // Pause's standalone toggle only gates Massive Cannon. Menu and efficiency
     // controls also call the source controller's enable/disable methods.
     if (control === 'efficiency' || (control === 'shake' && screen === 'menu'))
       stage.effects.setEnabled(settings.shake);
-    updateProfile((p) => ({ ...p, settings }));
+    // Normal settings save on menu exit; efficiency and requested zoom save immediately.
+    updateProfile(
+      (p) => ({ ...p, settings }),
+      control === 'efficiency' || settings.zoom !== profile?.settings.zoom,
+    );
   }
   function startRun() {
     if (!profile) return;
@@ -135,18 +148,18 @@ export default function GameShell() {
     next.onAchievement = (name) =>
       updateProfile((p) => ({ ...p, achievements: [...new Set([...p.achievements, name])] }));
     setWorld(next);
-    setScreen('game');
+    showScreen('game');
     setOverlay(null);
   }
   function menu() {
     world?.pause();
-    setScreen('menu');
+    showScreen('menu');
     setOverlay(null);
   }
   function edit(initial: TankDesign, upgrade = false) {
     world?.pause();
     setEditor({ initial, returnTo: screen, upgrade });
-    setScreen('creator');
+    showScreen('creator');
     setOverlay(null);
   }
   function saveTank(design: TankDesign) {
@@ -160,18 +173,20 @@ export default function GameShell() {
       else world.editPlayer(tank);
       world.resume();
     }
-    setScreen(editor.returnTo);
+    showScreen(editor.returnTo);
     setEditor(null);
     refresh();
   }
   function exitEditor() {
     if (editor) {
-      setScreen(editor.returnTo);
+      showScreen(editor.returnTo);
       setEditor(null);
       if (editor.returnTo === 'game' && !editor.upgrade) world?.resume();
     }
   }
   function closeOverlay() {
+    if (overlay === 'settings' && screen === 'menu' && profile)
+      setStorageError(!saveProfile(profile));
     setOverlay(null);
   }
   const settings = profile?.settings;
@@ -217,7 +232,7 @@ export default function GameShell() {
               <AssetGate
                 onReady={(p) => {
                   setPack(p);
-                  setScreen('menu');
+                  showScreen('menu');
                 }}
               />
             ) : null}
@@ -283,7 +298,7 @@ export default function GameShell() {
                 <button
                   className="menu-orb menu-library"
                   aria-label="My tanks"
-                  onClick={() => setScreen('library')}
+                  onClick={() => showScreen('library')}
                 >
                   <MenuArt pack={pack} symbol={496} icon="plus" size={28} />
                   <span className="orb-caption">MY TANKS</span>
@@ -455,7 +470,7 @@ export default function GameShell() {
               <TankLibrary
                 pack={pack}
                 tanks={profile.tanks}
-                onBack={() => setScreen('menu')}
+                onBack={() => showScreen('menu')}
                 onEdit={(t) => edit(t)}
                 onImport={(tank) =>
                   updateProfile((p) => ({
@@ -470,6 +485,7 @@ export default function GameShell() {
             ) : null}
             {pack && settings && overlay === 'settings' ? (
               <SettingsPanel
+                menuState={menuSettings}
                 overPause={screen === 'game' && world?.mode === 'paused'}
                 pack={pack}
                 settings={settings}

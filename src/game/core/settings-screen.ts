@@ -1,4 +1,5 @@
 import geometry from '../data/settings-geometry.json';
+import type { Settings } from './types';
 import { displayPixel } from './display-values';
 export interface SettingsLeaf {
   name: string;
@@ -24,6 +25,113 @@ export const SETTINGS_SCREEN: Record<
   'menu' | 'pause',
   Record<'settings' | 'hotkeys', SettingsLayout>
 > = geometry;
+export const HOTKEYS = [
+  ['h1', 'Move up', 'Up_mc', 'up'],
+  ['h2', 'Move down', 'Down_mc', 'down'],
+  ['h3', 'Move left', 'Left_mc', 'left'],
+  ['h4', 'Move right', 'Right_mc', 'right'],
+  ['h5', 'Pause', 'Paused_mc', 'pause'],
+] as const;
+export type Hotkey = (typeof HOTKEYS)[number][0];
+export const SETTING_ROWS = [
+  {
+    name: 'FrameRate_mc',
+    key: 'fps',
+    label: 'Frame Rate',
+    names: ['gs1', 'gs2', 'gs3'],
+    values: [35, 50, 65],
+    labels: ['Slow', 'Regular', 'Fast'],
+  },
+  {
+    name: 'Quality_mc',
+    key: 'quality',
+    label: 'Quality',
+    names: ['g1', 'g2', 'g3'],
+    values: ['low', 'medium', 'high'],
+    labels: ['Low', 'Medium', 'High'],
+  },
+  {
+    name: 'Music_mc',
+    key: 'music',
+    label: 'Music',
+    names: ['m1', 'm2'],
+    values: [false, true],
+    labels: ['Off', 'On'],
+  },
+  {
+    name: 'Sounds_mc',
+    key: 'sound',
+    label: 'Sound effects',
+    names: ['s1', 's2'],
+    values: [false, true],
+    labels: ['Off', 'On'],
+  },
+  {
+    name: 'ScreenShake_mc',
+    key: 'shake',
+    label: 'Screen Shake',
+    names: ['v1', 'v2'],
+    values: [false, true],
+    labels: ['Off', 'On'],
+  },
+  {
+    name: 'EfficientMode_mc',
+    key: 'efficient',
+    label: 'Efficiency Mode (Slow Computers)',
+    names: ['v2', 'v1'],
+    values: [false, true],
+    labels: ['Off', 'On'],
+  },
+] as const;
+export function changeSetting(
+  settings: Settings,
+  key: (typeof SETTING_ROWS)[number]['key'],
+  value: string | number | boolean,
+): Settings {
+  if (key === 'efficient')
+    return {
+      ...settings,
+      efficient: !!value,
+      sound: !value,
+      music: !value,
+      shake: !value,
+      quality: value ? 'low' : 'high',
+      fps: value ? 90 : 50,
+    };
+  if (key === 'fps') {
+    if (![35, 50, 65].includes(value as number)) return settings;
+    return {
+      ...settings,
+      fps: value as Settings['mainFps'],
+      mainFps: value as Settings['mainFps'],
+    };
+  }
+  return { ...settings, [key]: value };
+}
+/** _-Sm's selector belongs to a menu instance, not its transient Settings645 child. */
+export class MenuSettingsState {
+  selectedFps: Settings['mainFps'];
+  constructor(mainFps: Settings['mainFps']) {
+    this.selectedFps = mainFps;
+  }
+  change(key: (typeof SETTING_ROWS)[number]['key'], value: string | number | boolean) {
+    if (key === 'efficient') this.selectedFps = value ? 65 : 50;
+    else if (key === 'fps' && [35, 50, 65].includes(value as number))
+      this.selectedFps = value as Settings['mainFps'];
+  }
+}
+export function settingSelection(
+  settings: Settings,
+  key: (typeof SETTING_ROWS)[number]['key'],
+  overPause: boolean,
+  menu?: MenuSettingsState,
+) {
+  return key === 'fps'
+    ? !overPause
+      ? (menu?.selectedFps ?? settings.mainFps)
+      : settings.mainFps
+    : settings[key];
+}
 /** PauseMenu._-C7/_-B9/_-Lz/_-eE; gates see preceding setters in the same frame. */
 export class SettingsMotion {
   readonly settings = Object.fromEntries(

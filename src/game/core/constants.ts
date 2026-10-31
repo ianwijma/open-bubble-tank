@@ -22,6 +22,7 @@ export const DEFAULT_SETTINGS = {
   music: true,
   shake: true,
   fps: 50,
+  mainFps: 50,
   quality: 'high',
   efficient: false,
   h1: 'KeyW',

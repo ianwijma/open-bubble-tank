@@ -4,6 +4,11 @@ import { DEFAULT_SETTINGS } from '@/game/core/constants';
 import type { Settings } from '@/game/core/types';
 import { BubbleText, Dialog } from './ui';
 import type { AssetPack } from '@/game/assets/asset-pack';
+import {
+  changeSetting,
+  settingSelection,
+  type MenuSettingsState,
+} from '@/game/core/settings-screen';
 const keys = [
   ['h1', 'Move up'],
   ['h2', 'Move down'],
@@ -18,12 +23,14 @@ export function SettingsPanel({
   onChange,
   onClose,
   overPause = false,
+  menuState,
 }: {
   settings: Settings;
   pack: AssetPack;
   onChange: (s: Settings, control?: 'shake' | 'efficiency') => void;
   onClose: () => void;
   overPause?: boolean;
+  menuState?: MenuSettingsState;
 }) {
   const [binding, setBinding] = useState<keyof Settings | null>(null);
   const [hotkeys, setHotkeys] = useState(false);
@@ -34,7 +41,11 @@ export function SettingsPanel({
       className="stage-dialog settings-screen"
       scrimClassName={overPause ? 'pause-owned-overlay' : ''}
     >
-      <div className="settings-title">
+      <div
+        className="settings-title"
+        data-stage-fps={settings.fps}
+        data-configured-fps={settings.mainFps}
+      >
         <BubbleText pack={pack} size={35}>
           {hotkeys ? 'Hotkeys' : 'settings'}
         </BubbleText>
@@ -70,10 +81,11 @@ export function SettingsPanel({
                 [50, 'Regular'],
                 [65, 'Fast'],
               ]}
-              value={settings.fps}
-              onChange={(fps) =>
-                onChange({ ...settings, fps: fps as Settings['fps'], efficient: false })
-              }
+              value={settingSelection(settings, 'fps', overPause, menuState) as number}
+              onChange={(fps) => {
+                if (!overPause) menuState?.change('fps', fps);
+                onChange(changeSetting(settings, 'fps', fps));
+              }}
             />
             <SettingOptions
               label="Quality"
@@ -113,20 +125,10 @@ export function SettingsPanel({
                 [1, 'On'],
               ]}
               value={Number(settings.efficient)}
-              onChange={(value) =>
-                onChange(
-                  {
-                    ...settings,
-                    efficient: !!value,
-                    sound: !value,
-                    music: !value,
-                    shake: !value,
-                    quality: value ? 'low' : 'high',
-                    fps: value ? 90 : 50,
-                  },
-                  'efficiency',
-                )
-              }
+              onChange={(value) => {
+                if (!overPause) menuState?.change('efficient', !!value);
+                onChange(changeSetting(settings, 'efficient', !!value), 'efficiency');
+              }}
             />
             <button className="hotkey-options" onClick={() => setHotkeys(true)}>
               HotKey Options
@@ -221,7 +223,8 @@ function SettingOptions({
               name={label}
               aria-label={label === 'Frame Rate' ? `${id} FPS` : title}
               checked={value === id}
-              onChange={() => onChange(id)}
+              onChange={() => {}}
+              onClick={() => onChange(id)}
             />
             <BubbleText pack={pack} font="Accidental Presidency" size={14}>
               {title}
