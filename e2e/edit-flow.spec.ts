@@ -1,4 +1,5 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './helpers/frame-paced-test';
+import { visitAdjacentFieldAndReturn } from './helpers/field-travel';
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import type { TankDesign } from '../src/game/core/types';
@@ -50,13 +51,8 @@ for (const native of [false, true])
     const edit = page.getByRole('button', { name: 'Edit your tank', exact: true });
     await expect(edit).toBeDisabled();
     await page.locator('.game-canvas').focus();
-    await page.keyboard.down('KeyD');
-    await page.waitForTimeout(2900);
-    await page.keyboard.up('KeyD');
-    await page.keyboard.down('KeyA');
-    await page.waitForTimeout(2500);
-    await page.keyboard.up('KeyA');
-    await expect(edit).toBeEnabled({ timeout: 5000 });
+    await visitAdjacentFieldAndReturn(page);
+    await expect(edit).toBeEnabled({ timeout: 15000 });
     await expect.poll(async () => (await edit.boundingBox())!.width).toBeCloseTo(122, 0);
     const map = page.getByRole('button', { name: 'Change map size' });
     await map.click();

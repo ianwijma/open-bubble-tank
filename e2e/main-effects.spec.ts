@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './helpers/frame-paced-test';
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 const swf =
@@ -59,12 +59,22 @@ for (const native of [false, true])
         (await read()).samples.some((s: { alpha: number[] }) => s.alpha.length === 2),
       )
       .toBe(true);
-    await page.getByRole('button', { name: 'Unmount game', exact: true }).click();
+    // The prior flashes may expire during a slow automation round-trip. Start
+    // fresh ones in the same fixture event that unmounts the production viewport.
+    await expect.poll(async () => (await read()).alpha.length).toBe(0);
+    await page.getByRole('button', { name: 'Flash into menu', exact: true }).click();
     await expect(page.locator('.game-canvas')).toHaveCount(0);
+    await expect
+      .poll(async () =>
+        (await read()).samples.some(
+          (s: { alpha: number[]; canvas: object | null }) =>
+            s.alpha.length === 2 && s.canvas === null,
+        ),
+      )
+      .toBe(true);
     await expect.poll(async () => (await read()).alpha.length).toBe(0);
     const flashed = (await read()).samples.filter((s: { alpha: number[] }) => s.alpha.length === 2);
     expect(flashed.length).toBeGreaterThan(0);
-    expect(flashed.some((s: { canvas: object | null }) => s.canvas === null)).toBe(true);
     for (const sample of flashed) {
       const alpha = Math.max(0, sample.alpha[0]);
       expect(sample.alpha[1]).toBe(sample.alpha[0]);

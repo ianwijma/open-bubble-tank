@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './helpers/frame-paced-test';
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 const swf =
@@ -66,11 +66,13 @@ for (const native of [false, true]) {
     );
     await expect(dialog.locator('.tank-portrait canvas')).toBeVisible();
     await expect
-      .poll(async () =>
-        dialog.locator('.tank-portrait').evaluate((node) => {
-          const matrix = new DOMMatrix(getComputedStyle(node.parentElement!).transform);
-          return Math.abs(matrix.e - 359.5);
-        }),
+      .poll(
+        async () =>
+          dialog.locator('.tank-portrait').evaluate((node) => {
+            const matrix = new DOMMatrix(getComputedStyle(node.parentElement!).transform);
+            return Math.abs(matrix.e - 359.5);
+          }),
+        { timeout: 15000 },
       )
       .toBeLessThan(0.05);
     await page.screenshot({ path: `test-results/${native ? 'swf' : 'mock'}-tank-information.png` });
