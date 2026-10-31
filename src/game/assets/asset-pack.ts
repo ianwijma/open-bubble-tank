@@ -3,6 +3,8 @@ import type { Projectile, Rect, Tank, TankDesign, TankPart } from '../core/types
 import { Random, rotate } from '../core/math';
 import { SwfClip } from './swf-clip';
 import { partSnapshot } from './part-snapshot';
+import { PartPlayback } from './part-playback';
+import { massiveChargeFrame } from '../core/mounted-art';
 import {
   mockProjectileBounds,
   projectileScriptBounds,
@@ -207,7 +209,8 @@ export class AssetPack {
   private classFrames = new Map<number, Raster>();
   private classPoses = new Map<number, SwfClip>();
   private positivePosters = new Map<number, Raster>();
-  private partClips = new WeakMap<Tank, { design: TankDesign; parts: Map<string, SwfClip> }>();
+  private partClips = new WeakMap<Tank, { design: TankDesign; parts: Map<string, PartPlayback> }>();
+  private mockMountedFrames = new Map<number, Raster>();
   private forcefieldClones = new WeakMap<Tank, { parts: Map<string, SwfClip>; radius: number }>();
   private scriptGeometry: ScriptBoundsSource = {
     leafBounds: (id) => {
@@ -610,14 +613,34 @@ export class AssetPack {
       this.partClips.set(tank, owner);
     }
     const age = tank.artAge + 1;
-    let clip = owner.parts.get(part.key);
-    if (!clip || clip.age > age) {
+    let playback = owner.parts.get(part.key);
+    if (!playback || playback.clip.age > age) {
       // Painting/contact queries share a private stream rather than consuming gameplay RNG.
-      clip = this.newPartClip(tank, part);
-      owner.parts.set(part.key, clip);
+      playback = new PartPlayback(this.newPartClip(tank, part));
+      owner.parts.set(part.key, playback);
     }
-    clip.advance(age, part.y);
-    return clip;
+    return playback.advance(
+      age,
+      part.y,
+      tank.guns.find((g) => g.part.key === part.key)?.mountedPlay,
+    );
+  }
+  livePart(tank: Tank, part: TankPart) {
+    if (this.mode === 'mock' && part.type === 3008) {
+      const frame = massiveChargeFrame(
+        tank.guns.find((g) => g.part.key === part.key),
+        tank.artAge,
+      );
+      if (frame > 1) {
+        let raster = this.mockMountedFrames.get(frame);
+        if (!raster) {
+          raster = mockPart(part.type, frame);
+          this.mockMountedFrames.set(frame, raster);
+        }
+        return raster;
+      }
+    }
+    return this.part(part.type, tank.artAge + tank.phase, part.y);
   }
   private newPartClip(tank: Tank, part: TankPart, clone = false) {
     let seed = Math.imul(tank.uid + 1, 0x9e3779b1) ^ (clone ? 0x46f13d : 0);
@@ -653,7 +676,7 @@ export class AssetPack {
       );
       return { width: bounds?.width ?? 0, height: bounds?.height ?? 0 };
     }
-    const bounds = this.part(part.type);
+    const bounds = clone ? this.part(part.type) : this.livePart(tank, part);
     return {
       width: Math.abs(matrix.a) * bounds.width + Math.abs(matrix.c) * bounds.height,
       height: Math.abs(matrix.b) * bounds.width + Math.abs(matrix.d) * bounds.height,
@@ -861,7 +884,7 @@ export class AssetPack {
       const symbol = partById(p.type)?.symbol;
       if (symbol) return this.hitClip(this.partClip(t, p), local.x, local.y);
     }
-    return alphaHit(this.part(p.type, t.artAge + t.phase), local.x, local.y);
+    return alphaHit(this.livePart(t, p), local.x, local.y);
   };
   preview(design: TankDesign, size = 130): string {
     const canvas = document.createElement('canvas');
@@ -896,6 +919,7 @@ export class AssetPack {
     this.classPoses.clear();
     this.positivePosters.clear();
     this.partClips = new WeakMap();
+    this.mockMountedFrames.clear();
     this.forcefieldClones = new WeakMap();
     this.morphRasters.clear();
     this.morphPixels = 0;
