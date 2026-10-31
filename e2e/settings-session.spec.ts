@@ -1,3 +1,4 @@
+import { waitForMainMenu } from './helpers/main-menu';
 import { expect, test, type Page } from '@playwright/test';
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -6,6 +7,7 @@ const swf =
 async function load(page: Page, native: boolean) {
   if (native) await page.getByLabel('Bubble Tanks 3 Flash file').setInputFiles(swf);
   else await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await waitForMainMenu(page);
   await expect(page.getByRole('button', { name: 'Play', exact: true })).toBeVisible({
     timeout: 60000,
   });
@@ -75,6 +77,7 @@ for (const native of [false, true]) {
     await expect(page.getByRole('radio', { name: '35 FPS' })).toBeChecked();
     await page.getByRole('button', { name: 'DONE' }).click();
     await page.getByRole('button', { name: 'Main menu', exact: true }).click();
+    await waitForMainMenu(page);
     await page.getByRole('button', { name: 'Settings', exact: true }).click();
     await stageRate(page, 50, 35);
     await expect(page.getByRole('radio', { name: '35 FPS' })).toBeChecked();

@@ -29,6 +29,8 @@ for (const native of [false, true])
     };
     await advance(95);
     await advance(1);
+    // The native title splash is above the controls and still covers Credits at this frame.
+    await advance(100);
     await page.getByRole('button', { name: 'Credits', exact: true }).click();
     const dialog = page.getByRole('dialog', { name: 'Credits', exact: true }),
       pane = dialog.locator('.credits-content');

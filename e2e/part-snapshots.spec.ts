@@ -1,3 +1,4 @@
+import { waitForMainMenu } from './helpers/main-menu';
 import { expect, test } from '@playwright/test';
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -74,6 +75,7 @@ for (const native of [false, true]) {
     await page.goto('/');
     if (native) await page.getByLabel('Bubble Tanks 3 Flash file').setInputFiles(swf);
     else await page.getByRole('button', { name: 'Play with mock assets' }).click();
+    await waitForMainMenu(page);
     await page.getByRole('button', { name: 'My tanks', exact: true }).click({ timeout: 60000 });
     const bodies: TankPart[] = Array.from({ length: 4 }, (_, i) => ({
       ...starter.parts[0],

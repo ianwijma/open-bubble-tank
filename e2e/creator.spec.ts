@@ -1,3 +1,4 @@
+import { waitForMainMenu } from './helpers/main-menu';
 import { test, expect, type Page } from '@playwright/test';
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -40,6 +41,7 @@ for (const assets of ['mock', 'SWF'])
     await page.goto('/');
     if (assets === 'SWF') await page.getByLabel('Bubble Tanks 3 Flash file').setInputFiles(swf);
     else await page.getByRole('button', { name: 'Play with mock assets' }).click();
+    await waitForMainMenu(page);
     await page.getByRole('button', { name: 'My tanks', exact: true }).click({ timeout: 60000 });
     await page.getByLabel('Import tank design').setInputFiles({
       name: 'selection.json',

@@ -88,6 +88,12 @@ for (const native of [false, true]) {
     expect(Number(await menu.getAttribute('data-control-alpha'))).toBeGreaterThanOrEqual(1);
     await advance(1);
     await expect(menu).toHaveAttribute('data-menu-parked', 'false');
+    if (native) {
+      // Controls are present before the title splash above them has finished.
+      await page.getByRole('button', { name: 'Settings', exact: true }).click();
+      await expect(page.locator('#stage')).toHaveAttribute('data-menu-action-count', '0');
+      await advance(100);
+    }
     await page.getByRole('button', { name: 'Settings', exact: true }).click();
     await expect(overlay).toHaveAttribute('disabled', '');
     if (native) {

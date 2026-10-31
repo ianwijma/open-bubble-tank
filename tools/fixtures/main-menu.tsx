@@ -51,10 +51,12 @@ function MenuFixture({
   pack,
   stage,
   motion,
+  reportAction,
 }: {
   pack: AssetPack;
   stage: StageRuntime;
   motion: MainMenuMotion;
+  reportAction: (name: string) => void;
 }) {
   const overlayRoot = useRef<HTMLFieldSetElement>(null);
   const [overlay, setOverlay] = useState<'settings' | 'credits' | null>(null);
@@ -72,6 +74,7 @@ function MenuFixture({
         covered={overlay !== null}
         overlayRoot={overlayRoot}
         onAction={(name) => {
+          reportAction(name);
           if ((name === 'settings_btn' || name === 'credits_btn') && motion.open())
             setOverlay(name === 'settings_btn' ? 'settings' : 'credits');
         }}
@@ -106,6 +109,11 @@ export function showMainMenuFlow(pack: AssetPack, host: HTMLElement) {
     motion = new MainMenuMotion();
   const root = createRoot(host),
     controls = document.createElement('div');
+  host.dataset.menuActionCount = '0';
+  const reportAction = (name: string) => {
+    host.dataset.menuAction = name;
+    host.dataset.menuActionCount = String(Number(host.dataset.menuActionCount) + 1);
+  };
   controls.id = 'main-menu-flow-controls';
   for (const count of [1, 5, 20, 95, 100]) {
     const button = document.createElement('button');
@@ -118,7 +126,7 @@ export function showMainMenuFlow(pack: AssetPack, host: HTMLElement) {
   host.before(controls);
   root.render(
     <StrictMode>
-      <MenuFixture pack={pack} stage={stage} motion={motion} />
+      <MenuFixture pack={pack} stage={stage} motion={motion} reportAction={reportAction} />
     </StrictMode>,
   );
   return () => {

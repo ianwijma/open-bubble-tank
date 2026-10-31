@@ -1,3 +1,4 @@
+import { waitForMainMenu } from './helpers/main-menu';
 import { test, expect, type Page } from '@playwright/test';
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -17,6 +18,7 @@ async function watchAudio(page: Page) {
   });
 }
 async function play(page: Page) {
+  await waitForMainMenu(page);
   await page.getByRole('button', { name: 'Play', exact: true }).click();
   await page
     .getByRole('dialog', { name: 'Choose your tanks' })
