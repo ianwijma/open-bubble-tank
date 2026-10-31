@@ -188,3 +188,6 @@ The procedural import now includes body timelines and fitted body leaves. Mock b
 
 
 `assets/button-display-list.ts` converts parsed SimpleButton state records into ordinary depth-sorted static placements. The parser retains matrices, color and supported filter metadata; hit-only geometry stays separate from up/over/down painting. This module does not execute button actions or own browser input. Creator views consume it in a following slice.
+
+
+`core/creator-controls.ts` exposes generated numeric control/slider layout from `tools/import-creator-controls.ts`. Text leaves retain separate paint and declared-bounds matrices so internal text transforms are applied once in each use. The import contains representative primitive data and glyph advances, without source paths/media. This slice supplies metadata; browser gesture ownership and creator rendering remain separate.
