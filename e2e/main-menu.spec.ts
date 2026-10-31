@@ -21,7 +21,34 @@ for (const native of [false, true]) {
       await page.getByRole('button', { name: `Menu advance ${count} frames`, exact: true }).click();
     };
     await expect(menu).toHaveAttribute('data-menu-parked', 'true');
-    if (native) await expect(menu).toHaveAttribute('data-title-frame', '1');
+    if (native) {
+      await expect(menu).toHaveAttribute('data-title-frame', '1');
+      // Empty source regions expose shape487's gray fill and lower-right white mask outline.
+      const stageBounds = (await page.locator('#stage').boundingBox())!;
+      const sample = (x: number, y: number, width: number, height: number) =>
+        page.screenshot({
+          clip: { x: stageBounds.x + x, y: stageBounds.y + y, width, height },
+        });
+      // A solid backdrop isolates mask painting from CSS gradient compositor dithering.
+      const background = await menu.evaluate((node) => {
+        const previous = node.style.background;
+        node.style.background = '#0b3c5a';
+        return previous;
+      });
+      const tint = await sample(10, 390, 20, 10),
+        outline = await sample(408, 417, 5, 5);
+      const canvas = menu.locator('canvas');
+      await canvas.evaluate((node) => (node.style.visibility = 'hidden'));
+      const backdropTint = await sample(10, 390, 20, 10),
+        backdropOutline = await sample(408, 417, 5, 5);
+      await canvas.evaluate((node) => (node.style.visibility = ''));
+      await menu.evaluate((node, previous) => (node.style.background = previous), background);
+      expect(tint.equals(backdropTint), 'the nonpainting mask must not tint the menu').toBe(true);
+      expect(
+        outline.equals(backdropOutline),
+        'the mask outline must not enter visible artwork',
+      ).toBe(true);
+    }
     await page
       .locator('#stage')
       .screenshot({ path: `test-results/${native ? 'native' : 'mock'}-menu-intro.png` });
