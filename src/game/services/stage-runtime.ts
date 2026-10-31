@@ -1,5 +1,6 @@
 import { MainEffects } from '../simulation/main-effects';
 import { StageCapture } from './stage-capture';
+import { MainBackground } from '../core/main-background';
 
 interface StageListener {
   elapsed?: (milliseconds: number) => void;
@@ -12,6 +13,7 @@ interface StageListener {
 export class StageRuntime {
   constructor(readonly effects = new MainEffects()) {}
   random: () => number = Math.random;
+  readonly background = new MainBackground(() => this.random());
   readonly capture = new StageCapture();
   private accumulator = 0;
   private listeners = new Set<StageListener>();
@@ -31,6 +33,8 @@ export class StageRuntime {
       this.effects.tick(this.random);
       for (const listener of this.listeners) listener.beforeStep?.();
       for (const listener of this.listeners) listener.step?.();
+      // Apply camera shifts after Main/world updates in the shared clock.
+      this.background.advance();
       this.accumulator = Math.max(0, this.accumulator - step);
     }
     for (const listener of this.listeners) listener.draw?.();

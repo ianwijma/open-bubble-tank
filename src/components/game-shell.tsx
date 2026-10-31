@@ -54,9 +54,10 @@ export default function GameShell() {
   const refresh = useCallback(() => setRevision((r) => r + 1), []);
   useEffect(() => {
     const loaded = loadProfile();
+    stage.background.efficient = loaded.settings.efficient;
     setMenuSettings(new MenuSettingsState(loaded.settings.mainFps));
     setProfile(loaded);
-  }, []);
+  }, [stage]);
   useEffect(() => {
     let wasFullscreen = document.fullscreenElement === frame.current;
     const changed = () => {
@@ -127,6 +128,7 @@ export default function GameShell() {
     setScreen(next);
   }
   function settingsChange(settings: Settings, control?: 'shake' | 'efficiency') {
+    if (control === 'efficiency') stage.background.efficient = settings.efficient;
     // Pause's standalone toggle only gates Massive Cannon. Menu and efficiency
     // controls also call the source controller's enable/disable methods.
     if (control === 'efficiency' || (control === 'shake' && screen === 'menu'))
