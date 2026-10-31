@@ -566,6 +566,53 @@ export function shapeToSVG(shape, bitmapByCid, { morph = false, usesFillWinding 
   return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${fmt(w)}px" height="${fmt(h)}px" viewBox="0 0 ${fmt(w)} ${fmt(h)}">${defsXml}${bodies.join('')}</svg>`;
 }
 
+/** Geometric fill/stroke contours for AVM hitTestPoint; paint alpha is irrelevant.
+ * Kept separate from SVG paint, filters, bitmap sampling and raster antialiasing.
+ * Coordinates stay in the shape's registration space, in original pixels.
+ */
+export function shapeHitGeometry(shape) {
+  const fills = [],
+    strokes = [];
+  for (const layer of [...new Set(shape.runs.map((run) => run.layer ?? 0))]) {
+    const fillBuckets = new Map(),
+      strokeBuckets = new Map();
+    for (const run of shape.runs.filter((run) => (run.layer ?? 0) === layer)) {
+      if (run.f0 !== run.f1) {
+        if (run.f0 > 0) {
+          if (!fillBuckets.has(run.f0)) fillBuckets.set(run.f0, []);
+          fillBuckets.get(run.f0).push(reverseRun(run));
+        }
+        if (run.f1 > 0) {
+          if (!fillBuckets.has(run.f1)) fillBuckets.set(run.f1, []);
+          fillBuckets.get(run.f1).push(run);
+        }
+      }
+      if (run.line > 0) {
+        if (!strokeBuckets.has(run.line)) strokeBuckets.set(run.line, []);
+        strokeBuckets.get(run.line).push(opsToPath(run, 0, 0));
+      }
+    }
+    for (const [index, runs] of fillBuckets)
+      if (shape.fills[index - 1])
+        fills.push({
+          path: fillPath(runs, 0, 0),
+          rule: shape.usesFillWinding ? 'nonzero' : 'evenodd',
+        });
+    for (const [index, paths] of strokeBuckets) {
+      const line = shape.lines[index - 1];
+      if (!line) continue;
+      strokes.push({
+        path: paths.join(' '),
+        width: px(line.width ?? line.startWidth ?? 0),
+        cap: { 0: 'round', 1: 'butt', 2: 'square' }[line.startCap ?? 0] ?? 'round',
+        join: { 0: 'round', 1: 'bevel', 2: 'miter' }[line.join ?? 0] ?? 'round',
+        miter: line.miterLimit ?? 10,
+      });
+    }
+  }
+  return { fills, strokes };
+}
+
 // ---------------------------------------------------------------------------
 // Tag parsers
 // ---------------------------------------------------------------------------
