@@ -123,6 +123,8 @@ export function Dialog({
   className = '',
   closeKey,
   onShortcutClose,
+  active = true,
+  scrimClassName = '',
 }: {
   title: string;
   children: React.ReactNode;
@@ -130,22 +132,29 @@ export function Dialog({
   className?: string;
   closeKey?: string;
   onShortcutClose?: () => void;
+  active?: boolean;
+  scrimClassName?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   // Swapping dialogs must transfer keyboard focus in the same DOM commit.
   // A passive effect leaves a gap where the next key is delivered to BODY.
   useLayoutEffect(() => {
+    if (!active) return;
     const previous = document.activeElement as HTMLElement | null;
     ref.current?.focus();
     return () => previous?.focus({ preventScroll: true });
-  }, []);
+  }, [active]);
   return (
-    <div className="modal-scrim">
+    <div
+      className={`modal-scrim ${scrimClassName}`}
+      aria-hidden={!active || undefined}
+      inert={!active}
+    >
       <div
         ref={ref}
         tabIndex={-1}
-        role="dialog"
-        aria-modal="true"
+        role={active ? 'dialog' : undefined}
+        aria-modal={active || undefined}
         aria-label={title}
         className={`dialog ${className}`}
         onKeyDown={(e) => {

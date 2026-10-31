@@ -1255,6 +1255,18 @@ kbd {
   position: absolute;
   inset: 0;
 }
+.pause-bitmap {
+  position: absolute;
+  inset: 0;
+  width: 550px;
+  height: 450px;
+  pointer-events: none;
+}
+.modal-scrim.pause-bitmap-scrim,
+.modal-scrim.pause-owned-overlay {
+  background: transparent;
+  backdrop-filter: none;
+}
 .pause-orb:not(:has(img)) {
   background: #a6d2e42e;
 }

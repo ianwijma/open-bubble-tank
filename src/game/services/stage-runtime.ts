@@ -1,4 +1,5 @@
 import { MainEffects } from '../simulation/main-effects';
+import { StageCapture } from './stage-capture';
 
 interface StageListener {
   elapsed?: (milliseconds: number) => void;
@@ -11,6 +12,7 @@ interface StageListener {
 export class StageRuntime {
   constructor(readonly effects = new MainEffects()) {}
   random: () => number = Math.random;
+  readonly capture = new StageCapture();
   private accumulator = 0;
   private listeners = new Set<StageListener>();
   subscribe(listener: StageListener) {
