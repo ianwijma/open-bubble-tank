@@ -13,7 +13,7 @@ const browser = await chromium.launch({
   ],
 });
 const page = await browser.newPage({ viewport: { width: 1100, height: 1000 } });
-await page.goto('http://127.0.0.1:3103');
+await page.goto(process.env.BT3_REFERENCE_URL ?? 'http://127.0.0.1:3103');
 console.log(`Owned reference browser CDP: http://127.0.0.1:${port}`);
 await new Promise<void>((resolve) => {
   process.once('SIGINT', () => {
