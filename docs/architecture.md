@@ -4,7 +4,7 @@
 
 [PixiJS](https://pixijs.com/8.x/guides/components/application) supplies the WebGL renderer and scene graph. The game does not need a rigid-body physics engine, a tile map, or an entity framework: the recovered simulation uses authored tank parts, point-against-art collision, independent velocity axes, and frame timers. Keeping those rules in plain TypeScript avoids coupling them to a framework's physics or variable-time integration.
 
-Next.js supplies the application shell, TypeScript build, and static delivery. Tailwind is installed through its PostCSS integration; stage-specific styling is kept in one stylesheet so original Flash coordinates can remain explicit. Pixi is imported only when entering a game. No server-side game API or database is required.
+Next.js supplies the application shell, TypeScript build, and static delivery. Tailwind is installed through its PostCSS integration; stage-specific styling is kept in one stylesheet so original Flash coordinates can remain explicit. Pixi is imported on demand by rendered screens. No server-side game API or database is required.
 
 ## Ownership and flow
 
@@ -15,6 +15,8 @@ Next.js supplies the application shell, TypeScript build, and static delivery. T
 5. `World.step` advances one original game frame. `weapons.ts`, `projectiles.ts`, `ai.ts`, `waves.ts`, and `tank.ts` implement separate systems. Beam contact, healer patient ownership, turret construction, and status callbacks/clocks are isolated in `beams.ts`, `healing.ts`, `turrets.ts`, and `status.ts`. Rendering and browser storage are absent from these rules.
 6. `GameRenderer` positions the camera at the avatar, draws fields/entities/projectiles/pickups/effects, and updates `SwfSymbolView` display lists. `AssetPack` supplies matching animated alpha-mask hit tests.
 7. React observes a revision counter, approximately ten updates per second at 50 FPS; it does not render every simulation frame.
+
+`MainMenuMotion` belongs to each menu instance and advances on the shared `StageRuntime`. `MainMenuView` retains the supplied-SWF title and control clip trees through Settings/Credits visits; DOM buttons supply accessible input over the native canvas. Per-frame rendering uses refs and stage subscriptions, while `GameShell` owns screen changes and the guarded overlay. A new menu instance resets its intro; closing a child pane preserves its title timeline.
 
 Attached status marks are simulation state: their chosen part positions, rotations, variants, and replacement lifetime stay stable across frames and inactive fields. `SwfTankStatusView` consumes those choices without drawing random values or changing game rules. It holds variant frames while allowing nested clips to animate and applies the recovered infection color matrix to the complete tank view. Screen ink is an independently queued global effect; its lifetime and overlap do not belong to an avatar.
 
