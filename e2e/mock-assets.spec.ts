@@ -29,7 +29,9 @@ for (const native of [false, true])
     );
     expect(proof.palette.player.r).toBeGreaterThan(proof.palette.player.b + 80);
     expect(proof.palette.enemy.r).toBeGreaterThan(proof.palette.enemy.b + 80);
-    expect(proof.palette.player.g).toBeGreaterThan(proof.palette.enemy.g + 15);
+    // Editor previews share the original gold; hostile live mounts receive the tint.
+    expect(Math.abs(proof.palette.player.g - proof.palette.enemy.g)).toBeLessThan(10);
+    expect(proof.livePalette.player.g).toBeGreaterThan(proof.livePalette.enemy.g + 8);
     expect(proof.palette.bodyAlpha).toBeGreaterThan(16);
     expect(proof.palette.bodyAlpha).toBeLessThan(200);
     expect(proof.panels).toHaveLength(8);

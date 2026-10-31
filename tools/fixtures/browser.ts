@@ -36,6 +36,7 @@ import { showMockPartsProof } from './mock-parts';
 import { showPartSnapshots } from './part-snapshots';
 import { showMountedArt } from './mounted-art';
 import { showForcefieldLifecycle } from './forcefield-lifecycle';
+import { showMockPartMotion } from './mock-part-motion';
 
 const file = document.querySelector<HTMLInputElement>('#swf')!;
 const fixture = document.querySelector<HTMLSelectElement>('#fixture')!;
@@ -110,6 +111,12 @@ async function reset() {
   world = undefined;
   stage.replaceChildren();
   stage.style.height = '';
+  if (fixture.value === 'mock-part-motion') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    status.dataset.mockPartMotion = JSON.stringify(await showMockPartMotion(pack, stage));
+    status.textContent = 'Ready · all31 weapon and behavior previews with source motion';
+    return;
+  }
   if (fixture.value === 'forcefield-lifecycle') {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
     status.dataset.forcefieldLifecycle = JSON.stringify(await showForcefieldLifecycle(pack, stage));

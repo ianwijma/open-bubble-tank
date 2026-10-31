@@ -4,7 +4,6 @@ import { Random, rotate } from '../core/math';
 import { SwfClip } from './swf-clip';
 import { partSnapshot } from './part-snapshot';
 import { PartPlayback } from './part-playback';
-import { massiveChargeFrame } from '../core/mounted-art';
 import {
   mockProjectileBounds,
   projectileScriptBounds,
@@ -29,7 +28,8 @@ import effectArt from '../data/effect-art.json';
 import screenEffectArt from '../data/screen-effect-art.json';
 import mineArt from '../data/mine-art.json';
 import { buildDisplayList } from './display-list';
-import { mockPart } from './mock-part';
+import { mockPart, mockPartLeaf } from './mock-part';
+import mockPartTimelines from '../data/mock-part-timelines.json';
 import { mockProjectileHit } from './mock-projectile';
 import { authoredProjectileBounds } from './projectile-geometry';
 import { INFECTED_ART, STATUS_ART, PROTECTION_ART } from '../data/status-art';
@@ -210,7 +210,6 @@ export class AssetPack {
   private classPoses = new Map<number, SwfClip>();
   private positivePosters = new Map<number, Raster>();
   private partClips = new WeakMap<Tank, { design: TankDesign; parts: Map<string, PartPlayback> }>();
-  private mockMountedFrames = new Map<number, Raster>();
   private forcefieldClones = new WeakMap<
     Tank,
     {
@@ -241,8 +240,22 @@ export class AssetPack {
   }
   static async mock(onProgress: (n: number, label: string) => void = () => {}) {
     const pack = new AssetPack('mock');
+    pack.sprites = new Map(mockPartTimelines.sprites.map((s) => [s.id, s as SpriteInfo]));
+    pack.shapes = new Map(mockPartTimelines.shapes.map((s) => [s.id, s]));
+    for (const { id, bounds: b } of mockPartTimelines.shapes) {
+      const raster = mockPartLeaf(id, {
+        x: b.xMin / 20,
+        y: b.yMin / 20,
+        width: (b.xMax - b.xMin) / 20,
+        height: (b.yMax - b.yMin) / 20,
+      });
+      if (raster) pack.leaves.set(id, raster);
+    }
     for (const [i, part] of PARTS.entries()) {
-      pack.frames.set(part.id, [mockPart(part.id)]);
+      const raster = mockPart(part.id);
+      pack.frames.set(part.id, [raster]);
+      // Body fallback remains procedural; it can share the creator's live scene.
+      if (part.id < 2000) pack.leaves.set(part.symbol, raster);
       onProgress((i + 1) / PARTS.length, 'Drawing mock bubbles');
     }
     return pack;
@@ -557,6 +570,10 @@ export class AssetPack {
   spriteInfo(id: number) {
     return this.sprites.get(id);
   }
+  hasPartTimeline(id: number) {
+    const symbol = partById(id)?.symbol;
+    return symbol !== undefined && this.sprites.has(symbol);
+  }
   isMorph(id: number) {
     return this.morphs.has(id);
   }
@@ -634,20 +651,6 @@ export class AssetPack {
     );
   }
   livePart(tank: Tank, part: TankPart) {
-    if (this.mode === 'mock' && part.type === 3008) {
-      const frame = massiveChargeFrame(
-        tank.guns.find((g) => g.part.key === part.key),
-        tank.artAge,
-      );
-      if (frame > 1) {
-        let raster = this.mockMountedFrames.get(frame);
-        if (!raster) {
-          raster = mockPart(part.type, frame);
-          this.mockMountedFrames.set(frame, raster);
-        }
-        return raster;
-      }
-    }
     return this.part(part.type, tank.artAge + tank.phase, part.y);
   }
   private newPartClip(tank: Tank, part: TankPart, clone = false) {
@@ -672,7 +675,7 @@ export class AssetPack {
       tx: 0,
       ty: 0,
     };
-    if (this.mode === 'swf') {
+    if (this.mode === 'swf' || this.hasPartTimeline(part.type)) {
       const bounds = scriptBounds(
         this.scriptGeometry,
         partById(part.type)!.symbol,
@@ -698,7 +701,11 @@ export class AssetPack {
         .map((p) => ({
           x: p.x,
           y: p.y,
-          ...this.partSize(tank, p, this.mode === 'swf' ? this.partClip(tank, p) : undefined),
+          ...this.partSize(
+            tank,
+            p,
+            this.hasPartTimeline(p.type) ? this.partClip(tank, p) : undefined,
+          ),
         })),
     );
   private forcefieldClone(tank: Tank) {
@@ -706,7 +713,9 @@ export class AssetPack {
     if (!clone || clone.design !== tank.design || clone.generation !== tank.forcefieldGeneration) {
       const parts = new Map<string, SwfClip>();
       const children = tank.design.parts.map((part) => {
-        const pose = this.mode === 'swf' ? this.newPartClip(tank, part, true) : undefined;
+        const pose = this.hasPartTimeline(part.type)
+          ? this.newPartClip(tank, part, true)
+          : undefined;
         pose?.advance(1, part.y);
         if (pose) parts.set(part.key, pose);
         return { x: part.x, y: part.y, ...this.partSize(tank, part, pose, true) };
@@ -728,6 +737,9 @@ export class AssetPack {
     const pose = this.forcefieldClone(tank).parts.get(part.key)!;
     pose.advance(tank.artAge - tank.forcefieldStartedAt + 1, part.y);
     return pose;
+  }
+  clipScriptBounds(pose: SwfClip) {
+    return scriptBounds(this.scriptGeometry, pose.id, pose.age, undefined, undefined, [], 0, pose);
   }
   hitClip(clip: SwfClip, x: number, y: number, ratio = 0): boolean {
     if (this.morphs.has(clip.id)) return alphaHit(this.morphRaster(clip.id, ratio)!, x, y);
@@ -894,7 +906,7 @@ export class AssetPack {
       { x: (pt.x - p.x) / p.scale, y: (pt.y - p.y) / p.scale },
       -(gun?.angle ?? p.rotation),
     );
-    if (this.mode === 'swf') {
+    if (this.mode === 'swf' || this.hasPartTimeline(p.type)) {
       const symbol = partById(p.type)?.symbol;
       if (symbol) return this.hitClip(this.partClip(t, p), local.x, local.y);
     }
@@ -933,7 +945,6 @@ export class AssetPack {
     this.classPoses.clear();
     this.positivePosters.clear();
     this.partClips = new WeakMap();
-    this.mockMountedFrames.clear();
     this.forcefieldClones = new WeakMap();
     this.morphRasters.clear();
     this.morphPixels = 0;

@@ -28,6 +28,7 @@ export async function showMockAssetsProof(native: AssetPack, host: HTMLElement) 
   ctx.fillStyle = '#0b3c5a';
   ctx.fillRect(0, 0, 550, 450);
   const panels: { row: number; column: number; ink: number; painted: number }[] = [];
+  let livePalette: { player: { g: number }; enemy: { g: number } } | undefined;
   const capture = (column: number, row: number, label: string, entities = false) => {
     const renderer = renderers[column],
       world = worlds[column];
@@ -42,6 +43,23 @@ export async function showMockAssetsProof(native: AssetPack, host: HTMLElement) 
       resolution: 2,
     }) as HTMLCanvasElement;
     const pixels = frame.getContext('2d')!.getImageData(0, 0, frame.width, frame.height).data;
+    if (row === 0 && column === 1) {
+      const mean = (right: boolean) => {
+        let green = 0,
+          count = 0;
+        for (let i = 0; i < pixels.length; i += 4)
+          if (
+            (i / 4) % frame.width >= frame.width / 2 === right &&
+            pixels[i + 3] > 128 &&
+            pixels[i] - pixels[i + 2] > 100
+          ) {
+            green += pixels[i + 1];
+            count++;
+          }
+        return { g: green / count };
+      };
+      livePalette = { player: mean(false), enemy: mean(true) };
+    }
     let ink = 0;
     for (let i = 3; i < pixels.length; i += 4) if (pixels[i]) ink++;
     const x = column * 275,
@@ -203,6 +221,7 @@ export async function showMockAssetsProof(native: AssetPack, host: HTMLElement) 
       intercept,
       panels,
       palette: { player: palette(2001), enemy: palette(4001), bodyAlpha },
+      livePalette,
       galleryHash: galleryHash >>> 0,
     };
   } finally {

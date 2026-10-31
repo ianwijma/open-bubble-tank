@@ -71,7 +71,7 @@ const compounds: Record<number, number[][]> = {
   ],
 };
 const circular = new Set([14, 21, 33, 41, 694, 718, 719, 2449]);
-function recover(part: { id: number; symbol: number }, chargeFrame?: number, matrix = identity) {
+function recover(part: { id: number; symbol: number }) {
   // effect_Massive_Bullet_94.frame1 stops720 on its empty first frame.
   // A blind frame2 snapshot includes its charging particles around the idle gun.
   // _-KE.frame1 also stops Rotating Machine Gun701 before its alternate frame2.
@@ -130,7 +130,7 @@ function recover(part: { id: number; symbol: number }, chargeFrame?: number, mat
     const sprite = sprites.get(id);
     if (!sprite) throw new Error(`Unknown part symbol ${id}`);
     // Same frozen convention as creator thumbnails, except the stopped charge clip above.
-    for (const p of buildDisplayList(sprite, id === 720 && chargeFrame ? chargeFrame : frame)) {
+    for (const p of buildDisplayList(sprite, frame)) {
       if (p.clipDepth !== undefined || p.filters?.length || p.blendMode)
         throw new Error(`Part ${part.id}: unsupported compositing at ${id}/${p.depth}`);
       const color = p.color;
@@ -156,14 +156,14 @@ function recover(part: { id: number; symbol: number }, chargeFrame?: number, mat
       );
     }
   }
-  visit(part.symbol, matrix);
+  visit(part.symbol, identity);
   const x = xs.length ? Math.min(...xs) : 0,
     y = ys.length ? Math.min(...ys) : 0;
   return [
     part.id,
     {
       symbol: part.symbol,
-      frame: chargeFrame ?? frame,
+      frame,
       bounds: {
         x,
         y,
@@ -179,19 +179,6 @@ await writeFile(
   'src/game/data/part-geometry.json',
   JSON.stringify(Object.fromEntries(entries)) + '\n',
 );
-const massive = PARTS.find((p) => p.id === 3008)!;
-const charge = buildDisplayList(sprites.get(massive.symbol)!, 1).find(
-  (p) => p.name === 'bullet_mc',
-)!;
-await writeFile(
-  'src/game/data/massive-charge-geometry.json',
-  JSON.stringify(
-    Array.from(
-      { length: 26 },
-      (_, i) => recover({ id: massive.id, symbol: charge.charId }, i + 2, charge.matrix)[1],
-    ),
-  ) + '\n',
-);
 console.log(
-  `Imported ${entries.length} numeric gun/module idle layouts and26 Massive charge frames; no vector paths or media.`,
+  `Imported ${entries.length} numeric gun/module idle layouts; no vector paths or media.`,
 );
