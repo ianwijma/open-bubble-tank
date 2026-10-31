@@ -62,10 +62,14 @@ export class CreatorArtwork {
       wrapper = new Container();
     view.update(1, undefined, 0, part.y);
     const raster = this.pack.part(part.type);
-    const bounds = view.scriptBounds() ?? {
-      width: raster.width - (this.pack.mode === 'swf' ? 4 : 6),
-      height: raster.height - (this.pack.mode === 'swf' ? 4 : 6),
-    };
+    const bounds =
+      view.scriptBounds() ??
+      (this.pack.hasPartTimeline(part.type)
+        ? { width: 0, height: 0 }
+        : {
+            width: raster.width - (this.pack.mode === 'swf' ? 4 : 6),
+            height: raster.height - (this.pack.mode === 'swf' ? 4 : 6),
+          });
     wrapper.addChild(view.root);
     return {
       type: part.type,

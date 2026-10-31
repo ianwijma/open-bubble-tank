@@ -3,6 +3,7 @@ import data from '../src/game/data/mock-part-timelines.json';
 import { SwfClip, type ClipSource } from '../src/game/assets/swf-clip';
 import { buildDisplayList } from '../src/game/assets/display-list';
 import type { SpriteInfo } from '../src/game/assets/asset-pack';
+import { PARTS } from '../src/game/data/catalog';
 const sprites = new Map(data.sprites.map((s) => [s.id, s as SpriteInfo]));
 const source: ClipSource = {
   spriteInfo: (id) => sprites.get(id),
@@ -42,4 +43,23 @@ test('Sapper retains its late pale-pellet transform and Carrier loops before its
   });
   expect(pose(693, 20).children.get(25)!.placement.matrix.ty / 20).toBe(-16.5);
   for (const age of [40, 79, 118, 157]) expect(pose(695, age).frame).toBe(1);
+});
+
+test('all body roots retain their source timelines, including three static base variants', () => {
+  expect(PARTS.filter((p) => p.id < 2000)).toHaveLength(20);
+  for (const part of PARTS) expect(sprites.has(part.symbol), String(part.id)).toBe(true);
+  for (const id of [1782, 2185, 29]) expect(sprites.get(id)!.frameCount).toBe(1);
+  expect(pose(680, 25).children.get(2)!.placement.matrix.a).toBe(0.653839111328125);
+  expect(pose(680, 40).children.get(2)!.placement.matrix.a).toBe(1);
+});
+
+test('body clusters retain authored travel, angles, independent children and long loops', () => {
+  expect(pose(2448, 1).children.get(1)!.placement.matrix.tx).toBe(1);
+  expect(pose(2448, 25).children.get(1)!.placement.matrix.tx).toBe(456);
+  expect(pose(2446, 25).children.get(3)!.placement.matrix.b).toBe(0.178009033203125);
+  const bladder = pose(2445, 341);
+  expect(bladder.frame).toBe(1);
+  expect(bladder.children.get(1)!.clip.age).toBeGreaterThan(300);
+  expect(pose(2447, 1).placements).toHaveLength(0); // The source allows a rounded random start of0→1.
+  expect(pose(2447, 25).placements).toHaveLength(7);
 });

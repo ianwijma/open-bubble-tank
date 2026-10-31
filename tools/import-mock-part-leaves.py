@@ -19,6 +19,13 @@ COMPOUNDS={
 }
 COLORS={14:{'base':'#d15503','light':'#ffd9b3','spot':'#f78311'},2449:{'base':'#cc8e00','light':'#fee1a3','spot':'#f7ac00'},718:{'base':'#ff6699','light':'#dda2b4','spot':'#9c3857'},719:{'base':'#ff6699','light':'#dda2b4','spot':'#9c3857'}}
 STANDARD={'base':'#d2a800','light':'#ffeda6','spot':'#fbc900'}
+BODY_LEAVES=[16,18,26,28,39,45,679,681,683,685,2184,2186]
+for id in BODY_LEAVES:
+    #679/681/683 contain an earlier red fill under the same opaque blue outline.
+    # The later blue fills cover it; only the visible blue palette is approximated.
+    COLORS[id]=({'base':'#05638b','light':'#8cc6ec','spot':'#2694dd'} if id in [16,18,2184,2186]
+                else {'base':'#32aae4','light':'#c9e3f5','spot':'#6cbff0'} if id in [26,28,39,45]
+                else {'base':'#0781b4','light':'#b6dbf3','spot':'#4fa9e3'})
 def subpaths(data):
     a=re.findall(r'[MLQZ]|-?\d+(?:\.\d+)?',data);i=0;cmd=None;pos=(0,0);paths=[];pts=[]
     while i<len(a):
@@ -81,4 +88,4 @@ def rounded(obj):
     if isinstance(obj,dict):return {k:rounded(v)for k,v in obj.items()}
     if isinstance(obj,list):return [rounded(v)for v in obj]
     return obj
-if __name__=='__main__':print(json.dumps(rounded({id:recover(id)for id in [14,21,33,41,694,718,719,2449,698,699,1822,1824]}),indent=2))
+if __name__=='__main__':print(json.dumps(rounded({id:recover(id)for id in [14,21,33,41,694,718,719,2449,698,699,1822,1824]+BODY_LEAVES}),indent=2))
