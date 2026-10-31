@@ -32,6 +32,7 @@ import { showScreenEffectsProof } from './screen-effects';
 import { showMainEffects } from './main-effects';
 import { showCollapseProof } from './collapse';
 import { showGlowProof } from './glows';
+import { showMockPartsProof } from './mock-parts';
 
 const file = document.querySelector<HTMLInputElement>('#swf')!;
 const fixture = document.querySelector<HTMLSelectElement>('#fixture')!;
@@ -105,6 +106,13 @@ async function reset() {
   renderer = undefined;
   world = undefined;
   stage.replaceChildren();
+  stage.style.height = '';
+  if (fixture.value === 'mock-parts') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    status.dataset.mockParts = JSON.stringify(await showMockPartsProof(pack, stage));
+    status.textContent = 'Ready · all gun and behavior module silhouettes';
+    return;
+  }
   if (fixture.value === 'glows') {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
     const proof = await showGlowProof(pack, stage);
