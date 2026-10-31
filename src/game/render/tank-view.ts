@@ -5,12 +5,14 @@ import { partById } from '../data/catalog';
 import { SwfSymbolView, type RasterTextures } from './swf-symbol-view';
 import { SwfTankStatusView } from './swf-tank-status-view';
 import { SwfProtectionView } from './swf-protection-view';
+import { legacyShieldFilm } from '../core/shield-art';
 
 /** Shared live pose for the world and tank-information portrait. No simulation clocks advance here. */
 export class TankView {
   container = new Container();
   private parts: { root: Container; animation?: SwfSymbolView; sprite?: Sprite }[];
   private shield = new Graphics();
+  private mountedShields = new Map<TankChild, Graphics>();
   private status?: SwfTankStatusView;
   private protection?: SwfProtectionView;
   constructor(
@@ -72,7 +74,29 @@ export class TankView {
       }
     }
     this.shield.clear();
-    const shieldFilm = t.shield > 0 || t.displayChildren.includes('shield-film');
+    const shieldFilm = legacyShieldFilm(t);
+    if (!this.protection) {
+      const films = t.shieldClips.filter((clip) => clip.kind === 'film');
+      const keys = new Set<TankChild>(films.map((clip) => clip.key));
+      for (const [key, view] of this.mountedShields)
+        if (!keys.has(key)) {
+          view.destroy();
+          this.mountedShields.delete(key);
+        }
+      for (const clip of films) {
+        let view = this.mountedShields.get(clip.key);
+        if (!view) {
+          view = new Graphics();
+          view
+            .circle(0, 0, Number.isNaN(clip.diameter) ? 65 : clip.diameter / 2)
+            .fill({ color: 0xaaddff, alpha: 0.07 })
+            .stroke({ color: 0xbbeeff, alpha: 0.65, width: 1.5 });
+          this.mountedShields.set(clip.key, view);
+        }
+        view.alpha = t.alpha;
+        view.visible = t.displayChildren.includes(clip.key);
+      }
+    }
     if (
       !this.protection &&
       (shieldFilm ||
@@ -106,13 +130,9 @@ export class TankView {
     ]);
     entries.push(...(this.status?.displayEntries() ?? []));
     entries.push(...(this.protection?.displayEntries() ?? []));
+    entries.push(...this.mountedShields);
     if (!this.protection)
-      entries.push([
-        tank.shield > 0 || tank.displayChildren.includes('shield-film')
-          ? 'shield-film'
-          : 'forcefield',
-        this.shield,
-      ]);
+      entries.push([legacyShieldFilm(tank) ? 'shield-film' : 'forcefield', this.shield]);
     const order = new Map(tank.displayChildren.map((key, i) => [key, i]));
     entries.sort((a, b) => (order.get(a[0]) ?? Infinity) - (order.get(b[0]) ?? Infinity));
     for (const [index, [, child]] of entries.entries()) {

@@ -11,6 +11,7 @@ import {
   type ScriptBoundsSource,
 } from './projectile-bounds';
 import { protectionRadius, protectionScale } from '../core/protection-size';
+import { legacyShieldFilm } from '../core/shield-art';
 import { MINIMAP } from '../core/minimap';
 import { HUD } from '../core/hud';
 import { WIN_SCREEN } from '../core/win-screen';
@@ -976,13 +977,31 @@ export class AssetPack {
         this.symbolHit(id, age, point.x / scale.x, point.y / scale.y, 0, undefined, 0, childInverse)
       );
     };
-    const film = tank.shield > 0 || tank.displayChildren.includes('shield-film');
+    const film = legacyShieldFilm(tank);
     const hasHit = film || tank.displayChildren.includes('shield-hit');
     const diameter = !hasHit
       ? 0
       : tank.side === 'player'
         ? (tank.shieldDiameter ?? this.protectionRadius(tank) * 2)
         : tank.radius * 2;
+    for (const clip of tank.shieldClips) {
+      if (!tank.displayChildren.includes(clip.key)) continue;
+      if (this.mode === 'swf') {
+        if (
+          scaled(
+            clip.kind === 'film' ? PROTECTION_ART.shield : PROTECTION_ART.shieldHit,
+            clip.kind === 'hit' ? Math.min(16, clip.age + 1) : clip.age + 1,
+            clip.angle,
+            clip.diameter,
+          )
+        )
+          return true;
+      } else if (
+        clip.kind === 'film' &&
+        Math.hypot(x, y) <= (Number.isNaN(clip.diameter) ? 130 : clip.diameter) / 2
+      )
+        return true;
+    }
     if (this.mode === 'swf') {
       if (tank.statusDecoration) {
         const decoration = tank.statusDecoration;
