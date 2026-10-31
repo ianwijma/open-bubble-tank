@@ -1,3 +1,4 @@
+import { showCreatorButtons } from './creator-buttons';
 import { showMainMenuFlow } from './main-menu';
 import { showNativeMenuPicking } from './native-menu-picking';
 import { showHotkeyInput } from './hotkey-input';
@@ -124,6 +125,12 @@ async function reset() {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
     unmountScreen = showHotkeyInput(stage);
     status.textContent = 'Ready · production keyboard input and profile validation';
+    return;
+  }
+  if (fixture.value === 'creator-buttons') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    unmountScreen = await showCreatorButtons(pack, stage);
+    status.textContent = 'Ready · creator button raster states';
     return;
   }
   if (fixture.value === 'native-menu-picking') {
