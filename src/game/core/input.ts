@@ -1,8 +1,11 @@
 import { STAGE } from './constants';
+import { canonicalHotkey, hotkeyDirections } from './hotkeys';
 import type { InputFrame, Settings } from './types';
 export class GameInput {
   private keys = new Set<string>();
   private fire = false;
+  private secondary = false;
+  private lockHeld = false;
   private aim: { x: number; y: number } = { x: STAGE.cx + 100, y: STAGE.cy };
   private pointer: { x: number; y: number } | null = null;
   private abort = new AbortController();
@@ -10,7 +13,7 @@ export class GameInput {
     private host: HTMLElement,
     private settings: () => Settings,
     onPause: () => void,
-    onLock: () => void,
+    private onLock: () => void,
     private onStopFire: () => void = () => {},
   ) {
     const signal = this.abort.signal;
@@ -52,17 +55,25 @@ export class GameInput {
         if (stage.querySelector('[role="dialog"],.creator.over-game')) return;
         if (!stage.contains(document.activeElement) && document.activeElement !== document.body)
           return;
-        if (e.code === 'Space' || e.code.startsWith('Arrow')) e.preventDefault();
-        this.keys.add(e.code);
-        if (!e.repeat && (e.code === settings().h5 || e.code === 'Escape')) {
+        const code = canonicalHotkey(e.code);
+        const bindings = settings();
+        if (
+          code === 'Space' ||
+          code.startsWith('Arrow') ||
+          [bindings.h1, bindings.h2, bindings.h3, bindings.h4, bindings.h5, bindings.h6].includes(
+            code,
+          )
+        )
+          e.preventDefault();
+        this.keys.add(code);
+        if (!e.repeat && (code === settings().h5 || code === 'Escape')) {
           e.preventDefault();
           onPause();
         }
-        if (!e.repeat && e.code === settings().h6) onLock();
       },
       { signal },
     );
-    window.addEventListener('keyup', (e) => this.keys.delete(e.code), { signal });
+    window.addEventListener('keyup', (e) => this.keys.delete(canonicalHotkey(e.code)), { signal });
     window.addEventListener(
       'blur',
       () => {
@@ -84,6 +95,12 @@ export class GameInput {
   }
   frame(): InputFrame {
     const s = this.settings();
+    const held = this.keys.has(s.h6),
+      activate = held && !this.lockHeld;
+    this.lockHeld = held;
+    if (activate) this.onLock();
+    if (!this.keys.has('Space')) this.secondary = false;
+    else if (s.h3 !== 'Space' && s.h4 !== 'Space') this.secondary = true;
     // Main can move under a stationary pointer during shake; Flash mouseX/Y
     // resolve against its current transform on every stage frame.
     if (this.pointer) {
@@ -94,12 +111,9 @@ export class GameInput {
       };
     }
     return {
-      up: this.keys.has(s.h1),
-      down: this.keys.has(s.h2),
-      left: this.keys.has(s.h3),
-      right: this.keys.has(s.h4),
+      ...hotkeyDirections(this.keys, s),
       fire: this.fire,
-      secondary: this.keys.has('Space'),
+      secondary: this.secondary,
       aim: {
         x: STAGE.cx + (this.aim.x - STAGE.cx) / s.zoom,
         y: STAGE.cy + (this.aim.y - STAGE.cy) / s.zoom,
@@ -109,6 +123,8 @@ export class GameInput {
   clear(stopFire = true) {
     this.keys.clear();
     this.fire = false;
+    this.secondary = false;
+    this.lockHeld = false;
     if (stopFire) this.onStopFire();
   }
   dispose() {
