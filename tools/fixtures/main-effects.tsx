@@ -19,6 +19,10 @@ function MainEffectsFixture({
 }) {
   const [menu, setMenu] = useState(false),
     [fps, setFps] = useState<Settings['fps']>(50);
+  const stackFlashes = () => {
+    runtime.effects.flash(0xff0000, 0.2);
+    runtime.effects.flash(0x0000ff, 0.5);
+  };
   return (
     <div className="site-shell" style={{ position: 'relative', width: 550, height: 450 }}>
       <MainStage runtime={runtime} fps={fps}>
@@ -56,13 +60,14 @@ function MainEffectsFixture({
       <div style={{ position: 'absolute', right: 5, bottom: 5, zIndex: 40 }}>
         <button onClick={() => runtime.effects.shake(12)}>Shake 12</button>
         <button onClick={() => world.resume()}>Resume game</button>
+        <button onClick={stackFlashes}>Stack flashes</button>
         <button
           onClick={() => {
-            runtime.effects.flash(0xff0000, 0.2);
-            runtime.effects.flash(0x0000ff, 0.5);
+            stackFlashes();
+            setMenu(true);
           }}
         >
-          Stack flashes
+          Flash into menu
         </button>
         <button onClick={() => setMenu(!menu)}>{menu ? 'Mount game' : 'Unmount game'}</button>
         <select

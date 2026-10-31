@@ -1,4 +1,5 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './helpers/frame-paced-test';
+import { visitAdjacentFieldAndReturn } from './helpers/field-travel';
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import type { TankDesign } from '../src/game/core/types';
@@ -50,12 +51,7 @@ for (const native of [false, true])
       await expect(page.getByRole('dialog')).toHaveCount(0); // Initial PlaceAvatar branch does not show help.
       await page.locator('.game-canvas').focus();
       await page.keyboard.down('Space');
-      await page.keyboard.down('KeyD');
-      await page.waitForTimeout(2900);
-      await page.keyboard.up('KeyD');
-      await page.keyboard.down('KeyA');
-      await page.waitForTimeout(2500);
-      await page.keyboard.up('KeyA');
+      await visitAdjacentFieldAndReturn(page);
       await page.keyboard.up('Space');
       await page.getByRole('button', { name: 'Edit your tank', exact: true }).click();
       await page.getByRole('button', { name: 'YES', exact: true }).click();
