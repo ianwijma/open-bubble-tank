@@ -356,7 +356,9 @@ export default function GameShell() {
                     refresh();
                   }}
                 />
-                {screen === 'game' && world.mode === 'paused' && overlay === null ? (
+                {screen === 'game' &&
+                world.mode === 'paused' &&
+                (overlay === null || overlay === 'settings') ? (
                   <PausePanel
                     pack={pack}
                     closeKey={profile.settings.h5}
@@ -368,6 +370,7 @@ export default function GameShell() {
                     tank={world.player}
                     stage={stage}
                     fps={profile.settings.fps}
+                    covered={overlay === 'settings'}
                     onMenu={menu}
                   />
                 ) : null}
@@ -467,6 +470,7 @@ export default function GameShell() {
             ) : null}
             {pack && settings && overlay === 'settings' ? (
               <SettingsPanel
+                overPause={screen === 'game' && world?.mode === 'paused'}
                 pack={pack}
                 settings={settings}
                 onChange={settingsChange}

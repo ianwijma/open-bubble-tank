@@ -33,6 +33,10 @@ export function MainStage({
     };
     // Resolve the transform before input reads mouse coordinates, including catch-up frames.
     const unsubscribe = runtime.subscribe({ beforeStep: presentTransform });
+    const releaseCapture = runtime.capture.register({
+      order: 10,
+      draw: (context) => context.drawImage(canvas.current!, -40, -40, 630, 530),
+    });
     let frame = 0,
       last = performance.now();
     const tick = (now: number) => {
@@ -54,6 +58,7 @@ export function MainStage({
     return () => {
       cancelAnimationFrame(frame);
       unsubscribe();
+      releaseCapture();
     };
   }, [runtime]);
   return (
