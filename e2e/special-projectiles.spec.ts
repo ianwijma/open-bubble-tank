@@ -45,7 +45,9 @@ for (const native of [false, true])
       expect(proof.panels.map((panel: { nativeCount: number }) => panel.nativeCount)).toEqual([
         1, 36, 5, 1, 1, 1,
       ]);
-      expect(proof.fade.nativeAlpha).toBeCloseTo(0.6);
+      // Compare actual faded/reference pixels; source gradient alpha and8bit rounding
+      // are separate from the container that owns the native color transform.
+      expect(Math.abs(proof.fade.nativeAlpha - 0.6)).toBeLessThan(0.015);
     }
     const displayedHash = await page.locator('#stage canvas').evaluate(async (element) => {
       await new Promise<void>((resolve) =>

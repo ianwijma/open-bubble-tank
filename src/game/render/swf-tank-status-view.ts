@@ -34,10 +34,12 @@ export class SwfTankStatusView {
         }
     }
     if (this.decoration)
-      for (const [index, view] of this.marks.entries())
+      for (const [index, view] of this.marks.entries()) {
+        view.setParentAlpha(tank.alpha);
         if (this.decoration.kind === 'stun')
           view.update(this.decoration.marks[index].frame + this.decoration.artAge);
         else view.update(this.decoration.artAge + 1, this.decoration.marks[index].frame);
+      }
     if (tank.status.infect > 0) {
       if (!this.infected) {
         this.infected = new SwfSymbolView(INFECTED_ART, this.assets, this.textures);
@@ -68,6 +70,7 @@ export class SwfTankStatusView {
         ];
       }
       this.infected.root.scale.set((tank.radius * 1.5) / 36);
+      this.infected.setParentAlpha(tank.alpha);
       this.infected.root.angle = tank.infectionAngle;
       this.infected.update(tank.artAge - tank.infectStartedAt + 1);
     } else if (this.infected) {

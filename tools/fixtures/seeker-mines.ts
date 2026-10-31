@@ -1,3 +1,4 @@
+import { captureCanvas } from './pixi-capture';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { DEFAULT_SETTINGS } from '../../src/game/core/constants';
 import { STARTER } from '../../src/game/data/catalog';
@@ -79,7 +80,7 @@ export async function showSeekerMineProof(pack: AssetPack, host: HTMLElement) {
   const galleryInk: number[] = [];
   const capture = (row: number) => {
     renderer.draw(world, DEFAULT_SETTINGS);
-    const frame = renderer.app.renderer.extract.canvas({
+    const frame = captureCanvas(renderer.app.renderer, {
       target: renderer.app.stage,
       frame: new Rectangle(0, 0, 550, 450),
       resolution: 2,

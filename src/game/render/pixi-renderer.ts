@@ -330,7 +330,7 @@ export class GameRenderer {
           view.root.position.set(point.x, point.y);
           view.root.angle = b.kind === 'grow' ? b.heading : b.angle;
           view.root.scale.set((b.artScale ?? 1) * transform.scale);
-          view.root.alpha = b.artAlpha ?? 1;
+          view.setAlpha(b.artAlpha ?? 1);
           if (b.artPose) view.updatePose(b.artPose);
           else view.update(b.artFrame ?? b.age + 1);
           if (b.kind === 'beam' || b.kind === 'healBeam') setBeamLength(view, b.beamLength ?? 0);

@@ -1,3 +1,4 @@
+import { captureCanvas } from './pixi-capture';
 import { Rectangle } from 'pixi.js';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { DEFAULT_SETTINGS } from '../../src/game/core/constants';
@@ -56,7 +57,7 @@ export async function showProjectileClocksProof(pack: AssetPack, host: HTMLEleme
       x: (Math.min(...xs) + Math.max(...xs)) / 2,
       y: (Math.min(...ys) + Math.max(...ys)) / 2,
     };
-    const frame = renderer.app.renderer.extract.canvas({
+    const frame = captureCanvas(renderer.app.renderer, {
       target: pack.mode === 'swf' ? renderer.nativeShots : renderer.projectiles,
       frame: new Rectangle(center.x - 100, center.y - 54.5, 200, 109),
       resolution: 2,

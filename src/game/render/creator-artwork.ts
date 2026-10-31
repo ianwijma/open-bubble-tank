@@ -85,7 +85,7 @@ export class CreatorArtwork {
       wrapper.position.set(part.x, part.y);
       wrapper.scale.set(part.scale);
       wrapper.rotation = (part.rotation * Math.PI) / 180;
-      wrapper.alpha = alpha;
+      view.setParentAlpha(alpha);
       wrapper.filters = invalid ? [this.gray] : null;
       group.root.setChildIndex(wrapper, group.root.children.length - 1);
       view.update(Math.max(1, frame - node.born + 1), undefined, 0, part.y);
