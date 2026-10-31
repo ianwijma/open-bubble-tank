@@ -1,9 +1,13 @@
 import { Container, Matrix } from 'pixi.js';
-import type { AssetPack, SwfGlowFilter as GlowOptions } from '../assets/asset-pack';
+import type { AssetPack, SwfMatrix, SwfGlowFilter as GlowOptions } from '../assets/asset-pack';
 import { SwfClip } from '../assets/swf-clip';
 import { MAIN_MENU, type MainMenuMotion } from '../core/main-menu';
 import { SwfSymbolView, type RasterTextures } from './swf-symbol-view';
 import { SwfGlowFilter } from './swf-glow-filter';
+import { menuLocal, type MenuTarget } from '../core/menu-hit';
+import type { Vec } from '../core/types';
+import type { SeriesControl } from '../core/menu-series';
+import { CONTACT_IDENTITY, descendContact } from '../assets/contact-transform';
 
 /** Menu display objects retain independent child timelines, including the title's stop(179). */
 export class MainMenuView {
@@ -13,7 +17,10 @@ export class MainMenuView {
   private controls;
   private glow: SwfGlowFilter;
   private series: SwfSymbolView;
-  constructor(pack: AssetPack, textures: RasterTextures) {
+  constructor(
+    private pack: AssetPack,
+    textures: RasterTextures,
+  ) {
     //556 depth1/clipDepth2 makes487 a nonpainting mask. All controls start above depth2.
     this.controls = MAIN_MENU.controls.map((piece) => {
       const view = new SwfSymbolView(piece.symbol, pack, textures),
@@ -54,6 +61,36 @@ export class MainMenuView {
     );
     if (over) inner?.clip.gotoAndPlay(2);
     else inner?.clip.gotoAndStop(1);
+  }
+  hit(point: Vec, motion: MainMenuMotion): MenuTarget | undefined {
+    const hit = (clip: SwfClip, ...matrices: SwfMatrix[]) => {
+      let local = point,
+        inverse = CONTACT_IDENTITY;
+      for (const matrix of matrices) {
+        const next = menuLocal(local, matrix),
+          nextInverse = descendContact(inverse, matrix);
+        if (!next || !nextInverse) return false;
+        local = next;
+        inverse = nextInverse;
+      }
+      // Stroke widths use the complete Stage-to-leaf inverse, including wrapper scales.
+      return this.pack.hitClip(clip, local.x, local.y, 0, inverse);
+    };
+    if (hit(this.titlePose, MAIN_MENU.title.matrix)) return { kind: 'blocked' };
+    for (const p of [...motion.series.pose.placements].reverse()) {
+      if (!p.name) continue;
+      const child = motion.series.pose.children.get(p.depth)!.clip;
+      if (hit(child, MAIN_MENU.series.matrix, p.matrix))
+        return { kind: 'series', name: p.name as SeriesControl };
+    }
+    if (hit(motion.series.pose, MAIN_MENU.series.matrix)) return { kind: 'series' };
+    for (const { piece, pose } of [...this.controls].reverse()) {
+      const inner = [...pose.children.values()].find((child) => child.placement.name === 'inner')!;
+      if (hit(inner.clip, piece.matrix, inner.placement.matrix))
+        return { kind: 'control', name: piece.name };
+      // Interactive inner clips precede static icon geometry; wrappers have no action branch.
+      if (hit(pose, piece.matrix)) return { kind: 'decoration', name: piece.name };
+    }
   }
   update(motion: MainMenuMotion) {
     for (const { piece, view, pose, wrapper } of this.controls) {
