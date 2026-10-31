@@ -57,6 +57,7 @@ export class SwfProtectionView {
       this.size(this.shield, diameter);
       this.size(this.hit, tank.shieldHitDiameter ?? diameter);
       this.shield.root.visible = this.hit.root.visible = true;
+      this.shield.setParentAlpha(tank.alpha);
       this.shield.update(turret ? Math.min(25, tank.shieldAge + 1) : tank.shieldAge + 1);
     } else {
       if (this.shield) this.shield.root.visible = false;
@@ -64,6 +65,7 @@ export class SwfProtectionView {
     if (this.hit) {
       // KillShield removes the film only; its attached hit clip finishes independently.
       this.hit.root.visible = true;
+      this.hit.setParentAlpha(tank.alpha);
       this.hit.update(Math.min(16, tank.shieldHitAge + 1));
       this.hit.root.angle = tank.shieldHitAngle;
     }
@@ -92,6 +94,7 @@ export class SwfProtectionView {
       }
       for (const { view, part } of this.maskParts)
         view.updatePose(this.assets.forcefieldPartClip(tank, part));
+      this.field.setParentAlpha(tank.alpha);
       this.field.update(tank.artAge + 1, tank.forcefieldFrame);
       this.field.root.angle = tank.forcefieldAngle;
     }

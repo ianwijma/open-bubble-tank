@@ -1,3 +1,4 @@
+import { captureCanvas } from './pixi-capture';
 import { Rectangle } from 'pixi.js';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { DEFAULT_SETTINGS } from '../../src/game/core/constants';
@@ -63,14 +64,18 @@ export async function showSpecialProjectilesProof(pack: AssetPack, host: HTMLEle
   const panels: { label: string; ink: number; painted: number; nativeCount: number }[] = [];
   const capture = (label: string, center: { x: number; y: number }) => {
     renderer.draw(world, DEFAULT_SETTINGS);
-    const frame = renderer.app.renderer.extract.canvas({
+    const frame = captureCanvas(renderer.app.renderer, {
       target: pack.mode === 'swf' ? renderer.nativeShots : renderer.projectiles,
       frame: new Rectangle(center.x - 60, center.y - 32.7, 120, 65.4),
       resolution: 2,
     }) as HTMLCanvasElement;
     const pixels = frame.getContext('2d')!.getImageData(0, 0, frame.width, frame.height).data;
-    let ink = 0;
-    for (let index = 3; index < pixels.length; index += 4) if (pixels[index]) ink++;
+    let ink = 0,
+      maxAlpha = 0;
+    for (let index = 3; index < pixels.length; index += 4) {
+      if (pixels[index]) ink++;
+      maxAlpha = Math.max(maxAlpha, pixels[index]);
+    }
     const index = panels.length,
       x = (index % 2) * 275,
       y = Math.floor(index / 2) * 150;
@@ -89,6 +94,7 @@ export async function showSpecialProjectilesProof(pack: AssetPack, host: HTMLEle
     ctx.font = '12px Arial';
     ctx.fillText(label, x + 8, y + 17);
     panels.push({ label, ink, painted, nativeCount: renderer.nativeShots.children.length });
+    return maxAlpha / 255;
   };
   try {
     const star = make({ kind: 'star', symbol: 1811, artScale: 1.7, x: -300, speed: 8, damage: 35 });
@@ -128,11 +134,28 @@ export async function showSpecialProjectilesProof(pack: AssetPack, host: HTMLEle
     const repulsor = make({ kind: 'push', symbol: 2221, damage: 0 });
     world.addBullet(repulsor);
     for (let i = 0; i < 10; i++) tick(repulsor);
-    capture('Repulsor · ten fade updates', repulsor);
+    const paintedAlpha = capture('Repulsor · ten fade updates', repulsor);
+    let referenceAlpha = 1;
+    if (pack.mode === 'swf') {
+      const alpha = repulsor.artAlpha;
+      repulsor.artAlpha = 1;
+      renderer.draw(world, DEFAULT_SETTINGS);
+      const { pixels } = renderer.app.renderer.extract.pixels({
+        target: renderer.nativeShots,
+        frame: new Rectangle(repulsor.x - 60, repulsor.y - 32.7, 120, 65.4),
+        resolution: 2,
+      });
+      let max = 0;
+      for (let i = 3; i < pixels.length; i += 4) max = Math.max(max, pixels[i]);
+      referenceAlpha = max / 255;
+      repulsor.artAlpha = alpha;
+    }
     const fade = {
       alpha: repulsor.artAlpha,
       alive: !repulsor.dead,
-      nativeAlpha: renderer.nativeShots.children[0]?.alpha,
+      nativeAlpha: pack.mode === 'swf' ? paintedAlpha / referenceAlpha : undefined,
+      paintedAlpha,
+      referenceAlpha,
     };
     clear();
     const sapper = make({

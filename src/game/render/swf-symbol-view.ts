@@ -1,15 +1,14 @@
-import {
-  AlphaFilter,
-  ColorMatrixFilter,
-  Container,
-  Matrix,
-  Sprite,
-  type Texture,
-  type BLEND_MODES,
-} from 'pixi.js';
+import { AlphaFilter, Container, Matrix, Sprite, type Texture, type BLEND_MODES } from 'pixi.js';
 import type { AssetPack, DisplayPlacement, Raster } from '../assets/asset-pack';
 import { SwfClip } from '../assets/swf-clip';
-import { SwfKnockoutGlowFilter } from './swf-knockout-glow-filter';
+import {
+  composeColor,
+  fixedColorMultiplier,
+  IDENTITY_COLOR,
+  type SwfColorTransform,
+} from '../assets/swf-color-transform';
+import { SwfGlowFilter } from './swf-glow-filter';
+import { SwfColorFilter } from './swf-color-filter';
 export interface RasterTextures {
   get(raster: Raster): Texture;
   release(raster: Raster): void;
@@ -26,18 +25,26 @@ export class SwfSymbolView {
     {
       id: number;
       view: SwfSymbolView;
-      color: string;
       pose?: SwfClip;
     }
   >();
   private lastFrame = -1;
   private lastAge = -1;
   private matrix = new Matrix();
-  private colorFilter: ColorMatrixFilter | null = null;
+  private colorFilter: SwfColorFilter | null = null;
   private isolation: AlphaFilter | null = null;
-  private glow: SwfKnockoutGlowFilter | null = null;
+  private bitmapCache: AlphaFilter | null = null;
+  private glows: SwfGlowFilter[] = [];
   private filterKey = '';
+  private localColor = IDENTITY_COLOR;
+  private inheritedColor = IDENTITY_COLOR;
+  private combinedColor = IDENTITY_COLOR;
+  private colorKey = '';
+  private runtimeAlpha?: number;
+  private parentAlpha = 1;
+  private terminal: boolean;
   private effectiveBlend: BLEND_MODES = 'normal';
+  private localBlend: BLEND_MODES = 'inherit';
   private morphSprite: Sprite | null = null;
   private morphRaster: Raster | null = null;
   private morphRatio = -1;
@@ -49,6 +56,7 @@ export class SwfSymbolView {
     private textures: RasterTextures,
     playback?: ClipPlayback,
   ) {
+    this.terminal = !assets.spriteInfo(id)?.placements.some((p) => p.charId !== undefined);
     if (playback) this.ownedPose = new SwfClip(id, assets, playback.random);
     if (assets.isMorph(id)) {
       this.morphSprite = new Sprite();
@@ -120,18 +128,17 @@ export class SwfSymbolView {
       if (!node || node.id !== p.charId || (pose && node.pose !== childPose)) {
         node?.view.destroy();
         const view = new SwfSymbolView(p.charId, this.assets, this.textures);
-        node = { id: p.charId, view, color: '', pose: childPose };
+        node = { id: p.charId, view, pose: childPose };
         this.children.set(p.depth, node);
         this.root.addChild(view.root);
       }
       const m = p.matrix;
       node.view.root.setFromMatrix(this.matrix.set(m.a, m.b, m.c, m.d, m.tx / 20, m.ty / 20));
-      const color = JSON.stringify(p.color ?? null);
-      if (color !== node.color) {
-        node.view.setColor(p);
-        node.color = color;
-      }
       node.view.setPlacementFilters(p);
+      node.view.setColor(
+        p.color ?? IDENTITY_COLOR,
+        this.glows.length || this.bitmapCache ? IDENTITY_COLOR : this.combinedColor,
+      );
       node.view.setBlendMode(
         p.blendMode ?? 1,
         this.root.filters?.length ? 'normal' : this.effectiveBlend,
@@ -163,46 +170,71 @@ export class SwfSymbolView {
     const placement = this.assets.displayList(this.id, this.lastFrame).find((p) => p.name === name);
     return placement ? this.children.get(placement.depth)?.view : undefined;
   }
-  private setColor(p: DisplayPlacement) {
+  /** DisplayObject.alpha overwrites this object's alpha multiplier, retaining RGB/add terms. */
+  setAlpha(alpha: number) {
+    alpha = fixedColorMultiplier(alpha);
+    if (alpha === this.runtimeAlpha) return;
+    this.runtimeAlpha = alpha;
+    this.refreshColor();
+  }
+  /** Opacity of an embedding native owner; keep Pixi ancestors opaque during filter capture. */
+  setParentAlpha(alpha: number) {
+    alpha = fixedColorMultiplier(alpha);
+    if (alpha === this.parentAlpha) return;
+    this.parentAlpha = alpha;
+    this.refreshColor();
+  }
+  private setColor(local: SwfColorTransform, inherited: SwfColorTransform) {
+    if (local === this.localColor && inherited === this.inheritedColor) return;
+    this.localColor = local;
+    this.inheritedColor = inherited;
+    this.refreshColor();
+  }
+  private refreshColor() {
+    const local =
+      this.runtimeAlpha === undefined
+        ? this.localColor
+        : {
+            ...this.localColor,
+            mult: this.localColor.mult.map((m, i) => (i === 3 ? this.runtimeAlpha! : m)),
+          };
+    const inherited =
+      this.parentAlpha === 1
+        ? this.inheritedColor
+        : composeColor(
+            { mult: [1, 1, 1, this.parentAlpha], add: [0, 0, 0, 0] },
+            this.inheritedColor,
+          );
+    const combined = composeColor(inherited, local),
+      capture = this.glows.length > 0 || !!this.bitmapCache,
+      key = JSON.stringify([combined, capture]);
+    if (key === this.colorKey) return;
+    this.colorKey = key;
+    this.combinedColor = combined;
+    this.lastFrame = -1;
     this.colorFilter?.destroy();
     this.colorFilter = null;
-    this.applyFilters();
-    if (!p.color) {
-      this.root.alpha = 1;
-      this.root.visible = true;
-      return;
-    }
-    const { mult: m, add: a } = p.color;
-    this.root.visible = m[3] !== 0 || a[3] !== 0;
-    if (m.slice(0, 3).every((n) => n === 1) && a.every((n) => n === 0)) {
-      this.root.alpha = m[3];
-      return;
-    }
     this.root.alpha = 1;
-    const f = new ColorMatrixFilter();
-    f.matrix = [
-      m[0],
-      0,
-      0,
-      0,
-      a[0] / 255,
-      0,
-      m[1],
-      0,
-      0,
-      a[1] / 255,
-      0,
-      0,
-      m[2],
-      0,
-      a[2] / 255,
-      0,
-      0,
-      0,
-      m[3],
-      a[3] / 255,
-    ];
-    this.colorFilter = f;
+    const { mult: m, add: a } = combined;
+    this.root.visible = m[3] !== 0 || a[3] !== 0;
+    // Unfiltered branches pass accumulated color to their leaves. A filtered object
+    // captures with identity color, then applies its accumulated color AFTER the glows.
+    if (capture || this.terminal) {
+      const identity = m.every((n) => n === 1) && a.every((n) => n === 0);
+      if (!identity) {
+        if (
+          !capture &&
+          m[3] >= 0 &&
+          m[3] <= 1 &&
+          m.slice(0, 3).every((n) => n === 1) &&
+          a.every((n) => n === 0)
+        )
+          this.root.alpha = m[3];
+        else {
+          this.colorFilter = new SwfColorFilter(combined);
+        }
+      }
+    }
     this.applyFilters();
   }
   /** Flash LAYER is an isolated surface: child ERASE must not punch through the game. */
@@ -211,7 +243,7 @@ export class SwfSymbolView {
     if (isolate !== !!this.isolation) {
       this.isolation?.destroy();
       this.isolation = isolate ? new AlphaFilter({ alpha: 1 }) : null;
-      this.applyFilters();
+      this.refreshColor();
     }
     const local: BLEND_MODES =
       mode === 12
@@ -224,6 +256,7 @@ export class SwfSymbolView {
               ? 'screen'
               : 'inherit';
     const effective = local === 'inherit' ? inherited : local;
+    this.localBlend = local;
     if (effective !== this.effectiveBlend) this.lastFrame = -1;
     this.effectiveBlend = effective;
     this.applyFilters();
@@ -231,33 +264,32 @@ export class SwfSymbolView {
     this.root.blendMode = this.root.filters?.length ? 'normal' : local;
   }
   private setPlacementFilters(p: DisplayPlacement) {
-    const key = JSON.stringify(p.filters ?? []);
+    const key = JSON.stringify([p.filters ?? [], p.cacheAsBitmap ?? 0]);
     if (key === this.filterKey) return;
     this.filterKey = key;
-    this.glow?.destroy();
-    this.glow = null;
-    const f = p.filters?.[0];
-    // The collapse's reachable filter. Other Flash filter families remain unsupported.
-    if (
-      p.filters?.length === 1 &&
-      f?.kind === 'glow' &&
-      !f.inner &&
-      f.knockout &&
-      f.passes === 1 &&
-      f.blurX === 10 &&
-      f.blurY === 10 &&
-      f.strength === 1 &&
-      f.color.join(',') === '255,0,0,255'
-    )
-      this.glow = new SwfKnockoutGlowFilter();
+    const filters = p.filters ?? [];
+    while (this.glows.length > filters.length) this.glows.pop()!.destroy();
+    filters.forEach((f, i) => {
+      if (this.glows[i]) this.glows[i].setOptions(f);
+      else this.glows.push(new SwfGlowFilter(f));
+    });
+    if (p.cacheAsBitmap) this.bitmapCache ??= new AlphaFilter({ alpha: 1 });
+    else {
+      this.bitmapCache?.destroy();
+      this.bitmapCache = null;
+    }
+    this.refreshColor();
     this.applyFilters();
   }
   private applyFilters() {
     const captured = !!this.root.filters?.length;
-    const filters = [this.colorFilter, this.glow, this.isolation].filter((f) => f !== null);
+    const filters = [...this.glows, this.colorFilter, this.bitmapCache, this.isolation].filter(
+      (f) => f !== null,
+    );
     for (const f of filters) f.blendMode = 'normal';
     if (filters.length) filters.at(-1)!.blendMode = this.effectiveBlend;
     this.root.filters = filters.length ? filters : null;
+    this.root.blendMode = filters.length ? 'normal' : this.localBlend;
     if (captured !== !!filters.length) this.lastFrame = -1;
   }
   destroy() {
@@ -269,7 +301,8 @@ export class SwfSymbolView {
     this.children.clear();
     this.colorFilter?.destroy();
     this.isolation?.destroy();
-    this.glow?.destroy();
+    this.bitmapCache?.destroy();
+    for (const glow of this.glows) glow.destroy();
     if (!this.root.destroyed) this.root.destroy({ children: true });
   }
 }

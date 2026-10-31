@@ -1,3 +1,4 @@
+import { captureCanvas } from './pixi-capture';
 import { Rectangle } from 'pixi.js';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { DEFAULT_SETTINGS } from '../../src/game/core/constants';
@@ -44,7 +45,7 @@ export async function showBubbleBusterProof(pack: AssetPack, host: HTMLElement) 
   const capture = (label: string, bullet: Projectile) => {
     world.bullets = [bullet];
     renderer.draw(world, DEFAULT_SETTINGS);
-    const frame = renderer.app.renderer.extract.canvas({
+    const frame = captureCanvas(renderer.app.renderer, {
       target: pack.mode === 'swf' ? renderer.nativeShots : renderer.projectiles,
       frame: new Rectangle(bullet.x - 100, bullet.y - 50, 200, 100),
       resolution: 2,

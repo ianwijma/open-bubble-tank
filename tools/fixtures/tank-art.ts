@@ -1,3 +1,4 @@
+import { captureCanvas } from './pixi-capture';
 import { Application, Container, Rectangle } from 'pixi.js';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { STARTER } from '../../src/game/data/catalog';
@@ -79,7 +80,7 @@ export async function showTankArtProof(pack: AssetPack, host: HTMLElement) {
     };
   };
   const capture = (label: string, root: Container) => {
-    const frame = app.renderer.extract.canvas({
+    const frame = captureCanvas(app.renderer, {
       target: root,
       frame: new Rectangle(-100, -55, 200, 110),
       resolution: 2,

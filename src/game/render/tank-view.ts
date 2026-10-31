@@ -47,12 +47,15 @@ export class TankView {
   }
   update(t: Tank) {
     this.container.angle = t.rotation;
-    this.container.alpha = t.alpha;
+    this.container.alpha = this.assets.mode === 'swf' ? 1 : t.alpha;
     for (const [i, part] of t.design.parts.entries()) {
       const view = this.parts[i];
       view.root.visible = !t.hiddenParts.has(part.key) && !t.removedParts.has(part.key);
       view.root.angle = t.guns.find((g) => g.part.key === part.key)?.angle ?? part.rotation;
-      if (view.root.visible) view.animation?.updatePose(this.assets.partClip(t, part));
+      if (view.root.visible) {
+        view.animation?.setParentAlpha(t.alpha);
+        view.animation?.updatePose(this.assets.partClip(t, part));
+      }
     }
     this.shield.clear();
     if (

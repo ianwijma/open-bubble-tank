@@ -31,6 +31,7 @@ import { showTankArtProof } from './tank-art';
 import { showScreenEffectsProof } from './screen-effects';
 import { showMainEffects } from './main-effects';
 import { showCollapseProof } from './collapse';
+import { showGlowProof } from './glows';
 
 const file = document.querySelector<HTMLInputElement>('#swf')!;
 const fixture = document.querySelector<HTMLSelectElement>('#fixture')!;
@@ -104,6 +105,13 @@ async function reset() {
   renderer = undefined;
   world = undefined;
   stage.replaceChildren();
+  if (fixture.value === 'glows') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    const proof = await showGlowProof(pack, stage);
+    status.dataset.glows = JSON.stringify(proof);
+    status.textContent = 'Ready · authored glows, ordered filters and post-filter color';
+    return;
+  }
   if (fixture.value === 'collapse') {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
     const proof = await showCollapseProof(pack, stage);
