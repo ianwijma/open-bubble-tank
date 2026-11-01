@@ -1625,25 +1625,16 @@ kbd {
 }
 .palette-tabs {
   position: absolute;
-  z-index: 3;
-  left: 374px;
-  top: 174px;
-  width: 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+  z-index: 4;
+  width: 0;
+  height: 0;
 }
 .palette-tabs button {
-  font-size: 8px;
-  padding: 6px 3px;
-  writing-mode: vertical-rl;
-  transform: rotate(180deg);
-  color: #fff;
-  background: #8db7ca30;
-  min-height: 43px;
-}
-.palette-tabs button.active {
-  background: #b4d9ea50;
+  position: absolute;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
 }
 .part-palette {
   position: absolute;

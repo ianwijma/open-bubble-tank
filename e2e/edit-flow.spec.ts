@@ -81,6 +81,15 @@ for (const native of [false, true])
     await expect(
       page.getByRole('button', { name: 'Exit tank creator', exact: true }),
     ).toBeVisible();
+    const categories = page.getByRole('group', { name: 'Part categories' });
+    await expect(categories.getByRole('button')).toHaveCount(4);
+    const primary = categories.getByRole('button', { name: 'Primary', exact: true });
+    await primary.click();
+    await expect(primary).toHaveAttribute('aria-pressed', 'true');
+    await expect(
+      page.getByRole('button', { name: 'Place Basic Cannon', exact: true }),
+    ).toBeVisible();
+    await categories.getByRole('button', { name: 'Body', exact: true }).click();
     await page.getByRole('button', { name: 'Exit tank creator', exact: true }).click();
     await expect(page.getByRole('dialog')).toHaveCount(0);
     await expect(edit).toBeEnabled();
