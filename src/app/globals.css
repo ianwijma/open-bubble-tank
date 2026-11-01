@@ -1350,54 +1350,9 @@ kbd {
   font-size: 13px;
   margin: 0;
 }
-.creator-top {
-  position: absolute;
-  inset: 5px 5px auto;
-  display: flex;
-  gap: 5px;
-  height: 22px;
-  z-index: 3;
-  font-size: 8px;
-}
-.creator-top > button,
-.creator-symmetry {
-  background: #a1d4e64d;
-  height: 22px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 8px;
-}
-.creator-top > button:nth-child(2) {
-  width: 88px;
-}
-.creator-top > button:nth-child(3) {
-  width: 107px;
-}
-.creator-top > button:nth-child(4) {
-  width: 68px;
-}
-.creator-top > span {
-  background: #a1d4e64d;
-  padding: 6px 15px;
-}
-.creator-top > button:hover {
-  background: #a1d4e680;
-}
-.creator-symmetry {
-  width: 105px;
-  padding: 0 4px;
-  gap: 5px;
-  white-space: nowrap;
-}
-.creator-symmetry input {
-  width: 12px;
-  height: 12px;
-  margin: 0;
-}
 .creator-name {
   position: absolute;
-  top: 32px;
+  top: 110px;
   left: 12px;
   z-index: 2;
   font-size: 8px;
@@ -1405,6 +1360,27 @@ kbd {
   display: flex;
   align-items: center;
   gap: 8px;
+}
+.creator-name > label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.creator-name > button {
+  font-size: 8px;
+  padding: 3px 6px;
+  background: #98b4d352;
+}
+.creator-stats-tab {
+  position: absolute;
+  left: 392px;
+  top: 5px;
+  width: 60px;
+  height: 22px;
+  z-index: 3;
+  padding: 6px 15px;
+  font-size: 8px;
+  background: #a1d4e64d;
 }
 .creator-control {
   position: absolute;
@@ -1514,7 +1490,10 @@ kbd {
   height: 350px;
   touch-action: none;
   cursor: crosshair;
-  border: 1px solid #a1d9ee2b;
+  outline: 1px solid #a1d9ee2b;
+}
+.creator[data-assets='swf'] .creator-workspace > canvas {
+  outline: none;
 }
 .creator-meters {
   position: absolute;
@@ -1586,20 +1565,6 @@ kbd {
 .creator-inspector > div {
   padding: 0 8px 8px;
 }
-.part-slider {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 8px;
-  color: #c2e9fa;
-  margin-top: 8px;
-}
-.part-slider input {
-  width: 100%;
-  height: 10px;
-  margin-top: 6px;
-}
 .enemy-stats {
   font-size: 8px;
   margin-top: 10px;
@@ -1625,37 +1590,6 @@ kbd {
   text-decoration: underline;
   padding: 4px 0;
   color: #bce3f0;
-}
-.creator-tools {
-  position: absolute;
-  z-index: 3;
-  bottom: 9px;
-  left: 11px;
-  width: 350px;
-  height: 22px;
-  display: flex;
-  align-items: center;
-  gap: 3px;
-}
-.creator-tools button {
-  font-size: 8px;
-  padding: 4px 5px;
-  height: 22px;
-  background: #98b4d352;
-}
-.creator-tools button:hover {
-  background: #98b4d380;
-}
-.creator-tools > span {
-  position: absolute;
-  bottom: 27px;
-  left: 0;
-  width: 350px;
-  padding: 4px;
-  font-size: 8px;
-  color: #e2f8ff;
-  pointer-events: none;
-  background: #0a294744;
 }
 .creator-part-preview {
   position: absolute;

@@ -161,6 +161,10 @@ export class CreatorArtwork {
     const inverse = descendContact(CONTACT_IDENTITY, contactTransform(part.rotation, part.scale));
     return !!inverse && view.hitTest(local.x, local.y, inverse);
   }
+  localBounds(part: TankPart) {
+    const view = this.groups.get('design')?.parts.get(part.key)?.view;
+    return view ? (view.scriptBounds() ?? { x: 0, y: 0, width: 0, height: 0 }) : undefined;
+  }
   restartClusters(parts: TankPart[]) {
     for (const part of parts) {
       if (part.type >= 1500 && part.type <= 1600)

@@ -200,3 +200,6 @@ The procedural import now includes body timelines and fitted body leaves. Mock b
 
 
 `components/creator-controls.tsx` supplies positioned native/mock buttons and transform sliders, while the editor owns parts, selection, frame stepping and history. A selection key refreshes slider initialization in the layout phase; an active handle retains its chosen value. Pointer capture supports motion outside the input, and cancellation reports rollback once. The isolated fixture exercises this boundary before production screen wiring.
+
+
+`TankCreator` connects source controls to immutable designs and transient selection. Gesture refs retain the pre-control design and held nudge direction; its existing fixed-step renderer clock advances held X steps, while release callbacks finalize history once. Selection bounds come from the retained artwork's Script bounds and remain frozen during a transform. The asset service still owns cached native control/ring art, and simulation helpers own arithmetic; browser handlers own gestures, cancellation and accessible actions.
