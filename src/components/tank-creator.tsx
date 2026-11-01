@@ -15,8 +15,8 @@ import {
 import { CreatorButton, CreatorSlider } from './creator-controls';
 import { CREATOR_CONTROLS } from '@/game/core/creator-controls';
 import { TankCodeDialog } from './tank-code-dialog';
-import { weaponSummary } from './game-panels';
-import { CLASS_RINGS, CLASS_SPEED } from '@/game/core/constants';
+import { CreatorStats } from './creator-stats';
+import { CLASS_RINGS } from '@/game/core/constants';
 import {
   placementParts,
   acceptedPlacement,
@@ -483,7 +483,6 @@ export function TankCreator({
         }}
       />
       <CreatorButton pack={pack} name="Exit_mc" label="Exit tank creator" onClick={onExit} />
-      <span className="creator-stats-tab">Stats</span>
       <div className="creator-name">
         <label>
           Tank name{' '}
@@ -603,27 +602,7 @@ export function TankCreator({
           onPointerUp={() => finishDrag()}
           onPointerCancel={() => finishDrag(true)}
         />
-        <aside className="creator-stats">
-          <div className="creator-summary">
-            <p>Speed: {Math.round(CLASS_SPEED[classId - 1] * 100)}%</p>
-            {(design.avatar
-              ? [
-                  ['Primary Weapons', 2],
-                  ['Secondary Weapons', 3],
-                  ['Passive Weapons', 5],
-                ]
-              : [
-                  ['Weapons', 4],
-                  ['Behavior', 6],
-                ]
-            ).map(([label, cat]) => (
-              <p key={label}>
-                {label}:<br />
-                {weaponSummary(design, Number(cat))}
-              </p>
-            ))}
-          </div>
-        </aside>
+        <CreatorStats pack={pack} design={design} classId={classId} />
       </div>
       {!design.avatar ? (
         <details className="creator-inspector">

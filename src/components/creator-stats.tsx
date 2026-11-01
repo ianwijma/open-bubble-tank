@@ -29,7 +29,7 @@ export function CreatorStats({
   };
   return (
     <aside
-      className="creator-stats creator-authored"
+      className="creator-stats"
       aria-label="Tank statistics"
       style={{ left: p.origin.tx / 20, top: p.origin.ty / 20 }}
     >
