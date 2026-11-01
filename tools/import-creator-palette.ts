@@ -1,8 +1,10 @@
-/** Creator803/771/992 layout and text metadata. No original paths, fonts or media. */
+/** Creator803/771/992/928/915 layout and text metadata. No original paths, fonts or media. */
 import { readFile, writeFile } from 'node:fs/promises';
 import { decompressSWF } from '../src/game/assets/swf.mjs';
 import { extractSymbols } from '../src/game/assets/swf-symbols.mjs';
+import { buttonDisplayList } from '../src/game/assets/button-display-list';
 import { buildDisplayList } from '../src/game/assets/display-list';
+import type { CreatorPrimitive } from '../src/game/core/creator-controls';
 import { createSwfLayout } from './lib/swf-layout';
 import type { DisplayPlacement, SymbolResult } from '../src/game/assets/asset-pack';
 const root = process.argv[2] ?? '../documented-bubble-tank-3';
@@ -21,6 +23,7 @@ function field(p: DisplayPlacement) {
     descent = (f.descent ?? 0) / 20;
   return {
     name: p.name ?? '',
+    initialText: t.text.replace(/<[^>]*>/g, ''),
     symbol: p.charId,
     x: p.matrix.tx / 20 + t.bounds.xMin / 20,
     y: p.matrix.ty / 20 + t.bounds.yMin / 20,
@@ -86,8 +89,145 @@ const statsFields = stats
     .map(field),
   rowFields = row.filter((p) => p.name === 'name_txt' || p.name === 'cost_txt').map(field),
   caption = field(library.find((p) => p.charId === 770)!);
+function nestedFields(
+  id: number,
+  frame: number,
+  matrix: DisplayPlacement['matrix'],
+  alpha = 1,
+): ReturnType<typeof field>[] {
+  if (symbols.editTexts.some((t) => t.id === id)) {
+    const f = field({ charId: id, matrix } as DisplayPlacement);
+    return [{ ...f, color: [...f.color.slice(0, 3), (f.color[3] ?? 255) * alpha] }];
+  }
+  const button = (symbols.buttons ?? []).find((b) => b.id === id),
+    sprite = sprites.get(id);
+  const placements = button ? buttonDisplayList(button, 'up') : sprite ? list(id, frame) : [];
+  return placements.flatMap((p) =>
+    nestedFields(p.charId, 1, layout.multiply(matrix, p.matrix), alpha * (p.color?.mult?.[3] ?? 1)),
+  );
+}
+const advancedList = list(928, 2),
+  confirmList = list(915, 12);
+const piece = (
+  p: DisplayPlacement,
+  frames = (symbols.buttons ?? []).some((b) => b.id === p.charId) ? [1, 2, 3] : [1, 2],
+) => ({
+  name: p.name ?? '',
+  symbol: p.charId,
+  matrix: p.matrix,
+  bounds: rect(p.charId),
+  art: frames.map((frame, i) =>
+    layout.collect(
+      p.charId,
+      frame,
+      (symbols.buttons ?? []).some((b) => b.id === p.charId)
+        ? (['up', 'over', 'down'] as const)[i]
+        : 'up',
+    ),
+  ),
+});
+const advancedFields = advancedList
+  .filter((p) => symbols.editTexts.some((t) => t.id === p.charId))
+  .map(field);
+const confirmFields = confirmList.flatMap((p) =>
+  nestedFields(p.charId, p.name ? 11 : 1, p.matrix, p.color?.mult?.[3] ?? 1),
+);
+const advanced = {
+  symbol: 928,
+  origin: creator.find((p) => p.name === 'SecondaryStats_mc')!.matrix,
+  tab: piece(list(928).find((p) => p.charId === 899)!),
+  basicTab: piece(list(803, 2).find((p) => p.charId === 802)!),
+  static: advancedList
+    .filter((p) => !p.name && p.charId !== 916)
+    .flatMap((p) => layout.collect(p.charId, 1, 'up', p.matrix)),
+  fields: advancedFields,
+  suggested: piece(advancedList.find((p) => p.name === 'suggestedBox_mc')!),
+  sliders: advancedList
+    .filter((p) => p.name?.endsWith('Slider_mc'))
+    .map((p) => {
+      const children = list(p.charId),
+        handle = children.find((p) => p.name === 'resizehandle_mc')!;
+      return {
+        name: p.name!,
+        symbol: p.charId,
+        matrix: p.matrix,
+        track: children
+          .filter((p) => !p.name)
+          .flatMap((p) => layout.collect(p.charId, 1, 'up', p.matrix)),
+        handle: {
+          symbol: handle.charId,
+          matrix: handle.matrix,
+          variants: [1, 2].map((f) => layout.collect(handle.charId, f, 'up')),
+        },
+      };
+    }),
+  confirm: {
+    symbol: 915,
+    matrix: advancedList.find((p) => p.name === 'ConfirmMenu_mc')!.matrix,
+    fields: confirmFields,
+    buttons: confirmList
+      .filter((p) => p.name)
+      .map((p) => ({
+        ...piece(p, [11]),
+        art: (['up', 'over', 'down'] as const).map((state) => layout.collect(p.charId, 11, state)),
+        bounds: layout.bounds(layout.collect(p.charId, 11, 'up')),
+      })),
+    frames: Array.from({ length: 21 }, (_, i) => {
+      const frame = i + 2,
+        ps = list(915, frame);
+      return {
+        frame,
+        fields: ps.flatMap((p) =>
+          nestedFields(
+            p.charId,
+            p.name ? Math.min(11, frame - 1) : 1,
+            p.matrix,
+            p.color?.mult?.[3] ?? 1,
+          ),
+        ),
+        art: ps
+          .filter((p) => !symbols.editTexts.some((t) => t.id === p.charId))
+          .flatMap((p) => {
+            const art = layout.collect(
+              p.charId,
+              p.name ? Math.min(11, frame - 1) : 1,
+              'up',
+              p.matrix,
+              p.ratio ?? 0,
+            );
+            return art.map((leaf: CreatorPrimitive) => {
+              const alpha = p.color?.mult?.[3] ?? 1;
+              return {
+                ...leaf,
+                fill: leaf.fill ? [...leaf.fill.slice(0, 3), (leaf.fill[3] ?? 255) * alpha] : null,
+                stroke: leaf.stroke
+                  ? {
+                      ...leaf.stroke,
+                      color: [
+                        ...leaf.stroke.color.slice(0, 3),
+                        (leaf.stroke.color[3] ?? 255) * alpha,
+                      ],
+                    }
+                  : null,
+                glyphs: leaf.glyphs?.map((g) => ({
+                  ...g,
+                  color: [...g.color.slice(0, 3), (g.color[3] ?? 255) * alpha],
+                })),
+              };
+            });
+          }),
+      };
+    }),
+  },
+};
 const fonts = Object.fromEntries(
-  [...new Set([...statsFields, ...rowFields, caption].map((f) => f.fontId))].map((id) => {
+  [
+    ...new Set(
+      [...statsFields, ...rowFields, caption, ...advancedFields, ...confirmFields].map(
+        (f) => f.fontId,
+      ),
+    ),
+  ].map((id) => {
     const f = symbols.fonts.find((f) => f.id === id)!;
     return [
       id,
@@ -100,6 +240,7 @@ const fonts = Object.fromEntries(
 const data = {
   origin,
   fonts,
+  advanced,
   stats: {
     symbol: 803,
     fields: statsFields,
