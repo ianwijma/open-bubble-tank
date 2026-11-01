@@ -5,6 +5,8 @@ import type { SwfMatrix } from '../assets/asset-pack';
 import type { TankDesign } from './types';
 import { partById } from '../data/catalog';
 export interface CreatorField {
+  advances?: Record<string, number>;
+  deviceFont?: boolean;
   name: string;
   initialText?: string;
   symbol: number;

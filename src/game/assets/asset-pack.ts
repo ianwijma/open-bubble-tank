@@ -148,8 +148,15 @@ export interface SymbolResult {
       text: string;
       color?: number[];
       leading?: number;
+      maxLength?: number;
       margins?: number[];
-      flags?: { wordWrap: boolean; multiline: boolean; readOnly: boolean; html: boolean };
+      flags?: {
+        wordWrap: boolean;
+        multiline: boolean;
+        readOnly: boolean;
+        html: boolean;
+        useOutlines?: boolean;
+      };
     }[];
     symbolNames: Record<string, string>;
   };
