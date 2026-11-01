@@ -3,6 +3,14 @@ import { createRoot } from 'react-dom/client';
 import { createPortal } from 'react-dom';
 import { CreatorButton, CreatorSlider } from '../../src/components/creator-controls';
 import { CREATOR_CONTROLS } from '../../src/game/core/creator-controls';
+import { CREATOR_PALETTE } from '../../src/game/core/creator-palette';
+import {
+  ENEMY_STAT_LIMITS,
+  NEW_ENEMY_STATS,
+  enemyStatHandle,
+  enemyStatFromHandle,
+  type EnemyStat,
+} from '../../src/game/core/creator-enemy-stats';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 
 function ControlsFixture({
@@ -19,8 +27,12 @@ function ControlsFixture({
     [scale, setScale] = useState(1),
     [rotation, setRotation] = useState(0),
     [resetKey, setResetKey] = useState({}),
+    [enemy, setEnemy] = useState(NEW_ENEMY_STATS),
+    [enemyDisabled, setEnemyDisabled] = useState(false),
+    [enemyReset, setEnemyReset] = useState(0),
     [x, setX] = useState(0);
   const held = useRef(0),
+    beforeEnemy = useRef(enemy),
     before = useRef(1);
   const report = (name: string, value: unknown) => {
     host.dataset[name] = JSON.stringify(value);
@@ -110,12 +122,54 @@ function ControlsFixture({
             />
           );
         })}
+        {CREATOR_PALETTE.advanced.sliders.map((layout, index) => {
+          const key: EnemyStat = (['life', 'reward', 'speed'] as const)[index];
+          return (
+            <CreatorSlider
+              key={layout.name}
+              pack={pack}
+              layout={layout}
+              label={`Fixture enemy ${key}`}
+              value={enemy[key]}
+              resetKey={enemyReset}
+              disabled={enemyDisabled}
+              {...ENEMY_STAT_LIMITS[key]}
+              coordinates={{
+                min: -55,
+                max: 55,
+                toX: (v) => enemyStatHandle(key, v),
+                fromX: (v) => enemyStatFromHandle(key, v),
+              }}
+              onBegin={() => {
+                beforeEnemy.current = enemy;
+                record('enemyBegins');
+              }}
+              onChange={(v) => setEnemy((current) => ({ ...current, [key]: v }))}
+              onEnd={(cancel) => {
+                if (cancel) setEnemy(beforeEnemy.current);
+                report('enemyCancel', cancel);
+                record('enemyEnds');
+              }}
+            />
+          );
+        })}
         <span className="sr-only" data-control-values>
-          {JSON.stringify({ checked, scale, rotation, x })}
+          {JSON.stringify({ checked, scale, rotation, x, enemy })}
         </span>
       </div>
       {createPortal(
         <div>
+          <button onClick={() => setEnemyDisabled((value) => !value)}>
+            Toggle fixture enemy disabled
+          </button>
+          <button
+            onClick={() => {
+              setEnemy(NEW_ENEMY_STATS);
+              setEnemyReset((value) => value + 1);
+            }}
+          >
+            Reset fixture enemy
+          </button>
           <button onClick={() => setUndo((v) => !v)}>Toggle fixture undo</button>
           <button
             onClick={() => {
