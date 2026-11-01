@@ -1058,10 +1058,17 @@ export class AssetPack {
     }
     return false;
   }
-  textSvg(text: string, size: number, color = '#ffffff', fontName = 'Billo'): string | null {
-    const font = [...this.fonts.values()].find(
-      (f) => f.name.startsWith(fontName) && f.advances?.length,
-    );
+  textSvg(
+    text: string,
+    size: number,
+    color = '#ffffff',
+    fontName = 'Billo',
+    letterSpacing = 0,
+    fontId?: number,
+  ): string | null {
+    const font =
+      (fontId === undefined ? undefined : this.fonts.get(fontId)) ??
+      [...this.fonts.values()].find((f) => f.name.startsWith(fontName) && f.advances?.length);
     if (!font) return null;
     let x = 0,
       body = '';
@@ -1069,11 +1076,11 @@ export class AssetPack {
     for (const ch of text) {
       const index = font.codeTable.indexOf(ch.charCodeAt(0));
       if (index < 0) {
-        x += size * 0.4;
+        x += size * 0.4 + letterSpacing;
         continue;
       }
       body += `<path transform="translate(${x} ${size}) scale(${scale})" d="${font.glyphs[index]}"/>`;
-      x += ((font.advances?.[index] ?? 10240) / 20) * scale;
+      x += ((font.advances?.[index] ?? 10240) / 20) * scale + letterSpacing;
     }
     return `<svg xmlns="http://www.w3.org/2000/svg" width="${Math.max(1, x)}" height="${size * 1.4}" viewBox="0 0 ${Math.max(1, x)} ${size * 1.4}"><g fill="${escapeXml(color)}">${body}</g></svg>`;
   }
