@@ -87,7 +87,6 @@ for (const assets of ['mock', 'SWF'])
     await click(130, 110);
     await drag(-60, -70, 125, 50);
     await expect(page.getByText('Selected parts (3)', { exact: true })).toBeVisible();
-    await page.getByText('Selected parts (3)', { exact: true }).click();
     await page.getByLabel('Part scale').fill('1.4');
     await page.getByLabel('Part rotation').fill('45');
     saved = await snapshot(page);
@@ -118,8 +117,6 @@ for (const assets of ['mock', 'SWF'])
     // after reaching the axis: the SWF checks snap candidates before moving.
     await page.getByRole('button', { name: 'Undo', exact: true }).click();
     await page.getByLabel('Symmetric Mode').check();
-    const inspector = page.locator('details.creator-inspector');
-    if ((await inspector.getAttribute('open')) !== null) await inspector.locator('summary').click();
     await click(-30, -45);
     const from = await at(-30, -45),
       axis = await at(-30, 0),
