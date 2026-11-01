@@ -161,7 +161,7 @@ for (const native of [false, true])
     expect(errors).toEqual([]);
   });
 
-test('an early confirmation response resumes opening and retains the source frame12 stop', async ({
+test('mock early confirmation response resumes opening and retains the source frame12 stop', async ({
   page,
 }) => {
   await page.clock.install({ time: new Date('2024-12-10T08:00:00') });
