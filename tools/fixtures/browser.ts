@@ -1,3 +1,4 @@
+import { showCreatorText } from './creator-text';
 import { showCreatorControls } from './creator-controls';
 import { showCreatorButtons } from './creator-buttons';
 import { showMainMenuFlow } from './main-menu';
@@ -126,6 +127,12 @@ async function reset() {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
     unmountScreen = showHotkeyInput(stage);
     status.textContent = 'Ready · production keyboard input and profile validation';
+    return;
+  }
+  if (fixture.value === 'creator-text') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    unmountScreen = showCreatorText(pack, stage);
+    status.textContent = 'Ready · isolated creator text fields';
     return;
   }
   if (fixture.value === 'creator-controls') {
