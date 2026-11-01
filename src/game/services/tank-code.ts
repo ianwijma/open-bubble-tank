@@ -111,7 +111,7 @@ export async function encodeTankCode(tank: TankDesign): Promise<string> {
     tank.life,
     tank.reward,
     tank.speed,
-    difficulty(tank),
+    tank.difficulty,
     tank.id,
     0,
   ].join(',');

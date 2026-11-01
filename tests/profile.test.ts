@@ -1,5 +1,5 @@
 import { expect, test } from 'bun:test';
-import { STARTER } from '../src/game/data/catalog';
+import { STARTER, difficulty } from '../src/game/data/catalog';
 import {
   defaultProfile,
   importDesign,
@@ -112,4 +112,17 @@ test('optional original-code identity metadata rejects nonstrings and oversized 
   expect(validateDesign({ ...STARTER, sourceCode: 'wrong' })).toBe(false);
   expect(validateDesign({ ...STARTER, sourceCode: 'a'.repeat(200006) })).toBe(false);
   expect(validateDesign(STARTER)).toBe(true);
+});
+
+test('creator saves preserve submitted names and refresh difficulty instead of stale imported data', () => {
+  const profile = defaultProfile();
+  const design = { ...STARTER, name: '  A Tank  ', author: "Alice O'Brien", difficulty: -12345 };
+  const saved = saveCreatedTank(profile, design);
+  expect(saved.tank.author).toBe(design.author);
+  expect(saved.tank.name).toBe(design.name);
+  expect(saved.tank.difficulty).toBe(difficulty(design));
+  expect(saved.tank.sourceCode).toBeUndefined();
+  expect(design.difficulty).toBe(-12345);
+  expect(profile.tanks).toHaveLength(0);
+  expect(profile.nextTankId).toBe(10000001);
 });

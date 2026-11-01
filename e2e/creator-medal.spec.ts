@@ -27,6 +27,8 @@ for (const native of [false, true])
             ...STARTER,
             id: `imported-${index}`,
             name: `Imported ${index}`,
+            author: "Alice O'Brien",
+            difficulty: -12345,
             avatar,
           }),
         ),
@@ -50,6 +52,10 @@ for (const native of [false, true])
       'L10000001',
     ]);
     expect(profile.tanks[2].sourceCode).toBeUndefined();
+    expect(profile.tanks[2].author).toBe("Alice O'Brien");
+    expect(profile.tanks[2].difficulty).not.toBe(-12345);
+    expect(profile.tanks[0].difficulty).toBe(-12345);
+    expect(profile.tanks[0].name).toBe('Imported 0');
     expect(profile.achievements).toContain('Tank Creator');
     expect(profile.nextTankId).toBe(10000002);
     await page.reload();
