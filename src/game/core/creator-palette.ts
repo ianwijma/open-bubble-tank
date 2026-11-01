@@ -160,7 +160,7 @@ export function creatorGlyphLayout(text: string, field: CreatorField) {
   let width = 0;
   const glyphs = Array.from(text, (char) => {
     const x = width,
-      advance = CREATOR_PALETTE.fonts[field.fontId]?.[char];
+      advance = (field.advances ?? CREATOR_PALETTE.fonts[field.fontId])?.[char];
     width +=
       (advance === undefined ? field.size * 0.4 : (advance * field.size) / 1024) + field.spacing;
     return { char, x };

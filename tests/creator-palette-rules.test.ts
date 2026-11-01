@@ -94,3 +94,22 @@ test('mock caption uses source character advances and stays on one line', () => 
     text,
   ]);
 });
+
+test('per-field character advances take precedence without changing global font defaults', () => {
+  const field = {
+    ...CREATOR_PALETTE.library.caption,
+    size: 10,
+    spacing: 1,
+    advances: { A: 1024, B: 512 },
+  };
+  expect(creatorGlyphLayout('ABA', field)).toEqual({
+    glyphs: [
+      { char: 'A', x: 0 },
+      { char: 'B', x: 11 },
+      { char: 'A', x: 17 },
+    ],
+    width: 28,
+  });
+  expect(creatorGlyphLayout('C', field).width).toBe(5);
+  expect(creatorGlyphLayout('AA', { ...field, advances: { A: 0 } }).width).toBe(2);
+});
