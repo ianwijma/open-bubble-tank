@@ -6,11 +6,38 @@ import {
   extractSymbols,
   morphShapeAtRatio,
   parseSpriteTag,
+  parseEditTextTag,
   shapeToSVG,
 } from '../src/game/assets/swf-symbols.mjs';
 import type { SymbolResult } from '../src/game/assets/asset-pack';
 const file =
   process.env.BT3_SWF_FILE ?? resolve('../documented-bubble-tank-3/re/bt3/uncompressed.swf');
+test('DefineEditText reads signed little-endian leading without consuming the variable name', () => {
+  for (const leading of [0, 40, -40, 256, -256, 32767, -32768]) {
+    const result = parseEditTextTag(
+      Uint8Array.from([
+        1,
+        0,
+        0x08,
+        0x00,
+        0,
+        0x20,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        leading & 255,
+        (leading >> 8) & 255,
+        120,
+        0,
+      ]),
+    );
+    expect(result).toMatchObject({ leading, variableName: 'x', align: 0, margins: [0, 0, 0] });
+  }
+});
 test('PlaceObject3 reads both flag bytes before depth and keeps removal events', () => {
   // DefineSprite header; PlaceObject3 len 6: HasCharacter, flags2=0, depth513, cid729.
   const code = (70 << 6) | 6;
