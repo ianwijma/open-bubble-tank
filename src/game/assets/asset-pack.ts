@@ -144,6 +144,10 @@ export interface SymbolResult {
       fontId?: number;
       align: number;
       text: string;
+      color?: number[];
+      leading?: number;
+      margins?: number[];
+      flags?: { wordWrap: boolean; multiline: boolean; readOnly: boolean; html: boolean };
     }[];
     symbolNames: Record<string, string>;
   };
