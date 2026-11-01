@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import type { AssetPack } from '@/game/assets/asset-pack';
 import type { Profile, Settings, TankDesign } from '@/game/core/types';
 import { STARTER } from '@/game/data/catalog';
+import { NEW_ENEMY_STATS } from '@/game/core/creator-enemy-stats';
 import { World } from '@/game/simulation/world';
 import { AudioManager } from '@/game/services/audio';
 import { StageRuntime } from '@/game/services/stage-runtime';
@@ -271,9 +272,7 @@ export default function GameShell() {
                       id: 'new',
                       name: 'My Enemy Tank',
                       avatar: false,
-                      life: 1,
-                      reward: 1,
-                      speed: 1,
+                      ...NEW_ENEMY_STATS,
                       parts: [],
                     });
                   } else if (name === 'partsPacks_btn') showScreen('library');

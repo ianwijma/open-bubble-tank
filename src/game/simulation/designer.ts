@@ -48,14 +48,4 @@ export function validateBuild(design: TankDesign, level: number, maxClass: numbe
   }
   return [...new Set(errors)];
 }
-export function suggestedStats(design: TankDesign) {
-  const { gp, bp } = costs(design.parts),
-    c = design.classId;
-  const life = Math.max(1, Math.round((bp / 2 + gp * 3) * c));
-  const reward = Math.max(
-    1,
-    Math.round(life * (0.3 * ((7 - c) / 6) + 0.005 * gp + 0.1 - Math.min(0.1, 0.0005 * life))),
-  );
-  const speed = Math.max(0.1, Math.floor((3 * ((6 - c) / 6) + 0.5 - gp * 0.1) * 100) / 100);
-  return { life, reward, speed };
-}
+export { creatorSuggestedStats as suggestedStats } from '../core/creator-enemy-stats';

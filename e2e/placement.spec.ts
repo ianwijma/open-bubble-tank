@@ -38,7 +38,7 @@ for (const assets of ['mock', 'SWF'])
     else await page.getByRole('button', { name: 'Play with mock assets' }).click();
     await waitForMainMenu(page);
     await page.getByRole('button', { name: 'Enemy tank creator' }).click({ timeout: 60000 });
-    expect(await snapshot(page)).toMatchObject({ parts: [], life: 1, reward: 1, speed: 1 });
+    expect(await snapshot(page)).toMatchObject({ parts: [], life: 20, reward: 20, speed: 2 });
     const row = page.getByRole('button', { name: 'Place Medium Bubble', exact: true });
     await row.click();
     await expect(row).toHaveAttribute('aria-pressed', 'true');
