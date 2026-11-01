@@ -4,7 +4,8 @@ import type { AssetPack } from '@/game/assets/asset-pack';
 import { measureClass } from '@/game/assets/class-measurement';
 import type { TankDesign, TankPart } from '@/game/core/types';
 import { costs, gunBudget, PARTS, partById } from '@/game/data/catalog';
-import { canPlacePart, suggestedStats, validateBuild } from '@/game/simulation/designer';
+import { canPlacePart, validateBuild } from '@/game/simulation/designer';
+import { creatorSuggestedStats, creatorImportedSuggested } from '@/game/core/creator-enemy-stats';
 import { exportDesign } from '@/game/services/profile';
 import { firstAffordablePart, orderedPalette } from '@/game/simulation/editor-palette';
 import { CreatorButton, CreatorSlider } from './creator-controls';
@@ -81,6 +82,11 @@ export function TankCreator({
     [message, setMessage] = useState(''),
     [loading, setLoading] = useState(false);
   const [undo, setUndo] = useState<TankDesign[]>([]);
+  const [suggested, setSuggested] = useState(
+    () =>
+      !initial.avatar &&
+      (initial.id === 'new' || creatorImportedSuggested(initial, { parts: [], classId: 1 })),
+  );
   const canvas = useRef<HTMLCanvasElement>(null);
   const previewCanvas = useRef<HTMLCanvasElement>(null);
   const artwork = useRef<import('@/game/render/creator-artwork').CreatorArtwork | null>(null);
@@ -479,7 +485,11 @@ export function TankCreator({
             setMessage(errors[0]);
             return;
           }
-          onSave({ ...finalDesign, name: design.name.trim() || 'Untitled Tank' });
+          onSave({
+            ...finalDesign,
+            ...(!design.avatar && suggested ? creatorSuggestedStats(finalDesign, 'save') : {}),
+            name: design.name.trim() || 'Untitled Tank',
+          });
         }}
       />
       <CreatorButton pack={pack} name="Exit_mc" label="Exit tank creator" onClick={onExit} />
@@ -605,7 +615,13 @@ export function TankCreator({
         <CreatorStats pack={pack} design={design} classId={classId} />
       </div>
       {!design.avatar ? (
-        <details className="creator-inspector">
+        <details
+          className="creator-inspector"
+          onToggle={(e) => {
+            if (e.currentTarget.open && suggested)
+              setDesign({ ...design, ...creatorSuggestedStats(finalDesign) });
+          }}
+        >
           <summary>Enemy stats</summary>
           <div>
             {!design.avatar ? (
@@ -620,11 +636,19 @@ export function TankCreator({
                       max={key === 'speed' ? 4 : key === 'life' ? 1000 : 500}
                       step={key === 'speed' ? 0.1 : 1}
                       value={design[key]}
-                      onChange={(e) => setDesign({ ...design, [key]: Number(e.target.value) })}
+                      onChange={(e) => {
+                        setSuggested(false);
+                        setDesign({ ...design, [key]: Number(e.target.value) });
+                      }}
                     />
                   </label>
                 ))}
-                <button onClick={() => setDesign({ ...design, ...suggestedStats(finalDesign) })}>
+                <button
+                  onClick={() => {
+                    setSuggested(true);
+                    setDesign({ ...design, ...creatorSuggestedStats(finalDesign) });
+                  }}
+                >
                   Use suggested stats
                 </button>
               </div>
@@ -800,6 +824,8 @@ export function TankCreator({
               setMessage(`Load an ${design.avatar ? 'avatar' : 'enemy'} tank.`);
               return;
             }
+            if (!design.avatar)
+              setSuggested((current) => creatorImportedSuggested(tank, finalDesign, current));
             commit(tank);
             placement.current = null;
             setSelection(emptySelection());
