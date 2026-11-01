@@ -2115,3 +2115,60 @@ kbd {
   line-height: 1;
   white-space: pre;
 }
+
+.creator-save-dialog {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  outline: none;
+}
+.creator-save-dialog > svg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.creator-dialog-button {
+  position: absolute;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.creator-dialog-button:focus-visible {
+  outline: 1px solid white;
+}
+.creator-save-dialog .creator-dialog-input {
+  position: absolute;
+  box-sizing: border-box;
+  padding: 2px;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  color: transparent;
+  caret-color: white;
+  font-family: Arial, sans-serif;
+}
+.creator-dialog-input::selection {
+  background: #2980a580;
+  color: transparent;
+}
+.creator-save-dialog .creator-dialog-code {
+  position: absolute;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 2px;
+  border: 0;
+  border-radius: 0;
+  resize: none;
+  background: transparent;
+  color: white;
+  font-family: Arial, sans-serif;
+  overflow-wrap: anywhere;
+}
+.creator-dialog-status {
+  position: absolute;
+  bottom: 3px;
+  left: 10px;
+  margin: 0;
+  font-size: 10px;
+}
