@@ -116,6 +116,7 @@ interface FontInfo {
   advances?: number[];
   ascent?: number;
   descent?: number;
+  leading?: number;
 }
 interface TextInfo {
   id: number;

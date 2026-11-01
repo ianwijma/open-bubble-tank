@@ -46,6 +46,27 @@ export function CreatorPrimitives({ pieces }: { pieces: CreatorPrimitive[] }) {
               strokeWidth={1}
             />
           </>
+        ) : p.kind === 'scroll-grip' ? (
+          <>
+            <rect x={x} y={y} width={w} height={h} {...style} />
+            {[8, 13, 18].map((offset) => (
+              <path
+                key={offset}
+                d={`M${x + 2.5} ${y + offset}h${w - 5}`}
+                stroke="#73b2ce"
+                strokeWidth={1}
+                fill="none"
+              />
+            ))}
+          </>
+        ) : p.kind === 'up-arrow' ? (
+          <>
+            <rect x={x} y={y} width={w} height={h} {...style} />
+            <path
+              d={`M${x + w / 2} ${y + h * 0.22}L${x + w * 0.8} ${y + h * 0.78}H${x + w * 0.2}Z`}
+              fill={style.stroke}
+            />
+          </>
         ) : p.kind === 'arrow' ? (
           <path d={`M${x} ${y + h / 2}L${x + w} ${y}v${h}Z`} {...style} />
         ) : (

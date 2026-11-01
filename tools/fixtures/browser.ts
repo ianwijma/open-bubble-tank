@@ -1,4 +1,5 @@
 import { showCreatorStatistics } from './creator-stats';
+import { showCreatorPaletteRows } from './creator-palette';
 import { showCreatorText } from './creator-text';
 import { showCreatorControls } from './creator-controls';
 import { showCreatorButtons } from './creator-buttons';
@@ -134,6 +135,12 @@ async function reset() {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
     unmountScreen = showCreatorStatistics(pack, stage);
     status.textContent = 'Ready · isolated creator statistics';
+    return;
+  }
+  if (fixture.value === 'creator-palette-rows') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    unmountScreen = showCreatorPaletteRows(pack, stage);
+    status.textContent = 'Ready · isolated locked creator palette';
     return;
   }
   if (fixture.value === 'creator-text') {
