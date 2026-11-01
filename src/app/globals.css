@@ -2083,3 +2083,12 @@ kbd {
   max-width: none;
   vertical-align: top;
 }
+
+.creator-text-field {
+  position: absolute;
+  display: block;
+  overflow: hidden;
+  pointer-events: none;
+  line-height: 1;
+  white-space: pre;
+}
