@@ -511,6 +511,49 @@ export class AssetPack {
             if (raster)
               pack.creatorFrames.set(`palette:row:${frame}:${Number(body)}:${code}`, raster);
           }
+      const enemy = CREATOR_PALETTE.advanced;
+      const advancedPose = new SwfClip(enemy.symbol, pack);
+      advancedPose.start(2, false);
+      advancedPose.placements = advancedPose.placements.filter((p) => !p.name);
+      const advancedRaster = await pack.rasterClip(advancedPose);
+      if (advancedRaster) pack.creatorFrames.set('enemy:static', advancedRaster);
+      for (const [key, piece] of [
+        ['tab', enemy.tab],
+        ['basic', enemy.basicTab],
+      ] as const)
+        for (const state of ['up', 'over', 'down'] as const) {
+          const raster = await pack.rasterSymbol(piece.symbol, 1, 0, state);
+          if (raster) pack.creatorFrames.set(`enemy:${key}:${state}`, raster);
+        }
+      for (const frame of [1, 2]) {
+        const raster = await pack.rasterSymbol(enemy.suggested.symbol, frame);
+        if (raster) pack.creatorFrames.set(`enemy:suggested:${frame}`, raster);
+      }
+      const sliderPose = new SwfClip(enemy.sliders[0].symbol, pack);
+      sliderPose.start(1, false);
+      sliderPose.placements = sliderPose.placements.filter((p) => !p.name);
+      const track = await pack.rasterClip(sliderPose);
+      if (track)
+        for (const slider of enemy.sliders) pack.creatorFrames.set(`${slider.name}:track`, track);
+      for (const button of enemy.confirm.buttons)
+        for (const state of ['over', 'down'] as const) {
+          const raster = await pack.rasterSymbol(button.symbol, 11, 0, state);
+          if (raster) pack.creatorFrames.set(`enemy:confirm:${button.name}:${state}`, raster);
+        }
+      const confirmPose = new SwfClip(enemy.confirm.symbol, pack);
+      confirmPose.start(1, false);
+      confirmPose.gotoAndPlay(2);
+      // Source stops the parent at12 and button children at11; resume the same tree to close.
+      for (let frame = 2; frame <= 22; frame++) {
+        if (frame === 13) confirmPose.play();
+        confirmPose.advance(frame - 1);
+        if (frame === 12) {
+          confirmPose.gotoAndStop(12);
+          for (const child of confirmPose.children.values()) child.clip.gotoAndStop(11);
+        }
+        const raster = await pack.rasterClip(confirmPose);
+        if (raster) pack.creatorFrames.set(`enemy:confirm:${frame}`, raster);
+      }
       onProgress(1, 'Assets ready');
       return pack;
     } catch (e) {
