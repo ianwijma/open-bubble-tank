@@ -134,9 +134,13 @@ async function reset() {
     status.textContent = 'Ready · isolated creator control components';
     return;
   }
-  if (fixture.value === 'creator-buttons') {
+  if (fixture.value === 'creator-buttons' || fixture.value === 'creator-palette-art') {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
-    unmountScreen = await showCreatorButtons(pack, stage);
+    unmountScreen = await showCreatorButtons(
+      pack,
+      stage,
+      fixture.value === 'creator-palette-art' ? 'palette' : 'controls',
+    );
     status.textContent = 'Ready · creator button raster states';
     return;
   }

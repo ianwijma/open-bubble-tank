@@ -99,16 +99,26 @@ async function synthetic() {
 }
 
 /** Exercise production raster APIs; supplied media stays in memory and outside the repository. */
-export async function showCreatorButtons(pack: AssetPack, host: HTMLElement) {
+export async function showCreatorButtons(
+  pack: AssetPack,
+  host: HTMLElement,
+  subset: 'controls' | 'palette' = 'controls',
+) {
   const primitive = await synthetic();
   const canvas = document.createElement('canvas');
   canvas.width = 550;
   canvas.height = 450;
-  canvas.setAttribute('aria-label', 'Creator button raster states');
+  canvas.setAttribute(
+    'aria-label',
+    subset === 'palette' ? 'Creator palette raster states' : 'Creator button raster states',
+  );
   const ctx = canvas.getContext('2d')!;
   ctx.fillStyle = '#0b3c5a';
   ctx.fillRect(0, 0, 550, 450);
-  const rows = [...pack.creatorFrames].map(([key, raster], index) => {
+  const frames = [...pack.creatorFrames].filter(([key]) =>
+    subset === 'palette' ? key.startsWith('palette:') : !key.startsWith('palette:'),
+  );
+  const rows = frames.map(([key, raster], index) => {
     const x = (index % 7) * 78,
       y = Math.floor(index / 7) * 62;
     const scale = Math.min(1, 72 / raster.width, 42 / raster.height);
@@ -122,7 +132,11 @@ export async function showCreatorButtons(pack: AssetPack, host: HTMLElement) {
     ctx.fillStyle = '#fff';
     ctx.font = '7px Arial';
     ctx.fillText(key.replace('_mc', ''), x + 2, y + 57, 75);
-    return { key, ...proof(raster) };
+    return {
+      key,
+      ...proof(raster),
+      ...(key.startsWith('palette:row:') ? { pixel: sample(raster, 50, 10) } : {}),
+    };
   });
   host.append(canvas);
   host.dataset.creatorButtons = JSON.stringify({ primitive, rows });
