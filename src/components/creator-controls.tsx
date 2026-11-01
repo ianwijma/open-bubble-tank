@@ -29,7 +29,9 @@ export function CreatorPrimitives({ pieces }: { pieces: CreatorPrimitive[] }) {
               key={j}
               x={g.x}
               y={g.y}
-              fontFamily="monospace"
+              fontFamily={p.font?.startsWith('Arial') ? 'Arial, sans-serif' : 'monospace'}
+              fontWeight={p.bold ? 'bold' : 'normal'}
+              fontStyle={p.italic ? 'italic' : 'normal'}
               fontSize={g.size}
               fill={rgba(g.color)}
             >

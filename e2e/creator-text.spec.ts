@@ -6,6 +6,9 @@ const CREATOR_PALETTE = JSON.parse(
 ) as typeof import('../src/game/core/creator-palette').CREATOR_PALETTE;
 const swf =
   process.env.BT3_SWF_FILE ?? resolve('../documented-bubble-tank-3/re/bt3/uncompressed.swf');
+const dialogs = JSON.parse(
+  readFileSync(resolve('src/game/data/creator-dialogs.json'), 'utf8'),
+) as typeof import('../src/game/core/creator-dialogs').CREATOR_DIALOGS;
 for (const native of [false, true])
   test(`${native ? 'SWF' : 'mock'} creator text uses source fonts, alignment, line spacing and clipped accessible fields`, async ({
     page,
@@ -93,5 +96,85 @@ for (const native of [false, true])
     await expect(page.getByRole('status')).toContainText('Ready');
     await expect(page.locator('.creator-text-field')).toHaveCount(0);
     await expect(page.locator('#stage')).not.toHaveAttribute('data-creator-text');
+    expect(errors).toEqual([]);
+  });
+
+for (const native of [false, true])
+  test(`${native ? 'SWF' : 'mock'} creator device-font text retains paragraphs, color and inline advances`, async ({
+    page,
+  }, testInfo) => {
+    test.skip(native && !existsSync(swf), 'A local research SWF is required.');
+    const errors: string[] = [];
+    page.on('pageerror', (error) => errors.push(error.message));
+    await page.goto('http://127.0.0.1:3102');
+    await page.getByLabel('Fixture').selectOption('creator-text');
+    if (native) await page.getByLabel('Original SWF').setInputFiles(swf);
+    else await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
+    await expect(page.getByRole('status')).toContainText('Ready', { timeout: 60000 });
+    const device = page.locator('[data-creator-field="device"]'),
+      paragraph = device.locator(':scope > [aria-hidden="true"]'),
+      nowrap = page.locator('[data-creator-field="device-nowrap"]'),
+      inline = page.locator('[data-creator-field="inline-advances"]');
+    await expect(device.locator('img')).toHaveCount(0);
+    await expect(paragraph.locator(':scope > *')).toHaveCount(0);
+    expect(await paragraph.textContent()).toBe(
+      'First device line\nSecond device line\nThird device line',
+    );
+    await expect(device).toHaveCSS('color', 'rgb(32, 160, 224)');
+    expect(parseFloat(await device.evaluate((n) => getComputedStyle(n).opacity))).toBeCloseTo(
+      128 / 255,
+      6,
+    );
+    await expect(paragraph).toHaveCSS('font-family', 'Arial, sans-serif');
+    await expect(paragraph).toHaveCSS('white-space', 'pre-wrap');
+    await expect(paragraph).toHaveCSS('text-align', 'left');
+    const codeField = dialogs.frames.find((f) => f.frame === 3)!.fields[0],
+      label = dialogs.frames.find((f) => f.frame === 1)!.fields[0];
+    expect(parseFloat(await paragraph.evaluate((n) => getComputedStyle(n).lineHeight))).toBeCloseTo(
+      codeField.lineHeight,
+      3,
+    );
+    const positions = await paragraph.evaluate((node) => {
+      const text = node.firstChild!;
+      return [0, text.textContent!.indexOf('Second'), text.textContent!.indexOf('Third')].map(
+        (start) => {
+          const range = document.createRange();
+          range.setStart(text, start);
+          range.setEnd(text, start + 1);
+          return range.getBoundingClientRect().y;
+        },
+      );
+    });
+    expect(positions[1] - positions[0]).toBeCloseTo(codeField.lineHeight, 2);
+    expect(positions[2] - positions[1]).toBeCloseTo(codeField.lineHeight, 2);
+    const unwrapped = nowrap.locator(':scope > [aria-hidden="true"]');
+    await expect(unwrapped).toHaveCSS('white-space', 'pre');
+    await expect(unwrapped).toHaveCSS('text-align', 'center');
+    await expect(nowrap).toHaveCSS('overflow', 'hidden');
+    const width = ((label.advances!.B + label.advances!.C) * label.size) / 1024;
+    expect(
+      await inline
+        .locator(':scope > [aria-hidden="true"]')
+        .evaluate((node) => parseFloat((node as HTMLElement).style.left)),
+    ).toBeCloseTo((160 - width) / 2, 3);
+    await expect(inline.locator('img')).toHaveCount(native ? 1 : 0);
+    if (native)
+      await expect
+        .poll(() =>
+          inline
+            .locator('img')
+            .evaluate(
+              (node) =>
+                (node as HTMLImageElement).complete && (node as HTMLImageElement).naturalWidth > 0,
+            ),
+        )
+        .toBe(true);
+    const primitive = page.locator('[data-primitive-font] text').first();
+    await expect(primitive).toHaveAttribute('font-family', 'Arial, sans-serif');
+    await expect(primitive).toHaveAttribute('font-weight', 'normal');
+    await expect(primitive).toHaveAttribute('font-style', 'normal');
+    await page
+      .locator('#stage')
+      .screenshot({ path: testInfo.outputPath(`${native ? 'native' : 'mock'}-device-text.png`) });
     expect(errors).toEqual([]);
   });
