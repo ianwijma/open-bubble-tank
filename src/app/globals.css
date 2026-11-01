@@ -1371,17 +1371,7 @@ kbd {
   padding: 3px 6px;
   background: #98b4d352;
 }
-.creator-stats-tab {
-  position: absolute;
-  left: 392px;
-  top: 5px;
-  width: 60px;
-  height: 22px;
-  z-index: 3;
-  padding: 6px 15px;
-  font-size: 8px;
-  background: #a1d4e64d;
-}
+
 .creator-control {
   position: absolute;
   z-index: 4;
@@ -1534,20 +1524,13 @@ kbd {
 }
 .creator-stats {
   position: absolute;
-  left: 392px;
-  top: 27px;
-  width: 153px;
-  height: 139px;
-  background: #a1d4e64d;
-  padding: 6px 8px;
-  overflow-y: auto;
-  font-size: 8px;
+  width: 154px;
+  height: 161px;
+  overflow: hidden;
+  z-index: 2;
+  pointer-events: none;
 }
-.creator-summary p {
-  font-size: 8px;
-  line-height: 1.25;
-  margin-bottom: 10px;
-}
+
 .creator-inspector {
   position: absolute;
   left: 12px;

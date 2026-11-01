@@ -22,6 +22,12 @@ for (const native of [false, true])
       canvas = page.locator('.creator-workspace canvas');
     await expect(page.getByRole('button', { name: 'Align to Center', exact: true })).toHaveCount(0);
     await expect(page.getByRole('button', { name: 'Undo', exact: true })).toBeDisabled();
+    const stats = page.getByRole('complementary', { name: 'Tank statistics' });
+    await expect(stats.locator('[data-creator-field="Speed_txt"] > .sr-only')).toHaveText('');
+    await expect(stats.locator('[data-creator-field="primary_txt"] > .sr-only')).toHaveText('N/A');
+    await expect(
+      stats.locator('[data-creator-field="PrimarySecondary_txt"] > .sr-only'),
+    ).toHaveText('Primary Weapons:\n\n\nBehavior Weapons:');
     await page.getByRole('button', { name: 'Original game size', exact: true }).click();
     await expect.poll(async () => (await canvas.boundingBox())?.width).toBe(350);
     await dropPreview(page, -20, -25);
