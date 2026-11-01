@@ -23,6 +23,7 @@ for (const native of [false, true])
     await expect(page.getByRole('button', { name: 'Align to Center', exact: true })).toHaveCount(0);
     await expect(page.getByRole('button', { name: 'Undo', exact: true })).toBeDisabled();
     await page.getByRole('button', { name: 'Original game size', exact: true }).click();
+    await expect.poll(async () => (await canvas.boundingBox())?.width).toBe(350);
     await dropPreview(page, -20, -25);
     const box = (await canvas.boundingBox())!;
     await page.mouse.click(box.x + (155 * box.width) / 350, box.y + (150 * box.height) / 350);
