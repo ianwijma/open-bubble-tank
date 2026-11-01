@@ -61,7 +61,11 @@ export function TankCreator({
   onExit: () => void;
 }) {
   const [design, setDesign] = useState<TankDesign>(() => structuredClone(initial));
-  const classId = useMemo(() => measureClass(design, pack), [design, pack]);
+  const [transformClass, setTransformClass] = useState<number | null>(null);
+  const classId = useMemo(
+    () => transformClass ?? measureClass(design, pack),
+    [design, pack, transformClass],
+  );
   const finalDesign = useMemo(() => ({ ...design, classId }), [design, classId]);
   const { gp, bp } = costs(design.parts),
     budget = design.avatar ? gunBudget(classId, level) : Math.floor(gunBudget(classId, 6) * 1.5);
@@ -124,10 +128,12 @@ export function TankCreator({
   const transform = selectedTransform(design.parts, selection);
   function beginControl() {
     controlBefore.current = structuredClone(design);
+    setTransformClass(classId);
   }
   function endControl(cancel = false) {
     const before = controlBefore.current;
     controlBefore.current = null;
+    setTransformClass(null);
     if (!before) return;
     if (cancel) setDesign(before);
     else if (JSON.stringify(design) !== JSON.stringify(before))

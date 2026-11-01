@@ -92,5 +92,28 @@ for (const native of [false, true])
     await creator.screenshot({
       path: `test-results/${native ? 'native' : 'mock'}-creator-controls.png`,
     });
+    await page.getByRole('button', { name: 'Place Huge Base Bubble', exact: true }).click();
+    await dropPreview(page, 0, 0);
+    await page.mouse.click(box.x + (175 * box.width) / 350, box.y + (175 * box.height) / 350);
+    const readClass = async () =>
+      Number(
+        (await creator.locator('.creator-meters > div').first().innerText()).match(
+          /Class\s+(\d+)/,
+        )![1],
+      );
+    const beforeClass = await readClass();
+    const beforeBudget = await creator.locator('.creator-meters > div').nth(2).innerText();
+    const beforeResize = await snapshot();
+    await page.mouse.move(r.x - 19 * factor, r.y + 2.25 * factor);
+    await page.mouse.down();
+    await page.mouse.move(r.x + 57 * factor, r.y + 2.25 * factor, { steps: 8 });
+    expect((await snapshot(true)).parts.some((part) => part.scale === 2)).toBe(true);
+    expect(await readClass()).toBe(beforeClass); // _-CI changes art; _-1N updates class on release.
+    expect(await creator.locator('.creator-meters > div').nth(2).innerText()).toBe(beforeBudget);
+    await page.mouse.up();
+    await expect.poll(readClass).toBeGreaterThan(beforeClass);
+    await page.getByRole('button', { name: 'Undo', exact: true }).click();
+    expect((await snapshot()).parts).toEqual(beforeResize.parts);
+    expect(await readClass()).toBe(beforeClass);
     expect(errors).toEqual([]);
   });
