@@ -2092,3 +2092,13 @@ kbd {
   line-height: 1;
   white-space: pre;
 }
+
+.creator-stats.creator-authored {
+  width: 154px;
+  height: 161px;
+  background: none;
+  padding: 0;
+  overflow: hidden;
+  z-index: 2;
+  pointer-events: none;
+}

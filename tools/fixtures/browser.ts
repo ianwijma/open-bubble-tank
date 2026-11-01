@@ -1,3 +1,4 @@
+import { showCreatorStatistics } from './creator-stats';
 import { showCreatorText } from './creator-text';
 import { showCreatorControls } from './creator-controls';
 import { showCreatorButtons } from './creator-buttons';
@@ -127,6 +128,12 @@ async function reset() {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
     unmountScreen = showHotkeyInput(stage);
     status.textContent = 'Ready · production keyboard input and profile validation';
+    return;
+  }
+  if (fixture.value === 'creator-stats') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    unmountScreen = showCreatorStatistics(pack, stage);
+    status.textContent = 'Ready · isolated creator statistics';
     return;
   }
   if (fixture.value === 'creator-text') {
