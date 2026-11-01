@@ -1,10 +1,12 @@
 import data from '../data/creator-palette.json';
+import type { CreatorSliderLayout } from './creator-controls';
 import type { CreatorPrimitive } from './creator-controls';
 import type { SwfMatrix } from '../assets/asset-pack';
 import type { TankDesign } from './types';
 import { partById } from '../data/catalog';
 export interface CreatorField {
   name: string;
+  initialText?: string;
   symbol: number;
   x: number;
   y: number;
@@ -32,6 +34,23 @@ interface Piece {
 }
 export const CREATOR_PALETTE = data as {
   origin: SwfMatrix;
+  advanced: {
+    symbol: number;
+    origin: SwfMatrix;
+    tab: Piece;
+    basicTab: Piece;
+    static: CreatorPrimitive[];
+    fields: CreatorField[];
+    suggested: Piece;
+    sliders: CreatorSliderLayout[];
+    confirm: {
+      symbol: number;
+      matrix: SwfMatrix;
+      fields: CreatorField[];
+      buttons: Piece[];
+      frames: { frame: number; fields: CreatorField[]; art: CreatorPrimitive[] }[];
+    };
+  };
   fonts: Record<number, Record<string, number>>;
   stats: {
     symbol: number;
