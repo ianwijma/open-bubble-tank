@@ -1,7 +1,8 @@
 import { expect, test } from 'bun:test';
 import { decodeTankCode, encodeTankCode } from '../src/game/services/tank-code';
-import { STARTER } from '../src/game/data/catalog';
+import { STARTER, difficulty } from '../src/game/data/catalog';
 import { existsSync, readFileSync } from 'node:fs';
+import { createDecipheriv } from 'node:crypto';
 const source = '../documented-bubble-tank-3/re/bt3/builtin_tanks.json';
 test('original tank code encrypt/decrypt round-trip preserves all part geometry', async () => {
   const code = await encodeTankCode(STARTER);
@@ -30,3 +31,23 @@ test.skipIf(!existsSync(source))(
     }
   },
 );
+
+test('original export writes stored difficulty while import recalculates it from the design', async () => {
+  const code = await encodeTankCode({ ...STARTER, difficulty: -12345 });
+  const decipher = createDecipheriv(
+    'aes-128-ecb',
+    Buffer.from(code.slice(0, 3) + code.slice(-3) + 'm7U5kDYy5W'),
+    null,
+  );
+  const plain = Buffer.concat([
+    decipher.update(Buffer.from(code.slice(3, -3), 'hex')),
+    decipher.final(),
+  ]).toString();
+  const header = plain.split(';')[0].split(',');
+  expect(header[8]).toBe('-12345');
+  expect(header[0]).toBe(STARTER.author);
+  expect(header[1]).toBe(STARTER.name);
+  const decoded = await decodeTankCode(code);
+  expect(decoded.difficulty).toBe(difficulty(decoded));
+  expect(decoded.parts).toEqual(STARTER.parts);
+});
