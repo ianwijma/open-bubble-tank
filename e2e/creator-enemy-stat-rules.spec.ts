@@ -24,7 +24,7 @@ for (const native of [false, true])
     await waitForMainMenu(page);
     await page.getByRole('button', { name: 'Enemy tank creator', exact: true }).click();
     expect(await snapshot(page)).toMatchObject({ life: 20, reward: 20, speed: 2, parts: [] });
-    await page.locator('.creator-inspector > summary').click();
+    await page.getByRole('button', { name: 'Enemy Info', exact: true }).click();
     await expect(page.getByLabel('Enemy life', { exact: true })).toHaveValue('0');
     await expect(page.getByLabel('Enemy reward', { exact: true })).toHaveValue('1');
     await expect(page.getByLabel('Enemy speed', { exact: true })).toHaveValue('3');
@@ -34,7 +34,7 @@ for (const native of [false, true])
     const design = await snapshot(page);
     expect(design.parts).toHaveLength(1);
     expect(design).toMatchObject({ classId: 1, life: 0 });
-    // Save recalculates from the changed geometry even when the open readout is stale.
+    // Save recalculates from the changed geometry even when the earlier panel readout is stale.
     await page.getByRole('button', { name: 'SAVE', exact: true }).click();
     const saved = () =>
       page.evaluate(
@@ -46,13 +46,20 @@ for (const native of [false, true])
     await waitForMainMenu(page);
     await page.getByRole('button', { name: 'My tanks', exact: true }).click();
     await page.getByRole('button', { name: 'Edit', exact: true }).click();
-    await page.locator('.creator-inspector > summary').click();
-    await page.getByRole('button', { name: 'Use suggested stats', exact: true }).click();
+    await page.getByRole('button', { name: 'Enemy Info', exact: true }).click();
+    const suggested = page.getByRole('checkbox', { name: 'Use Suggested Settings', exact: true });
+    await suggested.click();
+    const dialog = page.getByRole('dialog', { name: 'Replace manual enemy statistics' });
+    await expect(dialog).toHaveAttribute('data-confirm-frame', '12');
+    await page.getByRole('button', { name: 'Yes, use suggested settings', exact: true }).click();
+    await expect(dialog).toHaveCount(0);
+    await expect(suggested).toBeChecked();
+    await suggested.uncheck();
     await page.getByLabel('Enemy life', { exact: true }).fill('333');
     await page.getByLabel('Enemy reward', { exact: true }).fill('77');
     await page.getByLabel('Enemy speed', { exact: true }).fill('2.75');
-    await page.locator('.creator-inspector > summary').click();
-    await page.locator('.creator-inspector > summary').click();
+    await page.getByRole('button', { name: 'Tank statistics', exact: true }).click();
+    await page.getByRole('button', { name: 'Enemy Info', exact: true }).click();
     await expect(page.getByLabel('Enemy life', { exact: true })).toHaveValue('333');
     await page.getByRole('button', { name: 'SAVE', exact: true }).click();
     await expect.poll(async () => (await saved()).length).toBe(2);

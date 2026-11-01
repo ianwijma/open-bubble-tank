@@ -12,6 +12,7 @@ import { CreatorButton, CreatorSlider } from './creator-controls';
 import { CREATOR_CONTROLS } from '@/game/core/creator-controls';
 import { TankCodeDialog } from './tank-code-dialog';
 import { CreatorStats } from './creator-stats';
+import { CreatorEnemyStats, CreatorStatsTab } from './creator-enemy-stats';
 import { CreatorPaletteFrame, CreatorPaletteTabs, CreatorPaletteRows } from './creator-palette';
 import { CREATOR_PALETTE } from '@/game/core/creator-palette';
 import { CLASS_RINGS } from '@/game/core/constants';
@@ -81,6 +82,7 @@ export function TankCreator({
     [symmetric, setSymmetric] = useState(true),
     [message, setMessage] = useState(''),
     [loading, setLoading] = useState(false);
+  const [advanced, setAdvanced] = useState(false);
   const [undo, setUndo] = useState<TankDesign[]>([]);
   const [suggested, setSuggested] = useState(
     () =>
@@ -612,49 +614,29 @@ export function TankCreator({
           onPointerUp={() => finishDrag()}
           onPointerCancel={() => finishDrag(true)}
         />
-        <CreatorStats pack={pack} design={design} classId={classId} />
+        {advanced ? (
+          <CreatorStatsTab pack={pack} basic onClick={() => setAdvanced(false)} />
+        ) : (
+          <CreatorStats pack={pack} design={design} classId={classId} />
+        )}
       </div>
       {!design.avatar ? (
-        <details
-          className="creator-inspector"
-          onToggle={(e) => {
-            if (e.currentTarget.open && suggested)
-              setDesign({ ...design, ...creatorSuggestedStats(finalDesign) });
+        <CreatorEnemyStats
+          pack={pack}
+          values={design}
+          suggested={suggested}
+          open={advanced}
+          fps={fps}
+          onOpen={() => {
+            setAdvanced(true);
+            if (suggested) setDesign({ ...design, ...creatorSuggestedStats(finalDesign) });
           }}
-        >
-          <summary>Enemy stats</summary>
-          <div>
-            {!design.avatar ? (
-              <div className="enemy-stats">
-                {(['life', 'reward', 'speed'] as const).map((key) => (
-                  <label key={key}>
-                    {key === 'reward' ? 'Bubbles' : key}
-                    <input
-                      aria-label={`Enemy ${key}`}
-                      type="number"
-                      min={key === 'speed' ? 0 : 1}
-                      max={key === 'speed' ? 4 : key === 'life' ? 1000 : 500}
-                      step={key === 'speed' ? 0.1 : 1}
-                      value={design[key]}
-                      onChange={(e) => {
-                        setSuggested(false);
-                        setDesign({ ...design, [key]: Number(e.target.value) });
-                      }}
-                    />
-                  </label>
-                ))}
-                <button
-                  onClick={() => {
-                    setSuggested(true);
-                    setDesign({ ...design, ...creatorSuggestedStats(finalDesign) });
-                  }}
-                >
-                  Use suggested stats
-                </button>
-              </div>
-            ) : null}
-          </div>
-        </details>
+          onValues={(values) => setDesign({ ...design, ...values })}
+          onSuggested={(enabled) => {
+            setSuggested(enabled);
+            if (enabled) setDesign({ ...design, ...creatorSuggestedStats(finalDesign) });
+          }}
+        />
       ) : null}
       {active ? (
         <>
@@ -768,6 +750,7 @@ export function TankCreator({
         aria-label={chosen ? `Drag ${partById(chosen)?.name} into design` : 'Choose a part'}
         onPointerDown={(e) => {
           if (e.button !== 0 || chosen === null) return;
+          setAdvanced(false);
           beginPlacement(chosen, 'pointer', point(e));
           e.currentTarget.setPointerCapture(e.pointerId);
         }}
@@ -792,6 +775,7 @@ export function TankCreator({
         avatar={design.avatar}
         category={category}
         onCategory={(id) => {
+          setAdvanced(false);
           setCategory(id);
           setChosen(
             firstAffordablePart(
@@ -810,6 +794,7 @@ export function TankCreator({
         context={paletteContext}
         chosen={chosen}
         onChoose={(id) => {
+          setAdvanced(false);
           setChosen(id);
           placement.current = null;
           setPlacing(null);

@@ -6,6 +6,8 @@ import {
   enemyStatHandle,
   enemyStatFromHandle,
   enemyStatText,
+  advanceSuggestedConfirm,
+  HIDDEN_SUGGESTED_CONFIRM,
 } from '../src/game/core/creator-enemy-stats';
 import { suggestedStats } from '../src/game/simulation/designer';
 import type { TankPart } from '../src/game/core/types';
@@ -99,4 +101,17 @@ test('enemy text changes retain fractions, clamp invalid/range values and defer 
   expect(enemyStatText('speed', '1.')).toBeUndefined();
   expect(enemyStatText('speed', '.')).toBeUndefined();
   expect(enemyStatText('life', '1.')).toBe(1);
+});
+
+test('suggestion confirmation stops at authored frames and resumes the existing position', () => {
+  const opening = advanceSuggestedConfirm({ frame: 2, playing: true, interactive: true }, 100);
+  expect(opening).toEqual({ frame: 12, playing: false, interactive: true });
+  expect(advanceSuggestedConfirm({ ...opening, playing: true, interactive: false }, 11)).toEqual(
+    HIDDEN_SUGGESTED_CONFIRM,
+  );
+  expect(advanceSuggestedConfirm({ frame: 9, playing: true, interactive: false }, 20)).toEqual({
+    frame: 12,
+    playing: false,
+    interactive: false,
+  });
 });

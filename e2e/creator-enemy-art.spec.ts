@@ -23,7 +23,7 @@ test('SWF enemy control cache retains checkbox, button and confirmation timeline
   });
   const row = (key: string) => proof.rows.find((item: { key: string }) => item.key === key)!,
     pose = (frame: number) => row(`enemy:confirm:${frame}`);
-  expect(proof.rows).toHaveLength(37);
+  expect(proof.rows).toHaveLength(39);
   expect(proof.rows.every((item: { ink: number }) => item.ink > 0)).toBe(true);
   expect(row('enemy:suggested:1').hash).not.toBe(row('enemy:suggested:2').hash);
   for (const tab of ['tab', 'basic']) {
@@ -43,6 +43,8 @@ test('SWF enemy control cache retains checkbox, button and confirmation timeline
   // Source913 cuts holes beneath both buttons; retained child frame11 paints alpha153 there.
   expect(pose(12).buttonPixel[3]).toBe(153);
   expect(pose(15).buttonPixel).toEqual([255, 255, 255, 77]);
+  for (const button of ['btnNo', 'btnYes'])
+    expect(row(`enemy:confirm:without:${button}`).buttonPixel).toEqual([0, 0, 0, 0]);
   expect(pose(17).hash).not.toBe(pose(22).hash);
   expect(pose(2).ink).toBeLessThan(pose(7).ink);
   expect(pose(22).ink).toBeLessThan(pose(17).ink);

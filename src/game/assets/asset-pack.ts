@@ -553,6 +553,15 @@ export class AssetPack {
         }
         const raster = await pack.rasterClip(confirmPose);
         if (raster) pack.creatorFrames.set(`enemy:confirm:${frame}`, raster);
+        if (frame === 12) {
+          const placements = confirmPose.placements;
+          for (const button of enemy.confirm.buttons) {
+            confirmPose.placements = placements.filter((p) => p.name !== button.name);
+            const without = await pack.rasterClip(confirmPose);
+            if (without) pack.creatorFrames.set(`enemy:confirm:without:${button.name}`, without);
+          }
+          confirmPose.placements = placements;
+        }
       }
       onProgress(1, 'Assets ready');
       return pack;

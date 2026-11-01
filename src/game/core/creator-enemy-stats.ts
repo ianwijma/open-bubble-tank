@@ -59,3 +59,26 @@ export function enemyStatText(key: EnemyStat, text: string): number | undefined 
     value = Number(text);
   return Number.isNaN(value) ? min : Math.max(min, Math.min(max, value));
 }
+
+export interface SuggestedConfirmation {
+  frame: number;
+  playing: boolean;
+  interactive: boolean;
+}
+export const HIDDEN_SUGGESTED_CONFIRM: SuggestedConfirmation = {
+  frame: 1,
+  playing: false,
+  interactive: false,
+};
+/** Symbol915 stops at1/12; Yes/No call play() rather than jumping to a closing frame. */
+export function advanceSuggestedConfirm(
+  state: SuggestedConfirmation,
+  frames: number,
+): SuggestedConfirmation {
+  let { frame, playing } = state;
+  for (let i = 0; i < frames && playing; i++) {
+    frame = frame === 22 ? 1 : frame + 1;
+    if (frame === 1 || frame === 12) playing = false;
+  }
+  return { ...state, frame, playing };
+}
