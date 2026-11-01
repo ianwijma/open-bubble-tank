@@ -47,6 +47,7 @@ import { INFECTED_ART, STATUS_ART, PROTECTION_ART, shieldClipSymbol } from '../d
 import { buttonDisplayList, type ButtonInfo, type ButtonState } from './button-display-list';
 import { CREATOR_CONTROLS } from '../core/creator-controls';
 import { CREATOR_PALETTE } from '../core/creator-palette';
+import { CREATOR_DIALOGS } from '../core/creator-dialogs';
 
 export interface Bounds extends Rect {}
 export interface Raster extends Bounds {
@@ -569,6 +570,13 @@ export class AssetPack {
           }
           confirmPose.placements = placements;
         }
+      }
+      for (const screen of CREATOR_DIALOGS.frames) {
+        const pose = new SwfClip(CREATOR_DIALOGS.symbol, pack);
+        pose.start(screen.frame, false);
+        pose.placements = pose.placements.filter((p) => screen.staticIds.includes(p.charId));
+        const raster = await pack.rasterClip(pose);
+        if (raster) pack.creatorFrames.set(`dialog:${screen.frame}`, raster);
       }
       onProgress(1, 'Assets ready');
       return pack;
