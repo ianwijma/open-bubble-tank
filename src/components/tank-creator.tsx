@@ -16,6 +16,7 @@ import { CreatorButton, CreatorSlider } from './creator-controls';
 import { CREATOR_CONTROLS } from '@/game/core/creator-controls';
 import { TankCodeDialog } from './tank-code-dialog';
 import { CreatorStats } from './creator-stats';
+import { CreatorPaletteTabs } from './creator-palette';
 import { CLASS_RINGS } from '@/game/core/constants';
 import {
   placementParts,
@@ -749,39 +750,22 @@ export function TankCreator({
         <canvas ref={previewCanvas} width={284} height={140} aria-hidden="true" />
         <span>Click and Drag Object</span>
       </button>
-      <div className="palette-tabs">
-        {(design.avatar
-          ? [
-              [1, 'Body'],
-              [2, 'Primary'],
-              [3, 'Secondary'],
-              [5, 'Interface'],
-            ]
-          : [
-              [1, 'Body'],
-              [4, 'Weapons'],
-              [6, 'Behavior'],
-            ]
-        ).map(([id, label]) => (
-          <button
-            key={id}
-            className={category === id ? 'active' : ''}
-            onClick={() => {
-              setCategory(Number(id));
-              setChosen(
-                firstAffordablePart(
-                  PARTS.filter((p) => Math.floor(p.id / 1000) === Number(id)),
-                  paletteContext,
-                ),
-              );
-              placement.current = null;
-              setPlacing(null);
-            }}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
+      <CreatorPaletteTabs
+        pack={pack}
+        avatar={design.avatar}
+        category={category}
+        onCategory={(id) => {
+          setCategory(id);
+          setChosen(
+            firstAffordablePart(
+              PARTS.filter((p) => Math.floor(p.id / 1000) === id),
+              paletteContext,
+            ),
+          );
+          placement.current = null;
+          setPlacing(null);
+        }}
+      />
       <div className="part-palette">
         {palette.map((p) => {
           const state = paletteState(p, paletteContext),
