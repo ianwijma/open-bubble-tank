@@ -102,52 +102,73 @@ async function synthetic() {
 export async function showCreatorButtons(
   pack: AssetPack,
   host: HTMLElement,
-  subset: 'controls' | 'palette' | 'enemy' = 'controls',
+  subset: 'controls' | 'palette' | 'enemy' | 'dialogs' = 'controls',
 ) {
   const primitive = await synthetic();
   const canvas = document.createElement('canvas');
-  canvas.width = 550;
-  canvas.height = 450;
+  const dialogs = subset === 'dialogs';
+  canvas.width = dialogs ? 1100 : 550;
+  canvas.height = dialogs ? 900 : 450;
   canvas.setAttribute(
     'aria-label',
-    subset === 'enemy'
-      ? 'Creator enemy raster states'
-      : subset === 'palette'
-        ? 'Creator palette raster states'
-        : 'Creator button raster states',
+    dialogs
+      ? 'Creator dialog static artwork'
+      : subset === 'enemy'
+        ? 'Creator enemy raster states'
+        : subset === 'palette'
+          ? 'Creator palette raster states'
+          : 'Creator button raster states',
   );
   const ctx = canvas.getContext('2d')!;
   ctx.fillStyle = '#0b3c5a';
-  ctx.fillRect(0, 0, 550, 450);
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
   const frames = [...pack.creatorFrames].filter(([key]) => {
     const enemy =
       key.startsWith('enemy:') ||
       ['LifeSlider_mc:track', 'BubblesReturnedSlider_mc:track', 'SpeedSlider_mc:track'].includes(
         key,
       );
-    return subset === 'enemy'
-      ? enemy
-      : subset === 'palette'
-        ? key.startsWith('palette:')
-        : !key.startsWith('palette:') && !enemy;
+    return dialogs
+      ? key.startsWith('dialog:')
+      : subset === 'enemy'
+        ? enemy
+        : subset === 'palette'
+          ? key.startsWith('palette:')
+          : !key.startsWith('palette:') && !key.startsWith('dialog:') && !enemy;
   });
   const rows = frames.map(([key, raster], index) => {
-    const x = (index % 7) * 78,
-      y = Math.floor(index / 7) * 62;
-    const scale = Math.min(1, 72 / raster.width, 42 / raster.height);
+    const x = dialogs ? (index % 2) * 550 : (index % 7) * 78,
+      y = dialogs ? Math.floor(index / 2) * 450 : Math.floor(index / 7) * 62;
+    const scale = dialogs ? 1 : Math.min(1, 72 / raster.width, 42 / raster.height);
+    if (dialogs) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(x, y, 550, 450);
+      ctx.clip();
+    }
     ctx.drawImage(
       raster.canvas,
-      x + (78 - raster.width * scale) / 2,
-      y + 4,
+      dialogs ? x + raster.x : x + (78 - raster.width * scale) / 2,
+      dialogs ? y + raster.y : y + 4,
       raster.width * scale,
       raster.height * scale,
     );
+    if (dialogs) ctx.restore();
     ctx.fillStyle = '#fff';
     ctx.font = '7px Arial';
-    ctx.fillText(key.replace('_mc', ''), x + 2, y + 57, 75);
+    ctx.fillText(key.replace('_mc', ''), x + 2, y + (dialogs ? 440 : 57), 75);
     return {
       key,
       ...proof(raster),
+      ...(dialogs
+        ? {
+            background: sample(raster, 5, 5),
+            author: sample(raster, 220, 190),
+            tank: sample(raster, 220, 245),
+            code: sample(raster, 80, 190),
+            message: sample(raster, 275, 220),
+          }
+        : {}),
       ...(key.startsWith('palette:row:') ? { pixel: sample(raster, 50, 10) } : {}),
       ...(/^enemy:confirm:\d+$/.test(key) ? { buttonPixel: sample(raster, 35, 15.75) } : {}),
       ...(key.startsWith('enemy:confirm:without:')
@@ -157,8 +178,17 @@ export async function showCreatorButtons(
         : {}),
     };
   });
+  const whole =
+    dialogs && pack.mode === 'swf'
+      ? await Promise.all(
+          [1, 2, 3, 7].map(async (frame) => {
+            const raster = await pack.rasterSymbol(1070, frame);
+            return { frame, ...(raster ? proof(raster) : {}) };
+          }),
+        )
+      : [];
   host.append(canvas);
-  host.dataset.creatorButtons = JSON.stringify({ primitive, rows });
+  host.dataset.creatorButtons = JSON.stringify({ primitive, rows, whole });
   return () => {
     canvas.remove();
     delete host.dataset.creatorButtons;

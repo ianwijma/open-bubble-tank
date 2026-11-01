@@ -155,16 +155,22 @@ async function reset() {
     status.textContent = 'Ready · isolated creator control components';
     return;
   }
-  if (['creator-buttons', 'creator-palette-art', 'creator-enemy-art'].includes(fixture.value)) {
+  if (
+    ['creator-buttons', 'creator-palette-art', 'creator-enemy-art', 'creator-dialog-art'].includes(
+      fixture.value,
+    )
+  ) {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
     unmountScreen = await showCreatorButtons(
       pack,
       stage,
-      fixture.value === 'creator-enemy-art'
-        ? 'enemy'
-        : fixture.value === 'creator-palette-art'
-          ? 'palette'
-          : 'controls',
+      fixture.value === 'creator-dialog-art'
+        ? 'dialogs'
+        : fixture.value === 'creator-enemy-art'
+          ? 'enemy'
+          : fixture.value === 'creator-palette-art'
+            ? 'palette'
+            : 'controls',
     );
     status.textContent = 'Ready · creator button raster states';
     return;
