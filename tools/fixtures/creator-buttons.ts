@@ -150,6 +150,11 @@ export async function showCreatorButtons(
       ...proof(raster),
       ...(key.startsWith('palette:row:') ? { pixel: sample(raster, 50, 10) } : {}),
       ...(/^enemy:confirm:\d+$/.test(key) ? { buttonPixel: sample(raster, 35, 15.75) } : {}),
+      ...(key.startsWith('enemy:confirm:without:')
+        ? {
+            buttonPixel: sample(raster, key.endsWith('btnNo') ? 35 : -35, 15.75),
+          }
+        : {}),
     };
   });
   host.append(canvas);
