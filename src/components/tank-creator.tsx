@@ -6,17 +6,12 @@ import type { TankDesign, TankPart } from '@/game/core/types';
 import { costs, gunBudget, PARTS, partById } from '@/game/data/catalog';
 import { canPlacePart, suggestedStats, validateBuild } from '@/game/simulation/designer';
 import { exportDesign } from '@/game/services/profile';
-import {
-  paletteState,
-  firstAffordablePart,
-  affordabilityHint,
-  orderedPalette,
-} from '@/game/simulation/editor-palette';
+import { firstAffordablePart, orderedPalette } from '@/game/simulation/editor-palette';
 import { CreatorButton, CreatorSlider } from './creator-controls';
 import { CREATOR_CONTROLS } from '@/game/core/creator-controls';
 import { TankCodeDialog } from './tank-code-dialog';
 import { CreatorStats } from './creator-stats';
-import { CreatorPaletteFrame, CreatorPaletteTabs } from './creator-palette';
+import { CreatorPaletteFrame, CreatorPaletteTabs, CreatorPaletteRows } from './creator-palette';
 import { CREATOR_PALETTE } from '@/game/core/creator-palette';
 import { CLASS_RINGS } from '@/game/core/constants';
 import {
@@ -784,33 +779,19 @@ export function TankCreator({
           setPlacing(null);
         }}
       />
-      <div className="part-palette">
-        {palette.map((p) => {
-          const state = paletteState(p, paletteContext),
-            locked = state.locked;
-          const hint = affordabilityHint(p, state.reason);
-          return (
-            <button
-              disabled={locked}
-              key={p.id}
-              aria-label={locked ? `${p.name}, unlocks at level ${p.tier}` : `Place ${p.name}`}
-              title={`${p.name} · ${p.gp} GP · ${p.bp} BP${locked ? ` · unlocks at level ${p.tier}` : hint ? ` · ${hint}` : ''}`}
-              aria-description={hint || undefined}
-              className={`${chosen === p.id ? 'selected' : ''} ${!state.affordable ? 'unaffordable' : ''}`}
-              aria-pressed={chosen === p.id}
-              onClick={() => {
-                setChosen(p.id);
-                placement.current = null;
-                setPlacing(null);
-                setMessage('');
-              }}
-            >
-              {p.id >= 2000 ? <span className="palette-cost">{locked ? '?' : p.gp}</span> : null}
-              {locked ? '???' : p.name}
-            </button>
-          );
-        })}
-      </div>
+      <CreatorPaletteRows
+        key={category}
+        pack={pack}
+        parts={palette}
+        context={paletteContext}
+        chosen={chosen}
+        onChoose={(id) => {
+          setChosen(id);
+          placement.current = null;
+          setPlacing(null);
+          setMessage('');
+        }}
+      />
       {loading ? (
         <TankCodeDialog
           onClose={() => setLoading(false)}

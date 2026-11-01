@@ -1639,52 +1639,66 @@ kbd {
 }
 .part-palette {
   position: absolute;
-  left: 395px;
-  top: 254px;
-  width: 146px;
-  height: 184px;
-  overflow-y: scroll;
-  z-index: 2;
-  padding: 1px;
-  background: #1e627ca1;
-  border: 2px solid #b1cfd799;
-  scrollbar-width: thin;
-  scrollbar-color: #006899 #4298b5;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 3;
+  padding: 0;
+  border: 0;
+  scrollbar-width: none;
+  overscroll-behavior: contain;
+}
+.part-palette::-webkit-scrollbar {
+  display: none;
 }
 .part-palette button {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  min-height: 20px;
-  padding: 2px 3px;
-  margin-bottom: 1px;
-  background: #087ca0bb;
+  padding: 0;
   border: 0;
   border-radius: 0;
-  font-size: 8px;
+  background: transparent;
   text-align: left;
-  gap: 4px;
+  overflow: visible;
 }
-.part-palette button.selected {
-  background: #d07500;
-}
-.part-palette button:hover {
-  background: #c0781499;
-}
-.part-palette button:disabled {
-  opacity: 0.5;
-  background: #475269;
-}
-.part-palette button.unaffordable:not(:disabled) {
-  opacity: 0.4;
+.creator-mock-row-paint {
+  position: absolute;
+  inset: 0;
+  border-top: 1px solid #003366;
+  pointer-events: none;
 }
 .palette-cost {
+  position: absolute;
+  left: 2px;
+  top: 2.25px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
-  min-width: 14px;
-  height: 14px;
-  background: #b5dded44;
-  display: grid;
-  place-items: center;
+  background: #ffffff33;
+  pointer-events: none;
+}
+.creator-row-indicator {
+  position: absolute;
+  left: 113px;
+  top: 6px;
+  font-size: 5px;
+  color: #ffffff88;
+  pointer-events: none;
+}
+.creator-palette-scroll {
+  position: absolute;
+  width: 16px;
+  height: 183px;
+  z-index: 4;
+}
+.creator-palette-scroll > button,
+.creator-palette-scroll > [role='scrollbar'] {
+  position: absolute;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  overflow: visible;
+  touch-action: none;
+}
+.creator-palette-scroll > button:disabled {
+  opacity: 1;
 }
 .tank-library {
   color: #c5ecf7;
