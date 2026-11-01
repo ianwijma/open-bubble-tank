@@ -16,7 +16,8 @@ import { CreatorButton, CreatorSlider } from './creator-controls';
 import { CREATOR_CONTROLS } from '@/game/core/creator-controls';
 import { TankCodeDialog } from './tank-code-dialog';
 import { CreatorStats } from './creator-stats';
-import { CreatorPaletteTabs } from './creator-palette';
+import { CreatorPaletteFrame, CreatorPaletteTabs } from './creator-palette';
+import { CREATOR_PALETTE } from '@/game/core/creator-palette';
 import { CLASS_RINGS } from '@/game/core/constants';
 import {
   placementParts,
@@ -277,10 +278,13 @@ export function TankCreator({
     ctx.restore();
     const pc = previewCanvas.current?.getContext('2d');
     if (pc) {
-      pc.clearRect(0, 0, 284, 140);
+      pc.clearRect(0, 0, 282, 134);
       pc.save();
       pc.scale(2, 2);
-      pc.translate(71, 35);
+      pc.translate(
+        -CREATOR_PALETTE.library.preview.bounds.x,
+        -CREATOR_PALETTE.library.preview.bounds.y,
+      );
       const part: TankPart | null =
         chosen === null
           ? null
@@ -722,10 +726,25 @@ export function TankCreator({
           {message}
         </p>
       ) : null}
+      <CreatorPaletteFrame pack={pack} />
       <button
         type="button"
         ref={preview}
         className="creator-part-preview"
+        style={{
+          left:
+            CREATOR_PALETTE.origin.tx / 20 +
+            CREATOR_PALETTE.library.matrix.tx / 20 +
+            CREATOR_PALETTE.library.preview.x +
+            CREATOR_PALETTE.library.preview.bounds.x,
+          top:
+            CREATOR_PALETTE.origin.ty / 20 +
+            CREATOR_PALETTE.library.matrix.ty / 20 +
+            CREATOR_PALETTE.library.preview.y +
+            CREATOR_PALETTE.library.preview.bounds.y,
+          width: CREATOR_PALETTE.library.preview.bounds.width,
+          height: CREATOR_PALETTE.library.preview.bounds.height,
+        }}
         disabled={chosen === null}
         aria-label={chosen ? `Drag ${partById(chosen)?.name} into design` : 'Choose a part'}
         onPointerDown={(e) => {
@@ -747,8 +766,7 @@ export function TankCreator({
           canvas.current?.focus();
         }}
       >
-        <canvas ref={previewCanvas} width={284} height={140} aria-hidden="true" />
-        <span>Click and Drag Object</span>
+        <canvas ref={previewCanvas} width={282} height={134} aria-hidden="true" />
       </button>
       <CreatorPaletteTabs
         pack={pack}

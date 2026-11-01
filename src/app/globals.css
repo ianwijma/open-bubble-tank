@@ -1576,20 +1576,9 @@ kbd {
 }
 .creator-part-preview {
   position: absolute;
-  left: 395px;
-  top: 176px;
-  width: 146px;
-  height: 74px;
-  border: 2px solid #b1cfd7;
-  background: #002e4077;
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: 8px;
-  letter-spacing: 0.4px;
-  gap: 5px;
+  border: 0;
+  background: transparent;
+  z-index: 3;
   padding: 0;
   overflow: hidden;
   touch-action: none;
@@ -1617,10 +1606,22 @@ kbd {
   height: 100%;
   pointer-events: none;
 }
-.creator-part-preview span {
+.creator-palette-backdrop {
   position: absolute;
-  bottom: 5px;
-  height: 12px;
+  z-index: 2;
+  pointer-events: none;
+}
+.creator-mock-preview-border,
+.creator-mock-row-border {
+  position: absolute;
+  border: 3px solid #b1cfd799;
+  background: #002e4077;
+}
+.creator-palette-caption {
+  position: absolute;
+  width: 0;
+  height: 0;
+  z-index: 4;
   pointer-events: none;
 }
 .palette-tabs {
