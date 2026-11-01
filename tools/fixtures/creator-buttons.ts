@@ -102,7 +102,7 @@ async function synthetic() {
 export async function showCreatorButtons(
   pack: AssetPack,
   host: HTMLElement,
-  subset: 'controls' | 'palette' = 'controls',
+  subset: 'controls' | 'palette' | 'enemy' = 'controls',
 ) {
   const primitive = await synthetic();
   const canvas = document.createElement('canvas');
@@ -110,14 +110,27 @@ export async function showCreatorButtons(
   canvas.height = 450;
   canvas.setAttribute(
     'aria-label',
-    subset === 'palette' ? 'Creator palette raster states' : 'Creator button raster states',
+    subset === 'enemy'
+      ? 'Creator enemy raster states'
+      : subset === 'palette'
+        ? 'Creator palette raster states'
+        : 'Creator button raster states',
   );
   const ctx = canvas.getContext('2d')!;
   ctx.fillStyle = '#0b3c5a';
   ctx.fillRect(0, 0, 550, 450);
-  const frames = [...pack.creatorFrames].filter(([key]) =>
-    subset === 'palette' ? key.startsWith('palette:') : !key.startsWith('palette:'),
-  );
+  const frames = [...pack.creatorFrames].filter(([key]) => {
+    const enemy =
+      key.startsWith('enemy:') ||
+      ['LifeSlider_mc:track', 'BubblesReturnedSlider_mc:track', 'SpeedSlider_mc:track'].includes(
+        key,
+      );
+    return subset === 'enemy'
+      ? enemy
+      : subset === 'palette'
+        ? key.startsWith('palette:')
+        : !key.startsWith('palette:') && !enemy;
+  });
   const rows = frames.map(([key, raster], index) => {
     const x = (index % 7) * 78,
       y = Math.floor(index / 7) * 62;
@@ -136,6 +149,7 @@ export async function showCreatorButtons(
       key,
       ...proof(raster),
       ...(key.startsWith('palette:row:') ? { pixel: sample(raster, 50, 10) } : {}),
+      ...(/^enemy:confirm:\d+$/.test(key) ? { buttonPixel: sample(raster, 35, 15.75) } : {}),
     };
   });
   host.append(canvas);
