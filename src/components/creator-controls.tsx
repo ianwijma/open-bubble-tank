@@ -225,12 +225,21 @@ export function CreatorSlider({
   onChange,
   onBegin,
   onEnd,
+  disabled = false,
+  coordinates,
 }: {
   pack: AssetPack;
   layout: CreatorSliderLayout;
   label: string;
   value: number;
-  resetKey: object;
+  resetKey: unknown;
+  disabled?: boolean;
+  coordinates?: {
+    toX: (value: number) => number;
+    fromX: (x: number) => number;
+    min: number;
+    max: number;
+  };
   min: number;
   max: number;
   onChange: (value: number) => void;
@@ -240,12 +249,14 @@ export function CreatorSlider({
   const [current, setCurrent] = useState(value),
     [hover, setHover] = useState(false);
   const dragging = useRef<number | null>(null);
+  const [cursorX, setCursorX] = useState<number | null>(null);
   // Flash recomputes averages on selection changes, while a dragged handle retains its chosen value.
   useLayoutEffect(() => {
     setCurrent(value);
+    setCursorX(null);
   }, [resetKey]);
   const normalized = Math.max(0, Math.min(1, (current - min) / (max - min))),
-    x = -57 + 114 * normalized,
+    x = cursorX ?? coordinates?.toX(current) ?? -57 + 114 * normalized,
     y = layout.handle.matrix.ty / 20;
   const hitRadius = Math.max(
     ...layout.handle.variants[hover ? 1 : 0].map((p) => (p.bounds.xMax - p.bounds.xMin) / 40),
@@ -265,7 +276,10 @@ export function CreatorSlider({
   };
   const finish = (cancel: boolean) => {
     if (dragging.current === null) return;
-    if (cancel) setCurrent(dragging.current);
+    if (cancel) {
+      setCurrent(dragging.current);
+      setCursorX(null);
+    }
     dragging.current = null;
     onEnd(cancel);
   };
@@ -273,7 +287,12 @@ export function CreatorSlider({
     <div
       className="creator-transform-slider"
       data-creator-slider={layout.name}
-      style={{ left: layout.matrix.tx / 20, top: layout.matrix.ty / 20 }}
+      style={{
+        left: layout.matrix.tx / 20,
+        top: layout.matrix.ty / 20,
+        transform: `matrix(${layout.matrix.a},${layout.matrix.b},${layout.matrix.c},${layout.matrix.d},0,0)`,
+        transformOrigin: '0 0',
+      }}
     >
       {track ? (
         <CreatorRasterArt raster={track} />
@@ -299,24 +318,33 @@ export function CreatorSlider({
       <input
         aria-label={label}
         type="range"
+        disabled={disabled}
         min={min}
         max={max}
         step="any"
         value={current}
-        onChange={(e) => change(Number(e.target.value))}
+        onChange={(e) => {
+          setCursorX(null);
+          change(Number(e.target.value));
+        }}
         onFocus={() => setHover(true)}
         onBlur={() => setHover(false)}
         onPointerMove={(e) => {
+          if (disabled) return;
           const p = local(e);
-          if (dragging.current !== null)
-            change(min + ((Math.max(-57, Math.min(57, p.x)) + 57) / 114) * (max - min));
-          else setHover(Math.hypot(p.x - x, p.y - y) <= hitRadius);
+          if (dragging.current !== null) {
+            if (coordinates) {
+              const raw = Math.max(coordinates.min, Math.min(coordinates.max, p.x));
+              setCursorX(Math.trunc(raw * 20) / 20);
+              change(coordinates.fromX(raw));
+            } else change(min + ((Math.max(-57, Math.min(57, p.x)) + 57) / 114) * (max - min));
+          } else setHover(Math.hypot(p.x - x, p.y - y) <= hitRadius);
         }}
         onPointerLeave={() => {
           if (dragging.current === null) setHover(false);
         }}
         onPointerDown={(e) => {
-          if (e.button !== 0) return;
+          if (e.button !== 0 || disabled) return;
           e.preventDefault();
           const p = local(e);
           if (Math.hypot(p.x - x, p.y - y) > hitRadius) return;
