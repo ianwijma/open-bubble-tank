@@ -3,6 +3,7 @@ import { showCreatorPaletteRows } from './creator-palette';
 import { showCreatorText } from './creator-text';
 import { showCreatorSaveDialog } from './creator-save-dialog';
 import { showCreatorDetailsArt } from './creator-details-art';
+import { showCreatorSelectionInfo } from './creator-selection-info';
 import { showCreatorControls } from './creator-controls';
 import { showCreatorButtons } from './creator-buttons';
 import { showMainMenuFlow } from './main-menu';
@@ -149,6 +150,12 @@ async function reset() {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
     unmountScreen = showCreatorSaveDialog(pack, stage);
     status.textContent = 'Ready · isolated creator save dialog';
+    return;
+  }
+  if (fixture.value === 'creator-selection-info') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    unmountScreen = showCreatorSelectionInfo(pack, stage);
+    status.textContent = 'Ready · production selection-info popup lifecycle';
     return;
   }
   if (fixture.value === 'creator-details-art') {
