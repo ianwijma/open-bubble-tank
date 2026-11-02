@@ -33,6 +33,8 @@ const buttons = [
     action: 'settings',
   },
 ] as const;
+const pauseMatrix = (m: (typeof PAUSE.root)[number]['matrix']) =>
+  `matrix(${m.a} ${m.b} ${m.c} ${m.d} ${m.tx / 20} ${m.ty / 20})`;
 
 /** One retained source button layer, shared alpha and stage clock for pause and Info. */
 export function PausePanel({
@@ -70,9 +72,11 @@ export function PausePanel({
   const settingsControls = useRef<{ back: () => void }>(null);
   const [closing, setClosing] = useState(false);
   const [caption, setCaption] = useState('');
+  const captionPiece = PAUSE.pieces.find((piece) => piece.name === 'rollover_txt')!;
   const [hovered, setHovered] = useState('');
   const nodes = useRef(new Map<string, HTMLElement>());
   const layer = useRef<HTMLDivElement>(null);
+  const shade = useRef<SVGSVGElement>(null);
   const resumeRef = useRef(onResume);
   const infoSeen = useRef(false),
     resumeSent = useRef(false);
@@ -96,9 +100,12 @@ export function PausePanel({
         draw: () => {
           if (layer.current) {
             layer.current.style.opacity = String(motion.layerAlpha);
+            layer.current.dataset.pauseAlpha = String(motion.layerAlpha);
             layer.current.dataset.pauseAge = String(motion.age);
             layer.current.dataset.pausePhase = motion.phase;
           }
+          if (shade.current)
+            shade.current.style.opacity = String((PAUSE.shade.color[3] / 255) * motion.layerAlpha);
           for (const [name, node] of nodes.current) {
             const p = motion.positions[name],
               piece = PAUSE.pieces.find((piece) => piece.name === name)!;
@@ -165,12 +172,63 @@ export function PausePanel({
       onShortcutClose={resume}
       scrimClassName="pause-bitmap-scrim"
     >
+      <svg className="pause-root" viewBox="0 0 550 450" aria-hidden="true">
+        {PAUSE.root.map((piece) => {
+          const raster = pack.uiFrames.get(piece.symbol)?.[0];
+          return (
+            <g key={piece.depth} transform={pauseMatrix(piece.matrix)}>
+              {raster ? (
+                <image
+                  href={raster.url}
+                  x={raster.x}
+                  y={raster.y}
+                  width={raster.width}
+                  height={raster.height}
+                />
+              ) : (
+                <g transform={pauseMatrix(piece.textMatrix)}>
+                  {piece.glyphs.map((glyph, i) => (
+                    <text
+                      key={i}
+                      x={glyph.x}
+                      y={glyph.y}
+                      fontSize={glyph.size}
+                      fontFamily={glyph.font}
+                      fill={`rgb(${glyph.color.join(',')})`}
+                    >
+                      {glyph.text}
+                    </text>
+                  ))}
+                </g>
+              )}
+            </g>
+          );
+        })}
+      </svg>
       <PauseBackdrop stage={stage} motion={motion} />
+      {/* Multiply the flat shade by the source parent alpha before CSS clamps it. */}
+      <svg
+        ref={shade}
+        className="pause-shade"
+        viewBox="0 0 550 450"
+        aria-hidden="true"
+        style={{ opacity: (PAUSE.shade.color[3] / 255) * motion.layerAlpha }}
+      >
+        <rect
+          transform={pauseMatrix(PAUSE.shade.matrix)}
+          x={PAUSE.shade.bounds.x}
+          y={PAUSE.shade.bounds.y}
+          width={PAUSE.shade.bounds.width}
+          height={PAUSE.shade.bounds.height}
+          fill={`rgb(${PAUSE.shade.color.slice(0, 3).join(',')})`}
+        />
+      </svg>
       <div
         ref={layer}
         className="pause-button-layer"
         inert={closing}
         style={{ opacity: motion.layerAlpha }}
+        data-pause-alpha={motion.layerAlpha}
         data-pause-age={motion.age}
         data-pause-phase={motion.phase}
       >
@@ -197,6 +255,7 @@ export function PausePanel({
                   top: titleRaster.y - title.bounds.y,
                   width: titleRaster.width,
                   height: titleRaster.height,
+                  maxWidth: 'none',
                 }}
               />
             ) : (
@@ -249,6 +308,7 @@ export function PausePanel({
                       top: raster.y - piece.bounds.y,
                       width: raster.width,
                       height: raster.height,
+                      maxWidth: 'none',
                     }}
                   />
                 ) : (
@@ -257,10 +317,32 @@ export function PausePanel({
               </button>
             );
           })}
-          <div className="pause-caption" aria-live="polite">
-            <BubbleText pack={pack} font="Accidental Presidency" size={17}>
-              {caption || ' '}
-            </BubbleText>
+          <div
+            className="pause-caption"
+            aria-live="polite"
+            style={{
+              left: captionPiece.x + captionPiece.bounds.x,
+              top: captionPiece.y + captionPiece.bounds.y,
+              width: captionPiece.bounds.width,
+              height: captionPiece.bounds.height,
+            }}
+          >
+            <span
+              style={{
+                display: 'block',
+                position: 'relative',
+                top: 2 + PAUSE.caption.size * (PAUSE.caption.ascent / 1024 - 1),
+              }}
+            >
+              <BubbleText
+                pack={pack}
+                font={PAUSE.caption.font}
+                fontId={PAUSE.caption.fontId}
+                size={PAUSE.caption.size}
+              >
+                {caption || ' '}
+              </BubbleText>
+            </span>
           </div>
         </div>
         <SettingsPanel

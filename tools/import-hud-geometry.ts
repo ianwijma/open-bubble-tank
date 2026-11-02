@@ -163,7 +163,71 @@ const secondaryHelp = list(1876).map((p) => {
   };
 });
 const pausePieces = list(1636);
+const pauseShade = pausePieces.find((piece) => piece.charId === 1096)!;
+const shadeShape = symbols.shapes.find((shape) => shape.id === pauseShade.charId) as unknown as {
+  fills: { kind: string; color: number[] }[];
+};
+if (shadeShape.fills.length !== 1 || shadeShape.fills[0].kind !== 'solid')
+  throw new Error('Pause shade is not the expected flat solid rectangle');
+const shadeBounds = bounds(pauseShade.charId);
+const caption = symbols.editTexts.find((text) => text.id === 1560)!;
+const captionFont = symbols.fonts.find((font) => font.id === caption.fontId)!;
+if (captionFont.ascent === undefined) throw new Error('Pause caption font has no ascent metric');
 const pause = {
+  shade: {
+    symbol: pauseShade.charId,
+    depth: pauseShade.depth,
+    matrix: pauseShade.matrix,
+    bounds: {
+      x: shadeBounds.xMin / 20,
+      y: shadeBounds.yMin / 20,
+      width: (shadeBounds.xMax - shadeBounds.xMin) / 20,
+      height: (shadeBounds.yMax - shadeBounds.yMin) / 20,
+    },
+    color: shadeShape.fills[0].color,
+  },
+  caption: {
+    size: caption.fontHeight / 20,
+    font: captionFont.name.replace(/\0/g, ''),
+    fontId: caption.fontId,
+    ascent: captionFont.ascent / 20,
+    align: caption.align,
+  },
+  root: list(1559).map((piece) => {
+    const text = symbols.texts.find((text) => text.id === piece.charId)!;
+    let fontId = 0,
+      x = 0,
+      y = 0,
+      height = 0;
+    let color = [0, 0, 0];
+    return {
+      symbol: piece.charId,
+      name: '',
+      depth: piece.depth,
+      matrix: piece.matrix,
+      textMatrix: text.matrix,
+      glyphs: text.records.flatMap((record) => {
+        fontId = record.fontId ?? fontId;
+        x = record.x ?? x;
+        y = record.y ?? y;
+        height = record.height ?? height;
+        color = record.color ?? color;
+        const font = symbols.fonts.find((font) => font.id === fontId)!;
+        return record.glyphs.map((glyph) => {
+          const result = {
+            text: String.fromCharCode(font.codeTable[glyph.index]),
+            x: x / 20,
+            y: y / 20,
+            size: height / 20,
+            font: font.name.replace(/\0/g, ''),
+            color,
+          };
+          x += glyph.advance;
+          return result;
+        });
+      }),
+    };
+  }),
   out: Object.fromEntries(
     pausePieces
       .filter((p) => p.charId === 439)

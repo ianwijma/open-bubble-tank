@@ -1131,6 +1131,14 @@ kbd {
   position: absolute;
   inset: 0;
 }
+.pause-root,
+.pause-shade {
+  position: absolute;
+  inset: 0;
+  width: 550px;
+  height: 450px;
+  pointer-events: none;
+}
 .pause-bitmap {
   position: absolute;
   inset: 0;
@@ -1171,9 +1179,7 @@ kbd {
 }
 .pause-caption {
   position: absolute;
-  top: 374px;
-  left: 50px;
-  width: 450px;
+  overflow: hidden;
 }
 .upgrade-title {
   position: absolute;
