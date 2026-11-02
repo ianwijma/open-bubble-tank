@@ -1,3 +1,4 @@
+import { showNpcDeactivation } from './npc-deactivation';
 import { showHomingProjectiles } from './homing-projectiles';
 import { showOrbitalWidth } from './orbital-width';
 import { showAimContracts } from './aim-contracts';
@@ -164,6 +165,12 @@ async function reset() {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
     status.dataset.weaponTargets = JSON.stringify(await showWeaponTargets(pack, stage));
     status.textContent = 'Ready · mounted target ownership and ordered aim';
+    return;
+  }
+  if (fixture.value === 'npc-deactivation') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    status.dataset.npcDeactivation = JSON.stringify(await showNpcDeactivation(pack, stage));
+    status.textContent = 'Ready · NPC final callbacks and boundary sounds';
     return;
   }
   if (fixture.value === 'healer-lifecycle') {

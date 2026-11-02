@@ -597,11 +597,9 @@ export class World {
     } else {
       // Base IsOutside deactivates allies directly, bypassing shield/forcefield damage.
       tank.life = 0;
-      tank.dead = true;
       this.dropBubbles(tank, tank.design.reward);
-      for (const bullet of this.bullets)
-        if (bullet.owner === tank.uid && ['beam', 'whip'].includes(bullet.kind)) bullet.dead = true;
-      deactivateTankData(tank);
+      this.emit('pop');
+      this.deactivateNpc(tank);
     }
   }
   beginCollapse(angle: number) {
@@ -782,12 +780,36 @@ export class World {
   }
   kill(t: Tank) {
     if (t.dead) return;
-    t.dead = true;
+    if (t.side === 'enemy') this.dropBubbles(t, t.design.reward);
     this.emit(t.side === 'ally' ? 'death' : 'pop');
-    if (t.side === 'enemy') {
-      this.stats.kills++;
-      this.dropBubbles(t, t.design.reward);
-    }
+    if (t.side === 'enemy' && t.status.infect > 0)
+      for (let i = 0; i < 2; i++)
+        this.addBullet({
+          uid: this.nextId(),
+          owner: t.uid,
+          enemy: false,
+          x: t.x,
+          y: t.y,
+          angle: this.rng.int(0, 360),
+          heading: 0,
+          speed: 6,
+          damage: 1,
+          radius: 3,
+          kind: 'infect',
+          status: 'infect',
+          age: 0,
+          life: Infinity,
+          explode: 0,
+          hit: new Set(),
+          targetId: null,
+          dead: false,
+          symbol: 15,
+          orbit: 0,
+        });
+    this.deactivateNpc(t);
+  }
+  /** _-Zx.Deactivate: primary finals precede data clearing, dead flag and field callback. */
+  private deactivateNpc(t: Tank) {
     for (const gun of t.guns)
       if (gun.part.type === 4022) {
         for (let i = 0; i < 6; i++) {
@@ -816,34 +838,14 @@ export class World {
           });
         }
       }
-    if (t.status.infect > 0)
-      for (let i = 0; i < 2; i++)
-        this.addBullet({
-          uid: this.nextId(),
-          owner: t.uid,
-          enemy: false,
-          x: t.x,
-          y: t.y,
-          angle: this.rng.int(0, 360),
-          heading: 0,
-          speed: 6,
-          damage: 1,
-          radius: 3,
-          kind: 'infect',
-          status: 'infect',
-          age: 0,
-          life: Infinity,
-          explode: 0,
-          hit: new Set(),
-          targetId: null,
-          dead: false,
-          symbol: 15,
-          orbit: 0,
-        });
     for (const b of this.bullets)
       if (b.owner === t.uid && ['beam', 'whip'].includes(b.kind)) b.dead = true;
     deactivateTankData(t);
-    if (t.side === 'enemy') this.runtime.enemyRemovals.push(t);
+    t.dead = true;
+    if (t.side === 'enemy') {
+      this.stats.kills++;
+      this.runtime.enemyRemovals.push(t);
+    }
   }
   /** _-0D.RemoveEnemy classifies the birth code only when the queued object detaches. */
   flushEnemyRemovals() {
