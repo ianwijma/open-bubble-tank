@@ -1,3 +1,4 @@
+import { saveCreator } from './helpers/creator';
 import { waitForMainMenu } from './helpers/main-menu';
 import { expect, test } from './helpers/frame-paced-test';
 import { visitAdjacentFieldAndReturn } from './helpers/field-travel';
@@ -58,7 +59,7 @@ for (const native of [false, true])
       await page.getByRole('button', { name: 'Edit your tank', exact: true }).click();
       await page.getByRole('button', { name: 'YES', exact: true }).click();
       await page.getByRole('button', { name: 'Edit Your Current Tank', exact: true }).click();
-      await page.getByRole('button', { name: 'SAVE', exact: true }).click();
+      await saveCreator(page);
     };
     await enter();
     const help = page.getByRole('dialog', { name: 'Secondary weapon help' });

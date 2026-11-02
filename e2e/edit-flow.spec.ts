@@ -1,3 +1,4 @@
+import { exitCreator } from './helpers/creator';
 import { waitForMainMenu } from './helpers/main-menu';
 import { expect, test } from './helpers/frame-paced-test';
 import { visitAdjacentFieldAndReturn } from './helpers/field-travel';
@@ -90,7 +91,7 @@ for (const native of [false, true])
       page.getByRole('button', { name: 'Place Basic Cannon', exact: true }),
     ).toBeVisible();
     await categories.getByRole('button', { name: 'Body', exact: true }).click();
-    await page.getByRole('button', { name: 'Exit tank creator', exact: true }).click();
+    await exitCreator(page);
     await expect(page.getByRole('dialog')).toHaveCount(0);
     await expect(edit).toBeEnabled();
     await edit.click();

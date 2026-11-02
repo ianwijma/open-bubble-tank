@@ -2,7 +2,7 @@ import { expect, test, type Page } from '@playwright/test';
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { waitForMainMenu } from './helpers/main-menu';
-import { dropPreview } from './helpers/creator';
+import { dropPreview, saveCreator } from './helpers/creator';
 import type { TankDesign } from '../src/game/core/types';
 const swf =
   process.env.BT3_SWF_FILE ?? resolve('../documented-bubble-tank-3/re/bt3/uncompressed.swf');
@@ -35,7 +35,7 @@ for (const native of [false, true])
     expect(design.parts).toHaveLength(1);
     expect(design).toMatchObject({ classId: 1, life: 0 });
     // Save recalculates from the changed geometry even when the earlier panel readout is stale.
-    await page.getByRole('button', { name: 'SAVE', exact: true }).click();
+    await saveCreator(page);
     const saved = () =>
       page.evaluate(
         () =>
@@ -61,7 +61,7 @@ for (const native of [false, true])
     await page.getByRole('button', { name: 'Tank statistics', exact: true }).click();
     await page.getByRole('button', { name: 'Enemy Info', exact: true }).click();
     await expect(page.getByLabel('Enemy life', { exact: true })).toHaveValue('333');
-    await page.getByRole('button', { name: 'SAVE', exact: true }).click();
+    await saveCreator(page);
     await expect.poll(async () => (await saved()).length).toBe(2);
     expect((await saved())[1]).toMatchObject({ life: 333, reward: 77, speed: 2.75 });
     expect(errors).toEqual([]);

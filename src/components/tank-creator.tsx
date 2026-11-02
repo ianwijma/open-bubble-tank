@@ -11,6 +11,7 @@ import { firstAffordablePart, orderedPalette } from '@/game/simulation/editor-pa
 import { CreatorButton, CreatorSlider } from './creator-controls';
 import { CREATOR_CONTROLS } from '@/game/core/creator-controls';
 import { TankCodeDialog } from './tank-code-dialog';
+import { CreatorSaveDialog } from './creator-save-dialog';
 import { CreatorStats } from './creator-stats';
 import { CreatorEnemyStats, CreatorStatsTab } from './creator-enemy-stats';
 import { CreatorPaletteFrame, CreatorPaletteTabs, CreatorPaletteRows } from './creator-palette';
@@ -56,7 +57,7 @@ export function TankCreator({
   level: number;
   maxClass: number;
   fps: number;
-  onSave: (tank: TankDesign) => void;
+  onSave: (tank: TankDesign) => TankDesign | undefined;
   onExit: () => void;
 }) {
   const [design, setDesign] = useState<TankDesign>(() => structuredClone(initial));
@@ -89,6 +90,10 @@ export function TankCreator({
       !initial.avatar &&
       (initial.id === 'new' || creatorImportedSuggested(initial, { parts: [], classId: 1 })),
   );
+  const [saveDialog, setSaveDialog] = useState<{ kind: 'save' | 'exit'; tank: TankDesign } | null>(
+    null,
+  );
+  const dialogOpener = useRef<HTMLElement | null>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
   const previewCanvas = useRef<HTMLCanvasElement>(null);
   const artwork = useRef<import('@/game/render/creator-artwork').CreatorArtwork | null>(null);
@@ -457,10 +462,12 @@ export function TankCreator({
     }
     draw();
   }
-  return (
+  const editor = (
     <div
       className={`creator stage-background ${overGame ? 'over-game' : ''}`}
       data-assets={pack.mode}
+      inert={!!saveDialog}
+      aria-hidden={!!saveDialog || undefined}
     >
       <CreatorButton
         pack={pack}
@@ -487,24 +494,28 @@ export function TankCreator({
             setMessage(errors[0]);
             return;
           }
-          onSave({
+          const tank = {
             ...finalDesign,
             ...(!design.avatar && suggested ? creatorSuggestedStats(finalDesign, 'save') : {}),
-            name: design.name.trim() || 'Untitled Tank',
+          };
+          setDesign(tank);
+          dialogOpener.current = document.activeElement as HTMLElement | null;
+          setSaveDialog({
+            kind: 'save',
+            tank: { ...tank, name: design.id === 'new' ? '' : design.name },
           });
         }}
       />
-      <CreatorButton pack={pack} name="Exit_mc" label="Exit tank creator" onClick={onExit} />
+      <CreatorButton
+        pack={pack}
+        name="Exit_mc"
+        label="Exit tank creator"
+        onClick={() => {
+          dialogOpener.current = document.activeElement as HTMLElement | null;
+          setSaveDialog({ kind: 'exit', tank: finalDesign });
+        }}
+      />
       <div className="creator-name">
-        <label>
-          Tank name{' '}
-          <input
-            aria-label="Tank name"
-            maxLength={40}
-            value={design.name}
-            onChange={(e) => setDesign({ ...design, name: e.target.value })}
-          />
-        </label>
         <button onClick={() => exportDesign(finalDesign)}>Export</button>
       </div>
       <div className="creator-meters">
@@ -819,5 +830,21 @@ export function TankCreator({
         />
       ) : null}
     </div>
+  );
+  return (
+    <>
+      {editor}
+      {saveDialog ? (
+        <CreatorSaveDialog
+          pack={pack}
+          kind={saveDialog.kind}
+          tank={saveDialog.tank}
+          opener={dialogOpener.current}
+          onSave={onSave}
+          onClose={() => setSaveDialog(null)}
+          onExit={onExit}
+        />
+      ) : null}
+    </>
   );
 }
