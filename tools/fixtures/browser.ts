@@ -1,3 +1,4 @@
+import { showViewerTankArtwork } from './viewer-tank-artwork';
 import { showSvgMasks } from './svg-masks';
 import { showCreatorStatistics } from './creator-stats';
 import { showCreatorPaletteRows } from './creator-palette';
@@ -195,6 +196,12 @@ async function reset() {
             : 'controls',
     );
     status.textContent = 'Ready · creator button raster states';
+    return;
+  }
+  if (fixture.value === 'viewer-tank-artwork') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    unmountScreen = await showViewerTankArtwork(pack, stage);
+    status.textContent = 'Ready · independent viewer tank artwork';
     return;
   }
   if (fixture.value === 'svg-masks') {

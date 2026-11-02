@@ -8,7 +8,7 @@ import { SwfTextures } from './swf-textures';
 import { creatorThumbnailScale } from '../core/creator-details';
 import { rotate } from '../core/math';
 
-type Layer = 'design' | 'draft' | 'preview' | 'details';
+type Layer = 'design' | 'draft' | 'preview' | 'details' | `viewer:${string}`;
 interface PartView {
   type: number;
   born: number;
@@ -30,13 +30,16 @@ export class CreatorArtwork {
   private groups = new Map<Layer, { root: Container; parts: Map<string, PartView> }>();
   private gray = new ColorMatrixFilter();
   private destroyed = false;
-  constructor(private pack: AssetPack) {
+  constructor(
+    private pack: AssetPack,
+    private size = 350,
+  ) {
     this.gray.greyscale(1, false);
   }
   async init() {
     await this.app.init({
-      width: 350,
-      height: 350,
+      width: this.size,
+      height: this.size,
       resolution: 2,
       backgroundAlpha: 0,
       antialias: true,
@@ -51,7 +54,7 @@ export class CreatorArtwork {
     let group = this.groups.get(layer);
     if (!group) {
       const root = new Container();
-      root.position.set(175, 175);
+      root.position.set(this.size / 2, this.size / 2);
       group = { root, parts: new Map() };
       this.groups.set(layer, group);
     }
@@ -110,9 +113,16 @@ export class CreatorArtwork {
     }
     return radius;
   }
-  draw(ctx: CanvasRenderingContext2D, layer: Layer, parts: ArtworkPart[], frame: number) {
+  draw(
+    ctx: CanvasRenderingContext2D,
+    layer: Layer,
+    parts: ArtworkPart[],
+    frame: number,
+    scale = 1,
+  ) {
     const group = this.group(layer),
       active = new Set(parts.map(({ part }) => part.key));
+    group.root.scale.set(scale);
     for (const [key, node] of group.parts) {
       if (!active.has(key)) {
         node.view.destroy();
@@ -146,7 +156,7 @@ export class CreatorArtwork {
     this.app.stage.removeChildren();
     this.app.stage.addChild(group.root);
     this.app.render();
-    ctx.drawImage(this.app.canvas, -175, -175, 350, 350);
+    ctx.drawImage(this.app.canvas, -this.size / 2, -this.size / 2, this.size, this.size);
   }
   /** Dropping moves the existing draft clips into the tank without restarting their timelines. */
   adoptDraft(parts: TankPart[]) {
@@ -172,9 +182,14 @@ export class CreatorArtwork {
     const inverse = descendContact(CONTACT_IDENTITY, contactTransform(part.rotation, part.scale));
     return !!inverse && view.hitTest(local.x, local.y, inverse);
   }
-  localBounds(part: TankPart) {
-    const view = this.groups.get('design')?.parts.get(part.key)?.view;
+  localBounds(part: TankPart, layer: Layer = 'design') {
+    const view = this.groups.get(layer)?.parts.get(part.key)?.view;
     return view ? (view.scriptBounds() ?? { x: 0, y: 0, width: 0, height: 0 }) : undefined;
+  }
+  removeLayer(layer: Layer) {
+    this.clearLayer(layer);
+    this.groups.get(layer)?.root.destroy();
+    this.groups.delete(layer);
   }
   restartClusters(parts: TankPart[]) {
     for (const part of parts) {
