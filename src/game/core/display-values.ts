@@ -3,7 +3,8 @@ export const displayAlpha = (value: number) => {
   const fixed = Math.trunc(value * 256) || 0;
   return Math.max(-32768, Math.min(32767, fixed)) / 256;
 };
-export const displayPixel = (value: number) => {
+export const displayTwips = (value: number) => {
   const twips = Math.trunc(value * 20) || 0;
-  return Math.max(-2147483648, Math.min(2147483647, twips)) / 20;
+  return Math.max(-2147483648, Math.min(2147483647, twips));
 };
+export const displayPixel = (value: number) => displayTwips(value) / 20;
