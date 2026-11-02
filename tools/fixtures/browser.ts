@@ -1,3 +1,4 @@
+import { showViewerFlow } from './viewer-flow';
 import { showViewerSortStatistics } from './viewer-sort-statistics';
 import { showViewerArtComponents } from './viewer-art-components';
 import { showViewerTankArtwork } from './viewer-tank-artwork';
@@ -198,6 +199,20 @@ async function reset() {
             : 'controls',
     );
     status.textContent = 'Ready · creator button raster states';
+    return;
+  }
+  if (['viewer-flow', 'viewer-actions', 'viewer-guide'].includes(fixture.value)) {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    unmountScreen = showViewerFlow(
+      pack,
+      stage,
+      fixture.value === 'viewer-guide'
+        ? 'guide'
+        : fixture.value === 'viewer-actions'
+          ? 'actions'
+          : 'flow',
+    );
+    status.textContent = 'Ready · manually clocked local viewer';
     return;
   }
   if (fixture.value === 'viewer-sort-statistics') {
