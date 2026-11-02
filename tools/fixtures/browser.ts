@@ -1,3 +1,4 @@
+import { showUnlockRetention } from './unlock-retention';
 import { showViewerFlow } from './viewer-flow';
 import { showViewerSortStatistics } from './viewer-sort-statistics';
 import { showViewerArtComponents } from './viewer-art-components';
@@ -225,6 +226,12 @@ async function reset() {
               : 'flow',
     );
     status.textContent = 'Ready · manually clocked local viewer';
+    return;
+  }
+  if (fixture.value === 'unlock-retention') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    unmountScreen = showUnlockRetention(pack, stage);
+    status.textContent = 'Ready · retained run unlocks after two real downgrades';
     return;
   }
   if (fixture.value === 'viewer-sort-statistics') {

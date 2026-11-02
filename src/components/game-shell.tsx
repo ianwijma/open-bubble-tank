@@ -435,6 +435,7 @@ export default function GameShell() {
                 overGame={editor.returnTo === 'game'}
                 initial={editor.initial}
                 level={editor.returnTo === 'game' ? (world?.progression.level ?? 1) : 6}
+                unlockedParts={editor.returnTo === 'game' ? world?.unlockedParts : undefined}
                 maxClass={
                   editor.returnTo === 'game' ? Math.min(6, (world?.progression.level ?? 0) + 1) : 6
                 }
