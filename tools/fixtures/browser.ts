@@ -202,7 +202,13 @@ async function reset() {
     return;
   }
   if (
-    ['viewer-flow', 'viewer-actions', 'viewer-guide', 'viewer-flow-avatar'].includes(fixture.value)
+    [
+      'viewer-flow',
+      'viewer-actions',
+      'viewer-guide',
+      'viewer-flow-avatar',
+      'viewer-flow-eligibility',
+    ].includes(fixture.value)
   ) {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
     unmountScreen = showViewerFlow(
@@ -214,7 +220,9 @@ async function reset() {
           ? 'actions'
           : fixture.value === 'viewer-flow-avatar'
             ? 'avatar'
-            : 'flow',
+            : fixture.value === 'viewer-flow-eligibility'
+              ? 'eligibility'
+              : 'flow',
     );
     status.textContent = 'Ready · manually clocked local viewer';
     return;

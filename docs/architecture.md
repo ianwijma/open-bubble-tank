@@ -262,3 +262,6 @@ The viewer importer exposes caution symbol1115 as its own pose. Native loading a
 
 
 `useViewerHighlights` samples the card background on stage steps, inverse-transforms browser pointer coordinates through each imported row matrix, and paints line/warning refs from the retained model. Native mode samples the cached card alpha; mock mode uses its numerical background rectangle. Keyboard load focus also highlights a row as an explicit accessibility adapter. `TankViewer` clears selected line/filter state before detail/confirmation and suspends updates while covered or in detail view. `CreatorArtwork.draw` accepts an optional complete-image glow, shared lazily across preview layers and destroyed with the renderer. Changes to job key/fit repaint immediately at the retained age, without advancing its stage clock.
+
+
+The candidate-eligibility fixture adds a level-two avatar queue with a preceding readout of3 GP. It imports codes through the production codec and viewer, so the Class2 Tripod's4 GP allowance is checked independently of that readout. The source policy already lives in `tankLoadEligibility`; this coverage slice does not change production rules or profile persistence.

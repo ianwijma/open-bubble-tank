@@ -15,7 +15,7 @@ function Flow({
   pack: AssetPack;
   stage: StageRuntime;
   host: HTMLElement;
-  mode: 'flow' | 'actions' | 'guide' | 'avatar';
+  mode: 'flow' | 'actions' | 'guide' | 'avatar' | 'eligibility';
 }) {
   const [tanks, setTanks] = useState<TankDesign[]>(() =>
     mode === 'actions'
@@ -27,11 +27,13 @@ function Flow({
       pack={pack}
       stage={stage}
       tanks={tanks}
-      avatar={mode === 'avatar'}
+      avatar={mode === 'avatar' || mode === 'eligibility'}
       limits={
-        mode === 'avatar'
-          ? { level: 1, maxClass: 2, gunPoints: 2 }
-          : { level: 6, maxClass: 6, gunPoints: 100 }
+        mode === 'eligibility'
+          ? { level: 2, maxClass: 3, gunPoints: 3 }
+          : mode === 'avatar'
+            ? { level: 1, maxClass: 2, gunPoints: 2 }
+            : { level: 6, maxClass: 6, gunPoints: 100 }
       }
       helpSeen={mode !== 'guide'}
       onHelpComplete={() => {
@@ -59,7 +61,7 @@ function Flow({
 export function showViewerFlow(
   pack: AssetPack,
   host: HTMLElement,
-  mode: 'flow' | 'actions' | 'guide' | 'avatar' = 'flow',
+  mode: 'flow' | 'actions' | 'guide' | 'avatar' | 'eligibility' = 'flow',
 ) {
   const stage = new StageRuntime(),
     root = createRoot(host),
