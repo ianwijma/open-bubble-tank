@@ -201,7 +201,9 @@ async function reset() {
     status.textContent = 'Ready · creator button raster states';
     return;
   }
-  if (['viewer-flow', 'viewer-actions', 'viewer-guide'].includes(fixture.value)) {
+  if (
+    ['viewer-flow', 'viewer-actions', 'viewer-guide', 'viewer-flow-avatar'].includes(fixture.value)
+  ) {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
     unmountScreen = showViewerFlow(
       pack,
@@ -210,7 +212,9 @@ async function reset() {
         ? 'guide'
         : fixture.value === 'viewer-actions'
           ? 'actions'
-          : 'flow',
+          : fixture.value === 'viewer-flow-avatar'
+            ? 'avatar'
+            : 'flow',
     );
     status.textContent = 'Ready · manually clocked local viewer';
     return;

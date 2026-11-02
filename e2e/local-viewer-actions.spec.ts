@@ -44,7 +44,7 @@ for (const native of [false, true]) {
           }),
       )
       .toBe(true);
-    await expect(stage).toHaveAttribute('data-viewer-flow-subscriptions', '3');
+    await expect(stage).toHaveAttribute('data-viewer-flow-subscriptions', '4');
     await expect(page.getByRole('button', { name: 'Previous page', exact: true })).toBeDisabled();
     await page.getByRole('button', { name: 'Next page', exact: true }).click();
     await expect(viewer).toContainText('Page: 2 out of:');

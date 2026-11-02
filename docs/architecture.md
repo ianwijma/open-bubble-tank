@@ -259,3 +259,6 @@ First-use help reads the Boolean profile flag after loading. Only the last Next 
 
 
 The viewer importer exposes caution symbol1115 as its own pose. Native loading automatically caches it through the existing widget loop; mock paint consumes numerical triangle/hole bounds and the separate mark primitive. These layers retain their own source registration and colors. No warning controller is wired by this metadata slice.
+
+
+`useViewerHighlights` samples the card background on stage steps, inverse-transforms browser pointer coordinates through each imported row matrix, and paints line/warning refs from the retained model. Native mode samples the cached card alpha; mock mode uses its numerical background rectangle. Keyboard load focus also highlights a row as an explicit accessibility adapter. `TankViewer` clears selected line/filter state before detail/confirmation and suspends updates while covered or in detail view. `CreatorArtwork.draw` accepts an optional complete-image glow, shared lazily across preview layers and destroyed with the renderer. Changes to job key/fit repaint immediately at the retained age, without advancing its stage clock.
