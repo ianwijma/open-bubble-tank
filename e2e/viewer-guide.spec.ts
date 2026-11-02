@@ -48,6 +48,55 @@ for (const native of [false, true]) {
     });
     const note = guide.locator('[data-creator-field="offlineGuide"]');
     await expect(note).toBeVisible();
+    const arrow = await guide
+      .locator('.viewer-group')
+      .first()
+      .locator(':scope > img, :scope > svg.viewer-art')
+      .first()
+      .evaluate(async (node) => {
+        const canvas = document.createElement('canvas');
+        canvas.width = 550;
+        canvas.height = 450;
+        const ctx = canvas.getContext('2d')!;
+        if (node instanceof HTMLImageElement) {
+          await node.decode();
+          ctx.drawImage(
+            node,
+            parseFloat(node.style.left),
+            parseFloat(node.style.top),
+            parseFloat(node.style.width),
+            parseFloat(node.style.height),
+          );
+        } else {
+          const svg = node.cloneNode(true) as SVGSVGElement;
+          svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+          svg.setAttribute('width', '550');
+          svg.setAttribute('height', '450');
+          const image = new Image(),
+            url = URL.createObjectURL(
+              new Blob([new XMLSerializer().serializeToString(svg)], { type: 'image/svg+xml' }),
+            );
+          try {
+            image.src = url;
+            await image.decode();
+            ctx.drawImage(image, 0, 0);
+          } finally {
+            URL.revokeObjectURL(url);
+          }
+        }
+        // Source1410: the tip reaches saved tanks; its upper corner retains only backdrop595.
+        const alpha = (x: number, y: number) => ctx.getImageData(x, y, 1, 1).data[3];
+        return {
+          upper: alpha(450, 225),
+          backdrop: alpha(500, 225),
+          tip: alpha(460, 239),
+          center: alpha(450, 239),
+        };
+      });
+    expect(arrow.backdrop).toBeLessThanOrEqual(26);
+    expect(arrow.upper).toBe(arrow.backdrop);
+    expect(arrow.tip).toBeGreaterThan(128);
+    expect(arrow.center).toBe(255);
     if (native) {
       const pixels = await note.locator('img').evaluateAll((images) =>
         images.map((node) => {
