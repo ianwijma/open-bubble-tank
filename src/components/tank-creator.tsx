@@ -604,6 +604,7 @@ export function TankCreator({
           aria-label="Tank design area. Choose a palette row, then drag its preview here. For keyboard placement, activate the preview, move with arrow keys and press Enter. Click parts to toggle selection. Drag empty space to select a group. Drag selected parts to move them."
           onPointerDown={(e) => {
             if (e.button !== 0) return;
+            setAdvanced(false);
             const pos = point(e);
             pointer.current = pos;
             if (placement.current?.mode === 'keyboard') {

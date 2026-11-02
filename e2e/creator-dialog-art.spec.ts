@@ -37,6 +37,12 @@ test('SWF creator dialogs cache static art without editable fields or text-only 
   expect(proof.rows[1].tank).toEqual([51, 51, 51, 255]);
   expect(proof.rows[2].code).toEqual([51, 51, 51, 255]);
   expect(proof.rows[3].message).toEqual([0, 0, 0, 204]);
+  expect(proof.textOnlyButtons).toHaveLength(21);
+  expect([...new Set(proof.textOnlyButtons.map((b: { symbol: number }) => b.symbol))]).toEqual([
+    1008, 1012, 1019, 1034, 1039, 1043, 1047,
+  ]);
+  for (const button of proof.textOnlyButtons)
+    expect(button).toMatchObject({ raster: false, cached: false });
   const data = await page
     .locator('#stage canvas')
     .evaluate((node) => (node as HTMLCanvasElement).toDataURL());

@@ -89,6 +89,16 @@ for (const native of [false, true])
     await expect(life).toHaveValue('250');
     await life.fill('9999');
     await expect(life).toHaveValue('1000');
+    const workspace = page.locator('.creator-workspace canvas'),
+      enemyInfo = page.getByRole('region', { name: 'Enemy statistics', exact: true });
+    await workspace.dispatchEvent('pointerdown', { button: 2, pointerType: 'mouse' });
+    await expect(enemyInfo).toBeVisible();
+    await workspace.click({ position: { x: 10, y: 10 } });
+    await expect(enemyInfo).toHaveCount(0);
+    await tab.click();
+    await expect(life).toHaveValue('1000');
+    await expect(reward).toHaveValue('125');
+    await expect(speed).toHaveValue('2.75');
     await reward.fill('oops');
     await expect(reward).toHaveValue('1');
     const underneath = await confirmationPixel(page);

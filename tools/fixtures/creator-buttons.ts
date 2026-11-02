@@ -1,6 +1,7 @@
 import { AssetPack, type Raster, type SpriteInfo } from '../../src/game/assets/asset-pack';
 import { SwfClip } from '../../src/game/assets/swf-clip';
 import type { ButtonInfo, ButtonState } from '../../src/game/assets/button-display-list';
+import { CREATOR_DIALOGS } from '../../src/game/core/creator-dialogs';
 
 function proof(raster: Raster) {
   let hash = 2166136261,
@@ -193,7 +194,19 @@ export async function showCreatorButtons(
         )
       : [];
   host.append(canvas);
-  host.dataset.creatorButtons = JSON.stringify({ primitive, rows, whole });
+  const textOnlyButtons = [];
+  if (dialogs && pack.mode === 'swf')
+    for (const symbol of new Set(
+      CREATOR_DIALOGS.frames.flatMap((f) => f.buttons.map((b) => b.symbol)),
+    ))
+      for (const state of ['up', 'over', 'down'] as const)
+        textOnlyButtons.push({
+          symbol,
+          state,
+          raster: (await pack.rasterSymbol(symbol, 1, 0, state)) !== null,
+          cached: pack.creatorFrames.has(`dialog:${symbol}:${state}`),
+        });
+  host.dataset.creatorButtons = JSON.stringify({ primitive, rows, whole, textOnlyButtons });
   return () => {
     canvas.remove();
     delete host.dataset.creatorButtons;
