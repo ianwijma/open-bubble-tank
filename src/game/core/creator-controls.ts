@@ -6,6 +6,7 @@ export interface CreatorPrimitive {
   italic?: boolean;
   id: number;
   kind: string;
+  innerBounds?: { xMin: number; xMax: number; yMin: number; yMax: number };
   matrix: SwfMatrix;
   boundsMatrix?: SwfMatrix;
   bounds: { xMin: number; xMax: number; yMin: number; yMax: number };

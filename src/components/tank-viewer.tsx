@@ -23,6 +23,7 @@ import {
   type ViewerPiece,
 } from '@/game/core/tank-viewer';
 import { costs, AVATARS, ENEMIES } from '@/game/data/catalog';
+import { removeViewerTank, viewerTankExists } from '@/game/core/viewer-storage';
 import { decodeTankCode, encodeTankCode } from '@/game/services/tank-code';
 import { community } from '@/game/services/extensions';
 import { TankViewerSort } from './tank-viewer-sort';
@@ -31,7 +32,15 @@ import { useViewerFade } from './viewer-fades';
 import { CreatorText } from './creator-text';
 import { viewerCardName, type ViewerPane } from '@/game/core/viewer-panes';
 import { ViewerCodeFlow, viewerToolbarName } from '@/game/core/viewer-code-flow';
+import {
+  initialViewerNavigation,
+  navigateViewer,
+  type ViewerNavigationAction,
+} from '@/game/core/viewer-navigation';
 import { ViewerPaneLayer } from './viewer-pane-layer';
+import { useViewerHighlights } from './viewer-highlights';
+import { ViewerRejections } from '@/game/core/viewer-rejections';
+import { ViewerRejectionEffects } from './viewer-rejections';
 import {
   ViewerArt,
   ViewerFields,
@@ -126,22 +135,29 @@ export function TankViewer({
   onSelect: (tank: TankDesign) => void;
   onBack: () => void;
   onSaveLocal: (tank: TankDesign) => void;
-  onDelete: (id: string) => void;
+  onDelete: (tank: TankDesign) => void;
   helpSeen: boolean;
   onHelpComplete: () => void;
 }) {
   const local = useMemo(() => localViewerTanks(tanks, avatar), [tanks, avatar]);
+  // Save scans the whole category profile, not the ID-filtered visible queue.
+  const profileTanks = useMemo(
+    () => [...(avatar ? AVATARS : ENEMIES), ...tanks].filter((tank) => tank.avatar === avatar),
+    [tanks, avatar],
+  );
   const [codeFlow] = useState(() => new ViewerCodeFlow(avatar));
+  const [rejections] = useState(() => new ViewerRejections());
   const panes = codeFlow.panes,
     fades = codeFlow.fades;
   const paneView = useSyncExternalStore(panes.subscribe, panes.getSnapshot, panes.getSnapshot);
   const initialLocal = useRef(local);
   const [guide, setGuide] = useState(helpSeen ? 0 : 1);
+  const [navigation, setNavigation] = useState(() => initialViewerNavigation(local.length));
+  const { offset, detail } = navigation;
+  const [localQueue, setLocalQueue] = useState(true);
+  const [savedFrames, setSavedFrames] = useState<Map<string, 3 | 4>>(() => new Map());
   const [queue, setQueue] = useState<TankDesign[] | null>(null),
-    [offset, setOffset] = useState(0),
     [ready, setReady] = useState(false),
-    [detail, setDetail] = useState(false),
-    [hover, setHover] = useState(''),
     [description, setDescription] = useState(''),
     [confirmation, setConfirmation] = useState<{
       tank: TankDesign;
@@ -167,6 +183,13 @@ export function TankViewer({
   const all = queue ?? local,
     selected = paneView.detail?.tank,
     covered = !!confirmation || codeOpen || !!message || (ready && guide > 0);
+  const highlights = useViewerHighlights(
+    pack,
+    stage,
+    paneView.cards,
+    limits,
+    ready && !detail && !covered,
+  );
   const jobs: ViewerJob[] = ready
     ? [
         ...paneView.cards.flatMap((p) => (p?.ownsArt ? [{ pane: p, fit: true }] : [])),
@@ -176,6 +199,8 @@ export function TankViewer({
         tank: pane.tank,
         fit,
         canvas: () => canvases.current.get(pane.instance) ?? null,
+        highlighted: () =>
+          fit && highlights.model.rows.some((row) => row.instance === pane.instance && row.glow),
       }))
     : [];
   if (confirmation)
@@ -213,14 +238,20 @@ export function TankViewer({
   function capture() {
     opener.current = document.activeElement as HTMLElement | null;
   }
-  function reset(list: TankDesign[] | null = null) {
+  function navigate(action: ViewerNavigationAction, length = all.length) {
+    const next = navigateViewer(navigation, length, action);
+    setNavigation(next);
+    return next;
+  }
+  function reset(list: TankDesign[] | null = null, sorted = false) {
     codeFlow.localPosition();
     setQueue(list);
-    setOffset(0);
-    setDetail(false);
+    const sourceLocal = sorted ? localQueue : true;
+    setLocalQueue(sourceLocal);
+    navigate({ type: sorted ? 'sort' : 'local' }, (list ?? local).length);
     const page = (list ?? local).slice(0, 4);
-    if (detail) panes.returnToCards(page);
-    else panes.setup(page);
+    if (detail) panes.returnToCards(page, sourceLocal);
+    else panes.setup(page, sourceLocal);
     setCopied(new Set());
     setSortOpen(false);
   }
@@ -228,16 +259,17 @@ export function TankViewer({
     const error = !deleting && viewerSelectionError(tank, avatar, limits);
     capture();
     if (error) {
-      setMessage(error);
+      rejections.add(error);
       return;
     }
+    const index = paneView.cards.findIndex((p) => p?.tank === tank);
+    if (index !== -1) highlights.model.clear(index);
     setConfirmation({ tank, deleting, instance: ++instances.current });
-    setHover('');
   }
-  async function copy(tank: TankDesign) {
+  async function copy(tank: TankDesign, key: string) {
     try {
       await navigator.clipboard.writeText(await encodeTankCode(tank));
-      if (mounted.current) setCopied((old) => new Set([...old, tank.id]));
+      if (mounted.current) setCopied((old) => new Set([...old, key]));
     } catch (e) {
       if (mounted.current) {
         capture();
@@ -277,16 +309,17 @@ export function TankViewer({
   function returnFromCode(imported?: TankDesign[]) {
     codeRequest.current++;
     const next = imported ?? all;
-    if (imported) setQueue(imported);
+    if (imported) {
+      setQueue(imported);
+      setLocalQueue(false);
+    }
     setCodeOpen(false);
     setBusy(false);
-    setOffset(0);
-    setDetail(false);
+    navigate({ type: 'code' }, next.length);
     setCopied(new Set());
-    setHover('');
     setDescription('');
-    if (busy || imported) codeFlow.returnAfterRead(next);
-    else codeFlow.returnToView(next);
+    if (busy || imported) codeFlow.returnAfterRead(next, imported ? false : localQueue);
+    else codeFlow.returnToView(next, localQueue);
   }
   function closeCode() {
     returnFromCode();
@@ -297,25 +330,23 @@ export function TankViewer({
     setCode('');
     setCodePrompt(true);
     setSortOpen(false);
-    setHover('');
     setDescription('');
     setCodeOpen(true);
   }
-  function page(direction: number) {
-    const next =
-      direction === 0
-        ? 0
-        : Math.max(
-            0,
-            Math.min(
-              detail ? all.length - 1 : Math.floor((all.length - 1) / 4) * 4,
-              offset + direction * (detail ? 1 : 4),
-            ),
-          );
-    setOffset(next);
-    if (detail && all[next]) panes.replaceDetail(all[next]);
-    else panes.setup(all.slice(next, next + 4));
+  function page(direction: -1 | 0 | 1) {
+    const next = navigate({ type: 'page', direction });
+    if (detail && all[next.offset]) panes.replaceDetail(all[next.offset], localQueue);
+    else {
+      panes.setup(all.slice(next.offset, next.offset + 4), localQueue);
+      if (!all[next.offset]) setMessage("The tank(s) you've requested could not be loaded.");
+    }
     setCopied(new Set());
+  }
+  function save(pane: ViewerPane, detailed = false) {
+    const duplicate = viewerTankExists(profileTanks, pane.tank),
+      key = `${detailed ? 'detail' : 'card'}:${pane.instance}`;
+    setSavedFrames((old) => new Map(old).set(key, detailed && duplicate ? 4 : 3));
+    if (!duplicate) onSaveLocal(pane.tank);
   }
   function canvas(key: string, tank: TankDesign) {
     return (
@@ -338,6 +369,7 @@ export function TankViewer({
     action: () => void,
     disabled = false,
     done = false,
+    stoppedFrame?: number,
   ) {
     return (
       <ViewerButton
@@ -348,6 +380,7 @@ export function TankViewer({
         onClick={action}
         disabled={disabled}
         done={done}
+        stoppedFrame={stoppedFrame}
         onHover={setDescription}
       />
     );
@@ -365,7 +398,7 @@ export function TankViewer({
       key = pane.instance,
       error = viewerSelectionError(tank, avatar, limits);
     return (
-      <ViewerGroup key={tank.id} matrix={place.matrix} className="viewer-card">
+      <ViewerGroup key={pane.instance} matrix={place.matrix} className="viewer-card">
         <ViewerArt pack={pack} symbol={1176} />
         <div
           className="viewer-preview-mask"
@@ -382,7 +415,16 @@ export function TankViewer({
             {pane.ownsArt ? canvas(key, tank) : null}
           </div>
         </div>
-        {hover === tank.id ? <ViewerArt pack={pack} symbol={1173} /> : null}
+        <div
+          className="viewer-group"
+          ref={(node) => {
+            highlights.lines.current[index] = node;
+          }}
+        >
+          <ViewerGroup matrix={row.children.find((p) => p.name === 'lines_mc')!.matrix}>
+            <ViewerArt pack={pack} symbol={1173} />
+          </ViewerGroup>
+        </div>
         <ViewerGroup matrix={selection.matrix}>
           <button
             className="viewer-select-tank"
@@ -390,15 +432,17 @@ export function TankViewer({
             style={{ left: b.x, top: b.y, width: b.width, height: b.height }}
             onClick={() => confirm(tank)}
             onPointerEnter={() => {
-              setHover(tank.id);
               setDescription(error || 'Select this tank');
             }}
             onPointerLeave={() => {
-              setHover('');
               setDescription('');
             }}
-            onFocus={() => setHover(tank.id)}
-            onBlur={() => setHover('')}
+            onFocus={() => {
+              highlights.focused.current = index;
+            }}
+            onBlur={() => {
+              highlights.focused.current = null;
+            }}
           />
         </ViewerGroup>
         <ViewerGroup matrix={row.children.find((p) => p.name === 'ButtonsContainer')!.matrix}>
@@ -419,8 +463,8 @@ export function TankViewer({
             )
             .map((p) => {
               if (
-                (p.name === 'btnDelete_mc' && builtinIds.has(tank.id)) ||
-                (p.name === 'btnSave_mc' && local.some((t) => t.id === tank.id))
+                (p.name === 'btnDelete_mc' && (!pane.local || builtinIds.has(tank.id))) ||
+                (p.name === 'btnSave_mc' && pane.local)
               )
                 return null;
               return button(
@@ -428,25 +472,44 @@ export function TankViewer({
                 `${p.name === 'btnDetails_mc' ? 'Details for' : p.name === 'btnCopy_mc' ? 'Copy code for' : p.name === 'btnDelete_mc' ? 'Delete' : 'Save locally'} ${tank.name}`,
                 () => {
                   if (p.name === 'btnDetails_mc') {
+                    highlights.model.clear(index);
                     panes.detail(index);
-                    setOffset(offset + index);
-                    setDetail(true);
-                    setHover('');
-                  } else if (p.name === 'btnCopy_mc') void copy(tank);
+                    navigate({ type: 'detail', index: offset + index });
+                  } else if (p.name === 'btnCopy_mc') void copy(tank, `card:${pane.instance}`);
                   else if (p.name === 'btnDelete_mc') confirm(tank, true);
-                  else onSaveLocal(tank);
+                  else save(pane);
                 },
                 false,
-                p.name === 'btnCopy_mc' && copied.has(tank.id),
+                p.name === 'btnCopy_mc' && copied.has(`card:${pane.instance}`),
+                p.name === 'btnSave_mc' ? savedFrames.get(`card:${pane.instance}`) : undefined,
               );
             })}
+          <div
+            className="viewer-group"
+            ref={(node) => {
+              highlights.cautions.current[index] = node;
+            }}
+          >
+            <ViewerGroup
+              matrix={rowButtons.children.find((p) => p.name === 'CautionSign_mc')!.matrix}
+            >
+              <ViewerArt pack={pack} symbol={1115} />
+            </ViewerGroup>
+          </div>
         </ViewerGroup>
       </ViewerGroup>
     );
   }
   return (
     <div
+      ref={highlights.host}
       className="tank-viewer"
+      onPointerMove={(e) => {
+        highlights.pointer.current = { x: e.clientX, y: e.clientY };
+      }}
+      onPointerLeave={() => {
+        highlights.pointer.current = null;
+      }}
       data-viewer-type={avatar ? 'Avatar' : 'Enemy'}
       data-viewer-ready={String(ready)}
       data-guide-page={ready ? guide : 0}
@@ -519,8 +582,9 @@ export function TankViewer({
                 )
                 .map((p) => {
                   if (
-                    (p.name === 'btnLargeDelete_mc' && builtinIds.has(selected.id)) ||
-                    (p.name === 'btnLargeSave' && local.some((t) => t.id === selected.id))
+                    (p.name === 'btnLargeDelete_mc' &&
+                      (!paneView.detail!.local || builtinIds.has(selected.id))) ||
+                    (p.name === 'btnLargeSave' && paneView.detail!.local)
                   )
                     return null;
                   return button(
@@ -530,16 +594,18 @@ export function TankViewer({
                       : `${p.name === 'btnCopy_mc' ? 'Copy code for' : p.name === 'btnLargeDelete_mc' ? 'Delete' : 'Save locally'} ${selected.name}`,
                     () => {
                       if (p.name === 'btnLargeBack_mc') {
-                        setDetail(false);
-                        setOffset(Math.floor(offset / 4) * 4);
-                        const first = Math.floor(offset / 4) * 4;
-                        panes.returnToCards(all.slice(first, first + 4));
-                      } else if (p.name === 'btnCopy_mc') void copy(selected);
+                        const next = navigate({ type: 'cards' });
+                        panes.returnToCards(all.slice(next.offset, next.offset + 4), localQueue);
+                      } else if (p.name === 'btnCopy_mc')
+                        void copy(selected, `detail:${paneView.detail!.instance}`);
                       else if (p.name === 'btnLargeDelete_mc') confirm(selected, true);
-                      else onSaveLocal(selected);
+                      else save(paneView.detail!, true);
                     },
                     false,
-                    p.name === 'btnCopy_mc' && copied.has(selected.id),
+                    p.name === 'btnCopy_mc' && copied.has(`detail:${paneView.detail!.instance}`),
+                    p.name === 'btnLargeSave'
+                      ? savedFrames.get(`detail:${paneView.detail!.instance}`)
+                      : undefined,
                   );
                 })}
             </ViewerGroup>
@@ -588,11 +654,13 @@ export function TankViewer({
                       else if (p.name === 'btnViewLocalTanks_mc') reset();
                       else void unavailable();
                     },
-                    p.name === 'btnFirst_mc' || p.name === 'btnPrev_mc'
-                      ? offset === 0
-                      : p.name === 'btnNext_mc'
-                        ? offset + (detail ? 1 : 4) >= all.length
-                        : false,
+                    p.name === 'btnFirst_mc'
+                      ? !navigation.first
+                      : p.name === 'btnPrev_mc'
+                        ? !navigation.previous
+                        : p.name === 'btnNext_mc'
+                          ? !navigation.next
+                          : false,
                   )}
                 </ViewerPaneLayer>
               ))
@@ -611,7 +679,7 @@ export function TankViewer({
             onOpen={setSortOpen}
             onHover={setDescription}
             onSort={(sort) => {
-              reset(sortViewerTanks(all, sort));
+              reset(sortViewerTanks(all, sort), true);
             }}
           />
         </ViewerPaneLayer>
@@ -627,7 +695,7 @@ export function TankViewer({
                 pack={pack}
                 symbol={1258}
                 values={{
-                  txtClass_txt: String(limits.maxClass),
+                  txtClass_txt: String(limits.profileMaxClass ?? limits.maxClass),
                   txtBBL_txt: '100',
                   txtGP_txt: String(limits.gunPoints),
                 }}
@@ -644,7 +712,7 @@ export function TankViewer({
                 ? ''
                 : detail
                   ? `Tank: ${offset + 1} out of: ${all.length}`
-                  : `Page: ${Math.floor(offset / 4) + 1} out of: ${Math.ceil(all.length / 4)}`,
+                  : `Page: ${navigation.page} out of: ${Math.ceil(all.length / 4)}`,
               txtExplination_txt: description,
             }}
           />
@@ -699,8 +767,8 @@ export function TankViewer({
               button(p, p.name === 'btnYes_mc' ? 'Yes' : 'No', () => {
                 if (p.name === 'btnYes_mc') {
                   if (shownConfirmation.deleting) {
-                    onDelete(shownConfirmation.tank.id);
-                    reset(local.filter((t) => t.id !== shownConfirmation.tank.id));
+                    onDelete(shownConfirmation.tank);
+                    reset(removeViewerTank(local, shownConfirmation.tank));
                   } else onSelect(shownConfirmation.tank);
                 }
                 setConfirmation(null);
@@ -775,6 +843,7 @@ export function TankViewer({
           </button>
         </SourceModal>
       ) : null}
+      <ViewerRejectionEffects pack={pack} stage={stage} model={rejections} />
     </div>
   );
 }

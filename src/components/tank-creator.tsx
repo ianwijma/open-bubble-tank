@@ -3,6 +3,7 @@ import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import type { AssetPack } from '@/game/assets/asset-pack';
 import { measureClass } from '@/game/assets/class-measurement';
 import type { TankDesign, TankPart } from '@/game/core/types';
+import type { ViewerLimits } from '@/game/core/tank-viewer';
 import { costs, gunBudget, PARTS, partById } from '@/game/data/catalog';
 import { canPlacePart, validateBuild } from '@/game/simulation/designer';
 import { creatorSuggestedStats, creatorImportedSuggested } from '@/game/core/creator-enemy-stats';
@@ -50,6 +51,8 @@ export function TankCreator({
   initial,
   level,
   maxClass,
+  unlockedParts,
+  profileMaxClass,
   fps,
   onSave,
   onExit,
@@ -60,10 +63,12 @@ export function TankCreator({
   initial: TankDesign;
   level: number;
   maxClass: number;
+  unlockedParts?: readonly number[];
+  profileMaxClass?: number;
   fps: number;
   onSave: (tank: TankDesign) => TankDesign | undefined;
   onExit: () => void;
-  onLoad: (limits: { avatar: boolean; level: number; maxClass: number; gunPoints: number }) => void;
+  onLoad: (limits: ViewerLimits & { avatar: boolean }) => void;
 }) {
   const [design, setDesign] = useState<TankDesign>(() => structuredClone(initial));
   const [transformClass, setTransformClass] = useState<number | null>(null);
@@ -74,8 +79,8 @@ export function TankCreator({
   const finalDesign = useMemo(() => ({ ...design, classId }), [design, classId]);
   const { gp, bp } = costs(design.parts),
     budget = design.avatar ? gunBudget(classId, level) : Math.floor(gunBudget(classId, 6) * 1.5);
-  const errors = validateBuild(finalDesign, level, maxClass);
-  const paletteContext = { avatar: design.avatar, level, classId, budget, gp, bp };
+  const errors = validateBuild(finalDesign, level, maxClass, unlockedParts);
+  const paletteContext = { avatar: design.avatar, level, classId, budget, gp, bp, unlockedParts };
   const [category, setCategory] = useState(1),
     [chosen, setChosen] = useState<number | null>(() =>
       firstAffordablePart(
@@ -535,7 +540,14 @@ export function TankCreator({
         label="Load a Tank..."
         onClick={() => {
           setDetails(null);
-          onLoad({ avatar: design.avatar, level, maxClass, gunPoints: budget });
+          onLoad({
+            avatar: design.avatar,
+            level,
+            maxClass,
+            gunPoints: budget,
+            unlockedParts,
+            profileMaxClass,
+          });
         }}
       />
       <CreatorButton

@@ -12,7 +12,7 @@ Next.js supplies the application shell, TypeScript build, and static delivery. T
 2. `AssetPack` extracts images, sounds, vectors, font outlines, and sprite placements. It composes frozen previews and shared vector-leaf textures. It never executes ABC/ActionScript or calls retired endpoints.
 3. `GameShell` owns the local profile, screen navigation, dialogs, and a `World` instance.
 4. `GameViewport` owns input listeners, a fixed-step accumulator, the Pixi renderer, and cleanup. Input is cleared on blur and gameplay pauses when hidden.
-5. `World.step` advances one original game frame. `weapons.ts`, `projectiles.ts`, `ai.ts`, `waves.ts`, and `tank.ts` implement separate systems. Beam contact, healer patient ownership, turret construction, and status callbacks/clocks are isolated in `beams.ts`, `healing.ts`, `turrets.ts`, and `status.ts`. Rendering and browser storage are absent from these rules.
+5. `World.step` advances one original game frame. `weapons.ts`, `projectiles.ts`, `actor-movement.ts`, `waves.ts`, and `tank.ts` implement separate systems. Beam contact, healer patient ownership, turret construction, and status callbacks/clocks are isolated in `beams.ts`, `healing.ts`, `turrets.ts`, and `status.ts`. Rendering and browser storage are absent from these rules.
 6. `GameRenderer` positions the camera at the avatar, draws fields/entities/projectiles/pickups/effects, and updates `SwfSymbolView` display lists. `AssetPack` supplies matching animated alpha-mask hit tests.
 7. React observes a revision counter, approximately ten updates per second at 50 FPS; it does not render every simulation frame.
 
@@ -250,3 +250,52 @@ Part descriptions are regenerated with `python3 tools/import-reference-data.py -
 First-use help reads the Boolean profile flag after loading. Only the last Next action writes completion; Escape closes without marking it seen. Supplied artwork and numerical mock regions retain the local guide while excluding the retired server callout. Replacement copy states the offline behavior. These local contracts do not establish original-runtime typography, paint, event-phase or full-game parity; remaining source differences stay in the fidelity ledger.
 
 `ViewerCodeFlow` owns one pane/fade graph for creator viewer code entry. It queues card/detail deletion separately from ordered toolbar fades, including hidden controls that affect forward-splice timing. Return rebuilds page one and assigns the source sort x616.55; local-list setup restores501.6. Direct Back retains source delete-on-requeue behavior. Asynchronous Web Crypto completion/cancellation first releases old pending previews, preventing stale disposal from erasing the rebuilt queue, and invalidates its request token. Code prompt state clears once per opening, and retained layer refs paint alpha on stage steps without a whole-content opacity multiplier.
+
+
+`core/viewer-navigation.ts` keeps the source's persistent page/detail button flags in an immutable snapshot. `TankViewer` dispatches local, sort, code, cards, detail and page actions, then asks the existing pane owner to rebuild or transfer previews. Caption setters and handlers write flags in source order, so enabled controls cannot be derived solely from queue bounds. Repeated First/Next actions can deliberately rebuild the same page/tank. The model has no rendering, profile or browser-service dependency.
+
+
+`core/viewer-highlights.ts` separates persistent card-slot line/glow latches from replaceable preview identity and caution alpha. Its frame step receives hit booleans and an activity flag; it owns no pointer sampling, DOM or renderer. Warning eligibility reuses `tankLoadEligibility`, retaining active-level capacity and authoritative unlock lists. Alpha assignments use the existing signed8.8 display setter. Browser sampling, warning geometry and preview filters follow in separate slices.
+
+
+The viewer importer exposes caution symbol1115 as its own pose. Native loading automatically caches it through the existing widget loop; mock paint consumes numerical triangle/hole bounds and the separate mark primitive. These layers retain their own source registration and colors. No warning controller is wired by this metadata slice.
+
+
+`useViewerHighlights` samples the card background on stage steps, inverse-transforms browser pointer coordinates through each imported row matrix, and paints line/warning refs from the retained model. Native mode samples the cached card alpha; mock mode uses its numerical background rectangle. Keyboard load focus also highlights a row as an explicit accessibility adapter. `TankViewer` clears selected line/filter state before detail/confirmation and suspends updates while covered or in detail view. `CreatorArtwork.draw` accepts an optional complete-image glow, shared lazily across preview layers and destroyed with the renderer. Changes to job key/fit repaint immediately at the retained age, without advancing its stage clock.
+
+
+The candidate-eligibility fixture adds a level-two avatar queue with a preceding readout of3 GP. It imports codes through the production codec and viewer, so the Class2 Tripod's4 GP allowance is checked independently of that readout. The source policy already lives in `tankLoadEligibility`; this coverage slice does not change production rules or profile persistence.
+
+
+`ViewerRejections` keeps independent messages and frame counters as stable lifetime snapshots: frame steps mutate counters, while add/removal publishes a new snapshot. Ended clips are removed together, matching the source effect manager's collect-then-remove pass. The viewer importer separately recovers symbol1557's91-frame three-layer alpha table, static metadata and dynamic field at source position224,196. The model and data have no live consumer in this slice; the timed browser overlay follows separately.
+
+
+`ViewerRejectionEffects` subscribes to immutable lifetime snapshots while painting each retained clip's imported alpha tracks through refs on stage steps. It layers independent native933/1555 rasters or mock primitives with the dynamic CreatorText field at the recovered origin. Invalid selection adds a timed clip; unrelated offline/service notifications retain the existing message dialog. The overlay shields pointer input without making the viewer inert or adding a dismiss/focus trap. The current owner remains the viewer; global mainEffects persistence and exact cross-screen phase remain comparison gaps.
+
+
+`RunPartUnlocks` supplies a fresh source reset list and append-only tier history as readonly snapshots. Adding a tier creates a new snapshot; a lower/repeated tier preserves the previous one. The shared `partUnlocked` predicate now also accepts optional retained history in palette state and save validation, while absent history keeps the existing level fallback. This rule slice does not yet connect a World/editor owner; runtime propagation follows separately.
+
+
+`World` now owns one `RunPartUnlocks` instance and exposes its current readonly snapshot. `getOffers` advances unlock history before filtering candidates, matching UpgradeMenu's source update order; candidates still obey active-level GP/class limits and avatar category restrictions. Damage-driven level restoration leaves unlock history intact, while a new World creates the source reset list. The component slice below passes this snapshot into the live creator/viewer.
+
+
+For in-game editing, GameShell supplies `world.unlockedParts` to TankCreator. The creator forwards the same readonly snapshot into palette state, save validation and ViewerLimits when loading another design. Menu-only editing keeps the existing no-history fallback. The isolated retention fixture drives real World downgrade rules through production creator/viewer components, while the shared Bun codec helper keeps Node test-loader adaptation outside production services.
+
+
+`core/profile-class.ts` holds the source's app-session `PlayerProfile.maxClass` field independently of current-level creator/selection caps. GameShell lazily owns one instance and shares it across Worlds; every actual upgrade overwrites it with the new level plus one, capped at six, while damage, restored history and new-world unlock resets leave it alone. TankCreator forwards the numeric readout to TankViewer through the existing optional `profileMaxClass` contract. Local profile JSON remains unchanged.
+
+
+`core/viewer-storage.ts` separates source save identity from a tank's imported ID: exact author/name and every ordered part's key, type, twin, position, rotation, scale and radius. Viewer duplicate checks scan the full category profile, independently of the visible queue. GameShell and the offline library share category-scoped append/first-match removal adapters; library row and confirmation identities distinguish designs sharing an ID. JSON deletion still physically removes records instead of retaining the source hidden-entry flag. `ViewerPane.local` carries profile/code origin through reparenting, paging, sorting, cancellation and fades. Saving does not change that origin. Save/copy completion belongs to each pane/layout control; stopped widget frames render the authored Saved/Already Owned states.
+
+Save comparison does not define queue deduplication. Bytecode binds the active View local button to `_‑Z2`, whose frame callback `_‑9M` uses the same ID-filtered incremental pull as initial loading. Both routes keep that adapter. The separate unfiltered `PullTanksFromCurrentPlayerObject` paths are not substituted for this binding; broader profile/navigation entry points remain unfinished.
+
+
+`Random.int` preserves the original inclusive rounding expression and authored argument order. It does not clamp or sort the endpoints: actor safety turns call the helper with descending negative bounds. The seeded generator and number of draws per call remain unchanged; actor movement and behavior state recovery consumes this prerequisite in a later slice.
+
+
+`simulation/phasing.ts` owns a registered Phasing part's integer constructor counter and active-frame alpha updates. `createTank` constructs Phasing state before deduplicating registered behavior IDs; the original design/visual parts remain intact. Production World, rebuild, wave and spawn paths supply the shared World RNG, while standalone tools retain a deterministic UID-seeded fallback. Part updates call Phasing after movement through the existing jam/stun/pause gates. Artwork clocks remain separate, and alpha assignments reuse the existing signed 8.8 display-value helper. Movement and other behavior-controller recovery follows separately.
+
+
+`simulation/actor-movement.ts` is the permanent movement module for the pending World/behavior integration. It owns source turn planning, prior-rotation translation, whole-vector force damping, stationary/boss branches and movement-state construction. Callers supply the already projected avatar/destination point and current sticky state; this module does not acquire targets, advance Phasing or own browser/rendering services. Source-ordered vector arithmetic and the existing twip setter keep stored coordinates distinct from unrounded vector components. The live legacy AI remains until the behavior controllers and World routing are replaced together.
+
+`simulation/actor-movement.ts` now owns active enemy/ally translation and delayed turn plans; `Tank.movement` replaces legacy steering counters. Registered behavior parts run after primary weapons and movement through `behaviors.ts`, consuming the separate destination, target-acquisition and Phasing modules. `ActorParents` owns simulation-only parent records: it distinguishes actor removal from unrooting an outgoing field wrapper and reparenting cached actors. It supplies parent-relative points without renderer objects or an active-only UID lookup. Parent records currently derive from World camera snapshots; per-assignment camera precision and matrix edge cases remain fidelity work. Healer retains its existing beam/patient owner until its overridden acquisition/Aim rules are recovered.

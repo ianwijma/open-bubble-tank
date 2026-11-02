@@ -88,6 +88,9 @@ export interface GunState {
   turretRefs?: Projectile[];
   spawnDesign?: TankDesign;
   patientId?: number;
+  phasing?: { counter: number };
+  behaviorTarget?: BehaviorTargetState;
+  wallFlower?: WallFlowerState;
   beamId?: number;
   shieldDiameter?: number;
   shieldFilm?: ShieldClip;
@@ -95,6 +98,30 @@ export interface GunState {
   mineRefs?: MineReference[];
   /** Latest non-overlapping mounted MovieClip.play episode, in stage-art ages. */
   mountedPlay?: { child: string; age: number; frames: number };
+}
+export interface BehaviorTargetState {
+  master: Tank['side'] | null;
+  target: Tank | null;
+  allies: number;
+}
+export interface WallFlowerState {
+  age: number;
+  frequency: number;
+  amplitude: number;
+  point?: Vec;
+  radius?: number;
+  direction?: number;
+}
+export interface ActorMovementState {
+  frames: number;
+  rate: number;
+  hold: number;
+  safety: boolean;
+  lastAngle: number;
+  swarmPoint: Vec | null;
+  wallFlower: boolean;
+  skittish: boolean;
+  stationary: boolean;
 }
 export interface Tank extends Vec {
   /** The source caches strTankCode at birth, independently of mutable live data. */
@@ -140,9 +167,8 @@ export interface Tank extends Vec {
   age: number;
   /** Attached artwork stage ticks, independent of gameplay Run. */
   artAge: number;
-  turnFrames: number;
-  turnRate: number;
-  holdTurn: number;
+  movement: ActorMovementState;
+  /** Existing procedural artwork offset, independent of simulation behavior clocks. */
   phase: number;
   alpha: number;
   targetId: number | null;

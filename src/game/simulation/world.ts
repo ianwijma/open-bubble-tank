@@ -6,6 +6,8 @@ import { detachForcefield } from './forcefield';
 import { removeTankChild } from './tank-display';
 import { killMountedShield } from './shields';
 import { MainEffects } from './main-effects';
+import { RunPartUnlocks, partUnlocked } from '../core/part-unlocks';
+import { ProfileClassAllowance } from '../core/profile-class';
 import type {
   CollisionTest,
   Effect,
@@ -24,10 +26,11 @@ import type {
   WorldEvent,
   WorldMode,
 } from '../core/types';
-import { AVATARS, BOSSES, costs, gunBudget, partById, STARTER } from '../data/catalog';
+import { AVATARS, BOSSES, costs, gunBudget, STARTER } from '../data/catalog';
 import { WEAPONS, type WeaponSpec } from '../data/weapons';
 import emitterData from '../data/emitters.json';
-import { moveEnemy } from './ai';
+import { moveActor } from './actor-movement';
+import { ActorParents } from './actor-parents';
 import { FieldRuntime } from './field-runtime';
 import { WallTimers } from './wall-timers';
 import { controlPlayerDirection } from './player-direction';
@@ -43,7 +46,6 @@ import { createTank } from './tank';
 import { spawnPickups, tickPickups } from './pickups';
 import { damageTank } from './damage';
 import { rollWave, UnitRoster } from './waves';
-import { healerPatient } from './healing';
 import { tickStatusDecoration, tickStatusTail } from './status';
 import fieldGeometry from '../data/field-geometry.json';
 import { nextMapMode, type MapMode } from '../core/minimap';
@@ -91,6 +93,7 @@ export const emptyInput = (): InputFrame => ({
 });
 export class World {
   mode: WorldMode = 'playing';
+  readonly actorParents = new ActorParents();
   player: Tank;
   private currentField!: Field;
   private fieldContext: Field | null = null;
@@ -212,6 +215,10 @@ export class World {
   private upgradeReturnMode: 'playing' | 'transit' = 'playing';
   private secondaryHelpReturnMode: 'playing' | 'transit' = 'playing';
   progression: Progression = { level: 0, history: [STARTER] };
+  private readonly partUnlocks = new RunPartUnlocks();
+  get unlockedParts() {
+    return this.partUnlocks.parts;
+  }
   offers: TankDesign[] = [];
   stats: Stats = {
     damageDone: 0,
@@ -294,6 +301,7 @@ export class World {
     history: TankDesign[] = [],
     seed?: number,
     readonly mainEffects = new MainEffects(),
+    readonly profileClass = new ProfileClassAllowance(),
   ) {
     this.rng = new Random(seed);
     this.roster = new UnitRoster(this.rng, localTanks);
@@ -312,6 +320,7 @@ export class World {
       0,
       max,
       Math.floor(max / 75) + 1,
+      this,
     );
     this.field = { col: 0, row: 0, scale: 1, enemies: [], cleared: true, boss: false, tutorial: 1 };
     this.fields.set('0,0', this.field);
@@ -359,6 +368,7 @@ export class World {
     try {
       this.stepFrame(input);
     } finally {
+      this.actorParents.sync(this);
       // Authored timelines advance even when state1 skips effects-engine polling.
       const attached = new Set<Tank>([this.player]);
       for (const { runtime } of this.activeFields()) {
@@ -500,6 +510,7 @@ export class World {
       });
   }
   private tickActiveFields(input: InputFrame) {
+    this.actorParents.sync(this);
     this.tacticalHud.updateAllies(this.allies, this.player, this.viewZoom);
     this.inField(this.currentField, { x: 0, y: 0 }, () => this.tickField(input, this.fieldVisit));
     const transit = this.transit;
@@ -508,7 +519,10 @@ export class World {
   }
   private tickField(input: InputFrame, visit: FieldVisit) {
     this.flushEnemyRemovals();
-    this.allies = this.allies.filter((t) => !t.dead);
+    this.allies = this.allies.filter((t) => {
+      if (t.dead) this.actorParents.detach(t);
+      return !t.dead;
+    });
     if (this.runtime.lastAllyCount !== this.allies.length) {
       this.runtime.lastAllyCount = this.allies.length;
       for (const e of this.field.enemies) e.targetId = null;
@@ -526,7 +540,10 @@ export class World {
       else index++;
     }
     tickPickups(this);
-    this.allies = this.allies.filter((t) => !t.dead);
+    this.allies = this.allies.filter((t) => {
+      if (t.dead) this.actorParents.detach(t);
+      return !t.dead;
+    });
     this.completeField(this.field, visit);
     // _-0D flushes queued effects after its combat/pickup/completion work. The engine
     // still targets the outgoing layer while both wrappers run during a crossing.
@@ -536,6 +553,7 @@ export class World {
     if (this.runtime.shootTimer >= 0) this.runtime.shootTimer--;
   }
   private tickActor(tank: Tank, input: InputFrame) {
+    this.actorParents.attach(tank, this.field);
     if (tank.dead) return;
     this.tickTank(tank, false);
     tank.stunned = tank.status.stun > 0;
@@ -548,15 +566,7 @@ export class World {
     }
     const boss = tank.side === 'enemy' && tank.design.id.startsWith('B');
     if (!boss && tank.status.sticky > 0) tank.status.sticky--;
-    const target = this.getTarget(tank);
-    const healer = tank.guns.find((gun) => gun.part.type === 6002);
-    moveEnemy(
-      tank,
-      target,
-      this.currentField.scale,
-      this.rng,
-      healer ? healerPatient(this, tank, healer) : undefined,
-    );
+    moveActor(tank, this.currentField.scale, this.rng, this.player);
     if (tank.status.jam > 0) tank.status.jam--;
     if (tank.status.jam === 0) this.tickGuns(tank, input);
     tickStatusDecoration(tank);
@@ -852,11 +862,15 @@ export class World {
       if (this.stats.deadheads === 200) this.award('Headhunter');
       if (this.stats.fighters === 100) this.award('Dogfighter');
       if (this.stats.sumo === 50) this.award('Pro Sumo');
+      this.actorParents.detach(tank);
       this.field.enemies.splice(index, 1);
     }
     runtime.enemyRemovals = [];
     // External fixtures may mark a tank dead without invoking its callback.
-    this.field.enemies = this.field.enemies.filter((tank) => !tank.dead);
+    this.field.enemies = this.field.enemies.filter((tank) => {
+      if (tank.dead) this.actorParents.detach(tank);
+      return !tank.dead;
+    });
   }
   dropBubbles(pos: Vec, amount: number) {
     spawnPickups(this, pos, amount, this.runtimeFor(this.currentField).pickups);
@@ -905,6 +919,7 @@ export class World {
     }
     if (p.life === p.maxLife && this.progression.level < 6) {
       this.progression.level++;
+      this.profileClass.recordUpgrade(this.progression.level);
       this.emit('upgrade');
       const design = this.progression.history[this.progression.level];
       if (design) this.rebuildPlayer(design);
@@ -919,6 +934,7 @@ export class World {
   getOffers(): TankDesign[] {
     const current = this.player.design.classId,
       level = this.progression.level;
+    this.partUnlocks.unlockThrough(level);
     const offers: TankDesign[] = [];
     for (const classId of [current - 1, current, current + 1]) {
       if (classId < 1 || classId > 6 || classId > Math.min(6, level + 1)) continue;
@@ -930,7 +946,7 @@ export class World {
           costs(t.parts).gp <= budget &&
           t.parts.every(
             (p) =>
-              (partById(p.type)?.tier ?? 0) <= level &&
+              partUnlocked(p.type, level, this.unlockedParts) &&
               Math.floor(p.type / 1000) !== 4 &&
               Math.floor(p.type / 1000) !== 6,
           ),
@@ -976,6 +992,7 @@ export class World {
       old.y,
       max,
       death ? max - 1 : Math.floor(max / 75) + 1,
+      this,
     );
     this.player.rotation = old.rotation;
     this.player.velocity = { ...old.velocity };
@@ -1045,6 +1062,9 @@ export class World {
             'enemy',
             this.rng.int(-200, 200) * wave.scale,
             this.rng.int(-200, 200) * wave.scale,
+            undefined,
+            undefined,
+            this,
           );
           t.rotation = this.rng.int(-180, 180);
           return t;
@@ -1085,6 +1105,7 @@ export class World {
     const dx = tr.target.x - this.player.x,
       dy = tr.target.y - this.player.y;
     if (dx * dx + dy * dy < 25) {
+      this.actorParents.sync(this);
       this.player.x -= tr.offset.x;
       this.player.y -= tr.offset.y;
       this.player.velocity = { x: 0, y: 0 };

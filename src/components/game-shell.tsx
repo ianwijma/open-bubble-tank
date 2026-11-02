@@ -21,6 +21,8 @@ import { TankCreator } from './tank-creator';
 import { TankLibrary } from './tank-library';
 import { TankViewer } from './tank-viewer';
 import type { ViewerLimits } from '@/game/core/tank-viewer';
+import { ProfileClassAllowance } from '@/game/core/profile-class';
+import { appendViewerTank, removeViewerTank } from '@/game/core/viewer-storage';
 import { UpgradePanel, EditConfirmPanel, SecondaryHelpPanel } from './game-panels';
 import { PausePanel } from './pause-panel';
 import { WinPanel } from './win-panel';
@@ -50,6 +52,7 @@ export default function GameShell() {
     [fullscreen, setFullscreen] = useState(false),
     [audio, setAudio] = useState<AudioManager | null>(null);
   const [stage] = useState(() => new StageRuntime());
+  const [profileClass] = useState(() => new ProfileClassAllowance());
   const [menuMotion, setMenuMotion] = useState(() => new MainMenuMotion());
   const menuOverlay = useRef<HTMLFieldSetElement>(null);
   const [menuSettings, setMenuSettings] = useState(() => new MenuSettingsState(50));
@@ -153,6 +156,7 @@ export default function GameShell() {
       continueRun ? profile.progression : [],
       undefined,
       stage.effects,
+      profileClass,
     );
     const random = next.rng;
     stage.random = () => random.next();
@@ -435,6 +439,8 @@ export default function GameShell() {
                 overGame={editor.returnTo === 'game'}
                 initial={editor.initial}
                 level={editor.returnTo === 'game' ? (world?.progression.level ?? 1) : 6}
+                unlockedParts={editor.returnTo === 'game' ? world?.unlockedParts : undefined}
+                profileMaxClass={profileClass.value}
                 maxClass={
                   editor.returnTo === 'game' ? Math.min(6, (world?.progression.level ?? 0) + 1) : 6
                 }
@@ -458,13 +464,10 @@ export default function GameShell() {
                 onBack={() => loadEditorTank()}
                 onSelect={loadEditorTank}
                 onSaveLocal={(tank) =>
-                  updateProfile((p) => ({
-                    ...p,
-                    tanks: [...p.tanks.filter((t) => t.id !== tank.id), tank],
-                  }))
+                  updateProfile((p) => ({ ...p, tanks: appendViewerTank(p.tanks, tank) }))
                 }
-                onDelete={(id) =>
-                  updateProfile((p) => ({ ...p, tanks: p.tanks.filter((t) => t.id !== id) }))
+                onDelete={(tank) =>
+                  updateProfile((p) => ({ ...p, tanks: removeViewerTank(p.tanks, tank) }))
                 }
               />
             ) : null}
@@ -475,13 +478,10 @@ export default function GameShell() {
                 onBack={() => showScreen('menu')}
                 onEdit={(t) => edit(t)}
                 onImport={(tank) =>
-                  updateProfile((p) => ({
-                    ...p,
-                    tanks: [...p.tanks.filter((t) => t.id !== tank.id), tank],
-                  }))
+                  updateProfile((p) => ({ ...p, tanks: appendViewerTank(p.tanks, tank) }))
                 }
-                onDelete={(id) =>
-                  updateProfile((p) => ({ ...p, tanks: p.tanks.filter((t) => t.id !== id) }))
+                onDelete={(tank) =>
+                  updateProfile((p) => ({ ...p, tanks: removeViewerTank(p.tanks, tank) }))
                 }
               />
             ) : null}

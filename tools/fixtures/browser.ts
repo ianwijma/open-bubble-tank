@@ -1,3 +1,6 @@
+import { showActorBehaviors } from './actor-behaviors';
+import { showPhasing } from './phasing';
+import { showUnlockRetention } from './unlock-retention';
 import { showViewerFlow } from './viewer-flow';
 import { showViewerSortStatistics } from './viewer-sort-statistics';
 import { showViewerArtComponents } from './viewer-art-components';
@@ -133,6 +136,18 @@ async function reset() {
   world = undefined;
   stage.replaceChildren();
   stage.style.height = '';
+  if (fixture.value === 'actor-behaviors') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    status.dataset.actorBehaviors = JSON.stringify(await showActorBehaviors(pack, stage));
+    status.textContent = 'Ready · live movement, ordered behaviors and production paint';
+    return;
+  }
+  if (fixture.value === 'phasing-clock') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    status.dataset.phasing = JSON.stringify(await showPhasing(pack, stage));
+    status.textContent = 'Ready · private Phasing clock and production paint';
+    return;
+  }
   if (fixture.value === 'hotkey-input') {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
     unmountScreen = showHotkeyInput(stage);
@@ -201,7 +216,15 @@ async function reset() {
     status.textContent = 'Ready · creator button raster states';
     return;
   }
-  if (['viewer-flow', 'viewer-actions', 'viewer-guide'].includes(fixture.value)) {
+  if (
+    [
+      'viewer-flow',
+      'viewer-actions',
+      'viewer-guide',
+      'viewer-flow-avatar',
+      'viewer-flow-eligibility',
+    ].includes(fixture.value)
+  ) {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
     unmountScreen = showViewerFlow(
       pack,
@@ -210,9 +233,19 @@ async function reset() {
         ? 'guide'
         : fixture.value === 'viewer-actions'
           ? 'actions'
-          : 'flow',
+          : fixture.value === 'viewer-flow-avatar'
+            ? 'avatar'
+            : fixture.value === 'viewer-flow-eligibility'
+              ? 'eligibility'
+              : 'flow',
     );
     status.textContent = 'Ready · manually clocked local viewer';
+    return;
+  }
+  if (fixture.value === 'unlock-retention') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    unmountScreen = showUnlockRetention(pack, stage);
+    status.textContent = 'Ready · retained run unlocks after two real downgrades';
     return;
   }
   if (fixture.value === 'viewer-sort-statistics') {

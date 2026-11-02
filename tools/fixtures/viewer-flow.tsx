@@ -5,6 +5,7 @@ import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { StageRuntime } from '../../src/game/services/stage-runtime';
 import { ENEMIES } from '../../src/game/data/catalog';
 import type { TankDesign } from '../../src/game/core/types';
+import { appendViewerTank, removeViewerTank } from '../../src/game/core/viewer-storage';
 
 function Flow({
   pack,
@@ -15,7 +16,7 @@ function Flow({
   pack: AssetPack;
   stage: StageRuntime;
   host: HTMLElement;
-  mode: 'flow' | 'actions' | 'guide';
+  mode: 'flow' | 'actions' | 'guide' | 'avatar' | 'eligibility';
 }) {
   const [tanks, setTanks] = useState<TankDesign[]>(() =>
     mode === 'actions'
@@ -27,8 +28,14 @@ function Flow({
       pack={pack}
       stage={stage}
       tanks={tanks}
-      avatar={false}
-      limits={{ level: 6, maxClass: 6, gunPoints: 100 }}
+      avatar={mode === 'avatar' || mode === 'eligibility'}
+      limits={
+        mode === 'eligibility'
+          ? { level: 2, maxClass: 3, gunPoints: 3 }
+          : mode === 'avatar'
+            ? { level: 1, maxClass: 2, gunPoints: 2 }
+            : { level: 6, maxClass: 6, gunPoints: 100 }
+      }
       helpSeen={mode !== 'guide'}
       onHelpComplete={() => {
         host.dataset.viewerHelpComplete = 'true';
@@ -40,12 +47,12 @@ function Flow({
         host.dataset.viewerBack = 'true';
       }}
       onSaveLocal={(tank) => {
-        setTanks((items) => [...items.filter((t) => t.id !== tank.id), tank]);
+        setTanks((items) => appendViewerTank(items, tank));
         host.dataset.viewerSaved = tank.id;
       }}
-      onDelete={(id) => {
-        setTanks((items) => items.filter((t) => t.id !== id));
-        host.dataset.viewerDeleted = id;
+      onDelete={(tank) => {
+        setTanks((items) => removeViewerTank(items, tank));
+        host.dataset.viewerDeleted = tank.id;
       }}
     />
   );
@@ -55,7 +62,7 @@ function Flow({
 export function showViewerFlow(
   pack: AssetPack,
   host: HTMLElement,
-  mode: 'flow' | 'actions' | 'guide' = 'flow',
+  mode: 'flow' | 'actions' | 'guide' | 'avatar' | 'eligibility' = 'flow',
 ) {
   const stage = new StageRuntime(),
     root = createRoot(host),

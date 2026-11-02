@@ -77,3 +77,24 @@ test('direct Back retains the source delete-on-requeue quirk during an unfinishe
   flow.fades.step();
   expect(flow.panes.getSnapshot().cards).toEqual([null, null, null, null]);
 });
+
+test('asynchronous code return preserves imported provenance while releasing stale pane ownership', () => {
+  const flow = new ViewerCodeFlow(false);
+  flow.panes.setup(ENEMIES.slice(0, 4));
+  flow.open(false);
+  flow.fades.step();
+  flow.returnAfterRead(ENEMIES.slice(4, 5), false);
+  const imported = flow.panes.getSnapshot().cards[0]!;
+  expect(imported.local).toBe(false);
+  for (let frame = 0; frame < 20; frame++) flow.fades.step();
+  expect(flow.panes.getSnapshot().cards[0]).toBe(imported);
+  flow.open(false);
+  for (let frame = 0; frame < 20; frame++) flow.fades.step();
+  flow.returnToView(ENEMIES.slice(4, 5), false);
+  expect(flow.panes.getSnapshot().cards[0]!.local).toBe(false);
+  flow.open(false);
+  flow.fades.step();
+  flow.returnAfterRead(ENEMIES.slice(0, 4));
+  expect(flow.panes.getSnapshot().cards.filter(Boolean)).toHaveLength(4);
+  expect(flow.panes.getSnapshot().cards.every((pane) => pane?.local)).toBe(true);
+});

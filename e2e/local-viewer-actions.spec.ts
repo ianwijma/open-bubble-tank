@@ -44,7 +44,7 @@ for (const native of [false, true]) {
           }),
       )
       .toBe(true);
-    await expect(stage).toHaveAttribute('data-viewer-flow-subscriptions', '3');
+    await expect(stage).toHaveAttribute('data-viewer-flow-subscriptions', '5');
     await expect(page.getByRole('button', { name: 'Previous page', exact: true })).toBeDisabled();
     await page.getByRole('button', { name: 'Next page', exact: true }).click();
     await expect(viewer).toContainText('Page: 2 out of:');
@@ -78,9 +78,10 @@ for (const native of [false, true]) {
     await advance();
     await page.getByRole('button', { name: 'Save locally AAA Local Tank', exact: true }).click();
     await expect(stage).toHaveAttribute('data-viewer-saved', /.+/);
-    await expect(
-      page.getByRole('button', { name: 'Save locally AAA Local Tank', exact: true }),
-    ).toHaveCount(0);
+    const saved = page.getByRole('button', { name: 'Save locally AAA Local Tank', exact: true });
+    await expect(saved).toBeVisible();
+    await expect(saved).toBeDisabled();
+    await expect(saved).toHaveAttribute('data-viewer-button-frame', '3');
     await page.getByRole('button', { name: 'Load AAA Local Tank', exact: true }).click();
     const confirm = page.getByRole('dialog', { name: 'Load AAA Local Tank?', exact: true });
     await confirm.getByRole('button', { name: 'Yes', exact: true }).click();

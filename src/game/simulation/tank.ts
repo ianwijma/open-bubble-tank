@@ -3,6 +3,12 @@ import { tankRadius } from '../data/catalog';
 import { createDegradation, degradeTank } from './degradation';
 import { tankRosterIdentity } from '../core/tank-identity';
 import { initialTankChildren } from './tank-display';
+import { Random } from '../core/math';
+import type { World } from './world';
+import { createPhasing } from './phasing';
+import { createActorMovement } from './actor-movement';
+import { createWallFlower, setupSkittish } from './behavior-destinations';
+import { acquireBehaviorTarget, createBehaviorTarget } from './behavior-targets';
 export function createTank(
   uid: number,
   design: TankDesign,
@@ -11,8 +17,11 @@ export function createTank(
   y = 0,
   maxLife = design.life,
   life = maxLife,
+  world?: World,
 ): Tank {
-  const cats = side === 'player' ? [2, 3, 5] : [4, 6, 7];
+  const cats = side === 'player' ? [2, 3, 5] : side === 'ally' ? [4, 6, 7] : [4, 6];
+  const rng = world?.rng ?? new Random(uid || 1),
+    registeredBehaviors = new Set<number>();
   const t: Tank = {
     uid,
     design,
@@ -25,15 +34,7 @@ export function createTank(
     maxLife,
     radius: tankRadius(design),
     velocity: { x: 0, y: 0 },
-    guns: design.parts
-      .filter((p) => cats.includes(Math.floor(p.type / 1000)))
-      .map((part) => ({
-        part,
-        counter: side === 'player' ? -1 : part.type === 4023 ? 240 : 0,
-        angle: part.rotation,
-        burst: 0,
-        burstTimer: 0,
-      })),
+    guns: [],
     status: { stun: 0, jam: 0, sticky: 0, ink: 0, weaken: 0, infect: 0 },
     infectCounter: 0,
     infectStartedAt: 0,
@@ -57,9 +58,7 @@ export function createTank(
     displayChildren: initialTankChildren(design, side),
     age: 0,
     artAge: 0,
-    turnFrames: 0,
-    turnRate: 0,
-    holdTurn: 0,
+    movement: createActorMovement(),
     phase: uid % 50,
     alpha: 1,
     targetId: null,
@@ -68,6 +67,42 @@ export function createTank(
     degradation: createDegradation(design),
     dead: false,
   };
+  t.guns = design.parts.flatMap((part) => {
+    const category = Math.floor(part.type / 1000);
+    if (!cats.includes(category)) return [];
+    // The clip constructor runs before RegisterBehaviorPart rejects duplicate IDs.
+    const phasing = part.type === 6004 ? createPhasing(rng) : undefined;
+    const wallFlower = part.type === 6005 ? createWallFlower(rng) : undefined;
+    if (category === 6) {
+      if (registeredBehaviors.has(part.type)) return [];
+      registeredBehaviors.add(part.type);
+    }
+    const behaviorTarget = category === 6 ? createBehaviorTarget() : undefined;
+    if (part.type === 6003) setupSkittish(t);
+    if (behaviorTarget && world && part.type !== 6002)
+      acquireBehaviorTarget(
+        behaviorTarget,
+        side,
+        {
+          avatar: world.player,
+          enemies: world.currentWrapper.enemies,
+          allies: world.runtimeFor(world.currentWrapper).allies,
+        },
+        rng,
+      );
+    return [
+      {
+        part,
+        counter: side === 'player' ? -1 : part.type === 4023 ? 240 : 0,
+        angle: part.rotation,
+        burst: 0,
+        burstTimer: 0,
+        phasing,
+        wallFlower,
+        behaviorTarget,
+      },
+    ];
+  });
   return t;
 }
 export function healTank(t: Tank, value: number) {

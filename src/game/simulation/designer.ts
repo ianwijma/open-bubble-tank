@@ -1,5 +1,6 @@
 import { CLASS_PIXELS, CLASS_RINGS } from '../core/constants';
 import { costs, gunBudget, partById } from '../data/catalog';
+import { partUnlocked } from '../core/part-unlocks';
 import type { TankDesign, TankPart } from '../core/types';
 // _-7q checks the rectangular selection area for classes 5/6; save validation
 // separately checks the max-class ring for classes 1..5 (_-AA).
@@ -13,7 +14,12 @@ function partExtent(part: TankPart) {
 export function classFromPixelCount(count: number) {
   return CLASS_PIXELS.findIndex((max) => count <= max) + 1;
 }
-export function validateBuild(design: TankDesign, level: number, maxClass: number) {
+export function validateBuild(
+  design: TankDesign,
+  level: number,
+  maxClass: number,
+  unlockedParts?: readonly number[],
+) {
   const { gp, bp } = costs(design.parts),
     errors: string[] = [];
   if (!design.parts.some((p) => p.type < 2000))
@@ -43,7 +49,7 @@ export function validateBuild(design: TankDesign, level: number, maxClass: numbe
       (def.lower ? design.classId > def.classCost : design.classId < def.classCost)
     )
       errors.push(`${def.name} requires a ${def.lower ? 'smaller' : 'larger'} class.`);
-    if (design.avatar && def.tier > level)
+    if (design.avatar && !partUnlocked(def.id, level, unlockedParts))
       errors.push(`${def.name} unlocks at tank level ${def.tier}.`);
   }
   return [...new Set(errors)];

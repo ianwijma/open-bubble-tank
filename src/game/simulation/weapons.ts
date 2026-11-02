@@ -20,29 +20,36 @@ import allyData from '../data/allies.json';
 import { createTank } from './tank';
 import type { World } from './world';
 import projectileArt from '../data/projectile-art.json';
-import { tickHealer } from './healing';
 import { decorateStatus } from './status';
 import { advanceRotatingCycle, triggerSuppressionCycle } from './weapon-cycles';
 import { projectileFlags } from './projectile-flags';
 import { recordLayerMine } from './mine-layers';
 import mineArt from '../data/mine-art.json';
 import { convertDrones } from './converter';
+import { tickBehavior } from './behaviors';
 
 export function tickGuns(world: World, t: Tank, input: InputFrame, categories?: readonly number[]) {
-  const target = world.getTarget(t);
-  const aim =
-    t.side === 'player'
-      ? { x: input.aim.x - STAGE.cx + t.x, y: input.aim.y - STAGE.cy + t.y }
-      : target;
   const guns =
     t.side === 'player'
       ? t.guns
-      : [...t.guns].sort((a, b) => Math.floor(a.part.type / 1000) - Math.floor(b.part.type / 1000));
+      : [...t.guns].sort(
+          (a, b) =>
+            Number(Math.floor(a.part.type / 1000) === 6) -
+            Number(Math.floor(b.part.type / 1000) === 6),
+        );
   for (const g of guns) {
     const id = g.part.type,
       category = Math.floor(id / 1000),
       spec = WEAPONS[id];
     if (categories && !categories.includes(category)) continue;
+    if (category === 6) {
+      tickBehavior(world, t, g);
+      continue;
+    }
+    const aim =
+      t.side === 'player'
+        ? { x: input.aim.x - STAGE.cx + t.x, y: input.aim.y - STAGE.cy + t.y }
+        : world.getTarget(t);
     if (id === 4032) tickTurretBehavior(world, t, g);
     const mount = rotate(g.part, t.rotation),
       pos = { x: t.x + mount.x, y: t.y + mount.y };
@@ -54,10 +61,6 @@ export function tickGuns(world: World, t: Tank, input: InputFrame, categories?: 
         (t.side === 'player' && t.design.classId <= 3) || fixed
           ? g.part.rotation
           : angleTo(pos, aim) - t.rotation;
-    if (id === 6002) {
-      tickHealer(world, t, g);
-      continue;
-    }
     if (t.side !== 'player' && g.burst > 0 && --g.burstTimer <= 0) {
       g.burst--;
       g.burstTimer = 6;
@@ -237,7 +240,9 @@ export function fireGun(world: World, t: Tank, gun: GunState, input: InputFrame)
     const max = t.guns.filter((g) => g.part.type === id).length;
     if (world.allies.filter((a) => a.design.id === key).length >= max) return;
     const pos = world.muzzle(t, gun);
-    world.allies.push(createTank(world.nextId(), design, 'ally', pos.x, pos.y));
+    world.allies.push(
+      createTank(world.nextId(), design, 'ally', pos.x, pos.y, undefined, undefined, world),
+    );
     return;
   }
   if (id === 4003) {
@@ -246,7 +251,18 @@ export function fireGun(world: World, t: Tank, gun: GunState, input: InputFrame)
       ENEMIES.filter((e) => e.name === 'Pew Pew' || e.name === 'Flittering Terror');
     gun.spawnDesign ??= world.rng.pick(candidates);
     const pos = world.muzzle(t, gun);
-    world.field.enemies.push(createTank(world.nextId(), gun.spawnDesign, 'enemy', pos.x, pos.y));
+    world.field.enemies.push(
+      createTank(
+        world.nextId(),
+        gun.spawnDesign,
+        'enemy',
+        pos.x,
+        pos.y,
+        undefined,
+        undefined,
+        world,
+      ),
+    );
     return;
   }
   if (id === 4023) {
