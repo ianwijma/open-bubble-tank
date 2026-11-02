@@ -7,7 +7,7 @@ import { displayPixel } from './display-values';
 export const TANK_INFO = HUD.tankInfo;
 
 /** PauseMenu._-Bz: sort IDs, then abbreviate each category independently. */
-export function infoWeapons(tank: TankDesign, category: 2 | 3 | 5) {
+export function infoWeapons(tank: TankDesign, category: 2 | 3 | 4 | 5 | 6) {
   const counts = new Map<number, number>();
   for (const part of tank.parts)
     if (Math.floor(part.type / 1000) === category)

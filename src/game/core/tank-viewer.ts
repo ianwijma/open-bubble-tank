@@ -2,7 +2,10 @@ import data from '../data/tank-viewer.json';
 import type { CreatorField } from './creator-palette';
 import type { CreatorPrimitive } from './creator-controls';
 import type { SwfMatrix } from '../assets/asset-pack';
-import type { Rect } from './types';
+import type { Rect, TankDesign } from './types';
+import { AVATARS, ENEMIES, costs, partById } from '../data/catalog';
+import { infoWeapons } from './tank-info';
+import { tankLoadEligibility, type TankLoadProfile } from './tank-eligibility';
 export interface ViewerField extends CreatorField {
   maxLength?: number;
   matrix: SwfMatrix;
@@ -47,3 +50,113 @@ export const viewerWidget = (id: number, frame = 1) =>
     (w) => w.symbol === id && w.frame === Math.min(frame, viewerFrameCounts.get(id) ?? frame),
   )!;
 export const viewerRoot = (name: string) => TANK_VIEWER.root.find((p) => p.name === name)!;
+export function localViewerTanks(tanks: readonly TankDesign[], avatar: boolean) {
+  const seen = new Set<string>();
+  return [...(avatar ? AVATARS : ENEMIES), ...tanks].filter((t) => {
+    if (t.avatar !== avatar || seen.has(t.id)) return false;
+    seen.add(t.id);
+    return true;
+  });
+}
+export type ViewerSort = 'name' | 'author' | 'classId' | 'guns' | 'bubbles';
+export function sortViewerTanks(tanks: readonly TankDesign[], sort: ViewerSort) {
+  const value = (t: TankDesign) =>
+    sort === 'guns' ? costs(t.parts).gp : sort === 'bubbles' ? costs(t.parts).bp : t[sort];
+  return tanks
+    .map((tank, index) => ({ tank, index }))
+    .sort((a, b) => {
+      const x = value(a.tank),
+        y = value(b.tank);
+      const order =
+        typeof x === 'string' && typeof y === 'string'
+          ? x.toLowerCase() < y.toLowerCase()
+            ? -1
+            : x.toLowerCase() > y.toLowerCase()
+              ? 1
+              : 0
+          : Number(x) - Number(y);
+      return order || a.index - b.index;
+    })
+    .map((p) => p.tank);
+}
+export interface ViewerLimits extends TankLoadProfile {
+  /** Current-profile readout; candidate selection uses that tank's class budget. */
+  gunPoints: number;
+}
+/** TankViewerScreen._-8V bypasses restrictions when selecting from the enemy viewer. */
+export function viewerSelectionError(tank: TankDesign, avatar: boolean, limits: ViewerLimits) {
+  return avatar ? viewerEditError(tank, limits) : '';
+}
+/** EditTank / EditLargeTank check both modes and print the specific _-cL reason. */
+export function viewerEditError(tank: TankDesign, limits: ViewerLimits) {
+  const { overGunPoints, overClass, missingParts, capacityLabel } = tankLoadEligibility(
+      tank,
+      limits,
+    ),
+    over = overGunPoints || overClass;
+  return missingParts
+    ? over
+      ? `Do not have the parts and exceeds ${capacityLabel}`
+      : 'Do not have all the parts for this tank'
+    : over
+      ? `Exceeds your ${capacityLabel}`
+      : '';
+}
+/** MOver's generic rollover copy is distinct from the attempted edit's error copy. */
+export function viewerEditWarning(tank: TankDesign, limits: ViewerLimits) {
+  const { overGunPoints, overClass, missingParts } = tankLoadEligibility(tank, limits),
+    over = overGunPoints || overClass;
+  return missingParts
+    ? over
+      ? 'Exceeds Parts, and Class, Gun, or Bubble Points'
+      : 'Do not have all the parts for this tank'
+    : over
+      ? 'Exceeds your Class, Gun, or Bubble Points'
+      : '';
+}
+export function viewerPartSummary(tank: TankDesign) {
+  const counts = new Map<string, number>();
+  for (const p of tank.parts) {
+    const name = partById(p.type)?.name ?? String(p.type);
+    counts.set(name, (counts.get(name) ?? 0) + 1);
+  }
+  return [...counts].map(([name, count]) => `${count} x ${name}\n`).join('');
+}
+export function viewerEquipmentFields(tank: TankDesign) {
+  const c = costs(tank.parts);
+  return {
+    bubblesLeft_txt: String(c.bp),
+    gunPoints_txt: String(c.gp),
+    class_txt: String(tank.classId),
+    PrimarySecondary_txt: tank.avatar
+      ? 'Primary Weapons:\n\n\n\nSecondary Weapons:\n\n\n\nPassive Weapons:'
+      : 'Enemy Weapons:\n\n\n\nBehavior Parts:',
+    primary_txt: infoWeapons(tank, tank.avatar ? 2 : 4),
+    secondary_txt: infoWeapons(tank, tank.avatar ? 3 : 6),
+    passive_txt: tank.avatar ? infoWeapons(tank, 5) : '',
+  };
+}
+/** TankLoadingBox.Setup's fit includes five invisible13px helpers at the extreme mount positions. */
+export function viewerFit(
+  tank: TankDesign,
+  boxes: readonly Rect[],
+  width = TANK_VIEWER.rowBounds.width - 50,
+  height = TANK_VIEWER.rowBounds.height - 80,
+) {
+  const x = Math.max(0, ...tank.parts.map((p) => Math.abs(p.x))),
+    y = Math.max(0, ...tank.parts.map((p) => Math.abs(p.y))),
+    h = TANK_VIEWER.helper;
+  const all = [
+    ...boxes,
+    ...[
+      { x: 0, y: 0 },
+      { x, y: 0 },
+      { x: -x, y: 0 },
+      { x: 0, y },
+      { x: 0, y: -y },
+    ].map((p) => ({ ...h, x: h.x + p.x, y: h.y + p.y })),
+  ];
+  const w = Math.max(...all.map((b) => b.x + b.width)) - Math.min(...all.map((b) => b.x)),
+    v = Math.max(...all.map((b) => b.y + b.height)) - Math.min(...all.map((b) => b.y));
+  return Math.min(1, width / w, height / v);
+}
