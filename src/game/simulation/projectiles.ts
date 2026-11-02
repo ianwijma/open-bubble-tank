@@ -62,16 +62,16 @@ export function tickBullet(world: World, b: Projectile, _input: InputFrame) {
   if (b.kind === 'spin') return tickSpinner(world, b);
   if (b.kind === 'sapper') return tickSapper(world, b);
   if (b.kind === 'seeker' && !b.enemy) return tickAvatarSeeker(world, b);
+  if (b.kind === 'healBeam') {
+    tickHealingBeam(world, b);
+    return;
+  }
   // Turret tests display containment, so a dead but still attached owner remains valid.
   const owners =
     b.kind === 'turret'
       ? [world.player, ...world.field.enemies, ...world.allies]
       : world.allTanks();
   const owner = owners.find((t) => t.uid === b.owner);
-  if (b.kind === 'healBeam') {
-    tickHealingBeam(world, b, owner);
-    return;
-  }
   if (b.kind === 'apocalypse') {
     if (b.detonating) {
       b.artFrame = ++b.detonating + 1;

@@ -9,7 +9,7 @@ import { createPhasing } from './phasing';
 import { createActorMovement } from './actor-movement';
 import { createWallFlower, setupSkittish } from './behavior-destinations';
 import { acquireBehaviorTarget, createBehaviorTarget } from './behavior-targets';
-import { acquireHealerTarget } from './healer-target';
+import { acquireHealerTarget, requireHealerData } from './healer-target';
 import { weaponAimFlags } from '../core/weapon-aim';
 export function createTank(
   uid: number,
@@ -27,6 +27,7 @@ export function createTank(
   const t: Tank = {
     uid,
     design,
+    dataActive: true,
     rosterIdentity: tankRosterIdentity(design),
     side,
     x,
@@ -109,9 +110,20 @@ export function createTank(
   });
   return t;
 }
+/** Weapon.Deactivate clears targets; the retained tank/beam artwork remains separate. */
+export function deactivateTankData(tank: Tank) {
+  for (const gun of tank.guns) {
+    if (gun.targeting) gun.targeting.target = null;
+    if (gun.behaviorTarget) gun.behaviorTarget.target = null;
+    gun.patientId = undefined;
+  }
+  tank.dataActive = false;
+}
 export function healTank(t: Tank, value: number) {
-  t.life += value | 0;
-  if (t.design.avatar && t.life > t.maxLife) t.life = t.maxLife;
+  t.life = (t.life + (value | 0)) | 0;
+  // AddLife increments its int property before the first objData.numLife read.
+  const data = requireHealerData(t);
+  if (t.life > data.maxLife && data.design.avatar) t.life = data.maxLife | 0;
   if (t.side === 'enemy') {
     // AddLife restores bodies, then adds missing-health debt without clearing old debt/minimum.
     t.hiddenParts.clear();
