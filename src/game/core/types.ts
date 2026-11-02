@@ -132,6 +132,8 @@ export interface Tank extends Vec {
   rosterIdentity: string;
   uid: number;
   design: TankDesign;
+  /** NPC Deactivate clears objData before the retained display clip detaches. */
+  dataActive: boolean;
   side: 'player' | 'enemy' | 'ally';
   rotation: number;
   life: number;
@@ -205,6 +207,8 @@ export type ProjectileKind =
   | 'turret'
   | 'builder';
 export interface Projectile extends Vec {
+  /** HealerBeam retains objHomeTank even after its owner deactivates. */
+  healingHome?: Tank;
   /** HealerBeam retains movTarget independently of a mutable live roster. */
   healingTarget?: Tank;
   uid: number;

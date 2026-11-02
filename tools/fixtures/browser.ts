@@ -3,6 +3,7 @@ import { showOrbitalWidth } from './orbital-width';
 import { showAimContracts } from './aim-contracts';
 import { showWeaponTargets } from './weapon-targets';
 import { showHealerTargets } from './healer-targets';
+import { showHealerLifecycle } from './healer-lifecycle';
 import { showActorBehaviors } from './actor-behaviors';
 import { showPhasing } from './phasing';
 import { showUnlockRetention } from './unlock-retention';
@@ -163,6 +164,12 @@ async function reset() {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
     status.dataset.weaponTargets = JSON.stringify(await showWeaponTargets(pack, stage));
     status.textContent = 'Ready · mounted target ownership and ordered aim';
+    return;
+  }
+  if (fixture.value === 'healer-lifecycle') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    status.dataset.healerLifecycle = JSON.stringify(await showHealerLifecycle(pack, stage));
+    status.textContent = 'Ready · Healer data and beam lifetimes';
     return;
   }
   if (fixture.value === 'healer-targets') {

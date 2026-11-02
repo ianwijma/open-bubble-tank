@@ -5,7 +5,7 @@ import type { GunState, Projectile, Tank } from '../core/types';
 import { healTank } from './tank';
 import type { World } from './world';
 import { createBehaviorTarget } from './behavior-targets';
-import { acquireHealerTarget, HealerTargetReadError } from './healer-target';
+import { acquireHealerTarget, HealerTargetReadError, requireHealerData } from './healer-target';
 
 /** The ID is compatibility/fixture metadata; the stored source target object owns selection. */
 export function healerPatient(world: World, owner: Tank, gun: GunState): Tank | undefined {
@@ -67,11 +67,20 @@ export function tickHealer(world: World, owner: Tank, gun: GunState) {
     return caught;
   };
   if (!patient) return;
-  const origin = world.muzzle(owner, gun);
-  if (patient.life === patient.maxLife) {
+  let fullHealth: boolean;
+  try {
+    fullHealth = patient.life === requireHealerData(patient).maxLife;
+  } catch (error) {
+    if (!(error instanceof HealerTargetReadError)) throw error;
+    // This first read is inside PartCallRun's try; its catch-side retry is not.
+    reacquire(false);
+    return;
+  }
+  if (fullHealth) {
     reacquire(true);
     return;
   }
+  const origin = world.muzzle(owner, gun);
   if (!point) {
     reacquire(false);
     return;
@@ -114,6 +123,7 @@ export function tickHealer(world: World, owner: Tank, gun: GunState) {
     explode: 0,
     targetId: patient.uid,
     healingTarget: patient,
+    healingHome: owner,
     hit: new Set(),
     dead: false,
     anchor: gun,
@@ -129,11 +139,13 @@ export function tickHealer(world: World, owner: Tank, gun: GunState) {
 }
 
 /** HealerBeam._-L2 ray-marches 3px, retaining its counter when contact is lost. */
-export function tickHealingBeam(world: World, beam: Projectile, owner: Tank | undefined) {
+export function tickHealingBeam(world: World, beam: Projectile, owner?: Tank) {
+  owner = beam.healingHome ?? owner;
   const patient = beam.healingTarget ?? world.allTanks().find((tank) => tank.uid === beam.targetId);
   const point = patient && world.actorParents.point(patient, world.field);
-  if (!owner || !patient || !point || owner.status.jam > 0) {
+  if (!owner || !world.actorParents.hasParent(owner) || !patient || !point) {
     beam.dead = true;
+    world.removeBullet(beam);
     return;
   }
   const unit = actorDirection(beam.angle, 1),

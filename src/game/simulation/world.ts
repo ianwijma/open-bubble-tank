@@ -45,7 +45,7 @@ import {
   orderSecondaries,
 } from './weapons';
 import { tickBullet, starSplit, releaseCarrier, explode } from './projectiles';
-import { createTank } from './tank';
+import { createTank, deactivateTankData } from './tank';
 import { spawnPickups, tickPickups } from './pickups';
 import { damageTank } from './damage';
 import { rollWave, UnitRoster } from './waves';
@@ -186,6 +186,8 @@ export class World {
   /** _-0D.SpawnNewBullet declines new shots while _-5d is set. Timers still run. */
   addBullet(bullet: Projectile, home?: Tank, target?: Tank) {
     if (this.transit) return false;
+    if (bullet.kind === 'healBeam')
+      bullet.healingHome ??= home ?? this.allTanks().find((tank) => tank.uid === bullet.owner);
     if (bullet.kind === 'apocalypse') bullet.missExempt ??= true;
     if (bullet.kind === 'turret') bullet.motion ??= direction(bullet.angle, bullet.speed);
     this.projectileTimelines.initialize(bullet);
@@ -599,6 +601,7 @@ export class World {
       this.dropBubbles(tank, tank.design.reward);
       for (const bullet of this.bullets)
         if (bullet.owner === tank.uid && ['beam', 'whip'].includes(bullet.kind)) bullet.dead = true;
+      deactivateTankData(tank);
     }
   }
   beginCollapse(angle: number) {
@@ -783,7 +786,6 @@ export class World {
     this.emit(t.side === 'ally' ? 'death' : 'pop');
     if (t.side === 'enemy') {
       this.stats.kills++;
-      this.runtime.enemyRemovals.push(t);
       this.dropBubbles(t, t.design.reward);
     }
     for (const gun of t.guns)
@@ -840,6 +842,8 @@ export class World {
         });
     for (const b of this.bullets)
       if (b.owner === t.uid && ['beam', 'whip'].includes(b.kind)) b.dead = true;
+    deactivateTankData(t);
+    if (t.side === 'enemy') this.runtime.enemyRemovals.push(t);
   }
   /** _-0D.RemoveEnemy classifies the birth code only when the queued object detaches. */
   flushEnemyRemovals() {
