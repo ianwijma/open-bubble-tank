@@ -458,6 +458,7 @@ export class AssetPack {
         ...settingsArtwork,
         ...HUD.editConfirm,
         ...HUD.secondaryHelp,
+        ...HUD.pause.root,
         ...HUD.pause.pieces.filter(
           (piece) => piece.name !== 'rollover_txt' && piece.name !== 'btnPlayMoreGames_mc',
         ),

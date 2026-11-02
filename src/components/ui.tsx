@@ -9,6 +9,7 @@ export function BubbleText({
   color = '#fff',
   className = '',
   font = 'Billo',
+  fontId,
 }: {
   children: string;
   pack?: AssetPack | null;
@@ -16,8 +17,9 @@ export function BubbleText({
   color?: string;
   className?: string;
   font?: string;
+  fontId?: number;
 }) {
-  const svg = pack?.textSvg(children, size, color, font);
+  const svg = pack?.textSvg(children, size, color, font, 0, fontId);
   if (svg)
     return (
       <img

@@ -163,7 +163,52 @@ const secondaryHelp = list(1876).map((p) => {
   };
 });
 const pausePieces = list(1636);
+const caption = symbols.editTexts.find((text) => text.id === 1560)!;
+const captionFont = symbols.fonts.find((font) => font.id === caption.fontId)!;
+if (captionFont.ascent === undefined) throw new Error('Pause caption font has no ascent metric');
 const pause = {
+  caption: {
+    size: caption.fontHeight / 20,
+    font: captionFont.name.replace(/\0/g, ''),
+    fontId: caption.fontId,
+    ascent: captionFont.ascent / 20,
+    align: caption.align,
+  },
+  root: list(1559).map((piece) => {
+    const text = symbols.texts.find((text) => text.id === piece.charId)!;
+    let fontId = 0,
+      x = 0,
+      y = 0,
+      height = 0;
+    let color = [0, 0, 0];
+    return {
+      symbol: piece.charId,
+      name: '',
+      depth: piece.depth,
+      matrix: piece.matrix,
+      textMatrix: text.matrix,
+      glyphs: text.records.flatMap((record) => {
+        fontId = record.fontId ?? fontId;
+        x = record.x ?? x;
+        y = record.y ?? y;
+        height = record.height ?? height;
+        color = record.color ?? color;
+        const font = symbols.fonts.find((font) => font.id === fontId)!;
+        return record.glyphs.map((glyph) => {
+          const result = {
+            text: String.fromCharCode(font.codeTable[glyph.index]),
+            x: x / 20,
+            y: y / 20,
+            size: height / 20,
+            font: font.name.replace(/\0/g, ''),
+            color,
+          };
+          x += glyph.advance;
+          return result;
+        });
+      }),
+    };
+  }),
   out: Object.fromEntries(
     pausePieces
       .filter((p) => p.charId === 439)
