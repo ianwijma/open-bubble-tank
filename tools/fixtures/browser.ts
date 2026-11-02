@@ -2,6 +2,7 @@ import { showCreatorStatistics } from './creator-stats';
 import { showCreatorPaletteRows } from './creator-palette';
 import { showCreatorText } from './creator-text';
 import { showCreatorSaveDialog } from './creator-save-dialog';
+import { showCreatorDetailsArt } from './creator-details-art';
 import { showCreatorControls } from './creator-controls';
 import { showCreatorButtons } from './creator-buttons';
 import { showMainMenuFlow } from './main-menu';
@@ -148,6 +149,12 @@ async function reset() {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
     unmountScreen = showCreatorSaveDialog(pack, stage);
     status.textContent = 'Ready · isolated creator save dialog';
+    return;
+  }
+  if (fixture.value === 'creator-details-art') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    unmountScreen = await showCreatorDetailsArt(pack, stage);
+    status.textContent = 'Ready · creator details caches and thumbnail lifecycle';
     return;
   }
   if (fixture.value === 'creator-text') {

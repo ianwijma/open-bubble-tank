@@ -571,6 +571,23 @@ export class AssetPack {
           confirmPose.placements = placements;
         }
       }
+      const detailsPose = new SwfClip(CREATOR_PALETTE.details.symbol, pack);
+      detailsPose.start(1, false);
+      detailsPose.placements = detailsPose.placements.filter((p) => !p.name);
+      const detailsRaster = await pack.rasterClip(detailsPose);
+      if (detailsRaster) pack.creatorFrames.set('details:static', detailsRaster);
+      for (const frame of [1, 2]) {
+        const raster = await pack.rasterSymbol(CREATOR_PALETTE.details.arrow.symbol, frame);
+        if (raster) pack.creatorFrames.set(`details:arrow:${frame}`, raster);
+      }
+      const info = CREATOR_PALETTE.selectionInfo;
+      const infoIcon = await pack.rasterSymbol(info.icon.symbol);
+      if (infoIcon) pack.creatorFrames.set('selection-info:icon', infoIcon);
+      const infoPose = new SwfClip(info.popup.symbol, pack);
+      infoPose.start(1, false);
+      infoPose.placements = infoPose.placements.filter((p) => !p.name);
+      const infoPopup = await pack.rasterClip(infoPose);
+      if (infoPopup) pack.creatorFrames.set('selection-info:popup', infoPopup);
       for (const screen of CREATOR_DIALOGS.frames) {
         const pose = new SwfClip(CREATOR_DIALOGS.symbol, pack);
         pose.start(screen.frame, false);
