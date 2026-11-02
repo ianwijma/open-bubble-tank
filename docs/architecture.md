@@ -256,3 +256,6 @@ First-use help reads the Boolean profile flag after loading. Only the last Next 
 
 
 `core/viewer-highlights.ts` separates persistent card-slot line/glow latches from replaceable preview identity and caution alpha. Its frame step receives hit booleans and an activity flag; it owns no pointer sampling, DOM or renderer. Warning eligibility reuses `tankLoadEligibility`, retaining active-level capacity and authoritative unlock lists. Alpha assignments use the existing signed8.8 display setter. Browser sampling, warning geometry and preview filters follow in separate slices.
+
+
+The viewer importer exposes caution symbol1115 as its own pose. Native loading automatically caches it through the existing widget loop; mock paint consumes numerical triangle/hole bounds and the separate mark primitive. These layers retain their own source registration and colors. No warning controller is wired by this metadata slice.

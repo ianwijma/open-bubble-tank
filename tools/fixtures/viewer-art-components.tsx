@@ -126,6 +126,14 @@ function Fixture({
         {mounted ? (
           <Artwork pack={pack} stage={stage} fit={fit} active={active} generation={generation} />
         ) : null}
+        <div
+          data-viewer-warning
+          style={{ position: 'absolute', left: 370, top: 275, width: 160, height: 160 }}
+        >
+          <ViewerGroup matrix={matrix(80, 80)}>
+            <ViewerArt pack={pack} symbol={1115} />
+          </ViewerGroup>
+        </div>
         <ViewerButton
           pack={pack}
           piece={viewerRoot('btnNext_mc')}

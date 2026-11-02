@@ -151,6 +151,35 @@ function widget(id: number, frame = 1, omit: number[] = []) {
         : [p],
     )
     .map((p) => {
+      if (id === 1115 && p.id === 1111) {
+        // Keep only the largest reverse-fill region's numeric bounds for the mock triangle hole.
+        const shape = symbols.shapes.find((s) => s.id === 1111)! as unknown as {
+          runs: { f0: number; f1: number; start: number[]; ops: (string | number)[][] }[];
+        };
+        const holes = shape.runs
+          .filter((r) => !r.f0 && r.f1)
+          .map((r) => {
+            const points = [
+              r.start,
+              ...r.ops.flatMap((op) => {
+                const ps: number[][] = [];
+                for (let i = 1; i < op.length; i += 2) ps.push([Number(op[i]), Number(op[i + 1])]);
+                return ps;
+              }),
+            ];
+            return {
+              xMin: Math.min(...points.map((p) => p[0])),
+              xMax: Math.max(...points.map((p) => p[0])),
+              yMin: Math.min(...points.map((p) => p[1])),
+              yMax: Math.max(...points.map((p) => p[1])),
+            };
+          })
+          .sort(
+            (a, b) => (b.xMax - b.xMin) * (b.yMax - b.yMin) - (a.xMax - a.xMin) * (a.yMax - a.yMin),
+          );
+        return { ...p, kind: 'warning-triangle', innerBounds: holes[0] };
+      }
+      if (id === 1115 && p.id === 1113) return { ...p, kind: 'warning-mark' };
       if (id === 1412 && p.id === 1410) return { ...p, kind: 'right-arrow' };
       if (p.kind !== 'text') return p;
       const text = symbols.texts.find((t) => t.id === p.id)!;
@@ -189,6 +218,7 @@ const widgets = [
   rowButtons,
   detail,
   widget(1173),
+  widget(1115), // TankLoadingBox's runtime-faded CautionSign_mc.
   widget(1137, 1),
   widget(1137, 2),
   widget(1403, 1),

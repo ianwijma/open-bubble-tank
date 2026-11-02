@@ -39,8 +39,8 @@ test('viewer fields keep local text bounds separate from authored placement matr
 });
 
 test('viewer lookup retains all authored sort poses and clamps one-frame button states', () => {
-  expect(TANK_VIEWER.widgets).toHaveLength(134);
-  expect(new Set(TANK_VIEWER.widgets.map((w) => `${w.symbol}:${w.frame}`)).size).toBe(134);
+  expect(TANK_VIEWER.widgets).toHaveLength(135);
+  expect(new Set(TANK_VIEWER.widgets.map((w) => `${w.symbol}:${w.frame}`)).size).toBe(135);
   for (const symbol of [1218, 1222])
     expect(TANK_VIEWER.widgets.filter((w) => w.symbol === symbol).map((w) => w.frame)).toEqual([
       1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
@@ -88,4 +88,24 @@ test('closing sort frame10 applies its source AnimatorFactory3D Bubble Points ro
     viewerWidget(1218, frame).children.find((p) => p.name === 'btnSortByBubbles_mc')!;
   expect(bubbles(9).matrix.ty).toBe(1084);
   expect(bubbles(10).matrix).toEqual({ a: 1, b: 0, c: 0, d: 1, tx: 0, ty: 1084 });
+});
+
+test('viewer warning retains separate triangle hole, mark paint and authored registration', () => {
+  const warning = viewerWidget(1115);
+  expect(warning.staticDepths).toEqual([1, 3]);
+  expect(warning.art.map((p) => [p.id, p.kind])).toEqual([
+    [1111, 'warning-triangle'],
+    [1113, 'warning-mark'],
+  ]);
+  expect(warning.art[0]).toMatchObject({
+    bounds: { xMin: -1043, xMax: 1042, yMin: -917, yMax: 917 },
+    innerBounds: { xMin: -860, xMax: 856, yMin: -680, yMax: 805 },
+    matrix: { a: 1.283538818359375, d: 1.283538818359375, tx: 0, ty: -220 },
+    fill: [255, 255, 255, 97],
+  });
+  expect(warning.art[1]).toMatchObject({
+    bounds: { xMin: -96, xMax: 96, yMin: -470, yMax: 471 },
+    matrix: { a: 1.467498779296875, d: 1.467498779296875, tx: 0, ty: 2 },
+    fill: [0, 0, 0, 108],
+  });
 });

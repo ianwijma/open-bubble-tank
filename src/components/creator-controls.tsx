@@ -51,6 +51,17 @@ export function CreatorPrimitives({ pieces }: { pieces: CreatorPrimitive[] }) {
           </>
         ) : p.kind === 'detail-arrow' ? (
           <path d={`M${x + h / 2} ${y}H${x + w}v${h}H${x + h / 2}L${x} ${y + h / 2}Z`} {...style} />
+        ) : p.kind === 'warning-triangle' ? (
+          <path
+            d={`M${x + w / 2} ${y}L${x + w} ${y + h}H${x}Z${p.innerBounds ? `M${(p.innerBounds.xMin + p.innerBounds.xMax) / 40} ${p.innerBounds.yMin / 20}L${p.innerBounds.xMin / 20} ${p.innerBounds.yMax / 20}H${p.innerBounds.xMax / 20}Z` : ''}`}
+            {...style}
+            fillRule="evenodd"
+          />
+        ) : p.kind === 'warning-mark' ? (
+          <>
+            <rect x={x} y={y} width={w} height={h * 0.7} {...style} />
+            <ellipse cx={x + w / 2} cy={y + h - w / 2} rx={w / 2} ry={w / 2} {...style} />
+          </>
         ) : p.kind === 'checked-box' ? (
           <>
             <rect x={x} y={y} width={w} height={h} {...style} />
