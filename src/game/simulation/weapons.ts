@@ -27,6 +27,7 @@ import { projectileFlags } from './projectile-flags';
 import { recordLayerMine } from './mine-layers';
 import mineArt from '../data/mine-art.json';
 import { convertDrones } from './converter';
+import { tickPhasing } from './phasing';
 
 export function tickGuns(world: World, t: Tank, input: InputFrame, categories?: readonly number[]) {
   const target = world.getTarget(t);
@@ -56,6 +57,10 @@ export function tickGuns(world: World, t: Tank, input: InputFrame, categories?: 
           : angleTo(pos, aim) - t.rotation;
     if (id === 6002) {
       tickHealer(world, t, g);
+      continue;
+    }
+    if (id === 6004) {
+      tickPhasing(t, g);
       continue;
     }
     if (t.side !== 'player' && g.burst > 0 && --g.burstTimer <= 0) {
@@ -237,7 +242,9 @@ export function fireGun(world: World, t: Tank, gun: GunState, input: InputFrame)
     const max = t.guns.filter((g) => g.part.type === id).length;
     if (world.allies.filter((a) => a.design.id === key).length >= max) return;
     const pos = world.muzzle(t, gun);
-    world.allies.push(createTank(world.nextId(), design, 'ally', pos.x, pos.y));
+    world.allies.push(
+      createTank(world.nextId(), design, 'ally', pos.x, pos.y, undefined, undefined, world),
+    );
     return;
   }
   if (id === 4003) {
@@ -246,7 +253,18 @@ export function fireGun(world: World, t: Tank, gun: GunState, input: InputFrame)
       ENEMIES.filter((e) => e.name === 'Pew Pew' || e.name === 'Flittering Terror');
     gun.spawnDesign ??= world.rng.pick(candidates);
     const pos = world.muzzle(t, gun);
-    world.field.enemies.push(createTank(world.nextId(), gun.spawnDesign, 'enemy', pos.x, pos.y));
+    world.field.enemies.push(
+      createTank(
+        world.nextId(),
+        gun.spawnDesign,
+        'enemy',
+        pos.x,
+        pos.y,
+        undefined,
+        undefined,
+        world,
+      ),
+    );
     return;
   }
   if (id === 4023) {

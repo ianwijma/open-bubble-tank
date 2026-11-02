@@ -58,9 +58,4 @@ export function moveEnemy(t: Tank, target: Tank, fieldScale: number, rng: Random
     t.turnRate = speed * 1.5 * Math.sign(turn);
     t.holdTurn = skittish ? 10 : 30;
   }
-  if (has(6004)) {
-    const frame = (t.age + t.phase) % 300;
-    t.alpha =
-      frame < 50 ? 1 - frame * 0.02 : frame < 150 ? 0 : frame < 200 ? (frame - 150) * 0.02 : 1;
-  }
 }

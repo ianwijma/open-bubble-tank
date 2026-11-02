@@ -319,6 +319,7 @@ export class World {
       0,
       max,
       Math.floor(max / 75) + 1,
+      this,
     );
     this.field = { col: 0, row: 0, scale: 1, enemies: [], cleared: true, boss: false, tutorial: 1 };
     this.fields.set('0,0', this.field);
@@ -985,6 +986,7 @@ export class World {
       old.y,
       max,
       death ? max - 1 : Math.floor(max / 75) + 1,
+      this,
     );
     this.player.rotation = old.rotation;
     this.player.velocity = { ...old.velocity };
@@ -1054,6 +1056,9 @@ export class World {
             'enemy',
             this.rng.int(-200, 200) * wave.scale,
             this.rng.int(-200, 200) * wave.scale,
+            undefined,
+            undefined,
+            this,
           );
           t.rotation = this.rng.int(-180, 180);
           return t;

@@ -1,3 +1,4 @@
+import { showPhasing } from './phasing';
 import { showUnlockRetention } from './unlock-retention';
 import { showViewerFlow } from './viewer-flow';
 import { showViewerSortStatistics } from './viewer-sort-statistics';
@@ -134,6 +135,12 @@ async function reset() {
   world = undefined;
   stage.replaceChildren();
   stage.style.height = '';
+  if (fixture.value === 'phasing-clock') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    status.dataset.phasing = JSON.stringify(await showPhasing(pack, stage));
+    status.textContent = 'Ready · private Phasing clock and production paint';
+    return;
+  }
   if (fixture.value === 'hotkey-input') {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
     unmountScreen = showHotkeyInput(stage);

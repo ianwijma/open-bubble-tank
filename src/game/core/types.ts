@@ -88,6 +88,7 @@ export interface GunState {
   turretRefs?: Projectile[];
   spawnDesign?: TankDesign;
   patientId?: number;
+  phasing?: { counter: number };
   beamId?: number;
   shieldDiameter?: number;
   shieldFilm?: ShieldClip;

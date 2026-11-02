@@ -291,3 +291,6 @@ Save comparison does not define queue deduplication. Bytecode binds the active V
 
 
 `Random.int` preserves the original inclusive rounding expression and authored argument order. It does not clamp or sort the endpoints: actor safety turns call the helper with descending negative bounds. The seeded generator and number of draws per call remain unchanged; actor movement and behavior state recovery consumes this prerequisite in a later slice.
+
+
+`simulation/phasing.ts` owns a registered Phasing part's integer constructor counter and active-frame alpha updates. `createTank` constructs Phasing state before deduplicating registered behavior IDs; the original design/visual parts remain intact. Production World, rebuild, wave and spawn paths supply the shared World RNG, while standalone tools retain a deterministic UID-seeded fallback. Part updates call Phasing after movement through the existing jam/stun/pause gates. Artwork clocks remain separate, and alpha assignments reuse the existing signed 8.8 display-value helper. Movement and other behavior-controller recovery follows separately.
