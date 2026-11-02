@@ -32,20 +32,20 @@ export class ViewerCodeFlow {
     if (!detail) this.fades.hide(viewerToolbarName('btnCreateATank_mc'));
     this.fades.hide(viewerToolbarName('btnCurrentPoints_mc'));
   }
-  returnToView(tanks: readonly TankDesign[]) {
+  returnToView(tanks: readonly TankDesign[], local = true) {
     this.sortX = 616.55;
     for (const name of viewerToolbar) this.fades.show(viewerToolbarName(name));
     if (this.avatar) this.fades.show(viewerToolbarName('btnCurrentPoints_mc'));
-    this.panes.rebuildCards(tanks.slice(0, 4));
+    this.panes.rebuildCards(tanks.slice(0, 4), local);
     // _-BB's creator-specific button setup removes this hidden profile control again.
     this.fades.cancel(viewerToolbarName('btnMyAvatar_mc'));
     this.fades.state(viewerToolbarName('btnMyAvatar_mc')).alpha = 0;
   }
   /** Browser crypto can complete/cancel during alpha-out; release old clips before rebuilding. */
-  returnAfterRead(tanks: readonly TankDesign[]) {
+  returnAfterRead(tanks: readonly TankDesign[], local = true) {
     for (let i = 0; i < 4; i++) this.fades.cancel(viewerCardName(i));
     this.fades.cancel('detail');
-    this.returnToView(tanks);
+    this.returnToView(tanks, local);
   }
   localPosition() {
     this.sortX = 501.6;
