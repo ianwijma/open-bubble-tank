@@ -84,6 +84,7 @@ export function GameViewport({
         world.onCameraMove = (x, y) => stage.background.move(x, y);
         world.hitTest = (t, x, y) => pack.hitTest(t, x, y, settingsRef.current.zoom);
         world.protectionRadius = pack.protectionRadius;
+        world.displayWidth = pack.tankDisplayWidth;
         world.hitPart = (t, p, x, y) => pack.hitPart(t, p, x, y, settingsRef.current.zoom);
         world.hitProjectile = (b, x, y) => pack.hitProjectile(b, x, y, settingsRef.current.zoom);
         world.projectileBounds = (b) =>

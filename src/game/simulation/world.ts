@@ -268,6 +268,8 @@ export class World {
   rng: Random;
   roster: UnitRoster;
   hitTest: CollisionTest = geometricHit;
+  /** Browser assets supply Script width; headless callers may inject geometry. */
+  displayWidth = (tank: Tank) => tank.radius * 2;
   /** Browser geometry supplies transformed Script bounds; headless callers can inject it. */
   protectionRadius = (tank: Tank) =>
     protectionRadius(

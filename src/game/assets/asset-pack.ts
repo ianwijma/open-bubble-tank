@@ -43,6 +43,9 @@ import {
   type ContactMatrix,
 } from './contact-transform';
 import mockPartTimelines from '../data/mock-part-timelines.json';
+import attachmentGeometry from '../data/attachment-geometry.json';
+import { tankScriptBounds } from './tank-bounds';
+import { StatusPlayback } from './status-playback';
 import { mockProjectileHit } from './mock-projectile';
 import { authoredProjectileBounds } from './projectile-geometry';
 import { INFECTED_ART, STATUS_ART, PROTECTION_ART, shieldClipSymbol } from '../data/status-art';
@@ -249,6 +252,7 @@ export class AssetPack {
   private positivePosters = new Map<number, Raster>();
   private partClips = new WeakMap<Tank, { design: TankDesign; parts: Map<string, PartPlayback> }>();
   private infections = new WeakMap<Tank, { startedAt: number; clip: SwfClip }>();
+  private statuses = new StatusPlayback(this);
   private forcefieldClones = new WeakMap<
     Tank,
     {
@@ -281,6 +285,10 @@ export class AssetPack {
     const pack = new AssetPack('mock');
     pack.sprites = new Map(mockPartTimelines.sprites.map((s) => [s.id, s as SpriteInfo]));
     pack.shapes = new Map(mockPartTimelines.shapes.map((s) => [s.id, s]));
+    // Numeric bounds/playback; procedural mock paint remains separate.
+    for (const sprite of attachmentGeometry.sprites)
+      pack.sprites.set(sprite.id, sprite as SpriteInfo);
+    for (const shape of attachmentGeometry.shapes) pack.shapes.set(shape.id, shape);
     for (const sprite of CREDITS.sprites) pack.sprites.set(sprite.id, sprite as SpriteInfo);
     for (const shape of CREDITS.shapes) pack.shapes.set(shape.id, shape);
     for (const leaf of [...CREDITS.shapes, ...CREDITS.texts]) {
@@ -1026,6 +1034,20 @@ export class AssetPack {
   clipScriptBounds(pose: SwfClip) {
     return scriptBounds(this.scriptGeometry, pose.id, pose.age, undefined, undefined, [], 0, pose);
   }
+  tankDisplayBounds = (tank: Tank) =>
+    tankScriptBounds(tank, this.scriptGeometry, {
+      part: (t, p) => (this.hasPartTimeline(p.type) ? this.partClip(t, p) : undefined),
+      status: (t, i) => this.statusClip(t, i),
+      infection: (t) => this.infectionClip(t),
+      forcefieldPart: (t, p) => this.forcefieldPartClip(t, p),
+      forcefieldRadius: (t) => this.forcefieldRadius(t),
+      protectionRadius: (t) => this.protectionRadius(t),
+    });
+  tankDisplayWidth = (tank: Tank) => this.tankDisplayBounds(tank)?.width ?? 0;
+  /** Stopped root frames retain independent children; stun roots keep playing. */
+  statusClip(tank: Tank, index: number) {
+    return this.statuses.clip(tank, index);
+  }
   /** Nine independently initialized infectedbubblepop_398 clips share paint/contact identity. */
   infectionClip(tank: Tank) {
     const age = tank.artAge - tank.infectStartedAt + 1;
@@ -1252,22 +1274,12 @@ export class AssetPack {
     if (this.mode === 'swf') {
       if (tank.statusDecoration) {
         const decoration = tank.statusDecoration;
-        for (const mark of decoration.marks) {
+        for (const [index, mark] of decoration.marks.entries()) {
           const point = rotate({ x: x - mark.x, y: y - mark.y }, -mark.angle);
-          const age = decoration.kind === 'stun' ? mark.frame + decoration.artAge : mark.frame;
           const childInverse = descendContact(inverse, contactTransform(mark.angle));
           if (
             childInverse &&
-            this.symbolHit(
-              STATUS_ART[decoration.kind],
-              age,
-              point.x,
-              point.y,
-              0,
-              undefined,
-              0,
-              childInverse,
-            )
+            this.hitClip(this.statusClip(tank, index), point.x, point.y, 0, childInverse)
           )
             return true;
         }
