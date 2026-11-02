@@ -51,6 +51,43 @@ for (const native of [false, true])
         await root.evaluate((node) => ((node as SVGElement).style.visibility = ''));
       }
     };
+    const shadePaint = async () => {
+      const shade = page.locator('.pause-shade');
+      const shown = await stage.screenshot();
+      await shade.evaluate((node) => ((node as SVGElement).style.visibility = 'hidden'));
+      let hidden: Buffer;
+      try {
+        hidden = await stage.screenshot();
+      } finally {
+        await shade.evaluate((node) => ((node as SVGElement).style.visibility = ''));
+      }
+      const colors = await page.evaluate(
+        async ({ shown, hidden }) => {
+          const read = async (bytes: number[]) => {
+            const image = await createImageBitmap(
+              new Blob([new Uint8Array(bytes)], { type: 'image/png' }),
+            );
+            const canvas = document.createElement('canvas');
+            canvas.width = image.width;
+            canvas.height = image.height;
+            const context = canvas.getContext('2d')!;
+            context.drawImage(image, 0, 0);
+            image.close();
+            return [...context.getImageData(30, 170, 1, 1).data].slice(0, 3);
+          };
+          return { shown: await read(shown), hidden: await read(hidden) };
+        },
+        { shown: [...shown], hidden: [...hidden] },
+      );
+      const layerAlpha = await page
+        .locator('.pause-button-layer')
+        .evaluate((node) => Number(node.getAttribute('data-pause-alpha')));
+      for (let channel = 0; channel < 3; channel++)
+        expect(
+          Math.abs(colors.shown[channel] - colors.hidden[channel] * (1 - (64 / 255) * layerAlpha)),
+        ).toBeLessThanOrEqual(1);
+      return { ...colors, layerAlpha };
+    };
     // An opaque initial capture covers the root text; the settled blur reveals it.
     expect(await rootDifference()).toBe(0);
     await page
@@ -59,6 +96,8 @@ for (const native of [false, true])
     await expect(bitmap).toHaveAttribute('data-saved-frames', '19');
     const rootPixels = await rootDifference();
     expect(rootPixels).toBeGreaterThan(80);
+    const settledShade = await shadePaint();
+    expect(settledShade.layerAlpha).toBe(1.03125);
     if (native) {
       const rasters = await page.locator('.pause-title img,.pause-orb img').evaluateAll((nodes) =>
         nodes.map((node) => {
@@ -118,9 +157,13 @@ for (const native of [false, true])
     expect(await changedPixels(page, before, await stage.screenshot(), [180, 370, 190, 46])).toBe(
       0,
     );
+    await page.getByRole('button', { name: 'PLAY', exact: true }).click();
+    await page.getByRole('button', { name: 'Advance5 frames', exact: true }).dispatchEvent('click');
+    const closingShade = await shadePaint();
+    expect(closingShade.layerAlpha).toBeLessThan(settledShade.layerAlpha);
     writeFileSync(
       testInfo.outputPath('pause-layout.json'),
-      JSON.stringify({ rootPixels, captionBounds }, null, 2),
+      JSON.stringify({ rootPixels, captionBounds, settledShade, closingShade }, null, 2),
     );
     expect(errors).toEqual([]);
   });

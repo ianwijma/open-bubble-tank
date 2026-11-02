@@ -33,6 +33,8 @@ const buttons = [
     action: 'settings',
   },
 ] as const;
+const pauseMatrix = (m: (typeof PAUSE.root)[number]['matrix']) =>
+  `matrix(${m.a} ${m.b} ${m.c} ${m.d} ${m.tx / 20} ${m.ty / 20})`;
 
 /** One retained source button layer, shared alpha and stage clock for pause and Info. */
 export function PausePanel({
@@ -74,6 +76,7 @@ export function PausePanel({
   const [hovered, setHovered] = useState('');
   const nodes = useRef(new Map<string, HTMLElement>());
   const layer = useRef<HTMLDivElement>(null);
+  const shade = useRef<SVGSVGElement>(null);
   const resumeRef = useRef(onResume);
   const infoSeen = useRef(false),
     resumeSent = useRef(false);
@@ -97,9 +100,12 @@ export function PausePanel({
         draw: () => {
           if (layer.current) {
             layer.current.style.opacity = String(motion.layerAlpha);
+            layer.current.dataset.pauseAlpha = String(motion.layerAlpha);
             layer.current.dataset.pauseAge = String(motion.age);
             layer.current.dataset.pausePhase = motion.phase;
           }
+          if (shade.current)
+            shade.current.style.opacity = String((PAUSE.shade.color[3] / 255) * motion.layerAlpha);
           for (const [name, node] of nodes.current) {
             const p = motion.positions[name],
               piece = PAUSE.pieces.find((piece) => piece.name === name)!;
@@ -169,10 +175,8 @@ export function PausePanel({
       <svg className="pause-root" viewBox="0 0 550 450" aria-hidden="true">
         {PAUSE.root.map((piece) => {
           const raster = pack.uiFrames.get(piece.symbol)?.[0];
-          const matrix = (m: typeof piece.matrix) =>
-            `matrix(${m.a} ${m.b} ${m.c} ${m.d} ${m.tx / 20} ${m.ty / 20})`;
           return (
-            <g key={piece.depth} transform={matrix(piece.matrix)}>
+            <g key={piece.depth} transform={pauseMatrix(piece.matrix)}>
               {raster ? (
                 <image
                   href={raster.url}
@@ -182,7 +186,7 @@ export function PausePanel({
                   height={raster.height}
                 />
               ) : (
-                <g transform={matrix(piece.textMatrix)}>
+                <g transform={pauseMatrix(piece.textMatrix)}>
                   {piece.glyphs.map((glyph, i) => (
                     <text
                       key={i}
@@ -202,11 +206,29 @@ export function PausePanel({
         })}
       </svg>
       <PauseBackdrop stage={stage} motion={motion} />
+      {/* Multiply the flat shade by the source parent alpha before CSS clamps it. */}
+      <svg
+        ref={shade}
+        className="pause-shade"
+        viewBox="0 0 550 450"
+        aria-hidden="true"
+        style={{ opacity: (PAUSE.shade.color[3] / 255) * motion.layerAlpha }}
+      >
+        <rect
+          transform={pauseMatrix(PAUSE.shade.matrix)}
+          x={PAUSE.shade.bounds.x}
+          y={PAUSE.shade.bounds.y}
+          width={PAUSE.shade.bounds.width}
+          height={PAUSE.shade.bounds.height}
+          fill={`rgb(${PAUSE.shade.color.slice(0, 3).join(',')})`}
+        />
+      </svg>
       <div
         ref={layer}
         className="pause-button-layer"
         inert={closing}
         style={{ opacity: motion.layerAlpha }}
+        data-pause-alpha={motion.layerAlpha}
         data-pause-age={motion.age}
         data-pause-phase={motion.phase}
       >

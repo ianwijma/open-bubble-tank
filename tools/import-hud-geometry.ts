@@ -163,10 +163,29 @@ const secondaryHelp = list(1876).map((p) => {
   };
 });
 const pausePieces = list(1636);
+const pauseShade = pausePieces.find((piece) => piece.charId === 1096)!;
+const shadeShape = symbols.shapes.find((shape) => shape.id === pauseShade.charId) as unknown as {
+  fills: { kind: string; color: number[] }[];
+};
+if (shadeShape.fills.length !== 1 || shadeShape.fills[0].kind !== 'solid')
+  throw new Error('Pause shade is not the expected flat solid rectangle');
+const shadeBounds = bounds(pauseShade.charId);
 const caption = symbols.editTexts.find((text) => text.id === 1560)!;
 const captionFont = symbols.fonts.find((font) => font.id === caption.fontId)!;
 if (captionFont.ascent === undefined) throw new Error('Pause caption font has no ascent metric');
 const pause = {
+  shade: {
+    symbol: pauseShade.charId,
+    depth: pauseShade.depth,
+    matrix: pauseShade.matrix,
+    bounds: {
+      x: shadeBounds.xMin / 20,
+      y: shadeBounds.yMin / 20,
+      width: (shadeBounds.xMax - shadeBounds.xMin) / 20,
+      height: (shadeBounds.yMax - shadeBounds.yMin) / 20,
+    },
+    color: shadeShape.fills[0].color,
+  },
   caption: {
     size: caption.fontHeight / 20,
     font: captionFont.name.replace(/\0/g, ''),

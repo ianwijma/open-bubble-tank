@@ -1131,7 +1131,8 @@ kbd {
   position: absolute;
   inset: 0;
 }
-.pause-root {
+.pause-root,
+.pause-shade {
   position: absolute;
   inset: 0;
   width: 550px;
