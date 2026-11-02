@@ -1,3 +1,4 @@
+import { showSvgMasks } from './svg-masks';
 import { showCreatorStatistics } from './creator-stats';
 import { showCreatorPaletteRows } from './creator-palette';
 import { showCreatorText } from './creator-text';
@@ -194,6 +195,12 @@ async function reset() {
             : 'controls',
     );
     status.textContent = 'Ready · creator button raster states';
+    return;
+  }
+  if (fixture.value === 'svg-masks') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    status.dataset.svgMasks = JSON.stringify(await showSvgMasks(pack, stage));
+    status.textContent = 'Ready · grouped SVG mask pixels';
     return;
   }
   if (fixture.value === 'native-menu-picking') {
