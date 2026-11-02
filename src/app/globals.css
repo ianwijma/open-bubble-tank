@@ -2250,3 +2250,12 @@ kbd {
   max-width: none;
   pointer-events: none;
 }
+
+.viewer-sort {
+  z-index: 3;
+}
+.viewer-statistics-window {
+  position: absolute;
+  overflow: clip;
+  pointer-events: none;
+}
