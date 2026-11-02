@@ -1,3 +1,4 @@
+import { showViewerSortStatistics } from './viewer-sort-statistics';
 import { showViewerArtComponents } from './viewer-art-components';
 import { showViewerTankArtwork } from './viewer-tank-artwork';
 import { showSvgMasks } from './svg-masks';
@@ -197,6 +198,12 @@ async function reset() {
             : 'controls',
     );
     status.textContent = 'Ready · creator button raster states';
+    return;
+  }
+  if (fixture.value === 'viewer-sort-statistics') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    unmountScreen = showViewerSortStatistics(pack, stage);
+    status.textContent = 'Ready · viewer sort and statistics widgets';
     return;
   }
   if (fixture.value === 'viewer-art-components') {

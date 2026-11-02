@@ -82,3 +82,10 @@ test('offline guide metadata clips retired upper callout and leaves local copy a
     matrix: { tx: -347, ty: 5967 },
   });
 });
+
+test('closing sort frame10 applies its source AnimatorFactory3D Bubble Points row override', () => {
+  const bubbles = (frame: number) =>
+    viewerWidget(1218, frame).children.find((p) => p.name === 'btnSortByBubbles_mc')!;
+  expect(bubbles(9).matrix.ty).toBe(1084);
+  expect(bubbles(10).matrix).toEqual({ a: 1, b: 0, c: 0, d: 1, tx: 0, ty: 1084 });
+});

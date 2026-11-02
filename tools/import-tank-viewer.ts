@@ -209,7 +209,17 @@ for (const w of [...widgets])
     if (p.name.startsWith('btn') || ['next_mc', 'back_mc'].includes(p.name)) ids.add(p.symbol);
 // Source sort panel's open endpoint; its motion remains represented by its numeric authored frames.
 for (const id of [1218, 1222])
-  for (let frame = 1; frame <= 10; frame++) widgets.push(widget(id, frame));
+  for (let frame = 1; frame <= 10; frame++) {
+    const pose = widget(id, frame);
+    if (id === 1218 && frame === 10) {
+      // buttonsmotionback_241's AnimatorFactory3D span starts at frame index9.
+      // Its one-frame matrix override restores Y54.200001 after the placement tag.
+      const bubble = pose.children.find((p) => p.name === 'btnSortByBubbles_mc');
+      if (!bubble) throw new Error('Missing closing sort Bubble Points row');
+      bubble.matrix = { ...bubble.matrix, ty: 1084 };
+    }
+    widgets.push(pose);
+  }
 for (const w of widgets.filter((w) => w.symbol === 1222))
   for (const p of w.children) ids.add(p.symbol);
 ids.add(1221);
