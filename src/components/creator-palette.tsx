@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useId, useRef, useState, type CSSProperties, type PointerEvent } from 'react';
 import type { AssetPack } from '@/game/assets/asset-pack';
+import type { CreatorDetailAnchor } from '@/game/core/creator-details';
 import { CREATOR_PALETTE, CreatorPaletteScroll } from '@/game/core/creator-palette';
 import type { PartDefinition } from '@/game/core/types';
 import {
@@ -130,12 +131,16 @@ export function CreatorPaletteRows({
   context,
   chosen,
   onChoose,
+  onDetails,
+  detailsId,
 }: {
   pack: AssetPack;
   parts: PartDefinition[];
   context: PaletteContext;
   chosen: number | null;
   onChoose: (id: number) => void;
+  onDetails?: (anchor: CreatorDetailAnchor | null) => void;
+  detailsId?: string;
 }) {
   const p = CREATOR_PALETTE,
     lib = p.library;
@@ -146,6 +151,7 @@ export function CreatorPaletteRows({
     [hover, setHover] = useState(0);
   const publish = () => {
     const m = model.current;
+    onDetails?.(null);
     // Chromium rounds scrollTop; the content transform preserves the authored fractional offset.
     if (port.current) port.current.scrollTop = m.offset;
     setPosition({ offset: m.offset, barY: m.barY, scrollTop: port.current?.scrollTop ?? 0 });
@@ -221,7 +227,7 @@ export function CreatorPaletteRows({
                 }
                 aria-description={hint || undefined}
                 aria-pressed={selected}
-                title={`${part.name} · ${part.gp} GP · ${part.bp} BP${hint ? ` · ${hint}` : ''}`}
+                aria-describedby={hover === part.id && !state.locked ? detailsId : undefined}
                 className={`${selected ? 'selected' : ''} ${!state.affordable ? 'unaffordable' : ''}`}
                 data-row-frame={frame}
                 style={{
@@ -232,10 +238,44 @@ export function CreatorPaletteRows({
                   height: p.row.height,
                   opacity: state.locked ? 0.5 : state.affordable ? 1 : 0.4,
                 }}
-                onPointerEnter={() => setHover(part.id)}
-                onPointerLeave={() => setHover(0)}
-                onFocus={() => setHover(part.id)}
-                onBlur={() => setHover(0)}
+                onPointerEnter={() => {
+                  setHover(part.id);
+                  if (!state.locked)
+                    onDetails?.({
+                      id: part.id,
+                      rowY:
+                        p.origin.ty / 20 +
+                        lib.matrix.ty / 20 +
+                        lib.inside.y +
+                        index * p.row.height -
+                        model.current.offset,
+                      alpha: state.affordable ? 1 : 0.4,
+                      selected,
+                    });
+                }}
+                onPointerLeave={() => {
+                  setHover(0);
+                  onDetails?.(null);
+                }}
+                onFocus={() => {
+                  setHover(part.id);
+                  if (!state.locked)
+                    onDetails?.({
+                      id: part.id,
+                      rowY:
+                        p.origin.ty / 20 +
+                        lib.matrix.ty / 20 +
+                        lib.inside.y +
+                        index * p.row.height -
+                        model.current.offset,
+                      alpha: state.affordable ? 1 : 0.4,
+                      selected,
+                    });
+                }}
+                onBlur={() => {
+                  setHover(0);
+                  onDetails?.(null);
+                }}
                 onMouseUp={(e) => {
                   if (e.button === 0 && !selected) onChoose(part.id);
                 }}

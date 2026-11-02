@@ -38,6 +38,19 @@ export function CreatorPrimitives({ pieces }: { pieces: CreatorPrimitive[] }) {
               {g.text}
             </text>
           ))
+        ) : p.kind === 'detail-panel' ? (
+          <>
+            <rect x={x + 0.5} y={y + 0.5} width={w - 1} height={h - 1} {...style} />
+            <path
+              d={`M${x + 4.5} ${y + 60.25}h175.75`}
+              fill="none"
+              stroke="white"
+              strokeWidth={1}
+              strokeLinecap="round"
+            />
+          </>
+        ) : p.kind === 'detail-arrow' ? (
+          <path d={`M${x + h / 2} ${y}H${x + w}v${h}H${x + h / 2}L${x} ${y + h / 2}Z`} {...style} />
         ) : p.kind === 'checked-box' ? (
           <>
             <rect x={x} y={y} width={w} height={h} {...style} />
