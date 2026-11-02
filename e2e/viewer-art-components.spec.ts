@@ -11,12 +11,18 @@ for (const native of [false, true]) {
     const errors: string[] = [];
     test.skip(native && !existsSync(swf), 'Supply the local research SWF.');
     page.on('pageerror', (error) => errors.push(error.message));
+    // Smooth Tentacle (2447) starts at round(random * 100); frame 1 has no ink.
+    // Keep the visible-pose checks deterministic, then exercise the zero start below.
+    await page.addInitScript(() => {
+      Math.random = () => 0.25;
+    });
     await page.goto('http://127.0.0.1:3102');
     await page.getByLabel('Fixture').selectOption('viewer-art-components');
     if (native) await page.getByLabel('Original SWF').setInputFiles(swf);
     else await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
     await expect(page.locator('#status')).toContainText('Ready', { timeout: 60000 });
     const stage = page.locator('#stage'),
+      components = page.locator('[data-viewer-components]'),
       size = page.getByLabel('Sized tank'),
       animation = page.getByLabel('Animated tank');
     await expect(stage).toHaveAttribute('data-viewer-subscriptions', '1');
@@ -49,6 +55,7 @@ for (const native of [false, true]) {
     await expect.poll(async () => (await pixels(size)).ink).toBeGreaterThan(0);
     const fitted = await pixels(size),
       first = await pixels(animation);
+    expect(first.ink).toBeGreaterThan(0);
     expect(fitted.width).toBeLessThan(170);
     const initialImage = await animation.evaluate((node) =>
       (node as HTMLCanvasElement).toDataURL(),
@@ -86,23 +93,51 @@ for (const native of [false, true]) {
     await page.getByRole('button', { name: 'Advance twenty frames', exact: true }).click();
     expect((await pixels(animation)).alphaHash).not.toBe(first.alphaHash);
     await page.getByRole('button', { name: 'Toggle fit', exact: true }).click();
-    await expect(page.locator('[data-viewer-components]')).toHaveAttribute('data-fit', 'false');
+    await expect(components).toHaveAttribute('data-fit', 'false');
     await page.getByRole('button', { name: 'Redraw held frame', exact: true }).click();
     expect((await pixels(size)).width).toBeGreaterThan(fitted.width * 2);
     await page.getByRole('button', { name: 'Toggle fit', exact: true }).click();
+    await expect(components).toHaveAttribute('data-fit', 'true');
     await page.getByRole('button', { name: 'Redraw held frame', exact: true }).click();
     expect(await pixels(size)).toEqual(fitted);
     await page.getByRole('button', { name: 'Replace animated job', exact: true }).click();
+    await expect(components).toHaveAttribute('data-generation', '1');
     await page.getByRole('button', { name: 'Redraw held frame', exact: true }).click();
     expect((await pixels(animation)).ink).toBeGreaterThan(0);
+    expect((await pixels(animation)).alphaHash).toBe(first.alphaHash);
     await page.getByRole('button', { name: 'Toggle animated job', exact: true }).click();
+    await expect(components).toHaveAttribute('data-active', 'false');
     await expect(animation).toHaveCount(0);
     await page.getByRole('button', { name: 'Redraw held frame', exact: true }).click();
     expect(await pixels(size)).toEqual(fitted);
     await page.getByRole('button', { name: 'Toggle animated job', exact: true }).click();
+    await expect(components).toHaveAttribute('data-active', 'true');
     await expect(animation).toBeVisible();
     await page.getByRole('button', { name: 'Redraw held frame', exact: true }).click();
     expect((await pixels(animation)).ink).toBeGreaterThan(0);
+    expect((await pixels(animation)).alphaHash).toBe(first.alphaHash);
+
+    // A fresh job born at the held stage age must retain the source's empty
+    // random-zero pose, rather than inheriting the removed job's twenty frames.
+    await page.evaluate(() => {
+      Math.random = () => 0;
+    });
+    await page.getByRole('button', { name: 'Replace animated job', exact: true }).click();
+    await expect(components).toHaveAttribute('data-generation', '2');
+    await page.getByRole('button', { name: 'Redraw held frame', exact: true }).click();
+    const empty = await pixels(animation);
+    expect(empty.ink).toBe(0);
+    await page.getByRole('button', { name: 'Redraw held frame', exact: true }).click();
+    expect(await pixels(animation)).toEqual(empty);
+    await page.evaluate(() => {
+      Math.random = () => 0.25;
+    });
+    await page.getByRole('button', { name: 'Advance one frame', exact: true }).click();
+    const resumed = await pixels(animation);
+    expect(resumed.ink).toBeGreaterThan(0);
+    await page.getByRole('button', { name: 'Redraw held frame', exact: true }).click();
+    expect((await pixels(animation)).alphaHash).toBe(resumed.alphaHash);
+    expect(await pixels(size)).toEqual(fitted);
     await expect(stage).toHaveAttribute('data-viewer-subscriptions', '1');
     await expect(stage.locator('[data-creator-field="largeName_txt"]').first()).toContainText(
       'Fitted tank',
