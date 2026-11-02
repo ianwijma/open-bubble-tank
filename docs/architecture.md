@@ -280,3 +280,6 @@ The candidate-eligibility fixture adds a level-two avatar queue with a preceding
 
 
 For in-game editing, GameShell supplies `world.unlockedParts` to TankCreator. The creator forwards the same readonly snapshot into palette state, save validation and ViewerLimits when loading another design. Menu-only editing keeps the existing no-history fallback. The isolated retention fixture drives real World downgrade rules through production creator/viewer components, while the shared Bun codec helper keeps Node test-loader adaptation outside production services.
+
+
+`core/profile-class.ts` holds the source's app-session `PlayerProfile.maxClass` field independently of current-level creator/selection caps. GameShell lazily owns one instance and shares it across Worlds; every actual upgrade overwrites it with the new level plus one, capped at six, while damage, restored history and new-world unlock resets leave it alone. TankCreator forwards the numeric readout to TankViewer through the existing optional `profileMaxClass` contract. Local profile JSON remains unchanged.
