@@ -82,6 +82,11 @@ export function CreatorPrimitives({ pieces }: { pieces: CreatorPrimitive[] }) {
               fill={style.stroke}
             />
           </>
+        ) : p.kind === 'right-arrow' ? (
+          <path
+            d={`M${x} ${y + h * 0.3}H${x + w - h / 2}V${y}L${x + w} ${y + h / 2}L${x + w - h / 2} ${y + h}V${y + h * 0.7}H${x}Z`}
+            {...style}
+          />
         ) : p.kind === 'arrow' ? (
           <path d={`M${x} ${y + h / 2}L${x + w} ${y}v${h}Z`} {...style} />
         ) : (
