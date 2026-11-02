@@ -271,3 +271,6 @@ The candidate-eligibility fixture adds a level-two avatar queue with a preceding
 
 
 `ViewerRejectionEffects` subscribes to immutable lifetime snapshots while painting each retained clip's imported alpha tracks through refs on stage steps. It layers independent native933/1555 rasters or mock primitives with the dynamic CreatorText field at the recovered origin. Invalid selection adds a timed clip; unrelated offline/service notifications retain the existing message dialog. The overlay shields pointer input without making the viewer inert or adding a dismiss/focus trap. The current owner remains the viewer; global mainEffects persistence and exact cross-screen phase remain comparison gaps.
+
+
+`RunPartUnlocks` supplies a fresh source reset list and append-only tier history as readonly snapshots. Adding a tier creates a new snapshot; a lower/repeated tier preserves the previous one. The shared `partUnlocked` predicate now also accepts optional retained history in palette state and save validation, while absent history keeps the existing level fallback. This rule slice does not yet connect a World/editor owner; runtime propagation follows separately.
