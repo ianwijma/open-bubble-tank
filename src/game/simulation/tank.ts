@@ -9,6 +9,7 @@ import { createPhasing } from './phasing';
 import { createActorMovement } from './actor-movement';
 import { createWallFlower, setupSkittish } from './behavior-destinations';
 import { acquireBehaviorTarget, createBehaviorTarget } from './behavior-targets';
+import { acquireHealerTarget } from './healer-target';
 export function createTank(
   uid: number,
   design: TankDesign,
@@ -61,7 +62,6 @@ export function createTank(
     movement: createActorMovement(),
     phase: uid % 50,
     alpha: 1,
-    targetId: null,
     hiddenParts: new Set(),
     removedParts: new Set(),
     degradation: createDegradation(design),
@@ -77,19 +77,20 @@ export function createTank(
       if (registeredBehaviors.has(part.type)) return [];
       registeredBehaviors.add(part.type);
     }
-    const behaviorTarget = category === 6 ? createBehaviorTarget() : undefined;
+    const state = createBehaviorTarget(),
+      behaviorTarget = category === 6 ? state : undefined,
+      targeting = category !== 6 ? state : undefined;
+    if (side === 'player') state.master = 'player';
     if (part.type === 6003) setupSkittish(t);
-    if (behaviorTarget && world && part.type !== 6002)
-      acquireBehaviorTarget(
-        behaviorTarget,
-        side,
-        {
-          avatar: world.player,
-          enemies: world.currentWrapper.enemies,
-          allies: world.runtimeFor(world.currentWrapper).allies,
-        },
-        rng,
-      );
+    if (world && side !== 'player') {
+      const population = {
+        avatar: world.player,
+        enemies: world.currentWrapper.enemies,
+        allies: world.runtimeFor(world.currentWrapper).allies,
+      };
+      if (part.type === 6002) acquireHealerTarget(state, t, population, rng);
+      else acquireBehaviorTarget(state, side, population, rng);
+    }
     return [
       {
         part,
@@ -100,6 +101,7 @@ export function createTank(
         phasing,
         wallFlower,
         behaviorTarget,
+        targeting,
       },
     ];
   });

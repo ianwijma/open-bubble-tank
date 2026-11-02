@@ -54,6 +54,10 @@ export class ActorParents {
 
   /** Source parent.localToGlobal -> owner.parent.globalToLocal crosses twip Point boundaries. */
   point(target: Tank, ownerField: Field): Vec | null {
+    return this.pointAt(target, target, ownerField);
+  }
+  /** A transformed detail or mount point, expressed in the actor parent coordinates. */
+  pointAt(target: Tank, point: Vec, ownerField: Field): Vec | null {
     const to = this.active.get(ownerField);
     if (!to) return null;
     if (target === this.avatar) return { x: -to.x || 0, y: -to.y || 0 };
@@ -65,8 +69,8 @@ export class ActorParents {
       return (twips(global) - twips(owner) - center * 20) / 20;
     };
     return {
-      x: project(target.x, from.x, to.x, STAGE.cx),
-      y: project(target.y, from.y, to.y, STAGE.cy),
+      x: project(point.x, from.x, to.x, STAGE.cx),
+      y: project(point.y, from.y, to.y, STAGE.cy),
     };
   }
 }

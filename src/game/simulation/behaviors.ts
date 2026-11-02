@@ -11,10 +11,13 @@ export function tickBehavior(world: World, tank: Tank, gun: GunState) {
   if (gun.part.type === 6002) {
     // Healer's override remains in the existing beam/patient owner.
     tickHealer(world, tank, gun);
-    const patient = [...world.field.enemies, world.player, ...world.allies].find(
-      (t) => t.uid === gun.patientId,
-    );
-    setPursuitPoint(tank, patient ? world.actorParents.point(patient, world.field) : null);
+    const patient = state.target;
+    const point = patient && world.actorParents.point(patient, world.field);
+    if (!point) {
+      state.target = null;
+      gun.patientId = undefined;
+    }
+    setPursuitPoint(tank, point);
     return;
   }
   const target = refreshBehaviorTarget(

@@ -334,6 +334,7 @@ test('Spinner weapon retains ordinary aiming rather than its authored fixed moun
       burstTimer: 0,
     },
   ];
+  world.actorParents.sync(world);
   tickGuns(world, enemy, emptyInput());
   expect(enemy.guns[0].angle).toBeCloseTo(90);
 });
