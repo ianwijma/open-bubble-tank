@@ -52,6 +52,7 @@ export default function GameShell() {
     [nativeSize, setNativeSize] = useState(false),
     [fullscreen, setFullscreen] = useState(false),
     [audio, setAudio] = useState<AudioManager | null>(null);
+  const [musicRequest, setMusicRequest] = useState<{ mode: 'menu' | 'game' }>({ mode: 'menu' });
   const [stage] = useState(() => new StageRuntime());
   const [profileClass] = useState(() => new ProfileClassAllowance());
   const [menuMotion, setMenuMotion] = useState(() => new MainMenuMotion());
@@ -110,16 +111,13 @@ export default function GameShell() {
   }, [pack, stage]);
   useEffect(() => {
     if (profile) {
-      audio?.setMusic(
-        screen === 'game' ||
-          ((screen === 'creator' || screen === 'viewer') && editor?.returnTo === 'game')
-          ? 'game'
-          : 'menu',
-        profile.settings.music,
-      );
+      audio?.setMusicEnabled(profile.settings.music);
       audio?.setSound(profile.settings.sound);
     }
-  }, [screen, profile, pack, editor, audio]);
+  }, [profile, audio]);
+  useEffect(() => {
+    audio?.requestMusic(musicRequest.mode);
+  }, [audio, musicRequest]);
   useEffect(() => () => pack?.dispose(), [pack]);
   function updateProfile(update: (p: Profile) => Profile, persist = true) {
     setProfile((previous) => {
@@ -133,6 +131,7 @@ export default function GameShell() {
     if (next === 'menu' && screen !== 'menu' && profile) {
       setMenuSettings(new MenuSettingsState(profile.settings.mainFps));
       setMenuMotion(new MainMenuMotion());
+      setMusicRequest({ mode: 'menu' });
     }
     setScreen(next);
   }
@@ -168,6 +167,7 @@ export default function GameShell() {
     next.onAchievement = (name) =>
       updateProfile((p) => ({ ...p, achievements: [...new Set([...p.achievements, name])] }));
     setWorld(next);
+    setMusicRequest({ mode: 'game' });
     showScreen('game');
     setOverlay(null);
   }
@@ -284,6 +284,7 @@ export default function GameShell() {
                   setPack(p);
                   setMenuMotion(new MainMenuMotion());
                   setMenuSettings(new MenuSettingsState(profile?.settings.mainFps ?? 50));
+                  setMusicRequest({ mode: 'menu' });
                   showScreen('menu');
                 }}
               />
