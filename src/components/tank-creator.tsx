@@ -727,8 +727,9 @@ export function TankCreator({
             pointer.current = pos;
             const current = drag.current;
             if (current) {
-              if (Math.hypot(pos.x - current.from.x, pos.y - current.from.y) > 0.25)
-                current.moved = true;
+              // _-5M/_-QV begin on the first move event, including zero delta.
+              // A delivered move suppresses the following click selection toggle.
+              current.moved = true;
               if (current.moved && current.moving) {
                 current.session = advanceSelectionDrag(
                   current.session ??

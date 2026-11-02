@@ -34,9 +34,14 @@ BT3_REFERENCE_PORT=3104 bun run reference
 # In another terminal:
 BT3_REFERENCE_URL=http://127.0.0.1:3104 BT3_SWF_FILE=/path/to/uncompressed.swf bun tools/capture-creator-reference.ts
 # Select the aggregate-validation route with BT3_REFERENCE_SCENARIO=validation.
+# Select public Save/Copy drag exports with BT3_REFERENCE_SCENARIO=drag.
 ```
 
 The capture tool uses its own browser, closes it after completion and leaves shared ports3100/3103 alone. Captures and manifests stay ignored under `reference-captures/`. Original capture scripts and historical prose are not proof that a fresh comparison succeeded: inspect the actual manifest, input/SWF/runtime identity and screenshots. Ruffle observations remain distinct from Adobe execution, exact pixel equality, constructor/event ordering and a synchronized playthrough. Record current results and remaining differences in [the fidelity ledger](fidelity.md).
+
+The drag route places a mirrored pair, crosses the axis to merge/respawn it, and exports geometry through the original Save/Copy controls. It scales the stage4× for the quarter-stage-pixel probe, making that displacement one browser pixel. Its manifest records decoded parts, input actions and layout/tool hashes. `reference/loaded-module-identity.ts` additionally compares CDP-exposed loaded JS/WASM bytes with installed files before controlled creator inputs. This establishes module identity for that session, not complete execution coverage, wire provenance or exact timing; debugger attachment itself may affect performance.
+
+Source `_‑5M` and `_‑QV` set their moved flags on the first delivered move, without a distance gate. A zero-delta move therefore suppresses the later click toggle, and an accepted selected-part release can record a no-op Undo snapshot. The browser regression also retains ordinary no-move click toggling and merge/respawn geometry in native and mock modes. Its intermediate eighth-pixel assertion checks the browser input adapter; the original final quarter-pixel export does not establish every intermediate Flash Point or MovieClip setter value. Keep coordinate precision, snapping and constructor/event timing as separate fidelity obligations.
 
 Fresh November2 captures are retained locally under `reference-captures/creator-workflow-recovery/original-creator/` (14 states) and `original-validation/` (15 states), each with zero page errors. They use the unmodified supplied SWF SHA256 `f5827841c682f988f23dcf470ab4ab59c1ffc497acb4ca0f21077d03f942c153`, Chrome156.0.8078.47, installed Ruffle0.7.1 and the configured wgpu-webgl renderer. The manifests retain installed runtime-file digests, input-layout/tool hashes and capture names; these installed-file identities do not independently prove every renderer variant executed. The capture tool now freezes its own/layout hashes before browser launch.
 
