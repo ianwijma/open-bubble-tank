@@ -5,15 +5,17 @@ import type { TankPart } from '../core/types';
 import { partById } from '../data/catalog';
 import { SwfSymbolView } from './swf-symbol-view';
 import { SwfTextures } from './swf-textures';
+import { creatorThumbnailScale } from '../core/creator-details';
 import { rotate } from '../core/math';
 
-type Layer = 'design' | 'draft' | 'preview';
+type Layer = 'design' | 'draft' | 'preview' | 'details';
 interface PartView {
   type: number;
   born: number;
   wrapper: Container;
   view: SwfSymbolView;
   initialWidth: number;
+  thumbnailScale: number;
 }
 export interface ArtworkPart {
   part: TankPart;
@@ -77,7 +79,18 @@ export class CreatorArtwork {
       view,
       wrapper,
       initialWidth: bounds.width,
+      thumbnailScale: creatorThumbnailScale(bounds.width, bounds.height),
     };
+  }
+  /** A new source detail focus constructs a fresh clip, even for the same part type. */
+  clearLayer(layer: Layer) {
+    const group = this.groups.get(layer);
+    if (!group) return;
+    for (const node of group.parts.values()) {
+      node.view.destroy();
+      node.wrapper.destroy();
+    }
+    group.parts.clear();
   }
   /** Measure the actual newly instantiated drag object, before its animation advances. */
   beginDraft(parts: TankPart[], frame: number) {
@@ -123,7 +136,7 @@ export class CreatorArtwork {
       }
       const { wrapper, view } = node;
       wrapper.position.set(part.x, part.y);
-      wrapper.scale.set(part.scale);
+      wrapper.scale.set(part.scale * (layer === 'details' ? node.thumbnailScale : 1));
       wrapper.rotation = (part.rotation * Math.PI) / 180;
       view.setParentAlpha(alpha);
       wrapper.filters = invalid ? [this.gray] : null;

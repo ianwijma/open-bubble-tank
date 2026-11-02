@@ -134,7 +134,11 @@ export async function showCreatorButtons(
         ? enemy
         : subset === 'palette'
           ? key.startsWith('palette:')
-          : !key.startsWith('palette:') && !key.startsWith('dialog:') && !enemy;
+          : !key.startsWith('palette:') &&
+            !key.startsWith('dialog:') &&
+            !key.startsWith('details:') &&
+            !key.startsWith('selection-info:') &&
+            !enemy;
   });
   const rows = frames.map(([key, raster], index) => {
     const x = dialogs ? (index % 2) * 550 : (index % 7) * 78,
