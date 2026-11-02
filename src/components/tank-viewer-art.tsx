@@ -73,6 +73,7 @@ export function ViewerButton({
   label,
   disabled = false,
   done = false,
+  stoppedFrame,
   onClick,
   onHover,
 }: {
@@ -81,18 +82,20 @@ export function ViewerButton({
   label: string;
   disabled?: boolean;
   done?: boolean;
+  stoppedFrame?: number;
   onClick: () => void;
   onHover?: (value: string) => void;
 }) {
   const [over, setOver] = useState(false);
-  const frame = done || disabled ? 5 : over ? 2 : 1;
+  const frame = stoppedFrame ?? (done || disabled ? 5 : over ? 2 : 1);
   const w = viewerWidget(piece.symbol, frame) ?? viewerWidget(piece.symbol, over ? 2 : 1),
     b = piece.bounds;
   return (
     <ViewerGroup matrix={piece.matrix}>
       <button
         className="viewer-button"
-        disabled={disabled || done}
+        disabled={disabled || done || stoppedFrame !== undefined}
+        data-viewer-button-frame={w.frame}
         aria-label={label}
         style={{ left: b.x, top: b.y, width: b.width, height: b.height }}
         onClick={onClick}
