@@ -1,3 +1,4 @@
+import { showActorBehaviors } from './actor-behaviors';
 import { showPhasing } from './phasing';
 import { showUnlockRetention } from './unlock-retention';
 import { showViewerFlow } from './viewer-flow';
@@ -135,6 +136,12 @@ async function reset() {
   world = undefined;
   stage.replaceChildren();
   stage.style.height = '';
+  if (fixture.value === 'actor-behaviors') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    status.dataset.actorBehaviors = JSON.stringify(await showActorBehaviors(pack, stage));
+    status.textContent = 'Ready · live movement, ordered behaviors and production paint';
+    return;
+  }
   if (fixture.value === 'phasing-clock') {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
     status.dataset.phasing = JSON.stringify(await showPhasing(pack, stage));

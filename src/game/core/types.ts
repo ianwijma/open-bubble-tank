@@ -89,6 +89,8 @@ export interface GunState {
   spawnDesign?: TankDesign;
   patientId?: number;
   phasing?: { counter: number };
+  behaviorTarget?: BehaviorTargetState;
+  wallFlower?: WallFlowerState;
   beamId?: number;
   shieldDiameter?: number;
   shieldFilm?: ShieldClip;
@@ -165,9 +167,8 @@ export interface Tank extends Vec {
   age: number;
   /** Attached artwork stage ticks, independent of gameplay Run. */
   artAge: number;
-  turnFrames: number;
-  turnRate: number;
-  holdTurn: number;
+  movement: ActorMovementState;
+  /** Existing procedural artwork offset, independent of simulation behavior clocks. */
   phase: number;
   alpha: number;
   targetId: number | null;

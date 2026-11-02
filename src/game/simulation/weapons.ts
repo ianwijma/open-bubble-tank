@@ -20,30 +20,36 @@ import allyData from '../data/allies.json';
 import { createTank } from './tank';
 import type { World } from './world';
 import projectileArt from '../data/projectile-art.json';
-import { tickHealer } from './healing';
 import { decorateStatus } from './status';
 import { advanceRotatingCycle, triggerSuppressionCycle } from './weapon-cycles';
 import { projectileFlags } from './projectile-flags';
 import { recordLayerMine } from './mine-layers';
 import mineArt from '../data/mine-art.json';
 import { convertDrones } from './converter';
-import { tickPhasing } from './phasing';
+import { tickBehavior } from './behaviors';
 
 export function tickGuns(world: World, t: Tank, input: InputFrame, categories?: readonly number[]) {
-  const target = world.getTarget(t);
-  const aim =
-    t.side === 'player'
-      ? { x: input.aim.x - STAGE.cx + t.x, y: input.aim.y - STAGE.cy + t.y }
-      : target;
   const guns =
     t.side === 'player'
       ? t.guns
-      : [...t.guns].sort((a, b) => Math.floor(a.part.type / 1000) - Math.floor(b.part.type / 1000));
+      : [...t.guns].sort(
+          (a, b) =>
+            Number(Math.floor(a.part.type / 1000) === 6) -
+            Number(Math.floor(b.part.type / 1000) === 6),
+        );
   for (const g of guns) {
     const id = g.part.type,
       category = Math.floor(id / 1000),
       spec = WEAPONS[id];
     if (categories && !categories.includes(category)) continue;
+    if (category === 6) {
+      tickBehavior(world, t, g);
+      continue;
+    }
+    const aim =
+      t.side === 'player'
+        ? { x: input.aim.x - STAGE.cx + t.x, y: input.aim.y - STAGE.cy + t.y }
+        : world.getTarget(t);
     if (id === 4032) tickTurretBehavior(world, t, g);
     const mount = rotate(g.part, t.rotation),
       pos = { x: t.x + mount.x, y: t.y + mount.y };
@@ -55,14 +61,6 @@ export function tickGuns(world: World, t: Tank, input: InputFrame, categories?: 
         (t.side === 'player' && t.design.classId <= 3) || fixed
           ? g.part.rotation
           : angleTo(pos, aim) - t.rotation;
-    if (id === 6002) {
-      tickHealer(world, t, g);
-      continue;
-    }
-    if (id === 6004) {
-      tickPhasing(t, g);
-      continue;
-    }
     if (t.side !== 'player' && g.burst > 0 && --g.burstTimer <= 0) {
       g.burst--;
       g.burstTimer = 6;
