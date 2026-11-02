@@ -62,6 +62,7 @@ export interface PartDefinition {
   classCost: number;
   lower: boolean;
   tier: number;
+  damageText: string;
   summary: string;
   flavor: string;
 }
