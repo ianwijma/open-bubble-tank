@@ -18,6 +18,7 @@ import { showCreatorSaveDialog } from './creator-save-dialog';
 import { showCreatorDetailsArt } from './creator-details-art';
 import { showCreatorSelectionInfo } from './creator-selection-info';
 import { showCreatorControls } from './creator-controls';
+import { showCreatorWorkspace } from './creator-workspace';
 import { showCreatorButtons } from './creator-buttons';
 import { showMainMenuFlow } from './main-menu';
 import { showNativeMenuPicking } from './native-menu-picking';
@@ -228,6 +229,12 @@ async function reset() {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
     unmountScreen = showCreatorControls(pack, stage);
     status.textContent = 'Ready · isolated creator control components';
+    return;
+  }
+  if (fixture.value === 'creator-workspace') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    status.dataset.creatorWorkspace = JSON.stringify(await showCreatorWorkspace(pack, stage));
+    status.textContent = 'Ready · six source workspace frames';
     return;
   }
   if (

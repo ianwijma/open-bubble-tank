@@ -266,8 +266,7 @@ export function TankCreator({
     ctx.scale(2, 2);
     ctx.translate(175, 175);
     const rings = pack.creatorFrames.get(`rings:${maxClass}`);
-    if (rings) ctx.drawImage(rings.canvas, rings.x, rings.y, rings.width, rings.height);
-    else {
+    if (!rings) {
       for (let i = maxClass; i >= 1; i--) {
         ctx.strokeStyle = i === maxClass ? 'rgba(160,241,255,.32)' : 'rgba(137,228,249,.12)';
         ctx.lineWidth = i === classId ? 1.2 : 0.6;
@@ -588,6 +587,7 @@ export function TankCreator({
     }
     draw();
   }
+  const workspace = pack.creatorFrames.get(`rings:${maxClass}`);
   const editor = (
     <div
       className={`creator stage-background ${overGame ? 'over-game' : ''}`}
@@ -675,6 +675,20 @@ export function TankCreator({
         </div>
       </div>
       <div className="creator-workspace">
+        {workspace && (
+          <img
+            className="creator-workspace-rings"
+            src={workspace.url}
+            alt=""
+            draggable={false}
+            style={{
+              left: CREATOR_CONTROLS.workspace.tx / 20 + workspace.x,
+              top: CREATOR_CONTROLS.workspace.ty / 20 + workspace.y,
+              width: workspace.width,
+              height: workspace.height,
+            }}
+          />
+        )}
         <canvas
           ref={canvas}
           width="700"

@@ -1442,6 +1442,12 @@ kbd {
   inset: 0;
   z-index: 1;
 }
+.creator-workspace-rings {
+  position: absolute;
+  max-width: none;
+  pointer-events: none;
+  user-select: none;
+}
 .creator-workspace > canvas {
   position: absolute;
   left: 11px;

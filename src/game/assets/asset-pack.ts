@@ -499,7 +499,9 @@ export class AssetPack {
         if (raster) pack.creatorFrames.set(`handle:${frame}`, raster);
       }
       for (let frame = 1; frame <= 6; frame++) {
-        const raster = await pack.rasterSymbol(819, frame);
+        const raster = await pack.rasterCompiled(
+          pack.compile(819, frame, new Set(), 0, undefined, 'up', undefined, 1),
+        );
         if (raster) pack.creatorFrames.set(`rings:${frame}`, raster);
       }
       for (const [key, symbol] of [
@@ -676,6 +678,7 @@ export class AssetPack {
     pose?: SwfClip,
     buttonState: ButtonState = 'up',
     clips?: ReadonlyMap<number, Bounds>,
+    workspaceScale?: number,
   ): { body: string; bounds: Bounds } | null {
     if (seen.has(id) || seen.size > 24) return null;
     const next = new Set(seen);
@@ -708,7 +711,17 @@ export class AssetPack {
         width: (b.xMax - b.xMin) / 20,
         height: (b.yMax - b.yMin) / 20,
       };
-      const body = svg.replace(/^<svg[^>]*>/, '').replace(/<\/svg>$/, '');
+      // Only prepared creator819 artwork opts in. Its descendants have positive uniform
+      // transforms: Ruffle0.7.1 tessellator.rs177–191 clamps hairlines to1 output pixel.
+      // Keep the authored SVG/shape, Script bounds, contact and other UI paint untouched.
+      const paint =
+        workspaceScale === undefined
+          ? svg
+          : svg.replace(
+              /stroke-width="([\d.]+)"/g,
+              (_, width: string) => `stroke-width="${Math.max(Number(width), 1 / workspaceScale)}"`,
+            );
+      const body = paint.replace(/^<svg[^>]*>/, '').replace(/<\/svg>$/, '');
       return { body: `<g transform="translate(${bounds.x} ${bounds.y})">${body}</g>`, bounds };
     }
     const text = this.texts.get(id);
@@ -723,7 +736,17 @@ export class AssetPack {
     const masks: { id: string; depth: number; end: number; bounds: Bounds; body: string }[] = [];
     for (const p of placements) {
       const childPose = pose?.children.get(p.depth)?.clip;
-      let child = this.compile(p.charId, frame, next, p.ratio ?? 0, childPose, buttonState, clips);
+      const m = p.matrix ?? identity;
+      let child = this.compile(
+        p.charId,
+        frame,
+        next,
+        p.ratio ?? 0,
+        childPose,
+        buttonState,
+        clips,
+        workspaceScale === undefined ? undefined : workspaceScale * m.a,
+      );
       if (!child) continue;
       const clip = clips?.get(p.charId);
       if (clip)
@@ -731,7 +754,6 @@ export class AssetPack {
           body: `<svg x="${clip.x}" y="${clip.y}" width="${clip.width}" height="${clip.height}" viewBox="${clip.x} ${clip.y} ${clip.width} ${clip.height}" overflow="hidden">${child.body}</svg>`,
           bounds: intersect(child.bounds, clip),
         };
-      const m = p.matrix ?? identity;
       if (p.clipDepth !== undefined) {
         masks.push({
           id: `mask${id}_${p.depth}_${seen.size}`,
