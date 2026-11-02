@@ -265,3 +265,6 @@ The viewer importer exposes caution symbol1115 as its own pose. Native loading a
 
 
 The candidate-eligibility fixture adds a level-two avatar queue with a preceding readout of3 GP. It imports codes through the production codec and viewer, so the Class2 Tripod's4 GP allowance is checked independently of that readout. The source policy already lives in `tankLoadEligibility`; this coverage slice does not change production rules or profile persistence.
+
+
+`ViewerRejections` keeps independent messages and frame counters as stable lifetime snapshots: frame steps mutate counters, while add/removal publishes a new snapshot. Ended clips are removed together, matching the source effect manager's collect-then-remove pass. The viewer importer separately recovers symbol1557's91-frame three-layer alpha table, static metadata and dynamic field at source position224,196. The model and data have no live consumer in this slice; the timed browser overlay follows separately.
