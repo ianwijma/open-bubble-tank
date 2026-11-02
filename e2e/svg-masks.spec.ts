@@ -35,8 +35,8 @@ for (const native of [false, true]) {
       expect(pixels.outside, name).toEqual([0, 0, 0, 0]);
     }
     if (native) {
-      //114 nonempty static poses including warning1115, plus10 statistics reveal ages.
-      expect(proof.native.cacheCount).toBe(124);
+      //114 widget static poses,10 statistics reveal ages and2 independent rejection rasters.
+      expect(proof.native.cacheCount).toBe(126);
       expect(proof.native.detailBackground[3]).toBeGreaterThan(0);
       expect(proof.native.closedHeader[3]).toBeGreaterThan(0);
       expect(proof.native.closedBody[3]).toBe(0);

@@ -110,7 +110,7 @@ for (const native of [false, true])
     await advance(20);
     await expect(canvas).toHaveAttribute('data-viewer-glow', 'false');
     await expect(warning).toHaveAttribute('data-caution-alpha', coveredAlpha!);
-    await expect(page.locator('#stage')).toHaveAttribute('data-viewer-flow-subscriptions', '4');
+    await expect(page.locator('#stage')).toHaveAttribute('data-viewer-flow-subscriptions', '5');
     await page.getByLabel('Fixture').selectOption('healing');
     await expect(page.locator('#stage')).toHaveAttribute('data-viewer-flow-subscriptions', '0');
     expect(errors).toEqual([]);

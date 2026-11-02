@@ -268,3 +268,6 @@ The candidate-eligibility fixture adds a level-two avatar queue with a preceding
 
 
 `ViewerRejections` keeps independent messages and frame counters as stable lifetime snapshots: frame steps mutate counters, while add/removal publishes a new snapshot. Ended clips are removed together, matching the source effect manager's collect-then-remove pass. The viewer importer separately recovers symbol1557's91-frame three-layer alpha table, static metadata and dynamic field at source position224,196. The model and data have no live consumer in this slice; the timed browser overlay follows separately.
+
+
+`ViewerRejectionEffects` subscribes to immutable lifetime snapshots while painting each retained clip's imported alpha tracks through refs on stage steps. It layers independent native933/1555 rasters or mock primitives with the dynamic CreatorText field at the recovered origin. Invalid selection adds a timed clip; unrelated offline/service notifications retain the existing message dialog. The overlay shields pointer input without making the viewer inert or adding a dismiss/focus trap. The current owner remains the viewer; global mainEffects persistence and exact cross-screen phase remain comparison gaps.
