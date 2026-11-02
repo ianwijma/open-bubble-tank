@@ -53,6 +53,7 @@ import { buttonDisplayList, type ButtonInfo, type ButtonState } from './button-d
 import { CREATOR_CONTROLS } from '../core/creator-controls';
 import { CREATOR_PALETTE } from '../core/creator-palette';
 import { CREATOR_DIALOGS } from '../core/creator-dialogs';
+import { CREATOR_GUIDE } from '../core/creator-guide';
 
 export interface Bounds extends Rect {}
 export interface Raster extends Bounds {
@@ -416,7 +417,13 @@ export class AssetPack {
       for (const art of Object.values(effectArt)) visit(art.symbol);
       for (const art of Object.values(screenEffectArt)) visit(art.symbol);
       for (const art of Object.values(mineArt)) visit(art.symbol);
-      for (const id of [...Object.values(STATUS_ART), INFECTED_ART]) visit(id);
+      for (const id of [
+        ...Object.values(STATUS_ART),
+        INFECTED_ART,
+        CREATOR_GUIDE.symbol,
+        CREATOR_DIALOGS.alert.symbol,
+      ])
+        visit(id);
       for (const id of Object.values(PROTECTION_ART)) visit(id);
       for (const id of [1816, 1817, 1820, 2173, 1780]) visit(id);
       for (const id of [MINIMAP.symbol, MINIMAP.button, MINIMAP.dot, MINIMAP.connector]) visit(id);
@@ -598,6 +605,30 @@ export class AssetPack {
       infoPose.placements = infoPose.placements.filter((p) => !p.name);
       const infoPopup = await pack.rasterClip(infoPose);
       if (infoPopup) pack.creatorFrames.set('selection-info:popup', infoPopup);
+      for (const page of CREATOR_GUIDE.frames) {
+        const pose = new SwfClip(CREATOR_GUIDE.symbol, pack);
+        pose.start(page.frame, false);
+        pose.placements = pose.placements.filter((p) => page.staticIds.includes(p.charId));
+        const raster = await pack.rasterClip(pose);
+        if (raster) pack.creatorFrames.set(`guide:${page.frame}`, raster);
+        for (const button of page.buttons)
+          for (const frame of [1, 2]) {
+            const art = await pack.rasterSymbol(button.symbol, frame);
+            if (art) pack.creatorFrames.set(`guide-button:${button.symbol}:${frame}`, art);
+          }
+      }
+      const alert = new SwfClip(CREATOR_DIALOGS.alert.symbol, pack);
+      alert.start(1, false);
+      alert.placements = alert.placements.filter((p) =>
+        CREATOR_DIALOGS.alert.staticIds.includes(p.charId),
+      );
+      const alertRaster = await pack.rasterClip(alert);
+      if (alertRaster) {
+        // Paint the prepared bitmap in DOM too: the SVG image lost its static
+        // text after a keyboard resize rejection despite decoding correctly in Canvas2D.
+        alertRaster.url = alertRaster.canvas.toDataURL();
+        pack.creatorFrames.set('alert', alertRaster);
+      }
       for (const screen of CREATOR_DIALOGS.frames) {
         const pose = new SwfClip(CREATOR_DIALOGS.symbol, pack);
         pose.start(screen.frame, false);

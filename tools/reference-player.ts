@@ -9,6 +9,7 @@ const bundle = await Bun.build({
 if (!bundle.success) throw new AggregateError(bundle.logs, 'Could not build the reference viewer');
 const javascript = await bundle.outputs[0].text();
 const configured = process.env.BT3_SWF_FILE;
+const port = Number(process.env.BT3_REFERENCE_PORT ?? 3103);
 const configuredBytes = configured
   ? (await decompressSWF(new Uint8Array(await Bun.file(configured).arrayBuffer()))).bytes
   : null;
@@ -22,7 +23,7 @@ ${configured ? '<button id="configured">Load configured research SWF</button>' :
 <script>window.RufflePlayer={config:{publicPath:'/ruffle/',polyfills:false}};</script><script src="/ruffle/ruffle.js"></script><script type="module" src="/reference.js"></script></html>`;
 Bun.serve({
   hostname: '127.0.0.1',
-  port: Number(process.env.BT3_REFERENCE_PORT ?? 3103),
+  port,
   async fetch(request) {
     const path = new URL(request.url).pathname;
     if (path === '/')
@@ -56,4 +57,4 @@ Bun.serve({
     return new Response('Not found', { status: 404 });
   },
 });
-console.log('Original reference viewer: http://127.0.0.1:3103');
+console.log(`Original reference viewer: http://127.0.0.1:${port}`);

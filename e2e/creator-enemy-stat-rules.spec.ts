@@ -1,16 +1,11 @@
-import { expect, test, type Page } from '@playwright/test';
-import { existsSync, readFileSync } from 'node:fs';
+import { expect, test } from '@playwright/test';
+import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { waitForMainMenu } from './helpers/main-menu';
-import { dropPreview, saveCreator } from './helpers/creator';
-import type { TankDesign } from '../src/game/core/types';
+import { readCreatorDesign, dropPreview, saveCreator } from './helpers/creator';
 const swf =
   process.env.BT3_SWF_FILE ?? resolve('../documented-bubble-tank-3/re/bt3/uncompressed.swf');
-async function snapshot(page: Page): Promise<TankDesign> {
-  const downloading = page.waitForEvent('download');
-  await page.getByRole('button', { name: 'Export', exact: true }).click();
-  return JSON.parse(readFileSync((await (await downloading).path())!, 'utf8'));
-}
+const snapshot = readCreatorDesign;
 for (const native of [false, true])
   test(`${native ? 'SWF' : 'mock'} enemy defaults, panel suggestions and automatic versus manual saves retain source values`, async ({
     page,

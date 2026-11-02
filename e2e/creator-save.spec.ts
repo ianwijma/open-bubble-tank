@@ -39,10 +39,27 @@ for (const native of [false, true])
       name: 'fixture.json',
       mimeType: 'application/json',
       buffer: Buffer.from(
-        JSON.stringify({ ...starter, id: 'saved-fixture', name: 'Save fixture' }),
+        JSON.stringify({
+          ...starter,
+          id: 'saved-fixture',
+          name: 'Save fixture',
+          avatar: false,
+          // Save does not rerun aggregate edit validation on imported parts.
+          parts: [
+            starter.parts[0],
+            ...Array.from({ length: 20 }, (_, i) => ({
+              ...starter.parts[0],
+              key: `over-budget-${i}`,
+              type: 4001,
+              x: 0,
+              y: 0,
+            })),
+          ],
+        }),
       ),
     });
     await page.getByRole('button', { name: 'Edit', exact: true }).click();
+    await expect(page.locator('.creator-meters > div').last()).toContainText('GP: 20');
     const read = () =>
       page.evaluate(() => JSON.parse(localStorage.getItem('open-bubble-tank.profile.v1')!));
     await page.getByRole('button', { name: 'Exit tank creator', exact: true }).click();

@@ -17,6 +17,7 @@ test('mock path: menu, local enemy creator, settings, exploration and pause', as
   await page.goto('/');
   await expect(page.getByRole('heading', { name: 'Your game. Original artwork.' })).toBeVisible();
   await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await waitForMainMenu(page);
   await page.getByRole('button', { name: 'Enemy tank creator' }).click();
   await page.getByRole('button', { name: 'Place Small Bubble', exact: true }).click();
   await dropPreview(page, 5, -10);

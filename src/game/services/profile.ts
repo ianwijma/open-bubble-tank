@@ -9,6 +9,7 @@ export function defaultProfile(): Profile {
     version: 1,
     secondaryHelpSeen: false,
     tankViewerHelpSeen: false,
+    creatorHelpSeen: false,
     progression: [],
     tanks: [],
     settings: { ...DEFAULT_SETTINGS },
@@ -112,6 +113,7 @@ export function loadProfile(): Profile {
       ...defaultProfile(),
       secondaryHelpSeen: p.secondaryHelpSeen === true,
       tankViewerHelpSeen: p.tankViewerHelpSeen === true,
+      creatorHelpSeen: p.creatorHelpSeen === true,
       settings: restoreSettings(p.settings),
       tanks: Array.isArray(p.tanks) ? p.tanks.filter(validateDesign).slice(0, 200) : [],
       progression: Array.isArray(p.progression)

@@ -1,16 +1,11 @@
 import { test, expect, type Page } from '@playwright/test';
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { waitForMainMenu } from './helpers/main-menu';
-import { dropPreview, saveCreator } from './helpers/creator';
-import type { TankDesign } from '../src/game/core/types';
+import { readCreatorDesign, dropPreview, saveCreator } from './helpers/creator';
 const swf =
   process.env.BT3_SWF_FILE ?? resolve('../documented-bubble-tank-3/re/bt3/uncompressed.swf');
-async function snapshot(page: Page): Promise<TankDesign> {
-  const wait = page.waitForEvent('download');
-  await page.getByRole('button', { name: 'Export', exact: true }).click();
-  return JSON.parse(readFileSync((await (await wait).path())!, 'utf8'));
-}
+const snapshot = readCreatorDesign;
 async function confirmationPixel(page: Page) {
   const png = await page.locator('.creator').screenshot();
   return page.evaluate(
@@ -105,7 +100,7 @@ for (const native of [false, true])
     await suggested.click();
     const dialog = page.getByRole('dialog', { name: 'Replace manual enemy statistics' });
     await expect(dialog).toHaveAttribute('data-confirm-frame', '12');
-    await expect(page.getByRole('button', { name: 'Export', exact: true })).toBeHidden();
+    await expect(page.getByRole('button', { name: 'Export', exact: true })).toHaveCount(0);
     await expect(dialog.locator('[data-creator-field]')).toHaveCount(3);
     const normal = await confirmationPixel(page);
     for (let i = 0; i < 3; i++)
@@ -119,7 +114,7 @@ for (const native of [false, true])
       .screenshot({ path: `test-results/${native ? 'native' : 'mock'}-enemy-confirm.png` });
     await page.getByRole('button', { name: 'No, keep manual settings' }).click();
     await expect(dialog).toHaveCount(0);
-    await expect(page.getByRole('button', { name: 'Export', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Export', exact: true })).toHaveCount(0);
     await expect(suggested).not.toBeChecked();
     await expect(life).toHaveValue('1000');
     await suggested.click();

@@ -1,6 +1,14 @@
 import { expect, type Page } from '@playwright/test';
+import type { TankDesign } from '../../src/game/core/types';
+/** Read-only observation keeps geometry tests independent of extra editor controls. */
+export async function readCreatorDesign(page: Page): Promise<TankDesign> {
+  const value = await page.locator('.creator').getAttribute('data-design');
+  if (!value) throw new Error('The tank creator is not mounted.');
+  return JSON.parse(value);
+}
 /** Coordinates are relative to the creator's tank registration point. */
 export async function dropPreview(page: Page, x: number, y: number) {
+  await page.locator('.creator-part-preview').hover();
   const preview = (await page.locator('.creator-part-preview').boundingBox())!;
   const canvas = (await page.locator('.creator-workspace canvas').boundingBox())!;
   await page.mouse.move(preview.x + preview.width / 2, preview.y + preview.height / 2);

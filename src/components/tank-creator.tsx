@@ -5,13 +5,22 @@ import { measureClass } from '@/game/assets/class-measurement';
 import type { TankDesign, TankPart } from '@/game/core/types';
 import type { ViewerLimits } from '@/game/core/tank-viewer';
 import { costs, gunBudget, PARTS, partById } from '@/game/data/catalog';
-import { canPlacePart, validateBuild } from '@/game/simulation/designer';
+import { canPlacePart } from '@/game/simulation/designer';
+import { creatorSavePrerequisite } from '@/game/core/creator-save';
+import { CREATOR_EDIT_ERRORS, creatorEditError } from '@/game/simulation/editor-validation';
+import {
+  initialEditorSnapshots,
+  acceptedEditorParts,
+  appendEditorSnapshot,
+  undoEditorSnapshot,
+} from '@/game/simulation/editor-history';
 import { creatorSuggestedStats, creatorImportedSuggested } from '@/game/core/creator-enemy-stats';
-import { exportDesign } from '@/game/services/profile';
 import { firstAffordablePart, orderedPalette } from '@/game/simulation/editor-palette';
 import { CreatorButton, CreatorSlider } from './creator-controls';
 import { CREATOR_CONTROLS } from '@/game/core/creator-controls';
 import { CreatorSaveDialog } from './creator-save-dialog';
+import { CreatorGuide } from './creator-guide';
+import { CreatorAlert } from './creator-alert';
 import { CreatorStats } from './creator-stats';
 import { CreatorEnemyStats, CreatorStatsTab } from './creator-enemy-stats';
 import { CreatorPaletteFrame, CreatorPaletteTabs, CreatorPaletteRows } from './creator-palette';
@@ -49,6 +58,9 @@ export function TankCreator({
   pack,
   overGame = false,
   initial,
+  initialSaveName = initial.name,
+  helpSeen = true,
+  onHelpStart,
   level,
   maxClass,
   unlockedParts,
@@ -61,6 +73,9 @@ export function TankCreator({
   pack: AssetPack;
   overGame?: boolean;
   initial: TankDesign;
+  initialSaveName?: string;
+  helpSeen?: boolean;
+  onHelpStart?: () => void;
   level: number;
   maxClass: number;
   unlockedParts?: readonly number[];
@@ -70,16 +85,16 @@ export function TankCreator({
   onExit: () => void;
   onLoad: (limits: ViewerLimits & { avatar: boolean }) => void;
 }) {
-  const [design, setDesign] = useState<TankDesign>(() => structuredClone(initial));
-  const [transformClass, setTransformClass] = useState<number | null>(null);
-  const classId = useMemo(
-    () => transformClass ?? measureClass(design, pack),
-    [design, pack, transformClass],
-  );
+  const [design, setDesignState] = useState<TankDesign>(() => structuredClone(initial)),
+    designLive = useRef(design);
+  const [classId, setClassState] = useState(() => measureClass(initial, pack)),
+    classLive = useRef(classId);
+  const [guideActive, setGuideActive] = useState(() => !helpSeen),
+    [alertRequest, setAlertRequest] = useState<{ message: string } | null>(null),
+    [alertActive, setAlertActive] = useState(false);
   const finalDesign = useMemo(() => ({ ...design, classId }), [design, classId]);
   const { gp, bp } = costs(design.parts),
     budget = design.avatar ? gunBudget(classId, level) : Math.floor(gunBudget(classId, 6) * 1.5);
-  const errors = validateBuild(finalDesign, level, maxClass, unlockedParts);
   const paletteContext = { avatar: design.avatar, level, classId, budget, gp, bp, unlockedParts };
   const [category, setCategory] = useState(1),
     [chosen, setChosen] = useState<number | null>(() =>
@@ -93,7 +108,8 @@ export function TankCreator({
     [symmetric, setSymmetric] = useState(true),
     [message, setMessage] = useState('');
   const [advanced, setAdvanced] = useState(false);
-  const [undo, setUndo] = useState<TankDesign[]>([]);
+  const [history, setHistory] = useState(() => initialEditorSnapshots(initial.parts)),
+    historyLive = useRef(history);
   const [suggested, setSuggested] = useState(
     () =>
       !initial.avatar &&
@@ -113,6 +129,19 @@ export function TankCreator({
   const artworkFrame = useRef(1);
   const drawRef = useRef<() => void>(() => {});
   const preview = useRef<HTMLButtonElement>(null);
+  const guideWasOpen = useRef(guideActive),
+    alertWasOpen = useRef(false);
+  useEffect(() => {
+    if (guideWasOpen.current && !guideActive) preview.current?.focus({ preventScroll: true });
+    guideWasOpen.current = guideActive;
+  }, [guideActive]);
+  useEffect(() => {
+    if (alertWasOpen.current && !alertActive) {
+      const opener = dialogOpener.current;
+      (opener?.isConnected ? opener : canvas.current)?.focus({ preventScroll: true });
+    }
+    alertWasOpen.current = alertActive;
+  }, [alertActive]);
   const placement = useRef<{ id: number; mode: 'pointer' | 'keyboard' } | null>(null);
   const nextPart = useRef(0);
   const radii = useRef(new Map<number, number>());
@@ -141,43 +170,84 @@ export function TankCreator({
     PARTS.filter((p) => Math.floor(p.id / 1000) === category),
     paletteContext,
   );
-  function commit(next: TankDesign) {
-    setUndo((previous) => [...previous.slice(-9), structuredClone(design)]);
-    setDesign(next);
+  function setDesign(next: TankDesign | ((previous: TankDesign) => TankDesign)) {
+    const value = typeof next === 'function' ? next(designLive.current) : next;
+    designLive.current = value;
+    setDesignState(value);
+  }
+  function setMeasuredClass(value: number) {
+    classLive.current = value;
+    setClassState(value);
+  }
+  function setSnapshots(next: typeof history) {
+    historyLive.current = next;
+    setHistory(next);
+  }
+  function showEditorAlert(message: string) {
+    dialogOpener.current = document.activeElement as HTMLElement | null;
+    const restored = { ...designLive.current, parts: acceptedEditorParts(historyLive.current) };
+    setDesign(restored);
+    setMeasuredClass(measureClass(restored, pack));
+    setSelection(emptySelection());
+    setDetails(null);
+    placement.current = null;
+    setPlacing(null);
+    nudge.current = null;
+    controlBefore.current = null;
+    artwork.current?.clearLayer('design');
+    artwork.current?.clearLayer('draft');
+    setAlertActive(true);
+    setAlertRequest({ message });
+  }
+  function commit(next: TankDesign, updateClass = true) {
+    const nextClass = updateClass ? measureClass(next, pack) : classLive.current,
+      nextBudget = next.avatar
+        ? gunBudget(nextClass, level)
+        : Math.floor(gunBudget(nextClass, 6) * 1.5),
+      error = creatorEditError(next.parts, nextClass, maxClass, nextBudget);
+    if (error) {
+      showEditorAlert(CREATOR_EDIT_ERRORS[error]);
+      return false;
+    }
+    setDesign({ ...next, classId: nextClass });
+    setMeasuredClass(nextClass);
+    setSnapshots(appendEditorSnapshot(historyLive.current, next.parts));
     setMessage('');
+    return true;
   }
   const controlBefore = useRef<TankDesign | null>(null);
-  const nudge = useRef<{ before: TankDesign; selection: PartSelection; direction: number } | null>(
-    null,
-  );
+  const controlUpdatesClass = useRef(true);
+  const nudge = useRef<{ selection: PartSelection; direction: number } | null>(null);
   const transform = selectedTransform(design.parts, selection);
-  function beginControl() {
+  function beginControl(updateClass: boolean) {
     controlBefore.current = structuredClone(design);
-    setTransformClass(classId);
+    controlUpdatesClass.current = updateClass;
   }
   function endControl(cancel = false) {
     const before = controlBefore.current;
     controlBefore.current = null;
-    setTransformClass(null);
     if (!before) return;
+    // _-1N/_-Xf refresh Script-bound outlines even after a no-op handle release.
+    selectionBoxes.current = null;
     if (cancel) setDesign(before);
-    else if (JSON.stringify(design) !== JSON.stringify(before))
-      setUndo((previous) => [...previous.slice(-9), before]);
+    else commit(designLive.current, controlUpdatesClass.current);
   }
   function beginNudge(direction: number) {
-    nudge.current = { before: structuredClone(design), selection, direction };
+    nudge.current = { selection, direction };
   }
   function endNudge(click: boolean) {
     const current = nudge.current;
     nudge.current = null;
     if (!current) return;
-    if (click)
-      setDesign((previous) => ({
-        ...previous,
-        parts: nudgeSelection(previous.parts, current.selection, current.direction),
-      }));
-    if (click || JSON.stringify(design.parts) !== JSON.stringify(current.before.parts))
-      setUndo((previous) => [...previous.slice(-9), current.before]);
+    // MOUSE_UP validates/records first; the subsequent CLICK adds one unrecorded pixel.
+    if (commit(designLive.current, false) && click) {
+      const next = {
+        ...designLive.current,
+        parts: nudgeSelection(designLive.current.parts, current.selection, current.direction),
+      };
+      setDesign(next);
+      setMeasuredClass(measureClass(next, pack));
+    }
   }
   function changePart(change: { rotation?: number; scale?: number }) {
     const next = {
@@ -185,7 +255,7 @@ export function TankCreator({
       parts: unlinkPartialSelection(transformSelection(design.parts, selection, change), selection),
     };
     if (controlBefore.current) setDesign(next);
-    else commit(next);
+    else commit(next, change.scale !== undefined);
   }
   function draw() {
     const cv = canvas.current;
@@ -397,10 +467,12 @@ export function TankCreator({
             const frames = Math.floor(accumulator / step);
             if (nudge.current) {
               const { selection, direction } = nudge.current;
-              setDesign((previous) => ({
-                ...previous,
-                parts: nudgeSelection(previous.parts, selection, direction * frames),
-              }));
+              const next = {
+                ...designLive.current,
+                parts: nudgeSelection(designLive.current.parts, selection, direction * frames),
+              };
+              setDesign(next);
+              setMeasuredClass(measureClass(next, pack));
             }
             artworkFrame.current += frames;
             accumulator %= step;
@@ -473,12 +545,12 @@ export function TankCreator({
         maxClass,
       );
       const parts = [...design.parts, ...added];
-      if (added.length) {
-        artwork.current?.adoptDraft(added);
-        commit({ ...design, parts });
-      }
-      const lastType = parts.at(-1)?.type ?? 0;
-      if (lastType >= 1500 && lastType <= 1600) artwork.current?.restartClusters(parts);
+      artwork.current?.adoptDraft(added);
+      artwork.current?.clearLayer('draft');
+      commit({ ...design, parts });
+      const lastType = designLive.current.parts.at(-1)?.type ?? 0;
+      if (lastType >= 1500 && lastType <= 1600)
+        artwork.current?.restartClusters(designLive.current.parts);
     }
   }
   function finishDrag(cancel = false) {
@@ -495,12 +567,11 @@ export function TankCreator({
         .filter((p) => final.selection.keys.includes(p.key) && !canPlacePart(p, classId, maxClass))
         .map((p) => p.key);
       const parts = removeParts(unlinkPartialSelection(final.parts, final.selection), invalid);
-      setDesign({ ...design, parts });
-      setSelection({
-        keys: final.selection.keys.filter((k) => !invalid.includes(k)),
-        ghosts: final.selection.ghosts.filter((k) => !invalid.includes(k)),
-      });
-      setUndo((prev) => [...prev.slice(-9), current.before]);
+      if (commit({ ...design, parts }))
+        setSelection({
+          keys: final.selection.keys.filter((k) => !invalid.includes(k)),
+          ghosts: final.selection.ghosts.filter((k) => !invalid.includes(k)),
+        });
     } else if (current.moved) {
       setSelection(
         marqueeSelection(
@@ -521,8 +592,9 @@ export function TankCreator({
     <div
       className={`creator stage-background ${overGame ? 'over-game' : ''}`}
       data-assets={pack.mode}
-      inert={!!saveDialog}
-      aria-hidden={!!saveDialog || undefined}
+      data-design={JSON.stringify(finalDesign)}
+      inert={!!saveDialog || guideActive || alertActive}
+      aria-hidden={!!saveDialog || guideActive || alertActive || undefined}
     >
       <CreatorButton
         pack={pack}
@@ -556,8 +628,9 @@ export function TankCreator({
         label="SAVE"
         onClick={() => {
           setDetails(null);
-          if (errors.length) {
-            setMessage(errors[0]);
+          const error = creatorSavePrerequisite(finalDesign);
+          if (error) {
+            showEditorAlert(error);
             return;
           }
           const tank = {
@@ -568,7 +641,7 @@ export function TankCreator({
           dialogOpener.current = document.activeElement as HTMLElement | null;
           setSaveDialog({
             kind: 'save',
-            tank: { ...tank, name: design.id === 'new' ? '' : design.name },
+            tank,
           });
         }}
       />
@@ -582,9 +655,6 @@ export function TankCreator({
           setSaveDialog({ kind: 'exit', tank: finalDesign });
         }}
       />
-      <div className="creator-name">
-        <button onClick={() => exportDesign(finalDesign)}>Export</button>
-      </div>
       <div className="creator-meters">
         <div>
           Class {classId}
@@ -736,7 +806,7 @@ export function TankCreator({
             name="BringFront_mc"
             label="To front"
             onClick={() =>
-              commit({ ...design, parts: orderSelection(design.parts, selection, true) })
+              commit({ ...design, parts: orderSelection(design.parts, selection, true) }, false)
             }
           />
           <CreatorButton
@@ -744,7 +814,7 @@ export function TankCreator({
             name="SendBack_mc"
             label="To back"
             onClick={() =>
-              commit({ ...design, parts: orderSelection(design.parts, selection, false) })
+              commit({ ...design, parts: orderSelection(design.parts, selection, false) }, false)
             }
           />
           <CreatorButton
@@ -753,8 +823,7 @@ export function TankCreator({
             label="Align to Center"
             onClick={() => {
               const next = centerSelection(design.parts, selection);
-              commit({ ...design, parts: next.parts });
-              setSelection(next.selection);
+              if (commit({ ...design, parts: next.parts })) setSelection(next.selection);
             }}
           />
           {([-1, 1] as const).map((direction) => (
@@ -783,7 +852,7 @@ export function TankCreator({
               onChange={(value) =>
                 changePart(layout.name === 'Resize_mc' ? { scale: value } : { rotation: value })
               }
-              onBegin={beginControl}
+              onBegin={() => beginControl(layout.name === 'Resize_mc')}
               onEnd={endControl}
             />
           ))}
@@ -793,10 +862,14 @@ export function TankCreator({
         pack={pack}
         name="Undo_mc"
         label="Undo"
-        disabled={!undo.length}
+        disabled={history.length <= 1}
         onClick={() => {
-          setDesign(undo[undo.length - 1]);
-          setUndo(undo.slice(0, -1));
+          const next = undoEditorSnapshot(historyLive.current),
+            restored = { ...designLive.current, parts: acceptedEditorParts(next) };
+          setSnapshots(next);
+          setDesign(restored);
+          setMeasuredClass(measureClass(restored, pack));
+          artwork.current?.clearLayer('design');
           setSelection(emptySelection());
           setMessage('');
         }}
@@ -894,11 +967,21 @@ export function TankCreator({
   return (
     <>
       {editor}
+      {guideActive ? (
+        <CreatorGuide
+          pack={pack}
+          seen={false}
+          onStart={onHelpStart}
+          onClose={() => setGuideActive(false)}
+        />
+      ) : null}
+      <CreatorAlert pack={pack} fps={fps} request={alertRequest} onActiveChange={setAlertActive} />
       {saveDialog ? (
         <CreatorSaveDialog
           pack={pack}
           kind={saveDialog.kind}
           tank={saveDialog.tank}
+          initialName={initialSaveName}
           opener={dialogOpener.current}
           onSave={onSave}
           onClose={() => setSaveDialog(null)}
