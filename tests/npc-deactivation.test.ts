@@ -91,7 +91,6 @@ test('enemy lethal damage drops and sounds before infection births, primary fina
   const proof = observe(world, victim);
   world.damage(victim, 100);
   expect(proof.phases).toEqual([
-    'hit',
     'drops',
     'pop',
     'infect',
@@ -151,7 +150,7 @@ test('allied lethal damage plays death, omits drops/infection and retains hostil
   applyProjectileStatus(world, victim, 'infect');
   const proof = observe(world, victim);
   world.damage(victim, 100);
-  expect(proof.phases).toEqual(['hit', 'death', ...Array(6).fill('seekerMine')]);
+  expect(proof.phases).toEqual(['death', ...Array(6).fill('seekerMine')]);
   expect(
     proof.births.every(
       (b) => b.enemy && b.x === victim.x && b.y === victim.y && b.speed === 4 && b.damage === 7,
@@ -203,7 +202,7 @@ test('enemy boundary uses lethal Damage and increments Sumo before the same deat
   applyProjectileStatus(world, victim, 'infect');
   const proof = observe(world, victim);
   world.step(emptyInput());
-  expect(proof.phases.slice(0, 5)).toEqual(['hit', 'drops', 'pop', 'infect', 'infect']);
+  expect(proof.phases.slice(0, 4)).toEqual(['drops', 'pop', 'infect', 'infect']);
   expect([world.stats.sumo, world.stats.kills]).toEqual([1, 1]);
   expect(world.runtimeFor(world.field).enemyRemovals).toContain(victim);
   expect(world.actorParents.hasParent(victim)).toBe(true);

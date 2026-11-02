@@ -1,4 +1,5 @@
 import { PARTS, partById } from '../data/catalog';
+import { prepareSound, type SwfSound } from './sound-window';
 import { SETTINGS_SCREEN } from '../core/settings-screen';
 import { CREDITS } from '../core/credits-screen';
 import { TANK_VIEWER } from '../core/tank-viewer';
@@ -370,8 +371,10 @@ export class AssetPack {
     pack.morphs = new Map(symbols.symbols.morphs.map((morph) => [morph.id, morph]));
     pack.fonts = new Map(symbols.symbols.fonts.map((f) => [f.id, f]));
     pack.texts = new Map(symbols.symbols.texts.map((t) => [t.id, t]));
-    for (const s of result.sounds as { id: number; blob?: Blob }[])
-      if (s.blob) pack.sounds.set(s.id, s.blob);
+    for (const s of result.sounds as SwfSound[]) {
+      const audio = await prepareSound(s);
+      if (audio) pack.sounds.set(s.id, audio);
+    }
     pack.report = {
       filename: file.name,
       images: result.images.length,

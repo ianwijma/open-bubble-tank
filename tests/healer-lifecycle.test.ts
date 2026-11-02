@@ -84,7 +84,9 @@ test('queued outgoing patient data aborts the incoming Healer catch retry, while
   world.player.x = 425;
   world.jump({ x: 1, y: 0 });
   const stage = stageFor(world);
+  world.hitSoundTimer = 4;
   stage.advance();
+  expect(world.hitSoundTimer).toBe(4); // The aborted World.Run never reaches its sound-clock tail.
   expect(patient.dead).toBe(true);
   expect(world.runtimeFor(outgoing).enemyRemovals).toContain(patient);
   expect(world.actorParents.hasParent(patient)).toBe(true);
@@ -96,6 +98,7 @@ test('queued outgoing patient data aborts the incoming Healer catch retry, while
   expect(gun.angle).toBe(150); // Aim happened before the protected data read failed.
   expect(world.currentWrapper).toBe(outgoing);
   stage.advance();
+  expect(world.hitSoundTimer).toBe(3);
   expect(world.actorParents.hasParent(patient)).toBe(false);
   expect(outgoing.enemies).not.toContain(patient);
   expect([owner.age, sentinel.age, stage.callbacks()]).toEqual([2, 1, 2]);

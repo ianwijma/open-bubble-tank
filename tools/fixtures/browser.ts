@@ -1,4 +1,5 @@
 import { showNpcDeactivation } from './npc-deactivation';
+import { showAudioWindows } from './audio-windows';
 import { showHomingProjectiles } from './homing-projectiles';
 import { showOrbitalWidth } from './orbital-width';
 import { showAimContracts } from './aim-contracts';
@@ -165,6 +166,12 @@ async function reset() {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
     status.dataset.weaponTargets = JSON.stringify(await showWeaponTargets(pack, stage));
     status.textContent = 'Ready · mounted target ownership and ordered aim';
+    return;
+  }
+  if (fixture.value === 'audio-windows') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    status.dataset.audioWindows = JSON.stringify(await showAudioWindows(pack, stage));
+    status.textContent = 'Ready · decoded source sound windows';
     return;
   }
   if (fixture.value === 'npc-deactivation') {

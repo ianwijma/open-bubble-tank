@@ -38,6 +38,7 @@ for (const native of [false, true])
       if (index < 2) expect(entry.contact).toBe(true);
       expect(entry.events).toContain(index === 1 ? 'death' : 'pop');
       expect(entry.events).not.toContain(index === 1 ? 'pop' : 'death');
+      expect(entry.events.includes('hit')).toBe(index === 0);
       const kinds =
         index < 4 ? [...(enemy ? ['infect', 'infect'] : []), ...Array(6).fill('seekerMine')] : [];
       expect(entry.births.map((birth: { kind: string }) => birth.kind)).toEqual(kinds);

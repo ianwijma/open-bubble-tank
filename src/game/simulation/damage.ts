@@ -47,7 +47,6 @@ export function damageTank(world: World, tank: Tank, amount: number, bullet?: Pr
     // AvatarLifeCorrect is empty and this branch never calls DegradeTank.
     return;
   }
-  if (damage > 0) world.emit('hit');
   if (tank.life <= 0) {
     tank.life = 0;
     world.kill(tank);
