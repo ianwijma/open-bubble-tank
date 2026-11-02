@@ -308,3 +308,6 @@ Save comparison does not define queue deduplication. Bytecode binds the active V
 
 
 `assets/tank-bounds.ts` measures the retained tank display tree in its parent space using Script bounds. Invisible children, masks, live gun angles and attached protection/status poses participate without changing the gameplay radius. `StatusPlayback` supplies the same retained root/child pose to native drawing, contact and bounds. The browser injects `AssetPack.tankDisplayWidth` into simulation; enemy orbital launch uses this live width while friendly orbitals keep their gameplay radius. Headless callers may inject a metric; the default radius-based metric is an explicit artwork-free fallback.
+
+
+`simulation/homing-projectiles.ts` owns enemy-seeker/orbital direct references, independent movement, delayed acquisition and ordered contact. `ActorParents` separately supplies parent membership, on-stage membership and local/global Point conversion for retained or detached targets. Base projectile Run refreshes only the collision avatar; the steering target has its own lifecycle. Known homing parent-read failures join the scoped listener boundary. Cached wrapper attachment resets primary weapon targets without resetting behavior/projectile state. The shared asset geometry and simulation remain connected through numeric callbacks, with no renderer objects in homing state.

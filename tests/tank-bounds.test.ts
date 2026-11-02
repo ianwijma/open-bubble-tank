@@ -140,6 +140,7 @@ test('status pose holds the selected root while its descendants keep playing', (
 
 test('enemy orbital launch uses live display width; friendly orbitals keep numRadius', () => {
   const world = new World([], [], 31);
+  world.rng.next = () => 0.5; // Keep this width assertion independent of diagonal twip residue.
   let measurements = 0;
   world.displayWidth = () => {
     measurements++;

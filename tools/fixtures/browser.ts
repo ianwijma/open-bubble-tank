@@ -1,3 +1,4 @@
+import { showHomingProjectiles } from './homing-projectiles';
 import { showOrbitalWidth } from './orbital-width';
 import { showAimContracts } from './aim-contracts';
 import { showWeaponTargets } from './weapon-targets';
@@ -140,6 +141,11 @@ async function reset() {
   world = undefined;
   stage.replaceChildren();
   stage.style.height = '';
+  if (fixture.value === 'homing-projectiles') {
+    status.dataset.homingProjectiles = JSON.stringify(await showHomingProjectiles(pack, stage));
+    status.textContent = `Ready · ${pack.mode} · homing projectile states`;
+    return;
+  }
   if (fixture.value === 'orbital-width') {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
     status.dataset.orbitalWidth = JSON.stringify(await showOrbitalWidth(pack, stage));

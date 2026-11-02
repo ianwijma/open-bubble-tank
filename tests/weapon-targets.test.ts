@@ -25,10 +25,34 @@ function scenario(ids = [4001]) {
   world.rng.next = () => 0.99;
   const owner = createTank(world.nextId(), design(ids), 'enemy', 0, 0, undefined, undefined, world);
   world.field.enemies = [owner];
-  for (const gun of owner.guns) gun.targeting!.allies = 1;
+  for (const gun of owner.guns) if (gun.targeting) gun.targeting.allies = 1;
   world.actorParents.sync(world);
   return { world, ally, owner, gun: owner.guns[0] };
 }
+
+test('cached attachment resets primary target only, preserving master, count and behavior state', () => {
+  const { world, ally, owner, gun } = scenario([4001, 6004]);
+  gun.targeting = { master: 'ally', target: ally, allies: 7 };
+  const behavior = owner.guns[1];
+  behavior.behaviorTarget = { master: 'enemy', target: ally, allies: 8 };
+  const old = world.field;
+  world.player.x = 425;
+  world.jump({ x: 1, y: 0 });
+  world.transit!.next.scale = 1;
+  world.transit!.next.enemies = [];
+  world.transit!.offset = { x: 800, y: 0 };
+  world.transit!.target = { x: 483, y: 0 };
+  owner.status.stun = 10; // Isolate reattachment from a subsequent offensive Run.
+  world.player.x = 483;
+  world.step(emptyInput());
+  expect(world.field).not.toBe(old);
+  world.editPlayer(STARTER);
+  expect(gun.targeting.target).toBe(ally);
+  world.jump({ x: -1, y: 0 });
+  expect(world.transit!.next).toBe(old);
+  expect(gun.targeting).toEqual({ master: 'ally', target: world.player, allies: 7 });
+  expect(behavior.behaviorTarget).toEqual({ master: 'enemy', target: ally, allies: 8 });
+});
 test('mounted weapons acquire and retain independent source targets during Setup', () => {
   const { world, ally } = scenario([]);
   const values = [0, 0, 0.99];

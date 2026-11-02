@@ -488,7 +488,8 @@ export function spawnVolley(
         b.anchor = gun;
         b.life = Infinity;
       }
-      if (world.addBullet(b)) spawned.push(b);
+      if (world.addBullet(b, t, kind === 'seeker' && t.side === 'enemy' ? world.player : undefined))
+        spawned.push(b);
     }
   return spawned;
 }

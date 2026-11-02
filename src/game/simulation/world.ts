@@ -33,6 +33,7 @@ import { moveActor } from './actor-movement';
 import { ActorParents } from './actor-parents';
 import { HealerTargetReadError } from './healer-target';
 import { SpikeTargetReadError } from './spikes';
+import { initializeHomingProjectile, HomingTargetReadError } from './homing-projectiles';
 import { FieldRuntime } from './field-runtime';
 import { WallTimers } from './wall-timers';
 import { controlPlayerDirection } from './player-direction';
@@ -183,13 +184,14 @@ export class World {
     }
   }
   /** _-0D.SpawnNewBullet declines new shots while _-5d is set. Timers still run. */
-  addBullet(bullet: Projectile) {
+  addBullet(bullet: Projectile, home?: Tank, target?: Tank) {
     if (this.transit) return false;
     if (bullet.kind === 'apocalypse') bullet.missExempt ??= true;
     if (bullet.kind === 'turret') bullet.motion ??= direction(bullet.angle, bullet.speed);
     this.projectileTimelines.initialize(bullet);
     initializeSapper(this, bullet);
     initializeAvatarSeeker(this, bullet);
+    initializeHomingProjectile(this, bullet, home, target);
     if (bullet.kind === 'infect' && bullet.targetId === null) expireInfectionTarget(this, bullet);
     this.bullets.push(bullet);
     if (bullet.enemy) this.stats.enemyShots++;
@@ -328,6 +330,7 @@ export class World {
     );
     this.field = { col: 0, row: 0, scale: 1, enemies: [], cleared: true, boss: false, tutorial: 1 };
     this.fields.set('0,0', this.field);
+    this.actorParents.sync(this);
   }
   nextId() {
     return this.uid++;
@@ -373,7 +376,11 @@ export class World {
       this.stepFrame(input);
     } catch (error) {
       // AVM2 dispatch ends this Main.Run listener on an uncaught target read; the next frame runs.
-      if (!(error instanceof HealerTargetReadError) && !(error instanceof SpikeTargetReadError))
+      if (
+        !(error instanceof HealerTargetReadError) &&
+        !(error instanceof SpikeTargetReadError) &&
+        !(error instanceof HomingTargetReadError)
+      )
         throw error;
     } finally {
       this.actorParents.sync(this);
@@ -591,8 +598,7 @@ export class World {
       tank.dead = true;
       this.dropBubbles(tank, tank.design.reward);
       for (const bullet of this.bullets)
-        if (bullet.owner === tank.uid && ['orbital', 'beam', 'whip'].includes(bullet.kind))
-          bullet.dead = true;
+        if (bullet.owner === tank.uid && ['beam', 'whip'].includes(bullet.kind)) bullet.dead = true;
     }
   }
   beginCollapse(angle: number) {
@@ -833,7 +839,7 @@ export class World {
           orbit: 0,
         });
     for (const b of this.bullets)
-      if (b.owner === t.uid && ['orbital', 'beam', 'whip'].includes(b.kind)) b.dead = true;
+      if (b.owner === t.uid && ['beam', 'whip'].includes(b.kind)) b.dead = true;
   }
   /** _-0D.RemoveEnemy classifies the birth code only when the queued object detaches. */
   flushEnemyRemovals() {
@@ -981,6 +987,7 @@ export class World {
       death ? max - 1 : Math.floor(max / 75) + 1,
       this,
     );
+    this.actorParents.setAvatar(this.player);
     this.player.rotation = old.rotation;
     this.player.velocity = { ...old.velocity };
     this.secondaryCounter = 0;
@@ -1059,7 +1066,14 @@ export class World {
       this.fields.set(`${col},${row}`, next);
       this.stats.visited = this.fields.size - 1;
       if (this.stats.visited === 100) this.award('Explorer');
-    } else next.boss = false; // Cached enemies do not preserve the wrapper's boss flag.
+    } else {
+      next.boss = false; // Cached enemies do not preserve the wrapper's boss flag.
+      // _-0D._-G0 resets only offensive primary movTarget on cached attachment.
+      for (const enemy of next.enemies)
+        for (const gun of enemy.guns)
+          if (Math.floor(gun.part.type / 1000) === 4 && gun.targeting)
+            gun.targeting.target = this.player;
+    }
     // Reattachment constructs a new bfStartDisplay even when the stored field already exists.
     next.tutorial = tutorial;
     const spacing =
