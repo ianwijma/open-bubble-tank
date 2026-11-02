@@ -146,7 +146,7 @@ test('Q does not redirect base-game homing; future hooks clear on field entry an
   world.field.enemies = [enemy, createTank(1001, STARTER, 'enemy', 200, 0)];
   world.cycleLock();
   world.cycleLock();
-  expect(world.getTarget(world.player)).toBe(enemy);
+  expect(world.nearestEnemy(world.player)).toBe(enemy);
   let cycles = 0;
   const resets: (number | undefined)[] = [];
   world.targetLocks = {

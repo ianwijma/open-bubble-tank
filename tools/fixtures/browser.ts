@@ -1,3 +1,5 @@
+import { showWeaponTargets } from './weapon-targets';
+import { showHealerTargets } from './healer-targets';
 import { showActorBehaviors } from './actor-behaviors';
 import { showPhasing } from './phasing';
 import { showUnlockRetention } from './unlock-retention';
@@ -136,6 +138,18 @@ async function reset() {
   world = undefined;
   stage.replaceChildren();
   stage.style.height = '';
+  if (fixture.value === 'weapon-targets') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    status.dataset.weaponTargets = JSON.stringify(await showWeaponTargets(pack, stage));
+    status.textContent = 'Ready · mounted target ownership and ordered aim';
+    return;
+  }
+  if (fixture.value === 'healer-targets') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    status.dataset.healerTargets = JSON.stringify(await showHealerTargets(pack, stage));
+    status.textContent = 'Ready · Healer targets and stage continuation';
+    return;
+  }
   if (fixture.value === 'actor-behaviors') {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
     status.dataset.actorBehaviors = JSON.stringify(await showActorBehaviors(pack, stage));

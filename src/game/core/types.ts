@@ -90,6 +90,8 @@ export interface GunState {
   patientId?: number;
   phasing?: { counter: number };
   behaviorTarget?: BehaviorTargetState;
+  /** Each offensive mount owns the source Weapon target reference and sampled master. */
+  targeting?: BehaviorTargetState;
   wallFlower?: WallFlowerState;
   beamId?: number;
   shieldDiameter?: number;
@@ -171,7 +173,6 @@ export interface Tank extends Vec {
   /** Existing procedural artwork offset, independent of simulation behavior clocks. */
   phase: number;
   alpha: number;
-  targetId: number | null;
   hiddenParts: Set<string>;
   removedParts: Set<string>;
   degradation: { debt: number; total: number; minimum: number };
@@ -202,6 +203,8 @@ export type ProjectileKind =
   | 'turret'
   | 'builder';
 export interface Projectile extends Vec {
+  /** HealerBeam retains movTarget independently of a mutable live roster. */
+  healingTarget?: Tank;
   uid: number;
   owner: number;
   enemy: boolean;
