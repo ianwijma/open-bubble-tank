@@ -36,6 +36,24 @@ interface Piece {
 }
 export const CREATOR_PALETTE = data as {
   origin: SwfMatrix;
+  selectionInfo: {
+    icon: { symbol: number; bounds: { x: number; y: number; width: number; height: number } };
+    popup: {
+      symbol: number;
+      bounds: { x: number; y: number; width: number; height: number };
+      fields: CreatorField[];
+      static: CreatorPrimitive[];
+    };
+  };
+  details: {
+    symbol: number;
+    origin: SwfMatrix;
+    bounds: { x: number; y: number; width: number; height: number };
+    static: CreatorPrimitive[];
+    fields: CreatorField[];
+    viewer: { matrix: SwfMatrix; mask: { x: number; y: number; width: number; height: number } };
+    arrow: Piece & { mask: { x: number; y: number; width: number; height: number } };
+  };
   advanced: {
     symbol: number;
     origin: SwfMatrix;
