@@ -24,10 +24,15 @@ test('secondary help migrates unseen and persists only a real Boolean', () => {
   });
   try {
     expect(loadProfile().secondaryHelpSeen).toBe(false);
+    expect(loadProfile().tankViewerHelpSeen).toBe(false);
     stored = JSON.stringify({ version: 1, secondaryHelpSeen: 'true' });
     expect(loadProfile().secondaryHelpSeen).toBe(false);
     expect(saveProfile({ ...defaultProfile(), secondaryHelpSeen: true })).toBe(true);
     expect(loadProfile().secondaryHelpSeen).toBe(true);
+    stored = JSON.stringify({ version: 1, tankViewerHelpSeen: 'true' });
+    expect(loadProfile().tankViewerHelpSeen).toBe(false);
+    expect(saveProfile({ ...defaultProfile(), tankViewerHelpSeen: true })).toBe(true);
+    expect(loadProfile().tankViewerHelpSeen).toBe(true);
   } finally {
     if (previous) Object.defineProperty(globalThis, 'localStorage', previous);
     else Reflect.deleteProperty(globalThis, 'localStorage');

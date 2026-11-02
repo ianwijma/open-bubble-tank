@@ -19,12 +19,14 @@ import { GameHud } from './game-hud';
 import { SettingsPanel } from './settings-panel';
 import { TankCreator } from './tank-creator';
 import { TankLibrary } from './tank-library';
+import { TankViewer } from './tank-viewer';
+import type { ViewerLimits } from '@/game/core/tank-viewer';
 import { UpgradePanel, EditConfirmPanel, SecondaryHelpPanel } from './game-panels';
 import { PausePanel } from './pause-panel';
 import { WinPanel } from './win-panel';
 import { Dialog, Icon } from './ui';
 
-type Screen = 'menu' | 'game' | 'creator' | 'library';
+type Screen = 'menu' | 'game' | 'creator' | 'library' | 'viewer';
 type Overlay = 'settings' | 'credits' | 'sources' | 'edit-confirm' | 'edit-choice' | null;
 interface EditorContext {
   initial: TankDesign;
@@ -42,6 +44,7 @@ export default function GameShell() {
     [localSources, setLocalSources] = useState(false),
     [continueRun, setContinueRun] = useState(false),
     [editor, setEditor] = useState<EditorContext | null>(null),
+    [viewer, setViewer] = useState<(ViewerLimits & { avatar: boolean }) | null>(null),
     [storageError, setStorageError] = useState(false),
     [nativeSize, setNativeSize] = useState(false),
     [fullscreen, setFullscreen] = useState(false),
@@ -105,7 +108,8 @@ export default function GameShell() {
     if (profile) {
       audio?.setFrameRate(profile.settings.fps);
       audio?.setMusic(
-        screen === 'game' || (screen === 'creator' && editor?.returnTo === 'game')
+        screen === 'game' ||
+          ((screen === 'creator' || screen === 'viewer') && editor?.returnTo === 'game')
           ? 'game'
           : 'menu',
         profile.settings.music,
@@ -195,6 +199,26 @@ export default function GameShell() {
       setEditor(null);
       if (editor.returnTo === 'game' && (!editor.upgrade || editor.saved)) world?.resume();
     }
+  }
+  function loadEditorTank(tank?: TankDesign) {
+    if (!editor || !viewer) return;
+    const initial =
+      tank ??
+      (viewer.avatar
+        ? editor.returnTo === 'game' && world
+          ? world.player.design
+          : editor.initial
+        : {
+            ...STARTER,
+            id: 'new',
+            name: 'My Enemy Tank',
+            avatar: false,
+            ...NEW_ENEMY_STATS,
+            parts: [],
+          });
+    setEditor({ ...editor, initial: structuredClone(initial) });
+    setViewer(null);
+    showScreen('creator');
   }
   function closeOverlay() {
     if (screen === 'menu' && !menuMotion.back()) return;
@@ -286,7 +310,8 @@ export default function GameShell() {
             ) : null}
             {pack &&
             profile &&
-            (screen === 'game' || (screen === 'creator' && editor?.returnTo === 'game')) &&
+            (screen === 'game' ||
+              ((screen === 'creator' || screen === 'viewer') && editor?.returnTo === 'game')) &&
             world ? (
               <>
                 <GameViewport
@@ -415,6 +440,32 @@ export default function GameShell() {
                 }
                 onSave={saveTank}
                 onExit={exitEditor}
+                onLoad={(limits) => {
+                  setViewer(limits);
+                  showScreen('viewer');
+                }}
+              />
+            ) : null}
+            {pack && profile && screen === 'viewer' && viewer && editor ? (
+              <TankViewer
+                pack={pack}
+                stage={stage}
+                tanks={profile.tanks}
+                avatar={viewer.avatar}
+                limits={viewer}
+                helpSeen={profile.tankViewerHelpSeen}
+                onHelpComplete={() => updateProfile((p) => ({ ...p, tankViewerHelpSeen: true }))}
+                onBack={() => loadEditorTank()}
+                onSelect={loadEditorTank}
+                onSaveLocal={(tank) =>
+                  updateProfile((p) => ({
+                    ...p,
+                    tanks: [...p.tanks.filter((t) => t.id !== tank.id), tank],
+                  }))
+                }
+                onDelete={(id) =>
+                  updateProfile((p) => ({ ...p, tanks: p.tanks.filter((t) => t.id !== id) }))
+                }
               />
             ) : null}
             {pack && profile && screen === 'library' ? (
