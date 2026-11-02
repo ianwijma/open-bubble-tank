@@ -1,3 +1,4 @@
+import { exitCreator } from './helpers/creator';
 import { expect, test } from '@playwright/test';
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -78,7 +79,7 @@ for (const native of [false, true])
     await expect(tab('Behavior')).toHaveAttribute('aria-pressed', 'true');
     await expect(page.getByRole('button', { name: 'Place Aggressor', exact: true })).toBeVisible();
     await creator.screenshot({ path: testInfo.outputPath('enemy-tabs.png') });
-    await page.getByRole('button', { name: 'Exit tank creator', exact: true }).click();
+    await exitCreator(page);
     await expect(tabs).toHaveCount(0);
     await waitForMainMenu(page);
     await page.getByRole('button', { name: 'My tanks', exact: true }).click();

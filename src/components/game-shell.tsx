@@ -8,7 +8,7 @@ import { World } from '@/game/simulation/world';
 import { AudioManager } from '@/game/services/audio';
 import { StageRuntime } from '@/game/services/stage-runtime';
 import { MenuSettingsState } from '@/game/core/settings-screen';
-import { loadProfile, saveProfile, saveCreatedTank } from '@/game/services/profile';
+import { loadProfile, saveProfile, submitCreatedTank } from '@/game/services/profile';
 import { AssetGate } from './asset-gate';
 import { GameViewport } from './game-viewport';
 import { MainStage } from './main-stage';
@@ -30,6 +30,7 @@ interface EditorContext {
   initial: TankDesign;
   returnTo: Screen;
   upgrade: boolean;
+  saved?: boolean;
 }
 export default function GameShell() {
   const [pack, setPack] = useState<AssetPack | null>(null),
@@ -175,24 +176,24 @@ export default function GameShell() {
   }
   function saveTank(design: TankDesign) {
     if (!profile || !editor) return;
-    const saved = saveCreatedTank(profile, design),
+    const saved = submitCreatedTank(profile, design),
       tank = saved.tank;
     updateProfile(() => saved.profile);
-
+    if (!tank) return;
     if (editor.returnTo === 'game' && world) {
-      if (editor.upgrade) world.selectUpgrade(tank);
+      if (editor.upgrade && !editor.saved) world.selectUpgrade(tank);
       else world.editPlayer(tank);
-      world.resume();
+      world.pause();
     }
-    showScreen(editor.returnTo);
-    setEditor(null);
+    setEditor({ ...editor, saved: true });
     refresh();
+    return tank;
   }
   function exitEditor() {
     if (editor) {
       showScreen(editor.returnTo);
       setEditor(null);
-      if (editor.returnTo === 'game' && !editor.upgrade) world?.resume();
+      if (editor.returnTo === 'game' && (!editor.upgrade || editor.saved)) world?.resume();
     }
   }
   function closeOverlay() {

@@ -1,3 +1,4 @@
+import { saveCreator } from './helpers/creator';
 import { waitForMainMenu } from './helpers/main-menu';
 import { expect, test } from '@playwright/test';
 import { existsSync, readFileSync } from 'node:fs';
@@ -42,8 +43,7 @@ for (const native of [false, true])
     await expect.poll(async () => (await read()).tanks.length).toBe(2);
     expect((await read()).achievements).not.toContain('Tank Creator');
     await page.getByRole('button', { name: 'Edit', exact: true }).first().click();
-    await page.getByRole('textbox', { name: 'Tank name' }).fill('Edited copy');
-    await page.getByRole('button', { name: 'SAVE', exact: true }).click();
+    await saveCreator(page, { name: 'Edited copy', author: "Alice O'Brien" });
     await expect.poll(async () => (await read()).tanks.length).toBe(3);
     const profile = await read();
     expect(profile.tanks.map((tank: { id: string }) => tank.id)).toEqual([
