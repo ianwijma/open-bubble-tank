@@ -4,16 +4,19 @@ import { createHash } from 'node:crypto';
 import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { CREATOR_GUIDE } from '../src/game/core/creator-guide';
+import { CREATOR_CONTROLS } from '../src/game/core/creator-controls';
+import { decodeTankCode } from '../src/game/services/tank-code';
+import { loadedReferenceModules } from './reference/loaded-module-identity';
 
 const scenario = process.env.BT3_REFERENCE_SCENARIO ?? 'creator';
-if (!['creator', 'validation'].includes(scenario))
-  throw new Error('Choose creator or validation reference scenario.');
+if (!['creator', 'validation', 'drag'].includes(scenario))
+  throw new Error('Choose creator, validation or drag reference scenario.');
 const swf = resolve(
     process.env.BT3_SWF_FILE ?? '../documented-bubble-tank-3/re/bt3/uncompressed.swf',
   ),
   output = resolve(
     process.env.BT3_REFERENCE_CAPTURE_DIR ??
-      `reference-captures/${scenario === 'validation' ? 'creator-validation' : 'creator'}`,
+      `reference-captures/${scenario === 'creator' ? 'creator' : `creator-${scenario}`}`,
   ),
   url = process.env.BT3_REFERENCE_URL ?? 'http://127.0.0.1:3104';
 await mkdir(output, { recursive: true });
@@ -23,6 +26,10 @@ const inputDigest = async (path: string) =>
     .update(await readFile(path))
     .digest('hex');
 const captureToolSha256 = await inputDigest(import.meta.path),
+  runtimeIdentityToolSha256 = await inputDigest(
+    resolve('tools/reference/loaded-module-identity.ts'),
+  ),
+  controlLayoutSha256 = await inputDigest(resolve('src/game/data/creator-controls.json')),
   guideLayoutSha256 = await inputDigest(resolve('src/game/data/creator-guide.json'));
 const browser = await chromium.launch({
   executablePath: '/usr/bin/google-chrome',
@@ -36,12 +43,15 @@ const browser = await chromium.launch({
 });
 const page = await browser.newPage({ viewport: { width: 1100, height: 1000 } }),
   errors: string[] = [],
-  captures: string[] = [];
+  captures: string[] = [],
+  dragEvidence: { name: string; parts: Awaited<ReturnType<typeof decodeTankCode>>['parts'] }[] = [],
+  actions: { action: string; x?: number; y?: number }[] = [];
 page.on('pageerror', (error) => errors.push(error.message));
 try {
   await page.goto(url);
   await page.getByLabel('Original SWF').setInputFiles(swf);
   await expect(page.getByRole('status')).toHaveAttribute('data-ready', 'true', { timeout: 30000 });
+  const observedRuntime = await loadedReferenceModules(page);
   const stage = page.locator('ruffle-player');
   const click = async (x: number, y: number) => {
     const b = (await stage.boundingBox())!;
@@ -152,7 +162,92 @@ try {
     await page.mouse.up();
     await page.waitForTimeout(400);
   };
-  if (scenario === 'validation') {
+  if (scenario === 'drag') {
+    await page.context().grantPermissions(['clipboard-read', 'clipboard-write']);
+    const origin = { x: CREATOR_CONTROLS.workspace.tx / 20, y: CREATOR_CONTROLS.workspace.ty / 20 };
+    const move = async (x: number, y: number) => {
+      actions.push({ action: 'move', x, y });
+      const b = (await stage.boundingBox())!;
+      await page.mouse.move(
+        b.x + ((origin.x + x) * b.width) / 550,
+        b.y + ((origin.y + y) * b.height) / 450,
+      );
+      await page.waitForTimeout(80);
+    };
+    const sample = async (name: string) => {
+      await capture(name);
+      await click(263, 16);
+      await click(280, 244);
+      await page.keyboard.type('Drag reference');
+      await click(360, 330);
+      await capture(`${name}-code`);
+      await click(370, 164);
+      const code = await page.evaluate(() => navigator.clipboard.readText());
+      const tank = await decodeTankCode(code);
+      dragEvidence.push({ name, parts: tank.parts });
+      await click(175, 392);
+    };
+    await dragPreview(origin.x - 20, origin.y - 10);
+    await sample('placed-pair');
+    await click(origin.x - 20, origin.y - 10);
+    await move(-20, -10);
+    await page.mouse.down();
+    actions.push({ action: 'down' });
+    await move(-19, -10);
+    await move(-19, 0);
+    await capture('pair-on-axis-before-snap');
+    await move(-18, 0);
+    await capture('pair-merged');
+    await move(-17, 6);
+    await capture('pair-respawned');
+    await page.mouse.up();
+    actions.push({ action: 'up' });
+    await sample('respawned-pair');
+    await move(-17, 6);
+    await page.mouse.down();
+    actions.push({ action: 'down' });
+    await move(-16.9, 6);
+    await page.mouse.up();
+    actions.push({ action: 'up' });
+    await sample('subpixel-drag');
+    await move(-16.9, 6);
+    await page.mouse.down();
+    actions.push({ action: 'down' });
+    await move(-16.77, 6.13);
+    await move(-16.76, 6.14);
+    await page.mouse.up();
+    actions.push({ action: 'up' });
+    await sample('fractional-drag');
+    // Scaling makes a quarter-stage-pixel move a whole browser pixel. The smaller
+    // unscaled probes above left the original's exported coordinates unchanged.
+    await page.setViewportSize({ width: 2400, height: 2100 });
+    await stage.evaluate((element) => {
+      element.style.width = '2200px';
+      element.style.height = '1800px';
+    });
+    actions.push({ action: 'stage-scale-4' });
+    await page.waitForTimeout(400);
+    await move(-17, 6);
+    await page.mouse.down();
+    actions.push({ action: 'down' });
+    await move(-16.75, 6);
+    await page.mouse.up();
+    actions.push({ action: 'up' });
+    await sample('quarter-pixel-drag');
+    await stage.evaluate((element) => {
+      element.style.width = '1650px';
+      element.style.height = '1350px';
+    });
+    actions.push({ action: 'stage-scale-3' });
+    await page.waitForTimeout(400);
+    await move(-16.75, 6);
+    await page.mouse.down();
+    actions.push({ action: 'down' });
+    for (let i = 1; i <= 3; i++) await move(-16.75 + i / 3, 6 + i / 3);
+    await page.mouse.up();
+    actions.push({ action: 'up' });
+    await sample('third-pixel-steps');
+  } else if (scenario === 'validation') {
     await click(382, 235); // Weapons tab; one Basic Cannon remains affordable at18GP.
     await click(450, 265);
     for (let i = 1; i <= 10; i++) {
@@ -223,7 +318,10 @@ try {
     browser: browser.version(),
     ruffle: runtimePackage.version,
     installedRuntimeDigests: runtimeDigests,
+    observedRuntime,
     captureToolSha256,
+    runtimeIdentityToolSha256,
+    controlLayoutSha256,
     guideLayoutSha256,
     configuredRenderer: 'wgpu-webgl',
     stackKB: 4096,
@@ -231,6 +329,7 @@ try {
     capturedAt: new Date().toISOString(),
     captures,
     pageErrors: errors,
+    ...(scenario === 'drag' ? { actions, dragEvidence } : {}),
     limitation:
       'Ruffle emulation; stopped foreground captures do not establish Adobe parity or frame timing.',
   };
