@@ -1,3 +1,5 @@
+import { showHomingProjectiles } from './homing-projectiles';
+import { showOrbitalWidth } from './orbital-width';
 import { showAimContracts } from './aim-contracts';
 import { showWeaponTargets } from './weapon-targets';
 import { showHealerTargets } from './healer-targets';
@@ -139,6 +141,17 @@ async function reset() {
   world = undefined;
   stage.replaceChildren();
   stage.style.height = '';
+  if (fixture.value === 'homing-projectiles') {
+    status.dataset.homingProjectiles = JSON.stringify(await showHomingProjectiles(pack, stage));
+    status.textContent = `Ready · ${pack.mode} · homing projectile states`;
+    return;
+  }
+  if (fixture.value === 'orbital-width') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    status.dataset.orbitalWidth = JSON.stringify(await showOrbitalWidth(pack, stage));
+    status.textContent = 'Ready · live orbital width and retained status pose';
+    return;
+  }
   if (fixture.value === 'aim-contracts') {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
     status.dataset.aimContracts = JSON.stringify(await showAimContracts(pack, stage));
@@ -639,6 +652,7 @@ async function reset() {
       { 'turret-1': 110, 'turret-2': 200, 'turret-3': 280, 'turret-4': 380 }[fixture.value] ?? 110;
   }
   world.hitTest = pack.hitTest;
+  world.displayWidth = pack.tankDisplayWidth;
   world.hitPart = pack.hitPart;
   world.hitProjectile = pack.hitProjectile;
   world.projectileBounds = (b) =>

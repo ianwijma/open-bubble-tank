@@ -18,6 +18,7 @@ export async function runPlaythrough(
   world.hitPart = pack.hitPart;
   world.hitProjectile = pack.hitProjectile;
   world.protectionRadius = pack.protectionRadius;
+  world.displayWidth = pack.tankDisplayWidth;
   world.projectileBounds = (bullet) =>
     pack.projectileBounds(
       bullet,

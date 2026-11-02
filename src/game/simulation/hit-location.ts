@@ -4,7 +4,7 @@ import type { Tank, TankDesign, Vec } from '../core/types';
 const points = new WeakMap<TankDesign, Vec>();
 
 /** TankData.GetClosestDetailToCenterPoint includes every detail and retains the first tie. */
-export function tankHitLocation(tank: Tank): Vec {
+export function tankHitDetail(tank: Tank): Readonly<Vec> {
   let point = points.get(tank.design);
   if (!point) {
     let best = 999999999999;
@@ -18,6 +18,9 @@ export function tankHitLocation(tank: Tank): Vec {
     }
     points.set(tank.design, point);
   }
-  const offset = rotate(point, tank.rotation);
+  return point;
+}
+export function tankHitLocation(tank: Tank): Vec {
+  const offset = rotate(tankHitDetail(tank), tank.rotation);
   return { x: tank.x + offset.x, y: tank.y + offset.y };
 }

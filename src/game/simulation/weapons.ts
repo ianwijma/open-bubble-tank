@@ -478,7 +478,7 @@ export function spawnVolley(
         b.wobbleAmplitude = world.rng.int(1, 8) / 10;
       }
       if (kind === 'orbital') {
-        const radius = t.radius + 10;
+        const radius = (gun.part.type === 4010 ? world.displayWidth(t) / 2 : t.radius) + 10;
         const radians = (world.rng.int(0, 360) * Math.PI) / 180;
         b.x = t.x + Math.cos(radians) * radius;
         b.y = t.y + Math.sin(radians) * radius;
@@ -488,7 +488,8 @@ export function spawnVolley(
         b.anchor = gun;
         b.life = Infinity;
       }
-      if (world.addBullet(b)) spawned.push(b);
+      if (world.addBullet(b, t, kind === 'seeker' && t.side === 'enemy' ? world.player : undefined))
+        spawned.push(b);
     }
   return spawned;
 }

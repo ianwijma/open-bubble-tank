@@ -28,11 +28,20 @@ for (const native of [false, true])
     expect(proof.snapshots[2].x).toBeCloseTo(proof.edge);
     expect(proof.snapshots[2].effects).toEqual([{ symbol: 1723, x: proof.edge }]);
     expect(proof.massiveWidth).toBeGreaterThan(0);
+    const before = proof.beforeDeflection,
+      setupAngle = (360 * Math.atan2(before.aimDelta.y, before.aimDelta.x)) / (2 * Math.PI);
+    expect(before.initialized).toBe(true);
+    expect([before.x, before.y]).toEqual([5, 100]);
+    expect(before.aimDelta).toEqual({ x: -5, y: -100 });
+    expect(before.angle).toBeCloseTo(setupAngle);
+    expect(before.angle).not.toBe(90); // Setup aims before Buster can preserve the pose.
+    expect(before.motion.x).toBeCloseTo(Math.cos((Math.PI * setupAngle) / 180) * 10);
+    expect(before.motion.y).toBeCloseTo(Math.sin((Math.PI * setupAngle) / 180) * 10);
     expect(proof.deflection).toEqual({
       alive: true,
       x: 15,
       y: 100,
-      angle: 90,
+      angle: before.angle,
       velocity: { x: 10, y: 0 },
     });
     await page

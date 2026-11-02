@@ -76,3 +76,38 @@ test('synchronizing an active layer preserves membership for later removal and r
   world.actorParents.sync(world);
   expect(world.actorParents.point(outgoing, old)).toBeNull();
 });
+
+test('localToGlobal rounds float32 rotated Point coordinates to nearest even twips', () => {
+  const world = new World([], [], 1),
+    tank = createTank(world.nextId(), { ...STARTER, parts: [] }, 'enemy');
+  tank.rotation = 30;
+  expect(world.actorParents.localToGlobal(tank, { x: 10.1, y: 0 })).toEqual({ x: 8.75, y: 5.05 });
+  tank.rotation = 60;
+  expect(world.actorParents.localToGlobal(tank, { x: 0.15, y: 0 })).toEqual({ x: 0.1, y: 0.15 });
+  expect(world.actorParents.localToGlobal(tank, { x: 0.25, y: 0 })).toEqual({ x: 0.1, y: 0.2 });
+  expect(world.actorParents.localToGlobal(tank, { x: -0.15, y: 0 })).toEqual({ x: -0.1, y: -0.15 });
+  expect(world.actorParents.localToGlobal(tank, { x: -0.25, y: 0 })).toEqual({ x: -0.1, y: -0.2 });
+});
+
+test('global conversions retain cached and detached local poses separately from parent membership', () => {
+  const { world, next, outgoing } = scenario();
+  const point = { x: 10.08, y: -2.08 };
+  expect(world.actorParents.fieldLocal(world.actorParents.fieldGlobal(point, next)!, next)).toEqual(
+    {
+      x: 10.05,
+      y: -2.05,
+    },
+  );
+  const oldAvatar = world.player;
+  expect(world.actorParents.localToGlobal(oldAvatar, { x: 0, y: 0 })).toEqual({ x: 275, y: 225 });
+  world.actorParents.setAvatar(createTank(world.nextId(), STARTER, 'player'));
+  expect(world.actorParents.localToGlobal(oldAvatar, { x: 0, y: 0 })).toEqual({ x: 0, y: 0 });
+  world.player.x = 483;
+  world.step(emptyInput());
+  expect(world.actorParents.onStage(outgoing)).toBe(false);
+  expect(world.actorParents.hasParent(outgoing)).toBe(true);
+  expect(world.actorParents.localToGlobal(outgoing, { x: 0, y: 0 })).toEqual({ x: -473, y: 20 });
+  world.actorParents.detach(outgoing);
+  expect(world.actorParents.hasParent(outgoing)).toBe(false);
+  expect(world.actorParents.localToGlobal(outgoing, { x: 0, y: 0 })).toEqual({ x: 10, y: 20 });
+});

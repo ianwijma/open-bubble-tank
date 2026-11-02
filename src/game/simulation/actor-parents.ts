@@ -3,6 +3,16 @@ import { STAGE } from '../core/constants';
 import { displayPixel } from '../core/display-values';
 import type { World } from './world';
 
+const twips = (value: number) => Math.round(displayPixel(value) * 20);
+// Pinned reference render::Matrix rounds float32 transforms to nearest, ties even.
+function matrixRound(value: number) {
+  if (!Number.isFinite(value)) return 0;
+  if (value >= 2147483648 || value < -2147483648) return -2147483648;
+  const floor = Math.floor(value),
+    fraction = value - floor;
+  return fraction < 0.5 ? floor : fraction > 0.5 ? floor + 1 : floor % 2 === 0 ? floor : floor + 1;
+}
+
 interface ActorParent extends Vec {
   rooted: boolean;
   members: Set<Tank>;
@@ -12,9 +22,11 @@ export class ActorParents {
   private active = new Map<Field, ActorParent>();
   private links = new WeakMap<Tank, ActorParent>();
   private avatar?: Tank;
+  private rootOffset: Vec = { x: 0, y: 0 };
 
   sync(world: World) {
     this.avatar = world.player;
+    this.rootOffset = world.mainEffects.position;
     const next = new Map<Field, ActorParent>();
     for (const { field, runtime, offset } of world.activeFields()) {
       const parent = this.active.get(field) ?? {
@@ -51,6 +63,49 @@ export class ActorParents {
     this.links.delete(tank);
   }
   hasParent = (tank: Tank) => tank === this.avatar || this.links.has(tank);
+  onStage = (tank: Tank) => tank === this.avatar || this.links.get(tank)?.rooted === true;
+  setAvatar(tank: Tank) {
+    this.avatar = tank;
+  }
+
+  /** Active field layer -> stage Point, independent of the user's render zoom. */
+  fieldGlobal(point: Vec, field: Field): Vec | null {
+    const parent = this.active.get(field);
+    if (!parent) return null;
+    return {
+      x: ((twips(point.x) + twips(parent.x) + twips(STAGE.cx + this.rootOffset.x)) | 0) / 20,
+      y: ((twips(point.y) + twips(parent.y) + twips(STAGE.cy + this.rootOffset.y)) | 0) / 20,
+    };
+  }
+  fieldLocal(point: Vec, field: Field): Vec | null {
+    const parent = this.active.get(field);
+    if (!parent) return null;
+    return {
+      x: ((twips(point.x) - twips(parent.x) - twips(STAGE.cx + this.rootOffset.x)) | 0) / 20,
+      y: ((twips(point.y) - twips(parent.y) - twips(STAGE.cy + this.rootOffset.y)) | 0) / 20,
+    };
+  }
+  /** Local Point conversion remains valid after a clip's parent detaches. */
+  localToGlobal(tank: Tank, point: Readonly<Vec>): Vec {
+    const radians = tank.rotation * (Math.PI / 180),
+      cos = Math.fround(Math.cos(radians)),
+      sin = Math.fround(Math.sin(radians)),
+      x = Math.fround(twips(point.x)),
+      y = Math.fround(twips(point.y)),
+      rx = matrixRound(Math.fround(Math.fround(cos * x) + Math.fround(-sin * y))),
+      ry = matrixRound(Math.fround(Math.fround(sin * x) + Math.fround(cos * y))),
+      avatar = tank.side === 'player',
+      parent = this.links.get(tank),
+      rooted = avatar ? tank === this.avatar : parent?.rooted === true;
+    // Avatar has its own origin during active gameplay. Collapse's separate
+    // listener suspends projectile Run and resets that local pose before resuming.
+    const tx = avatar ? 0 : twips(tank.x) + (parent ? twips(parent.x) : 0),
+      ty = avatar ? 0 : twips(tank.y) + (parent ? twips(parent.y) : 0);
+    return {
+      x: ((rx + tx + (rooted ? twips(STAGE.cx + this.rootOffset.x) : 0)) | 0) / 20,
+      y: ((ry + ty + (rooted ? twips(STAGE.cy + this.rootOffset.y) : 0)) | 0) / 20,
+    };
+  }
 
   /** Source parent.localToGlobal -> owner.parent.globalToLocal crosses twip Point boundaries. */
   point(target: Tank, ownerField: Field): Vec | null {
