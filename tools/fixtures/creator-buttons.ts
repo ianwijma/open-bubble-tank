@@ -138,6 +138,7 @@ export async function showCreatorButtons(
             !key.startsWith('dialog:') &&
             !key.startsWith('details:') &&
             !key.startsWith('selection-info:') &&
+            !key.startsWith('viewer:') &&
             !enemy;
   });
   const rows = frames.map(([key, raster], index) => {
