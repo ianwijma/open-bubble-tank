@@ -5,6 +5,8 @@ import { World, emptyInput } from '../../src/game/simulation/world';
 import { createTank } from '../../src/game/simulation/tank';
 import { GameRenderer } from '../../src/game/render/pixi-renderer';
 import { tickBullet } from '../../src/game/simulation/projectiles';
+import { createProjectile } from '../../src/game/simulation/create-projectile';
+import { tankHitDetail } from '../../src/game/simulation/hit-location';
 
 /** Real alpha contact, simulation phases, callbacks and native rendering in one fixture. */
 export async function showProjectileOrderProof(pack: AssetPack, host: HTMLElement) {
@@ -65,30 +67,44 @@ export async function showProjectileOrderProof(pack: AssetPack, host: HTMLElemen
         effects: world.effects.map((e) => ({ symbol: e.symbol, x: e.x })),
       });
     }
-    const buster = {
-      ...shot,
-      uid: world.nextId(),
-      kind: 'buster' as const,
+    world.bullets = [];
+    const buster = createProjectile(world.nextId(), {
+      owner: world.player.uid,
+      enemy: false,
+      kind: 'buster',
       symbol: 1800,
-      age: 0,
-      dead: false,
       x: 0,
       y: 100,
+      angle: 0,
       speed: 10,
-    };
-    const deflected = {
-      ...shot,
-      uid: world.nextId(),
-      kind: 'seeker' as const,
+      damage: 1,
+    });
+    const deflected = createProjectile(world.nextId(), {
+      owner: target.uid,
+      kind: 'seeker',
       symbol: 1809,
       enemy: true,
-      dead: false,
       x: 5,
       y: 100,
       angle: 90,
+      speed: 10,
+      damage: 1,
       targetId: world.player.uid,
+    });
+    // SpawnNewBullet -> _-BL.Setup invokes _-QM.RotateTowardTarget before Run/state2.
+    world.actorParents.sync(world);
+    world.addBullet(buster);
+    world.addBullet(deflected, target, world.player);
+    const origin = world.actorParents.fieldGlobal(deflected, world.field)!,
+      aim = world.actorParents.localToGlobal(world.player, tankHitDetail(world.player));
+    const beforeDeflection = {
+      x: deflected.x,
+      y: deflected.y,
+      angle: deflected.angle,
+      motion: { ...deflected.motion },
+      initialized: deflected.homing?.target === world.player,
+      aimDelta: { x: aim.x - origin.x, y: aim.y - origin.y },
     };
-    world.bullets = [buster, deflected];
     tickBullet(world, buster, emptyInput());
     tickBullet(world, deflected, emptyInput());
     const massiveWidth = pack.projectileWidth({ ...shot, symbol: 1794, angle: 0, artScale: 1 });
@@ -96,6 +112,7 @@ export async function showProjectileOrderProof(pack: AssetPack, host: HTMLElemen
       edge,
       snapshots,
       massiveWidth,
+      beforeDeflection,
       deflection: {
         alive: !deflected.dead,
         x: deflected.x,
