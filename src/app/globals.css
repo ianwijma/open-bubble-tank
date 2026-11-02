@@ -1350,27 +1350,6 @@ kbd {
   font-size: 13px;
   margin: 0;
 }
-.creator-name {
-  position: absolute;
-  top: 110px;
-  left: 12px;
-  z-index: 2;
-  font-size: 8px;
-  color: #b8e5ed;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.creator-name > label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.creator-name > button {
-  font-size: 8px;
-  padding: 3px 6px;
-  background: #98b4d352;
-}
 
 .creator-control {
   position: absolute;
@@ -1458,19 +1437,16 @@ kbd {
   background: radial-gradient(circle at 35% 30%, #fff, #b7b7b7);
   box-shadow: 0 0 5px #ffffffaa;
 }
-.creator-name input {
-  width: 170px;
-  font-size: 9px;
-  color: #e6faff;
-  background: #c0eaff14;
-  border: 0;
-  border-bottom: 1px solid #c0eaff33;
-  padding: 2px 4px;
-}
 .creator-workspace {
   position: absolute;
   inset: 0;
   z-index: 1;
+}
+.creator-workspace-rings {
+  position: absolute;
+  max-width: none;
+  pointer-events: none;
+  user-select: none;
 }
 .creator-workspace > canvas {
   position: absolute;
@@ -1604,9 +1580,6 @@ kbd {
 }
 .creator-stat-confirm > button:focus-visible {
   outline: 1px solid white;
-}
-.creator:has(.creator-stat-confirm) .creator-name > button {
-  visibility: hidden;
 }
 .creator-part-preview {
   position: absolute;
@@ -2149,6 +2122,58 @@ kbd {
   position: absolute;
   z-index: 1;
   pointer-events: auto;
+}
+.creator-guide {
+  position: absolute;
+  inset: 0;
+  z-index: 18;
+  pointer-events: auto;
+  outline: none;
+  transform-origin: 0 0;
+}
+.creator-guide > svg {
+  width: 550px;
+  height: 450px;
+}
+.creator-guide-button {
+  position: absolute;
+  pointer-events: auto;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.creator-guide-button > svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.creator-guide-button:focus-visible {
+  outline: 1px solid white;
+  outline-offset: 2px;
+}
+.creator-alert {
+  position: absolute;
+  inset: 0;
+  z-index: 31;
+  outline: none;
+  transform-origin: 0 0;
+}
+.creator-alert > svg {
+  width: 550px;
+  height: 450px;
+}
+.creator-alert-dismiss {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  outline: none;
+}
+.creator-alert-dismiss:focus-visible {
+  outline: 1px solid white;
+  outline-offset: -2px;
 }
 .creator-save-dialog {
   position: absolute;

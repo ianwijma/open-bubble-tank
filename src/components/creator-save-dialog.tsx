@@ -87,6 +87,7 @@ export function CreatorSaveDialog({
   pack,
   kind,
   tank,
+  initialName,
   opener,
   authorName = 'BubbleTanks3',
   onSave,
@@ -96,6 +97,7 @@ export function CreatorSaveDialog({
   pack: AssetPack;
   kind: 'save' | 'exit';
   tank: TankDesign;
+  initialName: string;
   opener: HTMLElement | null;
   authorName?: string;
   onSave: (tank: TankDesign) => TankDesign | undefined;
@@ -104,7 +106,7 @@ export function CreatorSaveDialog({
 }) {
   const [frame, setFrame] = useState<CreatorDialogFrame>(kind === 'save' ? 2 : 1),
     [author, setAuthor] = useState(authorName),
-    [name, setName] = useState(tank.name),
+    [name, setName] = useState(initialName),
     [saved, setSaved] = useState<TankDesign | null>(null),
     [code, setCode] = useState(''),
     [error, setError] = useState(''),

@@ -3,7 +3,7 @@ import { test, expect, type Page } from '@playwright/test';
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import type { TankDesign, TankPart } from '../src/game/core/types';
-import { dropPreview, exitCreator } from './helpers/creator';
+import { readCreatorDesign, dropPreview, exitCreator } from './helpers/creator';
 const starter: TankDesign = JSON.parse(readFileSync(resolve('src/game/data/tanks.json'), 'utf8'))
   .avatar_defaults[0];
 const swf =
@@ -45,7 +45,7 @@ async function importTank(page: Page, tank: TankDesign) {
     .click();
 }
 for (const assets of ['mock', 'SWF'])
-  test(`${assets} palette dims unaffordable parts but permits selection and protects save validation`, async ({
+  test(`${assets} palette dims unaffordable parts but permits selection and rolls back rejected edits`, async ({
     page,
   }) => {
     test.skip(assets === 'SWF' && !existsSync(swf), 'Provide the local reference SWF.');
@@ -76,20 +76,22 @@ for (const assets of ['mock', 'SWF'])
       page.getByRole('button', { name: 'Drag Seekers into design', exact: true }),
     ).toBeEnabled();
     await dropPreview(page, 30, 0);
-    await page.getByRole('button', { name: 'SAVE', exact: true }).click();
-    await expect(page.getByText('Not enough Gun Points: 20 / 19.', { exact: true })).toBeVisible();
+    const alert = page.getByRole('alertdialog', { name: 'Tank creator error' });
+    await expect(alert).toContainText('Not enough Gun Points!');
+    expect((await readCreatorDesign(page)).parts).toHaveLength(19);
+    await expect(page.locator('.creator-meters > div').last()).toContainText('GP: 18');
+    await alert.press('Enter');
     await page.getByRole('button', { name: 'Body', exact: true }).click();
-    await expect(page.getByRole('button', { name: 'Choose a part', exact: true })).toBeDisabled();
     const small = page.getByRole('button', { name: 'Place Small Bubble', exact: true });
     await expect(small).toBeEnabled();
-    await expect(small).toHaveCSS('opacity', '0.4');
+    await expect(small).toHaveCSS('opacity', '1');
     await small.click();
     await expect(
       page.getByRole('button', { name: 'Drag Small Bubble into design', exact: true }),
     ).toBeEnabled();
     await page.getByRole('button', { name: 'Undo', exact: true }).click();
-    await expect(small).toHaveCSS('opacity', '1');
-    await expect(page.locator('.creator').getByRole('alert')).toHaveCount(0);
+    expect((await readCreatorDesign(page)).parts).toHaveLength(0);
+    await expect(alert).toHaveCount(0);
     await exitCreator(page);
     await importTank(page, complexity);
     await page.getByRole('button', { name: 'Weapons', exact: true }).click();
@@ -98,18 +100,17 @@ for (const assets of ['mock', 'SWF'])
     await expect(small).toHaveCSS('opacity', '0.4');
     await small.click();
     await dropPreview(page, 100, 0);
-    await page.getByRole('button', { name: 'SAVE', exact: true }).click();
-    await expect(
-      page.getByText('Exceeds maximum complexity (100 BP).', { exact: true }),
-    ).toBeVisible();
+    await expect(alert).toContainText('Excedes max complexity.');
+    expect((await readCreatorDesign(page)).parts).toHaveLength(100);
     await page.screenshot({ path: `test-results/${assets}-palette-complexity.png` });
-    const alert = page.locator('.creator').getByRole('alert'),
-      inspector = page.getByRole('button', { name: 'Enemy Info', exact: true });
-    await expect(alert).toContainText('Exceeds maximum complexity');
-    const alertBox = await alert.boundingBox(),
-      inspectorBox = await inspector.boundingBox();
-    expect(alertBox!.x + alertBox!.width).toBeLessThan(inspectorBox!.x);
+    await expect(page.locator('.creator')).toHaveAttribute('inert', '');
+    const alertBox = (await alert.boundingBox())!,
+      creatorBox = (await page.locator('.creator').boundingBox())!;
+    expect(alertBox.width).toBe(creatorBox.width);
+    expect(alertBox.height).toBe(creatorBox.height);
+    await alert.press('Enter');
     await page.getByRole('button', { name: 'Undo', exact: true }).click();
+    expect((await readCreatorDesign(page)).parts).toHaveLength(0);
     await expect(alert).toHaveCount(0);
     expect(errors).toEqual([]);
   });

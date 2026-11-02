@@ -1,3 +1,4 @@
+import { readCreatorDesign } from './helpers/creator';
 import { exitCreator } from './helpers/creator';
 import { waitForMainMenu } from './helpers/main-menu';
 import { expect, test } from './helpers/frame-paced-test';
@@ -27,6 +28,7 @@ for (const native of [false, true])
       {
         version: 1,
         tankViewerHelpSeen: true,
+        creatorHelpSeen: true,
         secondaryHelpSeen: true, // The dedicated help flow covers its first-time interruption.
         tanks: [],
         achievements: [],
@@ -92,11 +94,7 @@ for (const native of [false, true])
       page.getByRole('button', { name: 'Place Basic Cannon', exact: true }),
     ).toBeVisible();
     await categories.getByRole('button', { name: 'Body', exact: true }).click();
-    const snapshot = async (): Promise<TankDesign> => {
-      const downloading = page.waitForEvent('download');
-      await page.getByRole('button', { name: 'Export', exact: true }).click();
-      return JSON.parse(readFileSync((await (await downloading).path())!, 'utf8'));
-    };
+    const snapshot = () => readCreatorDesign(page);
     const beforeViewer = await snapshot();
     await page.getByRole('button', { name: 'Load a Tank...', exact: true }).click();
     const viewer = page.locator('.tank-viewer');

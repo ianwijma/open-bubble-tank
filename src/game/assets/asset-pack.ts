@@ -53,6 +53,7 @@ import { buttonDisplayList, type ButtonInfo, type ButtonState } from './button-d
 import { CREATOR_CONTROLS } from '../core/creator-controls';
 import { CREATOR_PALETTE } from '../core/creator-palette';
 import { CREATOR_DIALOGS } from '../core/creator-dialogs';
+import { CREATOR_GUIDE } from '../core/creator-guide';
 
 export interface Bounds extends Rect {}
 export interface Raster extends Bounds {
@@ -416,7 +417,13 @@ export class AssetPack {
       for (const art of Object.values(effectArt)) visit(art.symbol);
       for (const art of Object.values(screenEffectArt)) visit(art.symbol);
       for (const art of Object.values(mineArt)) visit(art.symbol);
-      for (const id of [...Object.values(STATUS_ART), INFECTED_ART]) visit(id);
+      for (const id of [
+        ...Object.values(STATUS_ART),
+        INFECTED_ART,
+        CREATOR_GUIDE.symbol,
+        CREATOR_DIALOGS.alert.symbol,
+      ])
+        visit(id);
       for (const id of Object.values(PROTECTION_ART)) visit(id);
       for (const id of [1816, 1817, 1820, 2173, 1780]) visit(id);
       for (const id of [MINIMAP.symbol, MINIMAP.button, MINIMAP.dot, MINIMAP.connector]) visit(id);
@@ -492,7 +499,9 @@ export class AssetPack {
         if (raster) pack.creatorFrames.set(`handle:${frame}`, raster);
       }
       for (let frame = 1; frame <= 6; frame++) {
-        const raster = await pack.rasterSymbol(819, frame);
+        const raster = await pack.rasterCompiled(
+          pack.compile(819, frame, new Set(), 0, undefined, 'up', undefined, 1),
+        );
         if (raster) pack.creatorFrames.set(`rings:${frame}`, raster);
       }
       for (const [key, symbol] of [
@@ -598,6 +607,30 @@ export class AssetPack {
       infoPose.placements = infoPose.placements.filter((p) => !p.name);
       const infoPopup = await pack.rasterClip(infoPose);
       if (infoPopup) pack.creatorFrames.set('selection-info:popup', infoPopup);
+      for (const page of CREATOR_GUIDE.frames) {
+        const pose = new SwfClip(CREATOR_GUIDE.symbol, pack);
+        pose.start(page.frame, false);
+        pose.placements = pose.placements.filter((p) => page.staticIds.includes(p.charId));
+        const raster = await pack.rasterClip(pose);
+        if (raster) pack.creatorFrames.set(`guide:${page.frame}`, raster);
+        for (const button of page.buttons)
+          for (const frame of [1, 2]) {
+            const art = await pack.rasterSymbol(button.symbol, frame);
+            if (art) pack.creatorFrames.set(`guide-button:${button.symbol}:${frame}`, art);
+          }
+      }
+      const alert = new SwfClip(CREATOR_DIALOGS.alert.symbol, pack);
+      alert.start(1, false);
+      alert.placements = alert.placements.filter((p) =>
+        CREATOR_DIALOGS.alert.staticIds.includes(p.charId),
+      );
+      const alertRaster = await pack.rasterClip(alert);
+      if (alertRaster) {
+        // Paint the prepared bitmap in DOM too: the SVG image lost its static
+        // text after a keyboard resize rejection despite decoding correctly in Canvas2D.
+        alertRaster.url = alertRaster.canvas.toDataURL();
+        pack.creatorFrames.set('alert', alertRaster);
+      }
       for (const screen of CREATOR_DIALOGS.frames) {
         const pose = new SwfClip(CREATOR_DIALOGS.symbol, pack);
         pose.start(screen.frame, false);
@@ -645,6 +678,7 @@ export class AssetPack {
     pose?: SwfClip,
     buttonState: ButtonState = 'up',
     clips?: ReadonlyMap<number, Bounds>,
+    workspaceScale?: number,
   ): { body: string; bounds: Bounds } | null {
     if (seen.has(id) || seen.size > 24) return null;
     const next = new Set(seen);
@@ -677,7 +711,17 @@ export class AssetPack {
         width: (b.xMax - b.xMin) / 20,
         height: (b.yMax - b.yMin) / 20,
       };
-      const body = svg.replace(/^<svg[^>]*>/, '').replace(/<\/svg>$/, '');
+      // Only prepared creator819 artwork opts in. Its descendants have positive uniform
+      // transforms: Ruffle0.7.1 tessellator.rs177–191 clamps hairlines to1 output pixel.
+      // Keep the authored SVG/shape, Script bounds, contact and other UI paint untouched.
+      const paint =
+        workspaceScale === undefined
+          ? svg
+          : svg.replace(
+              /stroke-width="([\d.]+)"/g,
+              (_, width: string) => `stroke-width="${Math.max(Number(width), 1 / workspaceScale)}"`,
+            );
+      const body = paint.replace(/^<svg[^>]*>/, '').replace(/<\/svg>$/, '');
       return { body: `<g transform="translate(${bounds.x} ${bounds.y})">${body}</g>`, bounds };
     }
     const text = this.texts.get(id);
@@ -692,7 +736,17 @@ export class AssetPack {
     const masks: { id: string; depth: number; end: number; bounds: Bounds; body: string }[] = [];
     for (const p of placements) {
       const childPose = pose?.children.get(p.depth)?.clip;
-      let child = this.compile(p.charId, frame, next, p.ratio ?? 0, childPose, buttonState, clips);
+      const m = p.matrix ?? identity;
+      let child = this.compile(
+        p.charId,
+        frame,
+        next,
+        p.ratio ?? 0,
+        childPose,
+        buttonState,
+        clips,
+        workspaceScale === undefined ? undefined : workspaceScale * m.a,
+      );
       if (!child) continue;
       const clip = clips?.get(p.charId);
       if (clip)
@@ -700,7 +754,6 @@ export class AssetPack {
           body: `<svg x="${clip.x}" y="${clip.y}" width="${clip.width}" height="${clip.height}" viewBox="${clip.x} ${clip.y} ${clip.width} ${clip.height}" overflow="hidden">${child.body}</svg>`,
           bounds: intersect(child.bounds, clip),
         };
-      const m = p.matrix ?? identity;
       if (p.clipDepth !== undefined) {
         masks.push({
           id: `mask${id}_${p.depth}_${seen.size}`,

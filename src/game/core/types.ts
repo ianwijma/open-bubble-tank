@@ -347,6 +347,7 @@ export interface Profile {
   version: 1;
   secondaryHelpSeen: boolean;
   tankViewerHelpSeen: boolean;
+  creatorHelpSeen: boolean;
   progression: TankDesign[];
   tanks: TankDesign[];
   settings: Settings;

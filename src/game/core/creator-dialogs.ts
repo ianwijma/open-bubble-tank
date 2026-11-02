@@ -14,6 +14,13 @@ export interface CreatorDialogButton {
 }
 export const CREATOR_DIALOGS = data as {
   symbol: number;
+  alert: {
+    symbol: number;
+    matrix: SwfMatrix;
+    fields: CreatorField[];
+    staticIds: number[];
+    art: CreatorPrimitive[];
+  };
   frames: {
     frame: CreatorDialogFrame;
     fields: (CreatorField & { maxLength?: number })[];

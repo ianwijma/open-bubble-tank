@@ -1,9 +1,8 @@
 import { test, expect } from '@playwright/test';
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { waitForMainMenu } from './helpers/main-menu';
-import { dropPreview } from './helpers/creator';
-import type { TankDesign } from '../src/game/core/types';
+import { readCreatorDesign, dropPreview } from './helpers/creator';
 const swf =
   process.env.BT3_SWF_FILE ?? resolve('../documented-bubble-tank-3/re/bt3/uncompressed.swf');
 for (const native of [false, true])
@@ -36,13 +35,7 @@ for (const native of [false, true])
     await expect(page.getByRole('status')).toContainText('Selected parts (2)');
     await expect(page.getByLabel('Part scale')).toBeVisible();
     await expect(page.getByLabel('Part rotation')).toBeVisible();
-    const snapshot = async (keepPointer = false): Promise<TankDesign> => {
-      const downloading = page.waitForEvent('download');
-      const button = page.getByRole('button', { name: 'Export', exact: true });
-      if (keepPointer) await button.evaluate((node) => (node as HTMLButtonElement).click());
-      else await button.click();
-      return JSON.parse(readFileSync((await (await downloading).path())!, 'utf8'));
-    };
+    const snapshot = () => readCreatorDesign(page);
     const before = await snapshot();
     const slider = page.locator('[data-creator-slider="Resize_mc"]'),
       r = await slider.evaluate((node) => {
@@ -66,7 +59,9 @@ for (const native of [false, true])
     await page.mouse.click(box.x + (155 * box.width) / 350, box.y + (150 * box.height) / 350);
     await page.mouse.click(r.x - 19 * factor, r.y + 2.25 * factor);
     await page.getByRole('button', { name: 'Undo', exact: true }).click();
-    expect((await snapshot()).parts).toHaveLength(0); // A no-op handle press adds no undo state.
+    expect((await snapshot()).parts).toHaveLength(2); // Source records the accepted no-op release.
+    await page.getByRole('button', { name: 'Undo', exact: true }).click();
+    expect((await snapshot()).parts).toHaveLength(0);
     await dropPreview(page, -20, -25);
     await page.mouse.click(box.x + (155 * box.width) / 350, box.y + (150 * box.height) / 350);
     const right = page.getByRole('button', { name: 'Move selection right', exact: true });
@@ -75,8 +70,8 @@ for (const native of [false, true])
     const rb = (await right.boundingBox())!;
     await page.mouse.move(rb.x + rb.width / 2, rb.y + rb.height / 2);
     await page.mouse.down();
-    // Export through its public action without moving the pointer off the held control.
-    await expect.poll(async () => (await snapshot(true)).parts.every((p) => p.x > -19)).toBe(true);
+    // Observe a completed creator-frame nudge without moving the held pointer.
+    await expect.poll(async () => (await snapshot()).parts.every((p) => p.x > -19)).toBe(true);
     await page.mouse.up();
     expect((await snapshot()).parts.every((p) => p.x > -18)).toBe(true);
     await page.getByRole('button', { name: 'Undo', exact: true }).click();
@@ -114,7 +109,7 @@ for (const native of [false, true])
     await page.mouse.move(r.x - 19 * factor, r.y + 2.25 * factor);
     await page.mouse.down();
     await page.mouse.move(r.x + 57 * factor, r.y + 2.25 * factor, { steps: 8 });
-    expect((await snapshot(true)).parts.some((part) => part.scale === 2)).toBe(true);
+    expect((await snapshot()).parts.some((part) => part.scale === 2)).toBe(true);
     expect(await readClass()).toBe(beforeClass); // _-CI changes art; _-1N updates class on release.
     expect(await creator.locator('.creator-meters > div').nth(2).innerText()).toBe(beforeBudget);
     await page.mouse.up();

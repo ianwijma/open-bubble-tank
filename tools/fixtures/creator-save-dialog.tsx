@@ -32,6 +32,7 @@ export function showCreatorSaveDialog(pack: AssetPack, host: HTMLElement) {
             pack={pack}
             kind={dialog.kind}
             tank={dialog.tank}
+            initialName={dialog.tank.name}
             opener={dialog.opener}
             onSave={(tank) => {
               const result = submitCreatedTank(profile.current, tank);

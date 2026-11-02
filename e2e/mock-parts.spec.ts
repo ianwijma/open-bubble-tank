@@ -1,8 +1,8 @@
+import { waitForMainMenu } from './helpers/main-menu';
 import { expect, test } from '@playwright/test';
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { dropPreview } from './helpers/creator';
-import type { TankDesign } from '../src/game/core/types';
+import { readCreatorDesign, dropPreview } from './helpers/creator';
 const layouts = JSON.parse(
   readFileSync(resolve('src/game/data/part-geometry.json'), 'utf8'),
 ) as Record<number, { bounds: { width: number } }>;
@@ -54,8 +54,16 @@ test('mock creator previews distinct guns and behaviors and places their authore
 }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await waitForMainMenu(page);
   await page.getByRole('button', { name: 'Enemy tank creator' }).click();
   await page.getByLabel('Symmetric Mode').uncheck();
+  // 5 Parallel requires class2. Build a legal hull before checking its placement artwork.
+  await page.getByRole('button', { name: 'Place Huge Bubble', exact: true }).click();
+  await dropPreview(page, 0, 55);
+  const canvas = (await page.locator('.creator-workspace canvas').boundingBox())!;
+  await page.mouse.click(canvas.x + canvas.width / 2, canvas.y + (230 * canvas.height) / 350);
+  await page.getByLabel('Part scale').press('End');
+  expect((await readCreatorDesign(page)).classId).toBeGreaterThanOrEqual(2);
   const preview = page.locator('.creator-part-preview canvas');
   const hashes: number[] = [];
   for (const [tab, name, id, x] of [
@@ -85,9 +93,7 @@ test('mock creator previews distinct guns and behaviors and places their authore
       }),
     );
     await dropPreview(page, x, -30);
-    const download = page.waitForEvent('download');
-    await page.getByRole('button', { name: 'Export', exact: true }).click();
-    const design: TankDesign = JSON.parse(readFileSync((await (await download).path())!, 'utf8'));
+    const design = await readCreatorDesign(page);
     expect(design.parts.at(-1)?.type).toBe(id);
     expect(design.parts.at(-1)?.radius).toBeCloseTo(
       (layouts as Record<number, { bounds: { width: number } }>)[id].bounds.width / 2,
