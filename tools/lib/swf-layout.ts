@@ -32,15 +32,19 @@ export function createSwfLayout(symbols: SymbolResult['symbols']) {
       return [
         {
           kind:
-            id === 740
-              ? 'checked-box'
-              : id === 929 || id === 930
-                ? 'arrow'
-                : id === 758 || id === 759
-                  ? 'up-arrow'
-                  : id === 762
-                    ? 'scroll-grip'
-                    : 'rect',
+            id === 845
+              ? 'detail-panel'
+              : id === 857 || id === 858
+                ? 'detail-arrow'
+                : id === 740
+                  ? 'checked-box'
+                  : id === 929 || id === 930
+                    ? 'arrow'
+                    : id === 758 || id === 759
+                      ? 'up-arrow'
+                      : id === 762
+                        ? 'scroll-grip'
+                        : 'rect',
           id,
           matrix,
           bounds: shape.bounds,
