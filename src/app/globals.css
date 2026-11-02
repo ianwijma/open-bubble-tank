@@ -2130,6 +2130,26 @@ kbd {
   position: absolute;
   pointer-events: none;
 }
+.creator-selection-info {
+  position: absolute;
+  z-index: 8;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+.creator-weapon-info-icon {
+  position: absolute;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  pointer-events: auto;
+  cursor: default;
+}
+.creator-weapon-info-popup {
+  position: absolute;
+  z-index: 1;
+  pointer-events: auto;
+}
 .creator-save-dialog {
   position: absolute;
   inset: 0;

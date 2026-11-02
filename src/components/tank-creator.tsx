@@ -17,6 +17,8 @@ import { CreatorEnemyStats, CreatorStatsTab } from './creator-enemy-stats';
 import { CreatorPaletteFrame, CreatorPaletteTabs, CreatorPaletteRows } from './creator-palette';
 import { CREATOR_PALETTE } from '@/game/core/creator-palette';
 import { CreatorPartDetails } from './creator-part-details';
+import { CreatorSelectionInfo } from './creator-selection-info';
+import { creatorWeaponIcons, type CreatorWeaponIcon } from '@/game/core/creator-details';
 import { creatorThumbnailScale, type CreatorDetailFocus } from '@/game/core/creator-details';
 import { CLASS_RINGS } from '@/game/core/constants';
 import {
@@ -114,6 +116,8 @@ export function TankCreator({
     selection: PartSelection;
     boxes: Map<string, { x: number; y: number; width: number; height: number }>;
   } | null>(null);
+  const [selectionIcons, setSelectionIcons] = useState<CreatorWeaponIcon[]>([]);
+  const iconSnapshot = useRef<{ boxes: object | null; hidden: boolean } | null>(null);
   const drag = useRef<{
       before: TankDesign;
       from: { x: number; y: number };
@@ -227,6 +231,7 @@ export function TankCreator({
           selectionBoxes.current.selection !== selection))
     )
       selectionBoxes.current = { parts: design.parts, selection, boxes: new Map() };
+    const selectionMoving = !!(drag.current?.moved && drag.current.moving);
     for (const p of design.parts) {
       if (!artwork.current) {
         ctx.save();
@@ -234,7 +239,7 @@ export function TankCreator({
         pack.drawPart(ctx, p);
         ctx.restore();
       }
-      if (selection.keys.includes(p.key) && !drag.current?.moved) {
+      if (selection.keys.includes(p.key) && !selectionMoving) {
         let box = selectionBoxes.current.boxes.get(p.key);
         if (!box) {
           const r = artwork.current?.localBounds(p) ?? pack.part(p.type),
@@ -260,6 +265,17 @@ export function TankCreator({
         ctx.lineWidth = 1;
         ctx.strokeRect(box.x, box.y, box.width, box.height);
       }
+    }
+    if (
+      iconSnapshot.current?.boxes !== selectionBoxes.current ||
+      iconSnapshot.current?.hidden !== selectionMoving
+    ) {
+      iconSnapshot.current = { boxes: selectionBoxes.current, hidden: selectionMoving };
+      setSelectionIcons(
+        selectionMoving
+          ? []
+          : creatorWeaponIcons(design.parts, selection.keys, selectionBoxes.current.boxes),
+      );
     }
     if (drag.current?.moved && !drag.current.moving) {
       ctx.strokeStyle = '#00cbff';
@@ -858,6 +874,7 @@ export function TankCreator({
           setMessage('');
         }}
       />
+      <CreatorSelectionInfo pack={pack} icons={selectionIcons} />
       <CreatorPartDetails pack={pack} focus={details} canvas={detailCanvas} id={detailsId} />
       {loading ? (
         <TankCodeDialog
