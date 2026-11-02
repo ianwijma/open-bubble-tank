@@ -10,6 +10,7 @@ import { createActorMovement } from './actor-movement';
 import { createWallFlower, setupSkittish } from './behavior-destinations';
 import { acquireBehaviorTarget, createBehaviorTarget } from './behavior-targets';
 import { acquireHealerTarget } from './healer-target';
+import { weaponAimFlags } from '../core/weapon-aim';
 export function createTank(
   uid: number,
   design: TankDesign,
@@ -80,9 +81,9 @@ export function createTank(
     const state = createBehaviorTarget(),
       behaviorTarget = category === 6 ? state : undefined,
       targeting = category !== 6 ? state : undefined;
-    if (side === 'player') state.master = 'player';
+    if (side === 'player' || [4026, 4032].includes(part.type)) state.master = side;
     if (part.type === 6003) setupSkittish(t);
-    if (world && side !== 'player') {
+    if (world && side !== 'player' && ![4022, 4026, 4032].includes(part.type)) {
       const population = {
         avatar: world.player,
         enemies: world.currentWrapper.enemies,
@@ -96,6 +97,7 @@ export function createTank(
         part,
         counter: side === 'player' ? -1 : part.type === 4023 ? 240 : 0,
         angle: part.rotation,
+        aim: weaponAimFlags(part.type, design.classId),
         burst: 0,
         burstTimer: 0,
         phasing,

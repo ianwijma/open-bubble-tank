@@ -16,7 +16,7 @@ const vectorLength = (v: Vec) => Math.sqrt(v.x * v.x + v.y * v.y);
 export type MovingActor = Pick<
   Tank,
   'x' | 'y' | 'side' | 'design' | 'rotation' | 'radius' | 'velocity' | 'status'
-> & { movement: ActorMovementState };
+> & { movement: ActorMovementState; guns?: Tank['guns'] };
 export const createActorMovement = (point: Vec = { x: 0, y: 0 }): ActorMovementState => ({
   frames: 0,
   rate: 0,
@@ -83,6 +83,9 @@ export function moveActor(t: MovingActor, fieldScale: number, rng: Random, avata
   if (t.side === 'enemy' && t.design.id.startsWith('B')) {
     if (t.design.id.charAt(1) !== '1') return;
     t.x = t.y = 0;
+    const primaries = t.guns?.filter((gun) => Math.floor(gun.part.type / 1000) === 4) ?? [];
+    if (primaries[0]?.aim?.rotates)
+      for (const gun of primaries) if (gun.aim) gun.aim.rotates = false;
     m.frames--;
     t.rotation = actorAngle(t.rotation + m.rate);
     m.lastAngle = 0;

@@ -4,6 +4,8 @@ import { refreshBehaviorTarget } from './behavior-targets';
 import { setPursuitPoint, tickSkittish, tickWallFlower } from './behavior-destinations';
 import { tickPhasing } from './phasing';
 import { tickHealer } from './healing';
+import { actorAngle, actorHeading } from './actor-movement';
+import { weaponAimFlags } from '../core/weapon-aim';
 
 /** Registered behavior parts run after primary weapons and movement, in authored order. */
 export function tickBehavior(world: World, tank: Tank, gun: GunState) {
@@ -30,6 +32,13 @@ export function tickBehavior(world: World, tank: Tank, gun: GunState) {
     },
     world.rng,
     world.actorParents.hasParent,
+    (candidate) => {
+      const flags = (gun.aim ??= weaponAimFlags(gun.part.type, tank.design.classId));
+      if (!flags.rotates) return;
+      const point = world.actorParents.point(candidate, world.field);
+      if (point)
+        gun.angle = actorAngle(actorHeading(world.muzzle(tank, gun, 0), point) - tank.rotation);
+    },
   );
   const point = target && world.actorParents.point(target, world.field);
   if (gun.part.type === 6001) {

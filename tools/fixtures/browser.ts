@@ -1,3 +1,4 @@
+import { showAimContracts } from './aim-contracts';
 import { showWeaponTargets } from './weapon-targets';
 import { showHealerTargets } from './healer-targets';
 import { showActorBehaviors } from './actor-behaviors';
@@ -138,6 +139,12 @@ async function reset() {
   world = undefined;
   stage.replaceChildren();
   stage.style.height = '';
+  if (fixture.value === 'aim-contracts') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    status.dataset.aimContracts = JSON.stringify(await showAimContracts(pack, stage));
+    status.textContent = 'Ready · source aim flags and Spike contact';
+    return;
+  }
   if (fixture.value === 'weapon-targets') {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
     status.dataset.weaponTargets = JSON.stringify(await showWeaponTargets(pack, stage));

@@ -61,9 +61,17 @@ test('manual triggers precede combat, cooldowns follow it, and HUD retains the i
 });
 
 test('large-class manual triggers use the prior part aim, then aim updates in Avatar.Run', () => {
-  const world = setup(2001),
-    gun = world.player.guns[0];
-  world.player.design = { ...world.player.design, classId: 4 };
+  const world = setup(2001);
+  world.player = createTank(
+    world.nextId(),
+    { ...world.player.design, classId: 4 },
+    'player',
+    0,
+    0,
+    50,
+    1,
+  );
+  const gun = world.player.guns[0];
   gun.part = { ...gun.part, x: 0, y: 0 };
   gun.angle = 30;
   world.step({ ...fire(), aim: { x: 275, y: 125 } });

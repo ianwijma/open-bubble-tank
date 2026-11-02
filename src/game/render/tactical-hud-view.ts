@@ -73,6 +73,7 @@ export class TacticalHudView {
     for (const ally of state.allies) {
       const radius = ally.width / 2;
       g.circle(ally.x, ally.y, radius).stroke({ color: 0xffffff, alpha: 0.15, width: 2 });
+      g.moveTo(ally.x, ally.y - radius);
       g.arc(
         ally.x,
         ally.y,
