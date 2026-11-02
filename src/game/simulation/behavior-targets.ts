@@ -38,15 +38,16 @@ export function refreshBehaviorTarget(
   population: BehaviorPopulation,
   rng: Random,
   hasParent: (target: Tank) => boolean,
+  aim?: (target: Tank) => void,
 ) {
   if (!state.target || !hasParent(state.target))
     acquireBehaviorTarget(state, side, population, rng);
   // EnemyAim repeats the check before blnRotate=false can return.
-  if (
-    (state.master === 'enemy' || state.master === 'ally') &&
-    (!state.target || !hasParent(state.target))
-  )
-    acquireBehaviorTarget(state, side, population, rng);
+  if (state.master === 'enemy' || state.master === 'ally') {
+    if (!state.target || !hasParent(state.target))
+      acquireBehaviorTarget(state, side, population, rng);
+    else aim?.(state.target);
+  }
   if (state.master === 'enemy' && state.allies !== population.allies.length) {
     acquireBehaviorTarget(state, side, population, rng);
     state.allies = population.allies.length;

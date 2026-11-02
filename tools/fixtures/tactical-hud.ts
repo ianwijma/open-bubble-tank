@@ -102,6 +102,14 @@ export async function showTacticalHudProof(pack: AssetPack, host: HTMLElement) {
         [65, 225],
         [275, 15],
       ].map(([x, y]) => alpha(x, y)),
+      connectors: [
+        [50, 44],
+        [187, 88],
+        [362, 120],
+      ].map(([x, y]) => {
+        const data = ctx.getImageData(x - 2, y - 2, 5, 5).data;
+        return Math.max(...Array.from(data).filter((_, i) => i % 4 === 3));
+      }),
       cleared: 0,
       collapseUiFrozen: false,
       collapseFrames: 0,

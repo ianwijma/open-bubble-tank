@@ -1,4 +1,5 @@
 import type { GunState } from '../core/types';
+import { actorAngle } from './actor-movement';
 
 /** Symbol701 (_-KE) flips after 100 calls plus a separate switch frame. */
 export function advanceRotatingCycle(gun: GunState) {
@@ -8,7 +9,7 @@ export function advanceRotatingCycle(gun: GunState) {
     cycle.active = !cycle.active;
     cycle.remaining = 100;
   }
-  if (cycle.active) gun.angle += 5;
+  if (cycle.active) gun.angle = actorAngle(gun.angle + 5);
   return cycle.active;
 }
 

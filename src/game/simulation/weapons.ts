@@ -29,6 +29,8 @@ import { convertDrones } from './converter';
 import { tickBehavior } from './behaviors';
 import { weaponAimPoint, finishWeaponAim } from './weapon-targets';
 import { actorAngle, actorHeading } from './actor-movement';
+import { weaponAimFlags } from '../core/weapon-aim';
+import { tickSpike } from './spikes';
 
 export function tickGuns(world: World, t: Tank, input: InputFrame, categories?: readonly number[]) {
   const guns =
@@ -49,6 +51,25 @@ export function tickGuns(world: World, t: Tank, input: InputFrame, categories?: 
       continue;
     }
     if (t.side !== 'player' && [4013, 4022].includes(id)) continue;
+    if (t.side !== 'player' && id === 4015) {
+      if (advanceRotatingCycle(g) && ++g.counter >= spec.rate) {
+        g.counter = 0;
+        world.fireGun(t, g, input);
+      }
+      continue;
+    }
+    if (t.side !== 'player' && id === 4010) {
+      // _-Vc.Run calls PartCallRun directly, without target acquisition or Aim.
+      if (++g.counter >= spec.rate) {
+        world.fireGun(t, g, input);
+        g.counter = 0;
+      }
+      continue;
+    }
+    if (t.side !== 'player' && id === 4026) {
+      tickSpike(world, t, g);
+      continue;
+    }
     const aim =
       t.side === 'player'
         ? { x: input.aim.x - STAGE.cx + t.x, y: input.aim.y - STAGE.cy + t.y }
@@ -58,14 +79,9 @@ export function tickGuns(world: World, t: Tank, input: InputFrame, categories?: 
     if (id === 4032) tickTurretBehavior(world, t, g);
     const mount = rotate(g.part, t.rotation),
       pos = { x: t.x + mount.x, y: t.y + mount.y };
-    const fixed =
-      [3001, 3008, 3017, 4002, 4008, 4009, 4010, 4012, 4021].includes(id) ||
-      t.design.id.startsWith('B');
-    if (aim && ![4015, 4032, 5003, 5004, 5006].includes(id))
-      g.angle =
-        (t.side === 'player' && t.design.classId <= 3) || fixed
-          ? g.part.rotation
-          : actorAngle(actorHeading(pos, aim) - t.rotation);
+    const flags = (g.aim ??= weaponAimFlags(id, t.design.classId));
+    if (aim && (t.side === 'player' ? flags.avatar : flags.rotates) && id !== 4032)
+      g.angle = actorAngle(actorHeading(pos, aim) - t.rotation);
     const target = t.side === 'player' || id === 4032 ? null : finishWeaponAim(world, t, g);
     if (t.side !== 'player' && id !== 4032 && !target) continue;
     if (t.side !== 'player' && g.burst > 0 && --g.burstTimer <= 0) {
@@ -93,7 +109,6 @@ export function tickGuns(world: World, t: Tank, input: InputFrame, categories?: 
         }
       }
     } else {
-      if (id === 4015 && !advanceRotatingCycle(g)) continue;
       if (id === 4023) {
         if (world.runtimeFor(world.currentWrapper).apocalypse && ++g.counter >= spec.rate) {
           world.fireGun(t, g, input);
@@ -223,16 +238,20 @@ export function fireGun(world: World, t: Tank, gun: GunState, input: InputFrame)
     const pos = world.muzzle(t, gun);
     world.addCombatEffect(pos, 'areaBurst');
     for (const e of world.field.enemies)
-      if (!e.dead && distance(pos, e) <= 145) {
+      if (distance(pos, e) <= 145) {
         if (id === 3002) {
           e.status.stun = 101;
+          e.stunned = true;
           decorateStatus(world, e, 'stun', 100);
         } else world.damage(e, 25);
       }
-    if (id === 3003)
-      for (const b of world.bullets)
-        if (b.enemy && distance(b, pos) <= 145 && b.kind !== 'mine') b.dead = true;
-    if (id === 3003) world.flushEnemyRemovals();
+    if (id === 3003) {
+      for (const bullet of world.bullets.filter(
+        (b) => b.enemy && projectileFlags(b).destroyable && distance(b, pos) <= 145,
+      ))
+        world.removeBullet(bullet);
+      world.flushEnemyRemovals();
+    }
     return;
   }
   if (id === 3006) {
@@ -312,17 +331,7 @@ export function fireGun(world: World, t: Tank, gun: GunState, input: InputFrame)
     }
     return;
   }
-  if (id === 4026) {
-    const pos = world.muzzle(t, gun);
-    for (const e of [world.player, ...world.allies])
-      if (world.hitTest(e, pos.x, pos.y)) {
-        world.damage(e, 3);
-        const d = direction(angleTo(t, e), 8 - e.design.classId);
-        e.velocity.x += d.x;
-        e.velocity.y += d.y;
-      }
-    return;
-  }
+  if (id === 4026) return; // Its trigger is empty; contact belongs to BehaviorRun.
   if (id === 4032) {
     const turret = world.bullets.find((b) => b.uid === gun.turretId && (b.build ?? 1) < 4);
     const pos = world.muzzle(t, gun, 0),

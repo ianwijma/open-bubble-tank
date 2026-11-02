@@ -32,6 +32,7 @@ import emitterData from '../data/emitters.json';
 import { moveActor } from './actor-movement';
 import { ActorParents } from './actor-parents';
 import { HealerTargetReadError } from './healer-target';
+import { SpikeTargetReadError } from './spikes';
 import { FieldRuntime } from './field-runtime';
 import { WallTimers } from './wall-timers';
 import { controlPlayerDirection } from './player-direction';
@@ -370,7 +371,8 @@ export class World {
       this.stepFrame(input);
     } catch (error) {
       // AVM2 dispatch ends this Main.Run listener on an uncaught target read; the next frame runs.
-      if (!(error instanceof HealerTargetReadError)) throw error;
+      if (!(error instanceof HealerTargetReadError) && !(error instanceof SpikeTargetReadError))
+        throw error;
     } finally {
       this.actorParents.sync(this);
       // Authored timelines advance even when state1 skips effects-engine polling.
