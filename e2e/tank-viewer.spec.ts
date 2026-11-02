@@ -78,6 +78,24 @@ for (const native of [false, true])
       { x: 0, y: 0 },
       { x: 0, y: 0 },
     ]);
+    // Oversized retained artwork must not turn either fixed stage container into a scrollport.
+    const scroll = await page.locator('.stage-frame,.stage-space').evaluateAll((nodes) =>
+      nodes.map((node) => {
+        const probe = document.createElement('div');
+        probe.style.cssText = 'position:absolute;left:200%;top:200%;width:1px;height:1px';
+        node.append(probe);
+        node.scrollLeft = 11;
+        node.scrollTop = 13;
+        const result = { x: node.scrollLeft, y: node.scrollTop };
+        probe.remove();
+        node.scrollLeft = node.scrollTop = 0;
+        return result;
+      }),
+    );
+    expect(scroll).toEqual([
+      { x: 0, y: 0 },
+      { x: 0, y: 0 },
+    ]);
     expect(
       await viewer
         .locator('.viewer-card')

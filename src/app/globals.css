@@ -172,7 +172,7 @@ p {
   box-shadow:
     0 20px 70px #0005,
     0 0 0 1px #a3e5ee12;
-  overflow: hidden;
+  overflow: clip;
   background: #0a3b56;
   align-self: center;
 }
@@ -186,7 +186,7 @@ p {
   width: 550px;
   height: 450px;
   transform-origin: top left;
-  overflow: hidden;
+  overflow: clip;
 }
 .main-stage {
   position: relative;
