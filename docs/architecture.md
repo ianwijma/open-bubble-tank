@@ -253,3 +253,6 @@ First-use help reads the Boolean profile flag after loading. Only the last Next 
 
 
 `core/viewer-navigation.ts` keeps the source's persistent page/detail button flags in an immutable snapshot. `TankViewer` dispatches local, sort, code, cards, detail and page actions, then asks the existing pane owner to rebuild or transfer previews. Caption setters and handlers write flags in source order, so enabled controls cannot be derived solely from queue bounds. Repeated First/Next actions can deliberately rebuild the same page/tank. The model has no rendering, profile or browser-service dependency.
+
+
+`core/viewer-highlights.ts` separates persistent card-slot line/glow latches from replaceable preview identity and caution alpha. Its frame step receives hit booleans and an activity flag; it owns no pointer sampling, DOM or renderer. Warning eligibility reuses `tankLoadEligibility`, retaining active-level capacity and authoritative unlock lists. Alpha assignments use the existing signed8.8 display setter. Browser sampling, warning geometry and preview filters follow in separate slices.
