@@ -22,6 +22,7 @@ export function TankViewerSort({
   onOpen,
   onSort,
   onHover,
+  x = 501.6,
 }: {
   pack: AssetPack;
   stage: StageRuntime;
@@ -30,6 +31,7 @@ export function TankViewerSort({
   onOpen: (open: boolean) => void;
   onSort: (sort: ViewerSort) => void;
   onHover: (text: string) => void;
+  x?: number;
 }) {
   const icon = open ? 1224 : 1221,
     menu = open ? 1222 : 1218,
@@ -37,7 +39,7 @@ export function TankViewerSort({
     buttons = useRef(new Map<string, HTMLDivElement>()),
     rootElement = useRef<HTMLDivElement>(null);
   const base = viewerRoot('btnSortTanks_mc'),
-    root = { ...base.matrix, tx: 10032 },
+    root = { ...base.matrix, tx: Math.round(x * 20) },
     clip = viewerWidget(1225, open ? 2 : 1).children.find((p) => p.name === 'containerButtons_mc')!,
     b = TANK_VIEWER.sortButtonBounds;
   useEffect(() => {
