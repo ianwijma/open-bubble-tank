@@ -2116,6 +2116,20 @@ kbd {
   white-space: pre;
 }
 
+.creator-part-details {
+  position: absolute;
+  z-index: 7;
+  pointer-events: none;
+}
+.creator-details-arrow-mask {
+  position: absolute;
+  overflow: hidden;
+  pointer-events: none;
+}
+.creator-details-thumbnail {
+  position: absolute;
+  pointer-events: none;
+}
 .creator-save-dialog {
   position: absolute;
   inset: 0;

@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import type { AssetPack } from '@/game/assets/asset-pack';
 import { measureClass } from '@/game/assets/class-measurement';
 import type { TankDesign, TankPart } from '@/game/core/types';
@@ -16,6 +16,8 @@ import { CreatorStats } from './creator-stats';
 import { CreatorEnemyStats, CreatorStatsTab } from './creator-enemy-stats';
 import { CreatorPaletteFrame, CreatorPaletteTabs, CreatorPaletteRows } from './creator-palette';
 import { CREATOR_PALETTE } from '@/game/core/creator-palette';
+import { CreatorPartDetails } from './creator-part-details';
+import { creatorThumbnailScale, type CreatorDetailFocus } from '@/game/core/creator-details';
 import { CLASS_RINGS } from '@/game/core/constants';
 import {
   placementParts,
@@ -96,6 +98,10 @@ export function TankCreator({
   const dialogOpener = useRef<HTMLElement | null>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
   const previewCanvas = useRef<HTMLCanvasElement>(null);
+  const detailCanvas = useRef<HTMLCanvasElement>(null),
+    detailsCounter = useRef(0),
+    detailsId = useId();
+  const [details, setDetails] = useState<CreatorDetailFocus | null>(null);
   const artwork = useRef<import('@/game/render/creator-artwork').CreatorArtwork | null>(null);
   const artworkFrame = useRef(1);
   const drawRef = useRef<() => void>(() => {});
@@ -311,6 +317,33 @@ export function TankCreator({
       else if (part) pack.drawPart(pc, part);
       pc.restore();
     }
+    const dc = detailCanvas.current?.getContext('2d');
+    if (!details) artwork.current?.clearLayer('details');
+    else if (dc) {
+      dc.clearRect(0, 0, 98, 98);
+      dc.save();
+      dc.scale(2, 2);
+      const viewer = CREATOR_PALETTE.details.viewer;
+      dc.translate(viewer.matrix.tx / 20 - viewer.mask.x, viewer.matrix.ty / 20 - viewer.mask.y);
+      const part: TankPart = {
+        key: `details-${details.instance}`,
+        type: details.id,
+        x: 0,
+        y: 0,
+        radius: 0,
+        scale: 1,
+        rotation: 0,
+        twin: '',
+      };
+      if (artwork.current) artwork.current.draw(dc, 'details', [{ part }], artworkFrame.current);
+      else {
+        const raster = pack.part(part.type),
+          padding = pack.mode === 'swf' ? 4 : 6;
+        part.scale = creatorThumbnailScale(raster.width - padding, raster.height - padding);
+        pack.drawPart(dc, part);
+      }
+      dc.restore();
+    }
   }
   useEffect(() => {
     drawRef.current = draw;
@@ -396,6 +429,7 @@ export function TankCreator({
     return placementParts(id, radius, pos, symmetric, key);
   }
   function beginPlacement(id: number, mode: 'pointer' | 'keyboard', pos: { x: number; y: number }) {
+    setDetails(null);
     pointer.current = pos;
     radii.current.delete(id);
     const radius = artwork.current?.beginDraft(
@@ -483,13 +517,17 @@ export function TankCreator({
         pack={pack}
         name="LoadTank_mc"
         label="Load a Tank..."
-        onClick={() => setLoading(true)}
+        onClick={() => {
+          setDetails(null);
+          setLoading(true);
+        }}
       />
       <CreatorButton
         pack={pack}
         name="SaveExit_mc"
         label="SAVE"
         onClick={() => {
+          setDetails(null);
           if (errors.length) {
             setMessage(errors[0]);
             return;
@@ -511,6 +549,7 @@ export function TankCreator({
         name="Exit_mc"
         label="Exit tank creator"
         onClick={() => {
+          setDetails(null);
           dialogOpener.current = document.activeElement as HTMLElement | null;
           setSaveDialog({ kind: 'exit', tank: finalDesign });
         }}
@@ -786,6 +825,7 @@ export function TankCreator({
         avatar={design.avatar}
         category={category}
         onCategory={(id) => {
+          setDetails(null);
           setAdvanced(false);
           setCategory(id);
           setChosen(
@@ -804,7 +844,13 @@ export function TankCreator({
         parts={palette}
         context={paletteContext}
         chosen={chosen}
+        detailsId={details ? detailsId : undefined}
+        onDetails={(anchor) =>
+          setDetails(anchor ? { ...anchor, instance: ++detailsCounter.current } : null)
+        }
         onChoose={(id) => {
+          if (details && chosen !== id)
+            setDetails({ ...details, id, selected: true, instance: ++detailsCounter.current });
           setAdvanced(false);
           setChosen(id);
           placement.current = null;
@@ -812,6 +858,7 @@ export function TankCreator({
           setMessage('');
         }}
       />
+      <CreatorPartDetails pack={pack} focus={details} canvas={detailCanvas} id={detailsId} />
       {loading ? (
         <TankCodeDialog
           onClose={() => setLoading(false)}
