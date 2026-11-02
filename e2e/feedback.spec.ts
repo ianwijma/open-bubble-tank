@@ -2,21 +2,7 @@ import { waitForMainMenu } from './helpers/main-menu';
 import { test, expect, type Page } from '@playwright/test';
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
-
-async function watchAudio(page: Page) {
-  await page.addInitScript(() => {
-    const NativeAudio = window.Audio;
-    const audio: HTMLAudioElement[] = [];
-    Object.defineProperty(window, '__testAudio', { value: audio });
-    window.Audio = new Proxy(NativeAudio, {
-      construct(target, args) {
-        const element = new target(args[0]);
-        audio.push(element);
-        return element;
-      },
-    });
-  });
-}
+import { watchAudio, musicPlaying, musicState, pauseMusic, soundPlayed } from './helpers/audio';
 async function play(page: Page) {
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'Play', exact: true }).click();
@@ -25,13 +11,6 @@ async function play(page: Page) {
     .getByRole('button', { name: 'PLAY', exact: true })
     .click();
   await expect(page.locator('.game-canvas canvas')).toBeVisible();
-}
-async function musicPlaying(page: Page) {
-  return page.evaluate(() => {
-    const list = (window as unknown as { __testAudio: HTMLAudioElement[] }).__testAudio;
-    const music = list.filter((audio) => audio.loop).at(-1);
-    return !!music && !music.paused && music.currentTime > 0 && !music.error;
-  });
 }
 test('mock sound, gesture resume, P/Escape, zoom, guide and centered creator button', async ({
   page,
@@ -64,16 +43,12 @@ test('mock sound, gesture resume, P/Escape, zoom, guide and centered creator but
   await page.screenshot({ path: 'test-results/settings-zoom.png' });
   await page.getByRole('button', { name: 'DONE' }).click();
   await play(page);
+  await expect.poll(async () => (await musicState(page)).length).toBe(2);
   await expect.poll(() => musicPlaying(page)).toBe(true);
   await page.getByRole('button', { name: 'Pause game' }).focus();
   await page.keyboard.press('KeyP');
   await expect(page.getByRole('dialog', { name: 'Paused', exact: true })).toBeVisible();
-  await page.evaluate(() =>
-    (window as unknown as { __testAudio: HTMLAudioElement[] }).__testAudio
-      .filter((audio) => audio.loop)
-      .at(-1)!
-      .pause(),
-  );
+  await pauseMusic(page);
   await page.keyboard.press('Escape');
   await expect(page.getByRole('dialog', { name: 'Paused', exact: true })).toHaveCount(0);
   await expect.poll(() => musicPlaying(page)).toBe(true);
@@ -84,15 +59,7 @@ test('mock sound, gesture resume, P/Escape, zoom, guide and centered creator but
   const bounds = await page.locator('.game-canvas').boundingBox();
   await page.mouse.move(bounds!.x + bounds!.width * 0.8, bounds!.y + bounds!.height * 0.5);
   await page.mouse.down();
-  await expect
-    .poll(() =>
-      page.evaluate(() =>
-        (window as unknown as { __testAudio: HTMLAudioElement[] }).__testAudio.some(
-          (audio) => !audio.loop && audio.duration > 0 && !audio.error,
-        ),
-      ),
-    )
-    .toBe(true);
+  await expect.poll(() => soundPlayed(page)).toBe(true);
   await page.mouse.up();
   await page.getByRole('button', { name: 'Enter fullscreen' }).click();
   await expect.poll(() => page.evaluate(() => !!document.fullscreenElement)).toBe(true);
@@ -151,28 +118,16 @@ test('original SWF music resumes and player volleys play extracted audio', async
   await page.goto('/');
   await page.getByLabel('Bubble Tanks 3 Flash file').setInputFiles(swf);
   await play(page);
+  await expect.poll(async () => (await musicState(page)).length).toBe(2);
   await expect.poll(() => musicPlaying(page)).toBe(true);
   await page.keyboard.press('KeyP');
-  await page.evaluate(() =>
-    (window as unknown as { __testAudio: HTMLAudioElement[] }).__testAudio
-      .filter((audio) => audio.loop)
-      .at(-1)!
-      .pause(),
-  );
+  await pauseMusic(page);
   await page.getByRole('button', { name: 'PLAY', exact: true }).click();
   await expect.poll(() => musicPlaying(page)).toBe(true);
   await expect(page.getByRole('dialog')).toHaveCount(0);
   const bounds = await page.locator('.game-canvas').boundingBox();
   await page.mouse.move(bounds!.x + bounds!.width * 0.8, bounds!.y + bounds!.height * 0.5);
   await page.mouse.down();
-  await expect
-    .poll(() =>
-      page.evaluate(() =>
-        (window as unknown as { __testAudio: HTMLAudioElement[] }).__testAudio.some(
-          (audio) => !audio.loop && audio.duration > 0 && !audio.error,
-        ),
-      ),
-    )
-    .toBe(true);
+  await expect.poll(() => soundPlayed(page)).toBe(true);
   await page.mouse.up();
 });

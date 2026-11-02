@@ -15,7 +15,6 @@ export class AudioManager {
   private channels = new Set<HTMLAudioElement>();
   private music: HTMLAudioElement | null = null;
   private wantedTrack = 0;
-  private requestedTrack = 0;
   private rememberedTrack = 0;
   private musicEnabled = true;
   private fade: { direction: 'in' | 'out'; frame: number; total: number; from: number } | null =
@@ -50,16 +49,33 @@ export class AudioManager {
     if (this.musicEnabled && this.music?.paused) void this.music.play().catch(() => {});
   }
   private startMusic(id: number, frames: number) {
-    this.music?.pause();
-    this.music = null;
+    this.stopMusic();
     this.rememberedTrack = id;
     const url = this.urls.get(id);
     if (!url) return;
     this.music = new Audio(url);
-    this.music.loop = true;
+    // MusicPlayer receives SOUND_COMPLETE and starts the same Sound again.
+    // Native looping would bypass its volume write during an active transition.
+    this.music.loop = false;
     this.music.volume = frames ? 0 : 0.8;
+    const audio = this.music;
+    audio.onended = () => {
+      if (!this.musicEnabled || this.music !== audio) return;
+      audio.currentTime = 0;
+      audio.volume = 0.8;
+      // Completion replaces the voice, not MusicPlayer's transition/counter.
+      void audio.play().catch(() => {});
+    };
     this.fade = frames ? { direction: 'in', frame: 0, total: frames, from: 0 } : null;
     if (this.musicEnabled) void this.music.play().catch(() => {});
+  }
+  private stopMusic() {
+    const audio = this.music;
+    this.music = null;
+    if (audio) {
+      audio.onended = null;
+      audio.pause();
+    }
   }
   private tickMusic() {
     if (!this.musicEnabled || !this.fade || !this.music) return;
@@ -71,10 +87,8 @@ export class AudioManager {
       if (fade.direction === 'out') this.startMusic(this.wantedTrack, 20);
     }
   }
-  setMusic(mode: 'menu' | 'game', enabled: boolean) {
-    const id = mode === 'menu' ? 568 : 567;
-    const changed = id !== this.requestedTrack;
-    this.requestedTrack = id;
+  setMusicEnabled(enabled: boolean) {
+    if (enabled === this.musicEnabled) return;
     if (!enabled) {
       if (this.musicEnabled && this.fade?.direction === 'out')
         this.rememberedTrack = this.wantedTrack;
@@ -87,9 +101,12 @@ export class AudioManager {
       this.musicEnabled = true;
       if (this.rememberedTrack) this.startMusic(this.rememberedTrack, 0);
     }
-    // Main._-RO ignores muted route calls. PlayMusic accepts only idle/steady states;
-    // a rejected request is not queued or retried on an unrelated profile update.
-    if (!changed || this.fade) return this.unlock();
+  }
+  /** Main._-RO is called for a fresh menu/game, including an already playing track. */
+  requestMusic(mode: 'menu' | 'game') {
+    // Muted/fading calls are discarded, not queued for a later settings update.
+    if (!this.musicEnabled || this.fade) return;
+    const id = mode === 'menu' ? 568 : 567;
     if (!this.music) this.startMusic(id, 40);
     else {
       this.wantedTrack = id;
@@ -104,7 +121,8 @@ export class AudioManager {
   }
   dispose() {
     this.unsubscribe();
-    this.music?.pause();
+    this.stopMusic();
+    this.fade = null;
     for (const a of this.channels) a.pause();
     for (const url of this.urls.values()) URL.revokeObjectURL(url);
     this.channels.clear();
