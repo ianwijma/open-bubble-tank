@@ -274,3 +274,6 @@ The candidate-eligibility fixture adds a level-two avatar queue with a preceding
 
 
 `RunPartUnlocks` supplies a fresh source reset list and append-only tier history as readonly snapshots. Adding a tier creates a new snapshot; a lower/repeated tier preserves the previous one. The shared `partUnlocked` predicate now also accepts optional retained history in palette state and save validation, while absent history keeps the existing level fallback. This rule slice does not yet connect a World/editor owner; runtime propagation follows separately.
+
+
+`World` now owns one `RunPartUnlocks` instance and exposes its current readonly snapshot. `getOffers` advances unlock history before filtering candidates, matching UpgradeMenu's source update order; candidates still obey active-level GP/class limits and avatar category restrictions. Damage-driven level restoration leaves unlock history intact, while a new World creates the source reset list. Passing this snapshot into the live creator/viewer remains a separate component slice.

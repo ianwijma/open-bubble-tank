@@ -1,4 +1,5 @@
 import { expect, test } from 'bun:test';
+import { World, emptyInput } from '../src/game/simulation/world';
 import { RunPartUnlocks } from '../src/game/core/part-unlocks';
 import { STARTER, partById } from '../src/game/data/catalog';
 import { paletteState } from '../src/game/simulation/editor-palette';
@@ -85,4 +86,50 @@ test('tier order appends source IDs once and earlier snapshots remain unchanged'
   const all = run.parts;
   run.unlockThrough(0);
   expect(run.parts).toBe(all);
+});
+
+test('lower-level offers retain an earned Radar while still rejecting excess current Gun Points', () => {
+  const radar = {
+    ...STARTER,
+    id: 'L-offer-radar',
+    name: 'Retained Radar Offer',
+    sourceCode: undefined,
+    parts: [...STARTER.parts, { ...STARTER.parts[1], key: 'radar', type: 5001, x: 0, y: 20 }],
+  };
+  const overBudget = {
+    ...radar,
+    id: 'L-offer-over-budget',
+    parts: [...radar.parts, { ...STARTER.parts[1], key: 'extra', x: 20, y: 0 }],
+  };
+  const world = new World([radar, overBudget], [STARTER, STARTER, STARTER, STARTER], 1);
+  world.getOffers();
+  world.progression.level = 1;
+  const offers = world.getOffers();
+  expect(offers.some((t) => t.id === radar.id)).toBe(true);
+  expect(offers.some((t) => t.id === overBudget.id)).toBe(false);
+  const fresh = new World([radar], [], 1);
+  fresh.progression.level = 1;
+  expect(fresh.getOffers().some((t) => t.id === radar.id)).toBe(false);
+});
+
+test('real world upgrades unlock before offers and retain Radar through two damaging downgrades', () => {
+  const world = new World([], [STARTER, STARTER, STARTER, STARTER], 1);
+  expect(world.unlockedParts).not.toContain(5001);
+  world.getOffers(); // UpgradeMenu.SecondSetup / UpdateUnlocked before choosing or editing.
+  const unlocked = world.unlockedParts;
+  expect(unlocked).toContain(5001);
+  for (let death = 0; death < 2; death++) {
+    world.damage(world.player, 100000);
+    for (let i = 0; i < 25; i++) world.step(emptyInput());
+  }
+  expect(world.progression.level).toBe(1);
+  world.getOffers();
+  expect(world.unlockedParts).toBe(unlocked);
+  expect(world.unlockedParts).toContain(5001);
+  const fresh = new World([], [], 1);
+  fresh.player.life = fresh.player.maxLife;
+  fresh.step(emptyInput());
+  expect(fresh.progression.level).toBe(1);
+  expect(fresh.unlockedParts).toContain(2002);
+  expect(fresh.unlockedParts).not.toContain(5001);
 });
