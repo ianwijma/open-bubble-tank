@@ -82,7 +82,7 @@ test('mock music completes actual media playback and restarts at source volume',
   expect(music.error).toBe(false);
 });
 
-test('muted game entry does not replace the menu track remembered by paused Settings', async ({
+test('mock muted game entry does not replace the menu track remembered by paused Settings', async ({
   page,
 }) => {
   await watchAudio(page);
