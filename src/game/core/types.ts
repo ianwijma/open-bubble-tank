@@ -97,6 +97,14 @@ export interface GunState {
   /** Latest non-overlapping mounted MovieClip.play episode, in stage-art ages. */
   mountedPlay?: { child: string; age: number; frames: number };
 }
+export interface WallFlowerState {
+  age: number;
+  frequency: number;
+  amplitude: number;
+  point?: Vec;
+  radius?: number;
+  direction?: number;
+}
 export interface ActorMovementState {
   frames: number;
   rate: number;
