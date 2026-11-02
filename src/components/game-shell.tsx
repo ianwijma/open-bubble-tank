@@ -102,15 +102,14 @@ export default function GameShell() {
       setAudio(null);
       return;
     }
-    const manager = new AudioManager(pack);
+    const manager = new AudioManager(pack, stage);
     setAudio(manager);
     return () => {
       manager.dispose();
     };
-  }, [pack]);
+  }, [pack, stage]);
   useEffect(() => {
     if (profile) {
-      audio?.setFrameRate(profile.settings.fps);
       audio?.setMusic(
         screen === 'game' ||
           ((screen === 'creator' || screen === 'viewer') && editor?.returnTo === 'game')

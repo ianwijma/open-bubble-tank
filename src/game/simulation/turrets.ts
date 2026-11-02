@@ -4,6 +4,7 @@ import type { GunState, Projectile, Tank } from '../core/types';
 import type { World } from './world';
 import { projectileImpact } from './effects';
 import { projectileCallback } from './projectile-contact';
+import { collisionSound } from './collision-sound';
 import { attachTurretShield, removeTurretShield } from './shields';
 
 /** _-DO.Run polls only its own attached turrets before aiming and PartCallRun. */
@@ -59,12 +60,12 @@ export function tickTurret(world: World, turret: Projectile, owner: Tank | undef
   for (const shot of world.bullets) {
     if (shot.dead || shot.enemy === turret.enemy || !touches(world, turret, shot)) continue;
     turret.health = (turret.health ?? 10) - shot.damage;
-    world.emit('hit');
-    projectileCallback(world, shot, turret);
+    projectileCallback(world, shot, turret, turret.enemy);
     // _-BL.blnBeam starts true for every shipped class; this contact leaves the shot alive.
     if (turret.health <= 0) {
       turret.dead = true;
       projectileImpact(world, turret);
+      collisionSound(world, turret, false);
       return;
     }
   }
@@ -94,6 +95,7 @@ export function builderHitsObject(world: World, builder: Projectile) {
   ) {
     builder.dead = true;
     projectileImpact(world, builder);
+    collisionSound(world, builder);
     return true;
   }
   const contact = world.bullets.find(
@@ -106,5 +108,6 @@ export function builderHitsObject(world: World, builder: Projectile) {
   }
   builder.dead = true;
   projectileImpact(world, builder);
+  collisionSound(world, builder);
   return true;
 }

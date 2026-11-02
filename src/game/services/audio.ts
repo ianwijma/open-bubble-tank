@@ -1,6 +1,7 @@
 import type { AssetPack } from '../assets/asset-pack';
 import type { Settings, WorldEvent } from '../core/types';
 import { mockAudio } from './mock-audio';
+import type { StageRuntime } from './stage-runtime';
 const SOUND_IDS: Partial<Record<WorldEvent['type'], number>> = {
   shoot: 561,
   collect: 562,
@@ -13,55 +14,36 @@ export class AudioManager {
   private urls = new Map<number, string>();
   private channels = new Set<HTMLAudioElement>();
   private music: HTMLAudioElement | null = null;
-  private track = 0;
   private wantedTrack = 0;
+  private requestedTrack = 0;
+  private rememberedTrack = 0;
   private musicEnabled = true;
   private fade: { direction: 'in' | 'out'; frame: number; total: number; from: number } | null =
     null;
-  private animation = 0;
-  private fps = 50;
-  private frame = 0;
-  private last = new Map<number, number>();
-  constructor(pack: AssetPack) {
+  private unsubscribe: () => void;
+  constructor(pack: AssetPack, stage: StageRuntime) {
     for (const [id, blob] of pack.sounds) this.urls.set(id, URL.createObjectURL(blob));
     if (pack.mode === 'mock')
       for (const id of [561, 562, 563, 564, 565, 566, 567, 568])
         this.urls.set(id, URL.createObjectURL(mockAudio(id)));
-    let last = performance.now(),
-      accumulator = 0;
-    const tick = (now: number) => {
-      accumulator += Math.min(100, now - last);
-      last = now;
-      while (accumulator >= 1000 / this.fps) {
-        this.tickMusic();
-        accumulator -= 1000 / this.fps;
-      }
-      this.animation = requestAnimationFrame(tick);
-    };
-    this.animation = requestAnimationFrame(tick);
+    // MusicPlayer registers on the stage before the World/Main listener.
+    this.unsubscribe = stage.subscribe({ beforeStep: () => this.tickMusic() });
   }
   playEvents(events: WorldEvent[], settings: Settings) {
-    this.frame++;
     if (!settings.sound) return;
     for (const event of events) {
       const id = SOUND_IDS[event.type];
       if (!id) continue;
-      const throttle = id === 563 ? 4 : 0;
-      if (this.frame - (this.last.get(id) ?? -100) < throttle) continue;
       const url = this.urls.get(id);
       if (!url || this.channels.size >= 10) continue;
       const audio = new Audio(url);
       audio.volume = id === 562 ? 0.6 : id === 564 ? 0.9 : 1;
       this.channels.add(audio);
-      this.last.set(id, this.frame);
       const release = () => this.channels.delete(audio);
       audio.onended = release;
       audio.onerror = release;
       void audio.play().catch(release);
     }
-  }
-  setFrameRate(fps: number) {
-    this.fps = fps;
   }
   /** Re-enter playback inside a pointer/key gesture after autoplay rejection or media suspension. */
   unlock() {
@@ -70,7 +52,7 @@ export class AudioManager {
   private startMusic(id: number, frames: number) {
     this.music?.pause();
     this.music = null;
-    this.track = id;
+    this.rememberedTrack = id;
     const url = this.urls.get(id);
     if (!url) return;
     this.music = new Audio(url);
@@ -91,8 +73,11 @@ export class AudioManager {
   }
   setMusic(mode: 'menu' | 'game', enabled: boolean) {
     const id = mode === 'menu' ? 568 : 567;
-    this.wantedTrack = id;
+    const changed = id !== this.requestedTrack;
+    this.requestedTrack = id;
     if (!enabled) {
+      if (this.musicEnabled && this.fade?.direction === 'out')
+        this.rememberedTrack = this.wantedTrack;
       this.musicEnabled = false;
       this.music?.pause();
       this.fade = null;
@@ -100,19 +85,16 @@ export class AudioManager {
     }
     if (!this.musicEnabled) {
       this.musicEnabled = true;
-      this.startMusic(id, 0); // MusicPlayer._-a3 restarts a muted track at full volume.
-      return;
+      if (this.rememberedTrack) this.startMusic(this.rememberedTrack, 0);
     }
-    if (id === this.track && this.music) {
-      this.unlock();
-      return;
+    // Main._-RO ignores muted route calls. PlayMusic accepts only idle/steady states;
+    // a rejected request is not queued or retried on an unrelated profile update.
+    if (!changed || this.fade) return this.unlock();
+    if (!this.music) this.startMusic(id, 40);
+    else {
+      this.wantedTrack = id;
+      this.fade = { direction: 'out', frame: 0, total: 40, from: 0.8 };
     }
-    if (!this.music) {
-      this.startMusic(id, 40);
-      return;
-    }
-    if (this.fade?.direction !== 'out')
-      this.fade = { direction: 'out', frame: 0, total: 40, from: this.music.volume };
   }
   setSound(enabled: boolean) {
     if (!enabled) {
@@ -121,7 +103,7 @@ export class AudioManager {
     }
   }
   dispose() {
-    cancelAnimationFrame(this.animation);
+    this.unsubscribe();
     this.music?.pause();
     for (const a of this.channels) a.pause();
     for (const url of this.urls.values()) URL.revokeObjectURL(url);

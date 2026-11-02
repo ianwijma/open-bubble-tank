@@ -96,6 +96,7 @@ export const emptyInput = (): InputFrame => ({
 });
 export class World {
   mode: WorldMode = 'playing';
+  hitSoundTimer = -1;
   readonly actorParents = new ActorParents();
   player: Tank;
   private currentField!: Field;
@@ -376,6 +377,9 @@ export class World {
     if (advanceMainEffects) this.mainEffects.tick(() => this.rng.next());
     try {
       this.stepFrame(input);
+      // BTAGameWorld._-9E follows its mode switch, including state1 pause.
+      // An uncaught listener error skips this tail; the finally artwork pass is separate.
+      if (this.hitSoundTimer >= 0) this.hitSoundTimer--;
     } catch (error) {
       // AVM2 dispatch ends this Main.Run listener on an uncaught target read; the next frame runs.
       if (

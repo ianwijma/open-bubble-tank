@@ -451,7 +451,7 @@ export const SOUND_FORMATS = {
 };
 const SOUND_RATES = [5512, 11025, 22050, 44100];
 
-function pcmToWav(pcm, sampleRate, bits, channels) {
+export function pcmToWav(pcm, sampleRate, bits, channels) {
   const blockAlign = channels * (bits / 8);
   const buf = new ArrayBuffer(44 + pcm.length);
   const dv = new DataView(buf);

@@ -4,10 +4,18 @@ import type { World } from './world';
 import { projectileImpact } from './effects';
 import { applyProjectileStatus } from './status';
 import { spawnPickups } from './pickups';
+import { collisionSound } from './collision-sound';
 
 /** Source callbacks precede direct damage; splash excludes only this contact. */
-export function projectileCallback(world: World, bullet: Projectile, target?: Tank | Projectile) {
+export function projectileCallback(
+  world: World,
+  bullet: Projectile,
+  target?: Tank | Projectile,
+  enemy = bullet.enemy,
+) {
   projectileImpact(world, bullet);
+  // Sticky's sound follows its target status calls, in the tank callback below.
+  if (bullet.symbol !== 1802) collisionSound(world, bullet, enemy);
   if (bullet.kind === 'leech') spawnPickups(world, bullet, 1, world.pickups, true);
   if (bullet.explode && bullet.kind !== 'apocalypse')
     world.explode(bullet, bullet.explode, bullet.splashDamage ?? bullet.damage, target);
@@ -15,6 +23,7 @@ export function projectileCallback(world: World, bullet: Projectile, target?: Ta
 export function projectileTankCallback(world: World, bullet: Projectile, tank: Tank) {
   projectileCallback(world, bullet, tank);
   if (bullet.status) applyProjectileStatus(world, tank, bullet.status);
+  if (bullet.symbol === 1802) collisionSound(world, bullet);
   // _-BL's friendly branch and _-Un/_-dp count nominal contact damage, before shields.
   // The orbital _-JX override deliberately has no DamageDoneIncr call.
   if (!bullet.enemy && bullet.kind !== 'orbital') world.damageDoneIncr(bullet.damage);
