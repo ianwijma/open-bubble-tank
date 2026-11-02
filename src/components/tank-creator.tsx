@@ -10,7 +10,6 @@ import { exportDesign } from '@/game/services/profile';
 import { firstAffordablePart, orderedPalette } from '@/game/simulation/editor-palette';
 import { CreatorButton, CreatorSlider } from './creator-controls';
 import { CREATOR_CONTROLS } from '@/game/core/creator-controls';
-import { TankCodeDialog } from './tank-code-dialog';
 import { CreatorSaveDialog } from './creator-save-dialog';
 import { CreatorStats } from './creator-stats';
 import { CreatorEnemyStats, CreatorStatsTab } from './creator-enemy-stats';
@@ -54,6 +53,7 @@ export function TankCreator({
   fps,
   onSave,
   onExit,
+  onLoad,
 }: {
   pack: AssetPack;
   overGame?: boolean;
@@ -63,6 +63,7 @@ export function TankCreator({
   fps: number;
   onSave: (tank: TankDesign) => TankDesign | undefined;
   onExit: () => void;
+  onLoad: (limits: { avatar: boolean; level: number; maxClass: number; gunPoints: number }) => void;
 }) {
   const [design, setDesign] = useState<TankDesign>(() => structuredClone(initial));
   const [transformClass, setTransformClass] = useState<number | null>(null);
@@ -85,8 +86,7 @@ export function TankCreator({
     [placing, setPlacing] = useState<number | null>(null),
     [selection, setSelection] = useState<PartSelection>(emptySelection),
     [symmetric, setSymmetric] = useState(true),
-    [message, setMessage] = useState(''),
-    [loading, setLoading] = useState(false);
+    [message, setMessage] = useState('');
   const [advanced, setAdvanced] = useState(false);
   const [undo, setUndo] = useState<TankDesign[]>([]);
   const [suggested, setSuggested] = useState(
@@ -535,7 +535,7 @@ export function TankCreator({
         label="Load a Tank..."
         onClick={() => {
           setDetails(null);
-          setLoading(true);
+          onLoad({ avatar: design.avatar, level, maxClass, gunPoints: budget });
         }}
       />
       <CreatorButton
@@ -876,23 +876,6 @@ export function TankCreator({
       />
       <CreatorSelectionInfo pack={pack} icons={selectionIcons} />
       <CreatorPartDetails pack={pack} focus={details} canvas={detailCanvas} id={detailsId} />
-      {loading ? (
-        <TankCodeDialog
-          onClose={() => setLoading(false)}
-          onImport={(tank) => {
-            if (tank.avatar !== design.avatar) {
-              setMessage(`Load an ${design.avatar ? 'avatar' : 'enemy'} tank.`);
-              return;
-            }
-            if (!design.avatar)
-              setSuggested((current) => creatorImportedSuggested(tank, finalDesign, current));
-            commit(tank);
-            placement.current = null;
-            setSelection(emptySelection());
-            setPlacing(null);
-          }}
-        />
-      ) : null}
     </div>
   );
   return (

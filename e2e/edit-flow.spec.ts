@@ -26,6 +26,7 @@ for (const native of [false, true])
       (profile) => localStorage.setItem('open-bubble-tank.profile.v1', JSON.stringify(profile)),
       {
         version: 1,
+        tankViewerHelpSeen: true,
         secondaryHelpSeen: true, // The dedicated help flow covers its first-time interruption.
         tanks: [],
         achievements: [],
@@ -91,6 +92,31 @@ for (const native of [false, true])
       page.getByRole('button', { name: 'Place Basic Cannon', exact: true }),
     ).toBeVisible();
     await categories.getByRole('button', { name: 'Body', exact: true }).click();
+    const snapshot = async (): Promise<TankDesign> => {
+      const downloading = page.waitForEvent('download');
+      await page.getByRole('button', { name: 'Export', exact: true }).click();
+      return JSON.parse(readFileSync((await (await downloading).path())!, 'utf8'));
+    };
+    const beforeViewer = await snapshot();
+    await page.getByRole('button', { name: 'Load a Tank...', exact: true }).click();
+    const viewer = page.locator('.tank-viewer');
+    await expect(viewer).toHaveAttribute('data-viewer-type', 'Avatar');
+    await expect(viewer).toHaveAttribute('data-viewer-ready', 'true');
+    await expect(page.locator('.game-canvas canvas')).toBeVisible();
+    await page.getByRole('button', { name: 'Return to Tank Creator', exact: true }).click();
+    const returned = await snapshot();
+    expect(returned.name).toBe(beforeViewer.name);
+    expect(returned.parts).toEqual(beforeViewer.parts);
+    await page.getByRole('button', { name: 'Load a Tank...', exact: true }).click();
+    await expect(viewer).toHaveAttribute('data-viewer-ready', 'true');
+    const first = viewer.locator('.viewer-select-tank').first(),
+      label = await first.getAttribute('aria-label');
+    await first.click();
+    await page
+      .getByRole('dialog', { name: `${label}?`, exact: true })
+      .getByRole('button', { name: 'Yes', exact: true })
+      .click();
+    await expect(page.locator('.creator')).toBeVisible();
     await exitCreator(page);
     await expect(page.getByRole('dialog')).toHaveCount(0);
     await expect(edit).toBeEnabled();

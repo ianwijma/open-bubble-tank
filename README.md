@@ -32,6 +32,18 @@ The browser tests use Chrome if installed, otherwise a Playwright Chromium insta
 
 Ordinary navigation tests use `e2e/helpers/main-menu.ts` to wait for the native title intro before selecting a menu control. The title's hit geometry can cover an otherwise visible button. Controlled menu fixtures test input during the intro and on animated hover edges separately.
 
+The repeatable metadata importers read the sibling research checkout without copying artwork:
+
+```sh
+python3 tools/import-reference-data.py --parts-only # Catalog strings, costs and stable IDs
+bun tools/import-creator-controls.ts               # Creator controls and transforms
+bun tools/import-creator-palette.ts                # Palette, stats and rollover layouts
+bun tools/import-creator-dialogs.ts                # Save/exit/code screen layouts
+bun tools/import-tank-viewer.ts                    # Local viewer, sorting and detail layouts
+```
+
+Part strings are decoded directly from the recovered ActionScript table, including quoted flavor text. Generated JSON is committed; the research checkout is needed only when regenerating it.
+
 ## Original runtime reference
 
 The development reference viewer runs the supplied SWF with pinned Ruffle 0.7.1. It is separate from the game application and is excluded from the production bundle. It normalizes the research file's expanded CWS header to FWS and blocks retired external requests. Ruffle is an emulator, so observed differences still need to be checked against the recovered code.
@@ -62,6 +74,8 @@ The helper also accepts `reload PATH`, `hold X Y MS`, `keyhold KEY MS`, `drag X 
 The menu also provides the enemy tank creator and local tank library. Avatar designs can be edited during upgrades and after clearing a field. Designs can be saved, imported/exported as JSON, and shared using the **original encrypted tank-code format**. Settings, progression designs, and the secondary-weapon help flag are saved locally. The help appears on the first eligible tank replacement and pauses play until Close. As in the original, continuing restores the design progression, not a complete serialized world.
 
 In the creator, select a palette row, then drag its preview into the design area. The selected row stays available for repeated drops. With a supplied SWF, previews, dragged objects, and placed parts animate using the native display lists. Dimmed rows exceed the current budget or class limits but remain selectable, as in the original; saving checks the finished design. New enemy designs start empty. For keyboard placement, focus and activate the preview, position it with the arrow keys (Shift moves five pixels), then press Enter to place or Escape to cancel.
+
+**Load a Tank...** opens the local Tank Viewer with built-in and saved designs, animated details, sorting and tank-code entry. Copy, save and delete work locally; online search reports that the retired service is unavailable. Completing both guide pages saves its completion locally. Returning without selecting a tank rebuilds an empty enemy creator or restores the current avatar, following the original routes.
 
 Click placed parts to toggle selection, drag empty space to select a group, and drag selected parts to move them. Symmetric Mode selects a faded linked twin and mirrors group movement; parts meeting on the center line can merge and respawn a twin when moved away. Scale, rotation, layering, delete, and undo apply to the selection. Turning Symmetric Mode on or off clears the selection.
 
