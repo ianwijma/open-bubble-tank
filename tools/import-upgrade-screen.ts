@@ -130,7 +130,37 @@ const cards = list(viewers.charId)
   .map(piece)
   .sort((a, b) => a.name.localeCompare(b.name));
 const edit = piece(list(cards[0].symbol).find((p) => p.name === 'edit_mc')!);
-const ids = [1096, ...foreground.map((p) => p.symbol), cards[0].symbol, edit.symbol];
+const rootFrames = [1, 2, 3, 4].map((frame) => ({
+  frame,
+  pieces: list(1935, frame)
+    .filter((p) =>
+      ['viewers_mc', 'loadingBar_mc', 'buildTank_mc', 'text_mc'].includes(p.name ?? ''),
+    )
+    .map(piece),
+}));
+const loading = piece(list(1935, 1).find((p) => p.name === 'loadingBar_mc')!);
+const loadingChildren = list(loading.symbol);
+const animation = piece(loadingChildren.find((p) => p.name === 'loadingBar_mc')!);
+const label = piece(loadingChildren.find((p) => symbols.texts.some((t) => t.id === p.charId))!);
+const animationFrames = Array.from({ length: sprites.get(animation.symbol)!.frameCount }, (_, i) =>
+  list(animation.symbol, i + 1).map((p) => {
+    if (
+      p.color &&
+      (p.color.mult.slice(0, 3).some((value) => value !== 1) ||
+        p.color.add.some((value) => value !== 0))
+    )
+      throw new Error('Loading animation requires a color transform beyond alpha');
+    return { depth: p.depth, symbol: p.charId, matrix: p.matrix, alpha: p.color?.mult[3] ?? 1 };
+  }),
+);
+const ids = [
+  1096,
+  ...foreground.map((p) => p.symbol),
+  cards[0].symbol,
+  edit.symbol,
+  label.symbol,
+  ...new Set(animationFrames.flatMap((frame) => frame.map((p) => p.symbol))),
+];
 const widgets = ids.flatMap((id) =>
   Array.from(
     { length: id === cards[0].symbol || id === edit.symbol || id === 1923 ? 2 : 1 },
@@ -142,6 +172,17 @@ const result = {
   shade: piece(ps.find((p) => p.charId === 1096)!),
   foreground,
   viewers: { matrix: viewers.matrix, cards },
+  rootFrames,
+  loading: {
+    ...loading,
+    label,
+    animation: {
+      ...animation,
+      // LoadingAnimation_199.frame25 explicitly calls gotoAndPlay(3).
+      loopStart: 3,
+      frames: animationFrames,
+    },
+  },
   edit,
   widgets,
   preview: { width: 158, height: 84 },
