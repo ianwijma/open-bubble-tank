@@ -249,7 +249,7 @@ test('boss win preparation precedes awards and Masochist checks each coordinate 
   expect(world.achievements.has('Masochist')).toBe(true);
 });
 
-test('Explorer triggers only on creating the hundredth unique field, not revisits or later counts', () => {
+test('Explorer triggers at exactly the hundredth cache-miss attachment, not revisits or later counts', () => {
   for (const [existing, awarded] of [
     [100, true],
     [101, false],
@@ -257,6 +257,7 @@ test('Explorer triggers only on creating the hundredth unique field, not revisit
     const { world } = setup();
     for (let i = 1; i < existing; i++)
       world.fields.set(`${i},10`, { ...world.field, col: i, row: 10, enemies: [] });
+    world.stats.visited = existing - 1;
     world.jump({ x: 1, y: 0 });
     expect(world.stats.visited).toBe(existing);
     expect(world.achievements.has('Explorer')).toBe(awarded);
@@ -264,6 +265,8 @@ test('Explorer triggers only on creating the hundredth unique field, not revisit
   const { world } = setup();
   world.stats.visited = 100;
   world.fields.set('1,0', { ...world.field, col: 1, enemies: [], cleared: true });
+  world.cache.store(world.fields.get('1,0')!);
   world.jump({ x: 1, y: 0 });
+  expect(world.stats.visited).toBe(100);
   expect(world.achievements.has('Explorer')).toBe(false);
 });

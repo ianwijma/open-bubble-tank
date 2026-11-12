@@ -4,6 +4,7 @@ import { legacyShieldFilm } from '../core/shield-art';
 /** Attached MovieClips advance on the stage clock, independently of actor Run. */
 export function advanceTankArt(tank: Tank) {
   tank.artAge++;
+  if (!tank.displayChildren.length) return;
   if (tank.statusDecoration) tank.statusDecoration.artAge++;
   if (legacyShieldFilm(tank) || tank.shieldClips.some((clip) => clip.kind === 'film'))
     tank.shieldAge++;

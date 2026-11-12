@@ -42,6 +42,6 @@ test('the map recenters on the attached destination at the start of a crossing',
   world.player.x = 425;
   world.jump({ x: 1, y: 0 });
   expect(world.field).toBe(origin);
-  expect(mapCenter(world)).toBe(world.transit!.next);
+  expect(mapCenter(world)).toEqual({ col: world.transit!.next.col, row: world.transit!.next.row });
   expect(mapCenter(world).col).toBe(1);
 });

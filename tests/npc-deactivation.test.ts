@@ -180,9 +180,14 @@ test('allied boundary exit bypasses protection, drops then pops and runs primary
     false,
     99,
   ]);
+  expect(world.allies).toContain(victim);
+  expect(world.runtimeFor(world.field).allyRemovals).toContain(victim);
+  expect(world.actorParents.hasParent(victim)).toBe(true);
+  expect(victim.displayChildren).toEqual([]);
+  expect(world.stats.kills).toBe(0);
+  world.step(emptyInput());
   expect(world.allies).not.toContain(victim);
   expect(world.actorParents.hasParent(victim)).toBe(false);
-  expect(world.stats.kills).toBe(0);
 });
 
 for (const [name, design] of Object.entries(allies))
@@ -194,6 +199,9 @@ for (const [name, design] of Object.entries(allies))
     expect(world.events.map((e) => e.type)).toContain('pop');
     expect(world.events.map((e) => e.type)).not.toContain('death');
     expect([ally.dead, ally.dataActive]).toEqual([true, false]);
+    expect(world.actorParents.hasParent(ally)).toBe(true);
+    expect(ally.displayChildren).toEqual([]);
+    world.step(emptyInput());
     expect(world.actorParents.hasParent(ally)).toBe(false);
   });
 

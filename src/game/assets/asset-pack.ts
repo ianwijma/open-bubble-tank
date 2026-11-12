@@ -1292,6 +1292,7 @@ export class AssetPack {
     return this.sprites.has(id) || this.shapes.has(id);
   }
   hitTest = (t: Tank, x: number, y: number, stageScale = 1) => {
+    if (!t.displayChildren.length) return false;
     const inverse = descendContact(CONTACT_IDENTITY, contactTransform(t.rotation, stageScale));
     if (!inverse) return false;
     for (const p of t.design.parts) {
@@ -1443,7 +1444,7 @@ export class AssetPack {
     return authoredProjectileBounds(b, owner) ?? mockProjectileBounds(b);
   };
   hitPart = (t: Tank, p: TankPart, x: number, y: number, stageScale = 1) => {
-    if (t.removedParts.has(p.key)) return false;
+    if (t.removedParts.has(p.key) || !t.displayChildren.includes(`part:${p.key}`)) return false;
     const pt = rotate({ x: x - t.x, y: y - t.y }, -t.rotation);
     const gun = t.guns.find((g) => g.part.key === p.key);
     const tankInverse = descendContact(CONTACT_IDENTITY, contactTransform(t.rotation, stageScale));

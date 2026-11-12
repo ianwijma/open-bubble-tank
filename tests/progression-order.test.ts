@@ -100,14 +100,15 @@ test('upgrading during travel restores the same crossing after choosing a design
   world.player.life = 50;
   world.step(emptyInput());
   expect(world.mode).toBe('upgrade');
+  expect(crossing!.age).toBe(1);
   world.selectUpgrade(STARTER);
   expect(world.mode).toBe('transit');
   expect(world.transit).toBe(crossing);
   world.step(emptyInput());
-  expect(crossing!.age).toBe(1);
+  expect(crossing!.age).toBe(2);
 });
 
-test('downgrading into a secondary-help dialog during travel restores the crossing on close', () => {
+test('secondary-help Close selects ordinary mode while retaining the pending field attachment', () => {
   const shieldTank = {
     ...STARTER,
     parts: [...STARTER.parts, { ...STARTER.parts[1], key: 'shield', type: 3010 }],
@@ -120,7 +121,7 @@ test('downgrading into a secondary-help dialog during travel restores the crossi
   expect(world.mode).toBe('secondary-help');
   expect(world.player.life).toBe(49);
   world.closeSecondaryHelp();
-  expect(world.mode).toBe('transit');
+  expect(world.mode).toBe('playing');
   expect(world.transit).toBe(crossing);
   world.step(emptyInput());
   expect(crossing!.age).toBe(1);
@@ -182,7 +183,7 @@ test('level-zero escape preserves an already visited destination instead of repl
   expect(world.field.col).toBe(1);
   world.damage(world.player, 2); // The left entry marker is nearest: return to cached home.
   expect(world.mode).toBe('transit');
-  expect(world.transit?.next).toBe(home);
-  expect(world.fields.get('0,0')).toBe(home);
-  expect(home.enemies).toHaveLength(0);
+  expect(world.transit?.next === home).toBe(false);
+  expect(world.transit?.next).toBe(world.fields.get('0,0')!);
+  expect(world.transit!.next.enemies).toHaveLength(0);
 });

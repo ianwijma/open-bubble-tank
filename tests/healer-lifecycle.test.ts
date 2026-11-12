@@ -79,6 +79,7 @@ test('queued outgoing patient data aborts the incoming Healer catch retry, while
     tutorial: 0,
     enemies: [owner, sentinel],
   });
+  world.cache.store(world.fields.get('1,0')!);
   world.addBullet(shell(world, { x: 350 }));
   world.hitTest = (tank) => tank === patient;
   world.player.x = 425;
@@ -104,7 +105,7 @@ test('queued outgoing patient data aborts the incoming Healer catch retry, while
   expect([owner.age, sentinel.age, stage.callbacks()]).toEqual([2, 1, 2]);
 });
 
-test('AddLife increments before a queued patient data read, retaining the beam counter and aborting later work', () => {
+test('a queued dead patient has an empty display, so its beam retains contact count without AddLife', () => {
   const world = setup();
   const owner = createTank(world.nextId(), design, 'enemy');
   const patient = createTank(world.nextId(), design, 'enemy', 100, 0, 100, 1);
@@ -127,18 +128,19 @@ test('AddLife increments before a queued patient data read, retaining the beam c
   const stage = stageFor(world);
   stage.advance();
   expect(patient.dead).toBe(true);
-  expect(patient.life).toBe(1);
+  expect(patient.life).toBe(0);
+  expect(patient.displayChildren).toEqual([]);
   expect(world.actorParents.hasParent(patient)).toBe(true);
   expect([beam.contactFrames, sentinel.age, world.player.age, stage.callbacks()]).toEqual([
-    10, 0, 0, 1,
+    10, 1, 1, 1,
   ]);
   stage.advance();
   expect(world.actorParents.hasParent(patient)).toBe(false);
   expect(world.bullets).not.toContain(beam);
   // Source RemoveBullet splices the live array: its next old entry waits one more frame.
-  expect([sentinel.age, world.player.age, stage.callbacks()]).toEqual([0, 1, 2]);
+  expect([sentinel.age, world.player.age, stage.callbacks()]).toEqual([1, 2, 2]);
   stage.advance();
-  expect([sentinel.age, world.player.age, stage.callbacks()]).toEqual([1, 2, 3]);
+  expect([sentinel.age, world.player.age, stage.callbacks()]).toEqual([2, 3, 3]);
 });
 
 for (const mode of ['healthy', 'killed', 'jammed'] as const)
@@ -262,7 +264,7 @@ test('primary final callbacks see live data before the owning field receives dea
   expect(world.runtimeFor(world.field).enemyRemovals).toContain(owner);
 });
 
-test('an allied boundary exit clears data before a still-parented healing contact', () => {
+test('an allied boundary exit empties its still-parented display before healing contact', () => {
   const world = setup();
   const owner = createTank(world.nextId(), design, 'enemy', 400, 0);
   const patient = createTank(world.nextId(), design, 'ally', 414, 0, 100, 50);
@@ -285,9 +287,10 @@ test('an allied boundary exit clears data before a still-parented healing contac
   world.step(emptyInput());
   expect(patient.dead).toBe(true);
   expect(patient.dataActive).toBe(false);
-  expect(patient.life).toBe(1);
+  expect(patient.life).toBe(0);
+  expect(patient.displayChildren).toEqual([]);
   expect(world.actorParents.hasParent(patient)).toBe(true);
-  expect([beam.contactFrames, world.player.age]).toEqual([10, 0]);
+  expect([beam.contactFrames, world.player.age]).toEqual([10, 1]);
   world.step(emptyInput());
   expect(world.actorParents.hasParent(patient)).toBe(false);
   expect(world.bullets).not.toContain(beam);

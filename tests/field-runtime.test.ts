@@ -147,8 +147,8 @@ test('arrival retains destination shots, pickups and allies but clears registere
   expect(world.player.velocity).toEqual({ x: 0, y: 0 });
   const age = incoming.age;
   world.jump({ x: -1, y: 0 });
-  expect(world.transit!.next).toBe(old);
-  expect(world.runtimeFor(old).bullets).toEqual([]);
+  expect(world.transit!.next === old).toBe(false);
+  expect(world.runtimeFor(world.transit!.next).bullets).toEqual([]);
   world.step(emptyInput());
   expect(incoming.age).toBe(age + 1);
 });

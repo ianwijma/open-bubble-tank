@@ -185,7 +185,7 @@ test('player launcher uses 100ms Timer callbacks and current emitters through ja
   expect(world.bullets).toHaveLength(10);
 });
 
-test('normal crossing and avatar replacement cancel timers; death escape consumes rejected timer events', () => {
+test('normal crossing/replacement cancel timers; direct death/Destroy attachments consume rejected events', () => {
   const normal = setup(3015);
   normal.fireGun(normal.player, normal.player.guns[0], emptyInput());
   normal.jump({ x: 1, y: 0 });
@@ -196,17 +196,20 @@ test('normal crossing and avatar replacement cancel timers; death escape consume
   replaced.editPlayer(STARTER);
   replaced.advanceTime(1000);
   expect(replaced.stats.shots).toBe(0);
-  const escaped = setup(3015);
-  escaped.fireGun(escaped.player, escaped.player.guns[0], emptyInput());
-  escaped.damage(escaped.player, 5);
-  escaped.advanceTime(200);
-  expect(escaped.stats.shots).toBe(0);
-  escaped.player.x = escaped.transit!.target.x;
-  escaped.player.y = escaped.transit!.target.y;
-  escaped.step(emptyInput(), 0);
-  expect(escaped.mode).toBe('playing');
-  escaped.advanceTime(1000);
-  expect(escaped.stats.shots).toBe(8);
+  for (const caller of ['death', 'Destroy']) {
+    const escaped = setup(3015);
+    escaped.fireGun(escaped.player, escaped.player.guns[0], emptyInput());
+    if (caller === 'death') escaped.damage(escaped.player, 5);
+    else escaped.jump({ x: 1, y: 0 }, false, { finalizeParts: false });
+    escaped.advanceTime(200);
+    expect(escaped.stats.shots).toBe(0);
+    escaped.player.x = escaped.transit!.target.x;
+    escaped.player.y = escaped.transit!.target.y;
+    escaped.step(emptyInput(), 0);
+    expect(escaped.mode).toBe('playing');
+    escaped.advanceTime(1000);
+    expect(escaped.stats.shots).toBe(8);
+  }
 });
 
 test('Massive Cannon completion follows the bullet phase and observes looping authored frames during pause', () => {

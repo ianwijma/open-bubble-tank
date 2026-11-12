@@ -31,7 +31,7 @@ for (const native of [false, true])
         dead: true,
         dataActive: false,
         life: 0,
-        parented: enemy,
+        parented: true,
         kills: enemy ? 1 : 0,
         sumo: index === 2 ? 1 : 0,
       });

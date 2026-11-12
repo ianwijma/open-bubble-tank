@@ -7,10 +7,21 @@ import { acquireHealerTarget, HealerTargetReadError } from '../src/game/simulati
 import { healerPatient, tickHealer, tickHealingBeam } from '../src/game/simulation/healing';
 import { World, emptyInput } from '../src/game/simulation/world';
 import { StageRuntime } from '../src/game/services/stage-runtime';
-function actor(uid: number, side: 'ally' | 'enemy' | 'player' = 'ally', life = 100) {
+function actor(
+  uid: number,
+  side: 'ally' | 'enemy' | 'player' = 'ally',
+  life = 100,
+  painted = false,
+) {
   return createTank(
     uid,
-    { ...STARTER, avatar: side === 'player', speed: 0, life: 100, parts: [] },
+    {
+      ...STARTER,
+      avatar: side === 'player',
+      speed: 0,
+      life: 100,
+      parts: painted ? [STARTER.parts[0]] : [],
+    },
     side,
     0,
     0,
@@ -37,7 +48,7 @@ function random(...draws: number[]) {
   };
   return { rng, calls: () => calls };
 }
-function live(side: 'ally' | 'enemy' = 'enemy') {
+function live(side: 'ally' | 'enemy' = 'enemy', paintedPatient = false) {
   const world = new World([], [], 1);
   world.progression.level = 6;
   world.rng.next = () => 0.5;
@@ -55,7 +66,7 @@ function live(side: 'ally' | 'enemy' = 'enemy') {
     0,
   );
   owner.movement.frames = 10;
-  const patient = actor(101, side, 50);
+  const patient = actor(101, side, 50, paintedPatient);
   patient.x = 100;
   world.field.enemies = side === 'enemy' ? [owner, patient] : [];
   world.allies = side === 'ally' ? [owner, patient] : [];
@@ -241,7 +252,7 @@ test('stopping removes a beam immediately even when the next acquisition aborts 
 });
 
 test('beam retains a direct patient and projects its parent independently of roster UID lookup', () => {
-  const { world, owner, patient, gun } = live();
+  const { world, owner, patient, gun } = live('enemy', true);
   gun.counter = 2;
   tickHealer(world, owner, gun);
   const beam = world.bullets[0];

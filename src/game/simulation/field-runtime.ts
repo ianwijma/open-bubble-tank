@@ -4,6 +4,7 @@ import type { Effect, GunState, Pickup, Projectile, Tank } from '../core/types';
 export class FieldRuntime {
   /** Death callbacks queue removal; normal Run flushes before the next actor pass. */
   enemyRemovals: Tank[] = [];
+  allyRemovals: Tank[] = [];
   bullets: Projectile[] = [];
   pickups: Pickup[] = [];
   effects: Effect[] = [];

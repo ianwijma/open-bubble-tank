@@ -301,7 +301,7 @@ export interface Field {
   destroyed?: boolean;
 }
 export type WorldMode =
-  'playing' | 'paused' | 'secondary-help' | 'upgrade' | 'transit' | 'won' | 'collapse';
+  'playing' | 'paused' | 'secondary-help' | 'upgrade' | 'transit' | 'won' | 'collapse' | 'stopped';
 export interface InputFrame {
   up: boolean;
   down: boolean;
