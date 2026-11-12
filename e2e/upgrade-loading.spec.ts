@@ -2,6 +2,7 @@ import { expect, test } from './helpers/frame-paced-test';
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { waitForMainMenu } from './helpers/main-menu';
+import { exitCreator } from './helpers/creator';
 import { visitAdjacentFieldAndReturn } from './helpers/field-travel';
 import { DEFAULT_SETTINGS } from '../src/game/core/constants';
 import type { TankDesign } from '../src/game/core/types';
@@ -68,8 +69,31 @@ for (const native of [false, true])
     await expect(foreground).toHaveAttribute('data-upgrade-root-frame', '1');
     await expect(menu.getByRole('status')).toHaveText('Loading tanks');
     await expect(menu.locator('canvas[data-upgrade-ready="true"]')).toHaveCount(2);
-    for (const button of await menu.locator('.upgrade-pick').all())
+    expect(
+      await menu
+        .locator('[data-upgrade-slot]')
+        .evaluateAll((cards) => cards.map((card) => card.getAttribute('data-upgrade-slot'))),
+    ).toEqual(['1', '2']);
+    // Playwright's role matcher does not account for inert; inspect Chromium's actual AX tree.
+    const accessibility = await page.context().newCDPSession(page);
+    const { nodes } = await accessibility.send('Accessibility.getFullAXTree');
+    expect(
+      nodes.filter((node) => !node.ignored && /^Choose /.test(node.name?.value ?? '')),
+    ).toEqual([]);
+    expect(nodes.some((node) => !node.ignored && node.name?.value === 'Loading tanks')).toBe(true);
+    await accessibility.detach();
+    for (const button of await menu.locator('.upgrade-pick,.upgrade-edit').all())
       await expect(button).toBeDisabled();
+    const stage = (await page.locator('.stage-space').boundingBox())!;
+    for (const card of await menu.locator('.upgrade-card').all()) {
+      const box = (await card.boundingBox())!;
+      expect(
+        box.x + box.width <= stage.x ||
+          box.x >= stage.x + stage.width ||
+          box.y + box.height <= stage.y ||
+          box.y >= stage.y + stage.height,
+      ).toBe(true);
+    }
     const loader = menu.locator('[data-upgrade-loading-frame]');
     const frame = await loader.getAttribute('data-upgrade-loading-frame');
     await expect.poll(() => loader.getAttribute('data-upgrade-loading-frame')).not.toBe(frame);
@@ -78,11 +102,22 @@ for (const native of [false, true])
     await menu.screenshot({
       path: `test-results/${native ? 'swf' : 'mock'}-pending-upgrade-loading.png`,
     });
-    await menu.getByRole('button', { name: 'Edit Your Current Tank', exact: true }).click();
+    const editCurrent = menu.getByRole('button', { name: 'Edit Your Current Tank', exact: true });
+    await expect(menu).toBeFocused();
+    await page.keyboard.press('Tab');
+    await expect(editCurrent).toBeFocused();
+    await page.keyboard.press('Tab');
+    await expect(editCurrent).toBeFocused(); // No offstage card enters the focus loop.
+    await page.keyboard.press('Enter');
     await expect(page.locator('.creator')).toBeVisible();
     expect(await preview!.evaluate((node) => node.isConnected)).toBe(true);
     await expect
       .poll(async () => Number(await preview!.getAttribute('data-upgrade-age')))
       .toBeGreaterThan(age);
+    await expect(menu).toHaveCount(0);
+    await exitCreator(page); // Existing slot destroys even this partially loaded menu.
+    await expect(page.locator('.upgrade-screen')).toHaveCount(0);
+    await expect(page.locator('.upgrade-bitmap')).toHaveCount(0);
+    expect(await preview!.evaluate((node) => node.isConnected)).toBe(false);
     expect(errors).toEqual([]);
   });
