@@ -18,6 +18,13 @@ import { creatorSuggestedStats, creatorImportedSuggested } from '@/game/core/cre
 import { firstAffordablePart, orderedPalette } from '@/game/simulation/editor-palette';
 import { CreatorButton, CreatorSlider } from './creator-controls';
 import { CREATOR_CONTROLS } from '@/game/core/creator-controls';
+import { EditorPositions, editorDragTopology } from '@/game/simulation/editor-positions';
+import {
+  DISPLAY_IDENTITY,
+  displayMatrixProduct,
+  displayMousePoint,
+} from '@/game/core/display-transform';
+import { displayPixel, displayTwips } from '@/game/core/display-values';
 import { CreatorSaveDialog } from './creator-save-dialog';
 import { CreatorGuide } from './creator-guide';
 import { CreatorAlert } from './creator-alert';
@@ -87,7 +94,18 @@ export function TankCreator({
 }) {
   const [design, setDesignState] = useState<TankDesign>(() => structuredClone(initial)),
     designLive = useRef(design);
-  const [classId, setClassState] = useState(() => measureClass(initial, pack)),
+  const [positions] = useState(() => new EditorPositions(initial.parts));
+  const displayedParts = positions.present(design.parts);
+  // UpdateClass constructs fresh measurement clips from arrTankDetails metadata.
+  const measuredDesign = (tank: TankDesign) => ({
+    ...tank,
+    parts: tank.parts.map((part) => ({
+      ...part,
+      x: displayPixel(part.x),
+      y: displayPixel(part.y),
+    })),
+  });
+  const [classId, setClassState] = useState(() => measureClass(measuredDesign(initial), pack)),
     classLive = useRef(classId);
   const [guideActive, setGuideActive] = useState(() => !helpSeen),
     [alertRequest, setAlertRequest] = useState<{ message: string } | null>(null),
@@ -154,6 +172,7 @@ export function TankCreator({
   const iconSnapshot = useRef<{ boxes: object | null; hidden: boolean } | null>(null);
   const drag = useRef<{
       before: TankDesign;
+      beforeDisplay: TankPart[];
       from: { x: number; y: number };
       hit?: string;
       moving: boolean;
@@ -163,7 +182,7 @@ export function TankCreator({
     } | null>(null),
     pointer = useRef({ x: 0, y: 0 }),
     snapLocked = useRef(false);
-  const active = design.parts.find(
+  const active = displayedParts.find(
     (p) => p.key === selection.keys.find((key) => !selection.ghosts.includes(key)),
   );
   const palette = orderedPalette(
@@ -172,6 +191,7 @@ export function TankCreator({
   );
   function setDesign(next: TankDesign | ((previous: TankDesign) => TankDesign)) {
     const value = typeof next === 'function' ? next(designLive.current) : next;
+    positions.retain(value.parts);
     designLive.current = value;
     setDesignState(value);
   }
@@ -186,8 +206,9 @@ export function TankCreator({
   function showEditorAlert(message: string) {
     dialogOpener.current = document.activeElement as HTMLElement | null;
     const restored = { ...designLive.current, parts: acceptedEditorParts(historyLive.current) };
+    positions.reset(restored.parts);
     setDesign(restored);
-    setMeasuredClass(measureClass(restored, pack));
+    setMeasuredClass(measureClass(measuredDesign(restored), pack));
     setSelection(emptySelection());
     setDetails(null);
     placement.current = null;
@@ -200,11 +221,11 @@ export function TankCreator({
     setAlertRequest({ message });
   }
   function commit(next: TankDesign, updateClass = true) {
-    const nextClass = updateClass ? measureClass(next, pack) : classLive.current,
+    const nextClass = updateClass ? measureClass(measuredDesign(next), pack) : classLive.current,
       nextBudget = next.avatar
         ? gunBudget(nextClass, level)
         : Math.floor(gunBudget(nextClass, 6) * 1.5),
-      error = creatorEditError(next.parts, nextClass, maxClass, nextBudget);
+      error = creatorEditError(positions.present(next.parts), nextClass, maxClass, nextBudget);
     if (error) {
       showEditorAlert(CREATOR_EDIT_ERRORS[error]);
       return false;
@@ -218,7 +239,7 @@ export function TankCreator({
   const controlBefore = useRef<TankDesign | null>(null);
   const controlUpdatesClass = useRef(true);
   const nudge = useRef<{ selection: PartSelection; direction: number } | null>(null);
-  const transform = selectedTransform(design.parts, selection);
+  const transform = selectedTransform(displayedParts, selection);
   function beginControl(updateClass: boolean) {
     controlBefore.current = structuredClone(design);
     controlUpdatesClass.current = updateClass;
@@ -232,6 +253,13 @@ export function TankCreator({
     if (cancel) setDesign(before);
     else commit(designLive.current, controlUpdatesClass.current);
   }
+  function nudgedDesign(direction: number, selected: PartSelection, frames = 1) {
+    positions.nudge(selected.keys, direction, frames);
+    return {
+      ...designLive.current,
+      parts: nudgeSelection(designLive.current.parts, selected, direction, frames),
+    };
+  }
   function beginNudge(direction: number) {
     nudge.current = { selection, direction };
   }
@@ -241,23 +269,28 @@ export function TankCreator({
     if (!current) return;
     // MOUSE_UP validates/records first; the subsequent CLICK adds one unrecorded pixel.
     if (commit(designLive.current, false) && click) {
-      const next = {
-        ...designLive.current,
-        parts: nudgeSelection(designLive.current.parts, current.selection, current.direction),
-      };
+      const next = nudgedDesign(current.direction, current.selection);
       setDesign(next);
-      setMeasuredClass(measureClass(next, pack));
+      setMeasuredClass(measureClass(measuredDesign(next), pack));
     }
   }
   function changePart(change: { rotation?: number; scale?: number }) {
+    const transformed = unlinkPartialSelection(
+      transformSelection(displayedParts, selection, change),
+      selection,
+    );
     const next = {
       ...design,
-      parts: unlinkPartialSelection(transformSelection(design.parts, selection, change), selection),
+      parts: transformed.map((part) => {
+        const saved = design.parts.find((p) => p.key === part.key)!;
+        return { ...part, x: saved.x, y: saved.y };
+      }),
     };
     if (controlBefore.current) setDesign(next);
     else commit(next, change.scale !== undefined);
   }
   function draw() {
+    const parts = positions.present(designLive.current.parts);
     const cv = canvas.current;
     if (!cv) return;
     const ctx = cv.getContext('2d')!;
@@ -292,7 +325,7 @@ export function TankCreator({
       artwork.current.draw(
         ctx,
         'design',
-        design.parts.map((part) => ({
+        parts.map((part) => ({
           part,
           alpha: selection.ghosts.includes(part.key) ? 0.25 : 1,
         })),
@@ -301,12 +334,11 @@ export function TankCreator({
     if (
       !selectionBoxes.current ||
       (!controlBefore.current &&
-        (selectionBoxes.current.parts !== design.parts ||
-          selectionBoxes.current.selection !== selection))
+        (selectionBoxes.current.parts !== parts || selectionBoxes.current.selection !== selection))
     )
-      selectionBoxes.current = { parts: design.parts, selection, boxes: new Map() };
+      selectionBoxes.current = { parts: parts, selection, boxes: new Map() };
     const selectionMoving = !!(drag.current?.moved && drag.current.moving);
-    for (const p of design.parts) {
+    for (const p of parts) {
       if (!artwork.current) {
         ctx.save();
         if (selection.ghosts.includes(p.key)) ctx.globalAlpha = 0.25;
@@ -348,7 +380,7 @@ export function TankCreator({
       setSelectionIcons(
         selectionMoving
           ? []
-          : creatorWeaponIcons(design.parts, selection.keys, selectionBoxes.current.boxes),
+          : creatorWeaponIcons(parts, selection.keys, selectionBoxes.current.boxes),
       );
     }
     if (drag.current?.moved && !drag.current.moving) {
@@ -466,12 +498,9 @@ export function TankCreator({
             const frames = Math.floor(accumulator / step);
             if (nudge.current) {
               const { selection, direction } = nudge.current;
-              const next = {
-                ...designLive.current,
-                parts: nudgeSelection(designLive.current.parts, selection, direction * frames),
-              };
+              const next = nudgedDesign(direction, selection, frames);
               setDesign(next);
-              setMeasuredClass(measureClass(next, pack));
+              setMeasuredClass(measureClass(measuredDesign(next), pack));
             }
             artworkFrame.current += frames;
             accumulator %= step;
@@ -502,11 +531,42 @@ export function TankCreator({
     return artwork.current?.hitPart(part, x, y) ?? pack.hitDesignPart(part, x, y);
   }
   function point(e: { clientX: number; clientY: number }) {
-    const r = canvas.current!.getBoundingClientRect();
-    return {
-      x: ((e.clientX - r.left) * 350) / r.width - 175,
-      y: ((e.clientY - r.top) * 350) / r.height - 175,
-    };
+    const element = canvas.current!;
+    const creator = element.closest('.creator')!.getBoundingClientRect();
+    const spaceElement = element.closest('.stage-space');
+    const space = spaceElement?.getBoundingClientRect() ?? creator;
+    const frame = element.closest('.stage-frame')?.getBoundingClientRect() ?? space;
+    const transform =
+      spaceElement instanceof HTMLElement
+        ? spaceElement.style.transform || getComputedStyle(spaceElement).transform
+        : 'none';
+    // Preserve ResizeObserver's authored precision, before painted/computed serialization.
+    const scale = spaceElement
+        ? transform === 'none'
+          ? 1
+          : new DOMMatrixReadOnly(transform).a
+        : creator.width / 550,
+      dpr = window.devicePixelRatio;
+    const reference = displayMatrixProduct(
+      {
+        ...DISPLAY_IDENTITY,
+        tx: displayTwips((creator.left - space.left) / scale),
+        ty: displayTwips((creator.top - space.top) / scale),
+      },
+      CREATOR_CONTROLS.workspace,
+    );
+    return displayMousePoint(
+      { x: (e.clientX - frame.left) * dpr, y: (e.clientY - frame.top) * dpr },
+      {
+        ...DISPLAY_IDENTITY,
+        a: scale * dpr,
+        d: scale * dpr,
+        tx: displayTwips((space.left - frame.left) * dpr),
+        ty: displayTwips((space.top - frame.top) * dpr),
+      },
+      reference,
+      reference,
+    );
   }
   function pendingPlacement(id: number, pos: { x: number; y: number }, key = 'preview') {
     let radius = radii.current.get(id);
@@ -557,6 +617,7 @@ export function TankCreator({
     if (!current) return;
     drag.current = null;
     if (cancel) {
+      positions.adopt(current.beforeDisplay);
       setDesign(current.before);
       setSelection(current.selection);
     } else if (current.moved && current.moving) {
@@ -565,7 +626,8 @@ export function TankCreator({
       const invalid = final.parts
         .filter((p) => final.selection.keys.includes(p.key) && !canPlacePart(p, classId, maxClass))
         .map((p) => p.key);
-      const parts = removeParts(unlinkPartialSelection(final.parts, final.selection), invalid);
+      const released = positions.saveSelected(designLive.current.parts, final.selection.keys);
+      const parts = removeParts(unlinkPartialSelection(released, final.selection), invalid);
       if (commit({ ...design, parts }))
         setSelection({
           keys: final.selection.keys.filter((k) => !invalid.includes(k)),
@@ -574,7 +636,7 @@ export function TankCreator({
     } else if (current.moved) {
       setSelection(
         marqueeSelection(
-          design.parts,
+          positions.present(designLive.current.parts),
           selection,
           current.from,
           pointer.current,
@@ -593,6 +655,7 @@ export function TankCreator({
       className={`creator stage-background ${overGame ? 'over-game' : ''}`}
       data-assets={pack.mode}
       data-design={JSON.stringify(finalDesign)}
+      data-displayed-design={JSON.stringify({ ...finalDesign, parts: displayedParts })}
       inert={!!saveDialog || guideActive || alertActive}
       aria-hidden={!!saveDialog || guideActive || alertActive || undefined}
     >
@@ -707,12 +770,13 @@ export function TankCreator({
               finishPlacement(pos);
               return;
             }
-            const hit = [...design.parts].reverse().find((p) => hitPart(p, pos.x, pos.y));
-            const moving = design.parts.some(
+            const hit = [...displayedParts].reverse().find((p) => hitPart(p, pos.x, pos.y));
+            const moving = displayedParts.some(
               (p) => selection.keys.includes(p.key) && hitPart(p, pos.x, pos.y),
             );
             drag.current = {
               before: structuredClone(design),
+              beforeDisplay: structuredClone(displayedParts),
               from: pos,
               hit: hit?.key,
               moving,
@@ -734,7 +798,7 @@ export function TankCreator({
                 current.session = advanceSelectionDrag(
                   current.session ??
                     beginSelectionDrag(
-                      current.before.parts,
+                      current.beforeDisplay,
                       current.selection,
                       current.from,
                       symmetric,
@@ -743,7 +807,11 @@ export function TankCreator({
                     ),
                   pos,
                 );
-                setDesign({ ...design, parts: current.session.parts });
+                positions.adopt(current.session.parts);
+                setDesign({
+                  ...designLive.current,
+                  parts: editorDragTopology(designLive.current.parts, current.session.parts),
+                });
                 setSelection(current.session.selection);
               } else draw();
             } else if (placing) draw();
@@ -837,8 +905,13 @@ export function TankCreator({
             name="AlignCenter_mc"
             label="Align to Center"
             onClick={() => {
-              const next = centerSelection(design.parts, selection);
-              if (commit({ ...design, parts: next.parts })) setSelection(next.selection);
+              const next = centerSelection(displayedParts, selection);
+              positions.center(selection.keys);
+              const parts = next.parts.map((part) => {
+                const saved = design.parts.find((p) => p.key === part.key)!;
+                return { ...part, x: saved.x, y: selection.keys.includes(part.key) ? 0 : saved.y };
+              });
+              if (commit({ ...design, parts })) setSelection(next.selection);
             }}
           />
           {([-1, 1] as const).map((direction) => (
@@ -847,9 +920,7 @@ export function TankCreator({
               pack={pack}
               name={direction < 0 ? 'Left_mc' : 'Right_mc'}
               label={direction < 0 ? 'Move selection left' : 'Move selection right'}
-              onClick={() =>
-                commit({ ...design, parts: nudgeSelection(design.parts, selection, direction) })
-              }
+              onClick={() => commit(nudgedDesign(direction, selection))}
               onHoldStart={() => beginNudge(direction)}
               onHoldEnd={endNudge}
             />
@@ -882,8 +953,9 @@ export function TankCreator({
           const next = undoEditorSnapshot(historyLive.current),
             restored = { ...designLive.current, parts: acceptedEditorParts(next) };
           setSnapshots(next);
+          positions.reset(restored.parts);
           setDesign(restored);
-          setMeasuredClass(measureClass(restored, pack));
+          setMeasuredClass(measureClass(measuredDesign(restored), pack));
           artwork.current?.clearLayer('design');
           setSelection(emptySelection());
           setMessage('');
@@ -927,7 +999,7 @@ export function TankCreator({
             draw();
           }
         }}
-        onPointerUp={(e) => finishPlacement(point(e))}
+        onPointerUp={() => finishPlacement(pointer.current)}
         onPointerCancel={() => finishPlacement(pointer.current, true)}
         onClick={(e) => {
           if (e.detail !== 0 || chosen === null) return;

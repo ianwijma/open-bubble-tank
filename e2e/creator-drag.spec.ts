@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import type { TankDesign, TankPart } from '../src/game/core/types';
-import { readCreatorDesign } from './helpers/creator';
+import { readCreatorDesign, readDisplayedCreatorDesign } from './helpers/creator';
 import { waitForMainMenu } from './helpers/main-menu';
 
 const swf =
@@ -48,6 +48,15 @@ for (const native of [false, true])
     });
     await page.getByRole('button', { name: 'Edit', exact: true }).click();
     await page.getByRole('button', { name: 'SAVE', exact: true }).hover();
+    // Match the measured source's4× embedding so every quarter-pixel step is explicit.
+    await page.setViewportSize({ width: 2600, height: 2200 });
+    await page.addStyleTag({
+      content:
+        '.stage-frame{position:fixed!important;left:0!important;top:0!important;width:2200px!important;height:1800px!important;max-width:none!important}',
+    });
+    await expect
+      .poll(async () => (await page.locator('.creator-workspace canvas').boundingBox())!.width)
+      .toBe(1400);
     const canvas = page.locator('.creator-workspace canvas'),
       b = (await canvas.boundingBox())!,
       at = (x: number, y: number) => ({
@@ -58,7 +67,8 @@ for (const native of [false, true])
         const p = at(x, y);
         await page.mouse.move(p.x, p.y);
       },
-      parts = async () => (await readCreatorDesign(page)).parts;
+      parts = async () => (await readCreatorDesign(page)).parts,
+      displayed = async () => (await readDisplayedCreatorDesign(page)).parts;
     const start = at(-20, -10);
     await page.mouse.click(start.x, start.y);
     await expect(page.getByRole('status')).toContainText('Selected parts (2)');
@@ -70,9 +80,9 @@ for (const native of [false, true])
     await page.mouse.down();
     await move(-19, -10);
     await move(-19, 0);
-    expect((await parts()).map((p) => p.y)).toEqual([0, 0]);
+    expect((await displayed()).map((p) => p.y)).toEqual([0, 0]);
     await move(-18, 0);
-    const merged = await parts();
+    const merged = await displayed();
     expect(merged).toHaveLength(1);
     expect(merged[0]).toMatchObject({ key: '1_mc', y: 0, twin: '' });
     expect(merged[0].x).toBeCloseTo(-18, 4);
@@ -83,17 +93,16 @@ for (const native of [false, true])
     expect(respawned[0].key).toBe('1_mc');
     expect(respawned[1]).toMatchObject({ key: respawned[0].twin, twin: '1_mc' });
     for (const [i, p] of respawned.entries()) {
-      // CSS-scaled browser pointer coordinates retain a few millionths of noise.
+      // Released metadata now contains the source display getter coordinates.
       expect(p.x).toBeCloseTo(-17, 4);
       expect(p.y).toBeCloseTo(i === 0 ? 6 : -6, 4);
     }
     await move(-17, 6);
     await page.mouse.down();
-    // The intermediate eighth-pixel value checks the browser input adapter only.
-    // The measured original export establishes the final quarter-pixel position;
-    // it does not establish every Flash Point/display-setter precision boundary.
+    // The original4× positive eighth leaves this pose unchanged; the following
+    // quarter reaches the next device pixel. Saved metadata waits for release.
     await move(-16.875, 6);
-    for (const p of await parts()) expect(p.x).toBeCloseTo(-16.875, 4);
+    for (const p of await displayed()) expect(p.x).toBe(-17);
     await move(-16.75, 6);
     await page.mouse.up();
     const quarter = await parts();

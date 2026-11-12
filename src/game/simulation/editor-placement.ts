@@ -1,4 +1,5 @@
 import type { TankPart, Vec } from '../core/types';
+import { displayPixel } from '../core/display-values';
 import { canPlacePart } from './designer';
 import { removeParts } from './editor-selection';
 
@@ -10,9 +11,18 @@ export function placementParts(
   symmetric: boolean,
   key: string,
 ): TankPart[] {
-  const y = Math.abs(point.y) <= 3 ? 0 : point.y;
+  const y = Math.abs(point.y) <= 3 ? 0 : displayPixel(point.y);
   const twin = symmetric && y !== 0 ? `${key}-twin` : '';
-  const part: TankPart = { key, type, radius, x: point.x, y, rotation: 0, scale: 1, twin };
+  const part: TankPart = {
+    key,
+    type,
+    radius,
+    x: displayPixel(point.x),
+    y,
+    rotation: 0,
+    scale: 1,
+    twin,
+  };
   return twin ? [part, { ...part, key: twin, twin: key, y: -y }] : [part];
 }
 /** _-ZW checks each new member separately, breaking a rejected twin's link. */

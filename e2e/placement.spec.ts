@@ -3,6 +3,7 @@ import { test, expect, type Locator } from '@playwright/test';
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { readCreatorDesign, dropPreview } from './helpers/creator';
+import reference from '../tests/fixtures/creator-point-reference.json' with { type: 'json' };
 const swf =
   process.env.BT3_SWF_FILE ?? resolve('../documented-bubble-tank-3/re/bt3/uncompressed.swf');
 const snapshot = readCreatorDesign;
@@ -40,7 +41,22 @@ for (const assets of ['mock', 'SWF'])
     if (assets === 'SWF') await animatedPixels(page.locator('.creator-part-preview canvas'));
     await page.locator('.creator-workspace canvas').click({ position: { x: 175, y: 175 } });
     expect((await snapshot(page)).parts).toEqual([]); // Palette selection does not arm canvas clicks.
-    await dropPreview(page, 40, -25);
+    // Replay a measured original gesture: canvas-relative integers at the fitted
+    // 1.6× scale do not survive the source Point/display conversions unchanged.
+    const placement = reference.placement.find((row) => row.name === 'placement-eighth-scale1')!;
+    await page.addStyleTag({
+      content:
+        '.stage-frame{position:fixed!important;left:0!important;top:0!important;width:550px!important;height:450px!important;max-width:none!important}',
+    });
+    await expect
+      .poll(async () => (await page.locator('.creator-workspace canvas').boundingBox())!.width)
+      .toBe(350);
+    const stage = (await page.locator('.stage-space').boundingBox())!;
+    const start = (await page.locator('.creator-part-preview').boundingBox())!;
+    await page.mouse.move(start.x + start.width / 2, start.y + start.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(stage.x + placement.mouse.x, stage.y + placement.mouse.y, { steps: 12 });
+    await page.mouse.up();
     if (assets === 'SWF') await animatedPixels(page.locator('.creator-workspace canvas'));
     let saved = await snapshot(page);
     expect(saved.parts).toHaveLength(2);
@@ -49,10 +65,11 @@ for (const assets of ['mock', 'SWF'])
       [1002, 1, 0],
     ]);
     for (const part of saved.parts) expect(part.radius).toBeCloseTo(12.6, 6);
-    expect(saved.parts[0].x).toBeCloseTo(40, 4);
-    expect(saved.parts[0].y).toBeCloseTo(-25, 4);
-    expect(saved.parts[1]).toMatchObject({ twin: saved.parts[0].key });
-    expect(saved.parts[1].y).toBeCloseTo(25, 4);
+    expect(saved.parts.map(({ x, y }) => ({ x, y }))).toEqual(
+      placement.expected.map(({ x, y }) => ({ x, y })),
+    );
+    expect(saved.parts[0].twin).toBe(saved.parts[1].key);
+    expect(saved.parts[1].twin).toBe(saved.parts[0].key);
     await expect(page.getByText(/^Selected parts/)).toHaveCount(0);
     await expect(row).toHaveAttribute('aria-pressed', 'true');
     await dropPreview(page, -40, 2);
@@ -78,10 +95,7 @@ for (const assets of ['mock', 'SWF'])
     await preview.dispatchEvent('pointercancel', { pointerId: 1 });
     await page.mouse.up();
     expect((await snapshot(page)).parts).toHaveLength(4);
-    await page.mouse.click(
-      canvas.x + ((40 + 175) * canvas.width) / 350,
-      canvas.y + ((-25 + 175) * canvas.height) / 350,
-    );
+    await page.mouse.click(stage.x + placement.mouse.x, stage.y + placement.mouse.y);
     await expect(page.getByText('Selected parts (1)', { exact: true })).toBeVisible();
     await page.getByRole('button', { name: 'Place Small Bubble', exact: true }).click();
     await dropPreview(page, 110, 40);

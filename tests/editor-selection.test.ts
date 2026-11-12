@@ -144,3 +144,11 @@ test('creator deletes only selected parts and keeps the relative layering of a g
   expect(orderSelection(parts, selection, true).map((p) => p.key)).toEqual(['b', 'd', 'a', 'c']);
   expect(orderSelection(parts, selection, false).map((p) => p.key)).toEqual(['a', 'c', 'b', 'd']);
 });
+
+// AVM Number additions occur in each MoveRight frame, before metadata export.
+test('held nudge preserves per-frame floating arithmetic in raw metadata', () => {
+  const selected = { keys: ['a'], ghosts: [] };
+  const moved = nudgeSelection([part('a', -0.462, 10), part('b', 9, 10)], selected, 1, 3);
+  expect(moved[0].x).toBe(2.5380000000000003);
+  expect(moved[1].x).toBe(9);
+});

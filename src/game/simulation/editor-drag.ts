@@ -1,4 +1,5 @@
 import type { TankPart, Vec } from '../core/types';
+import { displayPixel } from '../core/display-values';
 import { type PartSelection, removeParts, unlinkSelection } from './editor-selection';
 
 /** Transient state corresponding to TankCreatorScreen.StartDrag/_-5M. */
@@ -77,8 +78,7 @@ export function advanceSelectionDrag(before: SelectionDrag, cursor: Vec): Select
   parts = parts.map((p) => {
     if (!selection.keys.includes(p.key)) return p;
     const y = p.y + (before.symmetric && !onSide.get(p.key) ? -dy : dy);
-    // Browser client coordinates lose a few millionths under CSS stage scaling.
-    return { ...p, x: p.x + dx, y: Math.abs(y) < 0.00001 ? 0 : y };
+    return { ...p, x: displayPixel(p.x + dx), y: displayPixel(y) };
   });
   let nextTwin = before.nextTwin;
   if (changed && locked) {

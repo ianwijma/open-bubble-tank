@@ -6,6 +6,12 @@ export async function readCreatorDesign(page: Page): Promise<TankDesign> {
   if (!value) throw new Error('The tank creator is not mounted.');
   return JSON.parse(value);
 }
+/** Display getters can move while the source's saved coordinates remain unchanged. */
+export async function readDisplayedCreatorDesign(page: Page): Promise<TankDesign> {
+  const value = await page.locator('.creator').getAttribute('data-displayed-design');
+  if (!value) throw new Error('The tank creator display is not mounted.');
+  return JSON.parse(value);
+}
 /** Coordinates are relative to the creator's tank registration point. */
 export async function dropPreview(page: Page, x: number, y: number) {
   await page.locator('.creator-part-preview').hover();
