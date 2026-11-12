@@ -6,7 +6,8 @@ import { detachForcefield } from './forcefield';
 import { removeTankChild } from './tank-display';
 import { killMountedShield } from './shields';
 import { MainEffects } from './main-effects';
-import { RunPartUnlocks, partUnlocked } from '../core/part-unlocks';
+import { RunPartUnlocks } from '../core/part-unlocks';
+import { defaultUpgradeTank, upgradeClasses } from '../core/upgrade-offers';
 import { ProfileClassAllowance } from '../core/profile-class';
 import type {
   CollisionTest,
@@ -26,7 +27,7 @@ import type {
   WorldEvent,
   WorldMode,
 } from '../core/types';
-import { AVATARS, BOSSES, costs, gunBudget, STARTER } from '../data/catalog';
+import { AVATARS, BOSSES, STARTER } from '../data/catalog';
 import { WEAPONS, type WeaponSpec } from '../data/weapons';
 import emitterData from '../data/emitters.json';
 import { moveActor } from './actor-movement';
@@ -350,6 +351,7 @@ export class World {
     seed?: number,
     readonly mainEffects = new MainEffects(),
     readonly profileClass = new ProfileClassAllowance(),
+    public avatarLibrary: readonly TankDesign[] = localTanks.filter((tank) => tank.avatar),
   ) {
     this.rng = new Random(seed);
     this.roster = new UnitRoster(this.rng, localTanks);
@@ -984,27 +986,14 @@ export class World {
       level = this.progression.level;
     this.partUnlocks.unlockThrough(level);
     const offers: TankDesign[] = [];
-    for (const classId of [current - 1, current, current + 1]) {
-      if (classId < 1 || classId > 6 || classId > Math.min(6, level + 1)) continue;
-      const budget = gunBudget(classId, level);
-      if (!budget) continue;
-      const pool = [...AVATARS, ...this.localTanks.filter((t) => t.avatar)].filter(
-        (t) =>
-          t.classId === classId &&
-          costs(t.parts).gp <= budget &&
-          t.parts.every(
-            (p) =>
-              partUnlocked(p.type, level, this.unlockedParts) &&
-              Math.floor(p.type / 1000) !== 4 &&
-              Math.floor(p.type / 1000) !== 6,
-          ),
-      );
-      const sorted = pool.sort((a, b) => costs(b.parts).gp - costs(a.parts).gp);
-      const exact = sorted.filter((t) => costs(t.parts).gp === budget);
-      if (exact.length) offers.push(this.rng.pick(exact));
-      else if (sorted.length) offers.push(sorted[0]);
+    const library = [...AVATARS, ...this.avatarLibrary];
+    for (const classId of upgradeClasses(current)) {
+      // The fresh source profile rolls its default-vs-server preference even
+      // though both routes reach GetDefaultTank when retired search is unavailable.
+      this.rng.int(1, 2);
+      const tank = defaultUpgradeTank(library, classId, level);
+      if (tank) offers.push(tank);
     }
-    if (!offers.length) offers.push({ ...STARTER, id: `fallback-${level}`, name: 'Basic Tank' });
     return offers;
   }
   selectUpgrade(design: TankDesign) {

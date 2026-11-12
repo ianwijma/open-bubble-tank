@@ -88,7 +88,7 @@ test('tier order appends source IDs once and earlier snapshots remain unchanged'
   expect(run.parts).toBe(all);
 });
 
-test('lower-level offers retain an earned Radar while still rejecting excess current Gun Points', () => {
+test('retained Radar stays unlocked but its cached tier excludes it from lower-tier default offers', () => {
   const radar = {
     ...STARTER,
     id: 'L-offer-radar',
@@ -105,7 +105,9 @@ test('lower-level offers retain an earned Radar while still rejecting excess cur
   world.getOffers();
   world.progression.level = 1;
   const offers = world.getOffers();
-  expect(offers.some((t) => t.id === radar.id)).toBe(true);
+  expect(world.unlockedParts).toContain(5001);
+  expect(offers.some((t) => t.id === radar.id)).toBe(false);
+  expect(offers[0].name).toBe('Infiltrator');
   expect(offers.some((t) => t.id === overBudget.id)).toBe(false);
   const fresh = new World([radar], [], 1);
   fresh.progression.level = 1;

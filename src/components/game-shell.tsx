@@ -119,6 +119,10 @@ export default function GameShell() {
     audio?.requestMusic(musicRequest.mode);
   }, [audio, musicRequest]);
   useEffect(() => () => pack?.dispose(), [pack]);
+  useEffect(() => {
+    // The source profile library stays live while creator/viewer children are open.
+    if (world && profile) world.avatarLibrary = profile.tanks.filter((tank) => tank.avatar);
+  }, [world, profile?.tanks]);
   function updateProfile(update: (p: Profile) => Profile, persist = true) {
     setProfile((previous) => {
       if (!previous) return previous;
@@ -156,6 +160,7 @@ export default function GameShell() {
       undefined,
       stage.effects,
       profileClass,
+      profile.tanks.filter((tank) => tank.avatar),
     );
     const random = next.rng;
     stage.random = () => random.next();
