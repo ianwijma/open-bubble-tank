@@ -47,7 +47,7 @@ export interface UpgradeRecenterBlock {
 
 type Three<T> = [T, T, T];
 
-/** Unused pure draft of UpgradeMenu._-96, SearchFailed, SecondSetup and _-aG.
+/** Pure state for UpgradeMenu._-96, SearchFailed, SecondSetup and _-aG.
  * Source: re/bt3/export_scripts/scripts/UpgradeMenu.as:159–174,210–298,478–641,787–801;
  * export_pcode/scripts/UpgradeMenu.pcode: _-96 ofs003c→002e→0016, _-aG ofs037c–0535.
  *

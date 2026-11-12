@@ -2,15 +2,16 @@
 import { useEffect, useState } from 'react';
 import type { AssetPack } from '@/game/assets/asset-pack';
 import type { StageRuntime } from '@/game/services/stage-runtime';
-import type { TankDesign } from '@/game/core/types';
+import type { UpgradeMenu } from '@/game/services/upgrade-menu';
+import type { UpgradeSlotId } from '@/game/core/upgrade-loading';
 import { upgradePartBounds, upgradePreviewPlacement } from '@/game/core/upgrade-screen';
 
 /** One retained renderer supplies the three _-Tr(0) previews, including their independent art clocks. */
 export function useUpgradeArtwork(
   pack: AssetPack,
   stage: StageRuntime,
-  offers: readonly TankDesign[],
-  canvases: Map<number, HTMLCanvasElement>,
+  menu: UpgradeMenu,
+  canvases: Map<UpgradeSlotId, HTMLCanvasElement>,
 ) {
   const [error, setError] = useState('');
   useEffect(() => {
@@ -31,8 +32,10 @@ export function useUpgradeArtwork(
       function draw() {
         const active = renderer;
         if (!active) return;
-        offers.forEach((tank, index) => {
-          const canvas = canvases.get(index),
+        menu.loading.slots.forEach(({ id, tank, card }) => {
+          if (!tank || !card.attached) return;
+          const index = id - 1;
+          const canvas = canvases.get(id),
             ctx = canvas?.getContext('2d');
           if (!canvas || !ctx) return;
           const layer = `viewer:upgrade-${index}` as const,
@@ -61,6 +64,7 @@ export function useUpgradeArtwork(
           canvas.dataset.upgradeAge = String(age);
           canvas.dataset.upgradeScale = String(pose.scale);
           canvas.dataset.upgradeBounds = JSON.stringify(pose);
+          menu.previewReady(id);
         });
       }
       unsubscribe = stage.subscribe({ step: () => age++, draw });
@@ -75,6 +79,6 @@ export function useUpgradeArtwork(
       unsubscribe?.();
       renderer?.destroy();
     };
-  }, [pack, stage, offers, canvases]);
+  }, [pack, stage, menu, canvases]);
   return error;
 }

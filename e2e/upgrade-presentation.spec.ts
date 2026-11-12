@@ -119,10 +119,17 @@ for (const native of [false, true])
     await bitmap.evaluate((node) => {
       (node as HTMLElement).dataset.retainedMenu = 'same-menu';
     });
+    const retainedPreview = await menu.locator('canvas').first().elementHandle();
+    const previewAge = Number(await retainedPreview!.getAttribute('data-upgrade-age'));
     await menu.getByRole('button', { name: 'Edit Nimble', exact: true }).click();
     await expect(bitmap).toHaveAttribute('data-upgrade-child', 'creator');
+    expect(await retainedPreview!.evaluate((node) => node.isConnected)).toBe(true);
+    await expect
+      .poll(async () => Number(await retainedPreview!.getAttribute('data-upgrade-age')))
+      .toBeGreaterThan(previewAge);
     await page.getByRole('button', { name: 'Load a Tank...', exact: true }).click();
     await expect(bitmap).toHaveAttribute('data-upgrade-child', 'viewer');
+    expect(await retainedPreview!.evaluate((node) => node.isConnected)).toBe(true);
     await page.getByRole('button', { name: 'Return to Tank Creator', exact: true }).click();
     await expect(bitmap).toHaveAttribute('data-upgrade-child', 'creator');
     await expect(bitmap).toHaveAttribute('data-retained-menu', 'same-menu');

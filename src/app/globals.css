@@ -1185,6 +1185,9 @@ kbd {
   background: transparent;
   backdrop-filter: none;
 }
+.modal-scrim.upgrade-retained-child {
+  z-index: 9;
+}
 .modal-scrim:has(.edit-confirm-screen) {
   backdrop-filter: none;
 }

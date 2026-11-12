@@ -1,8 +1,8 @@
 # Five-PR delivery stacks
 
 The current user policy is to accumulate five dependent PRs before integrating the
-batch into master. Keep each layer coherent and reviewable. PR125 is the first layer
-of the current stack; do not merge it into master while fewer than five layers exist.
+batch into master. Keep each layer coherent and reviewable. Assemble five layers
+before the final combined merge to master.
 
 ```text
 master ← PR1 ← PR2 ← PR3 ← PR4 ← PR5
@@ -23,12 +23,15 @@ successfully, and address actionable review findings. Pending, missing or failed
 Actions is not green. Escalate uncertain fundamental changes from the child to the
 parent. Never remove assertions or suites merely to obtain green checks.
 
-Once five layers exist and their gates pass, merge the top PR into its parent branch.
-Validate the updated parent's exact head, then continue down the stack. This folds all
-five changes into the bottom branch before its single final merge to master. Require
-a fresh complete Actions/review gate on that combined head. If master changes during
-the batch, integrate it and validate the resulting tree before the final merge. Verify
-each merge result and fetched tree; do not infer completion from a queued operation.
+Once five layers exist, assemble all changes on the last PR's branch and target that
+PR directly at master. A dependent top branch already contains its ancestors; verify
+that ancestry and fold in any missing layer or repair. Validate the final combined
+head once instead of waiting for a new CI pass after every intermediate fold. Require
+its complete current-head Actions/review gate before the single master merge. Earlier
+open layers can target master so their included commits are accounted for by that
+combined merge. If master changes during the batch, integrate it and validate the
+resulting tree before the final merge. Verify the fetched head and resulting tree;
+do not infer completion from a queued operation.
 
 ## Vercel deployment budget
 

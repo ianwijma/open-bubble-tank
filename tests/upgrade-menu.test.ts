@@ -106,3 +106,58 @@ test('PlaceAvatar secondary help can overwrite the shared return mode during car
   world.closeSecondaryHelp();
   expect(world.mode).toBe('playing');
 });
+
+test('browser menu preserves null slots until preview completion and reuses a partial menu after creator return', () => {
+  const stage = new StageRuntime();
+  stage.capture.capture = () => undefined;
+  const menu = new UpgradeMenu(stage, () => {}, 2);
+  const first = { ...STARTER, id: 'left', classId: 1 };
+  const third = { ...STARTER, id: 'right', classId: 3 };
+  menu.setupOffers(2, [first, third]);
+  expect(menu.loading.pending).toBe(3);
+  expect(menu.loading.rootFrame).toBe(1);
+  menu.previewReady(1);
+  menu.previewReady(3);
+  expect(menu.loading.pending).toBe(1);
+  expect(menu.loading.rootFrame).toBe(1);
+  const left = menu.loading.slot(1).card;
+  const preview = left.previews[0];
+  const originalX = left.x;
+  menu.showChild('creator');
+  stage.advance(100, 50);
+  const frame = menu.loading.loadingAnimationFrame;
+  menu.showChild('viewer');
+  stage.advance(100, 50);
+  expect(menu.loading.loadingAnimationFrame).toBeGreaterThan(frame);
+  menu.returnToOffers(6); // Cached records, not a fresh class6 lookup.
+  expect(menu.loading.rootFrame).toBe(2);
+  expect(menu.loading.pending).toBe(0);
+  expect(menu.loading.slot(1).tank).toBe(first);
+  expect(menu.loading.slot(3).tank).toBe(third);
+  expect(menu.loading.slot(2).card.attached).toBe(false);
+  expect(menu.loading.slot(1).card).toBe(left);
+  expect(left.previews[0]).toBe(preview);
+  expect(left.x).toBe(originalX + 90.5);
+  menu.returnToOffers(6);
+  expect(left.x).toBe(originalX + 90.5);
+  menu.previewReady(1); // Repainting an existing canvas cannot decrement again.
+  expect(menu.loading.pending).toBe(0);
+  menu.complete();
+});
+
+test('source selection removes both card handlers while bottom input remains live during closing', () => {
+  const stage = new StageRuntime();
+  stage.capture.capture = () => undefined;
+  const menu = new UpgradeMenu(stage, () => {});
+  menu.setupOffers(1, [STARTER, { ...STARTER, classId: 2 }]);
+  menu.previewReady(2);
+  menu.previewReady(3);
+  for (let i = 0; i < 8; i++) stage.advance(100, 50);
+  expect(menu.motion.bottomInputEnabled).toBe(true);
+  expect(menu.beginClosing()).toBe(true);
+  expect(
+    menu.loading.slots.every(({ card }) => !card.clickListener && !card.editClickListener),
+  ).toBe(true);
+  expect(menu.motion.bottomInputEnabled).toBe(true);
+  menu.complete();
+});

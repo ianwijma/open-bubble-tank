@@ -189,21 +189,27 @@ export default function GameShell() {
   }
   function openUpgradeMenu(target: World, automatic: boolean) {
     upgradeRef.current?.menu.dispose();
-    const menu = new UpgradeMenu(stage, () => {
-      if (upgradeRef.current?.menu !== menu) return;
-      if (automatic) target.finishUpgrade();
-      else {
-        target.offers = [];
-        target.resume();
-      }
-      upgradeRef.current = null;
-      setUpgrade(null);
-      setEditor(null);
-      setViewer(null);
-      setOverlay(null);
-      setScreen('game');
-      refresh();
-    });
+    const menu = new UpgradeMenu(
+      stage,
+      () => {
+        if (upgradeRef.current?.menu !== menu) return;
+        if (automatic) target.finishUpgrade();
+        else {
+          target.offers = [];
+          target.resume();
+        }
+        upgradeRef.current = null;
+        setUpgrade(null);
+        setEditor(null);
+        setViewer(null);
+        setOverlay(null);
+        setScreen('game');
+        refresh();
+      },
+      target.player.design.classId,
+    );
+    if (automatic) menu.setupOffers(target.player.design.classId, target.offers);
+    else menu.showConfirmation();
     const context = { menu, world: target, automatic };
     upgradeRef.current = context;
     setUpgrade(context);
@@ -215,7 +221,7 @@ export default function GameShell() {
   }
   function edit(initial: TankDesign, upgrade = false) {
     world?.pause();
-    upgradeRef.current?.menu.motion.showChild('creator');
+    upgradeRef.current?.menu.showChild('creator');
     setEditor({
       initial,
       saveName: screen === 'menu' ? '' : initial.name,
@@ -248,8 +254,7 @@ export default function GameShell() {
           context.menu.complete();
         } else {
           // _-Zo(false) calls SecondSetup on the same menu after an unsaved return.
-          context.menu.motion.returnToOffers();
-          context.world.offers = context.world.getOffers();
+          context.menu.returnToOffers(context.world.player.design.classId);
           showScreen('game');
           setEditor(null);
           setOverlay(context.automatic ? null : 'edit-choice');
@@ -264,7 +269,7 @@ export default function GameShell() {
   }
   function loadEditorTank(tank?: TankDesign) {
     if (!editor || !viewer) return;
-    upgradeRef.current?.menu.motion.showChild('creator');
+    upgradeRef.current?.menu.showChild('creator');
     const initial =
       tank ??
       (viewer.avatar
@@ -436,19 +441,21 @@ export default function GameShell() {
                     onMenu={menu}
                   />
                 ) : null}
-                {screen === 'game' && world.mode === 'upgrade' && upgrade ? (
+                {upgrade ? (
                   <UpgradePanel
                     pack={pack}
                     stage={stage}
                     menu={upgrade.menu}
-                    offers={world.offers}
+                    active={screen === 'game' && (upgrade.automatic || overlay === 'edit-choice')}
                     current={world.player.design}
                     onSelect={(tank) => {
-                      if (!world.placeUpgrade(tank)) return;
-                      upgrade.menu.motion.beginClosing();
+                      if (upgrade.automatic) {
+                        if (!world.placeUpgrade(tank)) return;
+                      } else world.editPlayer(tank);
+                      upgrade.menu.beginClosing();
                       refresh();
                     }}
-                    onEdit={(tank) => edit(tank, true)}
+                    onEdit={(tank) => edit(tank, upgrade.automatic)}
                   />
                 ) : null}
                 {screen === 'game' && world.mode === 'secondary-help' ? (
@@ -465,26 +472,15 @@ export default function GameShell() {
                     pack={pack}
                     onYes={() => {
                       world.offers = world.getOffers();
+                      upgradeRef.current?.menu.setupOffers(
+                        world.player.design.classId,
+                        world.offers,
+                      );
                       setOverlay('edit-choice');
                     }}
                     onNo={() => {
                       upgradeRef.current?.menu.complete();
                     }}
-                  />
-                ) : null}
-                {screen === 'game' && overlay === 'edit-choice' && upgrade ? (
-                  <UpgradePanel
-                    pack={pack}
-                    stage={stage}
-                    menu={upgrade.menu}
-                    offers={world.offers}
-                    current={world.player.design}
-                    onSelect={(tank) => {
-                      world.editPlayer(tank);
-                      upgrade.menu.motion.beginClosing();
-                      refresh();
-                    }}
-                    onEdit={(tank) => edit(tank)}
                   />
                 ) : null}
                 {screen === 'game' && world.mode === 'won' ? (
@@ -519,7 +515,7 @@ export default function GameShell() {
                 onSave={saveTank}
                 onExit={exitEditor}
                 onLoad={(limits) => {
-                  upgradeRef.current?.menu.motion.showChild('viewer');
+                  upgradeRef.current?.menu.showChild('viewer');
                   setViewer(limits);
                   showScreen('viewer');
                 }}

@@ -32,7 +32,7 @@ PlaceAvatar may overwrite that shared mode when secondary help is first opened.
 Creator/viewer children retain the same menu clock, bitmap, alpha and index. The
 menu continues Run while they are shown. Creator return `_‑Zo(false)` checks the
 current progression slot: an existing/saved slot destroys directly; an empty slot
-calls SecondSetup on the same menu and rebuilds offers without resetting its clock.
+calls SecondSetup on the same menu, reusing initialized offers without resetting its clock.
 Confirmation No also destroys directly. A card reversal may finish while a bottom
 handler's child is displayed. The nested viewer owns its own Update in this app;
 do not add a second update merely because the motion model emits that command.
