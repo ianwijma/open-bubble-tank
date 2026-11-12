@@ -138,7 +138,7 @@ test('source efficiency Off forcibly resumes a paused background, including repe
 test('stage runs the background after Main listeners, and movement reports no arrival teleport', () => {
   const stage = new StageRuntime();
   stage.subscribe({
-    step: () => {
+    mainStep: () => {
       expect(stage.background.revision).toBe(0);
       stage.background.move(1, 2);
     },

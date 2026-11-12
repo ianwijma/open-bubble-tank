@@ -14,6 +14,7 @@ export function GameViewport({
   stage,
   onChange,
   onReady,
+  isUpgradeOpen,
 }: {
   world: World;
   pack: AssetPack;
@@ -22,11 +23,13 @@ export function GameViewport({
   stage: StageRuntime;
   onChange: () => void;
   onReady?: () => void;
+  isUpgradeOpen?: () => boolean;
 }) {
   const host = useRef<HTMLDivElement>(null),
     settingsRef = useRef(settings),
     changeRef = useRef(onChange),
     readyRef = useRef(onReady),
+    upgradeOpenRef = useRef(isUpgradeOpen),
     [error, setError] = useState('');
   useEffect(() => {
     settingsRef.current = settings;
@@ -37,21 +40,32 @@ export function GameViewport({
   useEffect(() => {
     readyRef.current = onReady;
   }, [onReady]);
+  useLayoutEffect(() => {
+    upgradeOpenRef.current = isUpgradeOpen;
+  }, [isUpgradeOpen]);
   const mode = world.mode;
   useEffect(() => {
     if (mode === 'playing' || mode === 'transit' || mode === 'collapse')
       host.current?.focus({ preventScroll: true });
   }, [mode]);
   useLayoutEffect(() => {
-    let backgroundMode: World['mode'] | undefined;
-    const backgroundState = () => {
-      if (backgroundMode === world.mode) return;
-      backgroundMode = world.mode;
-      if (world.mode === 'playing' || world.mode === 'transit' || world.mode === 'collapse')
-        stage.background.resume();
+    const previous = world.onBackgroundChange;
+    const apply = (running: boolean) => {
+      if (running) stage.background.resume();
       else stage.background.stop();
     };
-    backgroundState();
+    const backgroundState = (running: boolean) => {
+      apply(running);
+      previous(running);
+    };
+    world.onBackgroundChange = backgroundState;
+    apply(world.backgroundRunning);
+    return () => {
+      if (world.onBackgroundChange === backgroundState) world.onBackgroundChange = previous;
+      stage.background.resume();
+    };
+  }, [world, stage]);
+  useLayoutEffect(() => {
     let cancelled = false,
       unsubscribe: (() => void) | undefined,
       releaseCapture: (() => void) | undefined,
@@ -97,17 +111,19 @@ export function GameViewport({
         releaseCapture = stage.capture.register({
           order: 0,
           base: true,
+          prepare: () => renderer!.draw(world, settingsRef.current),
           draw: (context) => renderer!.capture(context),
         });
         readyRef.current?.();
         let lastRevision = -1;
         unsubscribe = stage.subscribe({
           elapsed: (elapsed) => world.advanceTime(elapsed),
-          step: () => {
+          mainStep: () => {
             world.viewZoom = settingsRef.current.zoom;
             world.screenShake = settingsRef.current.shake;
-            world.step(input!.frame(), 0, false);
-            backgroundState();
+            // Choose once at entry: a newly born menu does not interrupt this World.Run.
+            if (upgradeOpenRef.current?.()) world.advanceArtwork();
+            else world.step(input!.frame(), 0, false);
             audio?.playEvents(world.drainEvents(), settingsRef.current);
           },
           draw: () => {
@@ -129,7 +145,6 @@ export function GameViewport({
       unsubscribe?.();
       input?.dispose();
       world.onCameraMove = () => {};
-      stage.background.resume();
       if (renderer?.app.renderer) renderer.destroy();
     };
   }, [world, pack, audio, stage]);

@@ -55,7 +55,7 @@ function stageFor(world: World) {
   const stage = new StageRuntime(world.mainEffects);
   stage.random = () => 0.5;
   let callbacks = 0;
-  stage.subscribe({ step: () => world.step(emptyInput(), 0, false) });
+  stage.subscribe({ mainStep: () => world.step(emptyInput(), 0, false) });
   stage.subscribe({ step: () => callbacks++ });
   return { advance: () => stage.advance(20, 50), callbacks: () => callbacks };
 }
