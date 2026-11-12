@@ -1,6 +1,8 @@
 'use client';
 import { useLayoutEffect, useRef, useState, type CSSProperties } from 'react';
 import type { AssetPack, Raster } from '@/game/assets/asset-pack';
+import type { Vec } from '@/game/core/types';
+import { displayPixel } from '@/game/core/display-values';
 import {
   creatorControl,
   type CreatorPrimitive,
@@ -258,6 +260,7 @@ export function CreatorSlider({
   onEnd,
   disabled = false,
   coordinates,
+  point,
 }: {
   pack: AssetPack;
   layout: CreatorSliderLayout;
@@ -271,6 +274,7 @@ export function CreatorSlider({
     min: number;
     max: number;
   };
+  point?: (event: React.PointerEvent<HTMLInputElement>, handle: Vec) => Vec;
   min: number;
   max: number;
   onChange: (value: number) => void;
@@ -279,7 +283,7 @@ export function CreatorSlider({
 }) {
   const [current, setCurrent] = useState(value),
     [hover, setHover] = useState(false);
-  const dragging = useRef<number | null>(null);
+  const dragging = useRef<{ value: number; cursorX: number | null } | null>(null);
   const [cursorX, setCursorX] = useState<number | null>(null);
   // Flash recomputes averages on selection changes, while a dragged handle retains its chosen value.
   useLayoutEffect(() => {
@@ -287,7 +291,7 @@ export function CreatorSlider({
     setCursorX(null);
   }, [resetKey]);
   const normalized = Math.max(0, Math.min(1, (current - min) / (max - min))),
-    x = cursorX ?? coordinates?.toX(current) ?? -57 + 114 * normalized,
+    x = cursorX ?? displayPixel(coordinates?.toX(current) ?? -57 + 114 * normalized),
     y = layout.handle.matrix.ty / 20;
   const hitRadius = Math.max(
     ...layout.handle.variants[hover ? 1 : 0].map((p) => (p.bounds.xMax - p.bounds.xMin) / 40),
@@ -299,6 +303,7 @@ export function CreatorSlider({
     onChange(value);
   };
   const local = (e: React.PointerEvent<HTMLInputElement>) => {
+    if (point) return point(e, { x, y });
     const r = e.currentTarget.getBoundingClientRect();
     return {
       x: ((e.clientX - r.left) * 138) / r.width - 69,
@@ -308,8 +313,8 @@ export function CreatorSlider({
   const finish = (cancel: boolean) => {
     if (dragging.current === null) return;
     if (cancel) {
-      setCurrent(dragging.current);
-      setCursorX(null);
+      setCurrent(dragging.current.value);
+      setCursorX(dragging.current.cursorX);
     }
     dragging.current = null;
     onEnd(cancel);
@@ -366,9 +371,13 @@ export function CreatorSlider({
           if (dragging.current !== null) {
             if (coordinates) {
               const raw = Math.max(coordinates.min, Math.min(coordinates.max, p.x));
-              setCursorX(Math.trunc(raw * 20) / 20);
+              setCursorX(displayPixel(raw));
               change(coordinates.fromX(raw));
-            } else change(min + ((Math.max(-57, Math.min(57, p.x)) + 57) / 114) * (max - min));
+            } else {
+              const raw = Math.max(-57, Math.min(57, p.x));
+              setCursorX(displayPixel(raw));
+              change(min + ((raw + 57) / 114) * (max - min));
+            }
           } else setHover(Math.hypot(p.x - x, p.y - y) <= hitRadius);
         }}
         onPointerLeave={() => {
@@ -379,7 +388,7 @@ export function CreatorSlider({
           e.preventDefault();
           const p = local(e);
           if (Math.hypot(p.x - x, p.y - y) > hitRadius) return;
-          dragging.current = current;
+          dragging.current = { value: current, cursorX };
           onBegin();
           e.currentTarget.setPointerCapture(e.pointerId);
           setHover(true);

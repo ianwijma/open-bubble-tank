@@ -9,8 +9,10 @@ import { decodeTankCode } from '../src/game/services/tank-code';
 import { loadedReferenceModules } from './reference/loaded-module-identity';
 
 const scenario = process.env.BT3_REFERENCE_SCENARIO ?? 'creator';
-if (!['creator', 'validation', 'drag', 'precision', 'placement'].includes(scenario))
-  throw new Error('Choose creator, validation, drag, precision or placement reference scenario.');
+if (!['creator', 'validation', 'drag', 'precision', 'placement', 'transform'].includes(scenario))
+  throw new Error(
+    'Choose creator, validation, drag, precision, placement or transform reference scenario.',
+  );
 const requestedDpr = Number(process.env.BT3_REFERENCE_DPR ?? 1);
 if (![1, 2].includes(requestedDpr)) throw new Error('Choose reference DPR1 or2.');
 const swf = resolve(
@@ -167,7 +169,7 @@ try {
     await page.mouse.up();
     await page.waitForTimeout(400);
   };
-  if (['drag', 'precision', 'placement'].includes(scenario)) {
+  if (['drag', 'precision', 'placement', 'transform'].includes(scenario)) {
     await page.context().grantPermissions(['clipboard-read', 'clipboard-write']);
     const origin = { x: CREATOR_CONTROLS.workspace.tx / 20, y: CREATOR_CONTROLS.workspace.ty / 20 };
     const move = async (x: number, y: number) => {
@@ -183,16 +185,20 @@ try {
       await capture(name);
       await click(263, 16);
       await click(280, 244);
+      await page.keyboard.press('Control+A');
       await page.keyboard.type('Drag reference');
       await click(360, 330);
       await capture(`${name}-code`);
+      // An error/name screen must not silently reuse a previous copied code.
+      await page.evaluate(() => navigator.clipboard.writeText(''));
       await click(370, 164);
       const code = await page.evaluate(() => navigator.clipboard.readText());
+      if (!code) throw new Error(`${name}: public Copy produced no tank code.`);
       const tank = await decodeTankCode(code);
       dragEvidence.push({ name, parts: tank.parts });
       await click(175, 392);
     };
-    if (['precision', 'placement'].includes(scenario)) {
+    if (['precision', 'placement', 'transform'].includes(scenario)) {
       await stage.locator('canvas').evaluate((canvas) => {
         const events: unknown[] = [];
         Object.defineProperty(window, '__creatorPointEvents', { value: events });
@@ -226,7 +232,47 @@ try {
       actions.push({ action: 'embedding-scale', x: n });
       await page.waitForTimeout(400);
     };
-    if (scenario === 'precision') {
+    if (scenario === 'transform') {
+      await dragPreview(origin.x - 40, origin.y - 10);
+      await sample('transform-placed-pair');
+      // A public click establishes selection and clears the source's marquee/drag
+      // flags. Save/Copy retains it; do not toggle the part before each control.
+      await click(origin.x - 40, origin.y - 10);
+      let rotationX = 154,
+        scaleX = 52;
+      for (const [name, control, target] of [
+        ['rotation-fractional', 'rotation', 239.5],
+        ['rotation-endpoint', 'rotation', 268],
+        ['rotation-midpoint', 'rotation', 211],
+        ['rotation-zero', 'rotation', 154],
+        ['scale-fractional', 'scale', 91.5],
+        ['scale-maximum', 'scale', 128],
+        ['scale-minimum', 'scale', 14],
+        ['scale-one', 'scale', 52],
+      ] as const) {
+        const b = (await stage.boundingBox())!,
+          start = control === 'rotation' ? rotationX : scaleX,
+          at = (x: number) => ({
+            x: b.x + (x * b.width) / 550,
+            y: b.y + (432.25 * b.height) / 450,
+          });
+        actions.push({ action: `${control}-start`, x: start, y: 432.25 });
+        const down = at(start),
+          end = at(target);
+        await page.mouse.move(down.x, down.y);
+        await page.waitForTimeout(100);
+        await page.mouse.down();
+        await page.waitForTimeout(100);
+        await page.mouse.move(end.x, end.y);
+        await page.waitForTimeout(100);
+        await capture(`${name}-held`);
+        await page.mouse.up();
+        actions.push({ action: `${control}-end`, x: target, y: 432.25 });
+        await sample(name);
+        if (control === 'rotation') rotationX = target;
+        else scaleX = target;
+      }
+    } else if (scenario === 'precision') {
       await dragPreview(origin.x - 20, origin.y - 10);
       await sample('precision-placed-pair');
       await click(origin.x - 20, origin.y - 10);
@@ -408,8 +454,10 @@ try {
     capturedAt: new Date().toISOString(),
     captures,
     pageErrors: errors,
-    ...(['drag', 'precision', 'placement'].includes(scenario) ? { actions, dragEvidence } : {}),
-    ...(['precision', 'placement'].includes(scenario)
+    ...(['drag', 'precision', 'placement', 'transform'].includes(scenario)
+      ? { actions, dragEvidence }
+      : {}),
+    ...(['precision', 'placement', 'transform'].includes(scenario)
       ? {
           pointerEvents: await page.evaluate('window.__creatorPointEvents'),
           embeddingScope:

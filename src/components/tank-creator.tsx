@@ -18,13 +18,10 @@ import { creatorSuggestedStats, creatorImportedSuggested } from '@/game/core/cre
 import { firstAffordablePart, orderedPalette } from '@/game/simulation/editor-palette';
 import { CreatorButton, CreatorSlider } from './creator-controls';
 import { CREATOR_CONTROLS } from '@/game/core/creator-controls';
-import { EditorPositions, editorDragTopology } from '@/game/simulation/editor-positions';
-import {
-  DISPLAY_IDENTITY,
-  displayMatrixProduct,
-  displayMousePoint,
-} from '@/game/core/display-transform';
-import { displayPixel, displayTwips } from '@/game/core/display-values';
+import { EditorDisplayState, editorDisplayTopology } from '@/game/simulation/editor-display';
+import { DISPLAY_IDENTITY, displayMatrixProduct } from '@/game/core/display-transform';
+import { displayPixel, displayRotation, displayTwips } from '@/game/core/display-values';
+import { stageDisplayPoint } from './stage-pointer';
 import { CreatorSaveDialog } from './creator-save-dialog';
 import { CreatorGuide } from './creator-guide';
 import { CreatorAlert } from './creator-alert';
@@ -94,8 +91,8 @@ export function TankCreator({
 }) {
   const [design, setDesignState] = useState<TankDesign>(() => structuredClone(initial)),
     designLive = useRef(design);
-  const [positions] = useState(() => new EditorPositions(initial.parts));
-  const displayedParts = positions.present(design.parts);
+  const [displayState] = useState(() => new EditorDisplayState(initial.parts));
+  const displayedParts = displayState.present(design.parts);
   // UpdateClass constructs fresh measurement clips from arrTankDetails metadata.
   const measuredDesign = (tank: TankDesign) => ({
     ...tank,
@@ -103,6 +100,7 @@ export function TankCreator({
       ...part,
       x: displayPixel(part.x),
       y: displayPixel(part.y),
+      rotation: displayRotation(part.rotation),
     })),
   });
   const [classId, setClassState] = useState(() => measureClass(measuredDesign(initial), pack)),
@@ -191,7 +189,7 @@ export function TankCreator({
   );
   function setDesign(next: TankDesign | ((previous: TankDesign) => TankDesign)) {
     const value = typeof next === 'function' ? next(designLive.current) : next;
-    positions.retain(value.parts);
+    displayState.retain(value.parts);
     designLive.current = value;
     setDesignState(value);
   }
@@ -206,7 +204,7 @@ export function TankCreator({
   function showEditorAlert(message: string) {
     dialogOpener.current = document.activeElement as HTMLElement | null;
     const restored = { ...designLive.current, parts: acceptedEditorParts(historyLive.current) };
-    positions.reset(restored.parts);
+    displayState.reset(restored.parts);
     setDesign(restored);
     setMeasuredClass(measureClass(measuredDesign(restored), pack));
     setSelection(emptySelection());
@@ -225,7 +223,7 @@ export function TankCreator({
       nextBudget = next.avatar
         ? gunBudget(nextClass, level)
         : Math.floor(gunBudget(nextClass, 6) * 1.5),
-      error = creatorEditError(positions.present(next.parts), nextClass, maxClass, nextBudget);
+      error = creatorEditError(displayState.present(next.parts), nextClass, maxClass, nextBudget);
     if (error) {
       showEditorAlert(CREATOR_EDIT_ERRORS[error]);
       return false;
@@ -236,13 +234,22 @@ export function TankCreator({
     setMessage('');
     return true;
   }
-  const controlBefore = useRef<TankDesign | null>(null);
-  const controlUpdatesClass = useRef(true);
+  const controlBefore = useRef<{
+    saved: TankDesign;
+    displayed: TankPart[];
+    field: 'scale' | 'rotation';
+    keys: string[];
+  } | null>(null);
   const nudge = useRef<{ selection: PartSelection; direction: number } | null>(null);
   const transform = selectedTransform(displayedParts, selection);
-  function beginControl(updateClass: boolean) {
-    controlBefore.current = structuredClone(design);
-    controlUpdatesClass.current = updateClass;
+  function beginControl(field: 'scale' | 'rotation') {
+    const saved = designLive.current;
+    controlBefore.current = {
+      saved: structuredClone(saved),
+      displayed: structuredClone(displayState.present(saved.parts)),
+      field,
+      keys: [...selection.keys],
+    };
   }
   function endControl(cancel = false) {
     const before = controlBefore.current;
@@ -250,11 +257,20 @@ export function TankCreator({
     if (!before) return;
     // _-1N/_-Xf refresh Script-bound outlines even after a no-op handle release.
     selectionBoxes.current = null;
-    if (cancel) setDesign(before);
-    else commit(designLive.current, controlUpdatesClass.current);
+    if (cancel) {
+      displayState.adopt(before.displayed);
+      setDesign(before.saved);
+    } else
+      commit(
+        {
+          ...designLive.current,
+          parts: displayState.saveTransform(designLive.current.parts, before.keys, before.field),
+        },
+        before.field === 'scale',
+      );
   }
   function nudgedDesign(direction: number, selected: PartSelection, frames = 1) {
-    positions.nudge(selected.keys, direction, frames);
+    displayState.nudge(selected.keys, direction, frames);
     return {
       ...designLive.current,
       parts: nudgeSelection(designLive.current.parts, selected, direction, frames),
@@ -275,22 +291,28 @@ export function TankCreator({
     }
   }
   function changePart(change: { rotation?: number; scale?: number }) {
+    const saved = designLive.current;
     const transformed = unlinkPartialSelection(
-      transformSelection(displayedParts, selection, change),
+      transformSelection(displayState.present(saved.parts), selection, change),
       selection,
     );
+    displayState.adopt(transformed);
     const next = {
-      ...design,
-      parts: transformed.map((part) => {
-        const saved = design.parts.find((p) => p.key === part.key)!;
-        return { ...part, x: saved.x, y: saved.y };
-      }),
+      ...saved,
+      parts: editorDisplayTopology(saved.parts, transformed),
     };
     if (controlBefore.current) setDesign(next);
-    else commit(next, change.scale !== undefined);
+    else {
+      // Accessible range input commits immediately; pointer gestures wait for release.
+      const field = change.scale !== undefined ? 'scale' : 'rotation';
+      commit(
+        { ...next, parts: displayState.saveTransform(next.parts, selection.keys, field) },
+        field === 'scale',
+      );
+    }
   }
   function draw() {
-    const parts = positions.present(designLive.current.parts);
+    const parts = displayState.present(designLive.current.parts);
     const cv = canvas.current;
     if (!cv) return;
     const ctx = cv.getContext('2d')!;
@@ -531,42 +553,7 @@ export function TankCreator({
     return artwork.current?.hitPart(part, x, y) ?? pack.hitDesignPart(part, x, y);
   }
   function point(e: { clientX: number; clientY: number }) {
-    const element = canvas.current!;
-    const creator = element.closest('.creator')!.getBoundingClientRect();
-    const spaceElement = element.closest('.stage-space');
-    const space = spaceElement?.getBoundingClientRect() ?? creator;
-    const frame = element.closest('.stage-frame')?.getBoundingClientRect() ?? space;
-    const transform =
-      spaceElement instanceof HTMLElement
-        ? spaceElement.style.transform || getComputedStyle(spaceElement).transform
-        : 'none';
-    // Preserve ResizeObserver's authored precision, before painted/computed serialization.
-    const scale = spaceElement
-        ? transform === 'none'
-          ? 1
-          : new DOMMatrixReadOnly(transform).a
-        : creator.width / 550,
-      dpr = window.devicePixelRatio;
-    const reference = displayMatrixProduct(
-      {
-        ...DISPLAY_IDENTITY,
-        tx: displayTwips((creator.left - space.left) / scale),
-        ty: displayTwips((creator.top - space.top) / scale),
-      },
-      CREATOR_CONTROLS.workspace,
-    );
-    return displayMousePoint(
-      { x: (e.clientX - frame.left) * dpr, y: (e.clientY - frame.top) * dpr },
-      {
-        ...DISPLAY_IDENTITY,
-        a: scale * dpr,
-        d: scale * dpr,
-        tx: displayTwips((space.left - frame.left) * dpr),
-        ty: displayTwips((space.top - frame.top) * dpr),
-      },
-      reference,
-      reference,
-    );
+    return stageDisplayPoint(e, canvas.current!.closest('.creator')!, CREATOR_CONTROLS.workspace);
   }
   function pendingPlacement(id: number, pos: { x: number; y: number }, key = 'preview') {
     let radius = radii.current.get(id);
@@ -617,7 +604,7 @@ export function TankCreator({
     if (!current) return;
     drag.current = null;
     if (cancel) {
-      positions.adopt(current.beforeDisplay);
+      displayState.adopt(current.beforeDisplay);
       setDesign(current.before);
       setSelection(current.selection);
     } else if (current.moved && current.moving) {
@@ -626,7 +613,7 @@ export function TankCreator({
       const invalid = final.parts
         .filter((p) => final.selection.keys.includes(p.key) && !canPlacePart(p, classId, maxClass))
         .map((p) => p.key);
-      const released = positions.saveSelected(designLive.current.parts, final.selection.keys);
+      const released = displayState.saveSelected(designLive.current.parts, final.selection.keys);
       const parts = removeParts(unlinkPartialSelection(released, final.selection), invalid);
       if (commit({ ...design, parts }))
         setSelection({
@@ -636,7 +623,7 @@ export function TankCreator({
     } else if (current.moved) {
       setSelection(
         marqueeSelection(
-          positions.present(designLive.current.parts),
+          displayState.present(designLive.current.parts),
           selection,
           current.from,
           pointer.current,
@@ -807,10 +794,10 @@ export function TankCreator({
                     ),
                   pos,
                 );
-                positions.adopt(current.session.parts);
+                displayState.adopt(current.session.parts);
                 setDesign({
                   ...designLive.current,
-                  parts: editorDragTopology(designLive.current.parts, current.session.parts),
+                  parts: editorDisplayTopology(designLive.current.parts, current.session.parts),
                 });
                 setSelection(current.session.selection);
               } else draw();
@@ -906,10 +893,16 @@ export function TankCreator({
             label="Align to Center"
             onClick={() => {
               const next = centerSelection(displayedParts, selection);
-              positions.center(selection.keys);
+              displayState.center(selection.keys);
               const parts = next.parts.map((part) => {
                 const saved = design.parts.find((p) => p.key === part.key)!;
-                return { ...part, x: saved.x, y: selection.keys.includes(part.key) ? 0 : saved.y };
+                return {
+                  ...part,
+                  x: saved.x,
+                  y: selection.keys.includes(part.key) ? 0 : saved.y,
+                  rotation: saved.rotation,
+                  scale: saved.scale,
+                };
               });
               if (commit({ ...design, parts })) setSelection(next.selection);
             }}
@@ -935,10 +928,22 @@ export function TankCreator({
               resetKey={selection}
               min={layout.name === 'Resize_mc' ? 0.5 : 0}
               max={layout.name === 'Resize_mc' ? 2 : 360}
+              point={(event, handle) =>
+                stageDisplayPoint(
+                  event,
+                  canvas.current!.closest('.creator')!,
+                  layout.matrix,
+                  displayMatrixProduct(layout.matrix, {
+                    ...DISPLAY_IDENTITY,
+                    tx: displayTwips(handle.x),
+                    ty: displayTwips(handle.y),
+                  }),
+                )
+              }
               onChange={(value) =>
                 changePart(layout.name === 'Resize_mc' ? { scale: value } : { rotation: value })
               }
-              onBegin={() => beginControl(layout.name === 'Resize_mc')}
+              onBegin={() => beginControl(layout.name === 'Resize_mc' ? 'scale' : 'rotation')}
               onEnd={endControl}
             />
           ))}
@@ -953,7 +958,7 @@ export function TankCreator({
           const next = undoEditorSnapshot(historyLive.current),
             restored = { ...designLive.current, parts: acceptedEditorParts(next) };
           setSnapshots(next);
-          positions.reset(restored.parts);
+          displayState.reset(restored.parts);
           setDesign(restored);
           setMeasuredClass(measureClass(measuredDesign(restored), pack));
           artwork.current?.clearLayer('design');
