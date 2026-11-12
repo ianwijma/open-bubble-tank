@@ -345,6 +345,17 @@ export class World {
   onCameraMove: (x: number, y: number) => void = () => {};
   secondaryHelpSeen = false;
   onSecondaryHelp: () => void = () => {};
+  onUpgradeMenuOpen: () => void = () => {};
+  onBackgroundChange: (running: boolean) => void = () => {};
+  private backgroundActive = true;
+  /** Last World command; Settings can independently force the browser background on/off. */
+  get backgroundRunning() {
+    return this.backgroundActive;
+  }
+  private backgroundState(running: boolean) {
+    this.backgroundActive = running;
+    this.onBackgroundChange(running);
+  }
   constructor(
     public localTanks: TankDesign[] = [],
     history: TankDesign[] = [],
@@ -389,7 +400,10 @@ export class World {
     return [this.player, ...this.field.enemies, ...this.allies].filter((t) => !t.dead);
   }
   pause() {
-    if (this.flow.pause()) this.revision++;
+    if (this.flow.pause()) {
+      this.backgroundState(false);
+      this.revision++;
+    }
   }
   cycleMap() {
     this.mapMode = nextMapMode(this.mapMode);
@@ -397,7 +411,10 @@ export class World {
     this.revision++;
   }
   resume() {
-    if (this.flow.resume()) this.revision++;
+    if (this.flow.resume()) {
+      this.backgroundState(true);
+      this.revision++;
+    }
   }
   cycleLock() {
     this.targetLocks.cycle();
@@ -426,23 +443,26 @@ export class World {
       )
         throw error;
     } finally {
-      this.actorParents.sync(this);
-      // Authored timelines advance even when state1 skips effects-engine polling.
-      const attached = new Set<Tank>([this.player]);
-      for (const { runtime } of this.attachedFields()) {
-        for (const effect of runtime.effects) effect.age++;
-        for (const bullet of runtime.bullets)
-          if (!bullet.dead) this.projectileTimelines.advance(bullet);
-        for (const effect of runtime.pending) {
-          effect.frame = (effect.frame % effect.total) + 1;
-        }
-      }
-      for (const { field, runtime } of this.attachedFields()) {
-        for (const tank of [...field.enemies, ...runtime.allies])
-          if (this.actorParents.inField(tank, field)) attached.add(tank);
-      }
-      for (const tank of attached) advanceTankArt(tank);
+      this.advanceArtwork();
     }
+  }
+  /** Attached ENTER_FRAME art continues when Main4 skips the World.Run listener. */
+  advanceArtwork() {
+    this.actorParents.sync(this);
+    const attached = new Set<Tank>([this.player]);
+    for (const { runtime } of this.attachedFields()) {
+      for (const effect of runtime.effects) effect.age++;
+      for (const bullet of runtime.bullets)
+        if (!bullet.dead) this.projectileTimelines.advance(bullet);
+      for (const effect of runtime.pending) {
+        effect.frame = (effect.frame % effect.total) + 1;
+      }
+    }
+    for (const { field, runtime } of this.attachedFields()) {
+      for (const tank of [...field.enemies, ...runtime.allies])
+        if (this.actorParents.inField(tank, field)) attached.add(tank);
+    }
+    for (const tank of attached) advanceTankArt(tank);
   }
   private stepFrame(input: InputFrame) {
     if (this.flow.state === 'collapse') {
@@ -942,6 +962,7 @@ export class World {
       this.bossDefeated = true;
       if (this.flow.state === 'playing') {
         this.flow.openWin();
+        this.backgroundState(false);
         this.emit('win');
       }
       this.award('Boss Badge');
@@ -977,6 +998,8 @@ export class World {
       else {
         this.offers = this.getOffers();
         this.flow.openUpgrade();
+        this.backgroundState(false);
+        this.onUpgradeMenuOpen();
         this.revision++;
       }
     }
@@ -996,13 +1019,30 @@ export class World {
     }
     return offers;
   }
+  /** Headless choice adapter; the browser separates placement from presentation completion. */
   selectUpgrade(design: TankDesign) {
-    if (this.mode !== 'upgrade') return;
+    if (!this.placeUpgrade(design)) return;
+    this.finishUpgrade();
+  }
+  /** ViewerUp places the avatar before starting its retained presentation reversal. */
+  placeUpgrade(design: TankDesign) {
+    if (this.mode !== 'upgrade') return false;
     this.progression.history[this.progression.level] = design;
     this.rebuildPlayer(design);
-    this.flow.closeUpgrade();
-    this.offers = [];
     this.onProgression([...this.progression.history]);
+    this.revision++;
+    return true;
+  }
+  /** Destroy restores the shared saved mode only after presentation completes. */
+  finishUpgrade() {
+    this.flow.closeUpgrade();
+    this.backgroundState(true);
+    this.offers = [];
+    this.revision++;
+  }
+  continueAfterWin() {
+    this.mode = 'playing';
+    this.backgroundState(true);
     this.revision++;
   }
   editPlayer(design: TankDesign) {

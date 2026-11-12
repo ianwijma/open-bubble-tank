@@ -11,12 +11,22 @@ Next.js supplies the application shell, TypeScript build, and static delivery. T
 1. `AssetGate` accepts a local file or initializes procedural mock artwork.
 2. `AssetPack` extracts images, sounds, vectors, font outlines, and sprite placements. It composes frozen previews and shared vector-leaf textures. It never executes ABC/ActionScript or calls retired endpoints.
 3. `GameShell` owns the local profile, screen navigation, dialogs, and a `World` instance.
-4. `GameViewport` owns input listeners, a fixed-step accumulator, the Pixi renderer, and cleanup. Input is cleared on blur and gameplay pauses when hidden.
+4. `GameViewport` owns input listeners, the Pixi renderer and cleanup. `MainStage` drives the shared `StageRuntime` fixed-step clock. Input is cleared on blur and gameplay pauses when hidden.
 5. `World.step` advances one original game frame. `weapons.ts`, `projectiles.ts`, `actor-movement.ts`, `waves.ts`, and `tank.ts` implement separate systems. Beam contact, healer patient ownership, turret construction, and status callbacks/clocks are isolated in `beams.ts`, `healing.ts`, `turrets.ts`, and `status.ts`. Rendering and browser storage are absent from these rules.
 6. `GameRenderer` positions the camera at the avatar, draws fields/entities/projectiles/pickups/effects, and updates `SwfSymbolView` display lists. `AssetPack` supplies matching animated alpha-mask hit tests.
 7. React observes a revision counter, approximately ten updates per second at 50 FPS; it does not render every simulation frame.
 
 `MainMenuMotion` belongs to each menu instance and advances on the shared `StageRuntime`. `MainMenuView` retains the supplied-SWF title and control clip trees through Settings/Credits visits; A stage-wide `MenuPointer` queries native retained geometry or procedural contours; DOM buttons retain keyboard access over the canvas. Per-frame rendering uses refs and stage subscriptions, while `GameShell` owns screen changes and the guarded overlay. A new menu instance resets its intro; closing a child pane preserves its title timeline.
+
+The browser-owned `UpgradeMenu` service retains its pure motion model and captured
+bitmap history across creator/viewer children. `World.onUpgradeMenuOpen` reports the
+interface-phase opening without storing browser objects. Card selection calls
+`placeUpgrade` synchronously, then presentation completion calls `finishUpgrade`;
+direct creator returns use the progression-slot rule. Components observe the shared
+service for paint and input state. [Frame ownership](upgrade-frame-reference.md)
+documents fresh browser capture and the fixed cohort shared across Main, background
+and child-menu phases. Main4 skips World.Run while attached artwork still advances;
+explicit World events own background stop/resume independently of dialog mode.
 
 `TankCreator.onLoad` passes its avatar/enemy mode and current limits to the local `TankViewer` screen. `GameShell` retains the editor return context and paused game viewport through that visit; the viewer's artwork and fades use the same stage clock. Selection constructs a fresh editor from the chosen design. Back reconstructs the current avatar or a new empty enemy, matching the recovered source routes. Viewer save/delete callbacks update the versioned local profile, and only completing the final guide page persists `tankViewerHelpSeen`. The viewer handles unavailable community search through the isolated service adapter.
 

@@ -81,7 +81,7 @@ export async function showHealerTargets(pack: AssetPack, host: HTMLElement) {
   const stage = new StageRuntime(fault.mainEffects);
   stage.random = () => 0.5;
   let callbacks = 0;
-  stage.subscribe({ step: () => fault.step(emptyInput(), 0, false) });
+  stage.subscribe({ mainStep: () => fault.step(emptyInput(), 0, false) });
   stage.subscribe({ step: () => callbacks++ });
   const read = () => ({
     frames: fault.stats.frames,
