@@ -40,6 +40,31 @@ A normal outgoing spawner still appends to its active live loop and its newborn 
 in that same pass. The built-in boss contains two part4003 mounts; this requires no
 custom design or parts-pack extension.
 
+## Spawner Setup and retained choice
+
+`_-Zx.RegisterPrimaryWeapon` (1125 onward) registers each clip and immediately calls
+its Setup before the next tank detail is constructed. `Weapon.Setup` (179 onward)
+acquires its target, then invokes SeperatePartSetup. The matching pcode follows
+0039 →0021 →0017 (acquisition) →000d (separate Setup).
+
+`_-ct/_-1k.SeperatePartSetup` (21 onward; matching pcode method) stores the result of
+GetRandomDataByKey("SmallFighter"). It is not deferred until PartCallTrigger. That
+trigger uses the retained code without another selection. Later roster additions
+therefore cannot alter the pending fighter or consume this selection's random draw.
+
+`_-3y.GetRandomDataByKey` (2284 onward; pcode method at9455) finds the contiguous
+key range and calls `_‑Wq` once, including a one-entry range. `_‑Wq` (48–50) uses
+`Math.round(random * (max - min + 0.8) + min - 0.4)`, rather than a uniform floor
+index. Selection now runs after acquisition in the existing per-detail construction
+loop, before a later Phasing constructor can draw its initial counter. Each mount
+keeps its own selection.
+
+The normal offline roster initializes SmallFighter twice before any boss is built.
+The preexisting fallback pool for standalone tank tools remains an explicit adapter;
+missing-key/empty-code import behavior is not established by this correction. The
+shared pseudorandom generator and complete display-constructor draw order are not
+claimed to match the original runtime.
+
 ## Verification limits
 
 Unit regressions preserve the actual old beam/patient, translate emitter positions

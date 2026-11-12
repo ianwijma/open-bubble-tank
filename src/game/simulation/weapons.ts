@@ -13,7 +13,6 @@ import type {
   TankPart,
   Vec,
 } from '../core/types';
-import { ENEMIES } from '../data/catalog';
 import { WEAPONS, type WeaponSpec } from '../data/weapons';
 import emitterData from '../data/emitters.json';
 import allyData from '../data/allies.json';
@@ -271,12 +270,8 @@ export function fireGun(world: World, t: Tank, gun: GunState, input: InputFrame)
     return;
   }
   if (id === 4003) {
-    const candidates =
-      world.roster.units.get('SmallFighter') ??
-      ENEMIES.filter((e) => e.name === 'Pew Pew' || e.name === 'Flittering Terror');
-    gun.spawnDesign ??= world.rng.pick(candidates);
     const pos = world.actorParents.pointAt(t, world.muzzle(t, gun), world.currentWrapper)!;
-    world.spawnEnemy(gun.spawnDesign, pos);
+    world.spawnEnemy(gun.spawnDesign!, pos);
     return;
   }
   if (id === 4023) {
