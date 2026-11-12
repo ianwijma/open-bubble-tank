@@ -4,6 +4,7 @@ import { decompressSWF } from '../src/game/assets/swf.mjs';
 import { extractSymbols } from '../src/game/assets/swf-symbols.mjs';
 import { buildDisplayList } from '../src/game/assets/display-list';
 import { createSwfLayout } from './lib/swf-layout';
+import { editTextFields } from './lib/swf-edit-fields';
 import type { SymbolResult, DisplayPlacement } from '../src/game/assets/asset-pack';
 const root = process.argv[2] ?? '../documented-bubble-tank-3';
 const { bytes } = await decompressSWF(
@@ -57,60 +58,7 @@ const list = (id: number, frame = 1) =>
     symbols.sprites.find((s) => s.id === id)!,
     frame,
   );
-function fieldsFor(placements: DisplayPlacement[]) {
-  return placements.flatMap((p) => {
-    const t = symbols.editTexts.find((t) => t.id === p.charId);
-    if (!t) return [];
-    const font = symbols.fonts.find((f) => f.id === t.fontId)!;
-    const size = t.fontHeight / 20,
-      ascent = (font.ascent ?? 20480) / 20,
-      descent = (font.descent ?? 0) / 20;
-    return [
-      {
-        matrix: p.matrix,
-        name: p.name ?? `text${p.charId}`,
-        symbol: p.charId,
-        initialText: t.text
-          .replace(/<\/p>/gi, '\n')
-          .replace(/<[^>]*>/g, '')
-          .replace(
-            /&(nbsp|apos|quot|amp|lt|gt);/g,
-            (_, key) =>
-              (
-                ({ nbsp: ' ', apos: "'", quot: '"', amp: '&', lt: '<', gt: '>' }) as Record<
-                  string,
-                  string
-                >
-              )[key] ?? '',
-          )
-          .trimEnd(),
-        x: t.bounds.xMin / 20,
-        y: t.bounds.yMin / 20,
-        width: (t.bounds.xMax - t.bounds.xMin) / 20,
-        height: (t.bounds.yMax - t.bounds.yMin) / 20,
-        fontId: font.id,
-        font: font.name.replaceAll('\0', ''),
-        size,
-        ascent,
-        lineHeight: ((ascent + descent) * size) / 1024 + (t.leading ?? 0) / 20,
-        color: t.color ?? [255, 255, 255, 255],
-        align: t.align ?? 0,
-        spacing: Number(t.text.match(/letterSpacing="([\d.-]+)"/)?.[1] ?? 0),
-        bold: !!font.bold,
-        italic: !!font.italic,
-        wordWrap: !!t.flags?.wordWrap,
-        deviceFont: !t.flags?.useOutlines,
-        maxLength: t.maxLength,
-        advances: Object.fromEntries(
-          font.codeTable.map((c, i) => [
-            String.fromCharCode(c),
-            (font.advances?.[i] ?? 10240) / 20,
-          ]),
-        ),
-      },
-    ];
-  });
-}
+const fieldsFor = (placements: DisplayPlacement[]) => editTextFields(symbols, placements);
 
 function piece(p: DisplayPlacement) {
   const leaves = layout.collect(p.charId, 1, 'up');

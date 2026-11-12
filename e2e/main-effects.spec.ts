@@ -103,3 +103,40 @@ for (const native of [false, true])
     await expect.poll(async () => (await read()).remaining).toBe(0);
     expect(errors).toEqual([]);
   });
+
+for (const native of [false, true])
+  test(`${native ? 'SWF' : 'mock'} upgrade capture includes current flash paint before RAF presentation`, async ({
+    page,
+  }) => {
+    test.skip(native && !existsSync(swf), 'Supply the original local SWF.');
+    const errors: string[] = [];
+    page.on('pageerror', (error) => errors.push(error.message));
+    await page.goto('http://127.0.0.1:3102');
+    await page.getByLabel('Fixture').selectOption('main-effects');
+    if (native) await page.getByLabel('Original SWF').setInputFiles(swf);
+    else await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
+    const status = page.getByRole('status');
+    await expect(status).toContainText('Ready', { timeout: 60000 });
+    await expect(page.locator('.game-canvas canvas')).toBeVisible();
+    await page.getByRole('button', { name: 'Capture next upgrade', exact: true }).click();
+    const read = async () => JSON.parse((await status.getAttribute('data-main-effects'))!);
+    await expect.poll(async () => (await read()).upgradeCapture).toBeTruthy();
+    const proof = await read();
+    expect(proof.upgradeCapture).toMatchObject({
+      counterAtBirth: 0,
+      avatarAgeAtCapture: 0,
+      capturedHudLife: 50,
+    });
+    const [red, green, blue, alpha] = proof.upgradeCapture.pixel;
+    expect(red).toBeGreaterThan(240);
+    expect(green).toBeLessThan(20);
+    expect(blue).toBeLessThan(20);
+    expect(alpha).toBe(255);
+    expect(proof.gameFrames).toBe(1);
+    expect(proof.avatarAge).toBe(1);
+    expect(proof.mode).toBe('upgrade');
+    await expect.poll(async () => (await read()).avatarArtAge).toBeGreaterThan(proof.avatarArtAge);
+    expect((await read()).gameFrames).toBe(1);
+    expect((await read()).avatarAge).toBe(1);
+    expect(errors).toEqual([]);
+  });

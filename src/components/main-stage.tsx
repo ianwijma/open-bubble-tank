@@ -32,18 +32,7 @@ export function MainStage({
       previousX = x;
       previousY = y;
     };
-    // Resolve the transform before input reads mouse coordinates, including catch-up frames.
-    const unsubscribe = runtime.subscribe({ beforeStep: presentTransform });
-    const releaseCapture = runtime.capture.register({
-      order: 10,
-      draw: (context) => context.drawImage(canvas.current!, -40, -40, 630, 530),
-    });
-    let frame = 0,
-      last = performance.now();
-    const tick = (now: number) => {
-      runtime.advance(now - last, fpsRef.current);
-      last = now;
-      presentTransform();
+    const paintFlashes = () => {
       const { flashes } = runtime.effects;
       if (paintedFlash || flashes.length) ctx.clearRect(0, 0, 630, 530);
       for (const flash of flashes) {
@@ -53,6 +42,21 @@ export function MainStage({
       }
       ctx.globalAlpha = 1;
       paintedFlash = flashes.length > 0;
+    };
+    // Resolve the transform before input reads mouse coordinates, including catch-up frames.
+    const unsubscribe = runtime.subscribe({ beforeStep: presentTransform });
+    const releaseCapture = runtime.capture.register({
+      order: 10,
+      prepare: paintFlashes,
+      draw: (context) => context.drawImage(canvas.current!, -40, -40, 630, 530),
+    });
+    let frame = 0,
+      last = performance.now();
+    const tick = (now: number) => {
+      runtime.advance(now - last, fpsRef.current);
+      last = now;
+      presentTransform();
+      paintFlashes();
       frame = requestAnimationFrame(tick);
     };
     frame = requestAnimationFrame(tick);

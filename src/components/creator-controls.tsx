@@ -25,7 +25,37 @@ export function CreatorPrimitives({ pieces }: { pieces: CreatorPrimitive[] }) {
     };
     return (
       <g key={i} transform={matrix(p.matrix)}>
-        {p.kind === 'text' ? (
+        {p.kind === 'paths' ? (
+          p.paths?.map((path, j) => (
+            <path
+              key={j}
+              d={path.d}
+              fill={path.fill ? rgba(path.fill) : 'none'}
+              fillRule={path.rule}
+              stroke={path.stroke ? rgba(path.stroke) : 'none'}
+              strokeWidth={path.width}
+              strokeLinecap={path.cap}
+              strokeLinejoin={path.join}
+            />
+          ))
+        ) : p.kind === 'text' && p.textLines ? (
+          p.textLines.map((line, j) => (
+            <text
+              key={j}
+              x={line.x}
+              y={line.y}
+              fontFamily={p.font?.startsWith('Arial') ? 'Arial, sans-serif' : 'monospace'}
+              fontWeight={p.bold ? 'bold' : 'normal'}
+              fontStyle={p.italic ? 'italic' : 'normal'}
+              fontSize={line.size}
+              textLength={line.width}
+              lengthAdjust="spacingAndGlyphs"
+              fill={rgba(line.color)}
+            >
+              {line.text}
+            </text>
+          ))
+        ) : p.kind === 'text' ? (
           p.glyphs?.map((g, j) => (
             <text
               key={j}

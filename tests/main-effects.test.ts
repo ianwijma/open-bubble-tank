@@ -132,7 +132,7 @@ test('shared stage advances effects before transform/input/gameplay, once, and s
       phases.push('elapsed');
       world.advanceTime(ms);
     },
-    step: () => {
+    mainStep: () => {
       phases.push('game');
       world.step(emptyInput(), 0, false);
       seen.push([stage.effects.remaining, stage.effects.position.x]);

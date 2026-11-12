@@ -1,5 +1,7 @@
 import { createRoot } from 'react-dom/client';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { UpgradeMenu } from '../../src/game/services/upgrade-menu';
+import { straightBitmap } from '../../src/game/core/bitmap-blur';
 import { MainStage } from '../../src/components/main-stage';
 import { GameViewport } from '../../src/components/game-viewport';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
@@ -12,11 +14,15 @@ function MainEffectsFixture({
   pack,
   world,
   runtime,
+  reportCapture,
 }: {
   pack: AssetPack;
   world: World;
   runtime: StageRuntime;
+  reportCapture: (proof: object) => void;
 }) {
+  const upgrade = useRef<UpgradeMenu | null>(null);
+  useEffect(() => () => upgrade.current?.dispose(), []);
   const [menu, setMenu] = useState(false),
     [fps, setFps] = useState<Settings['fps']>(50);
   const stackFlashes = () => {
@@ -50,6 +56,7 @@ function MainEffectsFixture({
             stage={runtime}
             settings={{ ...DEFAULT_SETTINGS, fps }}
             audio={null}
+            isUpgradeOpen={() => upgrade.current !== null}
             onChange={() => {}}
           />
         )}
@@ -71,6 +78,26 @@ function MainEffectsFixture({
         <button onClick={() => runtime.effects.shake(12)}>Shake 12</button>
         <button onClick={() => world.resume()}>Resume game</button>
         <button onClick={stackFlashes}>Stack flashes</button>
+        <button
+          onClick={() => {
+            // Explicit source-boundary fixture: full health and a new, not-yet-painted flash.
+            world.onUpgradeMenuOpen = () => {
+              upgrade.current = new UpgradeMenu(runtime, () => world.finishUpgrade());
+              const pixels = straightBitmap(upgrade.current.history!.pixels);
+              reportCapture({
+                pixel: [...pixels.slice((420 * 550 + 520) * 4, (420 * 550 + 520) * 4 + 4)],
+                counterAtBirth: upgrade.current.motion.counter,
+                avatarAgeAtCapture: world.player.age,
+                capturedHudLife: world.hud.readout(world.player, world.secondaryCounter).life,
+              });
+            };
+            world.player.life = 50;
+            runtime.effects.flash(0xff0000, 1);
+            world.resume();
+          }}
+        >
+          Capture next upgrade
+        </button>
         <button
           onClick={() => {
             stackFlashes();
@@ -106,7 +133,17 @@ export function showMainEffects(
   world.pause();
   world.field.tutorial = 0;
   const root = createRoot(host);
-  root.render(<MainEffectsFixture pack={pack} world={world} runtime={runtime} />);
+  let upgradeCapture: object | undefined;
+  root.render(
+    <MainEffectsFixture
+      pack={pack}
+      world={world}
+      runtime={runtime}
+      reportCapture={(proof) => {
+        upgradeCapture = proof;
+      }}
+    />,
+  );
   const samples: object[] = [],
     shakeSamples: object[] = [];
   let disposed = false;
@@ -150,6 +187,9 @@ export function showMainEffects(
           shakeSamples,
           gameFrames: world.stats.frames,
           mode: world.mode,
+          avatarAge: world.player.age,
+          avatarArtAge: world.player.artAge,
+          upgradeCapture,
         });
       }),
   });

@@ -63,7 +63,7 @@ export function drawBitmapOver(destination: Uint8ClampedArray, source: Uint8Clam
   }
 }
 
-/** PauseMenu's capture-before-blur stack, including its unused first reversal slot. */
+/** Pause/UpgradeMenu capture-before-blur stack, including the unused first reversal slot. */
 export class PauseBitmapHistory {
   pixels: Uint8ClampedArray;
   private scratch: Uint8ClampedArray;

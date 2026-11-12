@@ -12,7 +12,24 @@ export interface CreatorPrimitive {
   bounds: { xMin: number; xMax: number; yMin: number; yMax: number };
   fill?: number[] | null;
   stroke?: { color: number[]; width: number } | null;
+  paths?: {
+    d: string;
+    rule?: 'nonzero' | 'evenodd';
+    fill?: number[];
+    stroke?: number[];
+    width?: number;
+    cap?: 'round' | 'butt' | 'square';
+    join?: 'round' | 'bevel' | 'miter';
+  }[];
   glyphs?: { text: string; x: number; y: number; size: number; color: number[] }[];
+  textLines?: {
+    text: string;
+    x: number;
+    y: number;
+    size: number;
+    color: number[];
+    width: number;
+  }[];
 }
 export interface CreatorControl {
   name: string;

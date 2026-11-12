@@ -1,6 +1,8 @@
 type CaptureLayer = {
   order: number;
   base?: boolean;
+  /** Refresh owned paint from current model state without advancing its clocks. */
+  prepare?: () => void;
   draw: (context: CanvasRenderingContext2D) => void;
 };
 
@@ -13,13 +15,18 @@ export class StageCapture {
       this.layers.delete(layer);
     };
   }
-  capture() {
-    if (![...this.layers].some((layer) => layer.base)) return;
+  capture({ refresh = false }: { refresh?: boolean } = {}) {
+    const layers = [...this.layers].sort((a, b) => a.order - b.order);
+    if (!layers.some((layer) => layer.base)) return;
+    if (refresh) for (const layer of layers) if (this.layers.has(layer)) layer.prepare?.();
+    // A prepare can release its owner; never copy a disposed base or canvas.
+    if (!layers.some((layer) => layer.base && this.layers.has(layer))) return;
     const canvas = document.createElement('canvas');
     canvas.width = 550;
     canvas.height = 450;
     const context = canvas.getContext('2d', { willReadFrequently: true })!;
-    for (const layer of [...this.layers].sort((a, b) => a.order - b.order)) {
+    for (const layer of layers) {
+      if (!this.layers.has(layer)) continue;
       context.save();
       layer.draw(context);
       context.restore();

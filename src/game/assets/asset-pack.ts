@@ -3,6 +3,7 @@ import { prepareSound, type SwfSound } from './sound-window';
 import { SETTINGS_SCREEN } from '../core/settings-screen';
 import { CREDITS } from '../core/credits-screen';
 import { TANK_VIEWER } from '../core/tank-viewer';
+import { UPGRADE_SCREEN } from '../core/upgrade-screen';
 import { svgMaskDefinition } from './svg-mask';
 import { mockCreditsLeaf } from './mock-credits';
 import type { Projectile, Rect, Tank, TankDesign, TankPart } from '../core/types';
@@ -652,6 +653,15 @@ export class AssetPack {
           widget.clips && new Map(widget.clips.map((c) => [c.symbol, c.bounds])),
         );
         if (raster) pack.creatorFrames.set(`viewer:${widget.symbol}:${widget.frame}`, raster);
+      }
+      for (const widget of UPGRADE_SCREEN.widgets) {
+        const pose = new SwfClip(widget.symbol, pack);
+        pose.start(widget.frame, false);
+        pose.placements = pose.placements.filter((p) => widget.staticDepths.includes(p.depth));
+        const raster = widget.leaf
+          ? await pack.rasterSymbol(widget.symbol)
+          : await pack.rasterClip(pose);
+        if (raster) pack.creatorFrames.set(`upgrade:${widget.symbol}:${widget.frame}`, raster);
       }
       for (const piece of TANK_VIEWER.rejection.pieces) {
         const raster = await pack.rasterSymbol(piece.symbol);

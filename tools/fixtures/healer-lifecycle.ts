@@ -170,7 +170,7 @@ export async function showHealerLifecycle(pack: AssetPack, host: HTMLElement) {
   const stage = new StageRuntime(world.mainEffects);
   stage.random = () => 0.5;
   let callbacks = 0;
-  stage.subscribe({ step: () => world.step(emptyInput(), 0, false) });
+  stage.subscribe({ mainStep: () => world.step(emptyInput(), 0, false) });
   stage.subscribe({ step: () => callbacks++ });
   stage.advance(20, 50);
   const patientDeath = {

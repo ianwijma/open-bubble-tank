@@ -11,12 +11,22 @@ Next.js supplies the application shell, TypeScript build, and static delivery. T
 1. `AssetGate` accepts a local file or initializes procedural mock artwork.
 2. `AssetPack` extracts images, sounds, vectors, font outlines, and sprite placements. It composes frozen previews and shared vector-leaf textures. It never executes ABC/ActionScript or calls retired endpoints.
 3. `GameShell` owns the local profile, screen navigation, dialogs, and a `World` instance.
-4. `GameViewport` owns input listeners, a fixed-step accumulator, the Pixi renderer, and cleanup. Input is cleared on blur and gameplay pauses when hidden.
+4. `GameViewport` owns input listeners, the Pixi renderer and cleanup. `MainStage` drives the shared `StageRuntime` fixed-step clock. Input is cleared on blur and gameplay pauses when hidden.
 5. `World.step` advances one original game frame. `weapons.ts`, `projectiles.ts`, `actor-movement.ts`, `waves.ts`, and `tank.ts` implement separate systems. Beam contact, healer patient ownership, turret construction, and status callbacks/clocks are isolated in `beams.ts`, `healing.ts`, `turrets.ts`, and `status.ts`. Rendering and browser storage are absent from these rules.
 6. `GameRenderer` positions the camera at the avatar, draws fields/entities/projectiles/pickups/effects, and updates `SwfSymbolView` display lists. `AssetPack` supplies matching animated alpha-mask hit tests.
 7. React observes a revision counter, approximately ten updates per second at 50 FPS; it does not render every simulation frame.
 
 `MainMenuMotion` belongs to each menu instance and advances on the shared `StageRuntime`. `MainMenuView` retains the supplied-SWF title and control clip trees through Settings/Credits visits; A stage-wide `MenuPointer` queries native retained geometry or procedural contours; DOM buttons retain keyboard access over the canvas. Per-frame rendering uses refs and stage subscriptions, while `GameShell` owns screen changes and the guarded overlay. A new menu instance resets its intro; closing a child pane preserves its title timeline.
+
+The browser-owned `UpgradeMenu` service retains its pure motion model and captured
+bitmap history across creator/viewer children. `World.onUpgradeMenuOpen` reports the
+interface-phase opening without storing browser objects. Card selection calls
+`placeUpgrade` synchronously, then presentation completion calls `finishUpgrade`;
+direct creator returns use the progression-slot rule. Components observe the shared
+service for paint and input state. [Frame ownership](upgrade-frame-reference.md)
+documents fresh browser capture and the fixed cohort shared across Main, background
+and child-menu phases. Main4 skips World.Run while attached artwork still advances;
+explicit World events own background stop/resume independently of dialog mode.
 
 `TankCreator.onLoad` passes its avatar/enemy mode and current limits to the local `TankViewer` screen. `GameShell` retains the editor return context and paused game viewport through that visit; the viewer's artwork and fades use the same stage clock. Selection constructs a fresh editor from the chosen design. Back reconstructs the current avatar or a new empty enemy, matching the recovered source routes. Viewer save/delete callbacks update the versioned local profile, and only completing the final guide page persists `tankViewerHelpSeen`. The viewer handles unavailable community search through the isolated service adapter.
 
@@ -327,3 +337,6 @@ Save comparison does not define queue deduplication. Bytecode binds the active V
 
 
 `tools/import-hud-geometry.ts` recovers pause root1559's static placement/glyph metrics separately from PausedMenuButtons1636 and caption1560's font/size/ascent. AssetPack prepares the static text raster from the browser-supplied SWF; mock rendering uses the numerical glyph placements and local device font. PausePanel places that root below its saved bitmap and retains the independently fading button/caption layer above it. The blur's accumulated alpha loss can expose the underlying static label; the initial capture and reverse history still cover it. Caption layout uses the source RECT, two-pixel text-field inset and font ascent; BubbleText accepts the recovered font ID rather than relying on a name match. Padded title/orb rasters keep their own logical extent with scoped max-width overrides. The unnamed shape1096 is imported separately as a solid black64/255 rectangle at the bottom of the fading button layer. Its shade is composited above the saved bitmap and below every button/caption. The flat SVG receives color alpha multiplied by the raw button-layer alpha before CSS clamping, preserving the source1.03125 opening overshoot and the same closing clock without changing captured pixels or blur history.
+
+
+`core/upgrade-offers.ts` models the source avatar-library tier and backwards exact class/GP/tier lookup, independently of creator/viewer unlock eligibility. `World.getOffers` retains the fresh-profile preference rolls before resolving unavailable server routes through that lookup. Its separate live avatar library comes from the player profile even when saved enemy sources are disabled; GameShell synchronizes subsequent creator/viewer library changes. An already displayed offer list remains its own snapshot. Read [offline upgrade defaults](upgrade-source-reference.md) before changing these predicates.

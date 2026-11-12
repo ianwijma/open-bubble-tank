@@ -6,7 +6,8 @@ import { detachForcefield } from './forcefield';
 import { removeTankChild } from './tank-display';
 import { killMountedShield } from './shields';
 import { MainEffects } from './main-effects';
-import { RunPartUnlocks, partUnlocked } from '../core/part-unlocks';
+import { RunPartUnlocks } from '../core/part-unlocks';
+import { defaultUpgradeTank, upgradeClasses } from '../core/upgrade-offers';
 import { ProfileClassAllowance } from '../core/profile-class';
 import type {
   CollisionTest,
@@ -26,7 +27,7 @@ import type {
   WorldEvent,
   WorldMode,
 } from '../core/types';
-import { AVATARS, BOSSES, costs, gunBudget, STARTER } from '../data/catalog';
+import { AVATARS, BOSSES, STARTER } from '../data/catalog';
 import { WEAPONS, type WeaponSpec } from '../data/weapons';
 import emitterData from '../data/emitters.json';
 import { moveActor } from './actor-movement';
@@ -344,12 +345,24 @@ export class World {
   onCameraMove: (x: number, y: number) => void = () => {};
   secondaryHelpSeen = false;
   onSecondaryHelp: () => void = () => {};
+  onUpgradeMenuOpen: () => void = () => {};
+  onBackgroundChange: (running: boolean) => void = () => {};
+  private backgroundActive = true;
+  /** Last World command; Settings can independently force the browser background on/off. */
+  get backgroundRunning() {
+    return this.backgroundActive;
+  }
+  private backgroundState(running: boolean) {
+    this.backgroundActive = running;
+    this.onBackgroundChange(running);
+  }
   constructor(
     public localTanks: TankDesign[] = [],
     history: TankDesign[] = [],
     seed?: number,
     readonly mainEffects = new MainEffects(),
     readonly profileClass = new ProfileClassAllowance(),
+    public avatarLibrary: readonly TankDesign[] = localTanks.filter((tank) => tank.avatar),
   ) {
     this.rng = new Random(seed);
     this.roster = new UnitRoster(this.rng, localTanks);
@@ -387,7 +400,10 @@ export class World {
     return [this.player, ...this.field.enemies, ...this.allies].filter((t) => !t.dead);
   }
   pause() {
-    if (this.flow.pause()) this.revision++;
+    if (this.flow.pause()) {
+      this.backgroundState(false);
+      this.revision++;
+    }
   }
   cycleMap() {
     this.mapMode = nextMapMode(this.mapMode);
@@ -395,7 +411,10 @@ export class World {
     this.revision++;
   }
   resume() {
-    if (this.flow.resume()) this.revision++;
+    if (this.flow.resume()) {
+      this.backgroundState(true);
+      this.revision++;
+    }
   }
   cycleLock() {
     this.targetLocks.cycle();
@@ -424,23 +443,26 @@ export class World {
       )
         throw error;
     } finally {
-      this.actorParents.sync(this);
-      // Authored timelines advance even when state1 skips effects-engine polling.
-      const attached = new Set<Tank>([this.player]);
-      for (const { runtime } of this.attachedFields()) {
-        for (const effect of runtime.effects) effect.age++;
-        for (const bullet of runtime.bullets)
-          if (!bullet.dead) this.projectileTimelines.advance(bullet);
-        for (const effect of runtime.pending) {
-          effect.frame = (effect.frame % effect.total) + 1;
-        }
-      }
-      for (const { field, runtime } of this.attachedFields()) {
-        for (const tank of [...field.enemies, ...runtime.allies])
-          if (this.actorParents.inField(tank, field)) attached.add(tank);
-      }
-      for (const tank of attached) advanceTankArt(tank);
+      this.advanceArtwork();
     }
+  }
+  /** Attached ENTER_FRAME art continues when Main4 skips the World.Run listener. */
+  advanceArtwork() {
+    this.actorParents.sync(this);
+    const attached = new Set<Tank>([this.player]);
+    for (const { runtime } of this.attachedFields()) {
+      for (const effect of runtime.effects) effect.age++;
+      for (const bullet of runtime.bullets)
+        if (!bullet.dead) this.projectileTimelines.advance(bullet);
+      for (const effect of runtime.pending) {
+        effect.frame = (effect.frame % effect.total) + 1;
+      }
+    }
+    for (const { field, runtime } of this.attachedFields()) {
+      for (const tank of [...field.enemies, ...runtime.allies])
+        if (this.actorParents.inField(tank, field)) attached.add(tank);
+    }
+    for (const tank of attached) advanceTankArt(tank);
   }
   private stepFrame(input: InputFrame) {
     if (this.flow.state === 'collapse') {
@@ -940,6 +962,7 @@ export class World {
       this.bossDefeated = true;
       if (this.flow.state === 'playing') {
         this.flow.openWin();
+        this.backgroundState(false);
         this.emit('win');
       }
       this.award('Boss Badge');
@@ -975,6 +998,8 @@ export class World {
       else {
         this.offers = this.getOffers();
         this.flow.openUpgrade();
+        this.backgroundState(false);
+        this.onUpgradeMenuOpen();
         this.revision++;
       }
     }
@@ -984,36 +1009,40 @@ export class World {
       level = this.progression.level;
     this.partUnlocks.unlockThrough(level);
     const offers: TankDesign[] = [];
-    for (const classId of [current - 1, current, current + 1]) {
-      if (classId < 1 || classId > 6 || classId > Math.min(6, level + 1)) continue;
-      const budget = gunBudget(classId, level);
-      if (!budget) continue;
-      const pool = [...AVATARS, ...this.localTanks.filter((t) => t.avatar)].filter(
-        (t) =>
-          t.classId === classId &&
-          costs(t.parts).gp <= budget &&
-          t.parts.every(
-            (p) =>
-              partUnlocked(p.type, level, this.unlockedParts) &&
-              Math.floor(p.type / 1000) !== 4 &&
-              Math.floor(p.type / 1000) !== 6,
-          ),
-      );
-      const sorted = pool.sort((a, b) => costs(b.parts).gp - costs(a.parts).gp);
-      const exact = sorted.filter((t) => costs(t.parts).gp === budget);
-      if (exact.length) offers.push(this.rng.pick(exact));
-      else if (sorted.length) offers.push(sorted[0]);
+    const library = [...AVATARS, ...this.avatarLibrary];
+    for (const classId of upgradeClasses(current)) {
+      // The fresh source profile rolls its default-vs-server preference even
+      // though both routes reach GetDefaultTank when retired search is unavailable.
+      this.rng.int(1, 2);
+      const tank = defaultUpgradeTank(library, classId, level);
+      if (tank) offers.push(tank);
     }
-    if (!offers.length) offers.push({ ...STARTER, id: `fallback-${level}`, name: 'Basic Tank' });
     return offers;
   }
+  /** Headless choice adapter; the browser separates placement from presentation completion. */
   selectUpgrade(design: TankDesign) {
-    if (this.mode !== 'upgrade') return;
+    if (!this.placeUpgrade(design)) return;
+    this.finishUpgrade();
+  }
+  /** ViewerUp places the avatar before starting its retained presentation reversal. */
+  placeUpgrade(design: TankDesign) {
+    if (this.mode !== 'upgrade') return false;
     this.progression.history[this.progression.level] = design;
     this.rebuildPlayer(design);
-    this.flow.closeUpgrade();
-    this.offers = [];
     this.onProgression([...this.progression.history]);
+    this.revision++;
+    return true;
+  }
+  /** Destroy restores the shared saved mode only after presentation completes. */
+  finishUpgrade() {
+    this.flow.closeUpgrade();
+    this.backgroundState(true);
+    this.offers = [];
+    this.revision++;
+  }
+  continueAfterWin() {
+    this.mode = 'playing';
+    this.backgroundState(true);
     this.revision++;
   }
   editPlayer(design: TankDesign) {
