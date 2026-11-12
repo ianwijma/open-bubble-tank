@@ -98,6 +98,49 @@ test('creator marquee adds touched radius samples in either drag direction and c
     marqueeSelection(parts, paired, { x: 100, y: 100 }, { x: 110, y: 110 }, true, () => false),
   ).toEqual(emptySelection());
 });
+test('creator stage release has no rectangle samples after marquee paint was cleared', () => {
+  const saved = [part('a', 0, 0)];
+  expect(
+    marqueeSelection(
+      saved,
+      { keys: ['a'], ghosts: [] },
+      { x: 0, y: 0 },
+      { x: 0, y: 0 },
+      false,
+      () => false,
+      { rectangle: false },
+    ),
+  ).toEqual(emptySelection());
+});
+test('creator marquee samples clip positions with the independently saved radius and scale', () => {
+  const saved = [{ ...part('a', 7.125, -9.875), radius: 7 }];
+  const displayed = [{ ...saved[0], x: 7.1, y: -9.85, scale: 1.5 }];
+  expect(
+    marqueeSelection(
+      displayed,
+      emptySelection(),
+      { x: 14.05, y: -9.9 },
+      { x: 14.15, y: -9.8 },
+      false,
+      () => false,
+      { saved },
+    ),
+  ).toEqual({ keys: ['a'], ghosts: [] });
+});
+test('creator release alpha hit uses the actual up point independently of the last drawn rectangle', () => {
+  const saved = [part('a', 0, 0)];
+  expect(
+    marqueeSelection(
+      saved,
+      emptySelection(),
+      { x: 100, y: 100 },
+      { x: 110, y: 110 },
+      false,
+      (_part, x, y) => x === 0 && y === 0,
+      { release: { x: 0, y: 0 } },
+    ),
+  ).toEqual({ keys: ['a'], ghosts: [] });
+});
 test('creator group drag mirrors by initial pointer side, retaining each part offset', () => {
   const selection = { keys: ['a', 'b', 'c'], ghosts: ['b'] };
   const moved = advanceSelectionDrag(beginSelectionDrag(parts, selection, { x: 2, y: -25 }, true), {

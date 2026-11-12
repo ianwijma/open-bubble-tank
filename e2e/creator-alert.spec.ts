@@ -108,7 +108,17 @@ for (const native of [false, true])
     expect((await readCreatorDesign(page)).parts).toEqual(before.parts);
     await alert.press('Enter');
     await expect(alert).toHaveCount(0);
-    await expect(page.getByLabel('Part scale')).toHaveCount(0);
+    for (const label of ['Part scale', 'Part rotation']) {
+      await expect(page.getByLabel(label, { exact: true })).toHaveCount(1);
+      await expect(page.getByLabel(label, { exact: true })).toBeHidden();
+      await expect(page.getByRole('slider', { name: label, exact: true })).toHaveCount(0);
+    }
+    const selection = page.getByRole('status', { includeHidden: true });
+    await expect(selection).toHaveText('Selected parts (0)');
+    await expect(selection).toBeHidden();
+    await expect(page.getByRole('status')).toHaveCount(0);
+    await expect(save).toBeFocused();
+    expect((await readCreatorDesign(page)).parts).toEqual(before.parts);
     await expect(page.getByRole('button', { name: 'Undo', exact: true })).toBeEnabled();
     await page.getByRole('button', { name: 'Undo', exact: true }).click();
     expect((await readCreatorDesign(page)).parts).toHaveLength(0);

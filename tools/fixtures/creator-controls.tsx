@@ -79,11 +79,9 @@ function ControlsFixture({
               }
               onHoldEnd={
                 direction
-                  ? (click) => {
+                  ? () => {
                       held.current = 0;
-                      if (click) setX((v) => v + direction);
                       record('holdEnds');
-                      report('holdClick', click);
                     }
                   : undefined
               }

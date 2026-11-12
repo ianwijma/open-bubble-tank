@@ -143,6 +143,8 @@ export function CreatorButton({
   disabled = false,
   checked,
   onClick,
+  onKeyboardClick,
+  releaseAction = false,
   onHoldStart,
   onHoldEnd,
 }: {
@@ -152,14 +154,16 @@ export function CreatorButton({
   disabled?: boolean;
   checked?: boolean;
   onClick: () => void;
+  onKeyboardClick?: () => void;
+  releaseAction?: boolean;
   onHoldStart?: () => void;
-  onHoldEnd?: (click: boolean) => void;
+  onHoldEnd?: () => void;
 }) {
   const p = creatorControl(name),
     b = p.bounds;
   const [state, setState] = useState<'up' | 'over' | 'down'>('up');
   const held = useRef(false),
-    releasedClick = useRef(false);
+    pressed = useRef(false);
   const frame = name === 'Undo_mc' ? (disabled ? 1 : 2) : checked === false ? 2 : 1;
   const raster = pack.creatorFrames.get(`${name}:${frame}:${state}`);
   const style: CSSProperties = {
@@ -189,13 +193,13 @@ export function CreatorButton({
       setState('up');
       if (held.current) {
         held.current = false;
-        onHoldEnd?.(false);
+        onHoldEnd?.();
       }
     },
     onPointerDown: (event: React.PointerEvent) => {
       if (event.button !== 0 || disabled) return;
       setState('down');
-      releasedClick.current = false;
+      pressed.current = true;
       if (onHoldStart) {
         held.current = true;
         onHoldStart();
@@ -206,15 +210,20 @@ export function CreatorButton({
       setState('over');
       if (held.current) {
         held.current = false;
-        releasedClick.current = true;
-        onHoldEnd?.(true);
+        onHoldEnd?.();
+      }
+      // Delete's target MOUSE_UP precedes the creator's stage release listener.
+      if (releaseAction && pressed.current) {
+        pressed.current = false;
+        onClick();
       }
     },
     onPointerCancel: () => {
       setState('up');
+      pressed.current = false;
       if (held.current) {
         held.current = false;
-        onHoldEnd?.(false);
+        onHoldEnd?.();
       }
     },
     onFocus: () => setState('over'),
@@ -229,7 +238,8 @@ export function CreatorButton({
       style={style}
       {...events}
       onClick={(event) => {
-        if (!onHoldStart || event.detail === 0 || !releasedClick.current) onClick();
+        if (event.detail === 0 && onKeyboardClick) onKeyboardClick();
+        else if (!releaseAction || event.detail === 0) onClick();
       }}
     >
       {art}
@@ -258,6 +268,7 @@ export function CreatorSlider({
   onChange,
   onBegin,
   onEnd,
+  onRelease,
   disabled = false,
   coordinates,
   point,
@@ -280,6 +291,7 @@ export function CreatorSlider({
   onChange: (value: number) => void;
   onBegin: () => void;
   onEnd: (cancel: boolean) => void;
+  onRelease?: (event: React.PointerEvent<HTMLInputElement>, handle: Vec) => void;
 }) {
   const [current, setCurrent] = useState(value),
     [hover, setHover] = useState(false);
@@ -394,7 +406,12 @@ export function CreatorSlider({
           setHover(true);
         }}
         onPointerUp={(event) => {
-          if (event.button === 0) finish(false);
+          if (event.button === 0 && dragging.current !== null) {
+            // Both source callbacks are on stage; its earlier workspace
+            // listener can change selection before the transform copies it.
+            onRelease?.(event, { x, y });
+            finish(false);
+          }
         }}
         onPointerCancel={() => finish(true)}
         onLostPointerCapture={() => finish(true)}

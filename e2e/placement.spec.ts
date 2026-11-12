@@ -70,7 +70,10 @@ for (const assets of ['mock', 'SWF'])
     );
     expect(saved.parts[0].twin).toBe(saved.parts[1].key);
     expect(saved.parts[1].twin).toBe(saved.parts[0].key);
-    await expect(page.getByText(/^Selected parts/)).toHaveCount(0);
+    const selection = page.getByRole('status', { includeHidden: true });
+    await expect(selection).toHaveText('Selected parts (0)');
+    await expect(selection).toBeHidden();
+    await expect(page.getByRole('status')).toHaveCount(0);
     await expect(row).toHaveAttribute('aria-pressed', 'true');
     await dropPreview(page, -40, 2);
     saved = await snapshot(page);

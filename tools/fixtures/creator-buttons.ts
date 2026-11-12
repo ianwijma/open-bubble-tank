@@ -2,6 +2,7 @@ import { AssetPack, type Raster, type SpriteInfo } from '../../src/game/assets/a
 import { SwfClip } from '../../src/game/assets/swf-clip';
 import type { ButtonInfo, ButtonState } from '../../src/game/assets/button-display-list';
 import { CREATOR_DIALOGS } from '../../src/game/core/creator-dialogs';
+import { CREATOR_CONTROLS } from '../../src/game/core/creator-controls';
 
 function proof(raster: Raster) {
   let hash = 2166136261,
@@ -123,6 +124,15 @@ export async function showCreatorButtons(
   const ctx = canvas.getContext('2d')!;
   ctx.fillStyle = '#0b3c5a';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
+  const controlKeys = new Set([
+    ...CREATOR_CONTROLS.controls.flatMap((control) =>
+      Object.keys(control.variants).map((variant) => `${control.name}:${variant}`),
+    ),
+    ...CREATOR_CONTROLS.sliders.map((slider) => `${slider.name}:track`),
+    'handle:1',
+    'handle:2',
+    ...[1, 2, 3, 4, 5, 6].map((frame) => `rings:${frame}`),
+  ]);
   const frames = [...pack.creatorFrames].filter(([key]) => {
     const enemy =
       key.startsWith('enemy:') ||
@@ -135,12 +145,7 @@ export async function showCreatorButtons(
         ? enemy
         : subset === 'palette'
           ? key.startsWith('palette:')
-          : !key.startsWith('palette:') &&
-            !key.startsWith('dialog:') &&
-            !key.startsWith('details:') &&
-            !key.startsWith('selection-info:') &&
-            !key.startsWith('viewer:') &&
-            !enemy;
+          : controlKeys.has(key);
   });
   const rows = frames.map(([key, raster], index) => {
     const x = dialogs ? (index % 2) * 550 : (index % 7) * 78,

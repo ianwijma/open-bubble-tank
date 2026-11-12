@@ -9,9 +9,13 @@ import { decodeTankCode } from '../src/game/services/tank-code';
 import { loadedReferenceModules } from './reference/loaded-module-identity';
 
 const scenario = process.env.BT3_REFERENCE_SCENARIO ?? 'creator';
-if (!['creator', 'validation', 'drag', 'precision', 'placement', 'transform'].includes(scenario))
+if (
+  !['creator', 'validation', 'drag', 'precision', 'placement', 'transform', 'release'].includes(
+    scenario,
+  )
+)
   throw new Error(
-    'Choose creator, validation, drag, precision, placement or transform reference scenario.',
+    'Choose creator, validation, drag, precision, placement, transform or release reference scenario.',
   );
 const requestedDpr = Number(process.env.BT3_REFERENCE_DPR ?? 1);
 if (![1, 2].includes(requestedDpr)) throw new Error('Choose reference DPR1 or2.');
@@ -50,10 +54,14 @@ const page = await browser.newPage({
     deviceScaleFactor: requestedDpr,
   }),
   errors: string[] = [],
+  avmErrors: string[] = [],
   captures: string[] = [],
   dragEvidence: { name: string; parts: Awaited<ReturnType<typeof decodeTankCode>>['parts'] }[] = [],
   actions: { action: string; x?: number; y?: number }[] = [];
 page.on('pageerror', (error) => errors.push(error.message));
+page.on('console', (message) => {
+  if (message.text().includes('Error dispatching event')) avmErrors.push(message.text());
+});
 try {
   await page.goto(url);
   await page.getByLabel('Original SWF').setInputFiles(swf);
@@ -169,7 +177,7 @@ try {
     await page.mouse.up();
     await page.waitForTimeout(400);
   };
-  if (['drag', 'precision', 'placement', 'transform'].includes(scenario)) {
+  if (['drag', 'precision', 'placement', 'transform', 'release'].includes(scenario)) {
     await page.context().grantPermissions(['clipboard-read', 'clipboard-write']);
     const origin = { x: CREATOR_CONTROLS.workspace.tx / 20, y: CREATOR_CONTROLS.workspace.ty / 20 };
     const move = async (x: number, y: number) => {
@@ -198,7 +206,7 @@ try {
       dragEvidence.push({ name, parts: tank.parts });
       await click(175, 392);
     };
-    if (['precision', 'placement', 'transform'].includes(scenario)) {
+    if (['precision', 'placement', 'transform', 'release'].includes(scenario)) {
       await stage.locator('canvas').evaluate((canvas) => {
         const events: unknown[] = [];
         Object.defineProperty(window, '__creatorPointEvents', { value: events });
@@ -232,7 +240,121 @@ try {
       actions.push({ action: 'embedding-scale', x: n });
       await page.waitForTimeout(400);
     };
-    if (scenario === 'transform') {
+    if (scenario === 'release') {
+      await dragPreview(origin.x - 40, origin.y - 10);
+      await sample('placed-pair');
+      const marquee = async (name: string, to: { x: number; y: number }) => {
+        await click(origin.x + 90, origin.y);
+        await move(-80, -50);
+        await page.mouse.down();
+        actions.push({ action: name + '-down', x: -80, y: -50 });
+        for (let i = 1; i <= 8; i++)
+          await move(-80 + ((to.x + 80) * i) / 8, -50 + ((to.y + 50) * i) / 8);
+        await capture(name + '-held');
+        await page.mouse.up();
+        await page.waitForTimeout(200);
+        actions.push({ action: name + '-up', ...to });
+        await capture(name + '-released');
+      };
+      const rotate = async (name: string, start: number, end: number) => {
+        const b = (await stage.boundingBox())!,
+          at = (x: number) => ({
+            x: b.x + (x / 550) * b.width,
+            y: b.y + (432.25 / 450) * b.height,
+          });
+        const a = at(start),
+          z = at(end);
+        await page.mouse.move(a.x, a.y);
+        await page.waitForTimeout(100);
+        await page.mouse.down();
+        await page.waitForTimeout(100);
+        await page.mouse.move(z.x, z.y);
+        await page.waitForTimeout(150);
+        await capture(name + '-held');
+        await page.mouse.up();
+        await page.waitForTimeout(200);
+        actions.push({ action: name, x: end, y: 432.25 });
+        await capture(name + '-released');
+        await sample(name);
+      };
+      await marquee('marquee-inside', { x: 0, y: 50 });
+      await rotate('inside-rotation', 154, 239.5);
+      // A real workspace click resets source gesture flags before restoring0.
+      await click(origin.x - 40, origin.y - 10);
+      await rotate('click-reset-rotation', 211, 182.5);
+      await rotate('click-reset-zero', 182.5, 268);
+      await marquee('marquee-outside', { x: 220, y: 120 });
+      await rotate('outside-rotation', 154, 239.5);
+      const resize = async (name: string, start: number, end: number) => {
+        const b = (await stage.boundingBox())!,
+          at = (x: number) => ({
+            x: b.x + (x / 550) * b.width,
+            y: b.y + (432.25 / 450) * b.height,
+          });
+        const a = at(start),
+          z = at(end);
+        await page.mouse.move(a.x, a.y);
+        await page.waitForTimeout(100);
+        await page.mouse.down();
+        await page.waitForTimeout(100);
+        await page.mouse.move(z.x, z.y);
+        await page.waitForTimeout(150);
+        await capture(name + '-held');
+        await page.mouse.up();
+        await page.waitForTimeout(200);
+        actions.push({ action: name, x: end, y: 432.25 });
+        await capture(name + '-released');
+        await sample(name);
+      };
+      await marquee('scale-marquee-inside', { x: 0, y: 50 });
+      await resize('inside-scale', 52, 91.5);
+      await click(origin.x - 40, origin.y - 10);
+      await resize('click-reset-scale', 91.5, 128);
+      await resize('click-reset-unit', 128, 52);
+      await marquee('scale-marquee-outside', { x: 220, y: 120 });
+      await resize('outside-scale', 52, 91.5);
+      await click(origin.x - 40, origin.y - 10);
+      await resize('setup-unit', 91.5, 52);
+      await rotate('setup-zero', 211, 268);
+      await click(origin.x + 90, origin.y);
+      await click(origin.x - 40, origin.y - 10);
+      await move(-40, -10);
+      await page.mouse.down();
+      for (let i = 1; i <= 8; i++) await move(-40 + (5 * i) / 8, -10);
+      await page.mouse.up();
+      await capture('selected-drag-released');
+      await rotate('drag-rotation', 154, 239.5);
+      await click(origin.x + 90, origin.y);
+      await click(origin.x - 35, origin.y - 10);
+      await rotate('drag-reset-zero', 211, 268);
+      const controlClick = async (name: string) => {
+        const c = CREATOR_CONTROLS.controls.find((c) => c.name === name)!;
+        const x = c.bounds.x + c.bounds.width / 2,
+          y = c.bounds.y + c.bounds.height / 2;
+        actions.push({ action: 'control-click-' + name });
+        await click(
+          c.matrix.tx / 20 + c.matrix.a * x + c.matrix.c * y,
+          c.matrix.ty / 20 + c.matrix.b * x + c.matrix.d * y,
+        );
+      };
+      await marquee('center-marquee', { x: 0, y: 50 });
+      await controlClick('AlignCenter_mc');
+      await sample('marquee-center');
+      await marquee('placement-marquee', { x: 0, y: 50 });
+      await dragPreview(origin.x + 40, origin.y - 10);
+      await capture('placement-after-marquee');
+      await sample('marquee-placement');
+      await marquee('front-marquee', { x: 0, y: 50 });
+      await controlClick('BringFront_mc');
+      await sample('marquee-front');
+      await click(origin.x + 90, origin.y);
+      await click(origin.x - 35, origin.y - 10);
+      await controlClick('BringFront_mc');
+      await sample('click-front');
+      await marquee('delete-marquee', { x: 0, y: 50 });
+      await controlClick('DeleteButton_mc');
+      await sample('marquee-delete');
+    } else if (scenario === 'transform') {
       await dragPreview(origin.x - 40, origin.y - 10);
       await sample('transform-placed-pair');
       // A public click establishes selection and clears the source's marquee/drag
@@ -454,10 +576,11 @@ try {
     capturedAt: new Date().toISOString(),
     captures,
     pageErrors: errors,
-    ...(['drag', 'precision', 'placement', 'transform'].includes(scenario)
+    avmErrors,
+    ...(['drag', 'precision', 'placement', 'transform', 'release'].includes(scenario)
       ? { actions, dragEvidence }
       : {}),
-    ...(['precision', 'placement', 'transform'].includes(scenario)
+    ...(['precision', 'placement', 'transform', 'release'].includes(scenario)
       ? {
           pointerEvents: await page.evaluate('window.__creatorPointEvents'),
           embeddingScope:
