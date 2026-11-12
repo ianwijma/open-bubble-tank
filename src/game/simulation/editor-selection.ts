@@ -48,8 +48,14 @@ export function marqueeSelection(
   to: Vec,
   symmetric: boolean,
   hit: (part: TankPart, x: number, y: number) => boolean,
+  {
+    rectangle = true,
+    release = to,
+    saved = parts,
+  }: { rectangle?: boolean; release?: Vec; saved?: TankPart[] } = {},
 ) {
   const inside = (x: number, y: number) =>
+    rectangle &&
     x >= Math.min(from.x, to.x) &&
     x <= Math.max(from.x, to.x) &&
     y >= Math.min(from.y, to.y) &&
@@ -57,9 +63,11 @@ export function marqueeSelection(
   let result = selection,
     found = false;
   for (const p of parts) {
-    const r = p.radius * p.scale;
+    // _-bp takes position from the clip, but sample distances from metadata.
+    const data = saved.find((part) => part.key === p.key) ?? p,
+      r = data.radius * data.scale;
     if (
-      hit(p, to.x, to.y) ||
+      hit(p, release.x, release.y) ||
       [
         [0, 0],
         [r, 0],

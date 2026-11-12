@@ -146,7 +146,8 @@ for (const native of [false, true]) {
     );
     expect(redHeading).toBeGreaterThan(100);
     await alert.press('Enter');
-    await expect(page.getByLabel('Part scale')).toHaveCount(0);
+    await expect(page.getByLabel('Part scale')).toBeHidden();
+    await expect(page.getByRole('slider', { name: 'Part scale', exact: true })).toHaveCount(0);
     await expect(page.locator('.creator-workspace canvas')).toBeFocused();
     await page.getByRole('button', { name: 'Undo', exact: true }).click();
     expect((await readCreatorDesign(page)).parts).toEqual(original.parts);

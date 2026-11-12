@@ -133,6 +133,8 @@ export function CreatorPaletteRows({
   onChoose,
   onDetails,
   detailsId,
+  onScrollStart,
+  onScrollEnd,
 }: {
   pack: AssetPack;
   parts: PartDefinition[];
@@ -141,6 +143,8 @@ export function CreatorPaletteRows({
   onChoose: (id: number) => void;
   onDetails?: (anchor: CreatorDetailAnchor | null) => void;
   detailsId?: string;
+  onScrollStart?: () => void;
+  onScrollEnd?: () => void;
 }) {
   const p = CREATOR_PALETTE,
     lib = p.library;
@@ -327,6 +331,8 @@ export function CreatorPaletteRows({
         extent={model.current.extent}
         onStep={step}
         onDrag={drag}
+        onDragStart={onScrollStart}
+        onDragEnd={onScrollEnd}
       />
     </>
   );
@@ -341,6 +347,8 @@ function PaletteScrollbar({
   extent,
   onStep,
   onDrag,
+  onDragStart,
+  onDragEnd,
 }: {
   pack: AssetPack;
   portId: string;
@@ -350,6 +358,8 @@ function PaletteScrollbar({
   extent: number;
   onStep: (delta: number) => void;
   onDrag: (y: number) => void;
+  onDragStart?: () => void;
+  onDragEnd?: () => void;
 }) {
   const p = CREATOR_PALETTE,
     root = useRef<HTMLDivElement>(null),
@@ -428,21 +438,27 @@ function PaletteScrollbar({
               if (!enabled || e.button !== 0) return;
               e.preventDefault();
               dragging.current = true;
+              onDragStart?.();
               e.currentTarget.setPointerCapture(e.pointerId);
             }}
             onPointerMove={(e) => {
               if (dragging.current) onDrag(localY(e) - Math.round(b.height / 2));
             }}
             onPointerUp={(e) => {
-              if (e.button === 0) dragging.current = false;
+              if (e.button === 0 && dragging.current) {
+                dragging.current = false;
+                onDragEnd?.();
+              }
             }}
             onLostPointerCapture={() => {
               if (dragging.current) {
                 dragging.current = false;
+                onDragEnd?.();
                 setHover('');
               }
             }}
             onPointerCancel={() => {
+              if (dragging.current) onDragEnd?.();
               dragging.current = false;
               setHover('');
             }}

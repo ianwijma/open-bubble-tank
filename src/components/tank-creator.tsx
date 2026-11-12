@@ -120,10 +120,15 @@ export function TankCreator({
       ),
     ),
     [placing, setPlacing] = useState<number | null>(null),
-    [selection, setSelection] = useState<PartSelection>(emptySelection),
+    [selection, setSelectionState] = useState<PartSelection>(emptySelection),
     [symmetric, setSymmetric] = useState(true),
     [message, setMessage] = useState('');
   const [advanced, setAdvanced] = useState(false);
+  const selectionLive = useRef(selection),
+    marqueePending = useRef(false),
+    workspaceSuspended = useRef(false),
+    canceledPointers = useRef(new Set<number>()),
+    releasedEvents = useRef(new WeakSet<Event>());
   const [history, setHistory] = useState(() => initialEditorSnapshots(initial.parts)),
     historyLive = useRef(history);
   const [suggested, setSuggested] = useState(
@@ -154,7 +159,9 @@ export function TankCreator({
   useEffect(() => {
     if (alertWasOpen.current && !alertActive) {
       const opener = dialogOpener.current;
-      (opener?.isConnected ? opener : canvas.current)?.focus({ preventScroll: true });
+      (opener?.isConnected && opener.getClientRects().length ? opener : canvas.current)?.focus({
+        preventScroll: true,
+      });
     }
     alertWasOpen.current = alertActive;
   }, [alertActive]);
@@ -176,6 +183,7 @@ export function TankCreator({
       moving: boolean;
       moved: boolean;
       selection: PartSelection;
+      beforeMarquee: boolean;
       session: SelectionDrag | null;
     } | null>(null),
     pointer = useRef({ x: 0, y: 0 }),
@@ -192,6 +200,10 @@ export function TankCreator({
     displayState.retain(value.parts);
     designLive.current = value;
     setDesignState(value);
+  }
+  function setSelection(next: PartSelection) {
+    selectionLive.current = next;
+    setSelectionState(next);
   }
   function setMeasuredClass(value: number) {
     classLive.current = value;
@@ -238,7 +250,6 @@ export function TankCreator({
     saved: TankDesign;
     displayed: TankPart[];
     field: 'scale' | 'rotation';
-    keys: string[];
   } | null>(null);
   const nudge = useRef<{ selection: PartSelection; direction: number } | null>(null);
   const transform = selectedTransform(displayedParts, selection);
@@ -248,7 +259,6 @@ export function TankCreator({
       saved: structuredClone(saved),
       displayed: structuredClone(displayState.present(saved.parts)),
       field,
-      keys: [...selection.keys],
     };
   }
   function endControl(cancel = false) {
@@ -264,7 +274,11 @@ export function TankCreator({
       commit(
         {
           ...designLive.current,
-          parts: displayState.saveTransform(designLive.current.parts, before.keys, before.field),
+          parts: displayState.saveTransform(
+            designLive.current.parts,
+            selectionLive.current.keys,
+            before.field,
+          ),
         },
         before.field === 'scale',
       );
@@ -279,16 +293,13 @@ export function TankCreator({
   function beginNudge(direction: number) {
     nudge.current = { selection, direction };
   }
-  function endNudge(click: boolean) {
+  function endNudge() {
     const current = nudge.current;
     nudge.current = null;
     if (!current) return;
-    // MOUSE_UP validates/records first; the subsequent CLICK adds one unrecorded pixel.
-    if (commit(designLive.current, false) && click) {
-      const next = nudgedDesign(current.direction, current.selection);
-      setDesign(next);
-      setMeasuredClass(measureClass(measuredDesign(next), pack));
-    }
+    // Target MOUSE_UP records held motion before stage selection callbacks.
+    // The separate CLICK reads the surviving selection after those callbacks.
+    commit(designLive.current, false);
   }
   function changePart(change: { rotation?: number; scale?: number }) {
     const saved = designLive.current;
@@ -304,6 +315,7 @@ export function TankCreator({
     if (controlBefore.current) setDesign(next);
     else {
       // Accessible range input commits immediately; pointer gestures wait for release.
+      marqueePending.current = false;
       const field = change.scale !== undefined ? 'scale' : 'rotation';
       commit(
         { ...next, parts: displayState.saveTransform(next.parts, selection.keys, field) },
@@ -555,6 +567,39 @@ export function TankCreator({
   function point(e: { clientX: number; clientY: number }) {
     return stageDisplayPoint(e, canvas.current!.closest('.creator')!, CREATOR_CONTROLS.workspace);
   }
+  function releaseMarquee(
+    release: { x: number; y: number },
+    rectangle?: { from: { x: number; y: number }; to: { x: number; y: number } },
+  ) {
+    const saved = designLive.current.parts;
+    const next = marqueeSelection(
+      displayState.present(saved),
+      selectionLive.current,
+      rectangle?.from ?? release,
+      rectangle?.to ?? release,
+      symmetric,
+      hitPart,
+      { saved, release, rectangle: !!rectangle },
+    );
+    // _-bp refreshes both handles even when membership did not change.
+    setSelection({ keys: [...next.keys], ghosts: [...next.ghosts] });
+    selectionBoxes.current = null;
+  }
+  function stageSelectionRelease(event: React.PointerEvent, release = point(event)) {
+    if (
+      event.button !== 0 ||
+      workspaceSuspended.current ||
+      guideActive ||
+      alertActive ||
+      saveDialog ||
+      releasedEvents.current.has(event.nativeEvent)
+    )
+      return;
+    releasedEvents.current.add(event.nativeEvent);
+    // _-0m remains registered after _-bp clears its painted rectangle. Only
+    // the workspace CLICK or _-JQ rebind clears the retained marquee flag.
+    if (marqueePending.current) releaseMarquee(release);
+  }
   function pendingPlacement(id: number, pos: { x: number; y: number }, key = 'preview') {
     let radius = radii.current.get(id);
     if (radius === undefined) {
@@ -568,6 +613,7 @@ export function TankCreator({
     return placementParts(id, radius, pos, symmetric, key);
   }
   function beginPlacement(id: number, mode: 'pointer' | 'keyboard', pos: { x: number; y: number }) {
+    workspaceSuspended.current = mode === 'pointer';
     setDetails(null);
     pointer.current = pos;
     radii.current.delete(id);
@@ -582,6 +628,8 @@ export function TankCreator({
   function finishPlacement(pos: { x: number; y: number }, cancel = false) {
     const gesture = placement.current;
     if (!gesture) return;
+    workspaceSuspended.current = false;
+    marqueePending.current = false;
     placement.current = null;
     setPlacing(null);
     if (!cancel) {
@@ -599,40 +647,38 @@ export function TankCreator({
         artwork.current?.restartClusters(designLive.current.parts);
     }
   }
-  function finishDrag(cancel = false) {
+  function finishDrag(cancel = false, release = pointer.current) {
     const current = drag.current;
     if (!current) return;
     drag.current = null;
     if (cancel) {
+      marqueePending.current = current.beforeMarquee;
       displayState.adopt(current.beforeDisplay);
       setDesign(current.before);
       setSelection(current.selection);
     } else if (current.moved && current.moving) {
       const final = current.session!;
+      if (marqueePending.current) releaseMarquee(release);
+      const selected = selectionLive.current;
       snapLocked.current = final.locked;
       const invalid = final.parts
-        .filter((p) => final.selection.keys.includes(p.key) && !canPlacePart(p, classId, maxClass))
+        .filter((p) => selected.keys.includes(p.key) && !canPlacePart(p, classId, maxClass))
         .map((p) => p.key);
-      const released = displayState.saveSelected(designLive.current.parts, final.selection.keys);
-      const parts = removeParts(unlinkPartialSelection(released, final.selection), invalid);
+      const released = displayState.saveSelected(designLive.current.parts, selected.keys);
+      const parts = removeParts(unlinkPartialSelection(released, selected), invalid);
       if (commit({ ...design, parts }))
         setSelection({
-          keys: final.selection.keys.filter((k) => !invalid.includes(k)),
-          ghosts: final.selection.ghosts.filter((k) => !invalid.includes(k)),
+          keys: selected.keys.filter((k) => !invalid.includes(k)),
+          ghosts: selected.ghosts.filter((k) => !invalid.includes(k)),
         });
+      if (Math.abs(release.x) <= 175 && Math.abs(release.y) <= 175) marqueePending.current = false;
     } else if (current.moved) {
-      setSelection(
-        marqueeSelection(
-          displayState.present(designLive.current.parts),
-          selection,
-          current.from,
-          pointer.current,
-          symmetric,
-          hitPart,
-        ),
-      );
+      releaseMarquee(release, { from: current.from, to: pointer.current });
     } else {
-      setSelection(toggleSelection(design.parts, selection, current.hit, symmetric));
+      if (marqueePending.current) releaseMarquee(release);
+      else if (Math.abs(release.x) <= 175 && Math.abs(release.y) <= 175)
+        setSelection(toggleSelection(design.parts, selectionLive.current, current.hit, symmetric));
+      if (Math.abs(release.x) <= 175 && Math.abs(release.y) <= 175) marqueePending.current = false;
     }
     draw();
   }
@@ -645,6 +691,16 @@ export function TankCreator({
       data-displayed-design={JSON.stringify({ ...finalDesign, parts: displayedParts })}
       inert={!!saveDialog || guideActive || alertActive}
       aria-hidden={!!saveDialog || guideActive || alertActive || undefined}
+      onPointerDownCapture={(event) => canceledPointers.current.delete(event.pointerId)}
+      onPointerCancelCapture={(event) => canceledPointers.current.add(event.pointerId)}
+      onLostPointerCaptureCapture={(event) => {
+        if (event.buttons & 1) canceledPointers.current.add(event.pointerId);
+      }}
+      onPointerUpCapture={(event) => {
+        if (canceledPointers.current.delete(event.pointerId))
+          releasedEvents.current.add(event.nativeEvent);
+      }}
+      onPointerUp={stageSelectionRelease}
     >
       <CreatorButton
         pack={pack}
@@ -769,6 +825,7 @@ export function TankCreator({
               moving,
               moved: false,
               selection,
+              beforeMarquee: marqueePending.current,
               session: null,
             };
             e.currentTarget.setPointerCapture(e.pointerId);
@@ -800,7 +857,10 @@ export function TankCreator({
                   parts: editorDisplayTopology(designLive.current.parts, current.session.parts),
                 });
                 setSelection(current.session.selection);
-              } else draw();
+              } else {
+                marqueePending.current = true;
+                draw();
+              }
             } else if (placing) draw();
           }}
           tabIndex={0}
@@ -830,7 +890,11 @@ export function TankCreator({
               preview.current?.focus();
             }
           }}
-          onPointerUp={() => finishDrag()}
+          onPointerUp={(event) => {
+            if (event.button !== 0) return;
+            releasedEvents.current.add(event.nativeEvent);
+            finishDrag(false, point(event));
+          }}
           onPointerCancel={() => finishDrag(true)}
         />
         {advanced ? (
@@ -857,98 +921,134 @@ export function TankCreator({
           }}
         />
       ) : null}
-      {active ? (
-        <>
-          <span className="sr-only" role="status">
-            Selected parts ({selection.keys.length})
-          </span>
+      {/* Source hides these clips without removing their later CLICK listeners. */}
+      <div hidden={!active}>
+        <span className="sr-only" role="status">
+          Selected parts ({selection.keys.length})
+        </span>
+        <CreatorButton
+          pack={pack}
+          name="DeleteButton_mc"
+          label="Delete selected part"
+          releaseAction
+          onClick={() => {
+            commit({
+              ...designLive.current,
+              parts: removeParts(designLive.current.parts, selectionLive.current.keys),
+            });
+            setSelection(emptySelection());
+          }}
+        />
+        <CreatorButton
+          pack={pack}
+          name="BringFront_mc"
+          label="To front"
+          onClick={() =>
+            commit(
+              {
+                ...designLive.current,
+                parts: orderSelection(designLive.current.parts, selectionLive.current, true),
+              },
+              false,
+            )
+          }
+        />
+        <CreatorButton
+          pack={pack}
+          name="SendBack_mc"
+          label="To back"
+          onClick={() =>
+            commit(
+              {
+                ...designLive.current,
+                parts: orderSelection(designLive.current.parts, selectionLive.current, false),
+              },
+              false,
+            )
+          }
+        />
+        <CreatorButton
+          pack={pack}
+          name="AlignCenter_mc"
+          label="Align to Center"
+          onClick={() => {
+            const selected = selectionLive.current;
+            const next = centerSelection(displayState.present(designLive.current.parts), selected);
+            displayState.center(selected.keys);
+            const parts = next.parts.map((part) => {
+              const saved = design.parts.find((p) => p.key === part.key)!;
+              return {
+                ...part,
+                x: saved.x,
+                y: selected.keys.includes(part.key) ? 0 : saved.y,
+                rotation: saved.rotation,
+                scale: saved.scale,
+              };
+            });
+            if (commit({ ...design, parts })) setSelection(next.selection);
+          }}
+        />
+        {([-1, 1] as const).map((direction) => (
           <CreatorButton
+            key={direction}
             pack={pack}
-            name="DeleteButton_mc"
-            label="Delete selected part"
+            name={direction < 0 ? 'Left_mc' : 'Right_mc'}
+            label={direction < 0 ? 'Move selection left' : 'Move selection right'}
             onClick={() => {
-              commit({ ...design, parts: removeParts(design.parts, selection.keys) });
-              setSelection(emptySelection());
+              const next = nudgedDesign(direction, selectionLive.current);
+              setDesign(next);
+              setMeasuredClass(measureClass(measuredDesign(next), pack));
             }}
+            onKeyboardClick={() => commit(nudgedDesign(direction, selectionLive.current))}
+            onHoldStart={() => beginNudge(direction)}
+            onHoldEnd={endNudge}
           />
-          <CreatorButton
+        ))}
+        {CREATOR_CONTROLS.sliders.map((layout) => (
+          <CreatorSlider
+            key={layout.name}
             pack={pack}
-            name="BringFront_mc"
-            label="To front"
-            onClick={() =>
-              commit({ ...design, parts: orderSelection(design.parts, selection, true) }, false)
+            layout={layout}
+            label={layout.name === 'Resize_mc' ? 'Part scale' : 'Part rotation'}
+            value={layout.name === 'Resize_mc' ? transform.scale : transform.rotation}
+            resetKey={selection}
+            min={layout.name === 'Resize_mc' ? 0.5 : 0}
+            max={layout.name === 'Resize_mc' ? 2 : 360}
+            point={(event, handle) =>
+              stageDisplayPoint(
+                event,
+                canvas.current!.closest('.creator')!,
+                layout.matrix,
+                displayMatrixProduct(layout.matrix, {
+                  ...DISPLAY_IDENTITY,
+                  tx: displayTwips(handle.x),
+                  ty: displayTwips(handle.y),
+                }),
+              )
             }
-          />
-          <CreatorButton
-            pack={pack}
-            name="SendBack_mc"
-            label="To back"
-            onClick={() =>
-              commit({ ...design, parts: orderSelection(design.parts, selection, false) }, false)
+            onChange={(value) =>
+              changePart(layout.name === 'Resize_mc' ? { scale: value } : { rotation: value })
             }
-          />
-          <CreatorButton
-            pack={pack}
-            name="AlignCenter_mc"
-            label="Align to Center"
-            onClick={() => {
-              const next = centerSelection(displayedParts, selection);
-              displayState.center(selection.keys);
-              const parts = next.parts.map((part) => {
-                const saved = design.parts.find((p) => p.key === part.key)!;
-                return {
-                  ...part,
-                  x: saved.x,
-                  y: selection.keys.includes(part.key) ? 0 : saved.y,
-                  rotation: saved.rotation,
-                  scale: saved.scale,
-                };
-              });
-              if (commit({ ...design, parts })) setSelection(next.selection);
-            }}
-          />
-          {([-1, 1] as const).map((direction) => (
-            <CreatorButton
-              key={direction}
-              pack={pack}
-              name={direction < 0 ? 'Left_mc' : 'Right_mc'}
-              label={direction < 0 ? 'Move selection left' : 'Move selection right'}
-              onClick={() => commit(nudgedDesign(direction, selection))}
-              onHoldStart={() => beginNudge(direction)}
-              onHoldEnd={endNudge}
-            />
-          ))}
-          {CREATOR_CONTROLS.sliders.map((layout) => (
-            <CreatorSlider
-              key={layout.name}
-              pack={pack}
-              layout={layout}
-              label={layout.name === 'Resize_mc' ? 'Part scale' : 'Part rotation'}
-              value={layout.name === 'Resize_mc' ? transform.scale : transform.rotation}
-              resetKey={selection}
-              min={layout.name === 'Resize_mc' ? 0.5 : 0}
-              max={layout.name === 'Resize_mc' ? 2 : 360}
-              point={(event, handle) =>
+            onBegin={() => beginControl(layout.name === 'Resize_mc' ? 'scale' : 'rotation')}
+            onEnd={endControl}
+            onRelease={(event, handle) =>
+              stageSelectionRelease(
+                event,
                 stageDisplayPoint(
                   event,
                   canvas.current!.closest('.creator')!,
-                  layout.matrix,
+                  CREATOR_CONTROLS.workspace,
                   displayMatrixProduct(layout.matrix, {
                     ...DISPLAY_IDENTITY,
                     tx: displayTwips(handle.x),
                     ty: displayTwips(handle.y),
                   }),
-                )
-              }
-              onChange={(value) =>
-                changePart(layout.name === 'Resize_mc' ? { scale: value } : { rotation: value })
-              }
-              onBegin={() => beginControl(layout.name === 'Resize_mc' ? 'scale' : 'rotation')}
-              onEnd={endControl}
-            />
-          ))}
-        </>
-      ) : null}
+                ),
+              )
+            }
+          />
+        ))}
+      </div>
       <CreatorButton
         pack={pack}
         name="Undo_mc"
@@ -1039,6 +1139,13 @@ export function TankCreator({
         context={paletteContext}
         chosen={chosen}
         detailsId={details ? detailsId : undefined}
+        onScrollStart={() => {
+          workspaceSuspended.current = true;
+        }}
+        onScrollEnd={() => {
+          workspaceSuspended.current = false;
+          marqueePending.current = false;
+        }}
         onDetails={(anchor) =>
           setDetails(anchor ? { ...anchor, instance: ++detailsCounter.current } : null)
         }
