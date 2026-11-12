@@ -70,6 +70,38 @@ claimed to match the original runtime.
 Unit regressions preserve the actual old beam/patient, translate emitter positions
 across wrappers, distinguish parentage from fresh-array membership, retain the scoped
 StopFiring no-op and verify the boss newborn's owner/position/age. Both primary
-regressions failed against the preceding code. Original execution, complete constructor
-selection/RNG ordering, arbitrary reparented projectile combinations and Adobe parity
-remain unproved. Affected browser fixture validation is pending at this local draft.
+regressions failed against the preceding code. The local validation of
+`f61dfa6660e362178ed411d13cc8b36b2c645a51` passes
+`bun run check`: 907 unit tests/8,390 assertions, zero failures. No production or
+fixture repair was required; source-scoped StopFiring removal remains unchanged.
+
+Literal browser command (from the isolated checkout):
+
+```sh
+BT3_SWF_FILE=/home/ian/Projects/ianwijma/documented-bubble-tank-3/re/bt3/uncompressed.swf bun run test:e2e --config test-results/layer2-validation/playwright.config.ts healer-lifecycle.spec.ts healer-targets.spec.ts actor-behaviors.spec.ts
+```
+
+The private config replaces all webServer/baseURL settings with owned ports 3145
+(production Next server) and 3146 (fixture server), with reuse disabled. Temporary
+copies of the three specs change only the hardcoded fixture URL from 3102 to 3146;
+all assertions are identical. Production build and all six mock/supplied-SWF cases
+pass, with zero skips and no page errors. Ports were free before the run and both
+owned servers were stopped by Playwright afterward. `bun run format` also passes.
+
+All six paint captures were inspected. Lifecycle same-pose beam omission changes
+4,302 mock pixels and 3,529 supplied-SWF pixels for each healthy/killed/jammed owner;
+each patient reaches life 51 with the retained direct home and counter 0. Dead
+patients have zero children/no contact paint, then detach on the next frame while
+live-array removal and later Run recovery retain their asserted ages. Targeting
+captures show healthy beam contact and later recovery after the scoped read error;
+actor captures show the six sampled motion/behavior poses through frame 120 and
+pause preserves state. These existing browser fixtures exercise adjacent rendering,
+contact and lifecycle behavior; they do not directly reproduce a cached-field beam
+or incoming boss fighter birth. Those two ownership paths remain unit/source-checked.
+
+Local, uncommitted evidence is under `test-results/layer2-validation/` (private config,
+URL-only spec copies, report, logs and lifecycle PNG/JSON pairs), with targeting and
+actor mock/native PNGs directly under `test-results/`. No SWF or extracted media is
+committed. Original execution, complete constructor selection/RNG ordering,
+arbitrary reparented projectile combinations, ordinary-input reachability and
+synchronized original/Adobe/full-game parity remain unproved.
