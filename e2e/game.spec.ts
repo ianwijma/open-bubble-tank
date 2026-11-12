@@ -151,7 +151,7 @@ test('compressed CWS loads locally and original tank-code sharing survives reloa
   await expect(page.getByRole('button', { name: 'Play', exact: true })).toBeVisible({
     timeout: 60000,
   });
-  await expect(page.locator('.main-menu')).toHaveAttribute('data-title-frame', '179');
+  await waitForMainMenu(page);
   await page.getByRole('button', { name: 'Enemy tank creator' }).click();
   await dropPreview(page, 0, 0);
   await page.screenshot({ path: 'test-results/swf-creator.png' });

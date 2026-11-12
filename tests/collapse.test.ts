@@ -82,7 +82,7 @@ test('collapse retains frame1 at birth and its first stage, then removes120 befo
   expect(w.effects.some((e) => e.symbol === art.collapseFlash.symbol)).toBe(true);
 });
 
-test('collapse birth finishes the live field loop and final avatar/passive phase', () => {
+test('collapse birth finishes the selected frame even when that frame opens an upgrade menu', () => {
   const w = new World([], [], 1);
   w.hitTest = () => false;
   w.player = createTank(
@@ -116,7 +116,8 @@ test('collapse birth finishes the live field loop and final avatar/passive phase
   w.addBullet(apocalypse);
   w.addBullet(later);
   w.step(emptyInput());
-  expect(w.mode).toBe('collapse');
+  expect(w.mode).toBe('upgrade');
+  expect(w.offers.length).toBeGreaterThan(0);
   expect(w.collapse!.age).toBe(0);
   expect(later.age).toBe(1);
   expect(later.x).toBe(102);

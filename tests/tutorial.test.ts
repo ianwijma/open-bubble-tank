@@ -29,8 +29,9 @@ test('revisiting reconstructs the guide without incrementing the unique-field co
   world.jump({ x: 1, y: 0 });
   finish(world);
   world.jump({ x: -1, y: 0 });
-  expect(world.transit!.next).toBe(home);
-  expect(home.tutorial).toBe(2);
+  expect(world.transit!.next === home).toBe(false);
+  expect(world.transit!.next.tutorial).toBe(2);
+  expect(home.tutorial).toBe(1);
   expect(world.stats.visited).toBe(1);
   finish(world);
   world.jump({ x: 1, y: 0 });
@@ -50,6 +51,7 @@ test('the original guide remains stopped during idle, firing and pause, and reta
 test('early destroyed holes do not independently advance the tutorial or visit count', () => {
   const world = new World([], [], 50);
   world.fields.set('1,0', { ...world.field, col: 1, destroyed: true });
+  world.cache.store(world.fields.get('1,0')!);
   world.stats.visited = 1;
   world.jump({ x: 1, y: 0 });
   expect(world.transit!.next.col).toBe(2);

@@ -59,8 +59,9 @@ test('live enemies and destroyed fields do not complete, and cached boss wrapper
   arrive(world);
   away.boss = true;
   world.jump({ x: 1, y: 0 });
-  expect(world.transit!.next).toBe(away);
-  expect(away.boss).toBe(false);
+  expect(world.transit!.next === away).toBe(false);
+  expect(world.transit!.next.boss).toBe(false);
+  expect(away.boss).toBe(true);
 });
 
 test('a destination completion awards the current boss medals but does not open a win screen in transit', () => {

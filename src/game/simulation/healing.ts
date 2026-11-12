@@ -164,6 +164,7 @@ export function tickHealingBeam(world: World, beam: Projectile, owner?: Tank) {
     const roughDistance = Math.sqrt(dx * dx + dy + dy) | 0;
     if (
       roughDistance <= patient.radius &&
+      patient.displayChildren.length > 0 &&
       world.hitTest(patient, x + patient.x - point.x, y + patient.y - point.y)
     ) {
       if (beam.contactFrames === 10) {

@@ -118,6 +118,11 @@ export function deactivateTankData(tank: Tank) {
     gun.patientId = undefined;
   }
   tank.dataActive = false;
+  // TankData.Deactivate -> WipeTank removes every child of the live actor.
+  // Its empty outer container remains parented until the field callback removes it.
+  tank.displayChildren = [];
+  tank.shieldClips = [];
+  tank.forcefieldAttached = false;
 }
 export function healTank(t: Tank, value: number) {
   t.life = (t.life + (value | 0)) | 0;

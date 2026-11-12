@@ -85,6 +85,7 @@ export async function showCrossingProof(pack: AssetPack, host: HTMLElement) {
   world.hitTest = pack.hitTest;
   world.hitPart = pack.hitPart;
   world.hitProjectile = pack.hitProjectile;
+  world.actorParents.sync(world);
   await renderer.init(host, DEFAULT_SETTINGS);
   const snapshots = [];
   try {
@@ -126,10 +127,108 @@ export async function showCrossingProof(pack: AssetPack, host: HTMLElement) {
       snapshots,
       retained:
         world.field === next && world.bullets.includes(incoming) && world.allies.includes(ally),
-      abandoned: !world.bullets.includes(outgoing) && world.runtimeFor(old).bullets.length === 0,
+      abandoned:
+        !world.bullets.includes(outgoing) &&
+        world.attachedFields().every(({ field }) => field !== old),
+      detachedRuntimeRetained: world.runtimeFor(old).bullets.includes(outgoing),
     };
   } finally {
     renderer.destroy();
     host.replaceChildren(canvas);
+  }
+}
+
+/** Source-derived retained-wrapper proof; artificial setup is not an ordinary playthrough. */
+export async function showNestedCrossingProof(pack: AssetPack, host: HTMLElement) {
+  const world = new World([], [], 1);
+  const renderer = new GameRenderer(pack);
+  const gallery = document.createElement('canvas');
+  gallery.width = 1100;
+  gallery.height = 450;
+  gallery.style.width = '1100px';
+  host.style.width = '1100px';
+  const context = gallery.getContext('2d')!;
+  const sample = document.createElement('canvas');
+  sample.width = 550;
+  sample.height = 450;
+  const pixels = sample.getContext('2d', { willReadFrequently: true })!;
+  world.field.tutorial = 0;
+  world.jump({ x: 1, y: 0 });
+  const abandoned = world.transit!.next;
+  abandoned.tutorial = 0;
+  const actor = createTank(
+    world.nextId(),
+    {
+      ...STARTER,
+      avatar: false,
+      speed: 0,
+      parts: [{ ...STARTER.parts[0], type: 1003, radius: 22.5, scale: 1 }],
+    },
+    'enemy',
+    -100,
+    0,
+    100,
+    100,
+  );
+  abandoned.enemies = [actor];
+  world.player.x = world.transit!.offset.x - 200;
+  world.actorParents.sync(world);
+  world.damage(world.player, 2);
+  const latest = world.transit!.next;
+  latest.enemies = [];
+  latest.tutorial = 0;
+  world.actorParents.sync(world);
+  await renderer.init(host, DEFAULT_SETTINGS);
+  const read = () => {
+    renderer.draw(world, { ...DEFAULT_SETTINGS, shake: false });
+    pixels.clearRect(0, 0, 550, 450);
+    pixels.drawImage(renderer.app.canvas, 0, 0, 550, 450);
+    return pixels.getImageData(0, 0, 550, 450).data;
+  };
+  try {
+    const snapshots = [];
+    for (let index = 0; index < 2; index++) {
+      if (index) for (let frame = 0; frame < 3; frame++) world.step(emptyInput());
+      const before = read();
+      context.drawImage(renderer.app.canvas, index * 550, 0, 550, 450);
+      const states = world.attachedFields();
+      const retained = states.find(({ field }) => field === abandoned)!;
+      const expected = {
+        x: 275 + retained.offset.x + actor.x - world.player.x,
+        y: 225 + retained.offset.y + actor.y - world.player.y,
+      };
+      const rendered = renderer.entities.children.map((child) => child.getGlobalPosition());
+      actor.alpha = 0;
+      const without = read();
+      let bodyPixels = 0;
+      for (let i = 0; i < before.length; i += 4)
+        if (
+          before[i] !== without[i] ||
+          before[i + 1] !== without[i + 1] ||
+          before[i + 2] !== without[i + 2]
+        )
+          bodyPixels++;
+      actor.alpha = 1;
+      read();
+      snapshots.push({
+        expected,
+        rendered: rendered.map(({ x, y }) => ({ x, y })),
+        age: actor.age,
+        artAge: actor.artAge,
+        bodyPixels,
+        onStage: world.actorParents.onStage(actor),
+        attached: states.length,
+        active: world.activeFields().length,
+      });
+    }
+    return {
+      logicalPosition: world.mapPosition,
+      abandonedIsCurrent: world.currentWrapper === abandoned,
+      abandonedIsNext: world.transit?.next === abandoned,
+      snapshots,
+    };
+  } finally {
+    renderer.destroy();
+    host.replaceChildren(gallery);
   }
 }

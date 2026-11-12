@@ -211,7 +211,7 @@ export class GameRenderer {
       STAGE.cx - world.player.x * settings.zoom,
       STAGE.cy - world.player.y * settings.zoom,
     );
-    const activeFields = [world.field, ...(world.transit ? [world.transit.next] : [])];
+    const activeFields = world.attachedFields().map(({ field }) => field);
     this.captions?.update(world);
     for (const [field, node] of this.fieldNodes)
       if (!activeFields.includes(field)) {
@@ -223,7 +223,7 @@ export class GameRenderer {
         view.destroy();
         this.highlightNodes.delete(field);
       }
-    const states = world.activeFields().map((state) => ({
+    const states = world.attachedFields().map((state) => ({
       ...state,
       transform: fieldTransform(world, state.field, state.offset),
     }));
@@ -267,7 +267,7 @@ export class GameRenderer {
       { tank: world.player, transform: fieldTransform(world, world.currentWrapper) },
       ...states.flatMap(({ field, runtime, transform }) =>
         [...field.enemies, ...runtime.allies]
-          .filter((tank) => !tank.dead)
+          .filter((tank) => !tank.dead && world.actorParents.inField(tank, field))
           .map((tank) => ({ tank, transform })),
       ),
     ];

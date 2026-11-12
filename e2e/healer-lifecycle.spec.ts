@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 import { existsSync, writeFileSync } from 'node:fs';
 const swf = process.env.BT3_SWF_FILE ?? '../documented-bubble-tank-3/re/bt3/uncompressed.swf';
 for (const native of [false, true])
-  test(`${native ? 'SWF' : 'mock'} Healer beams retain dead/jammed homes and source data errors interrupt one Run`, async ({
+  test(`${native ? 'SWF' : 'mock'} Healer beams retain homes while dead patients lose their paint`, async ({
     page,
   }, testInfo) => {
     test.skip(native && !existsSync(swf), 'Supply the local research SWF.');
@@ -34,24 +34,26 @@ for (const native of [false, true])
         expect(owner.beamRemovedNext).toBe(true);
       }
     }
-    expect(proof.interrupted).toMatchObject({
+    expect(proof.patientDeath).toMatchObject({
       dead: true,
-      life: 1,
+      life: 0,
       dataActive: false,
       parented: true,
+      children: 0,
+      painted: false,
       counter: 10,
-      laterBulletAge: 0,
-      avatarAge: 0,
+      laterBulletAge: 1,
+      avatarAge: 1,
       callbacks: 1,
     });
     expect(proof.removal).toEqual({
       parented: false,
       beamRetained: false,
-      laterBulletAge: 0,
-      avatarAge: 1,
+      laterBulletAge: 1,
+      avatarAge: 2,
       callbacks: 2,
     });
-    expect(proof.recovered).toEqual({ laterBulletAge: 1, avatarAge: 2, callbacks: 3 });
+    expect(proof.recovered).toEqual({ laterBulletAge: 2, avatarAge: 3, callbacks: 3 });
     const gallery = page.locator('#stage > canvas');
     await expect.poll(async () => (await gallery.boundingBox())?.height).toBe(675);
     await gallery.screenshot({ path: testInfo.outputPath('healer-lifecycle.png') });

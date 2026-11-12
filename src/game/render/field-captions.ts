@@ -15,14 +15,15 @@ export class FieldCaptions {
     private textures: RasterTextures,
   ) {}
   update(world: World) {
-    const fields = [world.field, ...(world.transit ? [world.transit.next] : [])];
+    const states = world.attachedFields();
+    const fields = states.map(({ field }) => field);
     for (const [field, node] of this.nodes)
       if (!fields.includes(field) || node.stage !== field.tutorial) {
         node.native?.destroy();
         node.root.destroy({ children: true });
         this.nodes.delete(field);
       }
-    for (const field of fields) {
+    for (const { field, offset } of states) {
       let node = this.nodes.get(field);
       if (!node) {
         const container = new Container(),
@@ -70,10 +71,7 @@ export class FieldCaptions {
       }
       node.root.visible = !field.destroyed;
       node.root.scale.set(fieldTransform(world, field).scale);
-      node.root.position.set(
-        field === world.field ? 0 : world.transit!.offset.x,
-        field === world.field ? 0 : world.transit!.offset.y,
-      );
+      node.root.position.set(offset.x, offset.y);
     }
   }
   destroy() {

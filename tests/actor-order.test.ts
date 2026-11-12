@@ -94,9 +94,12 @@ test('ally escape bypasses shields and forcefields and drops its reward without 
   world.step(emptyInput());
   expect(ally.dead).toBe(true);
   expect(ally.life).toBe(0);
-  expect(world.allies).toEqual([]);
+  expect(world.allies).toContain(ally);
+  expect(ally.displayChildren).toEqual([]);
   expect(rewards).toEqual([5]);
   expect(world.stats.kills).toBe(0);
+  world.step(emptyInput());
+  expect(world.allies).toEqual([]);
 });
 
 test('a spawner appends enemies to the live actor loop, so their first Run is immediate', () => {

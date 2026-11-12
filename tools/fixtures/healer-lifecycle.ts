@@ -173,16 +173,18 @@ export async function showHealerLifecycle(pack: AssetPack, host: HTMLElement) {
   stage.subscribe({ step: () => world.step(emptyInput(), 0, false) });
   stage.subscribe({ step: () => callbacks++ });
   stage.advance(20, 50);
-  const interrupted = {
+  const patientDeath = {
     dead: patient.dead,
     life: patient.life,
     dataActive: patient.dataActive,
     parented: world.actorParents.hasParent(patient),
+    children: patient.displayChildren.length,
+    painted: pack.hitTest(patient, patient.x, patient.y),
     counter: beam.contactFrames,
     laterBulletAge: sentinel.age,
     avatarAge: world.player.age,
     callbacks,
-    beamPixels: await draw(world, 3, 'Patient killed: AddLife aborts Run'),
+    beamPixels: await draw(world, 3, 'Patient killed: empty display, no AddLife'),
   };
   stage.advance(20, 50);
   const removal = {
@@ -195,7 +197,7 @@ export async function showHealerLifecycle(pack: AssetPack, host: HTMLElement) {
   await draw(world, 4, 'Next frame: detach and live-array removal');
   stage.advance(20, 50);
   const recovered = { laterBulletAge: sentinel.age, avatarAge: world.player.age, callbacks };
-  await draw(world, 5, 'Later frame: ordinary Run resumes');
+  await draw(world, 5, 'Later frame: ordinary Run continues');
   host.replaceChildren(gallery);
-  return { owners, interrupted, removal, recovered };
+  return { owners, patientDeath, removal, recovered };
 }

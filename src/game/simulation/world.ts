@@ -68,6 +68,13 @@ import { initializeSapper } from './sapper';
 import { initializeAvatarSeeker } from './avatar-seeker';
 import { mockProjectileHit } from '../assets/mock-projectile';
 import { authoredProjectileBounds } from '../assets/projectile-geometry';
+import {
+  WorldFlow,
+  CrossingTargetReadError,
+  DeactivatedActorRunError,
+  FieldChildRemovalError,
+} from './world-flow';
+import { FieldCache } from './field-cache';
 
 export interface Transit {
   next: Field;
@@ -79,10 +86,10 @@ export interface Transit {
   stopShoot: boolean;
 }
 export interface FieldConnection {
-  from: Field;
-  to: Field;
+  from: Pick<Field, 'col' | 'row'>;
+  to: Pick<Field, 'col' | 'row'>;
 }
-export function fieldConnectionKey(from: Field, to: Field) {
+export function fieldConnectionKey(from: FieldConnection['from'], to: FieldConnection['to']) {
   return [`${from.col},${from.row}`, `${to.col},${to.row}`].sort().join('|');
 }
 export const emptyInput = (): InputFrame => ({
@@ -95,12 +102,24 @@ export const emptyInput = (): InputFrame => ({
   aim: { x: STAGE.cx + 100, y: STAGE.cy },
 });
 export class World {
-  mode: WorldMode = 'playing';
+  private flow = new WorldFlow();
+  get mode(): WorldMode {
+    return this.flow.mode;
+  }
+  set mode(value: WorldMode) {
+    this.flow.mode = value;
+  }
   hitSoundTimer = -1;
   readonly actorParents = new ActorParents();
   player: Tank;
   private currentField!: Field;
   private fieldContext: Field | null = null;
+  private contextOffset: Vec = { x: 0, y: 0 };
+  private orphaned: { field: Field; screen: Vec }[] = [];
+  private callbackFields = new WeakMap<Tank, Field>();
+  readonly cache = new FieldCache();
+  mapPosition = { col: 0, row: 0 };
+  private previousMapPosition = { col: 0, row: 0 };
   private runtimes = new WeakMap<Field, FieldRuntime>();
   get currentWrapper(): Field {
     return this.currentField;
@@ -170,18 +189,37 @@ export class World {
         : []),
     ];
   }
+  /** Superseded next wrappers remain attached at their last stage-relative position. */
+  attachedFields() {
+    const player = this.avatarPosition();
+    return [
+      ...this.activeFields().slice(0, 1),
+      ...this.orphaned.map(({ field, screen }) => ({
+        field,
+        runtime: this.runtimeFor(field),
+        offset: { x: screen.x + player.x, y: screen.y + player.y },
+      })),
+      ...this.activeFields().slice(1),
+    ];
+  }
+  private avatarPosition() {
+    return { x: this.player.x + this.contextOffset.x, y: this.player.y + this.contextOffset.y };
+  }
   /** Every actor keeps field-local coordinates; only the shared avatar needs projection. */
   private inField(field: Field, offset: Vec, run: () => void) {
     const previous = this.fieldContext;
+    const previousOffset = this.contextOffset;
     this.fieldContext = field;
-    this.player.x -= offset.x;
-    this.player.y -= offset.y;
+    this.contextOffset = offset;
+    this.player.x += previousOffset.x - offset.x;
+    this.player.y += previousOffset.y - offset.y;
     try {
       run();
     } finally {
-      this.player.x += offset.x;
-      this.player.y += offset.y;
+      this.player.x += offset.x - previousOffset.x;
+      this.player.y += offset.y - previousOffset.y;
       this.fieldContext = previous;
+      this.contextOffset = previousOffset;
     }
   }
   /** _-0D.SpawnNewBullet declines new shots while _-5d is set. Timers still run. */
@@ -218,9 +256,6 @@ export class World {
   connections = new Map<string, FieldConnection>();
   mapMode: MapMode = 1;
   mapHovered = false;
-  private pausedMode: WorldMode = 'playing';
-  private upgradeReturnMode: 'playing' | 'transit' = 'playing';
-  private secondaryHelpReturnMode: 'playing' | 'transit' = 'playing';
   progression: Progression = { level: 0, history: [STARTER] };
   private readonly partUnlocks = new RunPartUnlocks();
   get unlockedParts() {
@@ -298,7 +333,11 @@ export class World {
   projectileWidth = (b: Projectile) => this.projectileBounds(b).width;
   hitPart = (t: Tank, p: TankPart, x: number, y: number) => {
     const pt = rotate({ x: x - t.x, y: y - t.y }, -t.rotation);
-    return !t.removedParts.has(p.key) && distance(pt, p) <= p.radius * p.scale;
+    return (
+      t.displayChildren.includes(`part:${p.key}`) &&
+      !t.removedParts.has(p.key) &&
+      distance(pt, p) <= p.radius * p.scale
+    );
   };
   onProgression: (history: TankDesign[]) => void = () => {};
   onAchievement: (name: string) => void = () => {};
@@ -348,11 +387,7 @@ export class World {
     return [this.player, ...this.field.enemies, ...this.allies].filter((t) => !t.dead);
   }
   pause() {
-    if (this.mode === 'playing' || this.mode === 'transit') {
-      this.pausedMode = this.mode;
-      this.mode = 'paused';
-      this.revision++;
-    }
+    if (this.flow.pause()) this.revision++;
   }
   cycleMap() {
     this.mapMode = nextMapMode(this.mapMode);
@@ -360,10 +395,7 @@ export class World {
     this.revision++;
   }
   resume() {
-    if (this.mode === 'paused') {
-      this.mode = this.pausedMode;
-      this.revision++;
-    }
+    if (this.flow.resume()) this.revision++;
   }
   cycleLock() {
     this.targetLocks.cycle();
@@ -385,14 +417,17 @@ export class World {
       if (
         !(error instanceof HealerTargetReadError) &&
         !(error instanceof SpikeTargetReadError) &&
-        !(error instanceof HomingTargetReadError)
+        !(error instanceof HomingTargetReadError) &&
+        !(error instanceof CrossingTargetReadError) &&
+        !(error instanceof DeactivatedActorRunError) &&
+        !(error instanceof FieldChildRemovalError)
       )
         throw error;
     } finally {
       this.actorParents.sync(this);
       // Authored timelines advance even when state1 skips effects-engine polling.
       const attached = new Set<Tank>([this.player]);
-      for (const { runtime } of this.activeFields()) {
+      for (const { runtime } of this.attachedFields()) {
         for (const effect of runtime.effects) effect.age++;
         for (const bullet of runtime.bullets)
           if (!bullet.dead) this.projectileTimelines.advance(bullet);
@@ -400,33 +435,34 @@ export class World {
           effect.frame = (effect.frame % effect.total) + 1;
         }
       }
-      for (const { field, runtime } of this.activeFields()) {
-        for (const tank of [...field.enemies, ...runtime.allies]) attached.add(tank);
+      for (const { field, runtime } of this.attachedFields()) {
+        for (const tank of [...field.enemies, ...runtime.allies])
+          if (this.actorParents.inField(tank, field)) attached.add(tank);
       }
       for (const tank of attached) advanceTankArt(tank);
     }
   }
   private stepFrame(input: InputFrame) {
-    if (this.mode === 'collapse') {
+    if (this.flow.state === 'collapse') {
       // PausePlayerControl selects source state3: effects/ENTER_FRAME shrink continue, HUD Run stops.
       this.pollEffects();
       this.tickCollapse();
       return;
     }
-    if (this.mode === 'transit') {
+    if (this.flow.state === 'transit') {
       this.stats.frames++;
       this.interfaceFrame(input);
-      if (this.mode !== 'transit') return;
       this.tickActiveFields(input);
       this.pollEffects();
       this.tickTransit();
       return;
     }
-    if (this.mode !== 'playing') return;
+    if (this.flow.state !== 'playing') return;
     this.stats.frames++;
     // State0 detects an exit before interface/field/avatar work. Its initiation frame
     // still reaches Avatar.Run; subsequent state2 frames skip it.
-    if (length(this.player) > FIELD_RADIUS * this.field.scale) this.jump(nearestExit(this.player));
+    if (!this.transit && length(this.player) > FIELD_RADIUS * this.field.scale)
+      this.jump(nearestExit(this.player));
     this.interfaceFrame(input);
     this.tickActiveFields(input);
     // Avatar.Run follows Bubblefield.Run; infection cannot promote/demote a tank until
@@ -486,11 +522,11 @@ export class World {
       tank,
       this.field.enemies,
       this.viewZoom,
-      this.mode === 'collapse',
+      this.flow.state === 'collapse',
     );
   }
   stopPrimaryFire() {
-    for (const { runtime } of this.activeFields()) {
+    for (const { runtime } of this.attachedFields()) {
       for (const bullet of runtime.bullets)
         if (bullet.owner === this.player.uid && bullet.anchor?.part.type === 2017)
           bullet.dead = true;
@@ -540,10 +576,15 @@ export class World {
   }
   private tickField(input: InputFrame, visit: FieldVisit) {
     this.flushEnemyRemovals();
-    this.allies = this.allies.filter((t) => {
-      if (t.dead) this.actorParents.detach(t);
-      return !t.dead;
-    });
+    const runtime = this.runtime;
+    for (const tank of runtime.allyRemovals) {
+      const index = runtime.allies.indexOf(tank);
+      if (index >= 0) {
+        runtime.allies.splice(index, 1);
+        this.actorParents.detach(tank);
+      }
+    }
+    runtime.allyRemovals = [];
     // Separate live arrays match _-0D.Run: a spawner's newly appended enemies run now.
     for (const enemy of this.field.enemies) this.tickActor(enemy, input);
     for (const ally of this.allies) this.tickActor(ally, input);
@@ -557,10 +598,6 @@ export class World {
       else index++;
     }
     tickPickups(this);
-    this.allies = this.allies.filter((t) => {
-      if (t.dead) this.actorParents.detach(t);
-      return !t.dead;
-    });
     this.completeField(this.field, visit);
     // _-0D flushes queued effects after its combat/pickup/completion work. The engine
     // still targets the outgoing layer while both wrappers run during a crossing.
@@ -570,8 +607,11 @@ export class World {
     if (this.runtime.shootTimer >= 0) this.runtime.shootTimer--;
   }
   private tickActor(tank: Tank, input: InputFrame) {
-    this.actorParents.attach(tank, this.field);
-    if (tank.dead) return;
+    if (!this.callbackFields.has(tank)) {
+      this.callbackFields.set(tank, this.field);
+      this.actorParents.attach(tank, this.field);
+    }
+    if (tank.dead && tank.dataActive) return; // Host fixtures can mark death without source teardown.
     this.tickTank(tank, false);
     tank.stunned = tank.status.stun > 0;
     if (tank.stunned) {
@@ -583,6 +623,13 @@ export class World {
     }
     const boss = tank.side === 'enemy' && tank.design.id.startsWith('B');
     if (!boss && tank.status.sticky > 0) tank.status.sticky--;
+    tank.teleportReady = true;
+    if (!tank.dataActive) {
+      // Normal Deactivate leaves intState untouched. A retained stunned branch
+      // above can finish; active movement then reads its cleared data/vectors.
+      if (boss && tank.design.id.startsWith('B1')) tank.x = tank.y = 0;
+      throw new DeactivatedActorRunError();
+    }
     moveActor(tank, this.currentField.scale, this.rng, this.player);
     if (tank.status.jam > 0) tank.status.jam--;
     if (tank.status.jam === 0) this.tickGuns(tank, input);
@@ -633,7 +680,7 @@ export class World {
       effect,
       field: this.field,
     };
-    this.mode = 'collapse';
+    this.flow.collapse();
     this.tacticalHud.updatePassives(this.player, this.field.enemies, this.viewZoom, true);
     this.revision++;
   }
@@ -675,7 +722,7 @@ export class World {
     this.pending = [];
     this.player.x = this.player.y = 0;
     this.collapse = null;
-    this.mode = 'playing';
+    this.flow.restoreControl();
     // Destroy calls _-1E directly; only ordinary boundary exits run FinalPartCall.
     this.jump({ x: -1, y: 0 }, false, { finalizeParts: false });
     this.addCombatEffect({ x: 0, y: 0 }, 'collapseFlash', {}, true);
@@ -848,8 +895,8 @@ export class World {
     t.dead = true;
     if (t.side === 'enemy') {
       this.stats.kills++;
-      this.runtime.enemyRemovals.push(t);
-    }
+      this.runtimeFor(this.callbackFields.get(t) ?? this.field).enemyRemovals.push(t);
+    } else this.runtimeFor(this.callbackFields.get(t) ?? this.field).allyRemovals.push(t);
   }
   /** _-0D.RemoveEnemy classifies the birth code only when the queued object detaches. */
   flushEnemyRemovals() {
@@ -865,15 +912,12 @@ export class World {
       if (this.stats.deadheads === 200) this.award('Headhunter');
       if (this.stats.fighters === 100) this.award('Dogfighter');
       if (this.stats.sumo === 50) this.award('Pro Sumo');
+      if (this.actorParents.hasParent(tank) && !this.actorParents.inField(tank, this.field))
+        throw new FieldChildRemovalError();
       this.actorParents.detach(tank);
       this.field.enemies.splice(index, 1);
     }
     runtime.enemyRemovals = [];
-    // External fixtures may mark a tank dead without invoking its callback.
-    this.field.enemies = this.field.enemies.filter((tank) => {
-      if (tank.dead) this.actorParents.detach(tank);
-      return !tank.dead;
-    });
   }
   dropBubbles(pos: Vec, amount: number) {
     spawnPickups(this, pos, amount, this.runtimeFor(this.currentField).pickups);
@@ -881,6 +925,8 @@ export class World {
   private completeField(field: Field, visit: FieldVisit) {
     if (!visit.tryComplete(field)) return;
     field.cleared = true;
+    const dot = this.fields.get(`${this.mapPosition.col},${this.mapPosition.row}`);
+    if (dot) dot.cleared = true;
     this.editSlider.trigger(this.progression.level, this.mapMode);
     this.stats.completed++;
     this.revision++;
@@ -892,8 +938,8 @@ export class World {
     // CompletedABubblefield checks the current wrapper, even if the next one called it.
     if (this.currentField.boss && !this.bossDefeated) {
       this.bossDefeated = true;
-      if (this.mode === 'playing') {
-        this.mode = 'won';
+      if (this.flow.state === 'playing') {
+        this.flow.openWin();
         this.emit('win');
       }
       this.award('Boss Badge');
@@ -927,9 +973,8 @@ export class World {
       const design = this.progression.history[this.progression.level];
       if (design) this.rebuildPlayer(design);
       else {
-        this.upgradeReturnMode = this.mode === 'transit' ? 'transit' : 'playing';
         this.offers = this.getOffers();
-        this.mode = 'upgrade';
+        this.flow.openUpgrade();
         this.revision++;
       }
     }
@@ -965,8 +1010,8 @@ export class World {
   selectUpgrade(design: TankDesign) {
     if (this.mode !== 'upgrade') return;
     this.progression.history[this.progression.level] = design;
-    this.mode = this.upgradeReturnMode;
     this.rebuildPlayer(design);
+    this.flow.closeUpgrade();
     this.offers = [];
     this.onProgression([...this.progression.history]);
     this.revision++;
@@ -978,7 +1023,12 @@ export class World {
     this.revision++;
   }
   get canEdit() {
-    return this.editSlider.enabled && this.progression.level >= 1 && this.mode === 'playing';
+    return (
+      !this.transit &&
+      this.editSlider.enabled &&
+      this.progression.level >= 1 &&
+      this.mode === 'playing'
+    );
   }
   private rebuildPlayer(design: TankDesign, death = false) {
     this.targetLocks.clear(0);
@@ -1008,43 +1058,33 @@ export class World {
       this.player.guns.some((g) => Math.floor(g.part.type / 1000) === 3)
     ) {
       this.secondaryHelpSeen = true;
-      this.secondaryHelpReturnMode =
-        this.mode === 'transit' || (this.mode === 'paused' && this.pausedMode === 'transit')
-          ? 'transit'
-          : 'playing';
-      this.mode = 'secondary-help';
+      this.flow.openSecondaryHelp();
       this.onSecondaryHelp();
     }
   }
   closeSecondaryHelp() {
-    if (this.mode !== 'secondary-help') return;
-    this.mode = this.secondaryHelpReturnMode;
-    this.revision++;
+    if (this.flow.closeSecondaryHelp()) this.revision++;
   }
   /** _-Zx.Damage handles a level-zero lethal hit synchronously, before pickups run. */
   escapeAtLevelZero() {
     this.player.life = 1;
-    if (!this.transit) this.jump(nearestExit(this.player), true);
+    this.jump(nearestExit(this.avatarPosition()), true);
   }
   jump(dir: Vec, deadhead = false, { finalizeParts = true }: { finalizeParts?: boolean } = {}) {
-    if (this.mode === 'transit') return;
-    if (!deadhead) {
-      this.wallTimers.cancel(this.player.uid);
-      this.stopPrimaryFire();
-      this.tacticalHud.clearPassives();
-      if (finalizeParts) detachForcefield(this.player);
-    }
+    const stopShoot = this.transit?.stopShoot ?? false;
     const tutorial = tutorialForAttachment(this.stats.visited);
-    let col = this.currentField.col + dir.x,
-      row = this.currentField.row + dir.y;
-    let next = this.fields.get(`${col},${row}`);
+    this.previousMapPosition = { ...this.mapPosition };
+    let col = this.mapPosition.col + dir.x,
+      row = this.mapPosition.row + dir.y;
+    let stored = this.cache.get(col, row);
     // Only Apocalypse's destroyed fields are holes; ordinary cleared fields remain destinations.
-    while (next?.destroyed) {
+    while (stored?.destroyed) {
       col += dir.x;
       row += dir.y;
-      next = this.fields.get(`${col},${row}`);
+      stored = this.cache.get(col, row);
     }
-    if (!next) {
+    let next: Field;
+    if (!stored) {
       const boss =
         !deadhead && !this.bossTriggered && this.player.life >= 1000 && this.progression.level >= 5;
       const wave = boss
@@ -1073,26 +1113,50 @@ export class World {
           return t;
         }),
       };
-      this.fields.set(`${col},${row}`, next);
-      this.stats.visited = this.fields.size - 1;
+      this.stats.visited++;
       if (this.stats.visited === 100) this.award('Explorer');
     } else {
-      next.boss = false; // Cached enemies do not preserve the wrapper's boss flag.
+      next = {
+        col,
+        row,
+        scale: stored.scale,
+        boss: false,
+        cleared: this.fields.get(`${col},${row}`)?.cleared ?? false,
+        tutorial,
+        enemies: this.cache.restore(stored),
+      };
       // _-0D._-G0 resets only offensive primary movTarget on cached attachment.
       for (const enemy of next.enemies)
-        for (const gun of enemy.guns)
-          if (Math.floor(gun.part.type / 1000) === 4 && gun.targeting)
-            gun.targeting.target = this.player;
+        if (enemy.dataActive)
+          for (const gun of enemy.guns)
+            if (Math.floor(gun.part.type / 1000) !== 3 && gun.targeting)
+              gun.targeting.target = this.player;
     }
+    this.mapPosition = { col, row };
+    this.fields.set(`${col},${row}`, next);
+    this.connections.set(fieldConnectionKey(this.previousMapPosition, this.mapPosition), {
+      from: { ...this.previousMapPosition },
+      to: { ...this.mapPosition },
+    });
     // Reattachment constructs a new bfStartDisplay even when the stored field already exists.
     next.tutorial = tutorial;
     const spacing =
       fieldGeometry.transitDiameter * next.scale +
-      Math.trunc((fieldGeometry.transitDiameter * (this.field.scale - next.scale)) / 2) -
+      Math.trunc((fieldGeometry.transitDiameter * (this.currentField.scale - next.scale)) / 2) -
       4;
     this.roster.update(Math.hypot(col, row));
     const offset = { x: dir.x * spacing, y: dir.y * spacing };
     const entry = 317 * next.scale; // BF_over_detail_mc markers: ±6340 twips.
+    if (this.transit) {
+      const player = this.avatarPosition();
+      this.orphaned.push({
+        field: this.transit.next,
+        screen: {
+          x: this.transit.offset.x - player.x,
+          y: this.transit.offset.y - player.y,
+        },
+      });
+    }
     this.transit = {
       next,
       visit: new FieldVisit(),
@@ -1100,17 +1164,30 @@ export class World {
       target: { x: offset.x - dir.x * entry, y: offset.y - dir.y * entry },
       direction: dir,
       age: 0,
-      stopShoot: !deadhead,
+      stopShoot,
     };
+    for (const tank of next.enemies) {
+      this.callbackFields.set(tank, next);
+      this.actorParents.attach(tank, next);
+    }
     if (!next.enemies.length) this.editSlider.trigger(this.progression.level, this.mapMode);
     else if (this.editSlider.atRest) this.editSlider.hide();
-    this.mode = 'transit';
+    this.flow.cross();
+    // _-ZY performs these caller-owned writes/finals only after _-1E attached
+    // the field and enabled the birth gate. Death and Destroy call _-1E directly.
+    if (!deadhead && finalizeParts) {
+      this.transit.stopShoot = true;
+      this.wallTimers.cancel(this.player.uid);
+      this.stopPrimaryFire();
+      this.tacticalHud.clearPassives();
+      detachForcefield(this.player);
+    }
     this.emit('jump');
     this.revision++;
   }
   private tickTransit() {
     const tr = this.transit;
-    if (!tr) return;
+    if (!tr) throw new CrossingTargetReadError();
     tr.age++;
     const dx = tr.target.x - this.player.x,
       dy = tr.target.y - this.player.y;
@@ -1119,20 +1196,28 @@ export class World {
       this.player.x -= tr.offset.x;
       this.player.y -= tr.offset.y;
       this.player.velocity = { x: 0, y: 0 };
-      this.connections.set(fieldConnectionKey(this.field, tr.next), {
-        from: this.field,
-        to: tr.next,
-      });
-      // Only enemy objects survive in the cache. The destination already owns its
-      // live shots, pickups and allies and keeps them when promoted.
-      this.currentField.enemies = this.currentField.enemies.filter((t) => !t.dead);
+      // Deactivate clears only a completed wrapper. An uncleared detached
+      // wrapper retains its collections; neither wrapper itself enters the cache.
+      if (this.fieldVisit.completed) {
+        const outgoing = this.runtimeFor(this.currentField);
+        for (const bullet of outgoing.bullets) bullet.dead = true;
+        outgoing.bullets = [];
+        outgoing.pickups = [];
+        outgoing.enemyRemovals = [];
+        outgoing.allyRemovals = [];
+        this.currentField.enemies = [];
+      }
+      this.cache.store(
+        this.currentField,
+        this.previousMapPosition.col,
+        this.previousMapPosition.row,
+      );
       // _-8Y clears the single global effects engine without completing callbacks.
-      for (const { runtime } of this.activeFields()) {
+      for (const { runtime } of this.attachedFields()) {
         runtime.effects = [];
         runtime.effectQueue = [];
         runtime.pending = [];
       }
-      this.runtimes.delete(this.currentField);
       this.field = tr.next;
       this.targetLocks.clear();
       this.fieldVisit = tr.visit;
@@ -1142,7 +1227,7 @@ export class World {
       // KillShield, so the old film remains attached until another trigger.
       for (const g of this.player.guns) g.counter = 0;
       this.transit = null;
-      this.mode = 'playing';
+      this.flow.arrive();
       this.revision++;
     } else {
       this.player.x += dx * 0.09;
@@ -1194,6 +1279,8 @@ export function geometricHit(t: Tank, x: number, y: number) {
   const local = rotate({ x: x - t.x, y: y - t.y }, -t.rotation);
   return t.design.parts.some(
     (p) =>
-      !t.removedParts.has(p.key) && Math.hypot(local.x - p.x, local.y - p.y) < p.radius * p.scale,
+      t.displayChildren.includes(`part:${p.key}`) &&
+      !t.removedParts.has(p.key) &&
+      Math.hypot(local.x - p.x, local.y - p.y) < p.radius * p.scale,
   );
 }

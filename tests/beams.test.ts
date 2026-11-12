@@ -83,7 +83,8 @@ test('allied healers prioritize the avatar and remove their beam with its owner'
   expect(world.player.life).toBe(21);
   expect(patient.life).toBe(50);
   expect(world.bullets[0]?.targetId).toBe(world.player.uid);
-  healer.dead = true;
+  world.damage(healer, healer.life);
+  expect(world.actorParents.hasParent(healer)).toBe(true);
   frames(world, 1);
   expect(world.bullets).toHaveLength(0);
 });

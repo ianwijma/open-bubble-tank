@@ -122,7 +122,8 @@ describe('original gameplay contracts', () => {
     step(w, 5);
     expect({ x: cached.x, y: cached.y, age: cached.age }).toEqual(departedAt);
     w.jump({ x: -1, y: 0 });
-    expect(w.transit?.next).toBe(first);
+    expect(w.transit?.next === first).toBe(false);
+    expect(w.transit!.next.enemies[0]).toBe(cached);
     expect(first.enemies[0].life).toBe(1);
     expect(first.enemies[0]).toBe(cached);
     expect({ x: cached.x, y: cached.y, age: cached.age }).toEqual(departedAt);
@@ -143,7 +144,7 @@ describe('original gameplay contracts', () => {
     expect(w.transit?.next.boss).toBe(true);
     expect(w.bossTriggered).toBe(true);
   });
-  test('maps record completed crossings once, without connecting adjacent untraveled fields', () => {
+  test('maps record attached crossings once, without connecting adjacent untraveled fields', () => {
     const w = new World([], [], 8);
     for (const dir of [
       { x: 1, y: 0 },
@@ -152,7 +153,7 @@ describe('original gameplay contracts', () => {
     ]) {
       const previous = w.connections.size;
       w.jump(dir);
-      expect(w.connections.size).toBe(previous);
+      expect(w.connections.size).toBe(previous + 1);
       finishTransit(w);
     }
     expect(w.connections.size).toBe(3);

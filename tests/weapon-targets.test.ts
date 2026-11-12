@@ -49,7 +49,8 @@ test('cached attachment resets primary target only, preserving master, count and
   world.editPlayer(STARTER);
   expect(gun.targeting.target).toBe(ally);
   world.jump({ x: -1, y: 0 });
-  expect(world.transit!.next).toBe(old);
+  expect(world.transit!.next === old).toBe(false);
+  expect(world.transit!.next.enemies).toContain(owner);
   expect(gun.targeting).toEqual({ master: 'ally', target: world.player, allies: 7 });
   expect(behavior.behaviorTarget).toEqual({ master: 'enemy', target: ally, allies: 8 });
 });

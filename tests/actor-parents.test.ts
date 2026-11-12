@@ -41,7 +41,7 @@ test('arrival unroots the old wrapper without detaching retained enemy reference
   expect(world.actorParents.hasParent(outgoing)).toBe(true);
   expect(world.actorParents.point(outgoing, next)).toEqual({ x: -1065, y: -205 });
   world.jump({ x: -1, y: 0 });
-  expect(world.transit!.next).toBe(old);
+  expect(world.transit!.next === old).toBe(false);
   world.transit!.offset = { x: -800, y: 0 };
   world.actorParents.sync(world);
   expect(world.actorParents.point(outgoing, next)).toEqual({ x: -790, y: 20 });
@@ -50,6 +50,7 @@ test('arrival unroots the old wrapper without detaching retained enemy reference
 test('queued death keeps its parent until removal; a replacement avatar does not alias the old object', () => {
   const { world, old, outgoing } = scenario();
   outgoing.dead = true;
+  world.runtimeFor(old).enemyRemovals.push(outgoing);
   expect(world.actorParents.hasParent(outgoing)).toBe(true);
   world.flushEnemyRemovals();
   expect(world.actorParents.hasParent(outgoing)).toBe(false);
@@ -69,6 +70,7 @@ test('synchronizing an active layer preserves membership for later removal and r
   world.actorParents.sync(world);
   expect(world.actorParents.hasParent(outgoing)).toBe(false);
   next.enemies.push(outgoing);
+  world.actorParents.attach(outgoing, next);
   world.actorParents.sync(world);
   expect(world.actorParents.hasParent(outgoing)).toBe(true);
   expect(world.actorParents.point(outgoing, old)).toEqual({ x: 810, y: 20 });

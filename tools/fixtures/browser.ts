@@ -47,7 +47,7 @@ import { runPlaythrough } from '../playthrough/browser';
 import { showPauseFlow } from './pause-flow';
 import { showWinScreen } from './screens';
 import { showDegradationProof } from './degradation';
-import { showCrossingProof } from './crossing';
+import { showCrossingProof, showNestedCrossingProof } from './crossing';
 import { showPickupProof } from './pickups';
 import { showPlayerClocks } from './player-clocks';
 import { showCombatEffectsProof } from './combat-effects';
@@ -519,6 +519,12 @@ async function reset() {
     const proof = await showPickupProof(pack, stage);
     status.dataset.pickups = JSON.stringify(proof);
     status.textContent = 'Ready · pickup alpha contact';
+    return;
+  }
+  if (fixture.value === 'crossing-nested') {
+    const proof = await showNestedCrossingProof(pack, stage);
+    status.dataset.crossing = JSON.stringify(proof);
+    status.textContent = 'Ready';
     return;
   }
   if (fixture.value === 'crossing-combat') {
