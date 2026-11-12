@@ -1,4 +1,5 @@
 import type { TankPart, Vec } from '../core/types';
+import { displayRotation } from '../core/display-values';
 
 /** Transient creator state, never serialized into a tank code. */
 export interface PartSelection {
@@ -108,7 +109,7 @@ export function transformSelection(
           ...p,
           ...(change.rotation === undefined
             ? {}
-            : { rotation: p.y <= 0 ? change.rotation : -change.rotation }),
+            : { rotation: displayRotation(p.y <= 0 ? change.rotation : 360 - change.rotation) }),
           ...(change.scale === undefined ? {} : { scale: change.scale }),
         },
   );
