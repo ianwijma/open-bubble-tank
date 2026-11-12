@@ -43,9 +43,9 @@ painting and accessible button state; `World` stores no bitmap or DOM objects.
 The existing pause bitmap math supplies save-before-blur and source-over reversal.
 The upgrade UI no longer adds CSS blur over that history.
 
-Remaining boundary: initial capture currently copies the registered stage graph.
-Refreshing that graph at the exact interface callback, fixing newly registered
-stage listeners' first frame, and separating Main's skipped world Run from attached
-art clocks are the following layer. Full captured-layer equality, constructor/frame
+The [frame-ownership follow-up](upgrade-frame-reference.md) refreshes the graph and
+flash paint at the interface callback, fixes newly registered listener cohorts,
+separates skipped World.Run from attached art and retains explicit background events.
+Full captured-layer equality, constructor/frame
 script scheduling, loaded-runtime provenance and Adobe parity are not established
 by these source contracts or the focused browser fixture.

@@ -189,7 +189,6 @@ export default function GameShell() {
   }
   function openUpgradeMenu(target: World, automatic: boolean) {
     upgradeRef.current?.menu.dispose();
-    stage.background.stop();
     const menu = new UpgradeMenu(stage, () => {
       if (upgradeRef.current?.menu !== menu) return;
       if (automatic) target.finishUpgrade();
@@ -203,7 +202,6 @@ export default function GameShell() {
       setViewer(null);
       setOverlay(null);
       setScreen('game');
-      stage.background.resume();
       refresh();
     });
     const context = { menu, world: target, automatic };
@@ -390,6 +388,7 @@ export default function GameShell() {
                   settings={profile.settings}
                   audio={audio}
                   stage={stage}
+                  isUpgradeOpen={() => upgradeRef.current !== null}
                   onChange={refresh}
                   onReady={() => {
                     if (startingWorld.current !== world) return;
@@ -494,7 +493,7 @@ export default function GameShell() {
                     fps={profile.settings.fps}
                     onMenu={menu}
                     onContinue={() => {
-                      world.mode = 'playing';
+                      world.continueAfterWin();
                       refresh();
                     }}
                   />

@@ -15,7 +15,7 @@ export class UpgradeMenu {
     readonly stage: StageRuntime,
     private readonly onComplete: () => void,
   ) {
-    const capture = stage.capture.capture();
+    const capture = stage.capture.capture({ refresh: true });
     if (capture) {
       this.history = new PauseBitmapHistory(550, 450, capture.data);
       this.captureCount = 1;
