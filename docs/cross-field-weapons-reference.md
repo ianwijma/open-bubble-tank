@@ -65,6 +65,23 @@ missing-key/empty-code import behavior is not established by this correction. Th
 shared pseudorandom generator and complete display-constructor draw order are not
 claimed to match the original runtime.
 
+The follow-up at `0f6e7d2ca4c0af8530f9baf9ef46b8841aa2b484` passes formatting,
+TypeScript and909 unit tests/8,395 assertions. Its production build
+`S0tdGEMwWaxoYQ9RqHNGA` passes this literal browser command:
+
+```sh
+BT3_SWF_FILE=/home/ian/Projects/ianwijma/documented-bubble-tank-3/re/bt3/uncompressed.swf bun run test:e2e --config test-results/spawner-setup-validation/playwright.config.ts actor-behaviors.spec.ts weapon-targets.spec.ts playthrough.spec.ts
+```
+
+All six mock/supplied-art cases pass, without skips or page errors. The private
+config owns3165/3166; spec copies change only the fixture URL and retain every
+assertion. Actor/targeting fixtures cover adjacent behavior. The accelerated pilots
+reach six upgrades, boss defeat, badge and Continue (82,489 mock/77,617 native frames).
+They use seeded accelerated simulation and an upgrade-selection adapter, so they are
+not ordinary-input or original-runtime evidence. Supplied-art history and win paint
+were inspected. All owned servers stopped. Local evidence remains uncommitted under
+`test-results/spawner-setup-validation/` and the deployment-controls capture directory.
+
 ## Verification limits
 
 Unit regressions preserve the actual old beam/patient, translate emitter positions
