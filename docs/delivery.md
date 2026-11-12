@@ -9,8 +9,9 @@ master ← PR1 ← PR2 ← PR3 ← PR4 ← PR5
 ```
 
 The bottom PR targets master. Each later PR targets the preceding layer's branch,
-so its review shows that layer's change. Use `stack/<bottom-PR>-<layer>-<description>`
-for intermediate branches. Preserve the legacy recreation checkpoint unchanged.
+so its review shows that layer's change. Use `stack/<batch>-<layer>-<description>`
+for batch branches, including the first layer when conserving previews. Preserve the
+legacy recreation checkpoint unchanged.
 
 While an earlier layer runs CI, build the next dependent layer when its scope is
 clear. Up to five layers may be in flight together. Keep fixes on their owning
@@ -37,10 +38,10 @@ do not infer completion from a queued operation.
 
 Stacking alone does not suppress preview builds. `vercel.json` sets
 `git.deploymentEnabled["stack/**"]` to false, using Vercel's supported minimatch branch
-rules. Intermediate pushes and merges therefore skip automatic Vercel deployments.
-Unspecified branches retain their normal behavior, including master and the current
-bottom integration branch. The assembled bottom branch can receive a final preview;
-the one master merge can trigger the production deployment.
+rules. Pushes to those batch branches therefore skip automatic Vercel deployments.
+Unspecified branches retain their normal behavior, including master. Keeping every
+layer under `stack/**` leaves the one master merge as the automatic production
+deployment for a batch. A deliberate preview on another branch remains optional.
 
 See [Vercel's Git configuration](https://vercel.com/docs/project-configuration/git-configuration).
 Do not add a broad true rule overlapping `stack/**`: Vercel deploys when any matching
