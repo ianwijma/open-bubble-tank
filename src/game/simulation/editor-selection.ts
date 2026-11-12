@@ -120,8 +120,18 @@ export function orderSelection(parts: TankPart[], selection: PartSelection, fron
 }
 
 /** Left/Right controls change each selected X by one per frame, plus the release click. */
-export function nudgeSelection(parts: TankPart[], selection: PartSelection, delta: number) {
-  return parts.map((p) => (selection.keys.includes(p.key) ? { ...p, x: p.x + delta } : p));
+export function nudgeSelection(
+  parts: TankPart[],
+  selection: PartSelection,
+  delta: number,
+  frames = 1,
+) {
+  return parts.map((p) => {
+    if (!selection.keys.includes(p.key)) return p;
+    let x = p.x;
+    for (let frame = 0; frame < frames; frame++) x += delta;
+    return { ...p, x };
+  });
 }
 
 /** _-F1 / DeleteNonDominantTwinObject: center selected objects and retain the opaque twin. */

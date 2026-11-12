@@ -9,8 +9,10 @@ import { decodeTankCode } from '../src/game/services/tank-code';
 import { loadedReferenceModules } from './reference/loaded-module-identity';
 
 const scenario = process.env.BT3_REFERENCE_SCENARIO ?? 'creator';
-if (!['creator', 'validation', 'drag'].includes(scenario))
-  throw new Error('Choose creator, validation or drag reference scenario.');
+if (!['creator', 'validation', 'drag', 'precision', 'placement'].includes(scenario))
+  throw new Error('Choose creator, validation, drag, precision or placement reference scenario.');
+const requestedDpr = Number(process.env.BT3_REFERENCE_DPR ?? 1);
+if (![1, 2].includes(requestedDpr)) throw new Error('Choose reference DPR1 or2.');
 const swf = resolve(
     process.env.BT3_SWF_FILE ?? '../documented-bubble-tank-3/re/bt3/uncompressed.swf',
   ),
@@ -41,7 +43,10 @@ const browser = await chromium.launch({
     '--js-flags=--stack-size=4096',
   ],
 });
-const page = await browser.newPage({ viewport: { width: 1100, height: 1000 } }),
+const page = await browser.newPage({
+    viewport: { width: 1100, height: 1000 },
+    deviceScaleFactor: requestedDpr,
+  }),
   errors: string[] = [],
   captures: string[] = [],
   dragEvidence: { name: string; parts: Awaited<ReturnType<typeof decodeTankCode>>['parts'] }[] = [],
@@ -59,11 +64,11 @@ try {
     await page.waitForTimeout(400);
   };
   const capture = async (name: string) => {
-    await stage.screenshot({ path: resolve(output, `${name}.png`) });
+    await stage.screenshot({ scale: 'css', path: resolve(output, `${name}.png`) });
     captures.push(name);
   };
   const probe = async () => {
-    const png = await stage.screenshot();
+    const png = await stage.screenshot({ scale: 'css' });
     return page.evaluate(
       async (bytes) => {
         const image = await createImageBitmap(
@@ -162,7 +167,7 @@ try {
     await page.mouse.up();
     await page.waitForTimeout(400);
   };
-  if (scenario === 'drag') {
+  if (['drag', 'precision', 'placement'].includes(scenario)) {
     await page.context().grantPermissions(['clipboard-read', 'clipboard-write']);
     const origin = { x: CREATOR_CONTROLS.workspace.tx / 20, y: CREATOR_CONTROLS.workspace.ty / 20 };
     const move = async (x: number, y: number) => {
@@ -187,66 +192,138 @@ try {
       dragEvidence.push({ name, parts: tank.parts });
       await click(175, 392);
     };
-    await dragPreview(origin.x - 20, origin.y - 10);
-    await sample('placed-pair');
-    await click(origin.x - 20, origin.y - 10);
-    await move(-20, -10);
-    await page.mouse.down();
-    actions.push({ action: 'down' });
-    await move(-19, -10);
-    await move(-19, 0);
-    await capture('pair-on-axis-before-snap');
-    await move(-18, 0);
-    await capture('pair-merged');
-    await move(-17, 6);
-    await capture('pair-respawned');
-    await page.mouse.up();
-    actions.push({ action: 'up' });
-    await sample('respawned-pair');
-    await move(-17, 6);
-    await page.mouse.down();
-    actions.push({ action: 'down' });
-    await move(-16.9, 6);
-    await page.mouse.up();
-    actions.push({ action: 'up' });
-    await sample('subpixel-drag');
-    await move(-16.9, 6);
-    await page.mouse.down();
-    actions.push({ action: 'down' });
-    await move(-16.77, 6.13);
-    await move(-16.76, 6.14);
-    await page.mouse.up();
-    actions.push({ action: 'up' });
-    await sample('fractional-drag');
-    // Scaling makes a quarter-stage-pixel move a whole browser pixel. The smaller
-    // unscaled probes above left the original's exported coordinates unchanged.
-    await page.setViewportSize({ width: 2400, height: 2100 });
-    await stage.evaluate((element) => {
-      element.style.width = '2200px';
-      element.style.height = '1800px';
-    });
-    actions.push({ action: 'stage-scale-4' });
-    await page.waitForTimeout(400);
-    await move(-17, 6);
-    await page.mouse.down();
-    actions.push({ action: 'down' });
-    await move(-16.75, 6);
-    await page.mouse.up();
-    actions.push({ action: 'up' });
-    await sample('quarter-pixel-drag');
-    await stage.evaluate((element) => {
-      element.style.width = '1650px';
-      element.style.height = '1350px';
-    });
-    actions.push({ action: 'stage-scale-3' });
-    await page.waitForTimeout(400);
-    await move(-16.75, 6);
-    await page.mouse.down();
-    actions.push({ action: 'down' });
-    for (let i = 1; i <= 3; i++) await move(-16.75 + i / 3, 6 + i / 3);
-    await page.mouse.up();
-    actions.push({ action: 'up' });
-    await sample('third-pixel-steps');
+    if (['precision', 'placement'].includes(scenario)) {
+      await stage.locator('canvas').evaluate((canvas) => {
+        const events: unknown[] = [];
+        Object.defineProperty(window, '__creatorPointEvents', { value: events });
+        for (const type of ['pointermove', 'pointerdown', 'pointerup'])
+          canvas.addEventListener(type, (event) => {
+            const e = event as PointerEvent;
+            events.push({
+              type,
+              wall: performance.now(),
+              offsetX: e.offsetX,
+              offsetY: e.offsetY,
+              clientX: e.clientX,
+              clientY: e.clientY,
+              button: e.button,
+              buttons: e.buttons,
+            });
+          });
+      });
+    }
+    const embeddingScale = async (n: number) => {
+      await page.setViewportSize({ width: 2400, height: 2100 });
+      await stage.evaluate(
+        (element, options) => {
+          if (options.widenHost)
+            element.closest('main')!.style.width = String(550 * options.scale) + 'px';
+          element.style.width = String(550 * options.scale) + 'px';
+          element.style.height = String(450 * options.scale) + 'px';
+        },
+        { scale: n, widenHost: scenario === 'placement' },
+      );
+      actions.push({ action: 'embedding-scale', x: n });
+      await page.waitForTimeout(400);
+    };
+    if (scenario === 'precision') {
+      await dragPreview(origin.x - 20, origin.y - 10);
+      await sample('precision-placed-pair');
+      await click(origin.x - 20, origin.y - 10);
+      const scales = requestedDpr === 2 ? [1, 1, 1.5, 1, 1] : [4, 4, 3, 4, 4];
+      const gestures = [
+        ['precision-eighth-positive', 1 / 8, 1],
+        ['precision-eighth-negative', -1 / 8, 1],
+        ['precision-thirds-three-events', 1, 3],
+        ['precision-eighths-thirtytwo-events', 4, 32],
+        ['precision-tenths-ten-events', 1, 10],
+      ] as const;
+      for (const [i, [name, dx, steps]] of gestures.entries()) {
+        await embeddingScale(scales[i]);
+        const p = dragEvidence.at(-1)!.parts[0];
+        await move(p.x, p.y);
+        await page.mouse.down();
+        actions.push({ action: 'down' });
+        for (let step = 1; step <= steps; step++) await move(p.x + (dx * step) / steps, p.y);
+        await page.mouse.up();
+        actions.push({ action: 'up' });
+        await sample(name);
+      }
+    } else if (scenario === 'placement') {
+      for (const [name, n, x, y] of [
+        ['placement-eighth-scale1', 1, -20.125, -10.125],
+        ['placement-eighth-scale4', 4, -30.125, -10.125],
+        ['placement-third-scale3', 3, -40 - 1 / 3, -10 - 1 / 3],
+        ['placement-eighth-scale1p3', 1.3, -50.125, -10.125],
+        ['placement-axis-scale1', 1, -60.125, 2.875],
+      ] as const) {
+        await embeddingScale(n);
+        actions.push({ action: 'placement-target', x, y });
+        await dragPreview(origin.x + x, origin.y + y);
+        await sample(name);
+      }
+    } else {
+      await dragPreview(origin.x - 20, origin.y - 10);
+      await sample('placed-pair');
+      await click(origin.x - 20, origin.y - 10);
+      await move(-20, -10);
+      await page.mouse.down();
+      actions.push({ action: 'down' });
+      await move(-19, -10);
+      await move(-19, 0);
+      await capture('pair-on-axis-before-snap');
+      await move(-18, 0);
+      await capture('pair-merged');
+      await move(-17, 6);
+      await capture('pair-respawned');
+      await page.mouse.up();
+      actions.push({ action: 'up' });
+      await sample('respawned-pair');
+      await move(-17, 6);
+      await page.mouse.down();
+      actions.push({ action: 'down' });
+      await move(-16.9, 6);
+      await page.mouse.up();
+      actions.push({ action: 'up' });
+      await sample('subpixel-drag');
+      await move(-16.9, 6);
+      await page.mouse.down();
+      actions.push({ action: 'down' });
+      await move(-16.77, 6.13);
+      await move(-16.76, 6.14);
+      await page.mouse.up();
+      actions.push({ action: 'up' });
+      await sample('fractional-drag');
+      // Scaling makes a quarter-stage-pixel move a whole browser pixel. The smaller
+      // unscaled probes above left the original's exported coordinates unchanged.
+      await page.setViewportSize({ width: 2400, height: 2100 });
+      await stage.evaluate((element) => {
+        element.style.width = '2200px';
+        element.style.height = '1800px';
+      });
+      actions.push({ action: 'stage-scale-4' });
+      await page.waitForTimeout(400);
+      await move(-17, 6);
+      await page.mouse.down();
+      actions.push({ action: 'down' });
+      await move(-16.75, 6);
+      await page.mouse.up();
+      actions.push({ action: 'up' });
+      await sample('quarter-pixel-drag');
+      await stage.evaluate((element) => {
+        element.style.width = '1650px';
+        element.style.height = '1350px';
+      });
+      actions.push({ action: 'stage-scale-3' });
+      await page.waitForTimeout(400);
+      await move(-16.75, 6);
+      await page.mouse.down();
+      actions.push({ action: 'down' });
+      for (let i = 1; i <= 3; i++) await move(-16.75 + i / 3, 6 + i / 3);
+      await page.mouse.up();
+      actions.push({ action: 'up' });
+      await sample('third-pixel-steps');
+    }
   } else if (scenario === 'validation') {
     await click(382, 235); // Weapons tab; one Basic Cannon remains affordable at18GP.
     await click(450, 265);
@@ -324,12 +401,21 @@ try {
     controlLayoutSha256,
     guideLayoutSha256,
     configuredRenderer: 'wgpu-webgl',
+    requestedDpr,
+    observedDpr: await page.evaluate(() => window.devicePixelRatio),
     stackKB: 4096,
     stage: { width: 550, height: 450 },
     capturedAt: new Date().toISOString(),
     captures,
     pageErrors: errors,
-    ...(scenario === 'drag' ? { actions, dragEvidence } : {}),
+    ...(['drag', 'precision', 'placement'].includes(scenario) ? { actions, dragEvidence } : {}),
+    ...(['precision', 'placement'].includes(scenario)
+      ? {
+          pointerEvents: await page.evaluate('window.__creatorPointEvents'),
+          embeddingScope:
+            'Only host CSS dimensions and requested browser DPR vary; placement widens host main to keep the palette in viewport. Public Save/Copy exports guide subsequent input. No AVM/game/clock injection.',
+        }
+      : {}),
     limitation:
       'Ruffle emulation; stopped foreground captures do not establish Adobe parity or frame timing.',
   };

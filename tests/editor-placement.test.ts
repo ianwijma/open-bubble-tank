@@ -7,8 +7,9 @@ test('preview placement snaps new objects within three pixels in either symmetry
   expect(placementParts(1001, 5, { x: 10, y: -3 }, true, 'b')).toHaveLength(1);
   const pair = placementParts(1001, 5, { x: 10, y: -3.01 }, true, 'p');
   expect(pair.map((p) => [p.key, p.y, p.twin])).toEqual([
-    ['p', -3.01, 'p-twin'],
-    ['p-twin', 3.01, 'p'],
+    // The pre-write point exceeds3, so the twin remains; display setters truncate.
+    ['p', -3, 'p-twin'],
+    ['p-twin', 3, 'p'],
   ]);
 });
 test('new objects obey both the design rectangle and recovered body/weapon ring checks', () => {
