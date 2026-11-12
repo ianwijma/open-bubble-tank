@@ -12,6 +12,11 @@ The bottom PR targets master. Each later PR targets the preceding layer's branch
 so its review shows that layer's change. Use `stack/<bottom-PR>-<layer>-<description>`
 for intermediate branches. Preserve the legacy recreation checkpoint unchanged.
 
+While an earlier layer runs CI, build the next dependent layer when its scope is
+clear. Up to five layers may be in flight together. Keep fixes on their owning
+branch, propagate them through dependent layers, and validate each resulting head.
+Do not open a sixth layer or fold a partial batch into master merely to avoid a wait.
+
 For each finalized PR, create an isolated get-green agent. Require its current-head
 GitHub Actions run and the named `Rules, build and mock browser` job to complete
 successfully, and address actionable review findings. Pending, missing or failed

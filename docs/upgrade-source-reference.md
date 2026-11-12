@@ -53,7 +53,7 @@ creator, while its cached default-offer tier fails the lower-tier lookup.
 `_‑aG` removes unavailable viewers and shifts the others by90.5px per missing side;
 the final recenter runs only once its loading counter reaches zero. A missing exact
 default can leave that original loading phase pending. The offline panel still presents
-its resolved list immediately. This batch does not replace the
-existing approximate upgrade artwork, preview fitting, bitmap blur, loading/fade or
-selection/exit timelines. General scene-construction/random-stream interleaving,
+its resolved list immediately. [The presentation follow-up](upgrade-presentation-reference.md)
+replaces approximate card artwork, fields and preview fitting. Bitmap capture/blur,
+loading/fade and selection/exit timelines remain unfinished. General scene-construction/random-stream interleaving,
 original/Adobe comparison and an ordinary-input full boss/win run remain unfinished.

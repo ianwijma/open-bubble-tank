@@ -73,6 +73,7 @@ for (const native of [false, true])
       .click();
     const menu = page.getByRole('dialog', { name: 'Upgrade your tank', exact: true });
     await expect(menu.locator('.upgrade-pick')).toHaveCount(2);
+    await expect(menu.locator('canvas[data-upgrade-ready="true"]')).toHaveCount(2);
     expect(
       await menu
         .locator('.upgrade-pick')
@@ -84,7 +85,9 @@ for (const native of [false, true])
     await menu.screenshot({
       path: `test-results/${native ? 'swf' : 'mock'}-saved-upgrade-defaults.png`,
     });
-    await menu.getByRole('button', { name: 'Choose Latest saved avatar', exact: true }).click();
+    await menu
+      .getByRole('button', { name: 'Choose Latest saved avatar', exact: true })
+      .click({ position: { x: 88, y: 190 } });
     await expect(page.getByLabel('Tank health')).toContainText(
       'Latest saved avatar: 27 of 2000 health',
     );
@@ -93,7 +96,7 @@ for (const native of [false, true])
       .getByRole('dialog', { name: 'Edit your tank?', exact: true })
       .getByRole('button', { name: 'YES', exact: true })
       .click();
-    await menu.getByRole('button', { name: 'Edit Your Current Tank', exact: true }).click();
+    await menu.getByRole('button', { name: 'Edit Latest saved avatar', exact: true }).click();
     await saveCreator(page, { name: 'Saved during this run' });
     await expect(page.getByLabel('Tank health')).toContainText('Saved during this run');
     await edit.click();

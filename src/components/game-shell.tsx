@@ -387,6 +387,7 @@ export default function GameShell() {
                 {screen === 'game' && world.mode === 'upgrade' ? (
                   <UpgradePanel
                     pack={pack}
+                    stage={stage}
                     offers={world.offers}
                     current={world.player.design}
                     onSelect={(tank) => {
@@ -422,6 +423,7 @@ export default function GameShell() {
                 {screen === 'game' && overlay === 'edit-choice' ? (
                   <UpgradePanel
                     pack={pack}
+                    stage={stage}
                     offers={world.offers}
                     current={world.player.design}
                     onSelect={(tank) => {

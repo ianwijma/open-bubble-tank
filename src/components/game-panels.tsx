@@ -1,10 +1,7 @@
 'use client';
 import { useState } from 'react';
 import type { AssetPack } from '@/game/assets/asset-pack';
-import type { TankDesign } from '@/game/core/types';
-import { partById } from '@/game/data/catalog';
-import { BubbleText, Dialog } from './ui';
-import { TankPreview } from './tank-preview';
+import { Dialog } from './ui';
 import { HUD } from '@/game/core/hud';
 
 export function SecondaryHelpPanel({ pack, onClose }: { pack: AssetPack; onClose: () => void }) {
@@ -154,89 +151,5 @@ export function EditConfirmPanel({
   );
 }
 
-export function weaponSummary(tank: TankDesign, category: number) {
-  const counts = new Map<number, number>();
-  for (const p of tank.parts) {
-    if (Math.floor(p.type / 1000) === category) counts.set(p.type, (counts.get(p.type) ?? 0) + 1);
-  }
-  return (
-    [...counts].map(([id, count]) => `${count} ${partById(id)?.name ?? id}`).join(', ') || 'N/A'
-  );
-}
-
-export function UpgradePanel({
-  pack,
-  offers,
-  current,
-  onSelect,
-  onEdit,
-}: {
-  pack: AssetPack;
-  offers: TankDesign[];
-  current: TankDesign;
-  onSelect: (tank: TankDesign) => void;
-  onEdit: (tank: TankDesign) => void;
-}) {
-  return (
-    <Dialog title="Upgrade your tank" className="stage-dialog upgrade-screen">
-      <div className="upgrade-title">
-        <BubbleText pack={pack} size={35}>
-          Upgrade your tank
-        </BubbleText>
-      </div>
-      <div className="upgrade-subtitle">
-        <BubbleText pack={pack} font="Accidental Presidency" size={18}>
-          Choose or modify a premade tank:
-        </BubbleText>
-      </div>
-      <div className="upgrade-cards">
-        {offers.map((tank) => (
-          <article className="upgrade-card" key={tank.id}>
-            <div className="upgrade-preview">
-              <button
-                className="upgrade-pick"
-                aria-label={`Choose ${tank.name}`}
-                onClick={() => onSelect(tank)}
-              >
-                <span className="upgrade-name">{tank.name}</span>
-                <span className="upgrade-class">Class: {tank.classId}</span>
-                <small className="upgrade-author">by {tank.author}</small>
-                <TankPreview tank={tank} pack={pack} size={100} />
-              </button>
-              <button
-                className="upgrade-edit"
-                aria-label={`Edit ${tank.name}`}
-                onClick={() => onEdit(tank)}
-              >
-                Edit
-              </button>
-            </div>
-            <div className="upgrade-weapon-list">
-              {(
-                [
-                  ['Primary', 2],
-                  ['Secondary', 3],
-                  ['Passive', 5],
-                ] as const
-              ).map(([label, category]) => (
-                <p key={label}>
-                  {label}: {weaponSummary(tank, category)}
-                </p>
-              ))}
-            </div>
-          </article>
-        ))}
-      </div>
-      <div className="upgrade-alternatives">
-        <BubbleText pack={pack} font="Accidental Presidency" size={18}>
-          or choose from the following...
-        </BubbleText>
-        <button onClick={() => onEdit(current)}>
-          <BubbleText pack={pack} font="Accidental Presidency" size={17}>
-            Edit Your Current Tank
-          </BubbleText>
-        </button>
-      </div>
-    </Dialog>
-  );
-}
+export { UpgradePanel } from './upgrade-panel';
+export { upgradeWeaponSummary as weaponSummary } from '@/game/core/upgrade-screen';
