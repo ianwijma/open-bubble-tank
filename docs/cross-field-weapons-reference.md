@@ -82,6 +82,22 @@ not ordinary-input or original-runtime evidence. Supplied-art history and win pa
 were inspected. All owned servers stopped. Local evidence remains uncommitted under
 `test-results/spawner-setup-validation/` and the deployment-controls capture directory.
 
+## Shield Turrets: bounded audit, no simulation correction
+
+[The4032 caller/source audit](shield-turret-source-audit.md) proves a valid
+creator/save/optional-local-roster route, distinct from builtin encounters. The
+normal source profile unlocks the enemy-weapon catalog; `intCode3` is only the
+creator indicator frame.
+
+The requested cached unfinished-target retention assumption conflicts with
+`_-0D._-G0`: matching pcode resets every primary `movTarget` to the avatar on
+reattachment, including4032. The retained `_‑BC` list and its frame4 shield check
+are separate from that overwritten target. Also SpawnNewBullet returns its input
+object even when the crossing gate declines attachment; it does not return null.
+The new unparented reference is cleared by the next relevant poll. The audit
+records both bytecode paths and leaves production unchanged rather than asserting
+source-incompatible regression expectations. Current-wrapper removal stays scoped.
+
 ## Verification limits
 
 Unit regressions preserve the actual old beam/patient, translate emitter positions
