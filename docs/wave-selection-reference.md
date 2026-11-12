@@ -55,7 +55,21 @@ audit rather than inventing an empty valid field from the source return value.
 All three new regressions fail against the preceding sampling implementation.
 Formatting, TypeScript and912 unit tests/8,401 assertions pass after the lifecycle
 fixture correction. A bounded pre-correction run confirms that a constant-draw
-fixture hangs in repeat rejection; no production retry cap was added. Affected
-browser and accelerated progression validation remain pending at this local draft.
+fixture hangs in repeat rejection; no production retry cap was added.
+
+Production build `mUCWF5vrdmqGB4Mr0Uz0S` at
+`938bb7426a6d22bfba584c30de207f695d957ec7` passes this literal command:
+
+```sh
+BT3_SWF_FILE=/home/ian/Projects/ianwijma/documented-bubble-tank-3/re/bt3/uncompressed.swf bun run test:e2e --config test-results/wave-selection-validation/playwright.config.ts actor-behaviors.spec.ts crossing.spec.ts screen-effects.spec.ts playthrough.spec.ts
+```
+
+All ten mock/supplied-art cases pass, with zero skips, flaky cases or page errors.
+Private spec copies retain every assertion and change only the fixture URL. All
+server/baseURL settings point to owned3165/3166; both servers stopped afterward.
+The accelerated seeded pilots reach boss defeat and Continue in70,287 mock/72,573
+supplied-art frames. They use the existing upgrade adapter and do not establish
+ordinary progression or original execution. Local evidence is ignored under
+`test-results/wave-selection-validation/` and `reference-captures/wave-selection-audit/`.
 Original/Adobe comparison, the complete random stream and full-game parity remain
-unproved.
+unproved. This next-batch draft remains local and unpublished.
