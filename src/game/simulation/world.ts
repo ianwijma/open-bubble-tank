@@ -122,6 +122,7 @@ export class World {
   mapPosition = { col: 0, row: 0 };
   private previousMapPosition = { col: 0, row: 0 };
   private runtimes = new WeakMap<Field, FieldRuntime>();
+  private projectileParents = new WeakMap<Projectile, FieldRuntime>();
   get currentWrapper(): Field {
     return this.currentField;
   }
@@ -146,7 +147,19 @@ export class World {
     return this.runtime.bullets;
   }
   set bullets(value: Projectile[]) {
-    this.runtime.bullets = value;
+    this.replaceBullets(this.runtime, value);
+  }
+  private replaceBullets(runtime: FieldRuntime, bullets: Projectile[]) {
+    const retained = new Set(bullets);
+    for (const bullet of runtime.bullets)
+      if (!retained.has(bullet) && this.projectileParents.get(bullet) === runtime)
+        this.projectileParents.delete(bullet);
+    runtime.bullets = bullets;
+    for (const bullet of bullets) this.projectileParents.set(bullet, runtime);
+  }
+  /** A detached wrapper's bullet layer still parents its surviving children. */
+  hasBulletParent(bullet: Projectile) {
+    return this.projectileParents.has(bullet);
   }
   get pickups() {
     return this.runtime.pickups;
@@ -236,6 +249,7 @@ export class World {
     initializeHomingProjectile(this, bullet, home, target);
     if (bullet.kind === 'infect' && bullet.targetId === null) expireInfectionTarget(this, bullet);
     this.bullets.push(bullet);
+    this.projectileParents.set(bullet, this.runtime);
     if (bullet.enemy) this.stats.enemyShots++;
     else {
       this.stats.shots++;
@@ -246,11 +260,32 @@ export class World {
     }
     return true;
   }
-  removeBullet(bullet: Projectile) {
-    const index = this.bullets.indexOf(bullet);
-    if (index < 0) return;
+  removeBullet(bullet: Projectile, field = this.field) {
+    const runtime = this.runtimeFor(field);
+    const index = runtime.bullets.indexOf(bullet);
+    if (index < 0) return false;
     forgetLayerMine(this, bullet);
-    this.bullets.splice(index, 1);
+    runtime.bullets.splice(index, 1);
+    if (this.projectileParents.get(bullet) === runtime) this.projectileParents.delete(bullet);
+    return true;
+  }
+  /** currentBFTarget.SpawnNewEnemy has no crossing birth gate. */
+  spawnEnemy(design: TankDesign, point: Vec) {
+    const field = this.currentWrapper;
+    const enemy = createTank(
+      this.nextId(),
+      design,
+      'enemy',
+      point.x,
+      point.y,
+      undefined,
+      undefined,
+      this,
+    );
+    this.actorParents.attach(enemy, field);
+    this.callbackFields.set(enemy, field);
+    field.enemies.push(enemy);
+    return enemy;
   }
   fieldVisit = new FieldVisit(true);
   fields = new Map<string, Field>();
@@ -552,7 +587,10 @@ export class World {
       for (const bullet of runtime.bullets)
         if (bullet.owner === this.player.uid && bullet.anchor?.part.type === 2017)
           bullet.dead = true;
-      runtime.bullets = runtime.bullets.filter((bullet) => !bullet.dead);
+      this.replaceBullets(
+        runtime,
+        runtime.bullets.filter((bullet) => !bullet.dead),
+      );
     }
   }
   startRocketTimer(owner: Tank, gun: GunState) {
@@ -1230,7 +1268,7 @@ export class World {
       if (this.fieldVisit.completed) {
         const outgoing = this.runtimeFor(this.currentField);
         for (const bullet of outgoing.bullets) bullet.dead = true;
-        outgoing.bullets = [];
+        this.replaceBullets(outgoing, []);
         outgoing.pickups = [];
         outgoing.enemyRemovals = [];
         outgoing.allyRemovals = [];

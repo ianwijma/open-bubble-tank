@@ -96,6 +96,8 @@ export interface GunState {
   targeting?: BehaviorTargetState;
   wallFlower?: WallFlowerState;
   beamId?: number;
+  /** EBehaviorHealer retains beam_mc directly, independently of a wrapper's array. */
+  beamRef?: Projectile;
   shieldDiameter?: number;
   shieldFilm?: ShieldClip;
   shieldGeneration?: number;
