@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { waitForMainMenu } from './helpers/main-menu';
-import { readCreatorDesign, dropPreview } from './helpers/creator';
+import { readCreatorDesign, readDisplayedCreatorDesign, dropPreview } from './helpers/creator';
 const swf =
   process.env.BT3_SWF_FILE ?? resolve('../documented-bubble-tank-3/re/bt3/uncompressed.swf');
 for (const native of [false, true])
@@ -109,7 +109,10 @@ for (const native of [false, true])
     await page.mouse.move(r.x - 19 * factor, r.y + 2.25 * factor);
     await page.mouse.down();
     await page.mouse.move(r.x + 57 * factor, r.y + 2.25 * factor, { steps: 8 });
-    expect((await snapshot()).parts.some((part) => part.scale === 2)).toBe(true);
+    expect((await readDisplayedCreatorDesign(page)).parts.some((part) => part.scale === 2)).toBe(
+      true,
+    );
+    expect((await snapshot()).parts).toEqual(beforeResize.parts);
     expect(await readClass()).toBe(beforeClass); // _-CI changes art; _-1N updates class on release.
     expect(await creator.locator('.creator-meters > div').nth(2).innerText()).toBe(beforeBudget);
     await page.mouse.up();

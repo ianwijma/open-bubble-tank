@@ -1,5 +1,5 @@
 import type { TankPart, Vec } from '../core/types';
-import { displayPixel } from '../core/display-values';
+import { displayPixel, displayRotation } from '../core/display-values';
 import { type PartSelection, removeParts, unlinkSelection } from './editor-selection';
 
 /** Transient state corresponding to TankCreatorScreen.StartDrag/_-5M. */
@@ -110,7 +110,7 @@ export function advanceSelectionDrag(before: SelectionDrag, cursor: Vec): Select
       do {
         twinKey = `${key}-twin-${nextTwin++}`;
       } while (parts.some((p) => p.key === twinKey));
-      const rotation = ((((-p.rotation + 180) % 360) + 360) % 360) - 180;
+      const rotation = displayRotation(360 - p.rotation);
       const twin = { ...p, key: twinKey, twin: key, y: -p.y, rotation };
       parts = [...parts.slice(0, index), { ...p, twin: twinKey }, twin, ...parts.slice(index + 1)];
       selection = { keys: [...selection.keys, twinKey], ghosts: [...selection.ghosts, twinKey] };

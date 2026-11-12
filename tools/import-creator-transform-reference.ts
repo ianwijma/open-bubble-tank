@@ -51,6 +51,8 @@ const parts = (values: TankPart[]) =>
   }));
 const cases = [],
   provenance = [];
+const seenDprs = new Set<number>();
+let toolSha256: string | undefined;
 for (const directory of directories) {
   const bytes = await readFile(resolve(directory, 'manifest.json'));
   const m: Manifest = JSON.parse(bytes.toString('utf8'));
@@ -63,12 +65,27 @@ for (const directory of directories) {
     throw new Error(
       `${directory}: expected unchanged original transform capture without page errors.`,
     );
+  if (seenDprs.has(m.observedDpr) || (toolSha256 && toolSha256 !== m.captureToolSha256))
+    throw new Error(`${directory}: expected a fresh DPR and the same capture tool.`);
+  seenDprs.add(m.observedDpr);
+  toolSha256 = m.captureToolSha256;
   if (
     m.dragEvidence.length !== 9 ||
     m.dragEvidence[0].name !== 'transform-placed-pair' ||
     names.some((name, i) => m.dragEvidence[i + 1].name !== name)
   )
     throw new Error(`${directory}: unexpected export sequence.`);
+  if (
+    m.dragEvidence.some((row) =>
+      row.parts.some((p) =>
+        [p.x, p.y, p.rotation, p.scale, p.radius].some((value) => !Number.isFinite(value)),
+      ),
+    ) ||
+    m.pointerEvents.some(
+      (event) => !Number.isFinite(event.offsetX) || !Number.isFinite(event.offsetY),
+    )
+  )
+    throw new Error(`${directory}: incomplete numerical pointer/part data.`);
   const gestures: { down: Pointer; moves: Pointer[] }[] = [];
   let gesture: (typeof gestures)[number] | undefined;
   for (const event of m.pointerEvents) {

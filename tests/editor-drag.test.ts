@@ -60,6 +60,19 @@ test('a center part keeps the first-move grab offset and spawns one reciprocal m
   expect(drag.parts.map((p) => p.y)).toEqual([3, -3, 50]);
   expect(drag.parts.filter((p) => p.twin === 'p')).toHaveLength(1);
 });
+test('a respawned half-turn twin keeps the source positive180 rotation getter', () => {
+  for (const rotation of [180, -180]) {
+    let drag = beginSelectionDrag(
+      [{ ...part('p', 0), rotation }],
+      { keys: ['p'], ghosts: [] },
+      { x: 10, y: 0 },
+      true,
+    );
+    drag = advanceSelectionDrag(drag, { x: 10, y: 0 });
+    drag = advanceSelectionDrag(drag, { x: 10, y: 5 });
+    expect(drag.parts.map((p) => p.rotation)).toEqual([rotation, 180]);
+  }
+});
 test('axis merging requires both twins selected and asymmetric dragging never duplicates', () => {
   let drag = beginSelectionDrag(
     pair.map((p) => ({ ...p, y: 0 })),
