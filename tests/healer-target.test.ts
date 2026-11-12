@@ -7,6 +7,7 @@ import { acquireHealerTarget, HealerTargetReadError } from '../src/game/simulati
 import { healerPatient, tickHealer, tickHealingBeam } from '../src/game/simulation/healing';
 import { World, emptyInput } from '../src/game/simulation/world';
 import { StageRuntime } from '../src/game/services/stage-runtime';
+import { cacheEmptyField } from './fixtures/empty-field';
 function actor(
   uid: number,
   side: 'ally' | 'enemy' | 'player' = 'ally',
@@ -292,6 +293,7 @@ test('factory runs Healer Setup acquisition before its first active frame', () =
 
 test('incoming Healer Setup and active reselection use the current wrapper and project the held patient', () => {
   const { world, owner, patient } = live();
+  cacheEmptyField(world);
   world.player.x = 425;
   world.jump({ x: 1, y: 0 });
   world.transit!.offset = { x: 800, y: 0 };

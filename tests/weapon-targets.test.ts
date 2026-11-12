@@ -5,6 +5,7 @@ import { tickGuns } from '../src/game/simulation/weapons';
 import { weaponAimPoint } from '../src/game/simulation/weapon-targets';
 import { STARTER } from '../src/game/data/catalog';
 import { WEAPONS } from '../src/game/data/weapons';
+import { cacheEmptyField } from './fixtures/empty-field';
 
 const design = (ids: number[]) => ({
   ...STARTER,
@@ -19,6 +20,7 @@ const design = (ids: number[]) => ({
 });
 function scenario(ids = [4001]) {
   const world = new World([], [], 3);
+  cacheEmptyField(world);
   world.player.x = 100;
   const ally = createTank(world.nextId(), design([]), 'ally', 0, 100);
   world.allies = [ally];

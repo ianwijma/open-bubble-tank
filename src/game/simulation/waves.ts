@@ -58,22 +58,47 @@ export function rollWave(
   localTanks: readonly TankDesign[] = [],
   roster?: UnitRoster,
 ): { scale: number; designs: TankDesign[] } {
-  const options = availableWaves(distance, localTanks.length > 0);
-  const option = rng.weighted(options);
+  // WaveOption.AddInstruction draws NUM while constructing every available option.
+  const options = availableWaves(distance, localTanks.length > 0).map((option) => ({
+    ...option,
+    instructions: option.instructions.map((instruction) => ({
+      key: instruction.key,
+      count: rng.int(instruction.min, instruction.max),
+    })),
+  }));
+  const ticket = rng.int(
+    0,
+    options.reduce((sum, option) => sum + option.chance, 0),
+  );
+  let option = options[options.length - 1],
+    minimum = 0;
+  for (const candidate of options) {
+    const maximum = minimum + candidate.chance;
+    if (ticket >= minimum && ticket < maximum) {
+      option = candidate;
+      break;
+    }
+    minimum = maximum;
+  }
   const designs: TankDesign[] = [];
-  let last = '';
+  let previousKey = '',
+    previousIndex = -1;
   for (const instruction of option.instructions) {
     const rule = rules[instruction.key as keyof typeof rules];
     const pool =
       roster?.units.get(instruction.key) ??
       (roster ? [] : [...ENEMIES, ...localTanks].filter((t) => !t.avatar && matchesRule(t, rule)));
-    // A missing archetype aborts the original wave. Keep already resolved entries.
+    // The offline adapter retains a resolved prefix; source missing-key failure is separate.
     if (!pool.length) break;
-    const alternatives = pool.filter((t) => t.id !== last);
-    const design = rng.pick(alternatives.length ? alternatives : pool);
-    last = design.id;
-    const count = rng.int(instruction.min, instruction.max);
-    for (let i = 0; i < count; i++) designs.push(design);
+    if (instruction.key !== previousKey) previousIndex = -1;
+    let index = 0;
+    if (pool.length > 1)
+      do {
+        index = rng.int(0, pool.length - 1);
+      } while (index === previousIndex);
+    previousKey = instruction.key;
+    previousIndex = index;
+    for (let i = 0; i < instruction.count; i++) designs.push(pool[index]);
   }
   return { scale: option.scale, designs };
 }

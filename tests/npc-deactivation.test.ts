@@ -5,6 +5,7 @@ import allies from '../src/game/data/allies.json';
 import { createTank } from '../src/game/simulation/tank';
 import { applyProjectileStatus } from '../src/game/simulation/status';
 import { World, emptyInput } from '../src/game/simulation/world';
+import { cacheEmptyField } from './fixtures/empty-field';
 
 // Source _-Zx.Damage/IsOutside/Deactivate and _-6g.FinalPartCall.
 // Infection and custom allied pods are explicit state/API fixtures, not public-playthrough proof.
@@ -218,6 +219,7 @@ test('enemy boundary uses lethal Damage and increments Sumo before the same deat
 
 test('transit rejects births after evaluating all final-callback arguments and still completes teardown', () => {
   const { world, victim } = setup('enemy', false, 2);
+  cacheEmptyField(world);
   applyProjectileStatus(world, victim, 'infect');
   victim.design = { ...victim.design, reward: 0 };
   world.jump({ x: 1, y: 0 });
