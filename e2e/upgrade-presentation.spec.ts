@@ -3,6 +3,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { waitForMainMenu } from './helpers/main-menu';
 import { visitAdjacentFieldAndReturn } from './helpers/field-travel';
+import { exitCreator } from './helpers/creator';
 import { DEFAULT_SETTINGS } from '../src/game/core/constants';
 import type { TankDesign } from '../src/game/core/types';
 const avatars: TankDesign[] = JSON.parse(
@@ -110,6 +111,49 @@ for (const native of [false, true])
     expect(before.count).toBeGreaterThan(500);
     await expect.poll(async () => (await ink()).hash, { timeout: 5000 }).not.toBe(before.hash);
     await menu.screenshot({ path: `test-results/${native ? 'swf' : 'mock'}-authored-upgrade.png` });
+    const bitmap = page.locator('.upgrade-bitmap');
+    await expect(bitmap).toHaveAttribute('data-capture-count', '1');
+    await expect(bitmap).toHaveAttribute('data-saved-frames', '19');
+    await expect(menu.locator('.upgrade-foreground')).toHaveAttribute('data-upgrade-alpha', '1');
+    // The owning menu and its saved bitmap survive creator and nested viewer visits.
+    await bitmap.evaluate((node) => {
+      (node as HTMLElement).dataset.retainedMenu = 'same-menu';
+    });
+    await menu.getByRole('button', { name: 'Edit Nimble', exact: true }).click();
+    await expect(bitmap).toHaveAttribute('data-upgrade-child', 'creator');
+    await page.getByRole('button', { name: 'Load a Tank...', exact: true }).click();
+    await expect(bitmap).toHaveAttribute('data-upgrade-child', 'viewer');
+    await page.getByRole('button', { name: 'Return to Tank Creator', exact: true }).click();
+    await expect(bitmap).toHaveAttribute('data-upgrade-child', 'creator');
+    await expect(bitmap).toHaveAttribute('data-retained-menu', 'same-menu');
+    await expect(bitmap).toHaveAttribute('data-upgrade-counter', '39');
+    await expect(bitmap).toHaveAttribute('data-capture-count', '1');
+    await exitCreator(page); // Existing progression slot: direct Destroy, no card reversal.
+    await expect(bitmap).toHaveCount(0);
+    await expect(menu).toHaveCount(0);
+    await page.getByRole('button', { name: 'Edit your tank', exact: true }).click();
+    await page
+      .getByRole('dialog', { name: 'Edit your tank?', exact: true })
+      .getByRole('button', { name: 'YES', exact: true })
+      .click();
+    await expect(bitmap).toHaveAttribute('data-upgrade-counter', '39');
+    await menu
+      .getByRole('button', { name: 'Choose Nimble', exact: true })
+      .click({ position: { x: 88, y: 190 } });
+    // Avatar replacement is immediate; card listeners stop while presentation remains.
+    await expect(page.getByLabel('Tank health')).toContainText('Nimble');
+    await expect(menu).toBeVisible();
+    await expect(menu.getByRole('button', { name: 'Choose Nimble', exact: true })).toBeDisabled();
+    await page.mouse.move(0, 0);
+    await expect(cards.first()).toHaveAttribute('data-upgrade-card-frame', '2');
+    await expect
+      .poll(async () =>
+        Number(await menu.locator('.upgrade-foreground').getAttribute('data-upgrade-alpha')),
+      )
+      .toBeLessThan(1);
+    await expect(bitmap).toHaveAttribute('data-capture-count', '1');
+    await expect(menu).toHaveCount(0);
+    await expect(bitmap).toHaveCount(0);
     expect(errors).toEqual([]);
     await expect(menu.getByRole('alert')).toHaveCount(0);
   });

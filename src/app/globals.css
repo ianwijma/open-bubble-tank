@@ -1183,6 +1183,21 @@ kbd {
 }
 .modal-scrim:has(.upgrade-screen) {
   background: transparent;
+  backdrop-filter: none;
+}
+.modal-scrim:has(.edit-confirm-screen) {
+  backdrop-filter: none;
+}
+.upgrade-bitmap {
+  position: absolute;
+  inset: 0;
+  width: 550px;
+  height: 450px;
+  pointer-events: none;
+  z-index: 9;
+}
+.stage-space:has(.upgrade-bitmap) .creator.over-game {
+  backdrop-filter: none;
 }
 .upgrade-screen {
   margin: 0;
@@ -1222,6 +1237,11 @@ kbd {
 }
 .upgrade-edit {
   z-index: 3;
+}
+.upgrade-pick:disabled,
+.upgrade-edit:disabled,
+.upgrade-current-button:disabled {
+  opacity: 1;
 }
 .upgrade-tank-art {
   position: absolute;

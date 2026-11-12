@@ -18,6 +18,14 @@ Next.js supplies the application shell, TypeScript build, and static delivery. T
 
 `MainMenuMotion` belongs to each menu instance and advances on the shared `StageRuntime`. `MainMenuView` retains the supplied-SWF title and control clip trees through Settings/Credits visits; A stage-wide `MenuPointer` queries native retained geometry or procedural contours; DOM buttons retain keyboard access over the canvas. Per-frame rendering uses refs and stage subscriptions, while `GameShell` owns screen changes and the guarded overlay. A new menu instance resets its intro; closing a child pane preserves its title timeline.
 
+The browser-owned `UpgradeMenu` service retains its pure motion model and captured
+bitmap history across creator/viewer children. `World.onUpgradeMenuOpen` reports the
+interface-phase opening without storing browser objects. Card selection calls
+`placeUpgrade` synchronously, then presentation completion calls `finishUpgrade`;
+direct creator returns use the progression-slot rule. Components observe the shared
+service for paint and input state. Read [upgrade timing](upgrade-timing-reference.md)
+for the current capture/stage scheduling boundary and remaining limits.
+
 `TankCreator.onLoad` passes its avatar/enemy mode and current limits to the local `TankViewer` screen. `GameShell` retains the editor return context and paused game viewport through that visit; the viewer's artwork and fades use the same stage clock. Selection constructs a fresh editor from the chosen design. Back reconstructs the current avatar or a new empty enemy, matching the recovered source routes. Viewer save/delete callbacks update the versioned local profile, and only completing the final guide page persists `tankViewerHelpSeen`. The viewer handles unavailable community search through the isolated service adapter.
 
 The fixed stage wrappers clip overflow without becoming browser scroll containers, preserving the shared550×450 origin even when retained artwork extends beyond it. A primary creator workspace press closes Enemy Info while retaining its manual values. Dialog buttons remain text-only state layers: the native raster API has no static artwork to cache for their up/over/down records.

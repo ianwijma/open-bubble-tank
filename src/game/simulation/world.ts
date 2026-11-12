@@ -345,6 +345,7 @@ export class World {
   onCameraMove: (x: number, y: number) => void = () => {};
   secondaryHelpSeen = false;
   onSecondaryHelp: () => void = () => {};
+  onUpgradeMenuOpen: () => void = () => {};
   constructor(
     public localTanks: TankDesign[] = [],
     history: TankDesign[] = [],
@@ -977,6 +978,7 @@ export class World {
       else {
         this.offers = this.getOffers();
         this.flow.openUpgrade();
+        this.onUpgradeMenuOpen();
         this.revision++;
       }
     }
@@ -996,13 +998,24 @@ export class World {
     }
     return offers;
   }
+  /** Headless choice adapter; the browser separates placement from presentation completion. */
   selectUpgrade(design: TankDesign) {
-    if (this.mode !== 'upgrade') return;
+    if (!this.placeUpgrade(design)) return;
+    this.finishUpgrade();
+  }
+  /** ViewerUp places the avatar before starting its retained presentation reversal. */
+  placeUpgrade(design: TankDesign) {
+    if (this.mode !== 'upgrade') return false;
     this.progression.history[this.progression.level] = design;
     this.rebuildPlayer(design);
+    this.onProgression([...this.progression.history]);
+    this.revision++;
+    return true;
+  }
+  /** Destroy restores the shared saved mode only after presentation completes. */
+  finishUpgrade() {
     this.flow.closeUpgrade();
     this.offers = [];
-    this.onProgression([...this.progression.history]);
     this.revision++;
   }
   editPlayer(design: TankDesign) {

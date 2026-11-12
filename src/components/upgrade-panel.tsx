@@ -1,5 +1,6 @@
 'use client';
-import { useId, useRef, useState, type ReactNode } from 'react';
+import { useId, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
+import type { UpgradeMenu } from '@/game/services/upgrade-menu';
 import type { AssetPack, SwfMatrix } from '@/game/assets/asset-pack';
 import type { StageRuntime } from '@/game/services/stage-runtime';
 import type { TankDesign } from '@/game/core/types';
@@ -43,6 +44,7 @@ function Art({ pack, symbol, frame = 1 }: { pack: AssetPack; symbol: number; fra
 export function UpgradePanel({
   pack,
   stage,
+  menu,
   offers,
   current,
   onSelect,
@@ -50,6 +52,7 @@ export function UpgradePanel({
 }: {
   pack: AssetPack;
   stage: StageRuntime;
+  menu: UpgradeMenu;
   offers: TankDesign[];
   current: TankDesign;
   onSelect: (tank: TankDesign) => void;
@@ -59,6 +62,24 @@ export function UpgradePanel({
     [editHovered, setEditHovered] = useState(-1),
     [buildHovered, setBuildHovered] = useState(false);
   const canvases = useRef(new Map<number, HTMLCanvasElement>());
+  const foreground = useRef<HTMLDivElement>(null);
+  useLayoutEffect(
+    () =>
+      menu.observe(() => {
+        const layer = foreground.current;
+        if (!layer) return;
+        layer.style.opacity = String(menu.motion.foregroundAlpha);
+        layer.dataset.upgradeAlpha = String(menu.motion.foregroundAlpha);
+        layer.dataset.upgradeCounter = String(menu.motion.counter);
+        for (const button of layer.querySelectorAll<HTMLButtonElement>(
+          '.upgrade-pick,.upgrade-edit',
+        ))
+          button.disabled = !menu.motion.cardInputEnabled;
+        const build = layer.querySelector<HTMLButtonElement>('.upgrade-current-button');
+        if (build) build.disabled = !menu.motion.bottomInputEnabled;
+      }),
+    [menu],
+  );
   const error = useUpgradeArtwork(pack, stage, offers, canvases.current);
   const clipId = `upgrade-${useId().replaceAll(':', '')}`,
     card = UPGRADE_SCREEN.viewers.cards[0],
@@ -88,14 +109,17 @@ export function UpgradePanel({
           </clipPath>
         </defs>
       </svg>
-      <div className="upgrade-foreground">
+      <div ref={foreground} className="upgrade-foreground">
         {UPGRADE_SCREEN.foreground.map((piece) => (
           <Group key={piece.name} matrix={piece.matrix}>
             {piece.name === 'buildTank_mc' ? (
               <button
                 className="upgrade-current-button"
                 aria-label="Edit Your Current Tank"
-                onClick={() => onEdit(current)}
+                disabled={!menu.motion.bottomInputEnabled}
+                onClick={() => {
+                  if (menu.motion.bottomInputEnabled) onEdit(current);
+                }}
                 style={{
                   left: piece.bounds.x,
                   top: piece.bounds.y,
@@ -124,19 +148,26 @@ export function UpgradePanel({
             <Group key={`${index}:${tank.id}`} matrix={upgradeCardMatrix(index, offers.length)}>
               <article
                 className="upgrade-card"
+                data-upgrade-card-frame={hovered === index ? 2 : 1}
                 style={{
                   left: bounds.x,
                   top: bounds.y,
                   width: bounds.width,
                   height: bounds.height,
                 }}
-                onPointerEnter={() => setHovered(index)}
+                onPointerEnter={() => {
+                  if (menu.motion.cardInputEnabled) setHovered(index);
+                }}
                 onPointerLeave={() => {
+                  if (!menu.motion.cardInputEnabled) return;
                   setHovered(-1);
                   setEditHovered(-1);
                 }}
-                onFocusCapture={() => setHovered(index)}
+                onFocusCapture={() => {
+                  if (menu.motion.cardInputEnabled) setHovered(index);
+                }}
                 onBlurCapture={(event) => {
+                  if (!menu.motion.cardInputEnabled) return;
                   if (!event.currentTarget.contains(event.relatedTarget as Node)) {
                     setHovered(-1);
                     setEditHovered(-1);
@@ -182,23 +213,37 @@ export function UpgradePanel({
                 <button
                   className="upgrade-pick"
                   aria-label={`Choose ${tank.name}`}
-                  onClick={() => onSelect(tank)}
+                  disabled={!menu.motion.cardInputEnabled}
+                  onClick={() => {
+                    if (menu.motion.cardInputEnabled) onSelect(tank);
+                  }}
                   style={{ clipPath: `url(#${clipId})` }}
                 />
                 <button
                   className="upgrade-edit"
                   aria-label={`Edit ${tank.name}`}
-                  onClick={() => onEdit(tank)}
+                  disabled={!menu.motion.cardInputEnabled}
+                  onClick={() => {
+                    if (menu.motion.cardInputEnabled) onEdit(tank);
+                  }}
                   style={{
                     left: edit.matrix.tx / 20 + edit.bounds.x - bounds.x,
                     top: edit.matrix.ty / 20 + edit.bounds.y - bounds.y,
                     width: edit.bounds.width,
                     height: edit.bounds.height,
                   }}
-                  onPointerEnter={() => setEditHovered(index)}
-                  onPointerLeave={() => setEditHovered(-1)}
-                  onFocus={() => setEditHovered(index)}
-                  onBlur={() => setEditHovered(-1)}
+                  onPointerEnter={() => {
+                    if (menu.motion.cardInputEnabled) setEditHovered(index);
+                  }}
+                  onPointerLeave={() => {
+                    if (menu.motion.cardInputEnabled) setEditHovered(-1);
+                  }}
+                  onFocus={() => {
+                    if (menu.motion.cardInputEnabled) setEditHovered(index);
+                  }}
+                  onBlur={() => {
+                    if (menu.motion.cardInputEnabled) setEditHovered(-1);
+                  }}
                 />
               </article>
             </Group>

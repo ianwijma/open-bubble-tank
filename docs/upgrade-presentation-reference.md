@@ -46,8 +46,8 @@ and advancing artwork. They do not demonstrate ordinary earned progression.
 The affected saved-library/edit flows also exercise weapon-panel selection and
 the separate offer Edit button in mock and supplied-file modes.
 
-The source foreground starts at alpha1. The current presentation does not yet
-reproduce its saved-bitmap capture/blur history, delayed bottom handlers, retained
-child clock, selection/exit ordering or unresolved-default loading phase. Native
+The source foreground starts at alpha1. [The timing follow-up](upgrade-timing-reference.md)
+adds the saved-bitmap history, delayed bottom handlers, retained child clock and
+selection/exit ordering. Exact initial capture/stage scheduling and unresolved-default loading remain open. Native
 screenshots were inspected, but whole-frame pixel equality, synchronized original
 animation/audio, Adobe equivalence and ordinary-input full boss/win remain open.
