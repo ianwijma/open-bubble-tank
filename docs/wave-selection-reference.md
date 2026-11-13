@@ -72,7 +72,7 @@ supplied-art frames. They use the existing upgrade adapter and do not establish
 ordinary progression or original execution. Local evidence is ignored under
 `test-results/wave-selection-validation/` and `reference-captures/wave-selection-audit/`.
 Original/Adobe comparison, the complete random stream and full-game parity remain
-unproved. This next-batch draft remains local and unpublished.
+unproved. This validation was completed locally before publication of the layer.
 
 ## Port onto the combined loading/ownership/win batch
 
@@ -97,7 +97,7 @@ stopped. The accelerated pilots retain70,287 mock/72,573 supplied-art frames.
 Native win, creator and ink-gallery paint were inspected. Logs, report and pilot
 proofs remain ignored under the existing evidence directories (`ported-*`). These
 are scoped recreation checks; ordinary earned boss/win and original/Adobe parity
-remain unproved. No PR, push or deployment was created for the local port.
+remain unproved. No PR, push or deployment was created during that local validation.
 
 ## Bounded availability/template bytecode audit
 
