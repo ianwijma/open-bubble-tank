@@ -86,3 +86,14 @@ Qualify its new retained avatar/parent expectations against source/runtime evide
 rather than weakening assertions to keep the old model. Complete field geometry,
 source constructor/RNG timing, ordinary earned boss/win and original/Adobe/pixel /
 audio/full-game parity remain open.
+
+## Independent original numeric handoff
+
+The later [distinct original numeric probe](world-layer-original-reference.md)
+executes119 original ShrinkBubblefield calls on actual clips, freezing90 binary
+snapshots with independent DOM/payload/runtime verification. It supplies the
+avatar, sibling/nested, Main/World and Point oracle for consumer work. Finish,
+next-construction and detach controls retain explicit glue scope. Detached
+Ruffle concatenatedMatrix disagrees with localToGlobal; those APIs must remain
+separate. This evidence does not change this document's original implementation
+verification or claim renderer consumption. The parent owns that migration.
