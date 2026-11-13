@@ -1744,3 +1744,32 @@ The [population projection](field-population-reference.md) now combines actual a
 ## Field shape-mask qualification remains open
 
 The [tagged-source investigation](field-query-mask-qualification.md) found a potential disagreement between the new draft's all-active-mask conjunction and Ruffle0.7.1's changing depth latch for overlaps/end-depth controls. The field's existing nonoverlapping finite controls do not distinguish those policies. Static text also has advanced-rendering bounds versus ordinary glyph-contact branches; raster alpha cannot establish that contract. Tagged source is not authenticated compiled-runtime or Adobe proof. The local traversal draft is stashed, not integrated; twelve passing synthetic/frozen-width cases do not waive the shape question. A distinct preserved-original qualification is the next step. PR154 and production queries remain unchanged.
+
+## Original generic effect construction clocks
+
+The distinct [effect-clock qualification](effect-clock-original-reference.md)
+executes actual constructors for all15 catalog roots in before/inside ENTER
+cohorts, original field Setup/AddEffectToQueue and engine registration/CreateEffect/
+Run. Two fresh original-browser captures independently reproduce21,636 binary
+pose rows /259,632 Numbers each, including retained historical descendants,
+delayed registration, completion while parented and continuing removed wraps.
+Original header/order/all3,022 tags/ABCs/bindings are preserved except CID0 plus
+one added glue ABC; deterministic reemission matches. Eighteen consistent-forgery
+and byte/runtime controls reject per capture. Prior probe families remain unchanged.
+
+Inside births retain frame1 through the following ENTER2/EXIT2; registration does
+not restart playback. Inside mine registers at final6 and completes on that same
+ENTER7 poll. Collapse's103-frame child remains stopped103 across root wraps while
+its14-frame descendant continues; root placements keep changing the stopped
+child's own matrix. Direct isPlaying reads are unavailable, and399 original null
+child lookups (397 ENTER/two callback) remain explicit rather than fabricated poses.
+REA events remain incomplete/equality-ineligible. The raw-SpriteInfo SwfClip
+candidate replay records59 frame and45 identity/correspondence differences;
+registration-owned generic age remains an explicitly tested, unrepaired gap.
+
+Formatting/typecheck and1,157 tests /17,736 assertions pass. This is local research
+only: no production/caller/renderer migration, original field queue draining or
+World.Run, ordinary reachability, global event/entropy, complete geometry,
+Adobe/pixel/audio or full-game parity claim. PR154 and its CI/watch remain
+parent-owned and unchanged; parent separately owns static metadata and integration.
+
