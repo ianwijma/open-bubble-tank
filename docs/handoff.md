@@ -1,26 +1,88 @@
 # Recreation continuation
 
+**Current closeout priority (2026-11-14):** the user chose the faithful classic
+release finish line in [classic-release.md](classic-release.md), with remaining
+rare differences documented. Modernization/rebranding is separate. They also
+instructed quick PR checks and the longer full suite on master after merging;
+[delivery](delivery.md) now records that policy and the explicit long-run budget.
+The stricter parity checklist remains evidence, not a claim that every open
+comparison must close before the selected classic release.
+
+PR165's cache head `899b29d` failed only the hosted advancing mock readiness
+deadline (run43524294793/job132226086587;151 other passes/4 skips). Its independent
+cache/review audit found no concrete regression or actionable feedback. The parent
+owns the CI split follow-up, fresh final-head gate/watch and one master merge.
+The new local quick production flow passes on build `5yHBRhSNE0V3bC6JMuW6y`;
+formatting/TypeScript and1,299 rules /81,252 assertions pass. The source game build
+`OeDq6Mv8QjISX6YXv_BZi` is held unchanged on4705 for the separate public-input
+acceptance worker. Do not rebuild or stop that held server until its owner finishes.
+No release or full normal-input boss completion is claimed yet.
+
+
 The objective in [goals.markdown](../goals.markdown) remains the full faithful offline Bubble Tanks3 recreation. It is incomplete. Read `AGENTS.md`, [architecture](architecture.md), [fidelity](fidelity.md) and [creator source/verification](creator-ui-reference.md) before continuing. Tests establish their specific contracts, not indistinguishability of the whole game.
 
 Use [delivery](delivery.md) for the current five-layer workflow: build dependents while CI runs, assemble every layer on the last PR, target that PR at master, and require its combined current-head Actions/review gate before one master merge. Earlier entries below describe historical checkpoints; held hashes, browser PIDs and pending layers are not evidence of current state. Verify the actual remote/process state before acting, and dismiss repeated notifications for already merged PRs.
 
 The [retained display batch](retained-display-batch-validation.md) landed through one PR154 merge897d2e741b8a1d23f563f8bb8a2e6bd684932b9b. Exact-head pull-request run43407815305 attempt1/job131826378222 succeeded on73cdc4ffe42e4ce8a7bfc03d72df5e7877f0de8f. Fresh full review/comment/thread reads found one informational CodeRabbit skip and zero reviews/inline findings. Fetched master has the identical tested treee67613371458570ad8cb339c1a5f42b4dd38573d; all five exact heads are ancestors and GitHub marks PRs150–154 merged. All watches for that batch are stopped. Legacy22d9def7 is unchanged. Do not act on delayed old notifications or recreate intermediate watches. The source-preserving pilot repair and its original failures retain their actual build identities in the batch record; this delivery does not complete the full recreation objective.
 
-The current fifth combined branch is `stack/effect-geometry-05`, containing the
-exact PR155–158 heads plus qualified native text binding, retained generic effects,
-the physical orbital-fixture repair and retained actor/mount clocks. Its827 tracked
-code/test files match actor delegate commitf5b5bbf exactly. That source passed62
-broad and6 final mock/SWF cases, including both accelerated wins. Parent combined
-validation passed70/71 with an advancing native pilot timing out at64,000 frames;
-that failure remains real, not green. The direct-loop performance candidate and
-per-stage MessageChannel experiment were rejected; neither belongs to final
-production/fixture source. Formatting and1,291 tests /75,956 assertions pass. Read
-[the batch validation record](effect-geometry-batch-validation.md) for preserved
-failures, the overwritten diagnostic trace limitation and the required fresh
-hosted named-job/review gate. Keep master897d2e7 and legacy22d9def fixed until that
-final combined gate succeeds, then merge once. The existing constructor/EXIT
-phase discrepancy, under-avatar paint and full-game/ordinary acceptance remain
-open. Do not resurrect old PR watches or open a sixth layer.
+The [effect/geometry batch](effect-geometry-batch-validation.md) landed through one
+PR 160 merge, `e01a7fe403b1fb1dc5c31ada8ce732206b3d5439`. Exact-head pull-request
+run 43449089556, attempt 1/job 131966365335, succeeded on
+`58bd67415b97ef5cc630f0471b78ad0ef234f0de`. Fetched master has the identical tested
+tree `e41154b62b78bffea9e5036f61b69b9f62f2b12e`; all five exact heads are ancestors
+and GitHub marks PRs 155–158/160 merged. All five watches are stopped; legacy
+`22d9def` is preserved. Do not restart their watches or act on delayed old-head
+notifications. Hosted rules passed 1,286 with 5 source-SWF cases skipped; the
+mock/synthetic browser selection passed 150 with 4 skips. Parent manual 70/71 and
+its advancing native timeout remain distinct from that green gate. The rejected
+performance experiments remain discarded. Full recreation is incomplete.
+
+Next work stays local above that checkpoint. Native under-avatar draft `5e5ce20`
+is integrated locally as `4a36616`, with a procedural mock branch, bounded renderer
+cache, optional-file guard and complete finite native sample coverage. The parent
+literal production browser gate passes18 mock/native cases, zero skips; rule
+checks pass1,291 tests /75,956 assertions. Complete cross-field ordering and
+fractional-opacity composition remain open. Actor-phase draft `8d31935` is picked locally as `cc6151b` above PR161. Both frozen
+constructor/ENTER/EXIT cohorts through550 and eight fail-before regressions are
+retained. Parent checks pass1,299 tests /81,252 assertions, with24/24 combined
+mock/native browser cases on build `H96NgJsILo0CzxuxWl2PP`. Its earlier broad run
+still retains the advancing native timeout. First-trigger constructor scheduling,
+lazy construction and historical Y/entropy replay remain unqualified. Keep these
+limits separate from the targeted green gate. The first current-build home capture rejected 8/8 scaled-ancestor frames. The
+separate capture follow-up now qualifies bounded positive 2D scale/translation
+(`fe22864`, evidence `ea733a3`) and accepts eight fresh home frames over 8.145s.
+All prior rejects remain unchanged. This endpoint geometry qualification still has
+`currentHomeOnly=true`, `overlapQualified=false`, `controllerAllowed=false`; it
+establishes no observer/live-controller readiness. Review/integrate that tooling
+as its own next-stack layer. Parent integration picks those commits as `1108f8c`
+and `d75fb85` above PR162; fresh30/30 controls,46 independently decoded PNGs,
+84 valid video frames and833 unchanged child artifacts pass. No new current-game
+preflight is inferred from the older child's build. These follow-ups are not part
+of the delivered PR160 tree.
+
+The next local fourth layer (`stack/artwork-fidelity-04`) restores the lower-effect
+mask, not complete World ordering. Read [its source/runtime and validation record](field-lower-effect-mask-reference.md).
+Two fresh original captures match36×45 pixel controls; eight mutations reject.
+Rules pass1,299 tests /81,252 assertions and the final production browser gate
+passes26/26 mock/native cases, zero skips. The earlier24/26 run and its mock
+bare-stencil/native empty-mask screen failures remain preserved with their fixes.
+No source clocks, inputs or assertions changed. The separate World-order audit
+shows why sorting attached fields is insufficient: selected current/next siblings
+are raised, superseded layers remain interleaved, and replacement avatars use
+child-count-relative insertion. Global ordering remains open.
+
+The fifth layer (`stack/artwork-fidelity-05`) replaces repeated authored
+`id:frame` string lookup with a metadata-owned numeric frame cache. Read
+[the performance evidence and limits](authored-display-cache-performance.md).
+Both unchanged accelerated mock/supplied-art pilots pass on build
+`OeDq6Mv8QjISX6YXv_BZi`; the complete mock proof equals the profiled baseline and
+candidate. Sequential formatting/check passes1,299 tests /81,252 assertions.
+This changes authored data lookup only, without changing live clocks, yields,
+inputs, entropy, assertions or deadlines. PR161/163's hosted readiness failures
+remain recorded; local timing does not establish their cause or a hosted pass.
+The combined fifth-head hosted gate/review and single master merge remain due.
+Original ordinary-input, complete World order and all remaining fidelity gates
+stay open.
 
 The first next-stack foundation is prepared for `stack/effect-geometry-01`, targeting master897d2e7. Its local continuation remains `t3/retained-effect-poses-draft`, rebased onto that merged master with the entire tree unchanged62c16cb3dbf7d6e781e457fd2b9fcf772bce3127. Signed replay stalled in1Password; the parent restarted the rebase with explicit --no-gpg-sign under the authorized fallback. Current rebased commits are25d0786 (original camera), ca2e546 (effect metadata),174e62e (registration precision),d91bf96 (physical population),9ad13eb (mask qualification gap). Old hashes remain historical references, not current branch tips. The original [generic-effect clock qualification](effect-clock-original-reference.md), child69b5615, is picked asb20027b with both fidelity sections preserved. Parent independently reverified both owned capture copies:21,636 rows/259,632 binary Numbers each, REA events still equality-ineligible. The59 frame and45 identity/correspondence candidate differences are unrepaired;399 original lookup holes and unavailable isPlaying reads stay explicit. No blanket native-pose reconstruction is justified by matching root clocks. The separate mask task remains active on3915/9915 and was told the authorized new master checkpoint. It must not touch completed effect task3875/9875 resources.
 

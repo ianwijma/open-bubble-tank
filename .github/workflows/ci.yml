@@ -17,7 +17,7 @@ jobs:
   check:
     name: Rules, build and mock browser
     runs-on: ubuntu-24.04
-    timeout-minutes: 35
+    timeout-minutes: ${{ github.event_name == 'pull_request' && 10 || 45 }}
     env:
       NEXT_TELEMETRY_DISABLED: '1'
     steps:
@@ -29,8 +29,14 @@ jobs:
       - run: bun run format:check
       - run: bun run check
       - run: bunx playwright install --with-deps chromium
-      - name: Production build and offline browser smoke
-        run: bun run test:e2e --grep 'mock|synthetic'
+      - name: Production build and quick browser smoke
+        if: github.event_name == 'pull_request'
+        run: bun run test:e2e:smoke
+      - name: Production build and full offline browser suite
+        if: github.event_name != 'pull_request'
+        env:
+          BT3_PLAYTHROUGH_LONG_RUN: '1'
+        run: bun run test:e2e:offline
       - name: Retain failed browser traces
         if: failure()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4

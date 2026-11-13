@@ -13,7 +13,7 @@ import { retainedClipGeometry } from './retained-geometry';
 import type { DisplayGeometryContent } from '../core/display-geometry';
 import { partSnapshot } from './part-snapshot';
 import { MountedParts, PartPlayback } from './part-playback';
-import { observeActorArtwork } from '../core/actor-artwork';
+import { observeActorArtwork, readActorArtworkPhase } from '../core/actor-artwork';
 import {
   mockProjectileBounds,
   projectileScriptBounds,
@@ -39,7 +39,7 @@ import projectileArt from '../data/projectile-art.json';
 import effectArt from '../data/effect-art.json';
 import screenEffectArt from '../data/screen-effect-art.json';
 import mineArt from '../data/mine-art.json';
-import { buildDisplayList } from './display-list';
+import { DisplayListCache } from './display-list';
 import { mockPart, mockPartLeaf, mockPartLeafHit } from './mock-part';
 import { ShapeContact } from './shape-contact';
 import {
@@ -259,7 +259,7 @@ export class AssetPack {
   private texts = new Map<number, TextInfo>();
   private fonts = new Map<number, FontInfo>();
   private sourceUrls: string[] = [];
-  private displayCache = new Map<string, DisplayPlacement[]>();
+  private displayCache = new DisplayListCache();
   private dynamicWidths = new Map<number, number>();
   private classFrames = new Map<number, Raster>();
   private classPoses = new Map<number, SwfClip>();
@@ -440,7 +440,7 @@ export class AssetPack {
       ])
         visit(id);
       for (const id of Object.values(PROTECTION_ART)) visit(id);
-      for (const id of [1816, 1817, 1820, 2173, 1780]) visit(id);
+      for (const id of [1816, 1817, 1820, 2173, 1780, 1539, 1542, 1544]) visit(id);
       for (const id of [MINIMAP.symbol, MINIMAP.button, MINIMAP.dot, MINIMAP.connector]) visit(id);
       for (const id of [HUD.life.symbol, HUD.fire.symbol, HUD.edit.symbol]) visit(id);
       for (const { symbol } of Object.values(HUD.tactical)) visit(symbol);
@@ -988,13 +988,7 @@ export class AssetPack {
   displayList(id: number, age: number): DisplayPlacement[] {
     const sp = this.sprites.get(id);
     if (!sp) return [];
-    const frame = ((Math.max(1, Math.floor(age)) - 1) % sp.frameCount) + 1,
-      key = `${id}:${frame}`;
-    const cached = this.displayCache.get(key);
-    if (cached) return cached;
-    const result = buildDisplayList(sp, frame);
-    this.displayCache.set(key, result);
-    return result;
+    return this.displayCache.get(sp, age);
   }
   childAge(parentId: number, age: number, p: DisplayPlacement) {
     const count = this.sprites.get(parentId)?.frameCount ?? 1;
@@ -1009,13 +1003,16 @@ export class AssetPack {
       this.partClips.set(tank, owner);
       observeActorArtwork(tank, owner);
     }
+    const state = readActorArtworkPhase(tank);
     const age = tank.artAge + 1;
     let playback = owner.parts.get(part.key)?.playback;
-    if (!playback || playback.clip.age > age) {
+    if (!playback || (!state && playback.clip.age > age)) {
       // Painting/contact queries share a private stream rather than consuming gameplay RNG.
       playback = new PartPlayback(this.newPartClip(tank, part));
       owner.parts.set(part.key, { part, playback });
     }
+    const play = tank.guns.find((g) => g.part.key === part.key)?.mountedPlay;
+    if (state) return playback.present(state, part.y, play);
     return playback.advance(
       age,
       part.y,

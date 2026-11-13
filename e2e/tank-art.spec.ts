@@ -17,7 +17,7 @@ for (const native of [false, true])
     const status = page.getByRole('status');
     await expect(status).toContainText('Ready', { timeout: 60000 });
     const proof = JSON.parse((await status.getAttribute('data-tank-art'))!);
-    expect(proof.live).toEqual({ age: 0, artAge: 12, poseAge: native ? 13 : null, retained: true });
+    expect(proof.live).toEqual({ age: 0, artAge: 12, poseAge: native ? 12 : null, retained: true });
     expect(proof.hit.hitAge).toBe(3);
     if (native) {
       expect(proof.hit.remainingHitInk).toBeGreaterThan(20);

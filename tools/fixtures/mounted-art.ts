@@ -107,6 +107,9 @@ export async function showMountedArt(pack: AssetPack, host: HTMLElement) {
   };
   const fire = (index: number) => world.fireGun(tank, tank.guns[index], emptyInput());
   try {
+    // Explicitly enter/run the initial stop before PartCallTrigger's play().
+    // This gallery controls initialized charges, not first-constructor trigger timing.
+    world.advanceArtwork();
     capture('Idle · both charges stopped');
     fire(0);
     tick(8);

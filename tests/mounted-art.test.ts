@@ -16,7 +16,7 @@ const sprites: SpriteInfo[] = [
   },
   { id: 720, frameCount: 27, placements: [{ charId: 718, depth: 1, matrix, frame: 2 }] },
 ];
-function setup() {
+function setup(owned = false) {
   const pack = new AssetPack('swf');
   Object.assign(pack, { sprites: new Map(sprites.map((s) => [s.id, s])) });
   const world = new World([], [], 1);
@@ -34,7 +34,7 @@ function setup() {
     'player',
   );
   const tank = world.player;
-  world.actorArtwork.construct(tank); // Explicit omitted host construction ownership.
+  if (owned) world.actorArtwork.construct(tank); // Stage-owned test; other cases exercise explicit legacy ages.
   const pose = (index = 0) => pack.partClip(tank, tank.guns[index].part).children.get(19)!.clip;
   const fire = (index = 0) => world.fireGun(tank, tank.guns[index], emptyInput());
   return { pack, world, tank, pose, fire };
@@ -119,17 +119,18 @@ test('overlapping play calls preserve phase, later episodes catch up and new tan
 });
 
 test('pause and crossing keep mounted art advancing while forcefield copies stay idle', () => {
-  const { pack, world, tank, fire, pose } = setup();
+  const { pack, world, tank, fire, pose } = setup(true);
+  world.advanceArtwork(); // Explicitly initialize the stopped frame before the source play call.
   fire();
   world.pause();
   for (let i = 0; i < 8; i++) world.step(emptyInput());
-  expect([tank.age, tank.artAge, pose().frame]).toEqual([0, 8, 9]);
+  expect([tank.age, tank.artAge, pose().frame]).toEqual([0, 9, 9]);
   const clone = pack.forcefieldPartClip(tank, tank.guns[0].part);
   expect(clone.children.get(19)!.clip.frame).toBe(1);
   world.resume();
   world.jump({ x: 1, y: 0 });
   for (let i = 0; i < 3; i++) world.step(emptyInput());
-  expect(tank.artAge).toBe(11);
+  expect(tank.artAge).toBe(12);
   expect(pose().frame).toBe(12);
-  expect(tank.guns[0].mountedPlay?.age).toBe(1);
+  expect(tank.guns[0].mountedPlay?.age).toBe(2);
 });

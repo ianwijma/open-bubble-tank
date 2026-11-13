@@ -1,11 +1,40 @@
 # Effect and geometry batch validation
 
-The fifth combined layer includes the exact published heads of PRs155–158:
-`8a0b055`, `8ec5406`, `03d935f` and `bfc5fa6`. Master remains
-`897d2e741b8a1d23f563f8bb8a2e6bd684932b9b`; the preserved recreation checkpoint
-remains `22d9def7321bada8a2148a69a79a3392682bb390`. The fifth combined branch `stack/effect-geometry-05` is published as
-[PR160](https://github.com/ianwijma/open-bubble-tank/pull/160) against master. Its
-fresh hosted gate remains pending. No intermediate success substitutes for it.
+The five-layer batch landed through one
+[PR 160 merge](https://github.com/ianwijma/open-bubble-tank/pull/160),
+`e01a7fe403b1fb1dc5c31ada8ce732206b3d5439`. Fetched master has the identical tested
+tree `e41154b62b78bffea9e5036f61b69b9f62f2b12e`. The exact published heads of
+PRs 155–158 (`8a0b055`, `8ec5406`, `03d935f`, `bfc5fa6`) and final head
+`58bd67415b97ef5cc630f0471b78ad0ef234f0de` are verified ancestors. GitHub marks
+all five PRs merged. Intermediate PRs were retargeted to master for included-commit
+accounting before the single merge; no per-layer master merge occurred. All five
+parent watches are stopped. The preserved recreation checkpoint remains
+`22d9def7321bada8a2148a69a79a3392682bb390`.
+
+## Final hosted gate
+
+Exact-head pull-request [run 43449089556, attempt 1](https://github.com/ianwijma/open-bubble-tank/actions/runs/43449089556)
+and named [job 131966365335 — Rules, build and mock browser](https://github.com/ianwijma/open-bubble-tank/actions/runs/43449089556/job/131966365335)
+completed successfully. Formatting, frozen install, rule checks, production build
+and offline browser smoke passed. Hosted rules: **1,286 passed, 5 skipped** out of
+1,291 cases, 67,534 assertions. Those five source-SWF-dependent cases are unavailable
+in the hosted checkout. Hosted browser selection: **150 passed,4 skipped**. These
+are the workflow's mock/synthetic selection, not a supplied-file whole-game gate.
+The full raw job log and local merge/ref verification are retained under
+`test-results/final-combined-160/`.
+
+Fresh complete issue/review/inline/thread reads found one informational CodeRabbit
+stars-based skip and zero reviews, inline comments or threads. The skip supplied
+no approval. Latest-attempt success, clean mergeability, unchanged master base and
+exact head were revalidated immediately before the merge. No exact-head Vercel
+status existed; suppression remains configured for `stack/**`, without an
+authenticated provider-skip claim or quota waiver. The one master merge retains
+its normal automatic deployment behavior. GitHub's Vercel status for the
+merged master reports **success / Deployment has completed**, with
+[deployment details](https://vercel.com/ian-wijmas-projects/open-bubble-tank/B2Uc5dvMBsu5rzMZLqdpfZ48QFFK).
+The connected Vercel team-history API returned403; per-branch deployment
+inventory/counts therefore remain unverified. This is an API access limitation,
+not a deployment failure or quota receipt.
 
 ## Combined local failure and measured repair
 
@@ -57,11 +86,10 @@ launcher; the recorded retry completed successfully without code differences. No
 providers, simulation phases or lifetime ownership are weakened.
 
 The local timeout is an unresolved accelerator performance limit, without an
-observed gameplay stall or proven functional regression. Publish the final
-combined PR with this limitation explicit and require its fresh exact-head
-hosted **Rules, build and mock browser** job plus review inspection before one
-master merge. The hosted gate does not certify the manual supplied-file pilot or
-complete-game performance. Keep that acceptance work open after delivery.
+observed gameplay stall or proven functional regression. The final
+combined PR documented this limitation before its successful exact-head hosted
+gate and single merge. That gate does not certify the manual supplied-file pilot
+or complete-game performance. This acceptance work remains open after delivery.
 
 ## Remaining boundaries
 

@@ -23,12 +23,21 @@ Normal compressed CWS and uncompressed FWS containers are supported. The researc
 bun run check         # TypeScript and deterministic simulation/data tests
 bun run format:check  # Formatting
 bun run test:e2e      # Production build + Chrome/Playwright browser flows
+bun run test:e2e:smoke # Quick PR browser flow, including the production build
+bun run test:e2e:offline # Full mock/synthetic suite used on master
 bun run build
 bun run start
 bun run fixtures      # Gameplay/art/screen fixtures on localhost:3102
 ```
 
 The browser tests use Chrome if installed, otherwise a Playwright Chromium installation. To install Chromium, run `bun x playwright install chromium`. SWF integration tests use `BT3_SWF_FILE` or the sibling research fixture, and skip when neither exists. No SWF is committed to this project.
+
+PR CI runs formatting, TypeScript/rules, a production build and the quick mock
+startup/creator/settings/exploration/pause flow. Master pushes and manual CI runs
+retain the full mock/synthetic browser suite, including the progression pilot.
+The long post-merge pilot has a larger hosted wall-clock budget; its inputs,
+simulation cap and earned upgrade/boss/win assertions stay the same. See
+[delivery](docs/delivery.md) and the [classic release gates](docs/classic-release.md).
 
 Ordinary navigation tests use `e2e/helpers/main-menu.ts` to wait for the native title intro before selecting a menu control. The title's hit geometry can cover an otherwise visible button. Controlled menu fixtures test input during the intro and on animated hover edges separately.
 

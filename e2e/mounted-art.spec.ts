@@ -17,7 +17,7 @@ for (const native of [false, true])
     const status = page.getByRole('status');
     await expect(status).toContainText('Ready', { timeout: 60000 });
     const proof = JSON.parse((await status.getAttribute('data-mounted-art'))!);
-    expect(proof).toMatchObject({ firstPlayAge: 1, cloneFrame: 1, age: 0, artAge: 41 });
+    expect(proof).toMatchObject({ firstPlayAge: 2, cloneFrame: 1, age: 0, artAge: 42 });
     expect(proof.panels.map((p: { frames: number[] }) => p.frames)).toEqual([
       [1, 1],
       [9, 1],

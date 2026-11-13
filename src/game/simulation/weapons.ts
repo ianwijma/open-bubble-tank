@@ -1,3 +1,4 @@
+import { readActorArtworkPhase } from '../core/actor-artwork';
 import { FIELD_RADIUS, STAGE } from '../core/constants';
 import { angleTo, direction, distance, length, rotate } from '../core/math';
 import { fireDamageBeam } from './beams';
@@ -205,7 +206,7 @@ export function fireGun(world: World, t: Tank, gun: GunState, input: InputFrame)
     return;
   }
   if (id === 3008) {
-    triggerMassiveCharge(gun, t.artAge);
+    triggerMassiveCharge(gun, t.artAge, readActorArtworkPhase(t)?.frame);
     world.scheduleShot(t, gun, 26);
     gun.counter = spec.rate;
     return;

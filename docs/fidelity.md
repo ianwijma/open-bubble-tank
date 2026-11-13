@@ -2066,3 +2066,65 @@ fixture repair, with zero skips/flakes. Both unchanged seed17 accelerated pilots
 win at65,976/64,639 frames; no ordinary original-input parity follows. All832
 final inputs,175 frozen repository evidence inputs and98 read-only external
 inputs match. Owned4215/4216 are stopped/free; protected refs remain held.
+
+
+## Under-avatar paint projection follow-up
+
+The [retained under-avatar branch](under-avatar-paint-reference.md) now paints
+original1541/1543 using supplied artwork and alpha-channel masking, below pickups
+and actors. Model transforms and instance identities drive the projection;
+obsolete renderer views are disposed without changing model lifetime. Native
+coverage checks all12 masked original poses at45 points each in both isolated
+mask and production-renderer paths, including rejection of red-channel masking.
+Mock paint is an explicit procedural circle/exterior-circle approximation without
+the authored slit. Formatting/check passes1,291 tests /75,956 assertions; the
+literal affected production browser run passes18 mock/native cases with zero
+skips. Cross-field global group ordering, fractional-opacity composition, Adobe
+and full-game parity remain unqualified. This is local next-stack work above the
+PR160 merge, not part of the already delivered tree.
+
+
+## Actor constructor/entry/script phase follow-up
+
+The [actor phase repair](actor-artwork-phase-reference.md) separates constructor
+frame0, pre-Main stage entry and post-Main scripts for already materialized mounted
+roots. Both unchanged original captures agree through550 in both construction
+cohorts; final own-Y reads and retained identities are covered. Compatibility
+`artAge` edits cannot seek a stage-owned root. Parent checks pass1,299 tests /
+81,252 assertions and24 affected mock/native browser cases above the under-avatar
+layer. The initialized Massive Cannon gallery explicitly initializes its stop
+before triggering; it is not a first-ever-trigger oracle. Lazy source construction,
+historical placement/entropy replay, first-trigger scheduling and status/protection
+phases remain open. The earlier native full-pilot timeout is preserved.
+
+
+## Field-owned lower-effect paint mask
+
+The [lower-effect mask repair](field-lower-effect-mask-reference.md) restores
+original1539/1538 masking of field-owned lower117 content, using the mask slot's
+independent retained transform. Two original controlled paint captures agree on
+1,620 values each; the native/mock browser fixture and actual engine reparenting
+control pass with the26-case affected browser gate. Unchanged rules pass1,299
+tests /81,252 assertions. Empty mask projections skip rendering while preserving
+identity; existing screen-effect camera/zoom pixel checks pass. Opaque finite
+controls do not qualify fractional opacity, arbitrary transforms, complete World
+root ordering, queue draining, ordinary encounters or full-game/Adobe fidelity.
+
+
+## Authored placement lookup performance follow-up
+
+The [authored display cache](authored-display-cache-performance.md) shares numeric
+frame-indexed authored placement rows across AssetPack, effect and pickup
+providers. Rows belong to actual SpriteInfo metadata and contain no live clock,
+clip, parent, entropy or field membership. Existing frame normalization and
+placement construction remain. Clearing the cache drops authored lookup rows.
+
+Both unchanged accelerated mock/supplied-art pilots pass on build
+`OeDq6Mv8QjISX6YXv_BZi`, ending at65,976/64,639 frames with their original input
+digests and boss/badge/Continue assertions. The entire mock proof equals both
+profiled before/after controls. Formatting and sequential rules pass1,299 tests /
+81,252 assertions; all850 source/test/tool hashes match. Hosted failures are
+preserved separately; no assertion, yield, input, frame cap or timeout is altered.
+This local fifth-layer change still requires the complete current-head hosted
+gate and delivery. Normal-time progression, original/Adobe/global-event/RNG and
+whole-game fidelity remain unqualified.

@@ -26,8 +26,11 @@ byte count and SHA-256.
 `valid` requires exactly matching endpoint layout/page metrics, an uninterrupted
 browser clock origin, positive in-viewport bounds, PNG/CSS viewport dimension
 agreement, DPR1 and an unzoomed visual viewport. Mapping is limited to a connected
-top-level borderless, unpadded canvas without CSS transforms/zoom on its ancestor
-chain. Unsupported geometry is rejected explicitly. `valid` checks geometry at
+top-level borderless, unpadded canvas with the bounded positive axis-aligned 2D
+scale/translation ancestor contract qualified in
+[browser-capture-scaling-reference.md](browser-capture-scaling-reference.md).
+Individual transforms, rotation/skew, reflections, 3D syntax, perspective and zoom
+remain unsupported. Unsupported geometry is rejected explicitly. `valid` checks geometry at
 the endpoints; it does not prove pixel content, visibility through occlusion,
 unchanged metrics between samples, or continuous video registration. IHDR parsing
 alone is not a full image decode. A transient excursion returning to the same

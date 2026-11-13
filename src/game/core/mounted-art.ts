@@ -1,12 +1,12 @@
 import type { GunState } from './types';
 
 /** _-YM.PartCallTrigger resumes720; frame1 stops again after its27-frame loop. */
-export function triggerMassiveCharge(gun: GunState, artAge: number) {
+export function triggerMassiveCharge(gun: GunState, artAge: number, artworkFrame?: number) {
   const age = artAge + 1;
   // play() during playback does not restart it. Only720's leaf-only episode can
   // be coalesced this way: it has one stop, no randomness, and no child scripts.
   if (gun.mountedPlay && age < gun.mountedPlay.age + gun.mountedPlay.frames) return;
-  gun.mountedPlay = { child: 'bullet_mc', age, frames: 27 };
+  gun.mountedPlay = { child: 'bullet_mc', age, frames: 27, artworkFrame };
 }
 
 export function massiveChargeFrame(gun: GunState | undefined, artAge: number) {

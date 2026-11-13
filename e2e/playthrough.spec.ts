@@ -3,11 +3,14 @@ import { existsSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 const swf =
   process.env.BT3_SWF_FILE ?? resolve('../documented-bubble-tank-3/re/bt3/uncompressed.swf');
+// The full post-merge suite has a larger hosted wall-clock budget. The pilot's
+// inputs, simulated frames, frame cap and all earned-progression assertions stay fixed.
+const playthroughTimeout = process.env.BT3_PLAYTHROUGH_LONG_RUN === '1' ? 600000 : 300000;
 for (const native of [false, true])
   test(`${native ? 'SWF' : 'mock'} fresh game reaches the boss and win through ordinary controls`, async ({
     page,
   }, testInfo) => {
-    test.setTimeout(300000);
+    test.setTimeout(playthroughTimeout);
     test.skip(native && !existsSync(swf), 'A local research SWF is required.');
     const errors: string[] = [];
     page.on('pageerror', (error) => errors.push(error.message));
@@ -16,7 +19,7 @@ for (const native of [false, true])
     if (native) await page.getByLabel('Original SWF').setInputFiles(swf);
     else await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
     const status = page.getByRole('status');
-    await expect(status).toContainText('Ready', { timeout: 280000 });
+    await expect(status).toContainText('Ready', { timeout: playthroughTimeout - 20000 });
     const proof = JSON.parse((await status.getAttribute('data-playthrough'))!);
     const evidence = testInfo.outputPath('playthrough-evidence.json');
     writeFileSync(evidence, JSON.stringify(proof, null, 2));

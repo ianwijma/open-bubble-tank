@@ -11,6 +11,8 @@
     "test": "bun test tests",
     "check": "bun run typecheck && bun run test",
     "test:e2e": "bun run build && playwright test",
+    "test:e2e:smoke": "bun run test:e2e e2e/game.spec.ts --grep 'mock path:'",
+    "test:e2e:offline": "bun run test:e2e --grep 'mock|synthetic'",
     "fixtures": "bun tools/visual-fixtures.ts",
     "reference": "bun tools/reference-player.ts",
     "reference:browser": "bun tools/reference-browser.ts",

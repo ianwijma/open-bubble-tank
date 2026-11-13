@@ -36,7 +36,7 @@ for (const native of [false, true])
       0, 149, 199, 399, 439, 440,
     ]);
     expect(proof.panels.map((panel: { frames: number[] }) => panel.frames[0])).toEqual([
-      1, 3, 4, 8, 48, 49,
+      1, 2, 3, 7, 47, 48,
     ]);
     expect(proof.rotorFrames).toEqual([1, 1, 1, 1, 1, 1]);
     expect(new Set(proof.childFrames).size).toBeGreaterThan(2); // Finite advancement, not equality to independent original RNG.

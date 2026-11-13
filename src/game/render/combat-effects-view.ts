@@ -1,6 +1,7 @@
 import { Container, Graphics } from 'pixi.js';
 import type { AssetPack } from '../assets/asset-pack';
-import type { Effect } from '../core/types';
+import type { Effect, Field } from '../core/types';
+import { FieldLowerEffectsView, type LowerEffectMaskPaint } from './field-lower-effects-view';
 import { readEffectPlayback } from '../simulation/effect-playback';
 import { STAGE } from '../core/constants';
 import screenArt from '../data/screen-effect-art.json';
@@ -10,6 +11,7 @@ import { SwfSymbolView, type RasterTextures } from './swf-symbol-view';
 export interface EffectPaint extends Effect {
   readonly clip?: Effect;
   readonly parentAlpha?: number;
+  readonly field?: Field;
 }
 
 /** Separate under-field and over-projectile layers, sharing the engine's effect identities. */
@@ -19,13 +21,27 @@ export class CombatEffectsView {
   screen = new Container();
   private mockNodes = new Map<Effect, Graphics>();
   private nodes = new Map<Effect, SwfSymbolView>();
+  private lowerViews = new Map<Field, FieldLowerEffectsView>();
   constructor(
     private assets: AssetPack,
     private textures: RasterTextures,
   ) {
     this.screen.position.set(STAGE.cx, STAGE.cy);
   }
-  update(effects: readonly EffectPaint[]) {
+  lower(field: Field) {
+    return this.lowerViews.get(field);
+  }
+  update(effects: readonly EffectPaint[], masks: readonly LowerEffectMaskPaint[] = []) {
+    const fields = new Set(masks.map(({ field }) => field));
+    for (const mask of masks) {
+      let view = this.lowerViews.get(mask.field);
+      if (!view) {
+        view = new FieldLowerEffectsView(mask.read, this.assets, this.textures);
+        this.lowerViews.set(mask.field, view);
+        this.bottom.addChild(view.root);
+      }
+      view.update(mask);
+    }
     const active = new Set<Effect>();
     const mockActive = new Set<Effect>();
     const order = new Map<Container, number>();
@@ -37,8 +53,11 @@ export class CombatEffectsView {
         effect.layer === 'screen'
           ? this.screen
           : effect.layer === 'bottom'
-            ? this.bottom
+            ? effect.field
+              ? this.lowerViews.get(effect.field)?.content
+              : this.bottom
             : this.top;
+      if (!layer) throw new Error('Lower effect has no actual field mask projection');
       const index = order.get(layer) ?? 0;
       order.set(layer, index + 1);
       if (
@@ -128,6 +147,13 @@ export class CombatEffectsView {
         graphics.destroy();
         this.mockNodes.delete(clip);
       }
+    // Reparent/prune effect nodes first; disposing a former field must not destroy
+    // an active effect that moved to another physical layer this update.
+    for (const [field, view] of this.lowerViews)
+      if (!fields.has(field)) {
+        view.destroy();
+        this.lowerViews.delete(field);
+      } else view.root.visible &&= view.content.children.length > 0;
   }
   destroy() {
     this.update([]);

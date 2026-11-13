@@ -1,3 +1,5 @@
+import { showLowerEffectPaint } from './lower-effect-paint';
+import { showUnderAvatarPaint } from './under-avatar-paint';
 import { importAvatarFixture } from './avatar-attachments';
 import { showEffectOwnershipProof } from './effect-ownership';
 import { setFieldFixtureLayout } from './field-layout';
@@ -180,6 +182,16 @@ async function reset() {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
     status.dataset.audioWindows = JSON.stringify(await showAudioWindows(pack, stage));
     status.textContent = 'Ready · decoded source sound windows';
+    return;
+  }
+  if (fixture.value === 'lower-effect-paint') {
+    status.dataset.lowerEffectPaint = JSON.stringify(await showLowerEffectPaint(pack, stage));
+    status.textContent = 'Ready';
+    return;
+  }
+  if (fixture.value === 'under-avatar-paint') {
+    status.dataset.underAvatarPaint = JSON.stringify(await showUnderAvatarPaint(pack, stage));
+    status.textContent = 'Ready · under-avatar paint controls';
     return;
   }
   if (fixture.value === 'actor-render-ownership') {

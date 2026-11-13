@@ -1,3 +1,4 @@
+import type { CombatEffectsView } from '../../src/game/render/combat-effects-view';
 import { setEffectFixturePose } from './effect-pose';
 import { Container, Graphics } from 'pixi.js';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
@@ -33,10 +34,13 @@ export async function showEffectOwnershipProof(pack: AssetPack, host: HTMLElemen
     context.drawImage(renderer.app.canvas, 0, 0, 550, 450);
     return context.getImageData(0, 0, 550, 450).data;
   };
-  const bottom = renderer.root.children[2] as Container,
-    top = renderer.root.children[8] as Container;
+  const effects = (renderer as unknown as { combatEffects: CombatEffectsView }).combatEffects;
+  const bottom = effects.bottom,
+    top = effects.top;
   const nodes = (layer: Container) =>
-    layer.children.filter((c) => pack.mode !== 'swf' || !(c instanceof Graphics));
+    (layer === bottom ? effects.lower(world.field)!.content : layer).children.filter(
+      (c) => pack.mode !== 'swf' || !(c instanceof Graphics),
+    );
   try {
     const before = draw();
     const first = combatEffect(
