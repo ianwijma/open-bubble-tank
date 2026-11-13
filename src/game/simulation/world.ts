@@ -261,6 +261,8 @@ export class World {
     initializeAvatarSeeker(this, bullet, target);
     initializeHomingProjectile(this, bullet, home, target);
     if (bullet.kind === 'infect' && bullet.targetId === null) expireInfectionTarget(this, bullet);
+    // Source SpawnNewBullet writes this AFTER virtual Setup, even if Setup queued removal.
+    bullet.movementEnabled = true;
     this.bullets.push(bullet);
     this.projectileParents.set(bullet, this.runtime);
     if (bullet.enemy) this.stats.enemyShots++;

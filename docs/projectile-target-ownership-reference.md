@@ -23,8 +23,11 @@ All source paths are under the sibling research repository's `re/bt3`.
   `_‑PJ=false`, invokes its collision callback and returns the preceding
   rotation. `_‑BL.Setup` calls this before a first Run. `_‑BL.MoveBullet`
   checks `_‑PJ` only at entry: a failure inside a Run still reaches that
-  already selected contact/movement tail once. A failed Setup never enters
-  that tail. `_‑XV.BulletCallCollisionDetected` queues one seeker explosion
+  already selected contact/movement tail once. Direct Setup leaves it disabled,
+  but canonical `_‑0D.SpawnNewBullet:1087–1090` unconditionally writes
+  `blnMoveTank=true` **after** virtual Setup, then appends the projectile.
+  An empty-target canonical birth therefore queues once during Setup, runs
+  once and queues again, then stops. Pcode lines4712–4725 retain this order. `_‑XV.BulletCallCollisionDetected` queues one seeker explosion
   and applies the existing global hit-sound timer gate.
 - `_‑BL.Run:415–420` refreshes `objAvatar` when its parent disappears, without
   assigning `movTarget`. `_‑Jp`'s outbound steering and hit test read that
@@ -53,13 +56,18 @@ object/parent ownership. Numeric `targetId` remains compatibility metadata.
 
 Friendly aiming converts the actual parent and cached detail to the same
 global space. It keeps the private movement vector computed from the returned
-source angle. Its queued-removal flag distinguishes failed Setup from failure
-inside the current Run; callbacks are not replayed on later isolated Runs.
+source angle. `movementEnabled` models `_‑PJ` separately from the queued-removal
+flag. Canonical birth re-enables it after Setup without clearing the removal
+queue. A failure in the selected Run completes its tail; later disabled Runs do
+not replay callbacks. Direct virtual Setup alone has no canonical re-enable.
 Sapper retains target and refreshed avatar separately and transforms hit-test
 samples back into the existing numeric tank-hit adapter. Return aiming uses
 physical mount-child membership; guarded zero returns preserve visible rotation.
 
-All nine added cases fail on unchanged preceding source:
+The original nine source cases were checked against preceding `dad4de6`.
+The corrected suite now has eleven cases; two canonical-birth cases
+also fail against published `945d2ec`, which incorrectly conflated removal and
+movement. The source contracts are:
 
 1. A same-UID replacement does not inherit an old friendly target's identity;
    a detached target reacquires the first array candidate.
@@ -67,7 +75,9 @@ All nine added cases fail on unchanged preceding source:
 3. A stale array target reparented to another wrapper is rejected.
 4. Friendly Setup aims using transformed fractional cached detail points.
 5. Sapper Setup uses the same Point boundaries and global subtraction order.
-6. Failed Setup queues its explosion/hit callback once and never starts motion.
+6. Canonical empty-target births at0° and123° re-enable after Setup, move once
+   and queue a second explosion. Direct Setup alone stays stopped. The existing
+   hit-sound timer still permits only one sound event.
 7. Target loss inside Run retains the preceding target reference, completes one
    movement tail, then stops until removal.
 8. Sapper steering/contact keeps an old avatar object while damage uses the
@@ -91,21 +101,27 @@ bun run check
 BT3_SWF_FILE=/home/ian/Projects/ianwijma/documented-bubble-tank-3/re/bt3/uncompressed.swf bun run test:e2e --config test-results/projectile-target-validation/playwright.config.ts
 ```
 
-Formatting, TypeScript and976 tests /8,728 assertions pass. Production build `SGofqOmsFRu5W1kJLevpv` and all16 affected mock/supplied-art browser cases
-pass in2.0minutes, with no skips, flaky results or page errors. The final run
-repeated the whole scoped suite after preserving the old target on failed
-reacquisition. Native homing and special-projectile paint were inspected;
-owned3165/3166 servers exited and the ports are free. The ignored provenance manifest
-records519 source/test/tool digests before the browser build and ten research
-source/pcode hashes. The unchanged-source before snapshot and all logs are
-under `test-results/projectile-target-validation/` (snapshot itself stays in
-`/tmp`, outside the TypeScript glob).
+The preceding published head `945d2ec` passed976 tests /8,728 assertions and
+16 browser cases (build `SGofqOmsFRu5W1kJLevpv`), but its canonical empty-target
+birth assertion was wrong. The [controlled original probe](projectile-target-runtime-reference.md)
+exposed the omitted post-Setup setter. The new two-case regression fails on
+that exact head (2 failures /9 passing controls), then passes with the repair.
+Final repaired-source validation: formatting, TypeScript and978 tests /8,737
+assertions pass. Production build `rwZCscLqkfhTFJK-IU9ix` and all16 affected
+mock/supplied-art browser cases pass in2.1minutes, with zero skips, unexpected
+failures or flaky results. All688 tracked/untracked source/tool/doc digests
+match their pre-build snapshot. The native homing gallery was inspected; all
+recorded owned test processes exited and3165/3166 are free. The original probe's
+owned3295/9295 processes also exited. Canonical before/after logs, build/report,
+source manifest and cleanup identities remain under
+`test-results/projectile-target-validation/canonical/`. The earlier green local
+run does not validate this correction; these results do.
 
 The first private build caught unused copied e2e helper files whose relocated
 imports were invalid. Those unused copies were removed; spec assertions,
 production code, compiler options and required suites were not weakened.
 
-The tests establish retained references, selected source phases, Point-based
+The tests and bounded original probe establish retained references, selected source phases, Point-based
 numeric contracts and adjacent browser behavior. They do not establish an
 ordinary original-runtime Sapper encounter, all avatar destruction/display
 lifecycle, arbitrary matrices, the complete original callback/constructor/RNG

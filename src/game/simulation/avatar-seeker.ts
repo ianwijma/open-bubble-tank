@@ -17,6 +17,7 @@ function steer(world: World, b: Projectile) {
   }
   if (!target) {
     b.removeAfterFrame = true;
+    b.movementEnabled = false;
     world.addCombatEffect(b, 'seekerExplosion');
     collisionSound(world, b, true);
     b.motion = actorDirection(b.angle, b.speed);
@@ -44,9 +45,9 @@ export function initializeAvatarSeeker(world: World, b: Projectile, target?: Tan
 }
 
 export function tickAvatarSeeker(world: World, b: Projectile) {
-  // A failed Setup disabled _-PJ before Run. Failure inside this Run still
-  // completes its already selected contact/movement tail once.
-  if (b.removeAfterFrame) return;
+  // SpawnNewBullet re-enables _-PJ after virtual Setup, without clearing its
+  // removal queue. A failure inside this Run still completes the selected tail.
+  if (b.movementEnabled === false) return;
   if (projectileOutside(world, b)) {
     world.addCombatEffect(b, 'impact');
     b.dead = true;

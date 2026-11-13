@@ -265,6 +265,8 @@ export interface Projectile extends Vec {
   trailPoint?: Vec;
   deflected?: Vec;
   removeAfterFrame?: boolean;
+  /** _-PJ movement gate is independent of the queued-removal vector. */
+  movementEnabled?: boolean;
   infectionTries?: number;
   mineState?: { armed: boolean; movement: Vec };
   wipe?: boolean;

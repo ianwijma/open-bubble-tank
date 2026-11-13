@@ -5,6 +5,7 @@ import { createProjectile } from '../src/game/simulation/create-projectile';
 import { tickBullet } from '../src/game/simulation/projectiles';
 import { createTank } from '../src/game/simulation/tank';
 import { removeTankChild } from '../src/game/simulation/tank-display';
+import { initializeAvatarSeeker } from '../src/game/simulation/avatar-seeker';
 import { World, emptyInput } from '../src/game/simulation/world';
 
 function setup() {
@@ -114,16 +115,42 @@ for (const kind of ['seeker', 'sapper'] as const)
     expect(bullet.angle).toBe((360 * Math.atan2(325.05 - 225, 374.9 - 275)) / (2 * Math.PI));
   });
 
-test('friendly seeker with no Setup target queues one callback and never begins movement', () => {
+for (const [angle, x, y] of [
+  [0, 7, 5],
+  [123, 2.35, 7.5],
+])
+  test(`canonical seeker birth at ${angle} re-enables motion after Setup queued removal, then fails one active Run`, () => {
+    const world = setup(),
+      bullet = seeker(world, { x: 4, y: 5, angle });
+    expect(bullet.removeAfterFrame).toBe(true);
+    tick(world, bullet);
+    expect([bullet.x, bullet.y, bullet.angle]).toEqual([x, y, angle]);
+    tick(world, bullet);
+    expect([bullet.x, bullet.y, bullet.angle]).toEqual([x, y, angle]);
+    expect(world.runtimeFor(world.field).effectQueue.map((effect) => effect.symbol)).toEqual([
+      1767, 1767,
+    ]);
+    expect(world.drainEvents().filter((event) => event.type === 'hit')).toHaveLength(1);
+    expect(world.hitSoundTimer).toBe(4);
+  });
+
+test('direct virtual Setup alone leaves failed seeker movement disabled without replaying its callback', () => {
   const world = setup(),
-    bullet = seeker(world, { x: 4, y: 5, angle: 123 });
-  expect(bullet.removeAfterFrame).toBe(true);
+    bullet = createProjectile(world.nextId(), {
+      owner: world.player.uid,
+      enemy: false,
+      kind: 'seeker',
+      symbol: 1827,
+      x: 4,
+      y: 5,
+      angle: 123,
+      speed: 3,
+      damage: 1,
+    });
+  initializeAvatarSeeker(world, bullet);
   tick(world, bullet);
-  tick(world, bullet);
-  expect([bullet.x, bullet.y, bullet.angle]).toEqual([4, 5, 123]);
+  expect([bullet.x, bullet.y]).toEqual([4, 5]);
   expect(world.runtimeFor(world.field).effectQueue.map((effect) => effect.symbol)).toEqual([1767]);
-  expect(world.drainEvents().filter((event) => event.type === 'hit')).toHaveLength(1);
-  expect(world.hitSoundTimer).toBe(4);
 });
 
 test('friendly seeker whose target vanishes during Run completes that move once before removal', () => {
