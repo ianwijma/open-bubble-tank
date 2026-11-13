@@ -225,7 +225,8 @@ if audit:
     probe += assign(4, 'scaleX', integer(1)) + assign(4, 'scaleY', integer(1))
     # Authored depth10 mask covers only depth12, not depth18 enemyLayer.
     probe += get(4) + text('avatarUnderBubble_mc') + value_call('getChildByName', 1) + put(11)
-    probe += construct('ByteArray') + put(14)
+    if under_audit:
+        probe += construct('ByteArray') + put(14)
     for x in [0, 430, 600, 900]:
         probe += assign(10, 'x', integer(x))
         probe += get(4) + prop('enemyLayer_mc') + get(10) + call('addChild', 1)
