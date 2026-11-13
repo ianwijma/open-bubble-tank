@@ -4,6 +4,24 @@ This is the fifth integration layer for the retained display batch. It joins the
 four dependent source layers for one final current-head Actions/review gate and
 one merge to master. It does not claim completion of the recreation objective.
 
+## Delivery verified
+
+The batch landed through one [PR154](https://github.com/ianwijma/open-bubble-tank/pull/154)
+merge, `897d2e741b8a1d23f563f8bb8a2e6bd684932b9b`. Latest exact-head
+pull-request run43407815305, attempt1, and named job131826378222 completed
+successfully on73cdc4ffe42e4ce8a7bfc03d72df5e7877f0de8f. Parent re-read every
+comment/review/thread before merging: one informational CodeRabbit skip,
+zero reviews/inline comments/threads. There was no approval or actionable finding.
+
+Fresh fetch verifies master has the identical tested tree
+`e67613371458570ad8cb339c1a5f42b4dd38573d`; all five exact PR heads are ancestors.
+GitHub marks PRs150–154 merged. Protected legacy22d9def7 is unchanged. The154
+watch ended; explicit unwatch confirms watching=false. The paragraphs below
+retain the actual earlier validation failures, repairs and pending observations
+as history, rather than attributing later success to those earlier builds.
+Vercel stack suppression remains intact; absence of status is not provider skip
+proof. No extra deployment or provider change was requested.
+
 ## Included layers
 
 | PR | Retained contract | Included head |

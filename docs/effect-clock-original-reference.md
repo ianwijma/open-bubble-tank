@@ -248,3 +248,17 @@ full masks/filter/color/shape bounds and native field composition, source caller
 manual frame writes, original field queue draining/World.Run, arbitrary engine
 mutation/pause, ordinary reachability, complete constructor/event/global RNG,
 Adobe/pixel/audio and full-game equivalence. The recreation goal remains open.
+
+
+## Parent integration check
+
+The parent picked this research above merged master897d2e7 and the existing
+metadata/registration/population follow-up. The sole fidelity-append conflict
+preserved both sections. Owned copies of run-a1 and run-b independently reverify
+all21,636 rows/259,632 binary Numbers each; REA events remain incomplete and
+execution-equality-ineligible. The parent reran all18 rejecting controls in a
+fresh owned output directory. Joint formatting/check passes1,166 tests /17,793
+assertions. No additional original runtime was launched and no application
+flow was changed by this evidence pick. The existing registration correction's
+12 browser cases retain their recorded earlier source/build identity. Frame,
+identity/correspondence and transient lookup limits above remain unrepaired.
