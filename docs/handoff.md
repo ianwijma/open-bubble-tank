@@ -143,3 +143,17 @@ tests pass;2 mock/supplied browser cases pass without skips/flakes and777 build
 inputs match. This remains local, with no additional PR or master update. Bind
 complete text/root-coordinate and actor/effect owners before gameplay migration;
 the original-runtime coordinate and text qualifications are separately delegated.
+
+The next local integration includes both returned qualifications. Player-root
+arguments are Main-relative in the measured original route; the separate
+[public field boundary](player-root-field-query-reference.md) is bound and its
+native36-row/108-hit comparison passes. Loaded-root mapping remains unexecuted.
+[Original StaticText](text-contact-runtime-reference.md) instead requires explicit
+Engine-bounds dispatch, ignores the measured assigned runtime mask and differs
+from its wrapper at zero scale; do not feed it through generic mask/inverse rules.
+Exact Engine arithmetic is still open and no text provider is installed. Joint
+formatting/check passes1215 tests /38792 assertions; the unchanged production
+code's literal10-case crossing/Main/contact browser validation is recorded in the
+public-boundary reference. Third stack branch `stack/effect-geometry-03` will
+carry this coherent query/native-evidence layer above PR156, with no master merge
+until five layers are assembled and the final combined head is green.

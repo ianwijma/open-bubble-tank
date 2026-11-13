@@ -1837,7 +1837,8 @@ The [native retained-clip boundary](retained-native-geometry-reference.md) now
 projects current render order, actual child/birth identities and placement morph
 ratios without clock, constructor, entropy or age-reconstruction writes. Original
 declared rectangles feed Script bounds; native fill/stroke geometry feeds contact.
-Unsupported text/bitmap/dynamic content rejects rather than using raster alpha.
+Unsupported definition leaves such as text/bitmaps reject rather than using raster
+alpha; independently owned runtime drawings/masks require explicit composition.
 The unused API does not migrate gameplay queries or promise complete field geometry.
 
 The browser compares actual supplied1539/1544 contours against all51 selected
@@ -1882,4 +1883,26 @@ fixture bytes match a fresh current-source build; the recorded single-fixture
 formatting/hash overlap is explicit. Detached receivers still miss; Script width
 excludes Main translation. No loaded-root route, automatic identity inference,
 complete field-provider or gameplay migration is claimed.
+
+## Original advanced StaticText contact qualification
+
+The [text runtime controls](text-contact-runtime-reference.md) preserve all original
+text/CSM/ABC payloads and classify project-derived normal/advanced controls
+separately. Two fresh captures freeze322 rows /13524 Numbers each; parent-owned
+copies independently reverify and all30 mutations reject. Original advanced text
+hits empty margins and rotated world-AABB corners outside its local rectangle,
+while the derived normal control misses. Measured StaticText ignores its assigned
+runtime mask and can directly hit a zero-scaled line while its MovieClip wrapper
+misses. The current common mask/inverse-before-leaf rules must not be applied to
+those text leaves. Exact Engine-bounds arithmetic, broader glyph modes and
+authored text masks remain unqualified, so no text provider/gameplay migration
+is installed. REA events remain incomplete/equality-ineligible; Adobe, global and
+complete-game parity remain unproved.
+
+The joint native/root/text evidence checkout passes formatting/typecheck and1215
+tests /38792 assertions. Parent-owned root and text captures independently
+reverify with23 and30 rejecting controls respectively. The text qualification
+adds only evidence/tools after the10-case production browser run; its pick does
+not change that tested production/fixture code. These remain finite comparisons,
+not complete field or original/Adobe/gameplay parity.
 

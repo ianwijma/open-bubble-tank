@@ -1117,8 +1117,9 @@ export class AssetPack {
   clipScriptBounds(pose: SwfClip) {
     return scriptBounds(this.scriptGeometry, pose.id, pose.age, undefined, undefined, [], 0, pose);
   }
-  /** Geometry of a caller-owned retained native pose, without playback or alpha
-   * fallbacks. Text/bitmap/dynamic graphics require their own qualified provider.
+  /** Authored geometry of a caller-owned retained pose, without playback or alpha
+   * fallbacks. Owners must compose runtime drawings/masks separately; unsupported
+   * definition leaves (including text/bitmaps) require a qualified provider.
    */
   nativeClipGeometry(pose: SwfClip) {
     if (this.mode !== 'swf') throw new Error('Native geometry requires supplied SWF definitions');

@@ -60,10 +60,13 @@ bun run format
 BT3_SWF_FILE=/home/ian/Projects/ianwijma/documented-bubble-tank-3/re/bt3/uncompressed.swf bun run check
 ```
 
-Next qualify original builtins on those text leaves, including points inside
-declared bounds but outside ink, parent scaling/rotation, visibility, masks and
-stage attachment. Keep player-root argument mapping a separate qualified input.
-Only then select the text leaf path in the complete field provider. This change
+The later [original contact controls](text-contact-runtime-reference.md) measure
+those leaves, including empty margins, rotation, visibility, masks and attachment.
+They establish the finite advanced branch and reveal StaticText-specific mask
+and singular behavior. Exact Engine-bounds arithmetic remains unresolved.
+[Player-root argument mapping](root-query-runtime-reference.md) is qualified
+separately. Resolve the remaining Engine/dispatch contract before selecting the
+text leaf path in the complete field provider. This metadata change
 does not alter paint, alpha hits, gameplay, native field-query callers, or public
 coordinate semantics. No application browser flow is changed or E2E claimed;
 complete text/field, ordinary-game and Adobe parity remain unproved.

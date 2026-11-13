@@ -15,8 +15,10 @@ tree carries declared integer-twip extents and actual placement matrices, depths
 mask ends and morph ratios. Alpha and glow/paint-cache padding do not select
 geometry. Building the tree or reading its bounds needs no DOM or Path allocation;
 shape contact can lazily cache native paths. No raster-alpha or mock-contour
-fallback is installed. Text, bitmaps, dynamic graphics and separately owned runtime
-mask relationships require their explicit providers before complete composition.
+fallback is installed. Unsupported definition leaves such as text/bitmaps reject.
+Runtime drawings and mask relationships are outside this authored pose projection;
+their owners must compose them explicitly before claiming complete geometry. The
+reader cannot detect a drawing that its caller never supplied.
 
 The read uses current placements rather than child Map insertion order, preserving
 the independently corrected [effect correspondence](effect-clock-correspondence-reference.md).
