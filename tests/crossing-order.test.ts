@@ -66,8 +66,11 @@ test('secondary help closes to ordinary mode without completing its retained cro
   expect(world.mode).toBe('playing');
   expect(world.transit).toBe(crossing);
   const avatarAge = world.player.age;
-  world.step(emptyInput());
+  const position = { x: world.player.x, y: world.player.y };
+  world.step({ ...emptyInput(), up: true, right: true });
   expect(crossing.age).toBe(1);
+  // Close does not clear the source crossing/movement gate or resume travel.
+  expect({ x: world.player.x, y: world.player.y }).toEqual(position);
   expect(world.player.age).toBe(avatarAge + 1);
 });
 

@@ -95,3 +95,8 @@ playback, arbitrary affine/singular transforms, global event/RNG equality,
 ordinary earned full progression and original/Adobe/pixel/audio/full-game parity
 remain unresolved. Finite original Point arithmetic and accelerated browser
 progression cannot establish those broader claims.
+
+
+## Combined validation continuation
+
+The final source34955e5 browser run passes75/76 cases; the native failure is a retained crossing/mode stall after first secondary-help Close, also observed independently. The [fifth batch layer](retained-display-batch-validation.md) preserves those source state writes and corrects the test pilot's reward-coasting inputs. Both affected playthroughs then pass on build-Op3ze2z_uXkObma46lfY without production-src changes. That reference retains both failing and passing provenance,74 unaffected prior cases,729 unchanged source inputs and the broader parity limits.

@@ -47,11 +47,64 @@ exhausts200,000 frames at level3/life4 without a boss. This is a real validation
 failure, not just an observation timeout. The76-case run is terminal:75 passed, one failed, zero skips/flaky results.
 The one failure is the supplied-art playthrough. Owned servers exited and ports
 3775/3776 are independently verified free. The fifth
-integration PR is held until this failure is understood and the affected gate
-passes. All728 prebuild inputs match, and all33 private spec copies retain their
+integration was held for diagnosis; the ordinary-input pilot correction below
+now passes its affected gate. All728 prebuild inputs match, and all33 private spec copies retain their
 assertions/budgets, changing only owned ports and import routing. The earlier interrupted bridge cohort is preserved separately;
 it is not a completed playthrough or a passing browser gate. No pilot, source
 entropy provider, frame limit, timeout or collision assertion is weakened.
+
+## Supplied-art stall and ordinary-input pilot correction
+
+A single independent fresh-browser repeat at the same34955e5 source also fails
+at200,000 frames, level3/life4, input digest200414604 (buildsIoGSmQyThfHir9QjHBEr).
+Its read-only diagnostic samples show `playing` with a retained transit age2
+and identical scalar/actual-parent avatar Point from frame14,000 through200,000.
+Current enemies/pickups are empty and there are no downgrades. This establishes
+a mode/pending-crossing stall, not the earlier conditional stale-enemy hypothesis.
+It does not prove general determinism or isolate all changes from the prior base.
+
+The trace observes no targets and still-arriving rewards while the avatar coasts
+from(-118.5,326.55), velocity(0,4.380000000000003), at13450 to the boundary at13477.
+The final life arrives during crossing; upgrade3 and first secondary-help Close
+then select ordinary mode while the pending transit stays at age2. The pilot had
+released controls while waiting for rewards, allowing friction-only coasting.
+
+Production preserves the source contract: `_‑1E` sets the birth gate and disables
+`AvatarInterface._‑4v` (BTAGameWorld AS677–678); `MoveAvatar` reads that flag
+(AvatarInterface AS1315–1323). First-help Close sets `_‑Up=0` without clearing
+those gates (BTAGameWorld AS265–276, pcode797–848). Changing Close to restore
+transit or ignoring the movement gate would reinterpret the recovered behavior.
+The existing source-state regression now explicitly pins ignored movement input.
+
+The fifth layer changes only the accelerated test pilot: after clearing a field,
+steer inward with ordinary direction keys until pending rewards arrive, then
+navigate to the next field. Combat, upgrade scoring/choices, production simulation,
+source state callbacks, collision providers, seed17, frame cap and browser
+assertions/timeouts stay unchanged. Two new regressions fail before and pass after:
+an observed pre-coast avatar state with an explicitly controlled reward placement
+is collected/advanced through public World.step/pilot controls before crossing,
+including the same offered A10000041 first-help choice. The synthetic reward's
+position is not claimed to have been recovered from the failed trace.
+
+Formatting/typecheck and1,131 unit tests /16,325 assertions pass. Literal
+`BT3_SWF_FILE=/home/ian/Projects/ianwijma/documented-bubble-tank-3/re/bt3/uncompressed.swf bun run test:e2e --config test-results/retained-ancestry/pilot-playwright.config.mts`
+builds `-Op3ze2z_uXkObma46lfY` and passes both affected playthrough cases without
+skips/retries/flaky results. Mock wins at68,999, supplied art at67,433. Both reach
+all six offered upgrades, close help once, suffer no downgrades and earn the Boss
+Badge. Supplied-art boss generation is frame65,759; final life is950.
+
+All729 prebuild inputs match after the run. Production `src/` has no difference
+from34955e5; only the pilot policy and its source-preserving unit controls change.
+The earlier74 unaffected browser cases passed on that same production source,
+with their actual prior build identity retained. This is coverage across two
+builds, not a claim of one fresh76-case passing cohort. All33 private spec copies
+retain assertions/budgets, changing only owned ports/import routing. Supplied-art
+win and milestone paint was inspected; owned servers exited and3775/3776 are
+verified free. Logs, input/proof digests, cleanup and scope are in ignored
+`test-results/retained-ancestry/pilot-validation-result.json` and neighboring logs.
+No production softlock recovery, gameplay-rule, asset provider, entropy, seed,
+frame-cap, timeout or assertion change is introduced. The failed parent and
+independent trajectories remain preserved; they are not erased by the new pass.
 
 ## Caller-specific coordinate audit
 
