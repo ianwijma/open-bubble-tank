@@ -292,10 +292,24 @@ export class World {
     // TankData._-Tr completes Setup before SpawnNewEnemy assigns its display pose.
     enemy.x = point.x;
     enemy.y = point.y;
-    this.actorParents.attach(enemy, field);
-    this.callbackFields.set(enemy, field);
+    this.attachActor(enemy, field);
     field.enemies.push(enemy);
     return enemy;
+  }
+  /** SpawnNewAlly attaches before recording its callback and live-array entry. */
+  spawnAlly(design: TankDesign, point: Vec) {
+    const field = this.currentWrapper;
+    const ally = createTank(this.nextId(), design, 'ally', 0, 0, 15, undefined, this);
+    ally.x = point.x;
+    ally.y = point.y;
+    this.attachActor(ally, field);
+    this.runtimeFor(field).allies.push(ally);
+    return ally;
+  }
+  /** Source addChild followed by SetCallback; Run-array insertion is separate. */
+  attachActor(tank: Tank, field: Field) {
+    this.actorParents.attach(tank, field);
+    this.callbackFields.set(tank, field);
   }
   fieldVisit = new FieldVisit(true);
   fields = new Map<string, Field>();
@@ -506,10 +520,8 @@ export class World {
         effect.frame = (effect.frame % effect.total) + 1;
       }
     }
-    for (const { field, runtime } of this.attachedFields()) {
-      for (const tank of [...field.enemies, ...runtime.allies])
-        if (this.actorParents.inField(tank, field)) attached.add(tank);
-    }
+    for (const { field } of this.attachedFields())
+      for (const tank of this.actorParents.owned(field)) attached.add(tank);
     for (const tank of attached) advanceTankArt(tank);
   }
   private stepFrame(input: InputFrame) {
@@ -672,10 +684,6 @@ export class World {
     if (this.runtime.shootTimer >= 0) this.runtime.shootTimer--;
   }
   private tickActor(tank: Tank, input: InputFrame) {
-    if (!this.callbackFields.has(tank)) {
-      this.callbackFields.set(tank, this.field);
-      this.actorParents.attach(tank, this.field);
-    }
     if (tank.dead && tank.dataActive) return; // Host fixtures can mark death without source teardown.
     this.tickTank(tank, false);
     tank.stunned = tank.status.stun > 0;
@@ -1239,8 +1247,7 @@ export class World {
       stopShoot,
     };
     for (const tank of next.enemies) {
-      this.callbackFields.set(tank, next);
-      this.actorParents.attach(tank, next);
+      this.attachActor(tank, next);
     }
     if (!next.enemies.length) this.editSlider.trigger(this.progression.level, this.mapMode);
     else if (this.editSlider.atRest) this.editSlider.hide();

@@ -1,3 +1,4 @@
+import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import type { Projectile, Tank } from '../src/game/core/types';
 import { STARTER } from '../src/game/data/catalog';
@@ -46,7 +47,9 @@ function setup(side: 'enemy' | 'ally', outside = false, pods = 1) {
   );
   const survivor = createTank(world.nextId(), body, 'enemy', -150, 100);
   world.field.enemies = side === 'enemy' ? [victim, survivor] : [survivor];
+  importActorFixtures(world);
   world.allies = side === 'ally' ? [victim] : [];
+  importActorFixtures(world);
   world.actorParents.sync(world);
   return { world, victim };
 }
@@ -196,6 +199,7 @@ for (const [name, design] of Object.entries(allies))
     const { world } = setup('ally', true, 0);
     const ally = createTank(world.nextId(), design, 'ally', 440, 0, 15, 15, world);
     world.allies = [ally];
+    importActorFixtures(world);
     world.step(emptyInput());
     expect(world.events.map((e) => e.type)).toContain('pop');
     expect(world.events.map((e) => e.type)).not.toContain('death');

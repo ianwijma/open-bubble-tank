@@ -1,3 +1,4 @@
+import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import { World, emptyInput } from '../src/game/simulation/world';
 import { STARTER } from '../src/game/data/catalog';
@@ -22,6 +23,7 @@ function setup() {
   );
   enemy.guns = [];
   world.field.enemies = [enemy];
+  importActorFixtures(world);
   const shot = (changes: Partial<Projectile> = {}) =>
     createProjectile(world.nextId(), {
       owner: world.player.uid,
@@ -117,6 +119,7 @@ test('Repulsor needs an enemy-layer pixel gate and respects ordered prior-contac
   const second = createTank(world.nextId(), { ...enemy.design }, 'enemy', 0, 0);
   enemy.x = 0;
   world.field.enemies.push(second);
+  importActorFixtures(world);
   const b = shot({ kind: 'push', symbol: 2221, damage: 0, speed: 8 });
   tick(world, b);
   expect(enemy.velocity.x).toBe(0);
@@ -135,6 +138,7 @@ test('Repulsor includes allied geometry in the gate, truncates its radius gap an
   const { world, enemy, shot } = setup();
   const ally = createTank(world.nextId(), STARTER, 'ally');
   world.allies.push(ally);
+  importActorFixtures(world);
   world.hitTest = (t) => t === ally;
   enemy.x = enemy.radius + 70;
   const b = shot({ kind: 'push', symbol: 2221, damage: 0 });
@@ -160,6 +164,7 @@ test('allied geometry can open the ordinary friendly layer gate for an enemy hal
   tick(world, b);
   expect(enemy.life).toBe(100);
   world.allies.push(ally);
+  importActorFixtures(world);
   b.x = 0;
   tick(world, b);
   expect(enemy.life).toBe(98);
@@ -251,6 +256,7 @@ test('conversion target selection excludes the last entry; detached avatar-seeke
   const middle = createTank(world.nextId(), enemy.design, 'enemy', 0, 100);
   const last = createTank(world.nextId(), enemy.design, 'enemy', 1, 0);
   world.field.enemies.push(middle, last);
+  importActorFixtures(world);
   world.actorParents.sync(world);
   world.rng.next = () => 0.999;
   world.bullets.push(shot({ enemy: true, symbol: 1809 }));
@@ -265,7 +271,9 @@ test('conversion target selection excludes the last entry; detached avatar-seeke
   const b = world.bullets[0];
   expect(b.targetId).toBe(middle.uid);
   expect(b.angle).toBeCloseTo(90);
+  world.actorParents.detach(middle);
   world.field.enemies = [enemy, last];
+  importActorFixtures(world);
   world.actorParents.sync(world);
   tick(world, b);
   expect(b.targetId).toBe(enemy.uid);

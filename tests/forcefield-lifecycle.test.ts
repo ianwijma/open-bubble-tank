@@ -1,3 +1,4 @@
+import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import { FIELD_RADIUS } from '../src/game/core/constants';
 import { STARTER } from '../src/game/data/catalog';
@@ -41,6 +42,7 @@ test('ordinary boundary cleanup exposes field combat before same-frame passive r
       200,
     ),
   ];
+  importActorFixtures(world);
   tank.x = FIELD_RADIUS + 1;
   world.bullets.push(
     createProjectile(world.nextId(), {

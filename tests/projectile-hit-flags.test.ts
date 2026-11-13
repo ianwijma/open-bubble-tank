@@ -1,3 +1,4 @@
+import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import type { Projectile } from '../src/game/core/types';
 import { STARTER } from '../src/game/data/catalog';
@@ -25,6 +26,7 @@ function setup(carrier = false) {
     'enemy',
   );
   world.field.enemies = [target];
+  importActorFixtures(world);
   world.hitTest = (tank) => tank === target;
   return { world, target };
 }
@@ -173,6 +175,7 @@ test('Spinner callback, damage and memory precede its flag, which persists indep
   const { world } = setup();
   const ally = createTank(world.nextId(), { ...STARTER, life: 100 }, 'ally');
   world.allies.push(ally);
+  importActorFixtures(world);
   world.hitTest = () => true;
   const b = shot(world, { kind: 'spin', symbol: 2033, enemy: true, damage: 3 });
   const events: string[] = [];

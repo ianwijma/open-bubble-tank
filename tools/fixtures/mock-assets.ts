@@ -1,3 +1,4 @@
+import { importActorFixtures } from './actor-attachments';
 import { captureCanvas } from './pixi-capture';
 import { Rectangle } from 'pixi.js';
 import { AssetPack } from '../../src/game/assets/asset-pack';
@@ -119,6 +120,7 @@ export async function showMockAssetsProof(native: AssetPack, host: HTMLElement) 
           0,
         ),
       ];
+      importActorFixtures(world);
       capture(
         column,
         0,

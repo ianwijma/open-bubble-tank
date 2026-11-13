@@ -22,7 +22,6 @@ export class ActorParents {
   private active = new Map<Field, ActorParent>();
   private parents = new WeakMap<Field, ActorParent>();
   private links = new WeakMap<Tank, ActorParent>();
-  private observed = new WeakSet<Tank>();
   private avatar?: Tank;
   private rootOffset: Vec = { x: 0, y: 0 };
 
@@ -39,24 +38,11 @@ export class ActorParents {
     this.avatar = world.player;
     this.rootOffset = world.mainEffects.position;
     const next = new Map<Field, ActorParent>();
-    for (const { field, runtime, offset } of world.attachedFields()) {
+    for (const { field, offset } of world.attachedFields()) {
       const parent = this.parentFor(field);
       parent.rooted = true;
       parent.x = displayPixel(offset.x - world.player.x);
       parent.y = displayPixel(offset.y - world.player.y);
-      const members = new Set([...field.enemies, ...runtime.allies]);
-      for (const tank of parent.members)
-        if (!members.has(tank) && this.links.get(tank) === parent) this.links.delete(tank);
-      parent.members = new Set();
-      for (const tank of members) {
-        const previous = this.links.get(tank);
-        // Arrays can still reference an actor reparented by a later _-G0.
-        // Only attachment/reparenting moves an existing clip between layers.
-        if ((previous && previous !== parent) || (!previous && this.observed.has(tank))) continue;
-        this.observed.add(tank);
-        this.links.set(tank, parent);
-        parent.members.add(tank);
-      }
       next.set(field, parent);
     }
     for (const [field, parent] of this.active) if (!next.has(field)) parent.rooted = false;
@@ -66,13 +52,15 @@ export class ActorParents {
     const parent = this.parentFor(field);
     this.links.get(tank)?.members.delete(tank);
     this.links.set(tank, parent);
-    this.observed.add(tank);
     parent.members.add(tank);
   }
   detach(tank: Tank) {
     this.links.get(tank)?.members.delete(tank);
     this.links.delete(tank);
-    this.observed.add(tank);
+  }
+  /** Actual enemyLayer children in addChild order, independent of Run arrays. */
+  *owned(field: Field): IterableIterator<Tank> {
+    yield* this.parents.get(field)?.members ?? [];
   }
   hasParent = (tank: Tank) => tank === this.avatar || this.links.has(tank);
   onStage = (tank: Tank) => tank === this.avatar || this.links.get(tank)?.rooted === true;

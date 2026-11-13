@@ -1,3 +1,4 @@
+import { importActorFixtures } from './actor-attachments';
 import { captureCanvas } from './pixi-capture';
 import { Rectangle } from 'pixi.js';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
@@ -35,7 +36,8 @@ export async function showSpecialProjectilesProof(pack: AssetPack, host: HTMLEle
     -180,
   );
   world.field.enemies = [master];
-  world.actorParents.sync(world);
+  importActorFixtures(world);
+  importActorFixtures(world);
   const make = (options: Partial<Projectile>) =>
     createProjectile(world.nextId(), {
       owner: world.player.uid,

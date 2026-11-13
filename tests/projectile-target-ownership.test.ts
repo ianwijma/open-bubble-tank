@@ -1,3 +1,4 @@
+import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import type { Field, Projectile } from '../src/game/core/types';
 import { STARTER } from '../src/game/data/catalog';
@@ -25,6 +26,7 @@ function enemy(world: World, x: number, y = 0) {
   );
   tank.guns = [];
   world.field.enemies.push(tank);
+  importActorFixtures(world);
   return tank;
 }
 function seeker(world: World, changes: Partial<Projectile> = {}) {
@@ -53,7 +55,9 @@ test('friendly seeker reacquires the first array entry rather than a same-UID re
   const bullet = seeker(world, { targetId: target.uid });
   expect(bullet.angle).toBe(90);
   const replacement = { ...target, x: -100, y: 0 };
+  world.actorParents.detach(target);
   world.field.enemies = [first, replacement];
+  importActorFixtures(world);
   world.actorParents.sync(world);
   tick(world, bullet);
   expect(bullet.angle).toBe(0);
@@ -66,7 +70,8 @@ test('friendly seeker retains a physically contained target missing from the raw
     first = enemy(world, 100),
     target = enemy(world, 0, 100);
   const bullet = seeker(world, { targetId: target.uid });
-  world.field.enemies = [first]; // Array mutation does not remove the actual display child.
+  world.field.enemies = [first];
+  importActorFixtures(world); // Array mutation does not remove the actual display child.
   world.actorParents.attach(target, world.field);
   tick(world, bullet);
   expect(bullet.angle).toBe(90);
@@ -102,6 +107,7 @@ for (const kind of ['seeker', 'sapper'] as const)
       );
     if (kind === 'sapper') world.player = target;
     else world.field.enemies.push(target);
+    importActorFixtures(world);
     target.rotation = 90;
     const home = enemy(world, -100);
     const bullet = seeker(world, {
@@ -157,6 +163,7 @@ test('friendly seeker whose target vanishes during Run completes that move once 
   const world = setup();
   const old = enemy(world, 100);
   const bullet = seeker(world);
+  world.actorParents.detach(old);
   world.field.enemies = [];
   world.actorParents.sync(world);
   tick(world, bullet);
@@ -185,6 +192,7 @@ function sapper() {
       0,
     );
   world.field.enemies = [home];
+  importActorFixtures(world);
   const bullet = seeker(world, {
     owner: home.uid,
     enemy: true,

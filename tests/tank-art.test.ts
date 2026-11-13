@@ -1,3 +1,4 @@
+import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import { STARTER } from '../src/game/data/catalog';
 import { createTank } from '../src/game/simulation/tank';
@@ -53,10 +54,12 @@ test('transit advances avatar and both field populations once without running av
   const w = new World([], [], 10);
   const origin = createTank(w.nextId(), { ...STARTER, avatar: false }, 'enemy');
   w.field.enemies = [origin];
+  importActorFixtures(w);
   w.jump({ x: 1, y: 0 });
   const next = w.transit!.next;
   const destination = createTank(w.nextId(), { ...STARTER, avatar: false }, 'enemy');
   next.enemies = [destination];
+  w.attachActor(destination, next);
   const inactive = createTank(w.nextId(), STARTER, 'enemy');
   const detached = { ...next, col: 99, enemies: [inactive] };
   w.fields.set('99,0', detached);

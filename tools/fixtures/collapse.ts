@@ -1,3 +1,4 @@
+import { importActorFixtures } from './actor-attachments';
 import { captureCanvas } from './pixi-capture';
 import { Container, Graphics, Point, Rectangle } from 'pixi.js';
 import { AssetPack, type Raster, type SpriteInfo } from '../../src/game/assets/asset-pack';
@@ -34,6 +35,7 @@ export async function showCollapseProof(pack: AssetPack, host: HTMLElement) {
       20,
     ),
   );
+  importActorFixtures(world);
   world.addBullet(
     createProjectile(world.nextId(), {
       owner: -1,

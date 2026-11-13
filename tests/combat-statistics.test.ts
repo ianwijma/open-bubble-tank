@@ -1,3 +1,4 @@
+import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import { FieldVisit } from '../src/game/core/field-visit';
 import { FIELD_RADIUS } from '../src/game/core/constants';
@@ -19,6 +20,7 @@ function setup(
   world.roster.units = new Map([[key, [design]]]);
   const tank = createTank(world.nextId(), design, 'enemy', 100, 0);
   world.field.enemies = [tank];
+  importActorFixtures(world);
   return { world, tank };
 }
 
@@ -71,6 +73,7 @@ test('removal preserves death queue order and checks each exact counter before d
   const { world, tank } = setup('SmallDeadHead');
   const second = createTank(world.nextId(), tank.design, 'enemy', 200, 0);
   world.field.enemies.push(second);
+  importActorFixtures(world);
   world.stats.deadheads = 199;
   world.kill(second);
   world.kill(tank);
@@ -111,6 +114,7 @@ test('protected outside checks can skip exactly50, so later removals do not gran
   const second = createTank(world.nextId(), tank.design, 'enemy', FIELD_RADIUS + 10, 10);
   second.shield = 100;
   world.field.enemies.push(second);
+  importActorFixtures(world);
   world.stats.sumo = 49;
   world.step(emptyInput());
   expect([world.stats.sumo, tank.dead, second.dead]).toEqual([51, false, false]);
@@ -170,8 +174,10 @@ test('Apocalypse damage respects protection and counts callbacks without removal
   const protectedTank = createTank(world.nextId(), tank.design, 'enemy', 200, 0);
   protectedTank.shield = 1000;
   world.field.enemies.push(protectedTank);
+  importActorFixtures(world);
   const ally = createTank(world.nextId(), { ...STARTER, avatar: false, reward: 0 }, 'ally');
   world.allies.push(ally);
+  importActorFixtures(world);
   world.stats.deadheads = 199;
   world.beginCollapse(0);
   for (let i = 0; i < 120; i++) world.step(emptyInput());

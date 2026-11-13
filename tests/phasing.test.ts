@@ -1,3 +1,4 @@
+import { importActorFixtures } from './fixtures/actor-attachments';
 import { createPhasing, tickPhasing } from '../src/game/simulation/phasing';
 import { Random } from '../src/game/core/math';
 import { expect, test } from 'bun:test';
@@ -26,6 +27,7 @@ function scenario() {
     world,
   );
   world.field.enemies = [tank];
+  importActorFixtures(world);
   world.field.cleared = false;
   return { world, tank, gun: tank.guns[0] };
 }

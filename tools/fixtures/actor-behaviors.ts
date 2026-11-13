@@ -1,3 +1,4 @@
+import { importActorFixtures } from './actor-attachments';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { DEFAULT_SETTINGS } from '../../src/game/core/constants';
 import { STARTER } from '../../src/game/data/catalog';
@@ -44,6 +45,7 @@ export async function showActorBehaviors(pack: AssetPack, host: HTMLElement) {
   tanks[0].rotation = 90;
   tanks[0].life = 50;
   world.field.enemies = tanks;
+  importActorFixtures(world);
   world.field.cleared = false;
   const state = () =>
     tanks.map((t) => ({

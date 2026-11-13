@@ -1,3 +1,4 @@
+import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import { World, emptyInput } from '../src/game/simulation/world';
 import { createTank } from '../src/game/simulation/tank';
@@ -21,6 +22,7 @@ function setup(weapon = 4001, speed = 0) {
   };
   const tank = createTank(world.nextId(), design, 'enemy', 100, 0);
   world.field.enemies = [tank];
+  importActorFixtures(world);
   return { world, tank };
 }
 
@@ -91,6 +93,7 @@ test('ally escape bypasses shields and forcefields and drops its reward without 
     drop(pos, amount);
   };
   world.allies.push(ally);
+  importActorFixtures(world);
   world.step(emptyInput());
   expect(ally.dead).toBe(true);
   expect(ally.life).toBe(0);

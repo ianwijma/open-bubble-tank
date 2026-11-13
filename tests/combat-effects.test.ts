@@ -1,3 +1,4 @@
+import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import { World, emptyInput } from '../src/game/simulation/world';
 import { STARTER } from '../src/game/data/catalog';
@@ -148,6 +149,7 @@ test('burst damage and its clip share the emitter center and exact 145px radius'
     createTank(100 + i, { ...STARTER, avatar: false, life: 100 }, 'enemy', pos.x + offset, pos.y),
   );
   world.field.enemies = enemies;
+  importActorFixtures(world);
   world.fireGun(world.player, gun, emptyInput());
   expect(enemies.map((e) => e.life)).toEqual([75, 100]);
   expect(queue(world).map((e) => [e.symbol, e.x, e.y])).toEqual([[1789, pos.x, pos.y]]);
@@ -176,6 +178,7 @@ test('ripple remains ready until a target is close, then replaces ally force and
   const ally = createTank(101, { ...STARTER, avatar: false }, 'ally', 10, 0);
   ally.velocity = { x: 999, y: 999 };
   world.allies.push(ally);
+  importActorFixtures(world);
   tickGuns(world, enemy, emptyInput());
   expect(queue(world).map((e) => e.symbol)).toEqual([52]);
   expect(gun.counter).toBe(0);
@@ -265,6 +268,7 @@ test('Area Stun changes state immediately through shields and forcefields, with 
   );
   enemies[0].shield = 100;
   world.field.enemies = enemies;
+  importActorFixtures(world);
   world.fireGun(world.player, gun, emptyInput());
   expect(enemies.map((enemy) => [enemy.stunned, enemy.status.stun])).toEqual([
     [true, 101],
@@ -295,6 +299,7 @@ test('Area Burst flushes lethal enemies before returning and preserves their non
       pos.y,
     );
   world.field.enemies = [enemy];
+  importActorFixtures(world);
   world.fireGun(world.player, gun, emptyInput());
   expect(world.field.enemies).toEqual([]);
   expect(world.runtimeFor(world.field).enemyRemovals).toEqual([]);

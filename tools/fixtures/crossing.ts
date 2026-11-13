@@ -1,3 +1,4 @@
+import { importActorFixtures } from './actor-attachments';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { DEFAULT_SETTINGS } from '../../src/game/core/constants';
 import type { Projectile } from '../../src/game/core/types';
@@ -26,6 +27,7 @@ export async function showCrossingProof(pack: AssetPack, host: HTMLElement) {
   world.player.life = 40;
   world.field.tutorial = 0;
   world.field.enemies = [createTank(world.nextId(), design, 'enemy', 350, -80)];
+  importActorFixtures(world);
   const old = world.field;
   const bullet = (x: number): Projectile => ({
     uid: world.nextId(),
@@ -85,7 +87,7 @@ export async function showCrossingProof(pack: AssetPack, host: HTMLElement) {
   world.hitTest = pack.hitTest;
   world.hitPart = pack.hitPart;
   world.hitProjectile = pack.hitProjectile;
-  world.actorParents.sync(world);
+  importActorFixtures(world);
   await renderer.init(host, DEFAULT_SETTINGS);
   const snapshots = [];
   try {
@@ -172,12 +174,12 @@ export async function showNestedCrossingProof(pack: AssetPack, host: HTMLElement
   );
   abandoned.enemies = [actor];
   world.player.x = world.transit!.offset.x - 200;
-  world.actorParents.sync(world);
+  importActorFixtures(world);
   world.damage(world.player, 2);
   const latest = world.transit!.next;
   latest.enemies = [];
   latest.tutorial = 0;
-  world.actorParents.sync(world);
+  importActorFixtures(world);
   await renderer.init(host, DEFAULT_SETTINGS);
   const read = () => {
     renderer.draw(world, { ...DEFAULT_SETTINGS, shake: false });

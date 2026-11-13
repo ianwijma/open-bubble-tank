@@ -1,3 +1,4 @@
+import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import type { Projectile } from '../src/game/core/types';
 import { STARTER } from '../src/game/data/catalog';
@@ -70,6 +71,7 @@ test('deflected movement quantizes each display write without rounding the retai
 test('contact samples the preceding displayed pose on each ordinary Run', () => {
   const world = new World([], [], 42);
   world.field.enemies = [createTank(world.nextId(), STARTER, 'enemy', 100, 0)];
+  importActorFixtures(world);
   const samples: number[][] = [];
   world.hitTest = (_tank, x, y) => {
     samples.push([x, y]);

@@ -1,3 +1,4 @@
+import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import { World, emptyInput } from '../src/game/simulation/world';
 import { STARTER } from '../src/game/data/catalog';
@@ -29,6 +30,7 @@ function setup(...weapons: number[]) {
     0,
   );
   world.field.enemies = [owner];
+  importActorFixtures(world);
   return { world, owner };
 }
 function mine(world: World, options: Partial<Projectile> = {}): Projectile {
@@ -102,6 +104,7 @@ test('allies neither trigger arming nor receive the avatar-only contact', () => 
     b = mine(world),
     ally = createTank(world.nextId(), { ...STARTER, avatar: false, life: 50 }, 'ally', 1, 0);
   world.allies.push(ally);
+  importActorFixtures(world);
   world.hitTest = (tank) => tank === ally;
   tick(world, b);
   expect(b.mineState!.armed).toBe(false);

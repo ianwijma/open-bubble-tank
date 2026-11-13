@@ -1,3 +1,4 @@
+import { importActorFixtures } from './fixtures/actor-attachments';
 import { FieldVisit } from '../src/game/core/field-visit';
 import { expect, test } from 'bun:test';
 import { STARTER } from '../src/game/data/catalog';
@@ -33,6 +34,7 @@ function healingWorld() {
   world.field.cleared = false;
   world.fieldVisit = new FieldVisit();
   world.field.enemies = [healer, patient];
+  importActorFixtures(world);
   return { world, healer, patient };
 }
 
@@ -78,6 +80,7 @@ test('allied healers prioritize the avatar and remove their beam with its owner'
   const healer = createTank(100, healerDesign, 'ally', -100, 0);
   const patient = createTank(101, patientDesign, 'ally', 100, 0, 100, 50);
   world.allies = [healer, patient];
+  importActorFixtures(world);
   world.player.life = 20;
   frames(world, 13);
   expect(world.player.life).toBe(21);
@@ -104,6 +107,7 @@ test('damage beams count contact frames and stop at the bubble wall', () => {
   world.field.cleared = false;
   world.fieldVisit = new FieldVisit();
   world.field.enemies = [patient];
+  importActorFixtures(world);
   const hitTest = world.hitTest;
   world.hitTest = () => false;
   frames(world, 5, true);
@@ -137,6 +141,7 @@ test('damage beams sample every target on the shared source minimum-distance gri
   world.field.cleared = false;
   world.fieldVisit = new FieldVisit();
   world.field.enemies = [far, near];
+  importActorFixtures(world);
   frames(world, 1, true);
   near.x = 100;
   near.y = far.y = -20;

@@ -1,3 +1,4 @@
+import { importActorFixtures } from './actor-attachments';
 import { Application } from 'pixi.js';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { TacticalHudState } from '../../src/game/core/tactical-hud';
@@ -130,7 +131,9 @@ export async function showTacticalHudProof(pack: AssetPack, host: HTMLElement) {
     };
     const world = new World([], [STARTER, design], 50);
     world.field.enemies = [createTank(1000, STARTER, 'enemy', 350, 0)];
+    importActorFixtures(world);
     world.allies = [createTank(1001, STARTER, 'ally', -100, 0)];
+    importActorFixtures(world);
     world.editSlider.trigger(1, 1);
     world.step({ ...emptyInput(), fire: true });
     world.beginCollapse(0);

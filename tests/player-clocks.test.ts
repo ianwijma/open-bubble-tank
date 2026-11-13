@@ -1,3 +1,4 @@
+import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import { World, emptyInput } from '../src/game/simulation/world';
 import { STARTER } from '../src/game/data/catalog';
@@ -115,6 +116,7 @@ test('auto cannon acquires after its first attempt and retains the last equally 
   const left = createTank(world.nextId(), design, 'enemy', -100, 0),
     right = createTank(world.nextId(), design, 'enemy', 100, 0);
   world.field.enemies = [left, right];
+  importActorFixtures(world);
   world.player.guns[0].part = { ...world.player.guns[0].part, x: 0, y: 0 };
   world.step(emptyInput());
   expect(world.bullets).toEqual([]);
@@ -155,6 +157,7 @@ test('flak acquisition includes friendly infection shots and waits one part call
     0,
   );
   world.field.enemies.push(target);
+  importActorFixtures(world);
   seeker.targetId = target.uid;
   world.bullets.push(seeker);
   world.step(emptyInput());
@@ -280,6 +283,7 @@ test('enemy launcher retains its six-call burst delay after the first complete b
     0,
   );
   world.field.enemies = [tank];
+  importActorFixtures(world);
   const gun = tank.guns[0];
   world.fireGun(tank, gun, emptyInput());
   world.step(emptyInput());
@@ -307,6 +311,7 @@ test('normal boundary FinalPartCall clears readouts before the initiation frame 
       0,
     ),
   ];
+  importActorFixtures(world);
   world.step(emptyInput());
   expect(world.tacticalHud.passives).toHaveLength(1);
   world.player.x = 425;

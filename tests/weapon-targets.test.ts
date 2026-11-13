@@ -1,3 +1,4 @@
+import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import { World, emptyInput } from '../src/game/simulation/world';
 import { createTank } from '../src/game/simulation/tank';
@@ -24,9 +25,11 @@ function scenario(ids = [4001]) {
   world.player.x = 100;
   const ally = createTank(world.nextId(), design([]), 'ally', 0, 100);
   world.allies = [ally];
+  importActorFixtures(world);
   world.rng.next = () => 0.99;
   const owner = createTank(world.nextId(), design(ids), 'enemy', 0, 0, undefined, undefined, world);
   world.field.enemies = [owner];
+  importActorFixtures(world);
   for (const gun of owner.guns) if (gun.targeting) gun.targeting.allies = 1;
   world.actorParents.sync(world);
   return { world, ally, owner, gun: owner.guns[0] };
@@ -42,6 +45,7 @@ test('cached attachment resets primary target only, preserving master, count and
   world.jump({ x: 1, y: 0 });
   world.transit!.next.scale = 1;
   world.transit!.next.enemies = [];
+  importActorFixtures(world);
   world.transit!.offset = { x: 800, y: 0 };
   world.transit!.target = { x: 483, y: 0 };
   owner.status.stun = 10; // Isolate reattachment from a subsequent offensive Run.
@@ -122,6 +126,7 @@ test('dead but attached targets remain referenced until the source parent detach
   tickGuns(world, owner, emptyInput());
   expect(gun.angle).toBe(90);
   expect(gun.targeting!.target?.uid).toBe(ally.uid);
+  world.actorParents.detach(ally);
   world.allies = [];
   world.actorParents.sync(world);
   tickGuns(world, owner, emptyInput());
@@ -140,6 +145,7 @@ test('allied autocannon predicts from the closest detail and preserves the doubl
   );
   target.rotation = 90;
   world.field.enemies = [target];
+  importActorFixtures(world);
   const ally = createTank(
     world.nextId(),
     design([7001]),
@@ -151,6 +157,7 @@ test('allied autocannon predicts from the closest detail and preserves the doubl
     world,
   );
   world.allies = [ally];
+  importActorFixtures(world);
   world.actorParents.sync(world);
   const point = weaponAimPoint(world, ally, ally.guns[0]);
   expect(point!.x).toBeCloseTo(100);
@@ -216,6 +223,7 @@ test('ally prediction uses base speed despite sticky, then clears a deactivated 
   owner.status.sticky = 100;
   const ally = createTank(world.nextId(), design([7001]), 'ally', 0, 0, 100, 100, world);
   world.allies = [ally];
+  importActorFixtures(world);
   world.actorParents.sync(world);
   const point = weaponAimPoint(world, ally, ally.guns[0]);
   expect(point!.y).toBe(72); // round(sqrt(200²+60²)/10)=21, two Scale calls.

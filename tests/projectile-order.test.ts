@@ -1,3 +1,4 @@
+import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import { World, emptyInput } from '../src/game/simulation/world';
 import { tickBullet } from '../src/game/simulation/projectiles';
@@ -19,6 +20,7 @@ function setup() {
     0,
   );
   world.field.enemies = [target];
+  importActorFixtures(world);
   return { world, target };
 }
 function bullet(world: World, values: Partial<Projectile> = {}): Projectile {
@@ -91,6 +93,7 @@ test('friendly half-step contact needs a current-point layer hit; ordinary enemy
   expect(target.life).toBe(100); // Backward point alone cannot open the layer gate.
   const blocker = createTank(world.nextId(), { ...target.design }, 'enemy', 10, 0);
   world.field.enemies.push(blocker);
+  importActorFixtures(world);
   b.x = 10;
   tick(world, b);
   expect(target.life).toBe(98);
@@ -101,6 +104,7 @@ test('friendly half-step contact needs a current-point layer hit; ordinary enemy
   tick(world, enemyShot);
   expect(world.player.life).toBe(40);
   world.field.enemies = [target];
+  importActorFixtures(world);
   tick(world, enemyShot);
   expect(world.player.life).toBe(38);
 });
@@ -136,6 +140,7 @@ test('splash callback runs before direct damage and excludes only the current co
   const { world, target } = setup(),
     other = createTank(world.nextId(), target.design, 'enemy', 110, 0);
   world.field.enemies.push(other);
+  importActorFixtures(world);
   const b = bullet(world, { kind: 'pierce', symbol: 1728, x: 100, explode: 75, splashDamage: 100 });
   b.hit.add(other.uid);
   const calls: number[] = [];
@@ -199,6 +204,7 @@ test('Leech creates an attracted avatar pickup before shield-blocked damage; it 
       10,
     );
   world.allies.push(owner);
+  importActorFixtures(world);
   target.shield = 10;
   const b = bullet(world, { kind: 'leech', symbol: 1813, owner: owner.uid, x: 100, speed: 0 });
   world.hitTest = (t) => t === target;

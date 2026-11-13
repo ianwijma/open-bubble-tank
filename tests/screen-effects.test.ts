@@ -1,3 +1,4 @@
+import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import { STARTER } from '../src/game/data/catalog';
 import art from '../src/game/data/screen-effect-art.json';
@@ -19,6 +20,7 @@ function setup() {
       0,
     ),
   ];
+  importActorFixtures(w);
   return w;
 }
 const frames = (w: World, n: number) => {
@@ -87,6 +89,7 @@ test('enemy ink repeatedly hits allies and queues overlapping screen clips witho
   const w = setup();
   const ally = createTank(w.nextId(), { ...STARTER, avatar: false, life: 50 }, 'ally');
   w.allies.push(ally);
+  importActorFixtures(w);
   hit(w, ally);
   hit(w, ally);
   expect(ally.status.ink).toBe(0);

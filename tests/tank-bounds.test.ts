@@ -1,3 +1,4 @@
+import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import type { Bounds, SpriteInfo } from '../src/game/assets/asset-pack';
 import { StatusPlayback } from '../src/game/assets/status-playback';
@@ -172,6 +173,7 @@ test('enemy orbital Run fires its timer with no target, preserves angle and rese
       'enemy',
     );
   world.field.enemies = [tank];
+  importActorFixtures(world);
   const gun = tank.guns[0];
   gun.targeting!.target = null;
   gun.angle = 32;

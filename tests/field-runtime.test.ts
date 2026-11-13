@@ -1,3 +1,4 @@
+import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import { STARTER } from '../src/game/data/catalog';
 import type { Projectile } from '../src/game/core/types';
@@ -47,11 +48,13 @@ function setup() {
   world.player.x = 425;
   const outgoing = createTank(world.nextId(), design, 'enemy', 100, 0);
   world.field.enemies = [outgoing];
+  importActorFixtures(world);
   const old = world.field;
   world.jump({ x: 1, y: 0 });
   const next = world.transit!.next;
   const incoming = createTank(world.nextId(), design, 'enemy', 100, 0);
   next.enemies = [incoming];
+  world.attachActor(incoming, next);
   return { world, old, next, outgoing, incoming, runtime: world.runtimeFor(next) };
 }
 
@@ -192,6 +195,7 @@ test('an enemy killed in the bullet loop is removed and completes its field on t
     1,
   );
   world.field.enemies = [enemy];
+  importActorFixtures(world);
   const bullet = shot(world, 100, 0, false);
   bullet.speed = 0;
   world.bullets.push(bullet);

@@ -1,3 +1,4 @@
+import { importActorFixtures } from './fixtures/actor-attachments';
 import { FieldVisit } from '../src/game/core/field-visit';
 import { expect, test } from 'bun:test';
 import { STARTER } from '../src/game/data/catalog';
@@ -21,6 +22,7 @@ function patientWorld() {
   world.field.cleared = false;
   world.fieldVisit = new FieldVisit();
   world.field.enemies = [tank];
+  importActorFixtures(world);
   return { world, tank };
 }
 

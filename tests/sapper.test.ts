@@ -1,3 +1,4 @@
+import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import type { Projectile } from '../src/game/core/types';
 import { STARTER } from '../src/game/data/catalog';
@@ -31,6 +32,7 @@ function setup(playerX = 100) {
   master.life = 60;
   master.guns[0].counter = Infinity;
   world.field.enemies = [master];
+  importActorFixtures(world);
   world.actorParents.sync(world);
   const bullet: Projectile = {
     uid: world.nextId(),
@@ -117,6 +119,7 @@ test('outbound sapper ignores allies and flips art immediately while preserving 
   const { world, bullet } = setup();
   const ally = createTank(world.nextId(), { ...STARTER, avatar: false }, 'ally');
   world.allies.push(ally);
+  importActorFixtures(world);
   world.hitTest = (tank) => tank === ally;
   tickSapper(world, bullet);
   expect(bullet.returning).toBe(false);
@@ -199,6 +202,7 @@ test('sapper contains check retains dead-but-attached masters and removes after 
   master.dead = true;
   tickSapper(world, bullet);
   expect(bullet.dead).toBe(false);
+  world.actorParents.detach(master);
   world.field.enemies = [];
   world.actorParents.sync(world);
   const position = { x: bullet.x, y: bullet.y };

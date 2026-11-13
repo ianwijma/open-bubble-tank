@@ -1,3 +1,4 @@
+import { importActorFixtures } from './actor-attachments';
 import { Application } from 'pixi.js';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { STARTER } from '../../src/game/data/catalog';
@@ -49,7 +50,8 @@ export async function showTurretProtection(pack: AssetPack, host: HTMLElement) {
     100,
   );
   world.field.enemies = [tank];
-  world.actorParents.sync(world);
+  importActorFixtures(world);
+  importActorFixtures(world);
   world.hitTest = () => false;
   const gun = tank.guns[0],
     view = new TankView(tank.design, pack, textures);

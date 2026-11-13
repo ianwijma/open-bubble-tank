@@ -3,6 +3,7 @@ import { STARTER } from '../src/game/data/catalog';
 import { createTank } from '../src/game/simulation/tank';
 import { World, emptyInput } from '../src/game/simulation/world';
 import { cacheEmptyField } from './fixtures/empty-field';
+import allyData from '../src/game/data/allies.json';
 function scenario() {
   const world = new World([], [], 1);
   cacheEmptyField(world);
@@ -12,11 +13,13 @@ function scenario() {
   const old = world.field,
     outgoing = make();
   old.enemies = [outgoing];
+  world.attachActor(outgoing, old);
   world.player.x = 425;
   world.jump({ x: 1, y: 0 });
   const incoming = make(),
     next = world.transit!.next;
   next.enemies = [incoming];
+  world.attachActor(incoming, next);
   next.scale = 1;
   world.transit!.offset = { x: 800, y: 0 };
   world.transit!.target = { x: 483, y: 0 };
@@ -65,12 +68,12 @@ test('queued death keeps its parent until removal; a replacement avatar does not
   expect(world.actorParents.point(avatar, old)).toBeNull();
 });
 
-test('synchronizing an active layer preserves membership for later removal and reparenting', () => {
+test('Run-array replacement does not detach display children; only actual removal does', () => {
   const { world, old, next, outgoing } = scenario();
   world.actorParents.sync(world);
   old.enemies = [];
   world.actorParents.sync(world);
-  expect(world.actorParents.hasParent(outgoing)).toBe(false);
+  expect(world.actorParents.hasParent(outgoing)).toBe(true);
   next.enemies.push(outgoing);
   world.actorParents.attach(outgoing, next);
   world.actorParents.sync(world);
@@ -78,8 +81,76 @@ test('synchronizing an active layer preserves membership for later removal and r
   expect(world.actorParents.point(outgoing, old)).toEqual({ x: 810, y: 20 });
   next.enemies = next.enemies.filter((t) => t !== outgoing);
   world.actorParents.sync(world);
+  expect(world.actorParents.point(outgoing, old)).toEqual({ x: 810, y: 20 });
+  world.actorParents.detach(outgoing);
   expect(world.actorParents.point(outgoing, old)).toBeNull();
 });
+
+test('sync only updates ancestry; raw arrays cannot attach or reorder enemyLayer children', () => {
+  const { world, old, next, outgoing, incoming } = scenario();
+  const ally = createTank(world.nextId(), STARTER, 'ally');
+  world.attachActor(ally, old);
+  const lateEnemy = createTank(world.nextId(), STARTER, 'enemy');
+  world.attachActor(lateEnemy, old);
+  old.enemies = [lateEnemy, outgoing];
+  world.allies = [ally];
+  next.enemies.push(ally);
+  world.actorParents.sync(world);
+  expect([...world.actorParents.owned(old)]).toEqual([outgoing, ally, lateEnemy]);
+  expect([...world.actorParents.owned(next)]).toEqual([incoming]);
+  world.actorParents.attach(outgoing, old); // addChild on the same parent raises it.
+  expect([...world.actorParents.owned(old)]).toEqual([ally, lateEnemy, outgoing]);
+  world.actorParents.attach(ally, next);
+  world.actorParents.sync(world);
+  expect([...world.actorParents.owned(old)]).toEqual([lateEnemy, outgoing]);
+  expect([...world.actorParents.owned(next)]).toEqual([incoming, ally]);
+  const rawOnly = createTank(world.nextId(), STARTER, 'enemy');
+  old.enemies.push(rawOnly);
+  world.actorParents.sync(world);
+  expect(world.actorParents.hasParent(rawOnly)).toBe(false);
+});
+
+test('stage artwork advances an attached display-only actor without running its absent array entry', () => {
+  const world = new World([], [], 1),
+    actor = createTank(world.nextId(), STARTER, 'enemy');
+  world.attachActor(actor, world.field);
+  world.pause();
+  world.step(emptyInput());
+  expect(actor.age).toBe(0);
+  expect(actor.artAge).toBe(1);
+  expect(world.field.enemies).not.toContain(actor);
+  world.actorParents.detach(actor);
+  world.step(emptyInput());
+  expect(actor.artAge).toBe(1);
+});
+
+for (const id of [3007, 3016])
+  test(`summon ${id} attaches its child and callback before its first actor Run`, () => {
+    const design = {
+      ...STARTER,
+      parts: [STARTER.parts[0], { ...STARTER.parts[1], type: id, x: 0, y: 0 }],
+    };
+    const world = new World([], [design], 1);
+    const gun = world.player.guns[0];
+    world.fireGun(world.player, gun, emptyInput());
+    expect(world.allies).toHaveLength(1);
+    const ally = world.allies[0];
+    expect(ally.design).toEqual(id === 3007 ? allyData.swarm : allyData.mine);
+    expect([ally.life, ally.maxLife, ally.age]).toEqual([15, 15, 0]);
+    expect(world.actorParents.inField(ally, world.field)).toBe(true);
+    expect([...world.actorParents.owned(world.field)]).toEqual([ally]);
+    // Repeating the trigger observes the live wrapper's existing summon.
+    world.fireGun(world.player, gun, emptyInput());
+    expect(world.allies).toEqual([ally]);
+    world.damage(ally, 15);
+    expect(ally.dead).toBe(true);
+    expect(world.runtimeFor(world.field).allyRemovals).toContain(ally);
+    expect(world.actorParents.hasParent(ally)).toBe(true);
+    world.player.life = 1;
+    world.step(emptyInput());
+    expect(world.actorParents.hasParent(ally)).toBe(false);
+    expect(world.allies).not.toContain(ally);
+  });
 
 test('localToGlobal rounds float32 rotated Point coordinates to nearest even twips', () => {
   const world = new World([], [], 1),

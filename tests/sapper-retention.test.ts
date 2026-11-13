@@ -1,3 +1,4 @@
+import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import type { Field, TankDesign } from '../src/game/core/types';
 import { ENEMIES, STARTER } from '../src/game/data/catalog';
@@ -33,6 +34,7 @@ function setup() {
   const owner = createTank(world.nextId(), still(design), 'enemy', -100, 0, 100, 100, world);
   for (const gun of owner.guns) gun.counter = Infinity;
   world.field.enemies = [owner];
+  importActorFixtures(world);
   world.actorParents.sync(world);
   const gun = owner.guns.find((gun) => gun.part.type === 4012)!;
   world.fireGun(owner, gun, emptyInput());
@@ -142,7 +144,9 @@ test('Sapper steering transforms the projectile and target into the same global 
 test('Sapper master is the captured object, independent of a same-UID array replacement', () => {
   const { world, owner, bullet } = setup();
   const replacement = { ...owner, life: 9 };
+  world.actorParents.detach(owner);
   world.field.enemies = [replacement];
+  importActorFixtures(world);
   world.actorParents.sync(world);
   tickSapper(world, bullet);
   expect(bullet.dead).toBe(true);

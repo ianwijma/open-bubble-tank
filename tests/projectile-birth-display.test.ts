@@ -1,3 +1,4 @@
+import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import type { Projectile } from '../src/game/core/types';
 import { STARTER } from '../src/game/data/catalog';
@@ -22,6 +23,7 @@ function setup() {
     200,
   );
   world.field.enemies = [enemy];
+  importActorFixtures(world);
   world.actorParents.sync(world);
   return { world, enemy };
 }
