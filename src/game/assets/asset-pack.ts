@@ -440,7 +440,7 @@ export class AssetPack {
       ])
         visit(id);
       for (const id of Object.values(PROTECTION_ART)) visit(id);
-      for (const id of [1816, 1817, 1820, 2173, 1780]) visit(id);
+      for (const id of [1816, 1817, 1820, 2173, 1780, 1542, 1544]) visit(id);
       for (const id of [MINIMAP.symbol, MINIMAP.button, MINIMAP.dot, MINIMAP.connector]) visit(id);
       for (const id of [HUD.life.symbol, HUD.fire.symbol, HUD.edit.symbol]) visit(id);
       for (const { symbol } of Object.values(HUD.tactical)) visit(symbol);

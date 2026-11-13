@@ -25,12 +25,15 @@ import {
   type FieldTransform,
 } from './field-transform';
 import { projectEffects } from './effect-projection';
+import { FieldUnderAvatarView } from './field-under-avatar-view';
 
 export class GameRenderer {
   app = new Application();
   root = new Container();
   fields = new Container();
   entities = new Container();
+  underAvatars = new Container();
+  private underAvatarNodes = new Map<Field, FieldUnderAvatarView>();
   projectiles = new Container();
   nativeShots = new Container();
   nativePickups = new Container();
@@ -105,6 +108,7 @@ export class GameRenderer {
       this.fields,
       this.captions.root,
       this.combatEffects.bottom,
+      this.underAvatars,
       this.pickupArt,
       this.nativePickups,
       this.entities,
@@ -217,6 +221,21 @@ export class GameRenderer {
     this.root.scale.set(settings.zoom);
     const activeFields = world.attachedFields().map(({ field }) => field);
     this.captions?.update(world);
+    // Retain detached wrappers' display identities. Rooted orphan wrappers still paint.
+    for (const view of this.underAvatarNodes.values()) view.root.visible = false;
+    if (this.assets.mode === 'swf')
+      for (const field of activeFields) {
+        world.fieldDisplays.requireResolvedGeometry(field);
+        const read = world.fieldDisplays.read(field);
+        let view = this.underAvatarNodes.get(field);
+        if (!view) {
+          view = new FieldUnderAvatarView(read, this.assets, this.rasterTextures);
+          this.underAvatarNodes.set(field, view);
+          this.underAvatars.addChild(view.root);
+        }
+        view.update(read, fieldTransform(world, field));
+      }
+
     for (const [field, node] of this.fieldNodes)
       if (!activeFields.includes(field)) {
         node.destroy();
@@ -467,6 +486,8 @@ export class GameRenderer {
     this.hud?.destroy();
     this.editSlider?.destroy();
     this.captions?.destroy();
+    for (const view of this.underAvatarNodes.values()) view.destroy();
+    this.underAvatarNodes.clear();
     this.tacticalHud?.destroy();
     this.combatEffects?.destroy();
     for (const view of this.highlightNodes.values()) view.destroy();

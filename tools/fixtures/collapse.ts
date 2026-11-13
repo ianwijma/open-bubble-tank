@@ -1,3 +1,4 @@
+import type { CombatEffectsView } from '../../src/game/render/combat-effects-view';
 import { fieldPoint, worldLayerTransform } from '../../src/game/render/field-transform';
 import { setFieldFixtureLayout } from './field-layout';
 import { importPickupFixtures } from './pickup-attachments';
@@ -104,8 +105,9 @@ export async function showCollapseProof(pack: AssetPack, host: HTMLElement) {
         Math.floor(index / 2) * 225 + 14,
       );
       const avatar = renderer.entities.children.at(-1)!;
-      const bottomLayer = renderer.root.children[2] as Container;
-      const topLayer = renderer.root.children[8] as Container;
+      const effects = (renderer as unknown as { combatEffects: CombatEffectsView }).combatEffects;
+      const bottomLayer = effects.bottom;
+      const topLayer = effects.top;
       const b = bottomLayer.children.at(-1)!,
         t = topLayer.children.at(-1)!;
       snapshots.push({
