@@ -1,0 +1,5028 @@
+{
+  "scope": "Preserved original StaticText builtin contact under declared project wrappers.\nNo original method, ABC, frame script, RNG, clock or engine patch. F8 performs\nsynchronous builtin hitTestPoint(shape=true), width/height, bounds and Point reads.\nDerived normal/advanced copies are project controls, never original text.\n",
+  "originalSha256": "f5827841c682f988f23dcf470ab4ab59c1ffc497acb4ca0f21077d03f942c153",
+  "probeSha256": "9d5153223e82ff7a4afa068975074ec503fd5aaa7548e3b7c9bc03681256c63a",
+  "emitterSha256": "3b13e174838be1178fe7a1347cabced1e21f8b08990789fffdfe795287519afd",
+  "fields": [
+    "objectId",
+    "parentId",
+    "maskId",
+    "childIndex",
+    "hit",
+    "hitAgain",
+    "width",
+    "height",
+    "widthAgain",
+    "heightAgain",
+    "x",
+    "y",
+    "scaleX",
+    "scaleY",
+    "rotation",
+    "visible",
+    "alpha",
+    "input.x",
+    "input.y",
+    "point.x",
+    "point.y",
+    "pointIsInput",
+    "roundTrip.x",
+    "roundTrip.y",
+    "roundTripIsInput",
+    "bounds.x",
+    "bounds.y",
+    "bounds.width",
+    "bounds.height",
+    "localBounds.x",
+    "localBounds.y",
+    "localBounds.width",
+    "localBounds.height",
+    "worldBounds.x",
+    "worldBounds.y",
+    "worldBounds.width",
+    "worldBounds.height",
+    "main.x",
+    "main.y",
+    "main.scaleX",
+    "main.scaleY",
+    "main.rotation"
+  ],
+  "wrappers": [
+    {
+      "label": "original-1659",
+      "id": 60000,
+      "class": "TextContact60000",
+      "children": [
+        {
+          "symbol": 1659,
+          "depth": 1,
+          "name": "target",
+          "x": 0,
+          "clipDepth": null
+        }
+      ]
+    },
+    {
+      "label": "original-1660",
+      "id": 60001,
+      "class": "TextContact60001",
+      "children": [
+        {
+          "symbol": 1660,
+          "depth": 1,
+          "name": "target",
+          "x": 0,
+          "clipDepth": null
+        }
+      ]
+    },
+    {
+      "label": "original-1661",
+      "id": 60002,
+      "class": "TextContact60002",
+      "children": [
+        {
+          "symbol": 1661,
+          "depth": 1,
+          "name": "target",
+          "x": 0,
+          "clipDepth": null
+        }
+      ]
+    },
+    {
+      "label": "original-1662",
+      "id": 60003,
+      "class": "TextContact60003",
+      "children": [
+        {
+          "symbol": 1662,
+          "depth": 1,
+          "name": "target",
+          "x": 0,
+          "clipDepth": null
+        }
+      ]
+    },
+    {
+      "label": "original-1663",
+      "id": 60004,
+      "class": "TextContact60004",
+      "children": [
+        {
+          "symbol": 1663,
+          "depth": 1,
+          "name": "target",
+          "x": 0,
+          "clipDepth": null
+        }
+      ]
+    },
+    {
+      "label": "original-1664",
+      "id": 60005,
+      "class": "TextContact60005",
+      "children": [
+        {
+          "symbol": 1664,
+          "depth": 1,
+          "name": "target",
+          "x": 0,
+          "clipDepth": null
+        }
+      ]
+    },
+    {
+      "label": "original-1665",
+      "id": 60006,
+      "class": "TextContact60006",
+      "children": [
+        {
+          "symbol": 1665,
+          "depth": 1,
+          "name": "target",
+          "x": 0,
+          "clipDepth": null
+        }
+      ]
+    },
+    {
+      "label": "original-1666",
+      "id": 60007,
+      "class": "TextContact60007",
+      "children": [
+        {
+          "symbol": 1666,
+          "depth": 1,
+          "name": "target",
+          "x": 0,
+          "clipDepth": null
+        }
+      ]
+    },
+    {
+      "label": "derived-normal",
+      "id": 60008,
+      "class": "TextContact60008",
+      "children": [
+        {
+          "symbol": 61000,
+          "depth": 1,
+          "name": "target",
+          "x": 0,
+          "clipDepth": null
+        }
+      ]
+    },
+    {
+      "label": "derived-advanced",
+      "id": 60009,
+      "class": "TextContact60009",
+      "children": [
+        {
+          "symbol": 61001,
+          "depth": 1,
+          "name": "target",
+          "x": 0,
+          "clipDepth": null
+        }
+      ]
+    }
+  ],
+  "derived": [
+    {
+      "id": 61000,
+      "source": 1659,
+      "classification": "PROJECT-owned derived DefineText2; only CID differs",
+      "renderer": 0,
+      "gridFit": 2,
+      "thickness": 0,
+      "sharpness": 0
+    },
+    {
+      "id": 61001,
+      "source": 1659,
+      "classification": "PROJECT-owned derived DefineText2; only CID differs",
+      "renderer": 1,
+      "gridFit": 2,
+      "thickness": 0,
+      "sharpness": 0
+    }
+  ],
+  "originalTextInventory": [
+    {
+      "id": 1659,
+      "tag": 33,
+      "payloadSha256": "038c2766f9637121e3bc942e747475b7ebc3c385e0175599c4672b748ca1a50d",
+      "settingsPayloadSha256": "5e4eeef438d576a3645932aae578d3198b92bc03f0a82a1a140a2b594e558deb",
+      "boundsTwips": [-331, 5577, 15, 1780]
+    },
+    {
+      "id": 1660,
+      "tag": 33,
+      "payloadSha256": "07e586fb82cc8f5490d369fae74c6f9bc607b8d573b1d08a3ba90d96fa1a3ec8",
+      "settingsPayloadSha256": "a3494942bf7b256b0d1ab696d32662406facb4b71c97f8b3b7222d5e54878d0c",
+      "boundsTwips": [-270, 4629, -9, 1106]
+    },
+    {
+      "id": 1661,
+      "tag": 33,
+      "payloadSha256": "109438859dedfff54fc74b59d24ea1871b19dd90f6e06a0279ae0aa6949cc1c1",
+      "settingsPayloadSha256": "b390fa671f0c9237fcada7005a3786a9900d1a038fd679653fbc36033c86f1e4",
+      "boundsTwips": [1266, 2058, 36, 414]
+    },
+    {
+      "id": 1662,
+      "tag": 33,
+      "payloadSha256": "d15b3c125b32c4886ae504eb741f56e32738415b0211117b3c25ebc2397623d4",
+      "settingsPayloadSha256": "f4cb7195b098e6abd5144d1e5eb9471144bc2b88b65b264de72bbb5084ab62ce",
+      "boundsTwips": [153, 5093, -2, 1115]
+    },
+    {
+      "id": 1663,
+      "tag": 33,
+      "payloadSha256": "cf4b591df9a274be2d61c38714011cd267039b3c02fcecd4693751c08766fb7c",
+      "settingsPayloadSha256": "8909c4a9256b5351819dfe2f9c66e1e36002b336eb0f873c9c94ccc2b5b346e5",
+      "boundsTwips": [-179, 5450, -9, 1243]
+    },
+    {
+      "id": 1664,
+      "tag": 33,
+      "payloadSha256": "adbcca283de22372a524ee1ee3dc1c21fba44e5c2d06c42ef28b409fadb0d34b",
+      "settingsPayloadSha256": "3e8d8a1fff278d0c1334827f05c142e12c11f077283e2267e2a775ed5ace57be",
+      "boundsTwips": [-575, 4958, -2, 1210]
+    },
+    {
+      "id": 1665,
+      "tag": 33,
+      "payloadSha256": "52b76563cf4af41aeaaa7636a91136f950a17b26a7cfa9ce83a8ae17746c9132",
+      "settingsPayloadSha256": "0a20fb5882eddfa40bcdf260352f63041fe5da929e9e6c385e095593c0f09a36",
+      "boundsTwips": [135, 5112, 15, 661]
+    },
+    {
+      "id": 1666,
+      "tag": 33,
+      "payloadSha256": "a321881b13b39c46606865356a882389c2a2f43f48c32bc694afac84a4912284",
+      "settingsPayloadSha256": "28d635696b3bc6b2fb480f2a1ddad85c572ab10ee5fbe77a7ab4731b94fb7585",
+      "boundsTwips": [-450, 4834, -9, 1210]
+    }
+  ],
+  "addedTags": [
+    {
+      "code": 33,
+      "sha256": "f40b311454d4ce48479016b4a934ce76d973c8dbc209b7e813b9dd3bb020cc63"
+    },
+    {
+      "code": 74,
+      "sha256": "65188d6a66a61c7af47641bc1e7aed20f4fe4dfc927820362d87b7ec7639a403"
+    },
+    {
+      "code": 33,
+      "sha256": "5bc0f31e7c1512dcdbed0a2bcec49f7d8bff72caeb890d1309e3170264921c78"
+    },
+    {
+      "code": 74,
+      "sha256": "122fd37693c266736c83cf59c055e3115ac77c791b04f2839e21509e73973777"
+    },
+    {
+      "code": 39,
+      "sha256": "09563d779bced60f3a92d4147eb9baf91a0e7f1559df91584aac748054bb306f"
+    },
+    {
+      "code": 39,
+      "sha256": "ec099b2f621460cd3c3b960c645afa7098a5d935548794a98d33adae9e30a570"
+    },
+    {
+      "code": 39,
+      "sha256": "e5d8bfc1851a499072ce5747852e1be016c02ddbdee850100b76c25ce0289261"
+    },
+    {
+      "code": 39,
+      "sha256": "82e309c33695d7766a0c8a1ecfbd879c53159f6206666b60afec2dd1374f9179"
+    },
+    {
+      "code": 39,
+      "sha256": "95263b3727d61f135049516cbc4da6bcaeb2da4e4583170614e7c46a4fcd81bd"
+    },
+    {
+      "code": 39,
+      "sha256": "d75445e3bfaff1b6bcf69ebe5f2e84302a22face1702ec8083f212f607859afc"
+    },
+    {
+      "code": 39,
+      "sha256": "7afb622f205a6b629f98c9532b8fdaf7ddf1aae8450f4312f4925db67603b8ef"
+    },
+    {
+      "code": 39,
+      "sha256": "0304d8910b91fe80d1ef1bfcabefd8096f37b4d89288ec77f2f1a4a64d969454"
+    },
+    {
+      "code": 39,
+      "sha256": "2a73720b44886ecaceb90af48ec279ed35d676b852376f53d8178d1ebc471bcd"
+    },
+    {
+      "code": 39,
+      "sha256": "ad5f2793a19068274ae076817d603e76c3e5ff906f31b8da61a41760e4940c4e"
+    },
+    {
+      "code": 82,
+      "sha256": "468e029766a5ba60ec73eae6b7eaed2215245e858c1425d2ca6ac071969fc121"
+    },
+    {
+      "code": 76,
+      "sha256": "816b3a00f9663c553ddc568da76e3b469bc649c7d24a533ada4134c80dcd5915"
+    }
+  ],
+  "originalAbcPayloadHashes": [
+    "130eef8fcef585dc1ae00f427903d11c35a79feb22e11d4e93219f987c719a1c",
+    "d849764541e5f8b5b7d3b9bbdb31960ad9e47b8fd4a3e24652ccfa408c8be596"
+  ],
+  "runtimeModules": [
+    {
+      "sha256": "1ed33b9b71a6b01b9aafafed660be343ffeb2d246c5d79e6425a32bf93e38207",
+      "bytes": 14302754
+    },
+    {
+      "sha256": "26036a94567088dfb3de88a759e8ed10a4cea07b29500af36f345eef42420098",
+      "bytes": 465885
+    },
+    {
+      "sha256": "d27c6bdce2a34afb32e8dfa40970bc7e86cbcb912f92db7eb3e1ac70e943bd82",
+      "bytes": 108322
+    }
+  ],
+  "viewer": {
+    "sha256": "34f10c038f3c88d6c5e747161b38ecd5bd697318a32ec82743aac796fb7945a5",
+    "bytes": 3579
+  },
+  "binaryWords": [
+    [1073741824, 0],
+    [1072693248, 0],
+    [0, 0],
+    [1075838976, 0],
+    [1081243238, 1717986918],
+    [1079382016, 0],
+    [1080059084, 3435973836],
+    [1078358016, 0],
+    [1080058675, 858993459],
+    [1078357196, 3435973837],
+    [3224407244, 3435973837],
+    [1072168960, 0],
+    [1074266112, 0],
+    [1081175449, 2576980377],
+    [1079394304, 0],
+    [1081175244, 3435973837],
+    [3224410521, 2576980378],
+    [1081175654, 1717986918],
+    [1072064102, 1717986918],
+    [1079395123, 858993459],
+    [3224371200, 0],
+    [1079246848, 0],
+    [1081848217, 2576980378],
+    [1078332620, 3435973837],
+    [1079955456, 0],
+    [3225927680, 0],
+    [1073217536, 0],
+    [1071644672, 0],
+    [1081343590, 1717986918],
+    [3224967577, 2576980378],
+    [1078355558, 1717986918],
+    [1079549132, 3435973837],
+    [3225914572, 3435973837],
+    [3224403968, 0],
+    [1072273817, 2576980378],
+    [1082191052, 3435973837],
+    [1081591398, 1717986918],
+    [1081269862, 1717986918],
+    [1078099968, 0],
+    [1079208345, 2576980378],
+    [3226374963, 858993459],
+    [3225272320, 0],
+    [1077970534, 1717986918],
+    [1079191961, 2576980378],
+    [3226407731, 858993459],
+    [1081901260, 3435973836],
+    [1080940543, 4294967295],
+    [1081229516, 3435973837],
+    [1078740582, 1717986918],
+    [1081126297, 2576980378],
+    [1079391027, 858993458],
+    [1080059084, 3435973837],
+    [1078353920, 0],
+    [1079191142, 1717986919],
+    [1077795225, 2576980378],
+    [1081154560, 0],
+    [1081905561, 2576980377],
+    [1080888934, 1717986918],
+    [3227977318, 1717986918],
+    [1081217228, 3435973837],
+    [1081018368, 0],
+    [3226497843, 858993459],
+    [3223368499, 858993459],
+    [3226258636, 3435973837],
+    [1077967257, 2576980378],
+    [3226514227, 858993459],
+    [3223499571, 858993459],
+    [1080797184, 0],
+    [1080933580, 3435973837],
+    [1081343385, 2576980378],
+    [1078750412, 3435973837],
+    [1079209574, 1717986919],
+    [1079816601, 2576980378],
+    [1078358835, 858993459],
+    [3226515046, 1717986918],
+    [1076841676, 3435973837],
+    [1080064819, 858993459],
+    [1080805785, 2576980378],
+    [1081004851, 858993459],
+    [3225752371, 858993459],
+    [1080183193, 2576980378],
+    [1081179750, 1717986918],
+    [3219652608, 0],
+    [3224829952, 0],
+    [3225006899, 858993459],
+    [3222994944, 0],
+    [1077916467, 858993459],
+    [3224436736, 0],
+    [3226844364, 3435973837],
+    [3222300262, 1717986918],
+    [1080603443, 858993459],
+    [1080579276, 3435973837],
+    [3225072435, 858993459],
+    [3223257088, 0],
+    [1078409625, 2576980378],
+    [1080067686, 1717986918],
+    [1079896473, 2576980378],
+    [1076179763, 858993459],
+    [1079427891, 858993459],
+    [3220176896, 0],
+    [1082817536, 0],
+    [3229252608, 0],
+    [1074790400, 0],
+    [1083129856, 0],
+    [1082262016, 0],
+    [1083605299, 858993459],
+    [1080991334, 1717986918],
+    [1078714368, 0],
+    [1079721574, 1717986918],
+    [1077636300, 3435973837],
+    [1079721164, 3435973837],
+    [1077634662, 1717986918],
+    [3224043520, 0],
+    [3218918604, 3435973837],
+    [1080881152, 0],
+    [1078185164, 3435973837],
+    [1077077606, 1717986918],
+    [1079297638, 1717986918],
+    [1076264960, 0],
+    [1078961766, 1717986918],
+    [1073532108, 3435973837],
+    [1079622860, 3435973837],
+    [1081008128, 0],
+    [1078717644, 3435973837],
+    [1077662515, 858993459],
+    [1077660876, 3435973837],
+    [1075747225, 2576980378],
+    [3216611737, 2576980378],
+    [1081071206, 1717986919],
+    [1081071206, 1717986918],
+    [1081186099, 858993459],
+    [1078938828, 3435973837],
+    [1080064204, 3435973837],
+    [1077860761, 2576980378],
+    [1080064000, 0],
+    [3223447142, 1717986918],
+    [1081149644, 3435973837],
+    [1081166438, 1717986918],
+    [1078873292, 3435973837],
+    [1079731404, 3435973836],
+    [1077818163, 858993459],
+    [1079730995, 858993459],
+    [3225206784, 0],
+    [1081015910, 1717986918],
+    [1081023283, 858993459],
+    [1077945958, 1717986918],
+    [1080059289, 2576980378],
+    [1076946534, 1717986918],
+    [1075511296, 0],
+    [1081078988, 3435973837],
+    [1081115443, 858993459],
+    [1078884761, 2576980378],
+    [1079731814, 1717986918],
+    [1077806694, 1717986919],
+    [1077805056, 0],
+    [3224797184, 0],
+    [1080965120, 0]
+  ],
+  "samples": [
+    {
+      "case": "original-1659",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "center",
+      "space": "local",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 7, 8, 9, 2, 8, 9, 2, 10, 11, 4, 5, 10,
+        11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "baseline",
+      "role": "target",
+      "point": "center",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 7, 8, 9, 2, 8, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "min-min",
+      "space": "local",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 10, 11, 10, 11, 2, 10, 11, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "baseline",
+      "role": "target",
+      "point": "min-min",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 10, 11, 10, 11, 2, 10, 11, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "max-max",
+      "space": "local",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 13, 14, 15, 14, 2, 15, 14, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "baseline",
+      "role": "target",
+      "point": "max-max",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 13, 14, 15, 14, 2, 15, 14, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "left",
+      "space": "local",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 10, 7, 10, 9, 2, 10, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "baseline",
+      "role": "target",
+      "point": "left",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 10, 7, 10, 9, 2, 10, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "right",
+      "space": "local",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 13, 7, 15, 9, 2, 15, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "baseline",
+      "role": "target",
+      "point": "right",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 13, 7, 15, 9, 2, 15, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "top",
+      "space": "local",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 11, 8, 11, 2, 8, 11, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "baseline",
+      "role": "target",
+      "point": "top",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 11, 8, 11, 2, 8, 11, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "bottom",
+      "space": "local",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 14, 8, 14, 2, 8, 14, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "baseline",
+      "role": "target",
+      "point": "bottom",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 14, 8, 14, 2, 8, 14, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "outside-left",
+      "space": "local",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 16, 7, 16, 9, 2, 16, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "baseline",
+      "role": "target",
+      "point": "outside-left",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 16, 7, 16, 9, 2, 16, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "outside-right",
+      "space": "local",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 17, 7, 17, 9, 2, 17, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "baseline",
+      "role": "target",
+      "point": "outside-right",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 17, 7, 17, 9, 2, 17, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "outside-top",
+      "space": "local",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 18, 8, 18, 2, 8, 18, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "baseline",
+      "role": "target",
+      "point": "outside-top",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 18, 8, 18, 2, 8, 18, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "outside-bottom",
+      "space": "local",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 19, 8, 19, 2, 8, 19, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "baseline",
+      "role": "target",
+      "point": "outside-bottom",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 19, 8, 19, 2, 8, 19, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "empty-margin",
+      "space": "local",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 20, 21, 20, 21, 2, 20, 21, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "baseline",
+      "role": "target",
+      "point": "empty-margin",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 20, 21, 20, 21, 2, 20, 21, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "glyph-positive",
+      "space": "local",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 8, 9, 8, 9, 2, 8, 9, 2, 10, 11, 4, 5, 10,
+        11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "baseline",
+      "role": "target",
+      "point": "glyph-positive",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 8, 9, 8, 9, 2, 8, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "world-extrema",
+      "role": "wrapper",
+      "point": "center",
+      "space": "world",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 7, 6, 7, 1, 8, 9, 2, 10, 11, 4, 5, 10,
+        11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "world-extrema",
+      "role": "target",
+      "point": "center",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 7, 6, 7, 1, 8, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "world-extrema",
+      "role": "wrapper",
+      "point": "min-min",
+      "space": "world",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 10, 11, 10, 11, 1, 10, 11, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "world-extrema",
+      "role": "target",
+      "point": "min-min",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 10, 11, 10, 11, 1, 10, 11, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "world-extrema",
+      "role": "wrapper",
+      "point": "max-max",
+      "space": "world",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 13, 14, 13, 14, 1, 15, 14, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "world-extrema",
+      "role": "target",
+      "point": "max-max",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 13, 14, 13, 14, 1, 15, 14, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "world-extrema",
+      "role": "wrapper",
+      "point": "left",
+      "space": "world",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 10, 7, 10, 7, 1, 10, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "world-extrema",
+      "role": "target",
+      "point": "left",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 10, 7, 10, 7, 1, 10, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "world-extrema",
+      "role": "wrapper",
+      "point": "right",
+      "space": "world",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 13, 7, 13, 7, 1, 15, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "world-extrema",
+      "role": "target",
+      "point": "right",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 13, 7, 13, 7, 1, 15, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "world-extrema",
+      "role": "wrapper",
+      "point": "top",
+      "space": "world",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 11, 6, 11, 1, 8, 11, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "world-extrema",
+      "role": "target",
+      "point": "top",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 11, 6, 11, 1, 8, 11, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "world-extrema",
+      "role": "wrapper",
+      "point": "bottom",
+      "space": "world",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 14, 6, 14, 1, 8, 14, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "world-extrema",
+      "role": "target",
+      "point": "bottom",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 14, 6, 14, 1, 8, 14, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "world-extrema",
+      "role": "wrapper",
+      "point": "outside-left",
+      "space": "world",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 16, 7, 16, 7, 1, 16, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "world-extrema",
+      "role": "target",
+      "point": "outside-left",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 16, 7, 16, 7, 1, 16, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "world-extrema",
+      "role": "wrapper",
+      "point": "outside-right",
+      "space": "world",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 17, 7, 17, 7, 1, 17, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "world-extrema",
+      "role": "target",
+      "point": "outside-right",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 17, 7, 17, 7, 1, 17, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "world-extrema",
+      "role": "wrapper",
+      "point": "outside-top",
+      "space": "world",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 18, 6, 18, 1, 8, 18, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "world-extrema",
+      "role": "target",
+      "point": "outside-top",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 18, 6, 18, 1, 8, 18, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "world-extrema",
+      "role": "wrapper",
+      "point": "outside-bottom",
+      "space": "world",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 19, 6, 19, 1, 8, 19, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "world-extrema",
+      "role": "target",
+      "point": "outside-bottom",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 19, 6, 19, 1, 8, 19, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "scaled-parent",
+      "role": "wrapper",
+      "point": "center",
+      "space": "local",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 22, 23, 22, 23, 24, 25, 26, 27, 2, 1, 1, 6, 7, 28, 29, 2, 8, 30, 2, 10,
+        11, 4, 5, 10, 11, 4, 5, 31, 32, 22, 23, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "scaled-parent",
+      "role": "target",
+      "point": "center",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 7, 28, 29, 2, 8, 30, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 31, 32, 22, 23, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "scaled-parent",
+      "role": "wrapper",
+      "point": "min-min",
+      "space": "local",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 22, 23, 22, 23, 24, 25, 26, 27, 2, 1, 1, 10, 11, 31, 32, 2, 33, 34, 2, 10,
+        11, 4, 5, 10, 11, 4, 5, 31, 32, 22, 23, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "scaled-parent",
+      "role": "target",
+      "point": "min-min",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 10, 11, 31, 32, 2, 33, 34, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 31, 32, 22, 23, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "scaled-parent",
+      "role": "wrapper",
+      "point": "outside-right",
+      "space": "local",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 22, 23, 22, 23, 24, 25, 26, 27, 2, 1, 1, 17, 7, 35, 29, 2, 17, 30, 2, 10,
+        11, 4, 5, 10, 11, 4, 5, 31, 32, 22, 23, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "scaled-parent",
+      "role": "target",
+      "point": "outside-right",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 17, 7, 35, 29, 2, 17, 30, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 31, 32, 22, 23, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "rotated-parent",
+      "role": "wrapper",
+      "point": "world-near-min",
+      "space": "world",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 36, 37, 36, 37, 24, 25, 26, 27, 38, 1, 1, 39, 40, 39, 40, 1, 41, 42, 2,
+        10, 11, 4, 5, 10, 11, 4, 5, 43, 44, 36, 37, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "rotated-parent",
+      "role": "target",
+      "point": "world-near-min",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 39, 40, 39, 40, 1, 41, 42, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 43, 44, 36, 37, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "rotated-parent",
+      "role": "wrapper",
+      "point": "world-near-max",
+      "space": "world",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 36, 37, 36, 37, 24, 25, 26, 27, 38, 1, 1, 45, 46, 45, 46, 1, 47, 48, 2,
+        10, 11, 4, 5, 10, 11, 4, 5, 43, 44, 36, 37, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "rotated-parent",
+      "role": "target",
+      "point": "world-near-max",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 45, 46, 45, 46, 1, 47, 48, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 43, 44, 36, 37, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "rotated-parent",
+      "role": "wrapper",
+      "point": "world-center",
+      "space": "world",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 36, 37, 36, 37, 24, 25, 26, 27, 38, 1, 1, 49, 50, 49, 50, 1, 51, 52, 2,
+        10, 11, 4, 5, 10, 11, 4, 5, 43, 44, 36, 37, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "rotated-parent",
+      "role": "target",
+      "point": "world-center",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 49, 50, 49, 50, 1, 51, 52, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 43, 44, 36, 37, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "rotated-parent",
+      "role": "wrapper",
+      "point": "world-outside-left",
+      "space": "world",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 36, 37, 36, 37, 24, 25, 26, 27, 38, 1, 1, 53, 50, 53, 50, 1, 54, 55, 2,
+        10, 11, 4, 5, 10, 11, 4, 5, 43, 44, 36, 37, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "rotated-parent",
+      "role": "target",
+      "point": "world-outside-left",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 53, 50, 53, 50, 1, 54, 55, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 43, 44, 36, 37, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "rotated-parent",
+      "role": "wrapper",
+      "point": "world-outside-right",
+      "space": "world",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 36, 37, 36, 37, 24, 25, 26, 27, 38, 1, 1, 56, 50, 56, 50, 1, 57, 58, 2,
+        10, 11, 4, 5, 10, 11, 4, 5, 43, 44, 36, 37, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "rotated-parent",
+      "role": "target",
+      "point": "world-outside-right",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 56, 50, 56, 50, 1, 57, 58, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 43, 44, 36, 37, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "rotated-leaf",
+      "role": "wrapper",
+      "point": "world-near-min",
+      "space": "world",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 59, 60, 59, 60, 2, 2, 1, 1, 2, 1, 1, 61, 62, 61, 62, 1, 63, 64, 2, 65, 66,
+        59, 60, 10, 11, 4, 5, 65, 66, 59, 60, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "rotated-leaf",
+      "role": "target",
+      "point": "world-near-min",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 59, 60, 59, 60, 2, 2, 1, 1, 38, 1, 1, 61, 62, 61, 62, 1, 63, 64, 2, 65,
+        66, 59, 60, 10, 11, 4, 5, 65, 66, 59, 60, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "rotated-leaf",
+      "role": "wrapper",
+      "point": "world-near-max",
+      "space": "world",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 59, 60, 59, 60, 2, 2, 1, 1, 2, 1, 1, 67, 68, 67, 68, 1, 69, 70, 2, 65, 66,
+        59, 60, 10, 11, 4, 5, 65, 66, 59, 60, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "rotated-leaf",
+      "role": "target",
+      "point": "world-near-max",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 59, 60, 59, 60, 2, 2, 1, 1, 38, 1, 1, 67, 68, 67, 68, 1, 69, 70, 2, 65,
+        66, 59, 60, 10, 11, 4, 5, 65, 66, 59, 60, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "rotated-leaf",
+      "role": "wrapper",
+      "point": "world-center",
+      "space": "world",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 59, 60, 59, 60, 2, 2, 1, 1, 2, 1, 1, 71, 72, 71, 72, 1, 8, 73, 2, 65, 66,
+        59, 60, 10, 11, 4, 5, 65, 66, 59, 60, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "rotated-leaf",
+      "role": "target",
+      "point": "world-center",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 59, 60, 59, 60, 2, 2, 1, 1, 38, 1, 1, 71, 72, 71, 72, 1, 8, 73, 2, 65,
+        66, 59, 60, 10, 11, 4, 5, 65, 66, 59, 60, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "rotated-leaf",
+      "role": "wrapper",
+      "point": "world-outside-left",
+      "space": "world",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 59, 60, 59, 60, 2, 2, 1, 1, 2, 1, 1, 74, 72, 74, 72, 1, 75, 76, 2, 65, 66,
+        59, 60, 10, 11, 4, 5, 65, 66, 59, 60, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "rotated-leaf",
+      "role": "target",
+      "point": "world-outside-left",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 59, 60, 59, 60, 2, 2, 1, 1, 38, 1, 1, 74, 72, 74, 72, 1, 75, 76, 2, 65,
+        66, 59, 60, 10, 11, 4, 5, 65, 66, 59, 60, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "rotated-leaf",
+      "role": "wrapper",
+      "point": "world-outside-right",
+      "space": "world",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 59, 60, 59, 60, 2, 2, 1, 1, 2, 1, 1, 77, 72, 77, 72, 1, 78, 79, 2, 65, 66,
+        59, 60, 10, 11, 4, 5, 65, 66, 59, 60, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "rotated-leaf",
+      "role": "target",
+      "point": "world-outside-right",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 59, 60, 59, 60, 2, 2, 1, 1, 38, 1, 1, 77, 72, 77, 72, 1, 78, 79, 2, 65,
+        66, 59, 60, 10, 11, 4, 5, 65, 66, 59, 60, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "nested-transform",
+      "role": "wrapper",
+      "point": "world-near-min",
+      "space": "world",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 80, 81, 80, 81, 2, 2, 82, 26, 83, 1, 1, 84, 85, 84, 85, 1, 86, 87, 2, 88,
+        89, 90, 91, 10, 11, 4, 5, 92, 93, 80, 81, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "nested-transform",
+      "role": "target",
+      "point": "world-near-min",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 90, 91, 90, 91, 2, 2, 27, 26, 38, 1, 1, 84, 85, 84, 85, 1, 86, 87, 2, 88,
+        89, 90, 91, 10, 11, 4, 5, 92, 93, 80, 81, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "nested-transform",
+      "role": "wrapper",
+      "point": "world-center",
+      "space": "world",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 80, 81, 80, 81, 2, 2, 82, 26, 83, 1, 1, 94, 95, 94, 95, 1, 51, 73, 2, 88,
+        89, 90, 91, 10, 11, 4, 5, 92, 93, 80, 81, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "nested-transform",
+      "role": "target",
+      "point": "world-center",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 90, 91, 90, 91, 2, 2, 27, 26, 38, 1, 1, 94, 95, 94, 95, 1, 51, 73, 2, 88,
+        89, 90, 91, 10, 11, 4, 5, 92, 93, 80, 81, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "nested-transform",
+      "role": "wrapper",
+      "point": "world-outside-right",
+      "space": "world",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 80, 81, 80, 81, 2, 2, 82, 26, 83, 1, 1, 96, 95, 96, 95, 1, 97, 98, 2, 88,
+        89, 90, 91, 10, 11, 4, 5, 92, 93, 80, 81, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "nested-transform",
+      "role": "target",
+      "point": "world-outside-right",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 90, 91, 90, 91, 2, 2, 27, 26, 38, 1, 1, 96, 95, 96, 95, 1, 97, 98, 2, 88,
+        89, 90, 91, 10, 11, 4, 5, 92, 93, 80, 81, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "target-hidden",
+      "role": "wrapper",
+      "point": "empty-margin",
+      "space": "local",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 20, 21, 20, 21, 2, 20, 21, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "target-hidden",
+      "role": "target",
+      "point": "empty-margin",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 2, 1, 20, 21, 20, 21, 2, 20, 21, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "target-alpha0",
+      "role": "wrapper",
+      "point": "empty-margin",
+      "space": "local",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 20, 21, 20, 21, 2, 20, 21, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "target-alpha0",
+      "role": "target",
+      "point": "empty-margin",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 2, 20, 21, 20, 21, 2, 20, 21, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "wrapper-hidden",
+      "role": "wrapper",
+      "point": "empty-margin",
+      "space": "local",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 2, 1, 20, 21, 20, 21, 2, 20, 21, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "wrapper-hidden",
+      "role": "target",
+      "point": "empty-margin",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 20, 21, 20, 21, 2, 20, 21, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "wrapper-alpha0",
+      "role": "wrapper",
+      "point": "empty-margin",
+      "space": "local",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 2, 20, 21, 20, 21, 2, 20, 21, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "wrapper-alpha0",
+      "role": "target",
+      "point": "empty-margin",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 20, 21, 20, 21, 2, 20, 21, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "target-detached",
+      "role": "wrapper",
+      "point": "empty-margin",
+      "space": "local",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 1, 1, 20, 21, 20, 21, 2, 20, 21, 2, 2, 2, 2, 2,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "target-detached",
+      "role": "target",
+      "point": "empty-margin",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "null",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 2, 2, 99, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 20, 21, 20, 21, 2, 20, 21, 2, 10, 11,
+        4, 5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "reattached",
+      "role": "wrapper",
+      "point": "empty-margin",
+      "space": "local",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 20, 21, 20, 21, 2, 20, 21, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "reattached",
+      "role": "target",
+      "point": "empty-margin",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 20, 21, 20, 21, 2, 20, 21, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "wrapper-detached",
+      "role": "wrapper",
+      "point": "empty-margin",
+      "space": "local",
+      "className": "TextContact60000",
+      "parentClass": "null",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 2, 2, 99, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 20, 21, 20, 21, 2, 20, 21, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "wrapper-detached",
+      "role": "target",
+      "point": "empty-margin",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 20, 21, 20, 21, 2, 20, 21, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "wrapper-reattached",
+      "role": "wrapper",
+      "point": "empty-margin",
+      "space": "local",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 20, 21, 20, 21, 2, 20, 21, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "wrapper-reattached",
+      "role": "target",
+      "point": "empty-margin",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 20, 21, 20, 21, 2, 20, 21, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "runtime-mask-unassigned",
+      "role": "wrapper",
+      "point": "empty-margin",
+      "space": "local",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 100, 100, 100, 100, 2, 2, 1, 1, 2, 1, 1, 20, 21, 20, 21, 2, 20, 21, 2,
+        101, 101, 100, 100, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "runtime-mask-unassigned",
+      "role": "target",
+      "point": "empty-margin",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 20, 21, 20, 21, 2, 20, 21, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "runtime-mask-unassigned",
+      "role": "mask",
+      "point": "empty-margin",
+      "space": "local",
+      "className": "flash.display::MovieClip",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        102, 0, 2, 1, 1, 1, 100, 100, 100, 100, 2, 2, 1, 1, 2, 1, 1, 20, 21, 20, 21, 2, 20, 21, 2,
+        101, 101, 100, 100, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "runtime-mask-shifted-unassigned",
+      "role": "mask",
+      "point": "empty-margin",
+      "space": "local",
+      "className": "flash.display::MovieClip",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        102, 0, 2, 1, 2, 2, 100, 100, 100, 100, 103, 2, 1, 1, 2, 1, 1, 20, 21, 20, 21, 2, 20, 21, 2,
+        104, 101, 100, 100, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "runtime-mask-hit",
+      "role": "wrapper",
+      "point": "empty-margin",
+      "space": "local",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 100, 100, 100, 100, 2, 2, 1, 1, 2, 1, 1, 20, 21, 20, 21, 2, 20, 21, 2,
+        101, 101, 100, 100, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "runtime-mask-hit",
+      "role": "target",
+      "point": "empty-margin",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 102, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 20, 21, 20, 21, 2, 20, 21, 2, 10, 11,
+        4, 5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "runtime-mask-hit",
+      "role": "mask",
+      "point": "empty-margin",
+      "space": "local",
+      "className": "flash.display::MovieClip",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        102, 0, 2, 1, 2, 2, 100, 100, 100, 100, 2, 2, 1, 1, 2, 1, 1, 20, 21, 20, 21, 2, 20, 21, 2,
+        101, 101, 100, 100, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "runtime-mask-miss",
+      "role": "wrapper",
+      "point": "empty-margin",
+      "space": "local",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 105, 100, 105, 100, 2, 2, 1, 1, 2, 1, 1, 20, 21, 20, 21, 2, 20, 21, 2, 10,
+        101, 105, 100, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "runtime-mask-miss",
+      "role": "target",
+      "point": "empty-margin",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 102, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 20, 21, 20, 21, 2, 20, 21, 2, 10, 11,
+        4, 5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "runtime-mask-miss",
+      "role": "mask",
+      "point": "empty-margin",
+      "space": "local",
+      "className": "flash.display::MovieClip",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        102, 0, 2, 1, 2, 2, 100, 100, 100, 100, 103, 2, 1, 1, 2, 1, 1, 20, 21, 20, 21, 2, 20, 21, 2,
+        104, 101, 100, 100, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "runtime-mask-hidden",
+      "role": "wrapper",
+      "point": "empty-margin",
+      "space": "local",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 100, 100, 100, 100, 2, 2, 1, 1, 2, 1, 1, 20, 21, 20, 21, 2, 20, 21, 2,
+        101, 101, 100, 100, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "runtime-mask-hidden",
+      "role": "target",
+      "point": "empty-margin",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 102, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 20, 21, 20, 21, 2, 20, 21, 2, 10, 11,
+        4, 5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "runtime-mask-hidden",
+      "role": "mask",
+      "point": "empty-margin",
+      "space": "local",
+      "className": "flash.display::MovieClip",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        102, 0, 2, 1, 2, 2, 100, 100, 100, 100, 2, 2, 1, 1, 2, 2, 1, 20, 21, 20, 21, 2, 20, 21, 2,
+        101, 101, 100, 100, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "runtime-mask-alpha0",
+      "role": "wrapper",
+      "point": "empty-margin",
+      "space": "local",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 100, 100, 100, 100, 2, 2, 1, 1, 2, 1, 1, 20, 21, 20, 21, 2, 20, 21, 2,
+        101, 101, 100, 100, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "runtime-mask-alpha0",
+      "role": "target",
+      "point": "empty-margin",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 102, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 20, 21, 20, 21, 2, 20, 21, 2, 10, 11,
+        4, 5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "runtime-mask-alpha0",
+      "role": "mask",
+      "point": "empty-margin",
+      "space": "local",
+      "className": "flash.display::MovieClip",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        102, 0, 2, 1, 2, 2, 100, 100, 100, 100, 2, 2, 1, 1, 2, 1, 2, 20, 21, 20, 21, 2, 20, 21, 2,
+        101, 101, 100, 100, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "runtime-mask-cleared",
+      "role": "wrapper",
+      "point": "empty-margin",
+      "space": "local",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 20, 21, 20, 21, 2, 20, 21, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "runtime-mask-cleared",
+      "role": "target",
+      "point": "empty-margin",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 20, 21, 20, 21, 2, 20, 21, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "zero-scale",
+      "role": "wrapper",
+      "point": "world-center",
+      "space": "world",
+      "className": "TextContact60000",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 2, 5, 2, 5, 2, 2, 2, 1, 2, 1, 1, 2, 7, 2, 7, 1, 2, 9, 2, 10, 11, 4, 5, 10,
+        11, 4, 5, 2, 11, 2, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1659",
+      "phase": "zero-scale",
+      "role": "target",
+      "point": "world-center",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 2, 7, 2, 7, 1, 2, 9, 2, 2, 11, 2, 5, 10,
+        11, 4, 5, 2, 11, 2, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1660",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "center",
+      "space": "local",
+      "className": "TextContact60001",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 106, 107, 106, 107, 2, 2, 1, 1, 2, 1, 1, 108, 109, 110, 111, 2, 110, 111,
+        2, 112, 113, 106, 107, 112, 113, 106, 107, 112, 113, 106, 107, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1660",
+      "phase": "baseline",
+      "role": "target",
+      "point": "center",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60001",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 106, 107, 106, 107, 2, 2, 1, 1, 2, 1, 1, 108, 109, 110, 111, 2, 110, 111,
+        2, 112, 113, 106, 107, 112, 113, 106, 107, 112, 113, 106, 107, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1660",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "min-min",
+      "space": "local",
+      "className": "TextContact60001",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 106, 107, 106, 107, 2, 2, 1, 1, 2, 1, 1, 112, 113, 112, 113, 2, 112, 113,
+        2, 112, 113, 106, 107, 112, 113, 106, 107, 112, 113, 106, 107, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1660",
+      "phase": "baseline",
+      "role": "target",
+      "point": "min-min",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60001",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 106, 107, 106, 107, 2, 2, 1, 1, 2, 1, 1, 112, 113, 112, 113, 2, 112, 113,
+        2, 112, 113, 106, 107, 112, 113, 106, 107, 112, 113, 106, 107, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1660",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "outside-right",
+      "space": "local",
+      "className": "TextContact60001",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 106, 107, 106, 107, 2, 2, 1, 1, 2, 1, 1, 114, 109, 114, 111, 2, 114, 111,
+        2, 112, 113, 106, 107, 112, 113, 106, 107, 112, 113, 106, 107, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1660",
+      "phase": "baseline",
+      "role": "target",
+      "point": "outside-right",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60001",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 106, 107, 106, 107, 2, 2, 1, 1, 2, 1, 1, 114, 109, 114, 111, 2, 114, 111,
+        2, 112, 113, 106, 107, 112, 113, 106, 107, 112, 113, 106, 107, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1661",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "center",
+      "space": "local",
+      "className": "TextContact60002",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 115, 116, 115, 116, 2, 2, 1, 1, 2, 1, 1, 117, 118, 117, 118, 2, 117, 118,
+        2, 119, 120, 115, 116, 119, 120, 115, 116, 119, 120, 115, 116, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1661",
+      "phase": "baseline",
+      "role": "target",
+      "point": "center",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60002",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 115, 116, 115, 116, 2, 2, 1, 1, 2, 1, 1, 117, 118, 117, 118, 2, 117, 118,
+        2, 119, 120, 115, 116, 119, 120, 115, 116, 119, 120, 115, 116, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1661",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "min-min",
+      "space": "local",
+      "className": "TextContact60002",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 115, 116, 115, 116, 2, 2, 1, 1, 2, 1, 1, 119, 120, 119, 120, 2, 119, 120,
+        2, 119, 120, 115, 116, 119, 120, 115, 116, 119, 120, 115, 116, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1661",
+      "phase": "baseline",
+      "role": "target",
+      "point": "min-min",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60002",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 115, 116, 115, 116, 2, 2, 1, 1, 2, 1, 1, 119, 120, 119, 120, 2, 119, 120,
+        2, 119, 120, 115, 116, 119, 120, 115, 116, 119, 120, 115, 116, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1661",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "outside-right",
+      "space": "local",
+      "className": "TextContact60002",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 115, 116, 115, 116, 2, 2, 1, 1, 2, 1, 1, 121, 118, 121, 118, 2, 121, 118,
+        2, 119, 120, 115, 116, 119, 120, 115, 116, 119, 120, 115, 116, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1661",
+      "phase": "baseline",
+      "role": "target",
+      "point": "outside-right",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60002",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 115, 116, 115, 116, 2, 2, 1, 1, 2, 1, 1, 121, 118, 121, 118, 2, 121, 118,
+        2, 119, 120, 115, 116, 119, 120, 115, 116, 119, 120, 115, 116, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1662",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "center",
+      "space": "local",
+      "className": "TextContact60003",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 122, 123, 122, 123, 2, 2, 1, 1, 2, 1, 1, 51, 124, 51, 125, 2, 51, 125, 2,
+        126, 127, 122, 123, 126, 127, 122, 123, 126, 127, 122, 123, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1662",
+      "phase": "baseline",
+      "role": "target",
+      "point": "center",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60003",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 122, 123, 122, 123, 2, 2, 1, 1, 2, 1, 1, 51, 124, 51, 125, 2, 51, 125, 2,
+        126, 127, 122, 123, 126, 127, 122, 123, 126, 127, 122, 123, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1662",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "min-min",
+      "space": "local",
+      "className": "TextContact60003",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 122, 123, 122, 123, 2, 2, 1, 1, 2, 1, 1, 126, 127, 126, 127, 2, 126, 127,
+        2, 126, 127, 122, 123, 126, 127, 122, 123, 126, 127, 122, 123, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1662",
+      "phase": "baseline",
+      "role": "target",
+      "point": "min-min",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60003",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 122, 123, 122, 123, 2, 2, 1, 1, 2, 1, 1, 126, 127, 126, 127, 2, 126, 127,
+        2, 126, 127, 122, 123, 126, 127, 122, 123, 126, 127, 122, 123, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1662",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "outside-right",
+      "space": "local",
+      "className": "TextContact60003",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 122, 123, 122, 123, 2, 2, 1, 1, 2, 1, 1, 128, 124, 129, 125, 2, 129, 125,
+        2, 126, 127, 122, 123, 126, 127, 122, 123, 126, 127, 122, 123, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1662",
+      "phase": "baseline",
+      "role": "target",
+      "point": "outside-right",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60003",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 122, 123, 122, 123, 2, 2, 1, 1, 2, 1, 1, 128, 124, 129, 125, 2, 129, 125,
+        2, 126, 127, 122, 123, 126, 127, 122, 123, 126, 127, 122, 123, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1663",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "center",
+      "space": "local",
+      "className": "TextContact60004",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 130, 131, 130, 131, 2, 2, 1, 1, 2, 1, 1, 132, 133, 134, 133, 2, 134, 133,
+        2, 135, 113, 130, 131, 135, 113, 130, 131, 135, 113, 130, 131, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1663",
+      "phase": "baseline",
+      "role": "target",
+      "point": "center",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60004",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 130, 131, 130, 131, 2, 2, 1, 1, 2, 1, 1, 132, 133, 134, 133, 2, 134, 133,
+        2, 135, 113, 130, 131, 135, 113, 130, 131, 135, 113, 130, 131, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1663",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "min-min",
+      "space": "local",
+      "className": "TextContact60004",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 130, 131, 130, 131, 2, 2, 1, 1, 2, 1, 1, 135, 113, 135, 113, 2, 135, 113,
+        2, 135, 113, 130, 131, 135, 113, 130, 131, 135, 113, 130, 131, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1663",
+      "phase": "baseline",
+      "role": "target",
+      "point": "min-min",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60004",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 130, 131, 130, 131, 2, 2, 1, 1, 2, 1, 1, 135, 113, 135, 113, 2, 135, 113,
+        2, 135, 113, 130, 131, 135, 113, 130, 131, 135, 113, 130, 131, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1663",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "outside-right",
+      "space": "local",
+      "className": "TextContact60004",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 130, 131, 130, 131, 2, 2, 1, 1, 2, 1, 1, 136, 133, 136, 133, 2, 136, 133,
+        2, 135, 113, 130, 131, 135, 113, 130, 131, 135, 113, 130, 131, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1663",
+      "phase": "baseline",
+      "role": "target",
+      "point": "outside-right",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60004",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 130, 131, 130, 131, 2, 2, 1, 1, 2, 1, 1, 136, 133, 136, 133, 2, 136, 133,
+        2, 135, 113, 130, 131, 135, 113, 130, 131, 135, 113, 130, 131, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1664",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "center",
+      "space": "local",
+      "className": "TextContact60005",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 137, 138, 137, 138, 2, 2, 1, 1, 2, 1, 1, 139, 140, 141, 140, 2, 141, 140,
+        2, 142, 127, 137, 138, 142, 127, 137, 138, 142, 127, 137, 138, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1664",
+      "phase": "baseline",
+      "role": "target",
+      "point": "center",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60005",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 137, 138, 137, 138, 2, 2, 1, 1, 2, 1, 1, 139, 140, 141, 140, 2, 141, 140,
+        2, 142, 127, 137, 138, 142, 127, 137, 138, 142, 127, 137, 138, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1664",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "min-min",
+      "space": "local",
+      "className": "TextContact60005",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 137, 138, 137, 138, 2, 2, 1, 1, 2, 1, 1, 142, 127, 142, 127, 2, 142, 127,
+        2, 142, 127, 137, 138, 142, 127, 137, 138, 142, 127, 137, 138, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1664",
+      "phase": "baseline",
+      "role": "target",
+      "point": "min-min",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60005",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 137, 138, 137, 138, 2, 2, 1, 1, 2, 1, 1, 142, 127, 142, 127, 2, 142, 127,
+        2, 142, 127, 137, 138, 142, 127, 137, 138, 142, 127, 137, 138, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1664",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "outside-right",
+      "space": "local",
+      "className": "TextContact60005",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 137, 138, 137, 138, 2, 2, 1, 1, 2, 1, 1, 143, 140, 143, 140, 2, 143, 140,
+        2, 142, 127, 137, 138, 142, 127, 137, 138, 142, 127, 137, 138, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1664",
+      "phase": "baseline",
+      "role": "target",
+      "point": "outside-right",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60005",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 137, 138, 137, 138, 2, 2, 1, 1, 2, 1, 1, 143, 140, 143, 140, 2, 143, 140,
+        2, 142, 127, 137, 138, 142, 127, 137, 138, 142, 127, 137, 138, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1665",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "center",
+      "space": "local",
+      "className": "TextContact60006",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 144, 145, 144, 145, 2, 2, 1, 1, 2, 1, 1, 146, 147, 51, 147, 2, 51, 147, 2,
+        148, 11, 144, 145, 148, 11, 144, 145, 148, 11, 144, 145, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1665",
+      "phase": "baseline",
+      "role": "target",
+      "point": "center",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60006",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 144, 145, 144, 145, 2, 2, 1, 1, 2, 1, 1, 146, 147, 51, 147, 2, 51, 147,
+        2, 148, 11, 144, 145, 148, 11, 144, 145, 148, 11, 144, 145, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1665",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "min-min",
+      "space": "local",
+      "className": "TextContact60006",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 144, 145, 144, 145, 2, 2, 1, 1, 2, 1, 1, 148, 11, 148, 11, 2, 148, 11, 2,
+        148, 11, 144, 145, 148, 11, 144, 145, 148, 11, 144, 145, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1665",
+      "phase": "baseline",
+      "role": "target",
+      "point": "min-min",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60006",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 144, 145, 144, 145, 2, 2, 1, 1, 2, 1, 1, 148, 11, 148, 11, 2, 148, 11, 2,
+        148, 11, 144, 145, 148, 11, 144, 145, 148, 11, 144, 145, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1665",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "outside-right",
+      "space": "local",
+      "className": "TextContact60006",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 144, 145, 144, 145, 2, 2, 1, 1, 2, 1, 1, 149, 147, 149, 147, 2, 149, 147,
+        2, 148, 11, 144, 145, 148, 11, 144, 145, 148, 11, 144, 145, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1665",
+      "phase": "baseline",
+      "role": "target",
+      "point": "outside-right",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60006",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 144, 145, 144, 145, 2, 2, 1, 1, 2, 1, 1, 149, 147, 149, 147, 2, 149, 147,
+        2, 148, 11, 144, 145, 148, 11, 144, 145, 148, 11, 144, 145, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1666",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "center",
+      "space": "local",
+      "className": "TextContact60007",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 150, 151, 150, 151, 2, 2, 1, 1, 2, 1, 1, 152, 153, 152, 154, 2, 152, 154,
+        2, 155, 113, 150, 151, 155, 113, 150, 151, 155, 113, 150, 151, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1666",
+      "phase": "baseline",
+      "role": "target",
+      "point": "center",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60007",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 150, 151, 150, 151, 2, 2, 1, 1, 2, 1, 1, 152, 153, 152, 154, 2, 152, 154,
+        2, 155, 113, 150, 151, 155, 113, 150, 151, 155, 113, 150, 151, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1666",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "min-min",
+      "space": "local",
+      "className": "TextContact60007",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 150, 151, 150, 151, 2, 2, 1, 1, 2, 1, 1, 155, 113, 155, 113, 2, 155, 113,
+        2, 155, 113, 150, 151, 155, 113, 150, 151, 155, 113, 150, 151, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1666",
+      "phase": "baseline",
+      "role": "target",
+      "point": "min-min",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60007",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 150, 151, 150, 151, 2, 2, 1, 1, 2, 1, 1, 155, 113, 155, 113, 2, 155, 113,
+        2, 155, 113, 150, 151, 155, 113, 150, 151, 155, 113, 150, 151, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1666",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "outside-right",
+      "space": "local",
+      "className": "TextContact60007",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 150, 151, 150, 151, 2, 2, 1, 1, 2, 1, 1, 156, 153, 156, 154, 2, 156, 154,
+        2, 155, 113, 150, 151, 155, 113, 150, 151, 155, 113, 150, 151, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "original-1666",
+      "phase": "baseline",
+      "role": "target",
+      "point": "outside-right",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60007",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 150, 151, 150, 151, 2, 2, 1, 1, 2, 1, 1, 156, 153, 156, 154, 2, 156, 154,
+        2, 155, 113, 150, 151, 155, 113, 150, 151, 155, 113, 150, 151, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "center",
+      "space": "local",
+      "className": "TextContact60008",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 7, 8, 9, 2, 8, 9, 2, 10, 11, 4, 5, 10,
+        11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "baseline",
+      "role": "target",
+      "point": "center",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60008",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 7, 8, 9, 2, 8, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "min-min",
+      "space": "local",
+      "className": "TextContact60008",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 10, 11, 10, 11, 2, 10, 11, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "baseline",
+      "role": "target",
+      "point": "min-min",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60008",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 10, 11, 10, 11, 2, 10, 11, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "max-max",
+      "space": "local",
+      "className": "TextContact60008",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 13, 14, 15, 14, 2, 15, 14, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "baseline",
+      "role": "target",
+      "point": "max-max",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60008",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 13, 14, 15, 14, 2, 15, 14, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "left",
+      "space": "local",
+      "className": "TextContact60008",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 10, 7, 10, 9, 2, 10, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "baseline",
+      "role": "target",
+      "point": "left",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60008",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 10, 7, 10, 9, 2, 10, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "right",
+      "space": "local",
+      "className": "TextContact60008",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 13, 7, 15, 9, 2, 15, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "baseline",
+      "role": "target",
+      "point": "right",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60008",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 13, 7, 15, 9, 2, 15, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "top",
+      "space": "local",
+      "className": "TextContact60008",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 11, 8, 11, 2, 8, 11, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "baseline",
+      "role": "target",
+      "point": "top",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60008",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 11, 8, 11, 2, 8, 11, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "bottom",
+      "space": "local",
+      "className": "TextContact60008",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 14, 8, 14, 2, 8, 14, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "baseline",
+      "role": "target",
+      "point": "bottom",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60008",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 14, 8, 14, 2, 8, 14, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "outside-left",
+      "space": "local",
+      "className": "TextContact60008",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 16, 7, 16, 9, 2, 16, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "baseline",
+      "role": "target",
+      "point": "outside-left",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60008",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 16, 7, 16, 9, 2, 16, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "outside-right",
+      "space": "local",
+      "className": "TextContact60008",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 17, 7, 17, 9, 2, 17, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "baseline",
+      "role": "target",
+      "point": "outside-right",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60008",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 17, 7, 17, 9, 2, 17, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "outside-top",
+      "space": "local",
+      "className": "TextContact60008",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 18, 8, 18, 2, 8, 18, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "baseline",
+      "role": "target",
+      "point": "outside-top",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60008",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 18, 8, 18, 2, 8, 18, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "outside-bottom",
+      "space": "local",
+      "className": "TextContact60008",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 19, 8, 19, 2, 8, 19, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "baseline",
+      "role": "target",
+      "point": "outside-bottom",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60008",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 19, 8, 19, 2, 8, 19, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "empty-margin",
+      "space": "local",
+      "className": "TextContact60008",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 20, 21, 20, 21, 2, 20, 21, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "baseline",
+      "role": "target",
+      "point": "empty-margin",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60008",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 20, 21, 20, 21, 2, 20, 21, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "glyph-positive",
+      "space": "local",
+      "className": "TextContact60008",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 8, 9, 8, 9, 2, 8, 9, 2, 10, 11, 4, 5, 10,
+        11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "baseline",
+      "role": "target",
+      "point": "glyph-positive",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60008",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 8, 9, 8, 9, 2, 8, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "world-extrema",
+      "role": "wrapper",
+      "point": "center",
+      "space": "world",
+      "className": "TextContact60008",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 7, 6, 7, 1, 8, 9, 2, 10, 11, 4, 5, 10,
+        11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "world-extrema",
+      "role": "target",
+      "point": "center",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60008",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 7, 6, 7, 1, 8, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "world-extrema",
+      "role": "wrapper",
+      "point": "min-min",
+      "space": "world",
+      "className": "TextContact60008",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 10, 11, 10, 11, 1, 10, 11, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "world-extrema",
+      "role": "target",
+      "point": "min-min",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60008",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 10, 11, 10, 11, 1, 10, 11, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "world-extrema",
+      "role": "wrapper",
+      "point": "max-max",
+      "space": "world",
+      "className": "TextContact60008",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 13, 14, 13, 14, 1, 15, 14, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "world-extrema",
+      "role": "target",
+      "point": "max-max",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60008",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 13, 14, 13, 14, 1, 15, 14, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "world-extrema",
+      "role": "wrapper",
+      "point": "left",
+      "space": "world",
+      "className": "TextContact60008",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 10, 7, 10, 7, 1, 10, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "world-extrema",
+      "role": "target",
+      "point": "left",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60008",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 10, 7, 10, 7, 1, 10, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "world-extrema",
+      "role": "wrapper",
+      "point": "right",
+      "space": "world",
+      "className": "TextContact60008",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 13, 7, 13, 7, 1, 15, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "world-extrema",
+      "role": "target",
+      "point": "right",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60008",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 13, 7, 13, 7, 1, 15, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "world-extrema",
+      "role": "wrapper",
+      "point": "top",
+      "space": "world",
+      "className": "TextContact60008",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 11, 6, 11, 1, 8, 11, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "world-extrema",
+      "role": "target",
+      "point": "top",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60008",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 11, 6, 11, 1, 8, 11, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "world-extrema",
+      "role": "wrapper",
+      "point": "bottom",
+      "space": "world",
+      "className": "TextContact60008",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 14, 6, 14, 1, 8, 14, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "world-extrema",
+      "role": "target",
+      "point": "bottom",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60008",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 14, 6, 14, 1, 8, 14, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "world-extrema",
+      "role": "wrapper",
+      "point": "outside-left",
+      "space": "world",
+      "className": "TextContact60008",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 16, 7, 16, 7, 1, 16, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "world-extrema",
+      "role": "target",
+      "point": "outside-left",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60008",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 16, 7, 16, 7, 1, 16, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "world-extrema",
+      "role": "wrapper",
+      "point": "outside-right",
+      "space": "world",
+      "className": "TextContact60008",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 17, 7, 17, 7, 1, 17, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "world-extrema",
+      "role": "target",
+      "point": "outside-right",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60008",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 17, 7, 17, 7, 1, 17, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "world-extrema",
+      "role": "wrapper",
+      "point": "outside-top",
+      "space": "world",
+      "className": "TextContact60008",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 18, 6, 18, 1, 8, 18, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "world-extrema",
+      "role": "target",
+      "point": "outside-top",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60008",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 18, 6, 18, 1, 8, 18, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "world-extrema",
+      "role": "wrapper",
+      "point": "outside-bottom",
+      "space": "world",
+      "className": "TextContact60008",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 19, 6, 19, 1, 8, 19, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "world-extrema",
+      "role": "target",
+      "point": "outside-bottom",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60008",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 19, 6, 19, 1, 8, 19, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "scaled-parent",
+      "role": "wrapper",
+      "point": "center",
+      "space": "local",
+      "className": "TextContact60008",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 22, 23, 22, 23, 24, 25, 26, 27, 2, 1, 1, 6, 7, 28, 29, 2, 8, 30, 2, 10,
+        11, 4, 5, 10, 11, 4, 5, 31, 32, 22, 23, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "scaled-parent",
+      "role": "target",
+      "point": "center",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60008",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 7, 28, 29, 2, 8, 30, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 31, 32, 22, 23, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "scaled-parent",
+      "role": "wrapper",
+      "point": "min-min",
+      "space": "local",
+      "className": "TextContact60008",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 22, 23, 22, 23, 24, 25, 26, 27, 2, 1, 1, 10, 11, 31, 32, 2, 33, 34, 2, 10,
+        11, 4, 5, 10, 11, 4, 5, 31, 32, 22, 23, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "scaled-parent",
+      "role": "target",
+      "point": "min-min",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60008",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 10, 11, 31, 32, 2, 33, 34, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 31, 32, 22, 23, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "scaled-parent",
+      "role": "wrapper",
+      "point": "outside-right",
+      "space": "local",
+      "className": "TextContact60008",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 22, 23, 22, 23, 24, 25, 26, 27, 2, 1, 1, 17, 7, 35, 29, 2, 17, 30, 2, 10,
+        11, 4, 5, 10, 11, 4, 5, 31, 32, 22, 23, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "scaled-parent",
+      "role": "target",
+      "point": "outside-right",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60008",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 17, 7, 35, 29, 2, 17, 30, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 31, 32, 22, 23, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "rotated-parent",
+      "role": "wrapper",
+      "point": "world-near-min",
+      "space": "world",
+      "className": "TextContact60008",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 36, 37, 36, 37, 24, 25, 26, 27, 38, 1, 1, 39, 40, 39, 40, 1, 41, 42, 2,
+        10, 11, 4, 5, 10, 11, 4, 5, 43, 44, 36, 37, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "rotated-parent",
+      "role": "target",
+      "point": "world-near-min",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60008",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 39, 40, 39, 40, 1, 41, 42, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 43, 44, 36, 37, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "rotated-parent",
+      "role": "wrapper",
+      "point": "world-near-max",
+      "space": "world",
+      "className": "TextContact60008",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 36, 37, 36, 37, 24, 25, 26, 27, 38, 1, 1, 45, 46, 45, 46, 1, 47, 48, 2,
+        10, 11, 4, 5, 10, 11, 4, 5, 43, 44, 36, 37, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "rotated-parent",
+      "role": "target",
+      "point": "world-near-max",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60008",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 45, 46, 45, 46, 1, 47, 48, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 43, 44, 36, 37, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "rotated-parent",
+      "role": "wrapper",
+      "point": "world-center",
+      "space": "world",
+      "className": "TextContact60008",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 36, 37, 36, 37, 24, 25, 26, 27, 38, 1, 1, 49, 50, 49, 50, 1, 51, 52, 2,
+        10, 11, 4, 5, 10, 11, 4, 5, 43, 44, 36, 37, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "rotated-parent",
+      "role": "target",
+      "point": "world-center",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60008",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 49, 50, 49, 50, 1, 51, 52, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 43, 44, 36, 37, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "rotated-parent",
+      "role": "wrapper",
+      "point": "world-outside-left",
+      "space": "world",
+      "className": "TextContact60008",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 36, 37, 36, 37, 24, 25, 26, 27, 38, 1, 1, 53, 50, 53, 50, 1, 54, 55, 2,
+        10, 11, 4, 5, 10, 11, 4, 5, 43, 44, 36, 37, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "rotated-parent",
+      "role": "target",
+      "point": "world-outside-left",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60008",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 53, 50, 53, 50, 1, 54, 55, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 43, 44, 36, 37, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "rotated-parent",
+      "role": "wrapper",
+      "point": "world-outside-right",
+      "space": "world",
+      "className": "TextContact60008",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 36, 37, 36, 37, 24, 25, 26, 27, 38, 1, 1, 56, 50, 56, 50, 1, 57, 58, 2,
+        10, 11, 4, 5, 10, 11, 4, 5, 43, 44, 36, 37, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "rotated-parent",
+      "role": "target",
+      "point": "world-outside-right",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60008",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 56, 50, 56, 50, 1, 57, 58, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 43, 44, 36, 37, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "rotated-leaf",
+      "role": "wrapper",
+      "point": "world-near-min",
+      "space": "world",
+      "className": "TextContact60008",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 59, 60, 59, 60, 2, 2, 1, 1, 2, 1, 1, 61, 62, 61, 62, 1, 63, 64, 2, 65, 66,
+        59, 60, 10, 11, 4, 5, 65, 66, 59, 60, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "rotated-leaf",
+      "role": "target",
+      "point": "world-near-min",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60008",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 59, 60, 59, 60, 2, 2, 1, 1, 38, 1, 1, 61, 62, 61, 62, 1, 63, 64, 2, 65,
+        66, 59, 60, 10, 11, 4, 5, 65, 66, 59, 60, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "rotated-leaf",
+      "role": "wrapper",
+      "point": "world-near-max",
+      "space": "world",
+      "className": "TextContact60008",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 59, 60, 59, 60, 2, 2, 1, 1, 2, 1, 1, 67, 68, 67, 68, 1, 69, 70, 2, 65, 66,
+        59, 60, 10, 11, 4, 5, 65, 66, 59, 60, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "rotated-leaf",
+      "role": "target",
+      "point": "world-near-max",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60008",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 59, 60, 59, 60, 2, 2, 1, 1, 38, 1, 1, 67, 68, 67, 68, 1, 69, 70, 2, 65,
+        66, 59, 60, 10, 11, 4, 5, 65, 66, 59, 60, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "rotated-leaf",
+      "role": "wrapper",
+      "point": "world-center",
+      "space": "world",
+      "className": "TextContact60008",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 59, 60, 59, 60, 2, 2, 1, 1, 2, 1, 1, 71, 72, 71, 72, 1, 8, 73, 2, 65, 66,
+        59, 60, 10, 11, 4, 5, 65, 66, 59, 60, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "rotated-leaf",
+      "role": "target",
+      "point": "world-center",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60008",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 59, 60, 59, 60, 2, 2, 1, 1, 38, 1, 1, 71, 72, 71, 72, 1, 8, 73, 2, 65,
+        66, 59, 60, 10, 11, 4, 5, 65, 66, 59, 60, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "rotated-leaf",
+      "role": "wrapper",
+      "point": "world-outside-left",
+      "space": "world",
+      "className": "TextContact60008",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 59, 60, 59, 60, 2, 2, 1, 1, 2, 1, 1, 74, 72, 74, 72, 1, 75, 76, 2, 65, 66,
+        59, 60, 10, 11, 4, 5, 65, 66, 59, 60, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "rotated-leaf",
+      "role": "target",
+      "point": "world-outside-left",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60008",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 59, 60, 59, 60, 2, 2, 1, 1, 38, 1, 1, 74, 72, 74, 72, 1, 75, 76, 2, 65,
+        66, 59, 60, 10, 11, 4, 5, 65, 66, 59, 60, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "rotated-leaf",
+      "role": "wrapper",
+      "point": "world-outside-right",
+      "space": "world",
+      "className": "TextContact60008",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 59, 60, 59, 60, 2, 2, 1, 1, 2, 1, 1, 77, 72, 77, 72, 1, 78, 79, 2, 65, 66,
+        59, 60, 10, 11, 4, 5, 65, 66, 59, 60, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "rotated-leaf",
+      "role": "target",
+      "point": "world-outside-right",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60008",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 59, 60, 59, 60, 2, 2, 1, 1, 38, 1, 1, 77, 72, 77, 72, 1, 78, 79, 2, 65,
+        66, 59, 60, 10, 11, 4, 5, 65, 66, 59, 60, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "nested-transform",
+      "role": "wrapper",
+      "point": "world-near-min",
+      "space": "world",
+      "className": "TextContact60008",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 80, 81, 80, 81, 2, 2, 82, 26, 83, 1, 1, 84, 85, 84, 85, 1, 86, 87, 2, 88,
+        89, 90, 91, 10, 11, 4, 5, 92, 93, 80, 81, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "nested-transform",
+      "role": "target",
+      "point": "world-near-min",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60008",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 90, 91, 90, 91, 2, 2, 27, 26, 38, 1, 1, 84, 85, 84, 85, 1, 86, 87, 2, 88,
+        89, 90, 91, 10, 11, 4, 5, 92, 93, 80, 81, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "nested-transform",
+      "role": "wrapper",
+      "point": "world-center",
+      "space": "world",
+      "className": "TextContact60008",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 80, 81, 80, 81, 2, 2, 82, 26, 83, 1, 1, 94, 95, 94, 95, 1, 51, 73, 2, 88,
+        89, 90, 91, 10, 11, 4, 5, 92, 93, 80, 81, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "nested-transform",
+      "role": "target",
+      "point": "world-center",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60008",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 90, 91, 90, 91, 2, 2, 27, 26, 38, 1, 1, 94, 95, 94, 95, 1, 51, 73, 2, 88,
+        89, 90, 91, 10, 11, 4, 5, 92, 93, 80, 81, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "nested-transform",
+      "role": "wrapper",
+      "point": "world-outside-right",
+      "space": "world",
+      "className": "TextContact60008",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 80, 81, 80, 81, 2, 2, 82, 26, 83, 1, 1, 96, 95, 96, 95, 1, 97, 98, 2, 88,
+        89, 90, 91, 10, 11, 4, 5, 92, 93, 80, 81, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "nested-transform",
+      "role": "target",
+      "point": "world-outside-right",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60008",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 90, 91, 90, 91, 2, 2, 27, 26, 38, 1, 1, 96, 95, 96, 95, 1, 97, 98, 2, 88,
+        89, 90, 91, 10, 11, 4, 5, 92, 93, 80, 81, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "zero-scale",
+      "role": "wrapper",
+      "point": "world-center",
+      "space": "world",
+      "className": "TextContact60008",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 2, 5, 2, 5, 2, 2, 2, 1, 2, 1, 1, 2, 7, 2, 7, 1, 2, 9, 2, 10, 11, 4, 5, 10,
+        11, 4, 5, 2, 11, 2, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-normal",
+      "phase": "zero-scale",
+      "role": "target",
+      "point": "world-center",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60008",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 2, 7, 2, 7, 1, 2, 9, 2, 2, 11, 2, 5, 10,
+        11, 4, 5, 2, 11, 2, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "center",
+      "space": "local",
+      "className": "TextContact60009",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 7, 8, 9, 2, 8, 9, 2, 10, 11, 4, 5, 10,
+        11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "baseline",
+      "role": "target",
+      "point": "center",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60009",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 7, 8, 9, 2, 8, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "min-min",
+      "space": "local",
+      "className": "TextContact60009",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 10, 11, 10, 11, 2, 10, 11, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "baseline",
+      "role": "target",
+      "point": "min-min",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60009",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 10, 11, 10, 11, 2, 10, 11, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "max-max",
+      "space": "local",
+      "className": "TextContact60009",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 13, 14, 15, 14, 2, 15, 14, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "baseline",
+      "role": "target",
+      "point": "max-max",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60009",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 13, 14, 15, 14, 2, 15, 14, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "left",
+      "space": "local",
+      "className": "TextContact60009",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 10, 7, 10, 9, 2, 10, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "baseline",
+      "role": "target",
+      "point": "left",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60009",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 10, 7, 10, 9, 2, 10, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "right",
+      "space": "local",
+      "className": "TextContact60009",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 13, 7, 15, 9, 2, 15, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "baseline",
+      "role": "target",
+      "point": "right",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60009",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 13, 7, 15, 9, 2, 15, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "top",
+      "space": "local",
+      "className": "TextContact60009",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 11, 8, 11, 2, 8, 11, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "baseline",
+      "role": "target",
+      "point": "top",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60009",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 11, 8, 11, 2, 8, 11, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "bottom",
+      "space": "local",
+      "className": "TextContact60009",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 14, 8, 14, 2, 8, 14, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "baseline",
+      "role": "target",
+      "point": "bottom",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60009",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 14, 8, 14, 2, 8, 14, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "outside-left",
+      "space": "local",
+      "className": "TextContact60009",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 16, 7, 16, 9, 2, 16, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "baseline",
+      "role": "target",
+      "point": "outside-left",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60009",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 16, 7, 16, 9, 2, 16, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "outside-right",
+      "space": "local",
+      "className": "TextContact60009",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 17, 7, 17, 9, 2, 17, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "baseline",
+      "role": "target",
+      "point": "outside-right",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60009",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 17, 7, 17, 9, 2, 17, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "outside-top",
+      "space": "local",
+      "className": "TextContact60009",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 18, 8, 18, 2, 8, 18, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "baseline",
+      "role": "target",
+      "point": "outside-top",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60009",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 18, 8, 18, 2, 8, 18, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "outside-bottom",
+      "space": "local",
+      "className": "TextContact60009",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 19, 8, 19, 2, 8, 19, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "baseline",
+      "role": "target",
+      "point": "outside-bottom",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60009",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 19, 8, 19, 2, 8, 19, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "empty-margin",
+      "space": "local",
+      "className": "TextContact60009",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 20, 21, 20, 21, 2, 20, 21, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "baseline",
+      "role": "target",
+      "point": "empty-margin",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60009",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 20, 21, 20, 21, 2, 20, 21, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "baseline",
+      "role": "wrapper",
+      "point": "glyph-positive",
+      "space": "local",
+      "className": "TextContact60009",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 8, 9, 8, 9, 2, 8, 9, 2, 10, 11, 4, 5, 10,
+        11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "baseline",
+      "role": "target",
+      "point": "glyph-positive",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60009",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 8, 9, 8, 9, 2, 8, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "world-extrema",
+      "role": "wrapper",
+      "point": "center",
+      "space": "world",
+      "className": "TextContact60009",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 7, 6, 7, 1, 8, 9, 2, 10, 11, 4, 5, 10,
+        11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "world-extrema",
+      "role": "target",
+      "point": "center",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60009",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 7, 6, 7, 1, 8, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "world-extrema",
+      "role": "wrapper",
+      "point": "min-min",
+      "space": "world",
+      "className": "TextContact60009",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 10, 11, 10, 11, 1, 10, 11, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "world-extrema",
+      "role": "target",
+      "point": "min-min",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60009",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 10, 11, 10, 11, 1, 10, 11, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "world-extrema",
+      "role": "wrapper",
+      "point": "max-max",
+      "space": "world",
+      "className": "TextContact60009",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 13, 14, 13, 14, 1, 15, 14, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "world-extrema",
+      "role": "target",
+      "point": "max-max",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60009",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 13, 14, 13, 14, 1, 15, 14, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "world-extrema",
+      "role": "wrapper",
+      "point": "left",
+      "space": "world",
+      "className": "TextContact60009",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 10, 7, 10, 7, 1, 10, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "world-extrema",
+      "role": "target",
+      "point": "left",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60009",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 10, 7, 10, 7, 1, 10, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "world-extrema",
+      "role": "wrapper",
+      "point": "right",
+      "space": "world",
+      "className": "TextContact60009",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 13, 7, 13, 7, 1, 15, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "world-extrema",
+      "role": "target",
+      "point": "right",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60009",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 13, 7, 13, 7, 1, 15, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "world-extrema",
+      "role": "wrapper",
+      "point": "top",
+      "space": "world",
+      "className": "TextContact60009",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 11, 6, 11, 1, 8, 11, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "world-extrema",
+      "role": "target",
+      "point": "top",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60009",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 11, 6, 11, 1, 8, 11, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "world-extrema",
+      "role": "wrapper",
+      "point": "bottom",
+      "space": "world",
+      "className": "TextContact60009",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 14, 6, 14, 1, 8, 14, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "world-extrema",
+      "role": "target",
+      "point": "bottom",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60009",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 14, 6, 14, 1, 8, 14, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "world-extrema",
+      "role": "wrapper",
+      "point": "outside-left",
+      "space": "world",
+      "className": "TextContact60009",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 16, 7, 16, 7, 1, 16, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "world-extrema",
+      "role": "target",
+      "point": "outside-left",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60009",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 16, 7, 16, 7, 1, 16, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "world-extrema",
+      "role": "wrapper",
+      "point": "outside-right",
+      "space": "world",
+      "className": "TextContact60009",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 17, 7, 17, 7, 1, 17, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "world-extrema",
+      "role": "target",
+      "point": "outside-right",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60009",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 17, 7, 17, 7, 1, 17, 9, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "world-extrema",
+      "role": "wrapper",
+      "point": "outside-top",
+      "space": "world",
+      "className": "TextContact60009",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 18, 6, 18, 1, 8, 18, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "world-extrema",
+      "role": "target",
+      "point": "outside-top",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60009",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 18, 6, 18, 1, 8, 18, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "world-extrema",
+      "role": "wrapper",
+      "point": "outside-bottom",
+      "space": "world",
+      "className": "TextContact60009",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 19, 6, 19, 1, 8, 19, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "world-extrema",
+      "role": "target",
+      "point": "outside-bottom",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60009",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 19, 6, 19, 1, 8, 19, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 10, 11, 4, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "scaled-parent",
+      "role": "wrapper",
+      "point": "center",
+      "space": "local",
+      "className": "TextContact60009",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 22, 23, 22, 23, 24, 25, 26, 27, 2, 1, 1, 6, 7, 28, 29, 2, 8, 30, 2, 10,
+        11, 4, 5, 10, 11, 4, 5, 31, 32, 22, 23, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "scaled-parent",
+      "role": "target",
+      "point": "center",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60009",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 6, 7, 28, 29, 2, 8, 30, 2, 10, 11, 4, 5,
+        10, 11, 4, 5, 31, 32, 22, 23, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "scaled-parent",
+      "role": "wrapper",
+      "point": "min-min",
+      "space": "local",
+      "className": "TextContact60009",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 22, 23, 22, 23, 24, 25, 26, 27, 2, 1, 1, 10, 11, 31, 32, 2, 33, 34, 2, 10,
+        11, 4, 5, 10, 11, 4, 5, 31, 32, 22, 23, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "scaled-parent",
+      "role": "target",
+      "point": "min-min",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60009",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 10, 11, 31, 32, 2, 33, 34, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 31, 32, 22, 23, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "scaled-parent",
+      "role": "wrapper",
+      "point": "outside-right",
+      "space": "local",
+      "className": "TextContact60009",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 22, 23, 22, 23, 24, 25, 26, 27, 2, 1, 1, 17, 7, 35, 29, 2, 17, 30, 2, 10,
+        11, 4, 5, 10, 11, 4, 5, 31, 32, 22, 23, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "scaled-parent",
+      "role": "target",
+      "point": "outside-right",
+      "space": "local",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60009",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 17, 7, 35, 29, 2, 17, 30, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 31, 32, 22, 23, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "rotated-parent",
+      "role": "wrapper",
+      "point": "world-near-min",
+      "space": "world",
+      "className": "TextContact60009",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 36, 37, 36, 37, 24, 25, 26, 27, 38, 1, 1, 39, 40, 39, 40, 1, 41, 42, 2,
+        10, 11, 4, 5, 10, 11, 4, 5, 43, 44, 36, 37, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "rotated-parent",
+      "role": "target",
+      "point": "world-near-min",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60009",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 39, 40, 39, 40, 1, 41, 42, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 43, 44, 36, 37, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "rotated-parent",
+      "role": "wrapper",
+      "point": "world-near-max",
+      "space": "world",
+      "className": "TextContact60009",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 36, 37, 36, 37, 24, 25, 26, 27, 38, 1, 1, 45, 46, 45, 46, 1, 47, 48, 2,
+        10, 11, 4, 5, 10, 11, 4, 5, 43, 44, 36, 37, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "rotated-parent",
+      "role": "target",
+      "point": "world-near-max",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60009",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 45, 46, 45, 46, 1, 47, 48, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 43, 44, 36, 37, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "rotated-parent",
+      "role": "wrapper",
+      "point": "world-center",
+      "space": "world",
+      "className": "TextContact60009",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 36, 37, 36, 37, 24, 25, 26, 27, 38, 1, 1, 49, 50, 49, 50, 1, 51, 52, 2,
+        10, 11, 4, 5, 10, 11, 4, 5, 43, 44, 36, 37, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "rotated-parent",
+      "role": "target",
+      "point": "world-center",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60009",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 49, 50, 49, 50, 1, 51, 52, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 43, 44, 36, 37, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "rotated-parent",
+      "role": "wrapper",
+      "point": "world-outside-left",
+      "space": "world",
+      "className": "TextContact60009",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 36, 37, 36, 37, 24, 25, 26, 27, 38, 1, 1, 53, 50, 53, 50, 1, 54, 55, 2,
+        10, 11, 4, 5, 10, 11, 4, 5, 43, 44, 36, 37, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "rotated-parent",
+      "role": "target",
+      "point": "world-outside-left",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60009",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 53, 50, 53, 50, 1, 54, 55, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 43, 44, 36, 37, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "rotated-parent",
+      "role": "wrapper",
+      "point": "world-outside-right",
+      "space": "world",
+      "className": "TextContact60009",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 36, 37, 36, 37, 24, 25, 26, 27, 38, 1, 1, 56, 50, 56, 50, 1, 57, 58, 2,
+        10, 11, 4, 5, 10, 11, 4, 5, 43, 44, 36, 37, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "rotated-parent",
+      "role": "target",
+      "point": "world-outside-right",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60009",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 56, 50, 56, 50, 1, 57, 58, 2, 10, 11, 4,
+        5, 10, 11, 4, 5, 43, 44, 36, 37, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "rotated-leaf",
+      "role": "wrapper",
+      "point": "world-near-min",
+      "space": "world",
+      "className": "TextContact60009",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 59, 60, 59, 60, 2, 2, 1, 1, 2, 1, 1, 61, 62, 61, 62, 1, 63, 64, 2, 65, 66,
+        59, 60, 10, 11, 4, 5, 65, 66, 59, 60, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "rotated-leaf",
+      "role": "target",
+      "point": "world-near-min",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60009",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 59, 60, 59, 60, 2, 2, 1, 1, 38, 1, 1, 61, 62, 61, 62, 1, 63, 64, 2, 65,
+        66, 59, 60, 10, 11, 4, 5, 65, 66, 59, 60, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "rotated-leaf",
+      "role": "wrapper",
+      "point": "world-near-max",
+      "space": "world",
+      "className": "TextContact60009",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 59, 60, 59, 60, 2, 2, 1, 1, 2, 1, 1, 67, 68, 67, 68, 1, 69, 70, 2, 65, 66,
+        59, 60, 10, 11, 4, 5, 65, 66, 59, 60, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "rotated-leaf",
+      "role": "target",
+      "point": "world-near-max",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60009",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 59, 60, 59, 60, 2, 2, 1, 1, 38, 1, 1, 67, 68, 67, 68, 1, 69, 70, 2, 65,
+        66, 59, 60, 10, 11, 4, 5, 65, 66, 59, 60, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "rotated-leaf",
+      "role": "wrapper",
+      "point": "world-center",
+      "space": "world",
+      "className": "TextContact60009",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 59, 60, 59, 60, 2, 2, 1, 1, 2, 1, 1, 71, 72, 71, 72, 1, 8, 73, 2, 65, 66,
+        59, 60, 10, 11, 4, 5, 65, 66, 59, 60, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "rotated-leaf",
+      "role": "target",
+      "point": "world-center",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60009",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 59, 60, 59, 60, 2, 2, 1, 1, 38, 1, 1, 71, 72, 71, 72, 1, 8, 73, 2, 65,
+        66, 59, 60, 10, 11, 4, 5, 65, 66, 59, 60, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "rotated-leaf",
+      "role": "wrapper",
+      "point": "world-outside-left",
+      "space": "world",
+      "className": "TextContact60009",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 59, 60, 59, 60, 2, 2, 1, 1, 2, 1, 1, 74, 72, 74, 72, 1, 75, 76, 2, 65, 66,
+        59, 60, 10, 11, 4, 5, 65, 66, 59, 60, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "rotated-leaf",
+      "role": "target",
+      "point": "world-outside-left",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60009",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 59, 60, 59, 60, 2, 2, 1, 1, 38, 1, 1, 74, 72, 74, 72, 1, 75, 76, 2, 65,
+        66, 59, 60, 10, 11, 4, 5, 65, 66, 59, 60, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "rotated-leaf",
+      "role": "wrapper",
+      "point": "world-outside-right",
+      "space": "world",
+      "className": "TextContact60009",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 59, 60, 59, 60, 2, 2, 1, 1, 2, 1, 1, 77, 72, 77, 72, 1, 78, 79, 2, 65, 66,
+        59, 60, 10, 11, 4, 5, 65, 66, 59, 60, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "rotated-leaf",
+      "role": "target",
+      "point": "world-outside-right",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60009",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 59, 60, 59, 60, 2, 2, 1, 1, 38, 1, 1, 77, 72, 77, 72, 1, 78, 79, 2, 65,
+        66, 59, 60, 10, 11, 4, 5, 65, 66, 59, 60, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "nested-transform",
+      "role": "wrapper",
+      "point": "world-near-min",
+      "space": "world",
+      "className": "TextContact60009",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 80, 81, 80, 81, 2, 2, 82, 26, 83, 1, 1, 84, 85, 84, 85, 1, 86, 87, 2, 88,
+        89, 90, 91, 10, 11, 4, 5, 92, 93, 80, 81, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "nested-transform",
+      "role": "target",
+      "point": "world-near-min",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60009",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 90, 91, 90, 91, 2, 2, 27, 26, 38, 1, 1, 84, 85, 84, 85, 1, 86, 87, 2, 88,
+        89, 90, 91, 10, 11, 4, 5, 92, 93, 80, 81, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "nested-transform",
+      "role": "wrapper",
+      "point": "world-center",
+      "space": "world",
+      "className": "TextContact60009",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 80, 81, 80, 81, 2, 2, 82, 26, 83, 1, 1, 94, 95, 94, 95, 1, 51, 73, 2, 88,
+        89, 90, 91, 10, 11, 4, 5, 92, 93, 80, 81, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "nested-transform",
+      "role": "target",
+      "point": "world-center",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60009",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 90, 91, 90, 91, 2, 2, 27, 26, 38, 1, 1, 94, 95, 94, 95, 1, 51, 73, 2, 88,
+        89, 90, 91, 10, 11, 4, 5, 92, 93, 80, 81, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "nested-transform",
+      "role": "wrapper",
+      "point": "world-outside-right",
+      "space": "world",
+      "className": "TextContact60009",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 80, 81, 80, 81, 2, 2, 82, 26, 83, 1, 1, 96, 95, 96, 95, 1, 97, 98, 2, 88,
+        89, 90, 91, 10, 11, 4, 5, 92, 93, 80, 81, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "nested-transform",
+      "role": "target",
+      "point": "world-outside-right",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60009",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 2, 2, 90, 91, 90, 91, 2, 2, 27, 26, 38, 1, 1, 96, 95, 96, 95, 1, 97, 98, 2, 88,
+        89, 90, 91, 10, 11, 4, 5, 92, 93, 80, 81, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "zero-scale",
+      "role": "wrapper",
+      "point": "world-center",
+      "space": "world",
+      "className": "TextContact60009",
+      "parentClass": "BT3TextContactProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 2, 5, 2, 5, 2, 2, 2, 1, 2, 1, 1, 2, 7, 2, 7, 1, 2, 9, 2, 10, 11, 4, 5, 10,
+        11, 4, 5, 2, 11, 2, 5, 2, 2, 1, 1, 2
+      ]
+    },
+    {
+      "case": "derived-advanced",
+      "phase": "zero-scale",
+      "role": "target",
+      "point": "world-center",
+      "space": "world",
+      "className": "flash.text::StaticText",
+      "parentClass": "TextContact60009",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        12, 0, 2, 2, 1, 1, 4, 5, 4, 5, 2, 2, 1, 1, 2, 1, 1, 2, 7, 2, 7, 1, 2, 9, 2, 2, 11, 2, 5, 10,
+        11, 4, 5, 2, 11, 2, 5, 2, 2, 1, 1, 2
+      ]
+    }
+  ],
+  "evidenceId": "ev_4e6e1cb3deadbe6fe4df03148830fcd60b737f8776c011225019ce80feb0b906"
+}
