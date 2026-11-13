@@ -127,7 +127,7 @@ export async function showActorArtwork(pack: AssetPack, host: HTMLElement) {
       !world.actorParents.onStage(tank) &&
       !nodes().has(tank);
     until(149);
-    capture('Cached · retained pose at ENTER150');
+    capture('Cached · retained pose at EXIT149');
     until(199);
     world.jump({ x: -1, y: 0 });
     draw();
@@ -135,11 +135,11 @@ export async function showActorArtwork(pack: AssetPack, host: HTMLElement) {
       world.transit!.next.enemies[0] === tank &&
       nodes().has(tank) &&
       nodes().get(tank) !== firstView;
-    capture('Revisit · same mounts at ENTER200');
+    capture('Revisit · same mounts at EXIT199');
     const age = tank.age;
     world.actorParents.detach(tank);
     until(399);
-    capture('Direct actor removal · ENTER400');
+    capture('Direct actor removal · EXIT399');
     world.attachActor(tank, world.transit!.next);
     removeTankChild(tank, 'part:mount-2');
     until(439);
@@ -149,7 +149,7 @@ export async function showActorArtwork(pack: AssetPack, host: HTMLElement) {
     const childAge = child.clip.age;
     until(440);
     addTankChild(tank, 'part:mount-2');
-    capture('Rotor reattached · same child at ENTER441');
+    capture('Rotor reattached · same child at EXIT440');
     const mountedRetained =
       roots.every((root, i) => pack.partClip(tank, tank.design.parts[i]) === root) &&
       rotor.children.get(1) === child &&

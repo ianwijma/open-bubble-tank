@@ -13,7 +13,7 @@ import { retainedClipGeometry } from './retained-geometry';
 import type { DisplayGeometryContent } from '../core/display-geometry';
 import { partSnapshot } from './part-snapshot';
 import { MountedParts, PartPlayback } from './part-playback';
-import { observeActorArtwork } from '../core/actor-artwork';
+import { observeActorArtwork, readActorArtworkPhase } from '../core/actor-artwork';
 import {
   mockProjectileBounds,
   projectileScriptBounds,
@@ -1009,13 +1009,16 @@ export class AssetPack {
       this.partClips.set(tank, owner);
       observeActorArtwork(tank, owner);
     }
+    const state = readActorArtworkPhase(tank);
     const age = tank.artAge + 1;
     let playback = owner.parts.get(part.key)?.playback;
-    if (!playback || playback.clip.age > age) {
+    if (!playback || (!state && playback.clip.age > age)) {
       // Painting/contact queries share a private stream rather than consuming gameplay RNG.
       playback = new PartPlayback(this.newPartClip(tank, part));
       owner.parts.set(part.key, { part, playback });
     }
+    const play = tank.guns.find((g) => g.part.key === part.key)?.mountedPlay;
+    if (state) return playback.present(state, part.y, play);
     return playback.advance(
       age,
       part.y,

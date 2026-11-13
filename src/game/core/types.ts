@@ -107,7 +107,7 @@ export interface GunState {
   shieldGeneration?: number;
   mineRefs?: MineReference[];
   /** Latest non-overlapping mounted MovieClip.play episode, in stage-art ages. */
-  mountedPlay?: { child: string; age: number; frames: number };
+  mountedPlay?: { child: string; age: number; frames: number; artworkFrame?: number };
 }
 export interface BehaviorTargetState {
   master: Tank['side'] | null;
