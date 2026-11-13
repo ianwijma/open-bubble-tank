@@ -46,16 +46,18 @@ test('a valid creator save reaches the optional local roster and a literal Balan
   expect(saved[0].avatar).toBe(false);
   expect(matchesRule(saved[0], rules.Balanced)).toBe(true);
   // GameShell.startRun passes precisely these records only when My enemy tanks is enabled.
+  // A real seeded route under source count preparation/rejection; no RNG override.
+  const seed = 10;
   const world = new World(
     saved.filter((tank: { avatar: boolean }) => !tank.avatar),
     [],
-    6,
+    seed,
   );
   expect(world.roster.units.get('Balanced')).toEqual([saved[0]]);
   const wave = rollWave(7, world.rng, saved, world.roster);
   expect(wave.designs.filter((tank) => tank.id === saved[0].id)).toHaveLength(2);
   expect(wave.designs.find((tank) => tank.id === saved[0].id)!.parts.at(-1)!.type).toBe(4032);
-  const builtinOnly = new World([], [], 6);
+  const builtinOnly = new World([], [], seed);
   expect(
     [...builtinOnly.roster.units.values()]
       .flat()

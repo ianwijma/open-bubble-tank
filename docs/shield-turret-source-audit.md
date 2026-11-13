@@ -26,10 +26,12 @@ codes. The supported recreation caller is the optional saved-enemy adapter:
 4. GameShell's public **My enemy tanks** option starts unchecked. Only enabling
    it passes saved nonavatar records into `World`. `UnitRoster.load` evaluates
    the literal strict rules, then may choose a matching local record. The design
-   matches `Balanced`; an unmodified seed6 World loads it initially and a
-   distance7 `rollWave` selects two copies. No forced roster injection or RNG
-   override is used. This demonstrates a supported adapter route, not an earned
-   ordinary encounter or a builtin original route.
+   matches `Balanced`; the recorded audit base uses an unmodified seed6 World
+   whose distance7 wave selects two copies. With source count preparation and
+   table rejection restored, the same two-copy witness uses seed10 (seed6 now
+   produces one). No forced roster injection or RNG override is used, and every
+   two-copy assertion is retained. This demonstrates a supported adapter route,
+   not an earned ordinary encounter or a builtin original route.
 
 The companion public browser case imports that valid layout, opens the real
 creator, checks its measured class and validation, saves a fresh local record,

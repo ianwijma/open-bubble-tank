@@ -73,3 +73,28 @@ ordinary progression or original execution. Local evidence is ignored under
 `test-results/wave-selection-validation/` and `reference-captures/wave-selection-audit/`.
 Original/Adobe comparison, the complete random stream and full-game parity remain
 unproved. This next-batch draft remains local and unpublished.
+
+## Port onto the combined loading/ownership/win batch
+
+The local port onto `2f3d3a16e4aefe946d6ecdb4c8f3cf9c5d75b849`
+passes formatting, TypeScript and918 unit tests/8,464 assertions. The existing
+Shield Turrets caller proof now uses seed10 for its unchanged two-copy assertion;
+seed6 selects one copy under the restored wave draw order. A finite search using
+the normal `World`/`rollWave` RNG found the replacement; no entropy override or
+production change was added for that fixture.
+
+Production build `ckodAIOD7oeC2cdkw_yRT` passes:
+
+```sh
+BT3_SWF_FILE=/home/ian/Projects/ianwijma/documented-bubble-tank-3/re/bt3/uncompressed.swf bun run test:e2e --config test-results/wave-selection-validation/ported.config.ts
+```
+
+All twelve mock/supplied-art cases pass with zero skips, flaky results or page
+errors: the preceding ten cases and the public creator/save/local-source pair.
+Private fixture copies preserve every assertion and change only URL3102 to3166;
+the caller project uses the original spec and helpers. Both owned3165/3166 servers
+stopped. The accelerated pilots retain70,287 mock/72,573 supplied-art frames.
+Native win, creator and ink-gallery paint were inspected. Logs, report and pilot
+proofs remain ignored under the existing evidence directories (`ported-*`). These
+are scoped recreation checks; ordinary earned boss/win and original/Adobe parity
+remain unproved. No PR, push or deployment was created for the local port.
