@@ -1,7 +1,7 @@
 import { Container, Graphics } from 'pixi.js';
 import type { AssetPack } from '../assets/asset-pack';
 import type { Effect } from '../core/types';
-import { Random } from '../core/math';
+import { readEffectPlayback } from '../simulation/effect-playback';
 import { STAGE } from '../core/constants';
 import screenArt from '../data/screen-effect-art.json';
 import { SwfSymbolView, type RasterTextures } from './swf-symbol-view';
@@ -19,7 +19,6 @@ export class CombatEffectsView {
   screen = new Container();
   private mockNodes = new Map<Effect, Graphics>();
   private nodes = new Map<Effect, SwfSymbolView>();
-  private lines = new Map<Effect, Graphics>();
   constructor(
     private assets: AssetPack,
     private textures: RasterTextures,
@@ -33,6 +32,7 @@ export class CombatEffectsView {
     for (const effect of effects) {
       const identity = effect.clip ?? effect;
       const alpha = effect.parentAlpha ?? 1;
+      const playback = readEffectPlayback(identity);
       const layer =
         effect.layer === 'screen'
           ? this.screen
@@ -41,14 +41,15 @@ export class CombatEffectsView {
             : this.top;
       const index = order.get(layer) ?? 0;
       order.set(layer, index + 1);
-      if (effect.symbol && this.assets.mode === 'swf' && this.assets.hasSymbol(effect.symbol)) {
+      if (
+        playback.status === 'retained' &&
+        this.assets.mode === 'swf' &&
+        this.assets.hasSymbol(playback.symbol)
+      ) {
         active.add(identity);
         let view = this.nodes.get(identity);
         if (!view) {
-          const random = new Random(effect.uid);
-          view = new SwfSymbolView(effect.symbol, this.assets, this.textures, {
-            random: () => random.next(),
-          });
+          view = new SwfSymbolView(playback.symbol, this.assets, this.textures);
           this.nodes.set(identity, view);
         }
         if (view.root.parent !== layer) layer.addChild(view.root);
@@ -58,16 +59,7 @@ export class CombatEffectsView {
         view.root.scale.set(effect.scale ?? 1);
         view.setBlendMode(effect.blendMode === 'layer' ? 2 : 1);
         view.setParentAlpha(alpha);
-        view.update(effect.frame ?? effect.age + 1);
-        const line = view.namedChild('line_mc')?.root;
-        if (effect.line && line && !this.lines.has(identity)) {
-          const drawing = new Graphics()
-            .moveTo(0, 0)
-            .lineTo(effect.line.x, effect.line.y)
-            .stroke({ color: 0xffffff, width: 2, alpha: 0.3 });
-          line.addChild(drawing);
-          this.lines.set(identity, drawing);
-        }
+        view.updatePose(playback.pose);
         continue;
       }
       mockActive.add(identity);
@@ -80,8 +72,14 @@ export class CombatEffectsView {
       graphics.angle = effect.rotation ?? 0;
       graphics.scale.set(effect.scale ?? 1);
       graphics.alpha = alpha;
-      const age = effect.frame !== undefined ? effect.frame - 1 : effect.age % effect.duration;
-      const progress = age / Math.max(1, effect.duration - 1);
+      const duration = playback.status === 'retained' ? playback.totalFrames : effect.duration;
+      const age =
+        playback.status === 'retained'
+          ? playback.currentFrame - 1
+          : effect.frame !== undefined
+            ? effect.frame - 1
+            : effect.age % duration;
+      const progress = age / Math.max(1, duration - 1);
       const screenClip = Object.values(screenArt).find((clip) => clip.symbol === effect.symbol);
       if (effect.symbol === screenArt.collapse.symbol) {
         // Procedural substitute for the authored isolated erase/glow animation.
@@ -97,15 +95,21 @@ export class CombatEffectsView {
           alpha: screenClip.opacity[age] * (effect.symbol === screenArt.ink.symbol ? 0.85 : 1),
         });
       } else if (effect.symbol === 2175) {
-        if (effect.line)
-          graphics
-            .moveTo(0, 0)
-            .lineTo(effect.line.x, effect.line.y)
-            .stroke({
-              color: 0xffffff,
-              width: 2,
-              alpha: 0.3 * (1 - progress),
-            });
+        const placement =
+          playback.status === 'retained'
+            ? playback.pose.placements.find(
+                (p) => playback.pose.children.get(p.depth)?.clip === playback.lineTarget,
+              )
+            : undefined;
+        const lines =
+          placement && playback.status === 'retained' ? (playback.lineTarget?.lines ?? []) : [];
+        graphics.moveTo(0, 0);
+        for (const line of lines)
+          graphics.lineTo(line.x, line.y).stroke({
+            color: line.color,
+            width: line.width,
+            alpha: line.alpha * (placement?.color?.mult[3] ?? 1),
+          });
       } else {
         graphics.circle(0, 0, Math.max(0.1, effect.radius * progress)).stroke({
           color: effect.color,
@@ -118,7 +122,6 @@ export class CombatEffectsView {
       if (!active.has(uid)) {
         view.destroy();
         this.nodes.delete(uid);
-        this.lines.delete(uid);
       }
     for (const [clip, graphics] of this.mockNodes)
       if (!mockActive.has(clip)) {

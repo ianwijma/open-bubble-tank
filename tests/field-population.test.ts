@@ -182,3 +182,23 @@ test('unresolved under-avatar sizing rejects the population instead of supplying
   const world = new World([], [], 31, undefined, undefined, undefined, () => undefined);
   expect(() => readFieldPopulation(world, world.field)).toThrow(IncompleteFieldGeometryError);
 });
+
+test('effect geometry input reads the exact retained owner pose without advancing or discovering native clips', () => {
+  const world = new World([], [], 31);
+  const effect = world.addCombatEffect({ x: 17, y: 29 }, 'conversion', {}, true);
+  world.mode = 'paused';
+  for (let i = 0; i < 22; i++) world.step(emptyInput());
+  const before = effect.playback!.pose.age;
+  for (let i = 0; i < 3; i++) {
+    const node = population(world).find(
+      (node) => node.kind === 'effect' && node.instance === effect,
+    );
+    if (node?.kind !== 'effect') throw new Error('Missing effect');
+    expect(node.playback).toBe(effect.playback);
+    if (node.playback?.status !== 'retained') throw new Error('Missing retained playback');
+    expect(node.playback.pose).toBe(effect.playback!.pose);
+    expect(node.playback.currentFrame).toBe(1);
+    expect(node.transform).toMatchObject({ x: 17, y: 29 });
+  }
+  expect(effect.playback!.pose.age).toBe(before);
+});

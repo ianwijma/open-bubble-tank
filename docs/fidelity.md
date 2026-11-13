@@ -1996,3 +1996,39 @@ controls pass in the original qualification. The joint parent check passes
 this evidence-only pick does not change the preceding tested browser code.
 Departure/gameplay Run, other part/status/protection/collection lifetimes, global
 event/RNG, compiled-source identity, ordinary/Adobe/full-game parity remain open.
+## Local retained generic effect playback
+
+The [retained effect layer](retained-effect-playback-reference.md) replaces generic
+registration/attachment ages and renderer reconstruction with construction-owned
+numeric playback for all15 audited roots. Both measured birth epochs, delayed
+registration, current-frame completion/callbacks, pause/Main4, removed root wraps,
+conversion retirement and the stopped103/advancing14 collapse tree are retained.
+Existing children now enter before parent removals, consistent with tagged source
+and the unchanged original oracle; the existing2069 stop script is unchanged.
+
+All660 sampled retained multi-frame comparisons/correspondences match. Exact
+EXIT numeric checks cover2,830 current child matrices/positions/alpha and349
+historical/current sprite own poses/scales. Root placement starts at0; raw queue
+arguments remain independent until CreateEffect. Painting and the future field
+population seam read the same retained pose. Rocket graphics belong to the
+original named child, with no read-time redraw on a replacement. Unsupported
+native/legacy mock paths remain explicit. Shape-wrapper identity reuse, some
+rotation getter binary rounding,399 transient wrapper holes, complete ENTER
+geometry, complete field queries, global events/RNG, Adobe and full-game parity
+remain open. No mask work or stashed field-query draft is integrated. This work
+is local above569c406; PR155 and all remote/protected refs remain unchanged.
+
+
+Final local validation of this layer passes formatting/TypeScript and1,209 rule
+tests /27,536 assertions, then all69 affected mock/supplied-SWF browser cases on
+buildGmLvlQCLFKiOxw7V4b81n with zero skips/flaky results. Both seed17 pilots retain
+all controls/providers/frame caps/timeouts and finish at68,999/67,433 frames with
+the actual base input digests. Earlier gallery/timing failures and the base
+controls remain in the reference. Combined clip advancement now separates child
+entry/parent tags from forward render-order scripts; pending-script summaries and
+unchanged-tag reuse avoid redundant work while stopped descendants keep entering.
+The browser accelerator yields every50 logical frames, independently of its
+unchanged1,000-frame reporting cadence. All757 final inputs and85 prior evidence
+inputs match their recorded hashes; owned3955/3956 are free and1,195 process
+fingerprints have no survivors. Source/evidence gaps above remain open; no full
+original/Adobe/global-event or complete field-query claim is made.

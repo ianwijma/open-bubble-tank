@@ -2,7 +2,8 @@ import { expect, test } from 'bun:test';
 import original from './fixtures/effect-clock-original.json';
 import { decode, rows, unpack } from '../tools/reference/effect-clock-evidence.mjs';
 import { RegisteredEffects } from '../src/game/simulation/registered-effects';
-import type { Effect, Field } from '../src/game/core/types';
+import { combatEffect } from '../src/game/simulation/effects';
+import type { Field } from '../src/game/core/types';
 
 const measured = rows(original.contract);
 const roots = measured.filter((r) => r.path === '0' && r.kind === 'tree');
@@ -71,7 +72,7 @@ test('root-only scripts audit does not erase the qualified descendant stop actio
   expect(descendants.some((r) => r.random)).toBe(false);
 });
 
-test('current registration-owned generic age remains a documented candidate discrepancy', () => {
+test('production retained impact now matches original pre-registration and removed root clocks', () => {
   const engine = new RegisteredEffects();
   const owner = {
     col: 0,
@@ -84,28 +85,21 @@ test('current registration-owned generic age remains a documented candidate disc
   } as Field;
   engine.createFieldLayers(owner);
   engine.register(engine.layer(owner, 'top')!);
-  const clip = {
-    uid: 1,
-    x: 0,
-    y: 0,
-    kind: 'native',
-    age: 0,
-    duration: 4,
-    radius: 1,
-    color: 0xffffff,
-  } as Effect;
-  for (let tick = 1; tick < 7; tick++) engine.advanceArtwork();
-  const observed = roots.find((r) => r.label === 'before:impact' && r.phase === 'pre-register')!;
-  expect([clip.age + 1, observed.frame]).toEqual([1, 3]);
-  engine.create(clip, 'top', owner);
-  for (let i = 0; i < 4; i++) {
+  const clip = combatEffect(1, 'impact', {}, engine.artwork);
+  for (let tick = 1; tick <= 243; tick++) {
+    engine.enterFrame();
+    if (tick === 7) {
+      const observed = roots.find(
+        (r) => r.label === 'before:impact' && r.phase === 'pre-register',
+      )!;
+      expect(clip.frame).toBe(observed.frame);
+      engine.create(clip, 'top', owner);
+    }
+    if (tick >= 7) engine.poll();
     engine.advanceArtwork();
-    engine.poll();
   }
-  const removedAge = clip.age;
-  for (let i = 0; i < 20; i++) engine.advanceArtwork();
-  expect(clip.age).toBe(removedAge);
-  expect(
+  expect(engine.parent(clip)).toBeUndefined();
+  expect(clip.frame).toBe(
     roots.find((r) => r.label === 'before:impact' && r.phase === 'exit' && r.tick === 243)!.frame,
-  ).toBe(3);
+  );
 });

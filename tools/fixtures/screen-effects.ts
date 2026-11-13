@@ -1,3 +1,4 @@
+import { setEffectFixturePose } from './effect-pose';
 import { setFieldFixtureLayout } from './field-layout';
 import { captureCanvas } from './pixi-capture';
 import { Rectangle } from 'pixi.js';
@@ -70,7 +71,7 @@ export async function showScreenEffectsProof(pack: AssetPack, host: HTMLElement)
     const queued = world.runtimeFor(world.field).effectQueue[0];
     world.step(emptyInput());
     const ink = world.effects[0];
-    ink.age = 19;
+    setEffectFixturePose(ink, 19);
     const firstHash = capture('Ink20 · centered, queued instance');
     const beforeFront = inFront();
     world.pause();
@@ -128,16 +129,17 @@ export async function showScreenEffectsProof(pack: AssetPack, host: HTMLElement)
     world.pause();
     const overlapping = world.effects.filter((e) => e.layer === 'screen');
     for (const [i, effect] of overlapping.entries()) {
-      effect.age = 19;
+      setEffectFixturePose(effect, 19);
       effect.rotation = i ? 80 : 0;
     }
     capture('Two ally hits · overlapping ink');
     setEffects([ink]);
-    ink.age = 99;
+    setEffectFixturePose(ink, 99);
     capture('Ink100 · transparent, still attached');
     const final = { retained: world.effects[0] === ink, ink: sample().ink };
     world.resume();
-    world.step(emptyInput());
+    // Final-frame readiness control: poll before a new stage entry wraps the root.
+    world.effectEngine.poll();
     draw();
     const removed = { count: world.effects.length, ink: sample().ink };
     const flash = world.addCombatEffect(
@@ -146,7 +148,7 @@ export async function showScreenEffectsProof(pack: AssetPack, host: HTMLElement)
       { randomRotation: false },
       true,
     );
-    flash.age = 11;
+    setEffectFixturePose(flash, 11);
     capture('Collapse completion · native flash12');
     let galleryHash = 2166136261;
     for (const byte of ctx.getImageData(0, 0, 550, 450).data)

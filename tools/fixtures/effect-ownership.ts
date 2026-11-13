@@ -1,3 +1,4 @@
+import { setEffectFixturePose } from './effect-pose';
 import { Container, Graphics } from 'pixi.js';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { DEFAULT_SETTINGS } from '../../src/game/core/constants';
@@ -38,11 +39,16 @@ export async function showEffectOwnershipProof(pack: AssetPack, host: HTMLElemen
     layer.children.filter((c) => pack.mode !== 'swf' || !(c instanceof Graphics));
   try {
     const before = draw();
-    const first = combatEffect(7000, { x: -80, y: 0 }, 'impact', {
-      frame: 3,
-      randomRotation: false,
-      layer: 'bottom',
-    });
+    const first = combatEffect(
+      7000,
+      'impact',
+      {
+        randomRotation: false,
+        layer: 'bottom',
+      },
+      world.effectEngine.artwork,
+    );
+    setEffectFixturePose(first, 2, { x: -80, y: 0 });
     world.effectEngine.create(first, 'bottom', next);
     const painted = draw(),
       originalNode = nodes(bottom)[0];
@@ -54,11 +60,16 @@ export async function showEffectOwnershipProof(pack: AssetPack, host: HTMLElemen
       position: originalNode?.getGlobalPosition(),
       changedPixels,
     };
-    const second = combatEffect(7000, { x: 80, y: 0 }, 'impact', {
-      frame: 3,
-      randomRotation: false,
-      layer: 'top',
-    });
+    const second = combatEffect(
+      7000,
+      'impact',
+      {
+        randomRotation: false,
+        layer: 'top',
+      },
+      world.effectEngine.artwork,
+    );
+    setEffectFixturePose(second, 2, { x: 80, y: 0 });
     world.effectEngine.create(second, 'top', world.field);
     draw();
     const duplicateIds = {

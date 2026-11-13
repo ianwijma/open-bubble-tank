@@ -1,3 +1,4 @@
+import type { RetainedEffectPlayback } from '../simulation/effect-playback';
 import type { SwfClip } from '../assets/swf-clip';
 
 export interface Vec {
@@ -296,8 +297,9 @@ export interface Effect extends Vec {
   scale?: number;
   randomRotation?: boolean;
   line?: Vec;
-  /** A controller-owned authored frame; ordinary effect clips use their stage age. */
-  frame?: number;
+  /** Actual retained currentFrame for supported native roots; legacy mock override otherwise. */
+  readonly frame?: number;
+  readonly playback?: RetainedEffectPlayback;
   blendMode?: 'layer';
 }
 export interface Field {

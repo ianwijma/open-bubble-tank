@@ -1,3 +1,4 @@
+import { setEffectFixturePose } from './effect-pose';
 import { Application, Graphics } from 'pixi.js';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import art from '../../src/game/data/effect-art.json';
@@ -21,7 +22,7 @@ export async function showCombatEffectsProof(pack: AssetPack, host: HTMLElement)
   });
   const view = new CombatEffectsView(pack, textures),
     occluder = new Graphics();
-  app.stage.addChild(view.bottom, occluder, view.top);
+  app.stage.addChild(view.bottom, occluder, view.top, view.screen);
   const canvas = document.createElement('canvas');
   canvas.width = 550;
   canvas.height = 450;
@@ -53,36 +54,68 @@ export async function showCombatEffectsProof(pack: AssetPack, host: HTMLElement)
     world.mode = 'paused';
     const trailSamples = [];
     for (let frame = 1; frame <= 25; frame++) {
+      world.step(emptyInput());
       view.update(world.effects);
       draw();
       if ([1, 13, 25].includes(frame))
         trailSamples.push({
           frame,
-          age: trail.age,
+          // Compatibility visual offset; stageAge separately records actual clock telemetry.
+          age: trail.frame! - 1,
+          stageAge: trail.age,
           alpha: pixel(100, 60)[3],
           count: world.effects.length,
         });
-      if (frame < 25) world.step(emptyInput());
     }
     world.mode = 'playing';
-    world.step(emptyInput());
+    // Explicit Run poll at the presented final frame; a new stage entry would wrap first.
+    world.effectEngine.poll();
     view.update(world.effects);
     draw();
     const removed = { count: world.effects.length, ink: ink().count };
+    // Late first paint must use the independently running retained tree, including
+    // the stopped103 descendant and its still-running14-frame child.
+    const retainedWorld = new World([], [], 11);
+    retainedWorld.mode = 'paused';
+    const late = retainedWorld.addCombatEffect({ x: 0, y: 0 }, 'collapse', {}, true);
+    for (let i = 0; i < 121; i++) retainedWorld.step(emptyInput());
+    const pose = late.playback!.pose;
+    const stopped = [...pose.children.values()].find((child) => child.clip.id === 2069)!.clip;
+    const nested = [...stopped.children.values()].find((child) => child.clip.id === 2068)!.clip;
+    const before = [pose.age, pose.frame, stopped.frame, nested.frame];
+    view.update([late]);
+    const nativeView = view['nodes'].get(late);
+    const retainedProof = {
+      frame: late.frame,
+      stopped: stopped.frame,
+      nested: nested.frame,
+      exactPose: pack.mode === 'swf' ? nativeView?.['renderedPose'] === pose : null,
+      pureRead: false,
+    };
+    view.update([late]);
+    retainedProof.pureRead = before.every(
+      (value, i) => value === [pose.age, pose.frame, stopped.frame, nested.frame][i],
+    );
+    view.update([]);
     const gallery = [];
     const entries = Object.entries(art) as [CombatEffect, typeof art.impact][];
     for (let index = 0; index < entries.length; index++) {
       const [key, clip] = entries[index];
-      const effect = combatEffect(index + 100, { x: 275, y: 225 }, key, {
-        line: key === 'rocketTrail' ? { x: -90, y: 0 } : undefined,
-      });
-      effect.age = Math.min(3, clip.frames - 2);
+      const effect = combatEffect(
+        index + 100,
+        key,
+        {
+          line: key === 'rocketTrail' ? { x: -90, y: 0 } : undefined,
+        },
+        world.effectEngine.artwork,
+      );
+      setEffectFixturePose(effect, Math.min(3, clip.frames - 2), { x: 275, y: 225 });
       view.update([effect]);
       draw();
       gallery.push({ key, symbol: clip.symbol, ...ink() });
     }
-    const bottom = combatEffect(1000, { x: 275, y: 225 }, 'areaBurst', {});
-    bottom.age = 10;
+    const bottom = combatEffect(1000, 'areaBurst', {}, world.effectEngine.artwork);
+    setEffectFixturePose(bottom, 10, { x: 275, y: 225 });
     occluder.rect(0, 0, 550, 450).fill(0x123456);
     view.update([bottom]);
     draw();
@@ -90,8 +123,8 @@ export async function showCombatEffectsProof(pack: AssetPack, host: HTMLElement)
     view.update([]);
     draw();
     const coveredHash = ink().hash;
-    const impact = combatEffect(1001, { x: 275, y: 225 }, 'impact', {});
-    impact.age = 2;
+    const impact = combatEffect(1001, 'impact', {}, world.effectEngine.artwork);
+    setEffectFixturePose(impact, 2, { x: 275, y: 225 });
     view.update([impact]);
     draw();
     const topHash = ink().hash;
@@ -99,16 +132,19 @@ export async function showCombatEffectsProof(pack: AssetPack, host: HTMLElement)
     const effects = entries.map(([key, clip], i) => {
       const effect = combatEffect(
         i + 2000,
-        { x: 70 + (i % 4) * 137, y: 75 + Math.floor(i / 4) * 150 },
         key,
         { scale: 0.35, line: key === 'rocketTrail' ? { x: -150, y: 0 } : undefined },
+        world.effectEngine.artwork,
       );
-      effect.age = Math.min(3, clip.frames - 2);
+      setEffectFixturePose(effect, Math.min(3, clip.frames - 2), {
+        x: 70 + (i % 4) * 137,
+        y: 75 + Math.floor(i / 4) * 150,
+      });
       return effect;
     });
     view.update(effects);
     draw();
-    return { trailSamples, removed, gallery, hiddenBottom, coveredHash, topHash };
+    return { trailSamples, removed, retainedProof, gallery, hiddenBottom, coveredHash, topHash };
   } finally {
     view.destroy();
     app.destroy({ removeView: true }, { children: true });

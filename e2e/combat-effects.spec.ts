@@ -24,12 +24,20 @@ for (const native of [false, true])
         [24, 1],
       ],
     );
+    expect(proof.trailSamples.map((s: { stageAge: number }) => s.stageAge)).toEqual([1, 13, 25]);
     expect(proof.trailSamples[0].alpha).toBeGreaterThan(70);
     expect(proof.trailSamples[0].alpha).toBeLessThan(80);
     expect(proof.trailSamples[1].alpha).toBeGreaterThan(33);
     expect(proof.trailSamples[1].alpha).toBeLessThan(43);
     expect(proof.trailSamples[2].alpha).toBe(0);
     expect(proof.removed).toEqual({ count: 0, ink: 0 });
+    expect(proof.retainedProof).toEqual({
+      frame: 1,
+      stopped: 103,
+      nested: 9,
+      exactPose: native ? true : null,
+      pureRead: true,
+    });
     expect(proof.gallery).toHaveLength(12);
     expect(proof.gallery.every((s: { count: number }) => s.count > 0)).toBe(true);
     expect(proof.hiddenBottom).toBe(proof.coveredHash);

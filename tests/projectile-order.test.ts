@@ -58,7 +58,11 @@ test('ordinary movement precedes the next frame wall expiry; ricochet reflects a
   tick(world, b);
   expect([b.x, b.dead, queue(world).length]).toEqual([424, false, 0]);
   tick(world, b);
-  expect([b.x, b.dead, queue(world)[0].x]).toEqual([424, true, 424]);
+  expect([b.x, b.dead, world.runtimeFor(world.field).queuedEffectRequests[0].x]).toEqual([
+    424,
+    true,
+    424,
+  ]);
   const ricochet = bullet(world, { kind: 'ricochet', symbol: 1946, x: 416 });
   tick(world, ricochet);
   expect(ricochet.x).toBeCloseTo(406);
@@ -83,7 +87,11 @@ test('ordinary contacts sample before movement and callbacks retain the contact 
   expect(target.life).toBe(98);
   expect(b.dead).toBe(true);
   expect(b.x).toBe(10);
-  expect(queue(world).map((e) => [e.symbol, e.x])).toEqual([[1723, 10]]);
+  expect(
+    world
+      .runtimeFor(world.field)
+      .queuedEffectRequests.map(({ clip, x }) => ['symbol' in clip ? clip.symbol : undefined, x]),
+  ).toEqual([[1723, 10]]);
 });
 
 test('friendly half-step contact needs a current-point layer hit; ordinary enemy shots require an enemy wrapper entry', () => {

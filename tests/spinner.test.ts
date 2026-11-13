@@ -127,7 +127,7 @@ test('avatar alone cannot open the layer gate; a current width sample can enable
   expect(world.player.life).toBe(37);
   expect(b.x).toBe(30);
   expect(b.dead).toBe(false);
-  expect(queue(world)[0].x).toBe(10);
+  expect(world.runtimeFor(world.field).queuedEffectRequests[0].x).toBe(10);
 });
 
 test('volley precedes contact damage and movement, even when contact reports a hit', () => {
@@ -162,7 +162,11 @@ test('wall expiry precedes volley and contact and uses the field-scaled radius',
   expect(b.dead).toBe(true);
   expect(b.x).toBe(208);
   expect(world.bullets).toHaveLength(0);
-  expect(queue(world).map((effect) => [effect.symbol, effect.x])).toEqual([[1723, 208]]);
+  expect(
+    world
+      .runtimeFor(world.field)
+      .queuedEffectRequests.map(({ clip, x }) => ['symbol' in clip ? clip.symbol : undefined, x]),
+  ).toEqual([[1723, 208]]);
 });
 
 test('declined transit volleys consume their counter and angle without a catch-up volley', () => {

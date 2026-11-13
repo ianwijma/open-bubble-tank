@@ -1,3 +1,5 @@
+import { displayPixel } from '../core/display-values';
+import { EffectPlayback } from './effect-playback';
 import type { Effect, Field, GunState, Tank } from '../core/types';
 
 export type EffectLayerName = NonNullable<Effect['layer']>;
@@ -42,6 +44,7 @@ export const isArtwork = (clip: EffectClip): clip is Effect => 'duration' in cli
 
 /** _-2c: ordered completion records and actual layer children are separate. */
 export class RegisteredEffects {
+  readonly artwork = new EffectPlayback();
   private cohort = 0;
   private clocks = new WeakSet<PendingEffect>();
   private registered: EffectLayer[] = [];
@@ -75,6 +78,7 @@ export class RegisteredEffects {
   }
   enterFrame() {
     this.cohort++;
+    this.artwork.enterFrame();
   }
 
   private createLayer(kind: EffectLayerName, field?: Field): EffectLayer {
@@ -117,7 +121,15 @@ export class RegisteredEffects {
   *owned(layer: EffectLayer): IterableIterator<EffectClip> {
     yield* this.members.get(layer) ?? [];
   }
-  /** CreateEffect receives the same already constructed/modified MovieClip. */
+  /** Source CreateEffect writes captured Number arguments onto the original display object. */
+  createRequest(request: EffectRequest, context: Field, random: () => number) {
+    const { clip, x, y, name, randomRotation, callback } = request;
+    if (randomRotation) clip.rotation = Math.round(random() * 360);
+    clip.x = displayPixel(x);
+    clip.y = displayPixel(y);
+    this.create(clip, name, context, callback);
+  }
+  /** Physical addChild/record seam, with no constructor or placement discovery. */
   create(clip: EffectClip, name: EffectLayerName, context: Field, callback?: () => void) {
     const layer = this.resolve(name);
     if (!layer) throw new EffectLayerReadError(`No registered ${name} layer`);
@@ -146,12 +158,13 @@ export class RegisteredEffects {
   }
   /** Stage clocks are host-owned; registration/queries never advance them. */
   advanceArtwork() {
+    this.artwork.exitFrame();
     const advanced = new Set<EffectClip>();
     for (const { clip } of this.completions) {
       const parent = this.parents.get(clip);
       if (!parent || !this.attached.has(parent) || advanced.has(clip)) continue;
       advanced.add(clip);
-      if (isArtwork(clip)) clip.age++;
+      if (isArtwork(clip) && !clip.playback) clip.age++;
     }
   }
   poll() {
@@ -159,7 +172,9 @@ export class RegisteredEffects {
     const ready = this.completions
       .filter(({ clip }) =>
         isArtwork(clip)
-          ? (clip.frame ?? (clip.age % clip.duration) + 1) >= clip.duration
+          ? clip.playback
+            ? clip.playback.currentFrame >= clip.playback.totalFrames
+            : (clip.frame ?? (clip.age % clip.duration) + 1) >= clip.duration
           : clip.frame >= clip.total,
       )
       .map(({ clip }) => clip);

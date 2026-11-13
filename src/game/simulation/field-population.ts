@@ -2,6 +2,7 @@ import type { SwfClip } from '../assets/swf-clip';
 import type { Field, Pickup, Tank } from '../core/types';
 import type { FieldInstanceRead } from './field-display';
 import { isArtwork, type EffectClip } from './registered-effects';
+import { readEffectPlayback, type EffectPlaybackRead } from './effect-playback';
 import type { World } from './world';
 
 /** A transient population read, never an ownership registry or a geometric result. */
@@ -40,7 +41,8 @@ export interface PickupFieldPopulation extends PositionedPopulation {
 export interface EffectFieldPopulation extends PositionedPopulation {
   readonly kind: 'effect' | 'carrier';
   readonly instance: EffectClip;
-  /** Generic artwork pose qualification/expansion remains the geometry provider's work. */
+  /** Exact owner read for supported roots; unknown/legacy/carrier geometry stays explicit. */
+  readonly playback?: EffectPlaybackRead;
 }
 export type FieldPopulationNode =
   | AuthoredFieldPopulation
@@ -108,6 +110,7 @@ export function readFieldPopulation(world: World, field: Field): AuthoredFieldPo
             Object.freeze({
               kind: isArtwork(instance) ? 'effect' : 'carrier',
               instance,
+              playback: isArtwork(instance) ? readEffectPlayback(instance) : undefined,
               transform: transform(instance),
             }),
           );

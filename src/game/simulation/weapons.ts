@@ -288,7 +288,7 @@ export function fireGun(world: World, t: Tank, gun: GunState, input: InputFrame)
         world.addCombatEffect(
           { x: t.x + mount.x + offset.x, y: t.y + mount.y + offset.y },
           'neutralize',
-          { scale: 3 },
+          { scale: world.fieldDisplays.readPose(world.currentWrapper).pose.scaleX * 3 },
           true,
         );
       }

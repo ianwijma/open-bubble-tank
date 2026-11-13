@@ -397,3 +397,13 @@ binding supplies original declared leaf bounds and geometric fill/stroke contact
 unsupported content rejects rather than reading raster alpha. The
 [native boundary](retained-native-geometry-reference.md) records actual vector
 comparisons to frozen mask controls and remaining text/dynamic-owner integration.
+`simulation/effect-playback.ts` owns source-provenanced numeric trees for the15
+supported generic effect roots. `RegisteredEffects` drives their stage entry and
+script phases independently of registration/attachment; completion reads the
+actual native frame/count. Requests retain raw Number coordinates separately
+from constructor display X/Y0. `readEffectPlayback` supplies the exact same tree
+to native painting and field population; it exposes unsupported-native and
+legacy-mock paths explicitly. Numeric line graphics belong to the constructor's
+named child. Existing `SwfClip` children enter in reverse render order before
+parent removals; engine-removed roots and retired timeline descendants have
+different clock lifetimes. See [scope and evidence](retained-effect-playback-reference.md).

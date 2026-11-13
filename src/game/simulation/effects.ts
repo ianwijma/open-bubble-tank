@@ -1,6 +1,7 @@
 import art from '../data/effect-art.json';
 import screenArt from '../data/screen-effect-art.json';
 import type { Effect, Projectile, Vec } from '../core/types';
+import { drawEffectLine, type EffectPlayback } from './effect-playback';
 import type { World } from './world';
 
 const allArt = { ...art, ...screenArt };
@@ -12,21 +13,20 @@ export interface EffectOptions {
   /** Endpoint in the new effect's local coordinates, drawn into line_mc. */
   line?: Vec;
   rotation?: number;
-  frame?: number;
   blendMode?: Effect['blendMode'];
 }
 const top = new Set<CombatEffect>(['impact', 'seekerExplosion', 'leech']);
 export function combatEffect(
   uid: number,
-  pos: Vec,
   kind: CombatEffect,
   options: EffectOptions,
+  playback: EffectPlayback,
 ): Effect {
   const clip = allArt[kind];
-  return {
+  const effect: Effect = {
     uid,
-    x: pos.x,
-    y: pos.y,
+    x: 0,
+    y: 0,
     kind: 'native',
     symbol: clip.symbol,
     age: 0,
@@ -39,6 +39,9 @@ export function combatEffect(
     scale: 1,
     ...options,
   };
+  playback.construct(effect);
+  if (options.line) drawEffectLine(effect, options.line);
+  return effect;
 }
 
 /** BulletCallCollisionDetected chooses artwork independently of area damage. */
@@ -62,13 +65,10 @@ export function rocketTrail(world: World, bullet: Projectile) {
   if ((bullet.trailCounter = (bullet.trailCounter ?? 0) + 1) < 3) return;
   bullet.trailCounter = 0;
   const previous = bullet.trailPoint;
-  world.addCombatEffect(
-    bullet,
-    'rocketTrail',
-    {
-      line: previous ? { x: previous.x - bullet.x, y: previous.y - bullet.y } : undefined,
-    },
-    true,
-  );
+  const effect = world.addCombatEffect(bullet, 'rocketTrail', {}, true);
+  if (previous) {
+    effect.line = { x: previous.x - bullet.x, y: previous.y - bullet.y };
+    drawEffectLine(effect, effect.line);
+  }
   bullet.trailPoint = { x: bullet.x, y: bullet.y };
 }

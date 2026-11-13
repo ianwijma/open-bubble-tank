@@ -563,7 +563,7 @@ export class World {
     if (this.flow.state === 'collapse') {
       // PausePlayerControl selects source state3: effects/ENTER_FRAME shrink continue, HUD Run stops.
       this.pollEffects();
-      this.tickCollapse();
+      if (this.collapse) this.tickCollapse();
       return;
     }
     if (this.flow.state === 'transit') {
@@ -751,13 +751,14 @@ export class World {
       },
       'collapse',
       {
-        frame: 1,
         rotation: angle,
         scale: this.field.scale * this.viewZoom,
         randomRotation: false,
         blendMode: 'layer',
       },
       true,
+      this.field,
+      () => this.finishCollapse(),
     );
     this.collapse = {
       age: 0,
@@ -776,14 +777,6 @@ export class World {
   private tickCollapse() {
     const c = this.collapse!;
     c.age++;
-    // The script-created clip holds frame1 through its first stage update.
-    c.effect.frame = Math.max(1, c.age);
-    // Engine completion removes the shrink listener before the120th field ENTER_FRAME.
-    if (c.age >= c.effect.duration) {
-      this.finishCollapse();
-      this.effectEngine.discard(c.effect);
-      return;
-    }
     this.fieldDisplays.shrink(c.field, this.currentField);
     if (c.shakeTimer-- <= 0) {
       this.mainEffects.shake(++c.shakeCount);
@@ -1439,34 +1432,33 @@ export class World {
     options: EffectOptions = {},
     immediate = false,
     queueField = this.field,
+    callback?: () => void,
   ) {
-    const effect = combatEffect(this.nextId(), pos, kind, options);
-    if (immediate) this.registerEffect(effect);
-    else this.queueEffect(effect, queueField);
+    const effect = combatEffect(this.nextId(), kind, options, this.effectEngine.artwork);
+    const request = this.effectRequest(effect, pos, callback);
+    if (immediate) this.registerEffectRequest(request);
+    else this.runtimeFor(queueField).queueEffect(request);
     return effect;
   }
-  private registerEffect(effect: Effect) {
-    this.registerEffectRequest(this.effectRequest(effect));
-  }
-  private effectRequest(effect: Effect): EffectRequest {
+  private effectRequest(
+    effect: Effect,
+    position: Vec = effect,
+    callback?: () => void,
+  ): EffectRequest {
     return {
       clip: effect,
-      x: effect.x,
-      y: effect.y,
+      x: position.x,
+      y: position.y,
       name: effect.layer ?? 'top',
       randomRotation: effect.randomRotation ?? false,
+      callback,
     };
   }
   queueEffect(effect: Effect, field = this.field) {
     this.runtimeFor(field).queueEffect(this.effectRequest(effect));
   }
   private registerEffectRequest(request: EffectRequest) {
-    const { clip, x, y, name, randomRotation, callback } = request;
-    if (randomRotation) clip.rotation = Math.round(this.rng.next() * 360);
-    // CreateEffect assigns MovieClip properties; queued arguments stay Numbers.
-    clip.x = displayPixel(x);
-    clip.y = displayPixel(y);
-    this.effectEngine.create(clip, name, this.currentField, callback);
+    this.effectEngine.createRequest(request, this.currentField, () => this.rng.next());
   }
   award(name: string) {
     if (this.achievements.has(name)) return;

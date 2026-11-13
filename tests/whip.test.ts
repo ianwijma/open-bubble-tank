@@ -155,9 +155,15 @@ test('damage precedes remembering the hit and the impact uses the authored globa
   tickWhip(world, b);
   expect(samples).toEqual([[30, 35]]);
   expect(b.hit.has(target.uid)).toBe(true);
-  expect(queue(world).map((effect) => [effect.symbol, effect.x, effect.y])).toEqual([
-    [1723, 321, 273],
-  ]);
+  expect(
+    world
+      .runtimeFor(world.field)
+      .queuedEffectRequests.map(({ clip, x, y }) => [
+        'symbol' in clip ? clip.symbol : undefined,
+        x,
+        y,
+      ]),
+  ).toEqual([[1723, 321, 273]]);
 });
 
 test('last authored frame expires before contact or emitter follow regardless of active age', () => {

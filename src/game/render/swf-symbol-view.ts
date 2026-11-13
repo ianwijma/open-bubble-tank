@@ -1,7 +1,15 @@
 import { CONTACT_IDENTITY, type ContactMatrix } from '../assets/contact-transform';
-import { AlphaFilter, Container, Matrix, Sprite, type Texture, type BLEND_MODES } from 'pixi.js';
+import {
+  AlphaFilter,
+  Container,
+  Graphics,
+  Matrix,
+  Sprite,
+  type Texture,
+  type BLEND_MODES,
+} from 'pixi.js';
 import type { AssetPack, DisplayPlacement, Raster } from '../assets/asset-pack';
-import { SwfClip } from '../assets/swf-clip';
+import { SwfClip, type ClipLine } from '../assets/swf-clip';
 import {
   composeColor,
   fixedColorMultiplier,
@@ -31,6 +39,7 @@ export class SwfSymbolView {
   >();
   private lastFrame = -1;
   private lastAge = -1;
+  private lastRevision = -1;
   private matrix = new Matrix();
   private colorFilter: SwfColorFilter | null = null;
   private isolation: AlphaFilter | null = null;
@@ -51,6 +60,8 @@ export class SwfSymbolView {
   private morphRatio = -1;
   private ownedPose?: SwfClip;
   private renderedPose?: SwfClip;
+  private drawnLines?: readonly ClipLine[];
+  private drawing?: Graphics;
   constructor(
     readonly id: number,
     private assets: AssetPack,
@@ -95,6 +106,17 @@ export class SwfSymbolView {
     this.paint(age, frame, undefined, heldFrame !== undefined);
   }
   updatePose(pose: SwfClip, ratio = 0) {
+    if (this.drawnLines !== pose.lines) {
+      this.drawnLines = pose.lines;
+      if (pose.lines.length || this.drawing) {
+        const drawing = this.drawing ?? (this.drawing = this.root.addChild(new Graphics()));
+        drawing.clear().moveTo(0, 0);
+        for (const line of pose.lines)
+          drawing
+            .lineTo(line.x, line.y)
+            .stroke({ width: line.width, color: line.color, alpha: line.alpha });
+      }
+    }
     if (this.assets.leaves.has(this.id)) {
       this.renderedPose = pose;
       return;
@@ -109,10 +131,14 @@ export class SwfSymbolView {
   private paint(age: number, frame: number, pose?: SwfClip, held = false) {
     if (
       this.assets.leaves.has(this.id) ||
-      (this.lastFrame === frame && this.lastAge === age && this.renderedPose === pose)
+      (this.lastFrame === frame &&
+        this.lastAge === age &&
+        this.renderedPose === pose &&
+        this.lastRevision === (pose?.revision ?? -1))
     )
       return;
     this.renderedPose = pose;
+    this.lastRevision = pose?.revision ?? -1;
     this.lastFrame = frame;
     this.lastAge = age;
     const placements = pose?.placements ?? this.assets.displayList(this.id, frame),
