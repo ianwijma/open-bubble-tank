@@ -72,3 +72,28 @@ production defect. Artifacts remain under
 Complete constructor/event/RNG, arbitrary transforms, original/Adobe, pixel/audio
 and full offline-game parity remain unfinished. The goal remains active after
 this batch lands.
+
+
+## Landed batch
+
+PR144 merged once as `cafcebd321997a6113a3a32ce92f81f63118a4bf`. Its parents are
+held master12bf09d1 and exact tested head1ca0d1d9. Fetched master tree
+`200855540fa2a90169d3ed7517fb3094432dac8d` equals the green head's tree.
+GitHub marks PRs140,141,142,143 and144 merged; all five parent watches are stopped.
+The protected legacy head22d9def7 is unchanged. Earlier pending statements above
+are preparation history, not current gates.
+
+The immediate merge gate verified run43367078955, eventpull_request, latest
+attempt1, exact head1ca0d1d9 and completed success of the PRESENT job
+131693913299, **Rules, build and mock browser**. Its job completed successfully
+at2026-11-13T05:08:30Z, including the build/browser step. The base still matched12bf09d1 and merge state
+wasclean. Every layer's full comment/review/thread inspection found only advisory
+CodeRabbit skip notices, zero submitted reviews and zero inline threads. Vercel
+status was absent; no provider-confirmed skip was asserted. Included layers were
+retargeted to master without changing heads; no intermediate master merge occurred.
+
+The ignored immediate-merge-gate.json, merge-gate.json and merge-verification.json
+under test-results/projectile-stack-final retain the fresh evidence. This local
+post-merge documentation is intended for a later batch, avoiding another direct
+master push. The full recreation goal and the stated geometry/ordinary-game limits
+remain active.

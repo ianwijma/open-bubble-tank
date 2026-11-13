@@ -1573,3 +1573,8 @@ bun run format
 ## Local wrapper-query design audit
 
 - The [next-batch audit](beam-wrapper-query-design-audit.md) adds27 preserved-original child/root-scale and depth-mask controls, retaining the43 earlier rows. Native contour/mask samples agree within their stated scope, but current Script bounds differ numerically and the complete runtime field display population has no shared retained owner. The audit specifies a narrow width/hit boundary and the required ownership/precision work; it makes no production repair or new parity claim. The radius425 mismatch remains explicit. This local draft does not change PR144 or its parent's final gate.
+
+
+## Projectile stack delivery verification
+
+- PRs140–144 are all merged through the single PR144 mergecafcebd321997a6113a3a32ce92f81f63118a4bf. Its fetched master tree equals exact tested head1ca0d1d9/tree200855540fa2a90169d3ed7517fb3094432dac8d. Latest exact-head pull-request run43367078955 attempt1 and named job131693913299 completed successfully. Reviews/inline threads were empty across every included layer; advisory CodeRabbit skips did not hold the merge. All parent watches stopped; protected legacy22d9def7 remains unchanged. This establishes delivery of the bounded projectile contracts, not full-game parity or resolution of the remaining field geometry/ordinary progression requirements.
