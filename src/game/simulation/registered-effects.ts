@@ -7,8 +7,20 @@ export interface PendingEffect {
   gun: GunState;
   frame: number;
   total: number;
+  x?: number;
+  y?: number;
+  rotation?: number;
 }
 export type EffectClip = Effect | PendingEffect;
+/** _-0D retains both the original object and the supplied registration writes. */
+export interface EffectRequest {
+  readonly clip: EffectClip;
+  readonly x: number;
+  readonly y: number;
+  readonly name: EffectLayerName;
+  readonly randomRotation: boolean;
+  readonly callback?: () => void;
+}
 
 /** A concrete Sprite instance, independent of the engine's name registration. */
 export interface EffectLayer {
@@ -26,10 +38,12 @@ export class EffectLayerReadError extends Error {}
 export class EffectChildRemovalError extends Error {}
 export class EffectCompletionReadError extends Error {}
 
-const isArtwork = (clip: EffectClip): clip is Effect => 'duration' in clip;
+export const isArtwork = (clip: EffectClip): clip is Effect => 'duration' in clip;
 
 /** _-2c: ordered completion records and actual layer children are separate. */
 export class RegisteredEffects {
+  private cohort = 0;
+  private clocks = new WeakSet<PendingEffect>();
   private registered: EffectLayer[] = [];
   private completions: Completion[] = [];
   private parents = new WeakMap<EffectClip, EffectLayer>();
@@ -37,6 +51,31 @@ export class RegisteredEffects {
   private fieldLayers = new WeakMap<Field, { top: EffectLayer; bottom: EffectLayer }>();
   private attached = new WeakSet<EffectLayer>();
   readonly screen = this.createLayer('screen');
+
+  /** Only a numeric stage epoch is retained: expired clips are never rooted here.
+   * Before-ENTER construction first presents frame1 in the next cohort. Inside
+   * ENTER construction also presents frame1 in that cohort (measured separately).
+   */
+  constructCarrier<T extends PendingEffect>(clip: T): T {
+    if (this.clocks.has(clip)) return clip;
+    const born = this.cohort;
+    let origin = clip.frame,
+      advancedAt = born + 1;
+    Object.defineProperty(clip, 'frame', {
+      enumerable: true,
+      configurable: false,
+      get: () => ((origin - 1 + Math.max(0, this.cohort - advancedAt)) % clip.total) + 1,
+      set: (frame: number) => {
+        origin = frame;
+        advancedAt = Math.max(born + 1, this.cohort);
+      },
+    });
+    this.clocks.add(clip);
+    return clip;
+  }
+  enterFrame() {
+    this.cohort++;
+  }
 
   private createLayer(kind: EffectLayerName, field?: Field): EffectLayer {
     const layer = Object.freeze({ kind, field });
@@ -113,7 +152,6 @@ export class RegisteredEffects {
       if (!parent || !this.attached.has(parent) || advanced.has(clip)) continue;
       advanced.add(clip);
       if (isArtwork(clip)) clip.age++;
-      else clip.frame = (clip.frame % clip.total) + 1;
     }
   }
   poll() {

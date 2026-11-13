@@ -15,7 +15,11 @@ import {
 } from '../../src/game/assets/swf.mjs';
 import { parseSpriteTag } from '../../src/game/assets/swf-symbols.mjs';
 
-const [originalPath, probePath, out] = process.argv.slice(2);
+const [originalPath, probePath, out, variant] = process.argv.slice(2);
+const insideEnter = variant === '--inside-enter';
+const repeatedTick = insideEnter ? 51 : 50,
+  yeDone = repeatedTick,
+  shotDone = insideEnter ? 53 : 52;
 if (!out) throw new Error('Supply ORIGINAL PROBE CAPTURE_DIR.');
 const captureRoot = fileURLToPath(new URL('../../reference-captures/', import.meta.url));
 if (!resolve(out).startsWith(resolve(captureRoot) + sep))
@@ -148,7 +152,12 @@ const result = {
 };
 const fixture = JSON.parse(
   await readFile(
-    new URL('../../tests/fixtures/carrier-clock-original.json', import.meta.url),
+    new URL(
+      insideEnter
+        ? '../../tests/fixtures/carrier-enter-original.json'
+        : '../../tests/fixtures/carrier-clock-original.json',
+      import.meta.url,
+    ),
     'utf8',
   ),
 );
@@ -224,14 +233,15 @@ const byClip = fixture.labels.map((label, i) => {
   const rows = samples.filter((s) => s.label === label);
   const total = i % 2 ? 26 : 25,
     actual = i % 2 ? '_-5z' : '_-YE';
-  const expected = ['constructor/0'];
-  if (i < 2) expected.push('queued/0');
-  if (i >= 4) expected.push('control-attached/0');
+  const birthTick = insideEnter ? 1 : 0;
+  const expected = [`constructor/${birthTick}`];
+  if (i < 2) expected.push(`queued/${birthTick}`);
+  if (i >= 4) expected.push(`control-attached/${birthTick}`);
   for (let tick = 1; tick <= 70; tick++) {
     expected.push(`enter/${tick}`);
     if (tick === 32 && i < 2) expected.push('pre-register/32', 'post-register/32');
     // The controlled gotoAndStop during callback delivers an additional EXIT.
-    if (tick === 50) expected.push('exit/50');
+    if (tick === repeatedTick) expected.push(`exit/${repeatedTick}`);
     expected.push(`exit/${tick}`);
   }
   equal(
@@ -250,19 +260,19 @@ const byClip = fixture.labels.map((label, i) => {
     );
     equal(
       row.frame,
-      row.tick ? ((row.tick - 1) % total) + 1 : 1,
+      (Math.max(0, row.tick - (insideEnter ? 2 : 1)) % total) + 1,
       `Clock/reset mismatch: ${label}/${row.phase}/${row.tick}`,
     );
     const registered =
       i < 2 &&
       (row.tick > 32 || row.phase === 'post-register' || (row.tick === 32 && row.phase === 'exit'));
     const reentrantExit =
-      row.tick === 50 &&
+      row.tick === repeatedTick &&
       row.phase === 'exit' &&
-      row === rows.find((s) => s.tick === 50 && s.phase === 'exit');
+      row === rows.find((s) => s.tick === repeatedTick && s.phase === 'exit');
     const complete =
-      row.tick > (i === 0 ? 50 : 52) ||
-      (row.tick === (i === 0 ? 50 : 52) && row.phase === 'exit' && !reentrantExit);
+      row.tick > (i === 0 ? yeDone : shotDone) ||
+      (row.tick === (i === 0 ? yeDone : shotDone) && row.phase === 'exit' && !reentrantExit);
     const layerParent = registered && !complete;
     const controlAttached = i >= 4 && row.phase !== 'constructor';
     equal(
@@ -291,7 +301,7 @@ const byClip = fixture.labels.map((label, i) => {
 equal(new Set(byClip.map((clip) => clip.constructorName)).size, 6, 'Clip identities alias.');
 equal(
   trace
-    .filter((l) => / 50(?: |$)/.test(l))
+    .filter((l) => new RegExp(` ${repeatedTick}(?: |$)`).test(l))
     .map((line) => {
       const fields = line.split(' ');
       if (fields[0] === 'BT3_CARRIER_SAMPLE' && /^instance\d+$/.test(fields[10]))
@@ -304,7 +314,9 @@ equal(
 const callbacks = trace.filter((l) => l.startsWith('BT3_CARRIER_CALLBACK '));
 equal(callbacks, fixture.callbacks, 'Completion phase or callback-before-detach mismatch.');
 const poll50 = trace.filter(
-  (l) => / 50(?: |$)/.test(l) && /BT3_CARRIER_(POLL|CALLBACK|BORN)/.test(l),
+  (l) =>
+    (new RegExp(` ${repeatedTick}(?: |$)`).test(l) || (insideEnter && / 52(?: |$)/.test(l))) &&
+    /BT3_CARRIER_(POLL|CALLBACK|BORN)/.test(l),
 );
 equal(
   poll50,
@@ -314,14 +326,16 @@ equal(
 const polls = trace.filter((l) => l.startsWith('BT3_CARRIER_POLL '));
 const expectedPolls = [];
 for (let tick = 32; tick <= 70; tick++) {
-  const topBefore = tick <= 50 ? 1 : 0,
-    bottomBefore = tick <= 52 ? 1 : 0;
+  const topBefore = tick <= (insideEnter ? 52 : 50) ? 1 : 0,
+    bottomBefore = tick <= shotDone ? 1 : 0;
   expectedPolls.push(`BT3_CARRIER_POLL first before ${tick} ${topBefore} ${bottomBefore}`);
-  expectedPolls.push(`BT3_CARRIER_POLL first after ${tick} ${topBefore} ${tick < 52 ? 1 : 0}`);
+  expectedPolls.push(
+    `BT3_CARRIER_POLL first after ${tick} ${insideEnter && tick === 52 ? 0 : topBefore} ${tick < shotDone ? 1 : 0}`,
+  );
   if (tick === 50)
     expectedPolls.push(
       'BT3_CARRIER_POLL second before 50 1 1',
-      'BT3_CARRIER_POLL second after 50 0 1',
+      `BT3_CARRIER_POLL second after 50 ${insideEnter ? 1 : 0} 1`,
     );
 }
 equal(polls, expectedPolls, 'Actual engine polling/physical removal mismatch.');
@@ -364,7 +378,7 @@ result.observation = {
   byClip,
   callbacks,
   snapshotTrace: poll50,
-  repeatedExitTick: 50,
+  repeatedExitTick: repeatedTick,
   runtimeModules: observed.modules,
   browser: observed.browserVersion,
   reaEvidenceIds: [rea.discovery.evidence_id, rea.scenario.evidence_id],

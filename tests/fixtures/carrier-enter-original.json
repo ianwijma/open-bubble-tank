@@ -1,0 +1,70 @@
+{
+  "originalSha256": "f5827841c682f988f23dcf470ab4ab59c1ffc497acb4ca0f21077d03f942c153",
+  "probeSha256": "e50335883d3fa5d20fcdcecd01a646180d9de7a8a156c212e754c22337bd9e4a",
+  "roots": [
+    {
+      "name": "_-YE",
+      "ids": [1828],
+      "frames": [25],
+      "placements": [0]
+    },
+    {
+      "name": "_-5z",
+      "ids": [1801],
+      "frames": [26],
+      "placements": [0]
+    }
+  ],
+  "labels": ["queueYE", "queue5z", "heldYE", "held5z", "parentYE", "parent5z"],
+  "samples": 860,
+  "callbacks": [
+    "BT3_CARRIER_CALLBACK YE 51 25 true",
+    "BT3_CARRIER_CALLBACK born 52 25 true",
+    "BT3_CARRIER_CALLBACK 5z 53 26 true"
+  ],
+  "snapshotTrace": [
+    "BT3_CARRIER_POLL first before 51 1 1",
+    "BT3_CARRIER_CALLBACK YE 51 25 true",
+    "BT3_CARRIER_BORN 51 25 true",
+    "BT3_CARRIER_POLL first after 51 1 1",
+    "BT3_CARRIER_POLL first before 52 1 1",
+    "BT3_CARRIER_CALLBACK born 52 25 true",
+    "BT3_CARRIER_POLL first after 52 0 1"
+  ],
+  "runtimeSha256": [
+    "26036a94567088dfb3de88a759e8ed10a4cea07b29500af36f345eef42420098",
+    "d27c6bdce2a34afb32e8dfa40970bc7e86cbcb912f92db7eb3e1ac70e943bd82",
+    "1ed33b9b71a6b01b9aafafed660be343ffeb2d246c5d79e6425a32bf93e38207"
+  ],
+  "browserVersion": {
+    "protocolVersion": "1.3",
+    "product": "Chrome/157.0.8103.38",
+    "revision": "@a733b5afbb3ba618844ff8876b89ad1a774b2f18",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36",
+    "jsVersion": "15.7.112.23"
+  },
+  "fullBoundaryTrace": [
+    "BT3_CARRIER_SAMPLE enter queueYE 51 _-YE 25 25 false true 0 effect_1 13 23 0",
+    "BT3_CARRIER_SAMPLE enter queue5z 51 _-5z 24 26 false true 0 effect_2 14 24 0",
+    "BT3_CARRIER_SAMPLE enter heldYE 51 _-YE 25 25 true false 0 <heldYE> 0 0 0",
+    "BT3_CARRIER_SAMPLE enter held5z 51 _-5z 24 26 true false 0 <held5z> 0 0 0",
+    "BT3_CARRIER_SAMPLE enter parentYE 51 _-YE 25 25 false false 0 <parentYE> 0 0 0",
+    "BT3_CARRIER_SAMPLE enter parent5z 51 _-5z 24 26 false false 0 <parent5z> 0 0 0",
+    "BT3_CARRIER_POLL first before 51 1 1",
+    "BT3_CARRIER_CALLBACK YE 51 25 true",
+    "BT3_CARRIER_SAMPLE exit queueYE 51 _-YE 25 25 false true 0 effect_1 13 23 0",
+    "BT3_CARRIER_SAMPLE exit queue5z 51 _-5z 24 26 false true 0 effect_2 14 24 0",
+    "BT3_CARRIER_SAMPLE exit heldYE 51 _-YE 25 25 true false 0 <heldYE> 0 0 0",
+    "BT3_CARRIER_SAMPLE exit held5z 51 _-5z 24 26 true false 0 <held5z> 0 0 0",
+    "BT3_CARRIER_SAMPLE exit parentYE 51 _-YE 25 25 false false 0 <parentYE> 0 0 0",
+    "BT3_CARRIER_SAMPLE exit parent5z 51 _-5z 24 26 false false 0 <parent5z> 0 0 0",
+    "BT3_CARRIER_BORN 51 25 true",
+    "BT3_CARRIER_POLL first after 51 1 1",
+    "BT3_CARRIER_SAMPLE exit queueYE 51 _-YE 25 25 true false 0 effect_1 13 23 0",
+    "BT3_CARRIER_SAMPLE exit queue5z 51 _-5z 24 26 false true 0 effect_2 14 24 0",
+    "BT3_CARRIER_SAMPLE exit heldYE 51 _-YE 25 25 true false 0 <heldYE> 0 0 0",
+    "BT3_CARRIER_SAMPLE exit held5z 51 _-5z 24 26 true false 0 <held5z> 0 0 0",
+    "BT3_CARRIER_SAMPLE exit parentYE 51 _-YE 25 25 false false 0 <parentYE> 0 0 0",
+    "BT3_CARRIER_SAMPLE exit parent5z 51 _-5z 24 26 false false 0 <parent5z> 0 0 0"
+  ]
+}

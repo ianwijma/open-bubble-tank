@@ -52,7 +52,7 @@ test('projectile callbacks choose native art separately from damage and splash',
   for (const [type, expected] of matrix) {
     const world = setup(type);
     const bullet = shot(world, type);
-    queue(world).splice(0); // Constructor/Setup effects are separate from this collision callback.
+    world.runtimeFor(world.field).clearEffectQueue(); // Separate Constructor/Setup from collision.
     projectileImpact(world, bullet);
     expect(queue(world).map((e) => e.symbol)).toEqual(expected);
   }
@@ -87,12 +87,15 @@ test('both field queues register in the outgoing engine layer; arrival discards 
   const next = world.transit!.next,
     runtime = world.runtimeFor(next);
   next.enemies = [];
-  runtime.effectQueue.push({
-    ...world.addCombatEffect({ x: 12, y: 13 }, 'impact'),
-    uid: world.nextId(),
-    x: -40,
-    y: 25,
-  });
+  world.queueEffect(
+    {
+      ...world.addCombatEffect({ x: 12, y: 13 }, 'impact'),
+      uid: world.nextId(),
+      x: -40,
+      y: 25,
+    },
+    next,
+  );
   world.step(emptyInput());
   expect(runtime.effects).toEqual([]);
   expect(world.effects.map((e) => [e.x, e.y])).toEqual([
@@ -240,7 +243,7 @@ test('Area Burst immediately detaches only hostile destroyable shots, without im
     friendly = shot(world, 5006);
   Object.assign(friendly, pos);
   seekerMine.detonating = 1; // Armed/seeking still does not mean destroyable.
-  queue(world).splice(0);
+  world.runtimeFor(world.field).clearEffectQueue();
   world.fireGun(world.player, gun, emptyInput());
   expect(world.bullets).toEqual([outside, nonfinite, ordinary, mine, seekerMine, rocket, friendly]);
   expect([seeker, orbital, sapper].every((bullet) => !bullet.dead)).toBe(true);

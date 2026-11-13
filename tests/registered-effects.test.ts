@@ -137,9 +137,9 @@ function chargedWorld() {
   world.player.life = 1;
   world.hitTest = () => false;
   const gun = world.player.guns[0];
-  world.scheduleShot(world.player, gun, 26);
-  const carrier = world.runtimeFor(world.field).pending[0];
-  carrier.frame = 26;
+  // An already-registered final-frame control preserves callback registration
+  // order independently of the field queue's newly recovered tail phase.
+  const carrier = world.registerEffectCallback({ owner: world.player, gun, total: 26, frame: 26 });
   return { world, gun, carrier };
 }
 
@@ -157,7 +157,8 @@ test('World preserves a new completion carrier born inside an earlier carrier ca
   world.step(emptyInput());
   expect(calls).toBe(1);
   expect(world.runtimeFor(world.field).pending).toHaveLength(1);
-  expect(world.runtimeFor(world.field).pending[0].frame).toBe(2);
+  expect(world.runtimeFor(world.field).pending[0].frame).toBe(1);
+  expect(world.effectEngine.parent(world.runtimeFor(world.field).pending[0])).toBeUndefined();
   expect(world.effectEngine.parent(carrier)).toBeUndefined();
 });
 

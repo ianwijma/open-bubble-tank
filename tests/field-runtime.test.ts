@@ -127,16 +127,19 @@ test('arrival retains destination shots, pickups and allies but clears registere
     -100,
   );
   runtime.allies.push(ally);
-  runtime.effectQueue.push({
-    uid: world.nextId(),
-    x: 0,
-    y: -100,
-    kind: 'hit',
-    radius: 5,
-    color: 0xffffff,
-    duration: 500,
-    age: 0,
-  });
+  world.queueEffect(
+    {
+      uid: world.nextId(),
+      x: 0,
+      y: -100,
+      kind: 'hit',
+      radius: 5,
+      color: 0xffffff,
+      duration: 500,
+      age: 0,
+    },
+    next,
+  );
   world.player.shield = 30;
   world.player.velocity = { x: 6, y: 1 };
   cross(world);

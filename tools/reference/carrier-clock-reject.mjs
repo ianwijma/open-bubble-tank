@@ -7,7 +7,8 @@ import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { decompressSWF, readHeader, iterTags } from '../../src/game/assets/swf.mjs';
-const [original, probe, capture] = process.argv.slice(2);
+const [original, probe, capture, variant] = process.argv.slice(2);
+const insideEnter = variant === '--inside-enter';
 if (!capture) throw new Error('Supply ORIGINAL PROBE CAPTURE_DIR.');
 const captureRoot = fileURLToPath(new URL('../../reference-captures/', import.meta.url));
 if (!resolve(capture).startsWith(resolve(captureRoot) + sep))
@@ -15,14 +16,23 @@ if (!resolve(capture).startsWith(resolve(captureRoot) + sep))
 const mutations = [
   [
     'parentless-clock-frozen',
-    (o) => o.trace.map((l) => l.replace('enter heldYE 2 _-YE 2 ', 'enter heldYE 2 _-YE 1 ')),
+    (o) =>
+      o.trace.map((l) =>
+        l.replace(
+          insideEnter ? 'enter heldYE 3 _-YE 2 ' : 'enter heldYE 2 _-YE 2 ',
+          insideEnter ? 'enter heldYE 3 _-YE 1 ' : 'enter heldYE 2 _-YE 1 ',
+        ),
+      ),
     'Clock/reset mismatch',
   ],
   [
     'registration-reset',
     (o) =>
       o.trace.map((l) =>
-        l.replace('post-register queueYE 32 _-YE 7 ', 'post-register queueYE 32 _-YE 1 '),
+        l.replace(
+          `post-register queueYE 32 _-YE ${insideEnter ? 6 : 7} `,
+          'post-register queueYE 32 _-YE 1 ',
+        ),
       ),
     'Clock/reset mismatch',
   ],
@@ -31,8 +41,8 @@ const mutations = [
     (o) =>
       o.trace.map((l) =>
         l.replace(
-          'post-register queue5z 32 _-5z 6 26 false true',
-          'post-register queue5z 32 _-5z 6 26 false false',
+          `post-register queue5z 32 _-5z ${insideEnter ? 5 : 6} 26 false true`,
+          `post-register queue5z 32 _-5z ${insideEnter ? 5 : 6} 26 false false`,
         ),
       ),
     'Parent identity mismatch',
@@ -46,7 +56,10 @@ const mutations = [
     'callback-after-detach',
     (o) =>
       o.trace.map((l) =>
-        l.replace('BT3_CARRIER_CALLBACK YE 50 25 true', 'BT3_CARRIER_CALLBACK YE 50 25 false'),
+        l.replace(
+          `BT3_CARRIER_CALLBACK YE ${insideEnter ? 51 : 50} 25 true`,
+          `BT3_CARRIER_CALLBACK YE ${insideEnter ? 51 : 50} 25 false`,
+        ),
       ),
     'Reentrant EXIT/callback/poll boundary changed',
   ],
@@ -54,16 +67,33 @@ const mutations = [
     'callback-born-consumed-early',
     (o) =>
       o.trace.map((l) =>
-        l.replace('BT3_CARRIER_POLL first after 50 1 1', 'BT3_CARRIER_POLL first after 50 0 1'),
+        l.replace(
+          `BT3_CARRIER_POLL first after ${insideEnter ? 51 : 50} 1 1`,
+          `BT3_CARRIER_POLL first after ${insideEnter ? 51 : 50} 0 1`,
+        ),
       ),
     'Reentrant EXIT/callback/poll boundary changed',
   ],
 ];
+if (insideEnter) {
+  for (const phase of ['exit queueYE 1', 'enter heldYE 2'])
+    mutations.push([
+      `early-advance-${phase.replaceAll(' ', '-')}`,
+      (o) => o.trace.map((l) => l.replace(`${phase} _-YE 1 `, `${phase} _-YE 2 `)),
+      'Clock/reset mismatch',
+    ]);
+}
 const results = [];
 const run = (name, path, candidate, expected) => {
   const result = spawnSync(
     process.execPath,
-    [resolve('tools/reference/carrier-clock-verify.mjs'), original, candidate, path],
+    [
+      resolve('tools/reference/carrier-clock-verify.mjs'),
+      original,
+      candidate,
+      path,
+      ...(insideEnter ? [variant] : []),
+    ],
     { encoding: 'utf8' },
   );
   if (!result.status || !result.stderr.includes(expected))
@@ -103,7 +133,10 @@ for (const [name, mutate, expected] of mutations) {
     path = await prepare(name),
     e = JSON.parse(await readFile(resolve(path, 'rea-evidence.json'), 'utf8'));
   const dom = e.scenario.normalized_result.steps.at(-1).artifacts.dom.value;
-  dom.text = dom.text.replace('exit parent5z 61 _-5z 9', 'exit parent5z 61 _-5z 8');
+  dom.text = dom.text.replace(
+    `exit parent5z 61 _-5z ${insideEnter ? 8 : 9}`,
+    'exit parent5z 61 _-5z 7',
+  );
   dom.sha256 = createHash('sha256').update(dom.text).digest('hex');
   await writeFile(resolve(path, 'rea-evidence.json'), JSON.stringify(e));
   run(name, path, probe, 'Canonical trace differs from independent REA DOM tail');

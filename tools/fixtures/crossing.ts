@@ -80,16 +80,19 @@ export async function showCrossingProof(pack: AssetPack, host: HTMLElement) {
     forced: false,
     dead: false,
   });
-  runtime.effectQueue.push({
-    uid: world.nextId(),
-    x: -230,
-    y: 50,
-    kind: 'hit',
-    age: 0,
-    duration: 500,
-    radius: 30,
-    color: 0xffffff,
-  });
+  world.queueEffect(
+    {
+      uid: world.nextId(),
+      x: -230,
+      y: 50,
+      kind: 'hit',
+      age: 0,
+      duration: 500,
+      radius: 30,
+      color: 0xffffff,
+    },
+    next,
+  );
   world.hitTest = pack.hitTest;
   world.hitPart = pack.hitPart;
   world.hitProjectile = pack.hitProjectile;

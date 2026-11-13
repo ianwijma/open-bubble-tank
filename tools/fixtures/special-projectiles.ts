@@ -55,7 +55,7 @@ export async function showSpecialProjectilesProof(pack: AssetPack, host: HTMLEle
   const clear = () => {
     world.bullets = [];
     for (const effect of world.effects) world.effectEngine.discard(effect);
-    world.runtimeFor(world.field).effectQueue = [];
+    world.runtimeFor(world.field).clearEffectQueue();
   };
   await renderer.init(host, DEFAULT_SETTINGS);
   const canvas = document.createElement('canvas');

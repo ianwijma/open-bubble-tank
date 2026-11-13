@@ -39,6 +39,7 @@ import {
   EffectCompletionReadError,
   EffectLayerReadError,
   type PendingEffect,
+  type EffectRequest,
 } from './registered-effects';
 import { HealerTargetReadError } from './healer-target';
 import { TurretTargetReadError } from './turrets';
@@ -497,6 +498,7 @@ export class World {
     this.wallTimers.advance(milliseconds);
   }
   step(input: InputFrame, milliseconds = 20, advanceMainEffects = true) {
+    this.effectEngine.enterFrame();
     this.advanceTime(milliseconds);
     if (advanceMainEffects) this.mainEffects.tick(() => this.rng.next());
     try {
@@ -520,11 +522,12 @@ export class World {
       )
         throw error;
     } finally {
-      this.advanceArtwork();
+      this.advanceArtwork(false);
     }
   }
   /** Attached ENTER_FRAME art continues when Main4 skips the World.Run listener. */
-  advanceArtwork() {
+  advanceArtwork(enterCarrierFrame = true) {
+    if (enterCarrierFrame) this.effectEngine.enterFrame();
     this.fieldDisplays.advanceArtwork();
     this.actorParents.sync(this);
     this.effectEngine.advanceArtwork();
@@ -672,8 +675,7 @@ export class World {
     this.completeField(this.field, visit);
     // _-0D flushes queued effects after its combat/pickup/completion work. The engine
     // still targets the outgoing layer while both wrappers run during a crossing.
-    for (const effect of this.runtime.effectQueue) this.registerEffect(effect);
-    this.runtime.effectQueue = [];
+    runtime.flushEffects((request) => this.registerEffectRequest(request));
     if (this.runtime.collectTimer >= 0) this.runtime.collectTimer--;
     if (this.runtime.shootTimer >= 0) this.runtime.shootTimer--;
   }
@@ -888,17 +890,20 @@ export class World {
   scheduleShield(owner: Tank, gun: GunState) {
     owner.shieldManaged = true;
     // Every trigger queues a callback bound to that mount, without cancelling earlier ones.
-    this.registerEffectCallback({ kind: 'shield', owner, gun, frame: 1, total: 25 });
+    return this.queueEffectCallback({ kind: 'shield', owner, gun, frame: 1, total: 25 });
   }
   scheduleShot(owner: Tank, gun: GunState, frames: number) {
-    this.registerEffectCallback({ owner, gun, total: frames, frame: 1 });
+    return this.queueEffectCallback({ owner, gun, total: frames, frame: 1 });
   }
-  registerEffectCallback(carrier: PendingEffect) {
-    this.effectEngine.create(
-      carrier,
-      carrier.kind === 'shield' ? 'top' : 'bottom',
-      this.currentField,
-      () => {
+  private carrierRequest(carrier: PendingEffect): EffectRequest {
+    this.effectEngine.constructCarrier(carrier);
+    return {
+      clip: carrier,
+      x: 0,
+      y: 0,
+      name: carrier.kind === 'shield' ? 'top' : 'bottom',
+      randomRotation: false,
+      callback: () => {
         if (
           carrier.owner.dead ||
           (carrier.owner.side === 'player' && carrier.owner !== this.player)
@@ -911,7 +916,18 @@ export class World {
           this.spawnVolley(carrier.owner, carrier.gun, WEAPONS[3008]);
         }
       },
-    );
+    };
+  }
+  private queueEffectCallback(carrier: PendingEffect) {
+    // Both source weapons explicitly call objWorld.currentBFTarget, even while
+    // a next-field actor is running after the outgoing field's tail.
+    this.runtimeFor(this.currentField).queueEffect(this.carrierRequest(carrier));
+    return carrier;
+  }
+  /** Explicit CreateEffect adapter for host controls; gameplay uses the field queue. */
+  registerEffectCallback(carrier: PendingEffect) {
+    this.registerEffectRequest(this.carrierRequest(carrier));
+    return carrier;
   }
   /** Source counters record nominal contact damage before Damage applies protection. */
   damageDoneIncr(amount: number) {
@@ -1316,6 +1332,9 @@ export class World {
         outgoing.pickups = [];
         outgoing.enemyRemovals = [];
         outgoing.allyRemovals = [];
+        // _-0D.Deactivate clears _-I4 only for a completed wrapper. Engine
+        // clearing above is separate and must not erase an uncleared queue.
+        outgoing.clearEffectQueue();
         this.currentField.enemies = [];
       }
       for (const kind of ['top', 'bottom'] as const)
@@ -1373,12 +1392,30 @@ export class World {
   ) {
     const effect = combatEffect(this.nextId(), pos, kind, options);
     if (immediate) this.registerEffect(effect);
-    else this.runtimeFor(queueField).effectQueue.push(effect);
+    else this.queueEffect(effect, queueField);
     return effect;
   }
   private registerEffect(effect: Effect) {
-    if (effect.randomRotation) effect.rotation = Math.round(this.rng.next() * 360);
-    this.effectEngine.create(effect, effect.layer ?? 'top', this.currentField);
+    this.registerEffectRequest(this.effectRequest(effect));
+  }
+  private effectRequest(effect: Effect): EffectRequest {
+    return {
+      clip: effect,
+      x: effect.x,
+      y: effect.y,
+      name: effect.layer ?? 'top',
+      randomRotation: effect.randomRotation ?? false,
+    };
+  }
+  queueEffect(effect: Effect, field = this.field) {
+    this.runtimeFor(field).queueEffect(this.effectRequest(effect));
+  }
+  private registerEffectRequest(request: EffectRequest) {
+    const { clip, x, y, name, randomRotation, callback } = request;
+    if (randomRotation) clip.rotation = Math.round(this.rng.next() * 360);
+    clip.x = x;
+    clip.y = y;
+    this.effectEngine.create(clip, name, this.currentField, callback);
   }
   award(name: string) {
     if (this.achievements.has(name)) return;

@@ -218,9 +218,9 @@ test('Massive Cannon completion follows the bullet phase and observes looping au
   const world = setup(3008),
     gun = world.player.guns[0];
   world.fireGun(world.player, gun, emptyInput());
-  frames(world, 5); // Effect is now on frame6.
+  frames(world, 5); // Constructor before ENTER1: presented EXIT5 is frame5.
   world.pause();
-  frames(world, 20); // Timeline reaches26 without engine polling.
+  frames(world, 20); // EXIT25 is25; the next ENTER reaches26 before Run polls.
   expect(world.bullets).toEqual([]);
   world.player.x = 40;
   world.resume();

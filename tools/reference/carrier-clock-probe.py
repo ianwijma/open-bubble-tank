@@ -29,6 +29,8 @@ def tag(code, data=b''):
 
 
 
+# Optional distinct cohort capture; default emission remains byte-identical.
+inside_enter = '--inside-enter' in sys.argv[3:]
 ROOT = 'BT3CarrierClockProbe'
 CLASSES = ['_-YE', '_-5z'] * 3
 LABELS = ['queueYE', 'queue5z', 'heldYE', 'held5z', 'parentYE', 'parent5z']
@@ -91,15 +93,20 @@ for layer,label in [('top','TopEffectsLayer'),('bottom','BottomEffectsLayer')]:
 keybody+=assign('world',construct('BTAGameWorld'))+own('world')+b'\x26'+op(0x61,q['blnGameOver'])
 keybody+=own('world')+own('engine')+op(0x61,q['objEffectsEngine'])
 keybody+=assign('field',construct('Bubblefield'))+own('field')+own('world')+op(0x61,q['gWorldRef'])
+construction = b''
 for i,name in enumerate(CLASSES):
- keybody+=assign(f'p{i}',construct(name))+sample('constructor',i)
+ construction+=assign(f'p{i}',construct(name))+sample('constructor',i)
  if i<2:
-  keybody+=own('field')+own(f'p{i}')+integer(13+i)+integer(23+i)+text('TopEffectsLayer' if i==0 else 'BottomEffectsLayer')+b'\x27'+own('onDoneYE' if i==0 else 'onDone5z')+call('AddEffectToQueue',6)+sample('queued',i)
+  construction+=own('field')+own(f'p{i}')+integer(13+i)+integer(23+i)+text('TopEffectsLayer' if i==0 else 'BottomEffectsLayer')+b'\x27'+own('onDoneYE' if i==0 else 'onDone5z')+call('AddEffectToQueue',6)+sample('queued',i)
  elif i>=4:
-  keybody+=get(0)+own(f'p{i}')+call('addChild',1)+sample('control-attached',i)
+  construction+=get(0)+own(f'p{i}')+call('addChild',1)+sample('control-attached',i)
+if not inside_enter: keybody += construction
 keybody+=listener('addEventListener','enterFrame','onProbeEnter')+listener('addEventListener','exitFrame','onProbeExit')
 key=get(0)+b'\x30'+get(1)+prop('keyCode')+integer(119)+branch(0x14,len(keybody))+keybody+b'\x47'
-enter=get(0)+b'\x30'+assign('probeTick',own('probeTick')+b'\x91')+b''.join(sample('enter',i) for i in range(6))
+enter=get(0)+b'\x30'+assign('probeTick',own('probeTick')+b'\x91')
+if inside_enter:
+ enter+=own('probeTick')+integer(1)+branch(0x14,len(construction))+construction
+enter+=b''.join(sample('enter',i) for i in range(6))
 registration=b''.join(sample('pre-register',i) for i in range(2))
 registration+=register(0,'onDoneYE')+register(1,'onDone5z')+b''.join(sample('post-register',i) for i in range(2))
 enter+=own('probeTick')+integer(32)+branch(0x14,len(registration))+registration

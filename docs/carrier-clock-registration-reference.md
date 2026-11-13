@@ -215,6 +215,8 @@ rejecting-controls, process fingerprints, cleanup and check/format logs. The
 committed measured fixture contains numeric contracts and boundary strings only.
 No SWF, media, dependency, build or capture is committed.
 
+The preceding evidence-only checkpoint validated separately:
+
 `bun run format` and `bun run check` pass: TypeScript,1013 tests,8881 assertions.
 No production flow/rule changed, so production e2e was not required. The existing
 dependencies were temporarily linked and the link removed before handoff. All14
@@ -223,3 +225,159 @@ preview tab was closed. Other children's ports/processes and parent draft were
 untouched. Protected master tracking ref remains
 `cafcebd321997a6113a3a32ce92f81f63118a4bf`; legacy refs remain
 `22d9def7321bada8a2148a69a79a3392682bb390`. There were no remote actions.
+
+## Construction inside a declared ENTER callback
+
+The implementation continuation adds opt-in `--inside-enter` to the **distinct**
+carrier-clock emitter. Default emission remains byte-identical to the preceding
+`3ecefd46578426f5ce40193ed41adce60c5bf9505d1f8f137626da4127e8e5d7`
+probe. The new variant constructs the same six actual original objects inside
+the glue's declared ENTER1 callback, before its ENTER sample. It calls the actual
+original queue and delayed CreateEffect as before. Original ABC, carrier frame
+scripts, methods, RNG, clock and all nonbinding payloads remain unchanged.
+
+| Boundary                                       | YE1828/25        | 5z1801/26        |
+| ---------------------------------------------- | ---------------- | ---------------- |
+| Constructor inside ENTER1; same ENTER1 / EXIT1 | 1 / 1            | 1 / 1            |
+| Subsequent ENTER2 / EXIT2                      | 1 / 1            | 1 / 1            |
+| ENTER3 / EXIT3                                 | 2 / 2            | 2 / 2            |
+| ENTER32 CreateEffect, before / after           | 6 / 6            | 5 / 5            |
+| Original Run completion while parented         | ENTER51, frame25 | ENTER53, frame26 |
+| Retained, removed object at ENTER70 / EXIT70   | 19 / 19          | 17 / 17          |
+
+The extra frame1 boundary is observed for queued, held and parented controls.
+The callback-born stopped-final YE registered during poll51 survives that poll
+and completes on poll52. The deliberate extra poll50 precedes this birth in the
+new variant. The reentrant EXIT now occurs at51, while the completing YE is still
+parented. The independent verifier checks all860 ordered samples, actual classes,
+names, coordinate writes, both parent identities, all polls, original preservation,
+loaded JS/WASM/Chrome identities and both independent final DOM reads. Thirteen
+mutations reject incorrect birth-EXIT advance, next-ENTER advance, frozen clocks,
+registration reset, parent identity, missing samples, callback ordering, early
+snapshot consumption, loaded identity, DOM disagreement and payload/binding edits.
+The default capture was reverified **in an owned copy**, including its eleven
+rejecting mutations. No derived output was written into the evidence child.
+
+New probe SHA256 is
+`e50335883d3fa5d20fcdcecd01a646180d9de7a8a156c212e754c22337bd9e4a`;
+capture emitter SHA256 is
+`0e451c20da397a9f318d723499fd33bea73a93f6f97449edd75013dbaef3f863`.
+The original and loaded Ruffle/Chrome identities are those pinned above and in
+`tests/fixtures/carrier-enter-original.json`. REA scenario
+`ev_ac5746ed2b782e38ce74880235bfd01d96fd85eaa33b3e9886e86bd75cb5ada1`
+performed Load/readiness/focus/F8/DONE. Initial discovery was
+`ev_a5aacb26953187c85a428135a23209415e0bb85ce3bbc4f3b0fa3f2c819bfa78`;
+the retained post-run discovery is included separately. All scenario actions
+completed. REA still marks events incomplete and equality-ineligible. The full
+trace comes from the project observer, with the independent DOM limited to its
+final128 lines. Page/AVM errors are zero; retired loader/CSP diagnostics remain raw.
+
+Exact repeatability commands, from this isolated checkout:
+
+```sh
+python3 tools/reference/carrier-clock-probe.py /home/ian/Projects/ianwijma/documented-bubble-tank-3/re/bt3/uncompressed.swf reference-captures/carrier-enter-runtime/probe.swf --inside-enter
+BT3_REFERENCE_PORT=3525 BT3_SWF_FILE=reference-captures/carrier-enter-runtime/probe.swf bun run reference
+BT3_REFERENCE_CDP_PORT=9525 BT3_REFERENCE_URL=http://127.0.0.1:3525 bun run reference:browser
+BT3_PROBE_OUT=reference-captures/carrier-enter-runtime BT3_REFERENCE_URL=http://127.0.0.1:3525 BT3_REFERENCE_CDP_ENDPOINT=http://127.0.0.1:9525 node tools/reference/carrier-clock-observe.ts
+node tools/reference/carrier-clock-verify.mjs /home/ian/Projects/ianwijma/documented-bubble-tank-3/re/bt3/uncompressed.swf reference-captures/carrier-enter-runtime/probe.swf reference-captures/carrier-enter-runtime --inside-enter
+node tools/reference/carrier-clock-reject.mjs /home/ian/Projects/ianwijma/documented-bubble-tank-3/re/bt3/uncompressed.swf reference-captures/carrier-enter-runtime/probe.swf reference-captures/carrier-enter-runtime --inside-enter
+```
+
+This resolves **this declared glue ENTER construction** in the identified Ruffle
+runtime. It does not prove every global constructor/event/RNG phase, Adobe
+behavior, source World.Run execution or ordinary weapon reachability. The World
+phase mapping remains an inference from the qualified pcode, not a new original
+gameplay trace.
+
+## Queue and clock implementation
+
+`RegisteredEffects.constructCarrier` gives the actual preconstructed carrier one
+lazy frame accessor over its construction epoch and a monotonically increasing
+numeric cohort. The engine holds only a WeakSet for idempotent construction; it
+does not root every expired clip in a permanent clock registry. A retained
+unparented, queued, attached, cleared or removed carrier reads its continuing
+wrapping clock. Registration and removal never stop, play or reset it. The frame
+setter supports existing explicit host controls; it does not represent a full
+MovieClip playback interpreter.
+
+`World.step` starts the carrier cohort before Main/world work. The final ordinary
+artwork pass does not advance that same carrier cohort twice. A standalone
+`World.advanceArtwork` (Main4 skipping World.Run) starts the next carrier cohort.
+Thus a constructor between frames first presents1 at next ENTER/EXIT, while a
+constructor during Run presents1 both at that EXIT and the following ENTER/EXIT.
+Poll reads the current ENTER pose, while presented EXIT retains that same pose.
+The old post-Run pending.frame increment conflated those two boundaries. Actor,
+projectile, attached shield-film and menu clocks are not rewritten.
+
+`FieldRuntime` owns an ordered queue of request records: exact original object,
+supplied X/Y, layer name, random-rotation flag and callback. Its live tail flush
+registers each request through the current engine name lookup; only a successful
+flush replaces the queue. Appended requests survive and run in source order.
+An error preserves the queue, including already attempted entries, as in the
+original live indexed loop. The ordinary `effectQueue` read is now an immutable
+artwork snapshot; fixture mutations use explicit `queueEffect`/`clearEffectQueue`
+adapters. No array-discovery ownership fallback was added.
+
+`scheduleShield`/`scheduleShot` construct immediately and queue through the source
+weapons' explicit `objWorld.currentBFTarget` (`AS:_-ct/AGunShield.as:51` and
+`AS:_-ct/_-YM.as:47`). Even next-field weapons therefore use the outgoing queue.
+If that tail already ran, registration waits until its next Run. A request
+explicitly queued on next instead flushes at next's tail, still resolving the
+outgoing registered layer. Completion polling follows relevant field/avatar
+phases; callback-born requests wait for a subsequent tail. Queueing never makes
+the clip a physical child. `.pending` includes logical queued and registered
+carriers; `.queuedCarriers`, `effectEngine.pendingFor`, `parent` and `owned` keep
+queue, engine-record and physical ownership reads distinct. Clearing the engine
+does not clear a field queue; clearing a field queue does not stop its retained
+carrier clocks. On arrival, the existing completed-wrapper Deactivate branch
+separately clears its unflushed queue (`AS:_-0D.as:1117–1138`, qualified
+`P:_-0D.pcode:4789–4908`, `ofs0029`). An uncleared outgoing wrapper retains its
+queue. A callback-born queued-carrier regression covers both arrival branches
+and its continuing unparented clock. The previous ordered-ready snapshot, callback-before-remove,
+indexed reread and current-name removal/error contracts are preserved.
+
+Carrier construction consumes no gameplay random values or actor/projectile UID.
+Source registration writes request X/Y and optional random rotation at flush;
+later arbitrary clip edits cannot replace the supplied request scalars. Artwork
+identity and other prequeue modifications remain on the original object. The core
+engine imports no AssetPack, Pixi, DOM or browser services.
+
+An identical public-API comparison against parent
+`451fecab451c25e5955f40b8cd6954044b942138` retains the26-frame carrier through pause,
+resume, completion and removal:
+
+| Observation                                | Parent       | Implementation |
+| ------------------------------------------ | ------------ | -------------- |
+| Immediately scheduled, physically parented | true         | false          |
+| Presented EXIT1 frame                      | 2            | 1              |
+| Paused EXIT32 frame / physical parent      | 7 / attached | 6 / null       |
+| Completion after resume                    | Run52        | Run52          |
+| Held removed carrier at EXIT70             | frozen26     | wrapping18     |
+
+The new results match the original before-ENTER measurements. The retained
+command/script/results live in `test-results/carrier-queue/phase-comparison.mts`,
+`before.json` and `after.json`. For ordering coverage, an artificial ready-carrier
+fixture now explicitly registers before its later artwork; its original
+callback-before-later-detach assertion is retained. Its callback-born carrier's
+old presented frame2 becomes measured frame1 and remains physically unparented
+until the next field tail. The shield-film regression's cleanup carrier at
+EXIT60 changes11→10; its independent film-age/frame assertions stay unchanged.
+The paused Massive fixture retains all bullet/pose assertions and now documents
+EXIT25=25 followed by ENTER26=26, rather than calling the prior EXIT pose26.
+
+Remaining limits: existing owner-death/replacement callback guards remain a
+separate source gap. Ordinary effect host ages, mounted artwork timing, arbitrary
+off-World stage-listener construction order, general frame-script/RNG/Adobe
+scheduling, all source errors and complete gameplay/pixel/audio parity remain
+unqualified. The probe does not execute original field queue draining or
+World.Run. No renderer, complete field query, under-avatar sizing or handoff
+change is included in this implementation.
+
+## Implementation validation and cleanup
+
+- `bun run format` and `bun run check` pass: TypeScript, **1,035 tests / 9,124 assertions**. Typecheck and build ran serially. Fourteen added regressions cover both construction cohorts, 70-frame parentless wraps, delayed registration/no reset, retained removed clocks, outgoing/current-name routing, next/avatar tail phases, callback-born queue retention, independent clearing, live appends, failed tails, scalar retention, conditional Deactivate and no gameplay RNG/UID consumption.
+- Literal final browser command: `BT3_SWF_FILE=/home/ian/Projects/ianwijma/documented-bubble-tank-3/re/bt3/uncompressed.swf bun run test:e2e --config test-results/carrier-queue/playwright.config.mts`. Production build **`ayQyN9v03Uw-ZAqd2QVWO`** and **28 mock/supplied-SWF cases** pass; skipped/unexpected/flaky are all zero. Every browser flow asserts no page errors. All **388** saved source/tool input hashes match after final formatting.
+- The ignored config uses owned3535/3536, one worker and original unmodified assertions. Its private `.spec.mts` copies change only fixture3102→3536 and the frame-paced helper import path. They cover combat/screen/Main effects, two crossing flows, forcefield ordering, mounted Massive artwork, projectile clocks/order, shape contact, independent shield mounts, special projectiles and turret protection. An initial config run used the wrong working directory and stopped before browser tests; the owned config corrected that. Subsequent complete runs were repeated after source-routing and Deactivate corrections; only the final report/build above is the delivered identity.
+- Inspected finite supplied-art paint: `test-results/swf-mounted-art.png`, `swf-screen-effects.png`, `swf-shield-ownership.png` and `swf-active-crossing.png`. These are scoped fixture panels, not ordinary progression or original-runtime gameplay comparisons.
+- Exact config/spec copies, baseline/after comparison, source-input hashes, build/test log, JSON browser report, `verification.json` and `cleanup.json` are under ignored `test-results/carrier-queue/`. New original observation/REA/module/source identities, trace, independent verification and rejecting copies are under ignored `reference-captures/carrier-enter-runtime/`; the default evidence recheck is under `reference-captures/carrier-default-recheck/`.
+- Six identified owned process roots/browser/observer PIDs are absent;3525/9525/3535/3536 refuse connections. The dependency link is removed at handoff. No other task resources, research/evidence child files, protected refs, renderer/field-display/under-avatar tools or handoff were changed. No SWF/media/dependency/build/capture is committed, and no remote action occurred.

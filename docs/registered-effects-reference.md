@@ -37,8 +37,10 @@ to its actual field's nested lower container; top/screen are World siblings.
 Creating a next wrapper constructs its layer identities without registering them.
 Reads do not create layers, move clips, draw random values or advance clocks.
 
-`FieldRuntime.effects` and `.pending` are read-only compatibility snapshots of the
-engine's records. Their context field supports existing host observations; it is
+`FieldRuntime.effects` is a read-only compatibility snapshot of the engine's
+records. `.pending` includes logical queued carriers as well as registered
+carriers; `.queuedCarriers` isolates the former and `effectEngine.pendingFor`
+isolates the latter. Their context field supports existing host observations; it is
 not a physical parent or the source of the complete geometry population. Do not
 build a field query by filtering those snapshots. The query must visit the actual
 bottom layer's `owned` children under the wrapper's retained transforms.
@@ -62,10 +64,10 @@ its independent artwork tail continues.
 An isolated comparison against preceding commit `b2aa47b` demonstrates two actual
 before/after contradictions using the same World operations:
 
-| Observation inside/after a Massive callback | Before | After |
-| --- | --- | --- |
-| Newly scheduled carrier survives the callback pass | 0 retained | 1 retained |
-| Earlier callback sees later ready artwork still attached | false | true |
+| Observation inside/after a Massive callback              | Before     | After      |
+| -------------------------------------------------------- | ---------- | ---------- |
+| Newly scheduled carrier survives the callback pass       | 0 retained | 1 retained |
+| Earlier callback sees later ready artwork still attached | false      | true       |
 
 Eight new regressions cover those cases plus physical outgoing ownership of
 next-field requests, preservation of modified clip identity, duplicate name
@@ -84,17 +86,16 @@ comparison, build identity and browser report are ignored under
 
 ## Remaining phase and geometry objections
 
-The existing callback-carrier creation/activation adapter is retained in this
-checkpoint: `scheduleShield`/`scheduleShot` still register immediately rather than
-modeling the original preconstructed queue phase. An independent preserved-original
-probe is checking unparented carrier timelines and delayed CreateEffect before
-that phase changes. World also retains its previous owner-death/replacement
-callback guards. They are not justified as the complete original callback/error
-contract by this migration.
+The [construction-clock continuation](carrier-clock-registration-reference.md#queue-and-clock-implementation)
+now replaces immediate callback registration with preconstructed carriers and the
+source field tail queue. It separately qualifies before-ENTER and inside-ENTER
+construction against preserved-original captures. World retains its previous
+owner-death/replacement callback guards. They are not justified as the complete
+original callback/error contract by this migration.
 
 Ordinary effect host ages and the explicit collapse frame override remain finite
 adapters. Renderer-owned random/timeline poses, exact effect display setter
-writes, constructed-but-unattached clocks, dynamic drawn lines/shocks and complete
+writes, broader constructed-but-unattached artwork clocks, dynamic drawn lines/shocks and complete
 constructor/event/RNG scheduling still need qualification and retained geometry
 binding. This implementation does not resolve those by rebuilding `{symbol,age}`
 at query time. Full wrapper/pickup/effect geometry, beam wall equivalence, ordinary
