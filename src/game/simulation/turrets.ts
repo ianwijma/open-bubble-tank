@@ -1,5 +1,6 @@
 import { projectileOutside } from './projectile-boundary';
-import { angleTo, direction, distance } from '../core/math';
+import { direction, distance } from '../core/math';
+import { actorAngle, actorHeading } from './actor-movement';
 import type { GunState, Projectile, Tank } from '../core/types';
 import type { World } from './world';
 import { projectileImpact } from './effects';
@@ -7,11 +8,18 @@ import { projectileCallback } from './projectile-contact';
 import { collisionSound } from './collision-sound';
 import { attachTurretShield, removeTurretShield } from './shields';
 
-/** _-DO.Run polls only its own attached turrets before aiming and PartCallRun. */
+/** Observed original EnemyAim raises #1069 for the cached avatar's missing inner_mc. */
+export class TurretTargetReadError extends Error {
+  constructor() {
+    super('Shield Turrets target has no inner_mc (#1069)');
+  }
+}
+
+/** _-DO.Run polls physical parents, then aims, before PartCallRun. */
 export function tickTurretBehavior(world: World, owner: Tank, gun: GunState) {
   const wasShielded = owner.shield > 0;
   owner.shield = 0;
-  gun.turretRefs = (gun.turretRefs ?? []).filter((turret) => world.bullets.includes(turret));
+  gun.turretRefs = (gun.turretRefs ?? []).filter((turret) => world.hasBulletParent(turret));
   for (const turret of gun.turretRefs) {
     if ((turret.build ?? 1) !== 4) continue;
     owner.shield = 1;
@@ -19,13 +27,32 @@ export function tickTurretBehavior(world: World, owner: Tank, gun: GunState) {
     if (!owner.shieldHitClip) attachTurretShield(owner, gun);
   }
   if (wasShielded && owner.shield === 0) removeTurretShield(owner, gun);
-  let target = world.bullets.find((turret) => turret.uid === gun.turretId);
-  if (!target || (target.build ?? 1) === 4) {
-    gun.turretId = undefined;
+  let target = gun.turretTarget;
+  if (
+    !target ||
+    !('kind' in target ? world.hasBulletParent(target) : world.actorParents.hasParent(target))
+  ) {
+    gun.turretTarget = null;
     target = undefined;
   }
-  const position = world.muzzle(owner, gun, 0);
-  gun.angle = angleTo(position, target ?? { x: 0, y: 0 }) - owner.rotation;
+  if (target && !('kind' in target)) throw new TurretTargetReadError();
+  if (target && (target.build ?? 1) === 4) {
+    gun.turretTarget = null;
+    target = undefined;
+  }
+  const mount = world.actorParents.localToGlobal(owner, gun.part);
+  if (target) {
+    const point = world.bulletGlobal(target);
+    if (!point) throw new Error('Parented turret has no retained layer transform');
+    gun.angle = actorAngle(actorHeading(mount, point) - owner.rotation);
+  } else {
+    const point = world.actorParents.fieldLocal(mount, world.currentWrapper);
+    if (!point) throw new Error('Turret mount has no current field transform');
+    const scale = -world.rng.next();
+    gun.angle = actorAngle(
+      (360 * Math.atan2(point.y * scale, point.x * scale)) / (2 * Math.PI) - owner.rotation,
+    );
+  }
 }
 
 function movement(bullet: Projectile) {
@@ -50,8 +77,9 @@ function touches(world: World, a: Projectile, b: Projectile) {
   );
 }
 
-export function tickTurret(world: World, turret: Projectile, owner: Tank | undefined) {
-  if (!owner) {
+export function tickTurret(world: World, turret: Projectile) {
+  const owner = turret.turretHome;
+  if (!owner || !world.actorParents.hasParent(owner)) {
     turret.dead = true;
     projectileImpact(world, turret);
     return;

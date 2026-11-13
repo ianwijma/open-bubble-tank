@@ -29,6 +29,7 @@ function setup(forcefield = false) {
     'enemy',
   );
   world.field.enemies = [target];
+  world.actorParents.sync(world);
   world.hitTest = (tank) => tank === target;
   return { world, target };
 }
@@ -184,6 +185,7 @@ test('direct Damage, beam contact and turret interception retain their source ab
   expect(target.life).toBe(97);
   const turret = shot(world, {
     owner: target.uid,
+    turretHome: target,
     kind: 'turret',
     symbol: 2444,
     enemy: true,
@@ -192,7 +194,7 @@ test('direct Damage, beam contact and turret interception retain their source ab
   });
   world.bullets.push(shot(world, { damage: 4 }));
   world.hitProjectile = () => true;
-  tickTurret(world, turret, target);
+  tickTurret(world, turret);
   expect(turret.health).toBe(16);
   expect(world.stats.damageDone).toBe(0);
 });

@@ -33,6 +33,7 @@ import emitterData from '../data/emitters.json';
 import { moveActor } from './actor-movement';
 import { ActorParents } from './actor-parents';
 import { HealerTargetReadError } from './healer-target';
+import { TurretTargetReadError } from './turrets';
 import { SpikeTargetReadError } from './spikes';
 import { initializeHomingProjectile, HomingTargetReadError } from './homing-projectiles';
 import { FieldRuntime } from './field-runtime';
@@ -135,7 +136,7 @@ export class World {
   runtimeFor(field: Field): FieldRuntime {
     let runtime = this.runtimes.get(field);
     if (!runtime) {
-      runtime = new FieldRuntime();
+      runtime = new FieldRuntime(field);
       this.runtimes.set(field, runtime);
     }
     return runtime;
@@ -160,6 +161,10 @@ export class World {
   /** A detached wrapper's bullet layer still parents its surviving children. */
   hasBulletParent(bullet: Projectile) {
     return this.projectileParents.has(bullet);
+  }
+  bulletGlobal(bullet: Projectile) {
+    const parent = this.projectileParents.get(bullet);
+    return parent ? this.actorParents.layerGlobal(bullet, parent.field) : null;
   }
   get pickups() {
     return this.runtime.pickups;
@@ -237,12 +242,16 @@ export class World {
     }
   }
   /** _-0D.SpawnNewBullet declines new shots while _-5d is set. Timers still run. */
-  addBullet(bullet: Projectile, home?: Tank, target?: Tank) {
+  addBullet(bullet: Projectile, home?: Tank, target?: Tank, setup?: () => void) {
     if (this.transit) return false;
+    setup?.();
     if (bullet.kind === 'healBeam')
       bullet.healingHome ??= home ?? this.allTanks().find((tank) => tank.uid === bullet.owner);
     if (bullet.kind === 'apocalypse') bullet.missExempt ??= true;
-    if (bullet.kind === 'turret') bullet.motion ??= direction(bullet.angle, bullet.speed);
+    if (bullet.kind === 'turret') {
+      bullet.turretHome = home;
+      bullet.motion ??= direction(bullet.angle, bullet.speed);
+    }
     this.projectileTimelines.initialize(bullet);
     initializeSapper(this, bullet);
     initializeAvatarSeeker(this, bullet);
@@ -466,6 +475,7 @@ export class World {
       // AVM2 dispatch ends this Main.Run listener on an uncaught target read; the next frame runs.
       if (
         !(error instanceof HealerTargetReadError) &&
+        !(error instanceof TurretTargetReadError) &&
         !(error instanceof SpikeTargetReadError) &&
         !(error instanceof HomingTargetReadError) &&
         !(error instanceof CrossingTargetReadError) &&
@@ -1190,8 +1200,10 @@ export class World {
       for (const enemy of next.enemies)
         if (enemy.dataActive)
           for (const gun of enemy.guns)
-            if (Math.floor(gun.part.type / 1000) !== 3 && gun.targeting)
+            if (Math.floor(gun.part.type / 1000) !== 3 && gun.targeting) {
               gun.targeting.target = this.player;
+              if (gun.part.type === 4032) gun.turretTarget = this.player;
+            }
     }
     this.mapPosition = { col, row };
     this.fields.set(`${col},${row}`, next);

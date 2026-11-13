@@ -59,7 +59,7 @@ export async function loadedReferenceModules(page: Page) {
   if (modules.some((module) => !module.installedComparisons.some((file) => file.matchesObserved)))
     throw new Error('Loaded reference module bytes do not match the installed runtime.');
   return {
-    method: 'Passive CDP Debugger inventory/getScriptSource before controlled creator inputs',
+    method: 'Passive CDP Debugger inventory/getScriptSource before controlled reference inputs',
     modules,
     limitations: [
       'Loaded byte identity is not complete execution coverage or wire provenance.',

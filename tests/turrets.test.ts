@@ -29,6 +29,7 @@ function turretWorld() {
   world.field.enemies = [owner];
   world.field.cleared = false;
   world.fieldVisit = new FieldVisit();
+  world.actorParents.sync(world);
   return { world, owner };
 }
 
@@ -44,7 +45,7 @@ test('a complete shield turret stays alive while its gun starts another one', ()
   frames(world, 20);
   const turrets = world.bullets.filter((bullet) => bullet.kind === 'turret');
   expect(turrets).toHaveLength(2);
-  expect(owner.guns[0].turretId).not.toBe(first.uid);
+  expect(owner.guns[0].turretTarget === first).toBe(false);
   expect(first.dead).toBe(false);
   expect(owner.shield).toBeGreaterThan(0);
 });
@@ -181,7 +182,7 @@ test('only the last mature turret loss removes the film; launcher aim follows co
   frames(world, 1);
   expect(gun.shieldFilm).toBe(film);
   expect(owner.shield).toBe(1);
-  expect(gun.turretId).toBeUndefined();
+  expect(gun.turretTarget).toBeNull();
   expect(gun.angle).toBeCloseTo(
     angleTo(world.muzzle(owner, gun, 0), { x: 0, y: 0 }) - owner.rotation,
   );

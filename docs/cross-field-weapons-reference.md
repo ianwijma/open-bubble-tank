@@ -132,7 +132,7 @@ is `5b30ed4cca2a726a56569c8da70a24c652282c92836692cdbd6fd1f97fc8b5ae`;
 Art frame scripts, the complete source constructor draw stream, display-setter
 precision and original/Adobe/full-game equivalence remain unproved.
 
-## Shield Turrets: bounded audit, no simulation correction
+## Shield Turrets: source objections and retention follow-up
 
 [The4032 caller/source audit](shield-turret-source-audit.md) proves a valid
 creator/save/optional-local-roster route, distinct from builtin encounters. The
@@ -144,9 +144,11 @@ The requested cached unfinished-target retention assumption conflicts with
 reattachment, including4032. The retained `_‑BC` list and its frame4 shield check
 are separate from that overwritten target. Also SpawnNewBullet returns its input
 object even when the crossing gate declines attachment; it does not return null.
-The new unparented reference is cleared by the next relevant poll. The audit
-records both bytecode paths and leaves production unchanged rather than asserting
-source-incompatible regression expectations. Current-wrapper removal stays scoped.
+The new unparented reference is cleared by the next relevant poll. The original
+audit recorded both bytecode paths and left production unchanged. The later
+[retention/runtime follow-up](shield-turret-retention-reference.md) observes the
+original avatar read as ReferenceError #1069 and implements the combined target,
+parent, home, birth-gate and trigger contracts. Current-wrapper removal stays scoped.
 
 ## Verification limits
 

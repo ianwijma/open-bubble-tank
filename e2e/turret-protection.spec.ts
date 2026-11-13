@@ -23,7 +23,7 @@ for (const native of [false, true])
     expect(proof.oldKey).toBe('shield-hit:turret:launcher:1');
     expect(proof.currentKey).toBe('shield-hit:turret:launcher:2');
     expect(proof.panels.map((panel: { shield: number }) => panel.shield)).toEqual([
-      1, 1, 0, 1, 1, 1,
+      1, 1, 0, 1, 1, 1, 1,
     ]);
     expect(proof.panels[2].clips.map((clip: { kind: string }) => clip.kind)).toEqual(['hit']);
     expect(proof.panels[3].clips.map((clip: { age: number }) => clip.age)).toEqual([7, 0, 1]);
@@ -31,6 +31,16 @@ for (const native of [false, true])
     expect(proof.panels[5].clips.map((clip: { frame: number }) => clip.frame)).toEqual([
       16, 16, 25,
     ]);
+    expect(proof.cached).toEqual({
+      targetIsAvatar: true,
+      oldLayerRetainsTurret: true,
+      physicalParent: true,
+      absentFromCurrent: true,
+      counter: 79,
+      soundTimer: 7,
+      artAdvance: 3,
+      shield: 1,
+    });
     for (const panel of proof.panels) {
       expect(panel.painted).toEqual(
         panel.clips

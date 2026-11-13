@@ -5,6 +5,11 @@ No simulation correction is included. Two matching AS/pcode contracts contradict
 proposed cached-target and rejected-birth expectations; changing parent filtering
 alone would leave those contracts wrong.
 
+This audit is a historical checkpoint. The later [retention/runtime follow-up](shield-turret-retention-reference.md)
+observes the missing-member read in original code and implements both objections
+together with retained parent/home and trigger contracts. Its evidence and limits
+supersede the unresolved runtime status below; the source objections themselves stand.
+
 ## Supported offline caller
 
 No builtin avatar, enemy or boss design contains4032. This is protected by

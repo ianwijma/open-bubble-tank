@@ -8,6 +8,7 @@ import { SwfTextures } from '../../src/game/render/swf-textures';
 import { createTank } from '../../src/game/simulation/tank';
 import { createProjectile } from '../../src/game/simulation/create-projectile';
 import { World, emptyInput } from '../../src/game/simulation/world';
+import { FieldVisit } from '../../src/game/core/field-visit';
 
 /** _-DO's owner-Run latch, retired hit children, and independently stopped protection clips. */
 export async function showTurretProtection(pack: AssetPack, host: HTMLElement) {
@@ -26,8 +27,8 @@ export async function showTurretProtection(pack: AssetPack, host: HTMLElement) {
   host.appendChild(app.canvas);
   const sheet = document.createElement('canvas');
   sheet.width = 550;
-  sheet.height = 540;
-  sheet.style.height = host.style.height = '540px';
+  sheet.height = 720;
+  sheet.style.height = host.style.height = '720px';
   const ctx = sheet.getContext('2d')!;
   ctx.fillStyle = '#0b3c5a';
   ctx.fillRect(0, 0, 550, 540);
@@ -48,6 +49,7 @@ export async function showTurretProtection(pack: AssetPack, host: HTMLElement) {
     100,
   );
   world.field.enemies = [tank];
+  world.actorParents.sync(world);
   world.hitTest = () => false;
   const gun = tank.guns[0],
     view = new TankView(tank.design, pack, textures);
@@ -144,6 +146,41 @@ export async function showTurretProtection(pack: AssetPack, host: HTMLElement) {
     capture('Paused · both impacts advance independently');
     tick(100);
     capture('Still paused · film25 and hit16 stay stopped');
+    world.resume();
+    const original = world.field,
+      originalRuntime = world.runtimeFor(original);
+    const mature = gun.turretRefs![0];
+    world.field.cleared = false;
+    world.fieldVisit = new FieldVisit();
+    world.cache.store({
+      col: 1,
+      row: 0,
+      scale: 1,
+      enemies: [],
+      cleared: false,
+      boss: false,
+      tutorial: 0,
+    });
+    world.jump({ x: 1, y: 0 });
+    world.player.x = world.transit!.target.x;
+    world.player.y = world.transit!.target.y;
+    tick(1);
+    world.jump({ x: -1, y: 0 });
+    gun.counter = 79;
+    world.hitSoundTimer = 7;
+    const age = tank.artAge;
+    tick(3);
+    const cached = {
+      targetIsAvatar: gun.turretTarget === world.player,
+      oldLayerRetainsTurret: originalRuntime.bullets.includes(mature),
+      physicalParent: world.hasBulletParent(mature),
+      absentFromCurrent: !world.bullets.includes(mature),
+      counter: gun.counter,
+      soundTimer: world.hitSoundTimer,
+      artAdvance: tank.artAge - age,
+      shield: tank.shield,
+    };
+    capture('Cached return · source read abort, shield retained');
     return {
       panels,
       oldContact,
@@ -152,6 +189,7 @@ export async function showTurretProtection(pack: AssetPack, host: HTMLElement) {
       oldKey: oldHit.key,
       currentKey: tank.shieldHitClip!.key,
       films: tank.shieldClips.filter((clip) => clip.kind === 'film').length,
+      cached,
     };
   } finally {
     view.destroy();

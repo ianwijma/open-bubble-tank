@@ -122,6 +122,7 @@ export function createTank(
 export function deactivateTankData(tank: Tank) {
   for (const gun of tank.guns) {
     if (gun.targeting) gun.targeting.target = null;
+    if (gun.part.type === 4032) gun.turretTarget = null;
     if (gun.behaviorTarget) gun.behaviorTarget.target = null;
     gun.patientId = undefined;
   }

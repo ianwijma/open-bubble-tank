@@ -101,6 +101,25 @@ export class ActorParents {
       y: ((twips(point.y) - twips(parent.y) - twips(STAGE.cy + this.rootOffset.y)) | 0) / 20,
     };
   }
+  /** A retained layer keeps its own translation after losing the stage ancestors. */
+  layerGlobal(point: Vec, field: Field): Vec | null {
+    const parent = this.parents.get(field);
+    if (!parent) return null;
+    return {
+      x:
+        ((twips(point.x) +
+          twips(parent.x) +
+          (parent.rooted ? twips(STAGE.cx + this.rootOffset.x) : 0)) |
+          0) /
+        20,
+      y:
+        ((twips(point.y) +
+          twips(parent.y) +
+          (parent.rooted ? twips(STAGE.cy + this.rootOffset.y) : 0)) |
+          0) /
+        20,
+    };
+  }
   /** Local Point conversion remains valid after a clip's parent detaches. */
   localToGlobal(tank: Tank, point: Readonly<Vec>): Vec {
     const radians = tank.rotation * (Math.PI / 180),

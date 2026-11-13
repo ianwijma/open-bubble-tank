@@ -22,6 +22,7 @@ function setup() {
     0,
   );
   world.field.enemies = [tank];
+  world.actorParents.sync(world);
   const shot = (options: Partial<Projectile> = {}) =>
     createProjectile(world.nextId(), {
       owner: world.player.uid,
@@ -97,13 +98,20 @@ test('silent enemy Apocalypse callback still resets the gate, unlike the base en
 
 test('turret damage forwards its enemy flag and only the lethal turret callback uses false', () => {
   const { world, tank, shot, hits } = setup();
-  const turret = shot({ kind: 'turret', symbol: 2444, enemy: true, owner: tank.uid, health: 2 });
+  const turret = shot({
+    kind: 'turret',
+    symbol: 2444,
+    enemy: true,
+    owner: tank.uid,
+    health: 2,
+    turretHome: tank,
+  });
   world.bullets = [turret, shot()];
   world.hitProjectile = () => true;
-  tickTurret(world, turret, tank);
+  tickTurret(world, turret);
   expect(turret.health).toBe(1);
   expect(hits()).toHaveLength(0);
-  tickTurret(world, turret, tank);
+  tickTurret(world, turret);
   expect(turret.dead).toBe(true);
   expect(hits()).toHaveLength(1);
 });
