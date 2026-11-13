@@ -119,6 +119,58 @@ test('status artwork covers every part below five and replaces previous marks', 
   expect(tank.statusDecoration).toBeUndefined();
 });
 
+for (const partCount of [5, 7])
+  test(`status marks use rounded repeated indices before each pose for ${partCount} parts`, () => {
+    const { world, tank } = patientWorld();
+    tank.design = {
+      ...tank.design,
+      parts: Array.from({ length: partCount }, (_, i) => ({
+        ...STARTER.parts[0],
+        key: `part-${i}`,
+        x: i * 20,
+        y: -i * 10,
+      })),
+    };
+    // Each original mark draws a part index, rotation, then variant; repeats are retained.
+    const edge = partCount === 5 ? 0.19 : 0.14;
+    const opposite = partCount === 5 ? 0.81 : 0.86;
+    const draws = [edge, 0, 0, edge, 0.5, 0.99, opposite, 0.25, 0.6, 0, 0.9, 0.3, 0.99, 0.1, 0.8];
+    let cursor = 0;
+    world.rng.next = () => {
+      expect(cursor).toBeLessThan(draws.length);
+      return draws[cursor++];
+    };
+    decorateStatus(world, tank, 'jam');
+    const indices = partCount === 5 ? [1, 1, 3, 0, 4] : [1, 1, 5, 0, 6];
+    expect(tank.statusDecoration?.marks).toEqual(
+      indices.map((index, i) => ({
+        x: index * 20,
+        y: -index * 10,
+        angle: [-180, 0, -90, 144, -144][i],
+        frame: [1, 4, 3, 2, 4][i],
+      })),
+    );
+    expect(cursor).toBe(15);
+  });
+
+test('below five parts status marks preserve detail order without index draws', () => {
+  const { world, tank } = patientWorld();
+  tank.design = {
+    ...tank.design,
+    parts: [0, 20, 40, 60].map((x, i) => ({ ...STARTER.parts[0], key: `part-${i}`, x })),
+  };
+  let draws = 0;
+  world.rng.next = () => {
+    draws++;
+    return 0.5;
+  };
+  decorateStatus(world, tank, 'stun');
+  expect(tank.statusDecoration?.marks).toEqual(
+    [0, 20, 40, 60].map((x) => ({ x, y: STARTER.parts[0].y, angle: 0, frame: 3 })),
+  );
+  expect(draws).toBe(8);
+});
+
 test('forcefield regeneration measures twenty damaged frames rather than tank age', () => {
   const world = new World([], [], 10);
   world.player = createTank(
