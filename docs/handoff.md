@@ -1,5 +1,24 @@
 # Recreation continuation
 
+**Current closeout priority (2026-11-14):** the user chose the faithful classic
+release finish line in [classic-release.md](classic-release.md), with remaining
+rare differences documented. Modernization/rebranding is separate. They also
+instructed quick PR checks and the longer full suite on master after merging;
+[delivery](delivery.md) now records that policy and the explicit long-run budget.
+The stricter parity checklist remains evidence, not a claim that every open
+comparison must close before the selected classic release.
+
+PR165's cache head `899b29d` failed only the hosted advancing mock readiness
+deadline (run43524294793/job132226086587;151 other passes/4 skips). Its independent
+cache/review audit found no concrete regression or actionable feedback. The parent
+owns the CI split follow-up, fresh final-head gate/watch and one master merge.
+The new local quick production flow passes on build `5yHBRhSNE0V3bC6JMuW6y`;
+formatting/TypeScript and1,299 rules /81,252 assertions pass. The source game build
+`OeDq6Mv8QjISX6YXv_BZi` is held unchanged on4705 for the separate public-input
+acceptance worker. Do not rebuild or stop that held server until its owner finishes.
+No release or full normal-input boss completion is claimed yet.
+
+
 The objective in [goals.markdown](../goals.markdown) remains the full faithful offline Bubble Tanks3 recreation. It is incomplete. Read `AGENTS.md`, [architecture](architecture.md), [fidelity](fidelity.md) and [creator source/verification](creator-ui-reference.md) before continuing. Tests establish their specific contracts, not indistinguishability of the whole game.
 
 Use [delivery](delivery.md) for the current five-layer workflow: build dependents while CI runs, assemble every layer on the last PR, target that PR at master, and require its combined current-head Actions/review gate before one master merge. Earlier entries below describe historical checkpoints; held hashes, browser PIDs and pending layers are not evidence of current state. Verify the actual remote/process state before acting, and dismiss repeated notifications for already merged PRs.

@@ -1,5 +1,22 @@
 # Goal: faithfully recreate Bubble Tanks 3
 
+## Current classic release finish line
+
+The user's 2026-11-14 closeout decision is to finish a faithful classic release:
+fix visible/gameplay bugs, verify a full playthrough, and document remaining rare
+differences. Follow [the classic release gates](docs/classic-release.md).
+Modernization/rebranding and additional platform features are separate work.
+The original strict parity research below remains the specification and evidence
+ledger; do not claim its open comparison checkpoints are complete merely because
+the classic release ships. Further rare-edge research is deferred when it does
+not resolve a concrete release blocker.
+
+The user also changed CI policy: quick checks on PRs, with the complete longer
+suite on master after merging. Follow [delivery](docs/delivery.md) and require the
+resulting master full-suite result before declaring the classic release ready.
+
+## Original fidelity specification
+
 Continue building a faithful, one-to-one recreation of the original Bubble Tanks 3 Flash game in `/home/ian/Projects/ianwijma/open-bubble-tank`. The intended result is an offline game whose appearance, animation, controls, sound and gameplay are indistinguishable from the original, except for explicitly documented removals and usability additions.
 
 The reverse-engineering documentation and original implementation evidence are in `/home/ian/Projects/ianwijma/documented-bubble-tank-3`. Initial research, asset extraction and a demonstration of loading assets directly from the Flash file already exist. Consult that repository whenever functionality is uncertain. Prefer decompiled code, and inspect exported bytecode when the decompiler is ambiguous, rather than inventing behavior.

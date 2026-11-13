@@ -98,3 +98,17 @@ collapse, combat effects, lower/under-avatar paint, pickup ownership and screen
 ink. These private specs retain the earlier fixture routing and unchanged
 assertions. All850 recorded inputs still match, and owned4596/4636 are free.
 This rendering report is separate from the two accelerated-pilot results.
+
+## Hosted outcome and revised CI scheduling
+
+Exact cache head `899b29d2abafac00959c9a5b06241425bc2a5ec0` also fails the hosted
+readiness deadline in run43524294793/job132226086587: frame63,000, level6,
+life921 and1,001 kills. The other151 browser cases pass, with4 source-dependent
+skips. Its log is preserved at `test-results/artwork-stack-ci/pr165.log`.
+The local speedup is therefore not sufficient evidence of a hosted pass.
+
+The user subsequently instructed quick PR checks and the complete longer suite
+on master after merging. [Delivery](delivery.md) records this explicit scheduling
+change and the larger post-merge wall-clock budget. The earlier failed jobs remain
+failed; all progression assertions and the pilot's simulation/input contracts
+remain in the retained long suite.
