@@ -1,4 +1,4 @@
-import { angleTo, DEG, direction, distance, rotate } from '../core/math';
+import { angleTo, DEG, direction, distance } from '../core/math';
 import { displayPixel } from '../core/display-values';
 import type { GunState, InputFrame, Projectile, Tank } from '../core/types';
 import type { World } from './world';
@@ -22,6 +22,7 @@ import { tickGrow } from './grow';
 import { tickFlak } from './flak';
 import { projectileOutside, reportProjectileMiss } from './projectile-boundary';
 import { deflectFirstEnemy, tickDeflected } from './bubble-buster';
+import { createProjectile } from './create-projectile';
 export { starSplit } from './starburst';
 
 export function tickBullet(world: World, b: Projectile, _input: InputFrame) {
@@ -156,6 +157,10 @@ export function tickBullet(world: World, b: Projectile, _input: InputFrame) {
   if (b.kind === 'rocket' && !b.dead) rocketTrail(world, b);
 }
 export function releaseCarrier(world: World, t: Tank, gun: GunState) {
+  // _-Ng converts its emitter first; its six offsets are on the outgoing field axes.
+  const global = world.actorParents.localToGlobal(t, gun.part),
+    point = world.actorParents.fieldLocal(global, world.currentWrapper);
+  if (!point) throw new Error('Carrier trigger has no current field transform');
   for (const [x, y] of [
     [-22, 0],
     [22, 0],
@@ -164,13 +169,24 @@ export function releaseCarrier(world: World, t: Tank, gun: GunState) {
     [-9, 0],
     [9, 0],
   ]) {
-    world.spawnVolley(t, gun, { rate: 0, speed: 5, damage: 2, kind: 'seeker' });
-    const delta = rotate({ x, y }, t.rotation + gun.angle),
-      b = world.bullets[world.bullets.length - 1];
-    if (!world.transit && b) {
-      b.x += delta.x;
-      b.y += delta.y;
-    }
+    world.addBullet(
+      createProjectile(world.nextId(), {
+        owner: t.uid,
+        enemy: true,
+        kind: 'seeker',
+        symbol: 1809,
+        x: point.x + x,
+        y: point.y + y,
+        angle: t.rotation + gun.angle,
+        speed: 5,
+        damage: 2,
+        targetId: world.player.uid,
+        // Preserve accepted-shot RNG consumption pending the full constructor audit.
+        orbit: world.transit ? 0 : world.rng.int(0, 359),
+      }),
+      t,
+      world.player,
+    );
   }
   t.removedParts.add(gun.part.key);
   removeTankChild(t, `part:${gun.part.key}`);
