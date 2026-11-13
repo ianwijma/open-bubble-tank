@@ -1,5 +1,6 @@
 import { projectileOutside } from './projectile-boundary';
 import { direction } from '../core/math';
+import { displayPixel } from '../core/display-values';
 import type { Projectile, Tank } from '../core/types';
 import { createProjectile } from './create-projectile';
 import type { World } from './world';
@@ -64,6 +65,6 @@ export function tickSpinner(world: World, b: Projectile) {
       break;
     }
   }
-  b.x += velocity.x;
-  b.y += velocity.y;
+  b.x = displayPixel(b.x + velocity.x);
+  b.y = displayPixel(b.y + velocity.y);
 }

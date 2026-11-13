@@ -92,8 +92,7 @@ test('an already armed mine performs both double scatter and the following homin
   world.player.x = 100;
   tick(world, b);
   const norm = Math.hypot(100, 8);
-  expect(b.x).toBeCloseTo(400 / norm);
-  expect(b.y).toBeCloseTo(8 - 32 / norm);
+  expect([b.x, b.y]).toEqual([3.95, 7.65]);
   expect(b.scatter).toBe(0);
   expect(b.mineState!.movement.x).toBeCloseTo(400 / norm);
 });

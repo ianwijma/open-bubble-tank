@@ -1,5 +1,6 @@
 import { projectileOutside } from './projectile-boundary';
 import { angleTo, direction } from '../core/math';
+import { displayPixel } from '../core/display-values';
 import type { Projectile } from '../core/types';
 import { tankHitLocation } from './hit-location';
 import { projectileTankContact } from './projectile-contact';
@@ -35,6 +36,6 @@ export function tickAvatarSeeker(world: World, b: Projectile) {
     return;
   }
   const movement = direction(b.angle, b.speed);
-  b.x += movement.x;
-  b.y += movement.y;
+  b.x = displayPixel(b.x + movement.x);
+  b.y = displayPixel(b.y + movement.y);
 }

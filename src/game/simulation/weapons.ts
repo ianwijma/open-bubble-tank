@@ -1,5 +1,6 @@
 import { FIELD_RADIUS, STAGE } from '../core/constants';
 import { angleTo, direction, distance, length, rotate } from '../core/math';
+import { displayPixel } from '../core/display-values';
 import { triggerMassiveCharge } from '../core/mounted-art';
 import { refreshForcefield } from './forcefield';
 import { attachMountedShield } from './shields';
@@ -438,8 +439,8 @@ export function spawnVolley(
           ? world.bullets.find((b) => !b.dead && b.owner === t.uid && b.anchor === gun)
           : null;
       if (old) {
-        old.x = pos.x;
-        old.y = pos.y;
+        old.x = displayPixel(pos.x);
+        old.y = displayPixel(pos.y);
         old.angle = angle;
         old.heading = angle;
         continue;

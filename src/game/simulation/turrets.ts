@@ -1,5 +1,6 @@
 import { projectileOutside } from './projectile-boundary';
 import { direction, distance } from '../core/math';
+import { displayPixel } from '../core/display-values';
 import { actorAngle, actorHeading } from './actor-movement';
 import type { GunState, Projectile, Tank } from '../core/types';
 import type { World } from './world';
@@ -107,8 +108,8 @@ export function tickTurret(world: World, turret: Projectile) {
   if (speed >= 0.4) turret.motion = direction(turret.angle, speed);
   else turret.stopped = true;
   // SetMovement keeps the preceding velocity on the frame it switches off.
-  turret.x += turret.motion?.x ?? 0;
-  turret.y += turret.motion?.y ?? 0;
+  turret.x = displayPixel(turret.x + (turret.motion?.x ?? 0));
+  turret.y = displayPixel(turret.y + (turret.motion?.y ?? 0));
 }
 
 export function builderHitsObject(world: World, builder: Projectile) {

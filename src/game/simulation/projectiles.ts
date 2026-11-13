@@ -125,8 +125,8 @@ export function tickBullet(world: World, b: Projectile, _input: InputFrame) {
     }
     if (owner.side !== 'player') {
       const pos = world.muzzle(owner, b.anchor);
-      b.x = pos.x;
-      b.y = pos.y;
+      b.x = displayPixel(pos.x);
+      b.y = displayPixel(pos.y);
       b.angle = owner.rotation + b.anchor.angle;
     }
     tickDamageBeam(world, b, targets);

@@ -1,5 +1,6 @@
 import { projectileOutside } from './projectile-boundary';
 import { angleTo, direction, distance, rotate } from '../core/math';
+import { displayPixel } from '../core/display-values';
 import type { Projectile, Tank, Vec } from '../core/types';
 import { tankHitLocation } from './hit-location';
 import type { World } from './world';
@@ -92,6 +93,6 @@ export function tickSapper(world: World, bullet: Projectile) {
     world.projectileTimelines.hold(bullet, bullet.artFrame);
     state.forcedContact = false;
   }
-  bullet.x += state.movement.x;
-  bullet.y += state.movement.y;
+  bullet.x = displayPixel(bullet.x + state.movement.x);
+  bullet.y = displayPixel(bullet.y + state.movement.y);
 }

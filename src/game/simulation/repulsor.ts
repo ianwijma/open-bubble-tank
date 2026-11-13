@@ -1,5 +1,6 @@
 import { projectileOutside } from './projectile-boundary';
 import { direction, distance } from '../core/math';
+import { displayPixel } from '../core/display-values';
 import type { Projectile } from '../core/types';
 import type { World } from './world';
 
@@ -32,6 +33,6 @@ export function tickRepulsor(world: World, b: Projectile) {
     }
   }
   const movement = direction(b.angle, b.speed);
-  b.x += movement.x;
-  b.y += movement.y;
+  b.x = displayPixel(b.x + movement.x);
+  b.y = displayPixel(b.y + movement.y);
 }

@@ -170,13 +170,12 @@ test('player launcher uses 100ms Timer callbacks and current emitters through ja
   world.advanceTime(99);
   expect(world.bullets).toEqual([]);
   world.player.x = 50;
-  const muzzle = world.muzzle(world.player, gun, 13, 0);
   world.pause();
   applyProjectileStatus(world, world.player, 'jam');
   applyProjectileStatus(world, world.player, 'stun');
   world.advanceTime(1);
   expect(world.bullets).toHaveLength(1);
-  expect([world.bullets[0].x, world.bullets[0].y]).toEqual([muzzle.x, muzzle.y]);
+  expect([world.bullets[0].x, world.bullets[0].y]).toEqual([57.05, -14.35]);
   world.advanceTime(900);
   expect(world.bullets).toHaveLength(10);
   expect(world.bullets.every((bullet) => bullet.age === 0)).toBe(true);
@@ -221,12 +220,11 @@ test('Massive Cannon completion follows the bullet phase and observes looping au
   frames(world, 20); // Timeline reaches26 without engine polling.
   expect(world.bullets).toEqual([]);
   world.player.x = 40;
-  const muzzle = world.muzzle(world.player, gun);
   world.resume();
   world.step(emptyInput());
   expect(world.bullets[0].damage).toBe(100);
   expect(world.bullets[0].age).toBe(0);
-  expect([world.bullets[0].x, world.bullets[0].y]).toEqual([muzzle.x, muzzle.y]);
+  expect([world.bullets[0].x, world.bullets[0].y]).toEqual([70.75, 0.45]);
   world.step(emptyInput());
   expect(world.bullets[0].age).toBe(1);
   const loop = setup(3008);

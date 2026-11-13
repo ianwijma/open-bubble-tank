@@ -1,5 +1,6 @@
 import { CLASS_SPEED, FIELD_RADIUS, MAX_LIFE, STAGE } from '../core/constants';
 import { clamp, direction, distance, length, Random, rotate } from '../core/math';
+import { displayPixel } from '../core/display-values';
 import { protectionRadius } from '../core/protection-size';
 import { advanceTankArt } from './tank-art';
 import { detachForcefield } from './forcefield';
@@ -242,9 +243,12 @@ export class World {
     }
   }
   /** _-0D.SpawnNewBullet declines new shots while _-5d is set. Timers still run. */
-  addBullet(bullet: Projectile, home?: Tank, target?: Tank, setup?: () => void) {
+  addBullet(bullet: Projectile, home?: Tank, target?: Tank, prepare?: () => void) {
     if (this.transit) return false;
-    setup?.();
+    prepare?.();
+    // SpawnNewBullet assigns display coordinates before virtual Setup reads them.
+    bullet.x = displayPixel(bullet.x);
+    bullet.y = displayPixel(bullet.y);
     if (bullet.kind === 'healBeam')
       bullet.healingHome ??= home ?? this.allTanks().find((tank) => tank.uid === bullet.owner);
     if (bullet.kind === 'apocalypse') bullet.missExempt ??= true;
