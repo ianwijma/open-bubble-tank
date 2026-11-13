@@ -86,6 +86,7 @@ import {
   FieldChildRemovalError,
 } from './world-flow';
 import { FieldCache } from './field-cache';
+import { FieldDisplays, type UnderAvatarSizeResolver } from './field-display';
 
 export interface Transit {
   next: Field;
@@ -130,6 +131,7 @@ export class World {
   private orphaned: { field: Field; screen: Vec }[] = [];
   private callbackFields = new WeakMap<Tank, Field>();
   readonly cache = new FieldCache();
+  readonly fieldDisplays: FieldDisplays;
   mapPosition = { col: 0, row: 0 };
   private previousMapPosition = { col: 0, row: 0 };
   private runtimes = new WeakMap<Field, FieldRuntime>();
@@ -423,7 +425,9 @@ export class World {
     readonly mainEffects = new MainEffects(),
     readonly profileClass = new ProfileClassAllowance(),
     public avatarLibrary: readonly TankDesign[] = localTanks.filter((tank) => tank.avatar),
+    underAvatarSizeResolver?: UnderAvatarSizeResolver,
   ) {
+    this.fieldDisplays = new FieldDisplays(underAvatarSizeResolver);
     this.rng = new Random(seed);
     this.roster = new UnitRoster(this.rng, localTanks);
     if (history.length)
@@ -433,6 +437,10 @@ export class World {
       };
     const level = this.progression.level,
       max = MAX_LIFE[level];
+    this.field = { col: 0, row: 0, scale: 1, enemies: [], cleared: true, boss: false, tutorial: 1 };
+    this.fieldDisplays.create(this.field, true);
+    this.fieldDisplays.attach(this.field, { x: 0, y: 0 });
+    this.fieldDisplays.attachBottom(this.field);
     this.player = createTank(
       this.nextId(),
       this.progression.history[level],
@@ -443,7 +451,7 @@ export class World {
       Math.floor(max / 75) + 1,
       this,
     );
-    this.field = { col: 0, row: 0, scale: 1, enemies: [], cleared: true, boss: false, tutorial: 1 };
+    this.fieldDisplays.updateAvatar(this.player, this.field, undefined, this.stats.frames);
     this.fields.set('0,0', this.field);
     this.effectEngine.createFieldLayers(this.field);
     this.effectEngine.register(this.effectEngine.layer(this.field, 'top')!);
@@ -516,6 +524,7 @@ export class World {
   }
   /** Attached ENTER_FRAME art continues when Main4 skips the World.Run listener. */
   advanceArtwork() {
+    this.fieldDisplays.advanceArtwork();
     this.actorParents.sync(this);
     this.effectEngine.advanceArtwork();
     const attached = new Set<Tank>([this.player]);
@@ -737,6 +746,7 @@ export class World {
       effect,
       field: this.field,
     };
+    this.fieldDisplays.beginCollapse(this.field);
     this.flow.collapse();
     this.tacticalHud.updatePassives(this.player, this.field.enemies, this.viewZoom, true);
     this.revision++;
@@ -752,6 +762,7 @@ export class World {
       this.effectEngine.discard(c.effect);
       return;
     }
+    this.fieldDisplays.shrink(c.field, this.currentField);
     if (c.shakeTimer-- <= 0) {
       this.mainEffects.shake(++c.shakeCount);
       c.shakeTimer = c.shakeCount;
@@ -762,6 +773,7 @@ export class World {
     }
   }
   private finishCollapse() {
+    this.fieldDisplays.finishCollapse(this.collapse!.field, this.currentField);
     for (const ally of this.allies) this.damage(ally, ally.life);
     for (const enemy of this.field.enemies) {
       enemy.design = { ...enemy.design, reward: Math.floor(enemy.design.reward / 3) };
@@ -826,6 +838,8 @@ export class World {
       p[axis] += v;
     }
     this.onCameraMove(p.velocity.x, p.velocity.y);
+    this.fieldDisplays.moveCurrent(this.currentField, p.velocity);
+    this.fieldDisplays.updateMasks(this.currentField, this.transit?.next);
   }
 
   nearestEnemy(from: Vec): Tank | undefined {
@@ -1137,6 +1151,12 @@ export class World {
     this.actorParents.setAvatar(this.player);
     this.player.rotation = old.rotation;
     this.player.velocity = { ...old.velocity };
+    this.fieldDisplays.updateAvatar(
+      this.player,
+      this.currentField,
+      this.transit?.next,
+      this.stats.frames,
+    );
     this.secondaryCounter = 0;
     this.revision++;
     // PlaceAvatar tests only replacement avatars, including edits and downgrades.
@@ -1170,7 +1190,18 @@ export class World {
       row += dir.y;
       stored = this.cache.get(col, row);
     }
-    let next: Field;
+    // AttachNewBubblefield constructs1551 and its actor-layer tutorial before
+    // either _-WZ population or _-G0 cached reparenting, and before all setters.
+    const next: Field = {
+      col,
+      row,
+      scale: 1,
+      boss: false,
+      cleared: false,
+      tutorial,
+      enemies: [],
+    };
+    this.fieldDisplays.create(next);
     if (!stored) {
       const boss =
         !deadhead && !this.bossTriggered && this.player.life >= 1000 && this.progression.level >= 5;
@@ -1178,35 +1209,24 @@ export class World {
         ? rollBossWave(this.rng)
         : rollWave(deadhead ? -1 : Math.hypot(col, row), this.rng, this.localTanks, this.roster);
       if (boss) this.bossTriggered = true;
-      next = {
-        col,
-        row,
-        scale: wave.scale,
-        boss,
-        cleared: false,
-        tutorial,
-        enemies: wave.designs.map((design) => {
-          const t = createTank(this.nextId(), design, 'enemy', 0, 0, undefined, undefined, this);
-          // _-0D._-Ar finishes Setup, then samples against BF_BG_mc's authored
-          // scale 1. AttachNewBubblefield applies wave.scale only after population.
-          t.x = this.rng.int(-200, 200);
-          t.y = this.rng.int(-200, 200);
-          t.rotation = this.rng.int(-180, 180);
-          return t;
-        }),
-      };
+      next.scale = wave.scale;
+      next.boss = boss;
+      for (const design of wave.designs) {
+        const t = createTank(this.nextId(), design, 'enemy', 0, 0, undefined, undefined, this);
+        // _-Ar finishes Setup, then samples with authored BF_BG scale1.
+        t.x = this.rng.int(-200, 200);
+        t.y = this.rng.int(-200, 200);
+        t.rotation = this.rng.int(-180, 180);
+        this.attachActor(t, next);
+        next.enemies.push(t);
+      }
       this.stats.visited++;
       if (this.stats.visited === 100) this.award('Explorer');
     } else {
-      next = {
-        col,
-        row,
-        scale: stored.scale,
-        boss: false,
-        cleared: this.fields.get(`${col},${row}`)?.cleared ?? false,
-        tutorial,
-        enemies: this.cache.restore(stored),
-      };
+      next.scale = stored.scale;
+      next.cleared = this.fields.get(`${col},${row}`)?.cleared ?? false;
+      next.enemies = this.cache.restore(stored);
+      for (const tank of next.enemies) this.attachActor(tank, next);
       // _-0D._-G0 resets only offensive primary movTarget on cached attachment.
       for (const enemy of next.enemies)
         if (enemy.dataActive)
@@ -1224,6 +1244,7 @@ export class World {
     });
     // Reattachment constructs a new bfStartDisplay even when the stored field already exists.
     next.tutorial = tutorial;
+    this.fieldDisplays.setupChildren(next, next.scale);
     const spacing =
       fieldGeometry.transitDiameter * next.scale +
       Math.trunc((fieldGeometry.transitDiameter * (this.currentField.scale - next.scale)) / 2) -
@@ -1233,6 +1254,7 @@ export class World {
     const entry = 317 * next.scale; // BF_over_detail_mc markers: ±6340 twips.
     if (this.transit) {
       const player = this.avatarPosition();
+      this.fieldDisplays.orphan(this.transit.next);
       this.orphaned.push({
         field: this.transit.next,
         screen: {
@@ -1250,10 +1272,10 @@ export class World {
       age: 0,
       stopShoot,
     };
+    const currentRoot = this.fieldDisplays.read(this.currentField).root.pose;
+    this.fieldDisplays.attach(next, { x: currentRoot.x + offset.x, y: currentRoot.y + offset.y });
+    this.fieldDisplays.attachBottom(next);
     this.effectEngine.createFieldLayers(next);
-    for (const tank of next.enemies) {
-      this.attachActor(tank, next);
-    }
     if (!next.enemies.length) this.editSlider.trigger(this.progression.level, this.mapMode);
     else if (this.editSlider.atRest) this.editSlider.hide();
     this.flow.cross();
@@ -1302,6 +1324,7 @@ export class World {
         this.previousMapPosition.col,
         this.previousMapPosition.row,
       );
+      this.fieldDisplays.detach(this.currentField);
       this.field = tr.next;
       this.effectEngine.register(this.effectEngine.layer(this.field, 'top')!);
       this.effectEngine.register(this.effectEngine.layer(this.field, 'bottom')!);
@@ -1313,11 +1336,14 @@ export class World {
       // KillShield, so the old film remains attached until another trigger.
       for (const g of this.player.guns) g.counter = 0;
       this.transit = null;
+      this.fieldDisplays.arrive(this.currentField);
       this.flow.arrive();
       this.revision++;
     } else {
       this.player.x += dx * 0.09;
       this.player.y += dy * 0.09;
+      this.fieldDisplays.moveCurrent(this.currentField, { x: dx * 0.09, y: dy * 0.09 });
+      this.fieldDisplays.moveNext(this.currentField, tr.next, tr.offset, this.stats.frames);
       this.onCameraMove(dx * 0.09, dy * 0.09);
     }
   }
