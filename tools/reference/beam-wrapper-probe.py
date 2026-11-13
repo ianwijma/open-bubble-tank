@@ -2,6 +2,7 @@
 """Append controlled beam geometry observations; never modify original methods.
 
 python3 tools/reference/beam-wrapper-probe.py ORIGINAL.swf OUTPUT.swf
+Append --geometry-audit for isolated child/root scale and depth-mask controls.
 Load OUTPUT in the reference viewer and press F8 once after loading. Uses the
 original avatar-default Aggressor table entry11 and original PartCallTrigger /
 SpawnNewBullet / TestForCollision. Sibling versus deliberately nested bullet
@@ -28,6 +29,9 @@ def tag(code, data=b''):
 
 
 ROOT = 'BT3BeamWrapperProbe'
+if len(sys.argv) not in (3, 4) or (len(sys.argv) == 4 and sys.argv[3] != '--geometry-audit'):
+    raise SystemExit('Supply ORIGINAL OUTPUT [--geometry-audit].')
+audit = len(sys.argv) > 3 and sys.argv[3] == '--geometry-audit'
 names = [ROOT, 'Main', 'trace', 'stage', 'addEventListener', 'removeEventListener',
          'onProbeKey', 'keyCode', 'TankData', '_-HJ', 'getInstance', '_-7G',
          'ImportTankData', '_-Tr', 'addChild', 'removeChild', 'getChildByName',
@@ -41,6 +45,9 @@ names = [ROOT, 'Main', 'trace', 'stage', 'addEventListener', 'removeEventListene
          'getQualifiedClassName', 'StopFiring', 'arrEnemies']
 labels = ['BT3_BEAM_ID', 'BT3_BEAM_TOPOLOGY', 'BT3_BEAM_SAMPLE', 'BT3_BEAM_SWEEP',
           'BT3_BEAM_DONE', 'BT3_BEAM_EDGE', 'far', '29_mc', 'sibling', 'nested', 'bare', 'actor', 'restored']
+if audit:
+    labels += ['BT3_BEAM_AUDIT', 'children', 'root', 'masked', 'unmasked',
+               'avatarUnderBubble_mc', 'effectLayer_under_mc', 'under', 'restored-audit']
 strings = [''] + names + ['flash.display', 'flash.geom', 'flash.utils', 'keyDown'] + labels
 si = {s: i for i, s in enumerate(strings)}
 q = {n: i + 1 for i, n in enumerate(names)}
@@ -172,6 +179,55 @@ for length in [420, 600, 900, 1500]:
     probe += sample('nested', length)
 # Restore ownership and remove probe roots while leaving original Main untouched.
 probe += get(7) + get(5) + call('addChild', 1)
+if audit:
+    def audit_point(label, x, y):
+        code = (get(4) + op(0x60, q['Point']) + number(x) + number(y)
+                + op(0x42, 2) + value_call('localToGlobal', 1) + put(9))
+        values = [text(label), number(x), number(y),
+                  precise(get(4) + prop('width')), precise(get(4) + prop('scaleX')),
+                  precise(get(4) + prop('BF_BG_mc') + prop('scaleX')),
+                  precise(get(4) + prop('_-SQ') + prop('scaleX')),
+                  precise(get(4) + prop('_-SQ') + prop('width')),
+                  shape(4, 9), shape(10, 9)]
+        return code + emit('BT3_BEAM_AUDIT', values)
+
+    # Existing Basic root, display-only: no added avatar constructors/RNG draws.
+    # The source new-field path assigns four CHILD scales, overwriting the
+    # authored exterior-mask scale. These are setter controls, not full Setup.
+    for scale in [0.5, 1, 1.25, 2]:
+        for name in ['effect_mask_under', '_-SQ', 'BF_over_detail_mc', 'BF_BG_mc']:
+            for axis in ['scaleX', 'scaleY']:
+                probe += child(4, name, axis, number(scale))
+        probe += sweep('children', 5.2, 0, 0)
+        probe += audit_point('children', 425 * scale, 0)
+    # Restore the authored first-field scales before the separate root control.
+    for name in ['effect_mask_under', '_-SQ', 'BF_over_detail_mc', 'BF_BG_mc']:
+        for axis in ['scaleX', 'scaleY']:
+            value = integer(65043) + integer(65536) + b'\xa3' if name == '_-SQ' else integer(1)
+            probe += child(4, name, axis, value)
+    for scale in [0.5, 1.25, 2]:
+        probe += assign(4, 'scaleX', number(scale)) + assign(4, 'scaleY', number(scale))
+        # Sibling bullet coordinates stay independent in this synthetic control.
+        probe += sweep('root', 5.2, 0, 0)
+        probe += audit_point('root', 425.2, 0)
+    probe += assign(4, 'scaleX', integer(1)) + assign(4, 'scaleY', integer(1))
+    # Authored depth10 mask covers only depth12, not depth18 enemyLayer.
+    probe += get(4) + text('avatarUnderBubble_mc') + value_call('getChildByName', 1) + put(11)
+    for x in [0, 430, 600, 900]:
+        probe += assign(10, 'x', integer(x))
+        probe += get(4) + prop('enemyLayer_mc') + get(10) + call('addChild', 1)
+        probe += audit_point('unmasked', x, 0)
+        probe += get(11) + get(10) + call('addChild', 1)
+        probe += audit_point('masked', x, 0)
+    probe += get(11) + get(10) + call('removeChild', 1)
+    # Depth4's interior mask covers the depth6 under-effect layer.
+    probe += get(4) + text('effectLayer_under_mc') + value_call('getChildByName', 1) + put(11)
+    for x in [0, 430, 600, 900]:
+        probe += assign(10, 'x', integer(x))
+        probe += get(11) + get(10) + call('addChild', 1)
+        probe += audit_point('under', x, 0)
+    probe += get(11) + get(10) + call('removeChild', 1)
+    probe += sweep('restored-audit', 5.2, 0, 0)
 probe += get(6) + call('StopFiring', 0)
 probe += get(0) + get(7) + call('removeChild', 1)
 probe += emit('BT3_BEAM_DONE', [])
@@ -194,7 +250,7 @@ def body(index, code, stack, count, depth, maximum):
 
 bodies = u(4) + body(0, ctor, 4, 1, 1, 2)
 bodies += body(1, get(0) + b'\x30\x47', 1, 1, 1, 2)
-bodies += body(2, script, 2, 1, 0, 2) + body(3, key, 24, 11, 1, 2)
+bodies += body(2, script, 2, 1, 0, 2) + body(3, key, 24, 12 if audit else 11, 1, 2)
 abc = struct.pack('<HH', 16, 46) + cp + methods + u(0) + classes + scripts + bodies
 probe_tag = tag(82, struct.pack('<I', 0) + b'beam-wrapper-probe\0' + abc)
 

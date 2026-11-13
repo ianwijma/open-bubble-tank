@@ -12,7 +12,7 @@ const { loadedReferenceModules } = await import(identityModulePath);
 
 const out = process.env.BT3_PROBE_OUT ?? 'reference-captures/beam-wrapper-runtime';
 const endpoint = process.env.BT3_REFERENCE_CDP_ENDPOINT ?? 'http://127.0.0.1:9305';
-const origin = 'http://127.0.0.1:3305';
+const origin = process.env.BT3_REFERENCE_URL ?? 'http://127.0.0.1:3305';
 await mkdir(out, { recursive: true });
 const browser = await chromium.connectOverCDP(endpoint);
 const page = browser
