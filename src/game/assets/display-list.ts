@@ -1,6 +1,23 @@
 import type { DisplayPlacement, SpriteInfo } from './asset-pack';
 const identity = { a: 1, b: 0, c: 0, d: 1, tx: 0, ty: 0 };
 
+/** Authored placements only; never stores a live clip, age, random stream or parent.
+ * Rows belong to the actual sprite metadata object; numeric frame indexing avoids
+ * allocating and hashing an id:frame string on each retained timeline step.
+ */
+export class DisplayListCache {
+  private rows = new WeakMap<SpriteInfo, DisplayPlacement[][]>();
+  get(sprite: SpriteInfo, age: number): DisplayPlacement[] {
+    const frame = ((Math.max(1, Math.floor(age)) - 1) % sprite.frameCount) + 1;
+    let frames = this.rows.get(sprite);
+    if (!frames) this.rows.set(sprite, (frames = []));
+    return frames[frame] ?? (frames[frame] = buildDisplayList(sprite, frame));
+  }
+  clear() {
+    this.rows = new WeakMap();
+  }
+}
+
 /** Retained SWF depths, shared by browser artwork and numeric simulation poses. */
 export function buildDisplayList(sprite: SpriteInfo, age: number): DisplayPlacement[] {
   const frame = ((Math.max(1, Math.floor(age)) - 1) % sprite.frameCount) + 1;

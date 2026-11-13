@@ -1,19 +1,16 @@
-import type { DisplayPlacement, SpriteInfo } from '../assets/asset-pack';
-import { buildDisplayList } from '../assets/display-list';
+import type { SpriteInfo } from '../assets/asset-pack';
+import { DisplayListCache } from '../assets/display-list';
 import { SwfClip, type ClipLine } from '../assets/swf-clip';
 import type { Effect, Vec } from '../core/types';
 import metadata from '../data/effect-clips.json';
 
 const sprites = metadata.sprites as unknown as Record<number, SpriteInfo>;
-const lists = new Map<string, DisplayPlacement[]>();
+const lists = new DisplayListCache();
 const source = {
   spriteInfo: (id: number) => sprites[id],
   displayList(id: number, frame: number) {
-    if (!sprites[id]) return [];
-    const key = `${id}:${frame}`;
-    let list = lists.get(key);
-    if (!list) lists.set(key, (list = buildDisplayList(sprites[id], frame)));
-    return list;
+    const sprite = sprites[id];
+    return sprite ? lists.get(sprite, frame) : [];
   },
 };
 

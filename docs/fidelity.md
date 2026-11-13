@@ -2109,3 +2109,22 @@ tests /81,252 assertions. Empty mask projections skip rendering while preserving
 identity; existing screen-effect camera/zoom pixel checks pass. Opaque finite
 controls do not qualify fractional opacity, arbitrary transforms, complete World
 root ordering, queue draining, ordinary encounters or full-game/Adobe fidelity.
+
+
+## Authored placement lookup performance follow-up
+
+The [authored display cache](authored-display-cache-performance.md) shares numeric
+frame-indexed authored placement rows across AssetPack, effect and pickup
+providers. Rows belong to actual SpriteInfo metadata and contain no live clock,
+clip, parent, entropy or field membership. Existing frame normalization and
+placement construction remain. Clearing the cache drops authored lookup rows.
+
+Both unchanged accelerated mock/supplied-art pilots pass on build
+`OeDq6Mv8QjISX6YXv_BZi`, ending at65,976/64,639 frames with their original input
+digests and boss/badge/Continue assertions. The entire mock proof equals both
+profiled before/after controls. Formatting and sequential rules pass1,299 tests /
+81,252 assertions; all850 source/test/tool hashes match. Hosted failures are
+preserved separately; no assertion, yield, input, frame cap or timeout is altered.
+This local fifth-layer change still requires the complete current-head hosted
+gate and delivery. Normal-time progression, original/Adobe/global-event/RNG and
+whole-game fidelity remain unqualified.
