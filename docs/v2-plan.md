@@ -80,6 +80,10 @@ Each entry is marked **decided** (Ian confirmed it), **proposed** (recommended, 
 | Save and resume | Required. Quitting must not force a restart. | Decided |
 | Save method | Checkpoints, not an exact freeze-frame. Clearing a field always saves. | Decided |
 | Quick switching | Jump between editor, test arena, workshop and game without reloading. | Decided |
+| One game frame | Every area lives inside one frame that is loaded once. Each area has its own address for links and the back button, but moving between areas never reloads the game. | Decided |
+| Which tank is in the address | The editor and the arena take the tank from the address, so a reload or a shared link opens the same tank. Three kinds: a tank in the player's library, a published tank, and one version of a published tank. | Decided |
+| No codes in links | A link names a tank by its id and never carries a tank code, because the code of a large tank is too long for an address. A code is entered through an "enter tank code" window in the game. | Decided |
+| Share button | On tank, publisher and pack pages, in the editor, the arena and the library. A phone opens its share window; a desktop shows a link to copy. A tank that is not published has no link, so it is shared as a code to copy. | Decided |
 | Community enemies | Supported, with the player choosing which sources appear. | Decided |
 
 ### Workshop
@@ -105,7 +109,7 @@ Each entry is marked **decided** (Ian confirmed it), **proposed** (recommended, 
 | Library | Two kinds of entry. A subscribed workshop tank follows its latest version and cannot be edited. A copy is the player's own tank, editable, with no link back to the original. | Decided |
 | Copies | Copying someone's tank, changing it and publishing it as your own is allowed. Exact copies are not refused. | Decided |
 | Tanks during a run | A run keeps the versions it started with. Nothing changes mid-run. | Decided |
-| Tank code | Deterministic: the same build always produces the same code. Two kinds: a full code holding the whole tank, and a workshop reference pointing to a published tank. | Decided |
+| Tank code | Deterministic: the same build always produces the same code. Two kinds: a full code holding the whole tank, and a workshop reference pointing to a published tank. A full code is text to copy and paste, never part of a link. | Decided |
 | Weekly pack | The most used tanks of the past week, top 10 per tier, installable in one click. Other "top X" packs later. | Decided |
 | Weekly pack version | The pack takes each tank's latest version at the moment it is built and keeps that version. | Decided |
 | Weekly pack schedule | Built automatically every Friday at 06:00 UTC. Past weeks stay playable, and the current week is advertised in the game. | Decided |
@@ -126,18 +130,73 @@ V2 work starts after steps 1 and 2. Classic is not this plan's concern from then
 
 ### One app frame
 
-Classic is a single screen-state machine inside `GameShell`. V2 becomes several pages under one persistent frame that holds what must survive navigation: loaded art, audio, the profile and the tank being worked on.
+Classic is a single screen-state machine inside `GameShell`. V2 keeps everything inside one game frame that is loaded once and stays loaded. The frame holds the drawing surface, loaded art, audio, the profile and the tank being worked on. The game, the editor, the test arena and the workshop are areas shown inside that frame.
 
-| Route | Purpose |
+Switching between areas never reloads the game. Going from the editor to the arena and back, or from a workshop tank into a run, swaps what the frame shows and nothing else.
+
+Each area still has its own address, so that it can be linked, bookmarked and reached with the browser's back button. The address changes as the player moves, but the frame does not restart. Only opening a link from outside, or pressing the browser's reload button, loads the game, and that happens once.
+
+| Address | Area |
 | --- | --- |
 | `/` | Menu and the game |
-| `/editor` | New tank editor |
+| `/editor` | Tank editor |
 | `/arena` | Test arena |
+| `/library` | The player's own and subscribed tanks |
 | `/workshop` | Browse community tanks |
-| `/workshop/t/<id>` | One tank |
+| `/workshop/t/<id>` | One tank, latest version |
+| `/workshop/t/<id>/v/<n>` | One version of a tank |
 | `/workshop/u/<handle>` | One publisher |
+| `/workshop/packs` | The weekly packs, this week's first |
+| `/workshop/packs/<week>` | One pack |
+| `/moderation` | The report queue, for moderators and the owner |
+| `/terms`, `/privacy` | What a publisher agrees to, and what data is stored |
 
-Moving between pages must not reload art or lose the tank being worked on.
+The spellings are a first proposal and can change in implementation. What is decided is that each of these has an address.
+
+**No address on purpose.** Settings are a panel over the game. A run in progress has no address either: saves live on the device, so a link to one would mean nothing to anyone else.
+
+**Which tank (editor and arena).** The editor and the arena take the tank from the address. A reload then returns to the same tank, and "can you try this tank?" can be sent as a link.
+
+| In the address | Meaning | Who can open it |
+| --- | --- | --- |
+| Nothing | Editor: a new tank. Arena: the tank used last. | Anyone |
+| `?tank=local:<id>` | A tank kept in the player's library: unpublished, or a copy | Only the player who has it |
+| `?tank=<id>` | A published tank, latest version | Anyone |
+| `?tank=<id>&v=<n>` | One version of a published tank | Anyone |
+
+What the editor does with each:
+
+- **A tank in the library** opens for editing.
+- **The player's own published tank** opens the working copy that becomes its next version. With a version number, the next version starts from that older version.
+- **Someone else's published tank** opens for viewing only, with "copy to my library" to edit it. This keeps the rule that only your own tanks can be edited.
+
+The arena drives the named tank. A second value, `enemy=`, names the opponent, which is how "fight it" on a tank page works.
+
+**No tank codes in addresses.** A link names a tank by its id and never carries the code itself. The code of a large tank is too long for an address: among today's built-in tanks the median classic code is about 1,400 characters and the largest about 32,000, and browsers, servers and chat apps cut off or reject addresses far shorter than that. A tank therefore needs an id before it can be linked, and it gets one by being published.
+
+**Enter tank code.** A code comes into the game through a window, not through an address.
+
+- **Where.** The menu, the library, the editor and the arena each have an "enter tank code" button.
+- **What it does.** The player pastes a code and sees the tank drawn with its stats. From there: copy to my library, open in editor, or try it in the arena.
+- **Both kinds of code.** A full code shows the tank it holds. A workshop reference opens that tank's workshop page.
+- **Kept across a reload.** A tank entered from a code is held on the device as a draft, so reloading the editor or the arena keeps it. It joins the library only when the player saves it.
+- **A bad code** says what is wrong with it and changes nothing.
+
+**Other rules for addresses.**
+
+- **Filters in the address.** The workshop list keeps tier, type and sort in the address (for example `?tier=3&sort=most-used`). A filtered list can be shared, and the back button restores it.
+- **Login return.** After logging in with Discord the player comes back to the area they left, not to the menu.
+- **Removed or missing tanks.** A link to a removed tank, or to a library tank that is not on this device, shows a short message saying so and offers the workshop.
+- **Opening a link changes nothing.** A tank from a link is never added to the library, subscribed to or published without the player choosing it. The same holds for a pasted code, which also passes the same size and part-count limits as any other tank.
+
+**Share button.**
+
+- **Where.** Tank page, publisher page, pack page, editor, arena and library entries.
+- **On a phone** it opens the phone's own share window.
+- **On a desktop** it shows the link with a copy button. The same panel is the fallback wherever the browser has no share window.
+- **Published tank.** The link is the workshop address. It names a version only when the player is looking at a specific one.
+- **Tank that is not published.** It exists only in the player's library and has no id, so there is no link to give. The share button offers the tank's code to copy instead, and says that anyone who enters the code gets a copy of the tank. This is not publishing: the tank does not appear in the workshop and gathers no uses. To share it as a link, the player publishes it.
+- **From the arena** the link opens the arena with the same tank, and the same opponent if one was chosen. This works for published tanks. For a tank that is not published, the other player enters its code in the arena.
 
 ### Starting without the original file
 
@@ -372,8 +431,8 @@ Classic's "Continue" restores design progression only. V2 must resume the run.
 
 **V2 tank code (the determinism is decided; the format is proposed).**
 
-- **Full code.** Holds a whole tank. Entering one puts a copy of the tank in the player's library.
-- **Workshop reference.** A short link or id pointing to a published tank. Using one subscribes to that tank.
+- **Full code.** Holds a whole tank. It is text to copy and paste. Entering one in the "enter tank code" window shows the tank, and the player can then copy it to the library, edit it or try it.
+- **Workshop reference.** A short id pointing to a published tank, which is also what a link carries. Opening one shows the tank's workshop page, where the player can subscribe.
 - **What goes in a full code.** The player-or-enemy flag, and each part in layer order with its type, position, rotation, scale and twin. Twins are referenced by position in the list.
 - **What stays out.** Name, author and ids travel beside the code. Tier, health, speed, reward and difficulty are calculated from the build (workstream K). Each part's radius is looked up from its type and scale, not stored.
 - **The flag stays.** Weapons are registered differently for player and enemy tanks (`src/game/simulation/tank.ts`), so a build is made for one role.
@@ -383,7 +442,7 @@ Classic's "Continue" restores design progression only. V2 must resume the run.
 - **Identity.** A hash of the canonical data identifies a build. It tells whether a library entry is unchanged, and it is the key for drawn-picture caches.
 - **Classic codes.** V2 does not write them. Reading them is optional and low priority.
 
-**Links.** A full code or a workshop reference in a URL opens the tank with "subscribe" or "copy to library", "open in editor" and "try it". Full codes need no server.
+**Links and codes.** A link names a published tank by its id and opens it with "subscribe", "copy to library", "open in editor" and "try it". A full code is never put in a link, because large tanks make it too long. It is copied as text and pasted into the game's "enter tank code" window, which needs no server. The addresses, the ways a link names a tank, the code window and the share button are set out in section 4.
 
 **Link preview images (later, not for launch).**
 
@@ -396,6 +455,9 @@ Classic's "Continue" restores design progression only. V2 must resume the run.
 
 A new editor at `/editor`, built on the existing editor rule modules (`src/game/simulation/editor-*.ts`, `designer.ts`).
 
+- **The address names the tank being edited** (section 4): a library tank, the player's own published tank, or one of its versions. A reload returns to the same tank.
+- **Enter tank code** loads a tank from a pasted code as a draft.
+- **Share** gives a link to the tank when it is published, and its code to copy when it is not.
 - Full-window workspace with zoom and pan.
 - Touch-friendly palette and controls. The classic creator's 20-pixel palette rows are too small for phones.
 - Drafts save automatically.
@@ -414,7 +476,7 @@ Possible later addition on wide screens: editor and live arena side by side.
 - **Damage.** A practice target that does not die and reports damage per hit, per second and in total.
 - **Speed.** A live movement-speed readout with the tank's stats.
 - **Controls.** Invulnerability, enemy fire on or off, restart, slow motion.
-- **Linkable.** An arena link can carry a tank.
+- **Linkable.** The address names the tank being driven and, if chosen, the opponent (section 4). The share button gives a link that opens the arena with the same published tank, so a player can ask someone to try it. A tank that is not published is tried by entering its code.
 
 The engine already supports the core of this: a world can start with a chosen tank, and `spawnEnemy` in `src/game/simulation/world.ts` places a specific design at a point. A mode with waves and progression switched off is needed and has not been scoped.
 
@@ -431,7 +493,7 @@ The engine already supports the core of this: a world can start with a chosen ta
 - **Filters.** Tier and type (player tank or enemy tank). The tier filter is required.
 - **Cards** show tier, the level from which the tank can be used, overall and recent use, and publisher.
 
-**Tank page.** Live drawing, stats, the list of versions, and the actions: subscribe, copy to library, try it (arena), play now, fight it (arena, as an enemy) and report.
+**Tank page.** Live drawing, stats, the list of versions, and the actions: subscribe, copy to library, try it (arena), play now, fight it (arena, as an enemy), share and report. Each version has its own address.
 
 **Publisher page (`/workshop/u/<handle>`).**
 
@@ -693,3 +755,5 @@ Left for the implementation phase, by decision: the balance between tiers, the s
 - Pixi's default filter resolution, graphics-context recovery, and fullscreen on current iPhones.
 - Whether the drawing code can run on a server.
 - Performance of tier 8 tanks on a phone.
+- The length of a V2 full code for large tanks. It no longer limits links, but a very long code may still be awkward to paste into some chat apps.
+- Which browsers offer a share window. The copy panel is the fallback.
