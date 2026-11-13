@@ -128,3 +128,54 @@ exports remain untouched; the ignored `template-audit.json` and
 agreement of the imported template payload/order/conditions with the walked
 bytecode. It is not AVM2 execution, a proof beyond the supplied domain, verification
 of `_‑Wd`'s caller, the full RNG stream or original/Adobe/full-game parity.
+
+## Roster candidate indices and boss selection
+
+`GetLocalTank` (`_-3y.as`2044–2205; matching pcode8301 onward) gathers matching
+records and selects with `_‑Wq(0, candidates.length - 1)`. The pcode at the end
+of that method loads zero and the decremented candidate count before calling
+`_-Wq`. The recreation's `UnitRoster.load` previously used `rng.pick`, whose
+floor-based choice has a different distribution. Candidate selection now uses
+the rounded inclusive index within the existing offline pool. With three Balanced
+candidates and raw 0.33, the source formula chooses index 1; the floor pick chose 0.
+Separate regressions exercise builtin and saved pools and fail before this change.
+
+The pool construction policy is unchanged: the optional saved/builtin choice,
+catalog order, deduplication and empty-pool handling remain explicit offline
+adapters. This correction does not reproduce the retired server request/fallback
+schedule or every original profile/source combination. The full constructor and
+random stream are not established merely by correcting this index formula.
+
+`_-De` (`_-3y.as`2207 onward; pcode9029 onward) calls
+`_-Wq(1, PlayerProfile._-Ri.length - 1)`, even when there is only one boss.
+PlayerProfile initializes a sentinel at index 0, then appends builtin boss records
+(`PlayerProfile.as`408–447). The imported boss catalog omits that sentinel. The new
+`rollBossWave` therefore draws 1 through the compact catalog's length and subtracts 1
+for lookup, retaining scale 1 and the existing eligibility/once-per-session gate.
+Previously selecting `BOSSES[0]` consumed no entropy and shifted following Setup
+and pose draws.
+
+The new World-level regression observes the leading 1..1 draw and verifies that it
+consumes entropy before the builtin boss's Setup. The existing birth-order fixture
+now accepts that source selection prefix while preserving its complete Setup-before-
+pose assertions. All three new encounter-selection regressions fail against the
+preceding layer and pass after the correction. The original AS/pcode files remain
+unchanged; source digests and logs are ignored under
+`reference-captures/wave-selection-audit/encounter-*`.
+
+Formatting, TypeScript and 922 unit tests / 8,478 assertions pass. The independent
+template audit still passes all 1,344 cases and visits all 99 constructor sites.
+Production build `8p5RuFKcBRNGaYCOHVVsR` passes this literal command:
+
+```sh
+BT3_SWF_FILE=/home/ian/Projects/ianwijma/documented-bubble-tank-3/re/bt3/uncompressed.swf bun run test:e2e --config test-results/wave-selection-validation/encounter.config.ts
+```
+
+All 14 mock/supplied-art cases pass, with zero skips, flaky results or page errors.
+Private fixture copies preserve every assertion and change only the transport
+URL; the creator/save/source-option pair uses its original spec and helpers.
+The accelerated pilots reach six upgrades, boss defeat, badge and Continue in
+80,162 mock / 81,551 supplied-art frames. Native history, win and mounted-target
+paint were inspected. Both owned 3165/3166 servers stopped. The ignored report
+and pilot proofs remain under `test-results/wave-selection-validation/encounter-*`.
+These are scoped recreation checks, not ordinary-input or original/Adobe parity.

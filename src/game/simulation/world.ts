@@ -27,7 +27,7 @@ import type {
   WorldEvent,
   WorldMode,
 } from '../core/types';
-import { AVATARS, BOSSES, STARTER } from '../data/catalog';
+import { AVATARS, STARTER } from '../data/catalog';
 import { WEAPONS, type WeaponSpec } from '../data/weapons';
 import emitterData from '../data/emitters.json';
 import { moveActor } from './actor-movement';
@@ -49,7 +49,7 @@ import { tickBullet, starSplit, releaseCarrier, explode } from './projectiles';
 import { createTank, deactivateTankData } from './tank';
 import { spawnPickups, tickPickups } from './pickups';
 import { damageTank } from './damage';
-import { rollWave, UnitRoster } from './waves';
+import { rollBossWave, rollWave, UnitRoster } from './waves';
 import { tickStatusDecoration, tickStatusTail } from './status';
 import fieldGeometry from '../data/field-geometry.json';
 import { nextMapMode, type MapMode } from '../core/minimap';
@@ -1155,7 +1155,7 @@ export class World {
       const boss =
         !deadhead && !this.bossTriggered && this.player.life >= 1000 && this.progression.level >= 5;
       const wave = boss
-        ? { scale: 1, designs: [BOSSES[0]] }
+        ? rollBossWave(this.rng)
         : rollWave(deadhead ? -1 : Math.hypot(col, row), this.rng, this.localTanks, this.roster);
       if (boss) this.bossTriggered = true;
       next = {

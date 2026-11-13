@@ -1,7 +1,7 @@
 import data from '../data/waves.json';
 import rules from '../data/rules.json';
 import batches from '../data/roster.json';
-import { ENEMIES, costs, difficulty, isSupport } from '../data/catalog';
+import { BOSSES, ENEMIES, costs, difficulty, isSupport } from '../data/catalog';
 import type { TankDesign } from '../core/types';
 import { Random } from '../core/math';
 import { tankRosterIdentity } from '../core/tank-identity';
@@ -102,6 +102,10 @@ export function rollWave(
   }
   return { scale: option.scale, designs };
 }
+/** PlayerProfile's boss table has a sentinel at0; _-De still draws for a singleton. */
+export function rollBossWave(rng: Random): { scale: number; designs: TankDesign[] } {
+  return { scale: 1, designs: [BOSSES[rng.int(1, BOSSES.length) - 1]] };
+}
 export class UnitRoster {
   units = new Map<string, TankDesign[]>();
   stage = 1;
@@ -127,7 +131,7 @@ export class UnitRoster {
       const pool = local.length && this.rng.int(1, 2) === 1 ? local : builtin;
       if (!pool.length) continue;
       const list = this.units.get(key) ?? [],
-        tank = this.rng.pick(pool);
+        tank = pool[this.rng.int(0, pool.length - 1)];
       if (!list.some((t) => t.id === tank.id)) list.push(tank);
       this.units.set(key, list);
     }

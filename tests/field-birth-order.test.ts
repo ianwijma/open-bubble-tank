@@ -13,6 +13,7 @@ test('fresh boss field completes weapon Setup before drawing its display pose', 
     fighter = 0;
   world.rng.int = (minimum, maximum) => {
     draws.push([minimum, maximum]);
+    if (minimum === 1 && maximum === 1) return 1; // _-De's singleton boss selection.
     if (minimum === -200 && maximum === 200) return [50, -30][position++];
     if (minimum === -180 && maximum === 180) return 90;
     if (minimum === 0 && maximum === fighters.length - 1) return [0, 2][fighter++];
