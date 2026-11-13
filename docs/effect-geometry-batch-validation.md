@@ -3,8 +3,8 @@
 The fifth combined layer includes the exact published heads of PRs155–158:
 `8a0b055`, `8ec5406`, `03d935f` and `bfc5fa6`. Master remains
 `897d2e741b8a1d23f563f8bb8a2e6bd684932b9b`; the preserved recreation checkpoint
-remains `22d9def7321bada8a2148a69a79a3392682bb390`. The final combined PR and its
-fresh hosted gate are still pending. No intermediate success substitutes for it.
+remains `22d9def7321bada8a2148a69a79a3392682bb390`. The fifth combined branch is `stack/effect-geometry-05`; its
+fresh hosted gate remains pending. No intermediate success substitutes for it.
 
 ## Combined local failure and measured repair
 
@@ -26,26 +26,41 @@ these are diagnostic observations, not a directly comparable uninstrumented
 acceptance duration. The profile, progress samples and unchanged test budgets
 are preserved under `test-results/fifth-pilot-profile/`.
 
-The repair replaces only the effect owner's yielded weak-reference traversal
-with direct Set iteration. Both frame phases still dereference and prune in the
-same order, include the same constructions, retain the same weak ownership and
-advance every surviving timeline. No lifetime culling, seed, input, frame cap,
-clock phase, provider, assertion or timeout changes are made. A five-round local
-300-effect/2,000-frame timing control retains identical full tree/placement,
-frame and age digests before and after. Its median588.42→572.09ms is a finite
-Bun measurement, not a browser speed guarantee. All46 effect/registration tests
-pass9,737 assertions. The actual browser gate still needs to demonstrate margin.
+The direct-iteration candidate was rejected. Although its five-round local
+300-effect/2,000-frame timing control retained identical complete tree, placement,
+frame and age digests (median588.42→572.09ms), the actual combined browser run
+failed earlier: mock readiness exceeded280 seconds at frame55,000, level6,
+life444 and841 kills. It passed53 earlier cases; the remaining17 were deliberately
+stopped/not run. This is not a passing71-case run. Its source isce508d2 and build
+`Lwt83ZMwJev2lOmpglzJ0`; the report, trace and input hashes remain under
+`test-results/fifth-integration-final/`. The effect loop was reverted after the
+runner stopped. Fewer generator allocations are not an established browser fix.
 
-The literal combined browser command is:
+An isolated bundle-only per-stage MessageChannel experiment also failed the mock
+readiness limit, at frame37,000/level5. No tracked accelerator code was changed.
+Its terminal log and exact transformation remain under
+`test-results/stage-task-diagnostic/`. A subsequent task-only probe reused that
+output directory and overwrote the diagnostic trace/report; those artifacts are
+not claimed as preserved. The original combined failure and direct-iteration
+failure remain intact. The task-only probe measured1,000 message tasks in5.1ms
+and100 nested zero-delay timers in384.9ms; it does not explain the game slowdown.
+No GC or scheduler cause is established by these experiments.
 
-```sh
-BT3_SWF_FILE=/home/ian/Projects/ianwijma/documented-bubble-tank-3/re/bt3/uncompressed.swf \
-  bun run test:e2e --config test-results/fifth-integration-final/playwright.config.mts
-```
+Both experiments are discarded. Final `src/` and `tools/` match actor delegate
+commit `f5b5bbf373bbe3f5fca40eb1eff4272a3150bf7f` exactly. That source passed62 broad
+mock/SWF cases, including both accelerated wins, then six final actor/orbital/
+contact cases. The parent70/71 result adds combined text/query coverage but
+retains its actual native timeout; it is not relabeled green. All1,291 rule tests
+and75,956 assertions pass. A final formatter invocation crashed in the Bun
+launcher; the recorded retry completed successfully without code differences. No assertions, timeouts, source inputs, frame caps,
+providers, simulation phases or lifetime ownership are weakened.
 
-Private specs preserve current source assertions and budgets; only their imports
-and owned localhost ports are routed. Results of the repaired combined run and
-the eventual exact-head hosted gate must be recorded before merging.
+The local timeout is an unresolved accelerator performance limit, without an
+observed gameplay stall or proven functional regression. Publish the final
+combined PR with this limitation explicit and require its fresh exact-head
+hosted **Rules, build and mock browser** job plus review inspection before one
+master merge. The hosted gate does not certify the manual supplied-file pilot or
+complete-game performance. Keep that acceptance work open after delivery.
 
 ## Remaining boundaries
 

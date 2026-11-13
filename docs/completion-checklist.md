@@ -8,14 +8,14 @@ scope.
 
 ## Current snapshot
 
-- Checked: 2026-11-14 01:33 AEDT, Australia/Sydney.
-- Inspected local source HEAD: `fcb6c4fffa9d11b76222184489f3d55f4f4fded2`, with the measured effect-iteration repair pending locally.
-- Dirty state at inspection: one production file replaces generator traversal with direct weak-reference iteration; actor phase and batch validation documentation are updated separately.
-- Live source: [main thread](t3-thread://v2/a713d3ff-a5f3-472b-97bd-83fd799395a5/93d9eb80-8a0a-44ac-8262-07b1ceb7992a). This snapshot records current local evidence; published and merged evidence remain distinct.
-- Delivery: PRs150–154 merged; PRs155–158 remain open. The fifth combined PR is not published. The first combined71-case run passed70 and timed out in the advancing SWF pilot; the measured repair passes1,291 rule tests and awaits the combined browser rerun. PR158's orbital fixture repair passes both combined browser modes locally, without retroactive hosted success.
+- Checked: 2026-11-14 02:00 AEDT, Australia/Sydney.
+- Inspected source: final production/fixture files match `f5b5bbf373bbe3f5fca40eb1eff4272a3150bf7f`; the rejected `ce508d2` effect-iteration change is reverted locally.
+- Dirty state at inspection: the effect loop reversion and validation/checklist metadata are pending commit. No other production changes are pending.
+- Live source: [main thread](t3-thread://v2/a713d3ff-a5f3-472b-97bd-83fd799395a5/93d9eb80-8a0a-44ac-8262-07b1ceb7992a). Local, published and merged evidence remain distinct.
+- Delivery: PRs150–154 merged; PRs155–158 remain open. The fifth combined PR is being finalized for the required hosted gate. Parent combined validation passed70/71; the advancing SWF pilot timed out. Source-identical delegate validation passed62 broad plus6 final cases with both pilots winning. The manual accelerator performance limit remains open; no failed run is relabeled green.
 - Packages complete: **0/7**.
 - Checkpoints complete: **7/21**. These are completion gates of unequal size, not a percentage of effort or a PR estimate.
-- Changes since previous update: retained actor lifetime correction integrated; the combined pilot runtime-budget failure is preserved and profiled. Original actor constructor/EXIT phase discrepancies are confirmed on both current and restored baseline code. No checkpoint changes.
+- Changes since previous update: rejected two accelerator/performance experiments, restored the verified production source, and recorded all results and evidence limits. Original actor constructor/EXIT phase discrepancies remain open. No checkpoint changes.
 
 ## Fixed overview
 

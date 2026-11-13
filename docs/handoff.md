@@ -6,6 +6,22 @@ Use [delivery](delivery.md) for the current five-layer workflow: build dependent
 
 The [retained display batch](retained-display-batch-validation.md) landed through one PR154 merge897d2e741b8a1d23f563f8bb8a2e6bd684932b9b. Exact-head pull-request run43407815305 attempt1/job131826378222 succeeded on73cdc4ffe42e4ce8a7bfc03d72df5e7877f0de8f. Fresh full review/comment/thread reads found one informational CodeRabbit skip and zero reviews/inline findings. Fetched master has the identical tested treee67613371458570ad8cb339c1a5f42b4dd38573d; all five exact heads are ancestors and GitHub marks PRs150–154 merged. All watches for that batch are stopped. Legacy22d9def7 is unchanged. Do not act on delayed old notifications or recreate intermediate watches. The source-preserving pilot repair and its original failures retain their actual build identities in the batch record; this delivery does not complete the full recreation objective.
 
+The current fifth combined branch is `stack/effect-geometry-05`, containing the
+exact PR155–158 heads plus qualified native text binding, retained generic effects,
+the physical orbital-fixture repair and retained actor/mount clocks. Its827 tracked
+code/test files match actor delegate commitf5b5bbf exactly. That source passed62
+broad and6 final mock/SWF cases, including both accelerated wins. Parent combined
+validation passed70/71 with an advancing native pilot timing out at64,000 frames;
+that failure remains real, not green. The direct-loop performance candidate and
+per-stage MessageChannel experiment were rejected; neither belongs to final
+production/fixture source. Formatting and1,291 tests /75,956 assertions pass. Read
+[the batch validation record](effect-geometry-batch-validation.md) for preserved
+failures, the overwritten diagnostic trace limitation and the required fresh
+hosted named-job/review gate. Keep master897d2e7 and legacy22d9def fixed until that
+final combined gate succeeds, then merge once. The existing constructor/EXIT
+phase discrepancy, under-avatar paint and full-game/ordinary acceptance remain
+open. Do not resurrect old PR watches or open a sixth layer.
+
 The first next-stack foundation is prepared for `stack/effect-geometry-01`, targeting master897d2e7. Its local continuation remains `t3/retained-effect-poses-draft`, rebased onto that merged master with the entire tree unchanged62c16cb3dbf7d6e781e457fd2b9fcf772bce3127. Signed replay stalled in1Password; the parent restarted the rebase with explicit --no-gpg-sign under the authorized fallback. Current rebased commits are25d0786 (original camera), ca2e546 (effect metadata),174e62e (registration precision),d91bf96 (physical population),9ad13eb (mask qualification gap). Old hashes remain historical references, not current branch tips. The original [generic-effect clock qualification](effect-clock-original-reference.md), child69b5615, is picked asb20027b with both fidelity sections preserved. Parent independently reverified both owned capture copies:21,636 rows/259,632 binary Numbers each, REA events still equality-ineligible. The59 frame and45 identity/correspondence candidate differences are unrepaired;399 original lookup holes and unavailable isPlaying reads stay explicit. No blanket native-pose reconstruction is justified by matching root clocks. The separate mask task remains active on3915/9915 and was told the authorized new master checkpoint. It must not touch completed effect task3875/9875 resources.
 
 The local [effect registration position correction](effect-registration-position-reference.md) now preserves queued Number coordinates while applying signed-twip X/Y setters at CreateEffect attachment. Two new regressions fail before and pass after; format/check passes1,140 tests /17,368 assertions. The literal affected browser run passes12 mock/supplied-art cases on buildcnC5ZnrgsKzrSI2ZEdSt-, zero skips/flaky results, with804 unchanged input hashes and3775/3776 stopped/free. Original generic-clock qualification is now complete, with owner/descendant integration still open; no PR/push/deployment or published-head change occurred.
