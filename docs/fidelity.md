@@ -1709,3 +1709,18 @@ The corrected PR153 head34955e5 passes1,129 unit tests /16,312 assertions and75 
 The independent supplied-art repeat at34955e5 also reaches level3/life4 with a retained transit age2. Its read-only samples identify the state after first secondary-help Close: source mode becomes ordinary while movement/birth gates remain set. Cleared-field coasting with pending rewards precedes upgrade during the crossing. The [fifth integration](retained-display-batch-validation.md) preserves production source behavior and changes only the accelerated pilot to steer inward until forced rewards arrive. Two new public-input regressions fail before and pass after; the existing source-state case now also pins ineffective direction input rather than silently resuming travel. Formatting/check pass1,131 tests /16,325 assertions.
 
 Fresh literal build-Op3ze2z_uXkObma46lfY passes both affected mock/supplied-art playthroughs at68,999/67,433frames with the same offered designs, all six levels, help once, no downgrades and Boss Badge. All729 prebuild inputs match, production src has no difference from34955e5, and owned3775/3776 are free. The74 unaffected prior cases retain their original build identity; this is not one new76-case passing run. No controller skip, production recovery, provider/RNG/seed/frame-cap/timeout/assertion relaxation is used. Original failing trajectories remain available. Hosted combined-head validation, ordinary realtime earned progression and original/Adobe/full-game parity remain separate requirements.
+
+## Original ordinary camera numeric qualification
+
+The distinct [world-motion original-method control](world-motion-original-reference.md)
+executes actual public AdjustBubblefieldObjects161 times with the genuine original
+vector and background dependencies. Four fresh source Number sequences and one
+controlled teleport freeze400 rows /12,400 binary Numbers; original parent
+Position at40 is170.55 per positive axis, supporting the receiver-local bridge.
+Two fresh captures preserve original bytes/order/ABCs/bindings and match every
+frozen word;15 adversarial mutations reject. Candidate public-step checks and
+finite Point replay match, with12 constructor-versus-attachment mask setup
+differences explicit. Formatting/check passes1,136 tests /17,347 assertions.
+Production is unchanged. REA events remain incomplete/equality-ineligible;
+original World.Run, ordinary/native progression/controller causality, global
+constructor/event/RNG, Adobe/pixel/audio and full-game parity remain unproved.
