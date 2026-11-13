@@ -8,11 +8,12 @@ scope.
 
 ## Current snapshot
 
-- Checked: 2026-11-14 02:56 AEDT, Australia/Sydney.
+- Checked: 2026-11-14 03:17 AEDT, Australia/Sydney.
 - Inspected master: `e01a7fe403b1fb1dc5c31ada8ce732206b3d5439`, identical tested tree `e41154b62b78bffea9e5036f61b69b9f62f2b12e`; local draft starts from this merge.
+- Inspected local HEAD: `9357ca255aec29cce9519ed7d523769445f9936f`; post-merge coordination metadata only.
 - Dirty state at inspection: clean before this delivery/status metadata update. No uncommitted production changes.
 - Live source: [merged PR160](https://github.com/ianwijma/open-bubble-tank/pull/160) and [main thread](t3-thread://v2/a713d3ff-a5f3-472b-97bd-83fd799395a5/93d9eb80-8a0a-44ac-8262-07b1ceb7992a). Local drafts remain separate from delivered code.
-- Delivery: PRs155–158 and160 are merged through one master merge after exact-head run43449089556/attempt1/job131966365335 success and fresh review/ref checks. All five heads are ancestors, the tested tree is delivered and their watches are stopped. Legacy `22d9def` remains unchanged. Hosted rules:1,286 passed/5 source-SWF skips; browser selection:150 passed/4 skips. The manual native accelerator timeout remains open.
+- Delivery: PRs155–158 and160 are merged through one master merge after exact-head run43449089556/attempt1/job131966365335 success and fresh review/ref checks. All five heads are ancestors, the tested tree is delivered and their watches are stopped. Legacy `22d9def` remains unchanged. Hosted rules:1,286 passed/5 source-SWF skips; browser selection:150 passed/4 skips. The master Vercel deployment reports success; team-history access returned403 and build-count totals remain unverified. The manual native accelerator timeout remains open.
 - Packages complete: **0/7**.
 - Checkpoints complete: **7/21**. These are completion gates of unequal size, not a percentage of effort or a PR estimate.
 - Changes since previous update: delivered the five-layer effect/geometry batch. Native under-avatar and actor-phase repairs have returned as local drafts. Fresh home capture rejected8/8 scaled-ancestor frames; capture qualification is next. No checkpoint changes: subsequent required fidelity changes and whole-game acceptance remain unfinished.

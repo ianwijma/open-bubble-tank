@@ -29,7 +29,12 @@ no approval. Latest-attempt success, clean mergeability, unchanged master base a
 exact head were revalidated immediately before the merge. No exact-head Vercel
 status existed; suppression remains configured for `stack/**`, without an
 authenticated provider-skip claim or quota waiver. The one master merge retains
-its normal automatic deployment behavior.
+its normal automatic deployment behavior. GitHub's Vercel status for the
+merged master reports **success / Deployment has completed**, with
+[deployment details](https://vercel.com/ian-wijmas-projects/open-bubble-tank/B2Uc5dvMBsu5rzMZLqdpfZ48QFFK).
+The connected Vercel team-history API returned403; per-branch deployment
+inventory/counts therefore remain unverified. This is an API access limitation,
+not a deployment failure or quota receipt.
 
 ## Combined local failure and measured repair
 
