@@ -23,7 +23,7 @@ Paths below are relative to the sibling research repository's `re/bt3`.
   physical projectile-parent membership distinguishes the initialized retained
   shot from a declined or removed one. A queued dead flag alone does not rearm
   the mount. A detached wrapper's child remains parented.
-- `_‑Jp.TestForCollision:183–197`, matching pcode `ofs0049 → ofs0039 → ofs0016`,
+- `_‑Jp.TestForCollision:175–190`, matching pcode `ofs0049 → ofs0039 → ofs0016`,
   lazily reads the captured `myMaster` object from special data, then caches
   that object's current life before testing **the owning Bubblefield's
   contains(master)**. It does not look up a replacement by ID or use current
@@ -99,3 +99,16 @@ arbitrary matrices, constructor/event/RNG scheduling, pixels/audio or
 original/Adobe/full-game equivalence. Those remaining contracts must not be
 silently inferred from these tests. Hold master for the final combined head of
 the five-layer delivery batch.
+
+## Original source identities
+
+| Research input | SHA-256 |
+| --- | --- |
+| `export_scripts/scripts/_-ct/_-3C.as` | `3afb97c64c581dde141193e8bf477eaacf99b8844119282a6e2f3f143949aa41` |
+| `export_pcode/scripts/_-ct/_-3C.pcode` | `11eb40f0fba080820e5234c3add2b933f5af5678296222430cf352dee4f87e07` |
+| `export_scripts/scripts/_-14/_-Jp.as` | `662433e4ac45a96a1ccec06cb03b318fb14dc68a55d8f59ffe1602a07b3247ce` |
+| `export_pcode/scripts/_-14/_-Jp.pcode` | `b13df74ba8b32c00d6d9a3950bbd2498f4fbd7d9f6502a229070cd6aa154fb63` |
+| `export_scripts/scripts/_-BL.as` | `21f55ae5f710002b5c9bc24e81fedc4e611d7ceeac493fa44fd86016bb9e1133` |
+| `export_pcode/scripts/_-BL.pcode` | `3b365d3e31350a90d69f814b9692c88af83e600ae957e3bea3645c69114fb64f` |
+| `export_scripts/scripts/_-0D.as` | `a3cb66e601053b5c615003b01077cfc96752554f85352a62feb278004750ac24` |
+| `export_pcode/scripts/_-0D.pcode` | `5b30ed4cca2a726a56569c8da70a24c652282c92836692cdbd6fd1f97fc8b5ae` |

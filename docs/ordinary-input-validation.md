@@ -111,3 +111,25 @@ This is scoped current-stack ordinary-input evidence. It establishes neither ful
 progression nor full original/Adobe, synchronized runtime, pixel, audio,
 constructor/event/RNG or complete-game parity. It does not replace the combined
 integration gate or the original-runtime comparisons still listed in fidelity.
+
+## Observer audit follow-up
+
+A read-only audit of the completed4353d49 recording identified concrete observer
+failures: the already zoom-scaled62.5px self-exclusion disk masks separate close
+blue and gold enemies; an object can be labeled both actor and pickup; field-wall
+contours can be selected as actors; and earlier pickup steering competed with
+recognized threats. Screen/world units and approximately half-second feedback
+cycles also interact with boundary policies. Simply halving every constant is
+not a validated remedy.
+
+The ignored audit at
+`/home/ian/.t3/worktrees/open-bubble-tank/t3-4ce85804/reference-captures/observer-audit/audit.md`
+links exact original screenshots, coordinates and one-based trace lines. It
+analyzed337 retained PNGs and5,924 records without starting another game or
+altering original evidence. Its recommended next step is an offline observer
+correction, followed by a six-minute public-input calibration run with retained
+per-decision images and explicit transit intent. The old45-minute attempt is
+still partial evidence; causal damage attribution and full progression remain
+unproved. The audit checkout lacked Prettier, so its attempted format command
+failed without installing dependencies or changing tracked files. The parent
+later ran the complete formatting/check workflow when integrating this record.
