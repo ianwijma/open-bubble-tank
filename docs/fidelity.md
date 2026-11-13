@@ -1906,3 +1906,21 @@ adds only evidence/tools after the10-case production browser run; its pick does
 not change that tested production/fixture code. These remain finite comparisons,
 not complete field or original/Adobe/gameplay parity.
 
+## Removed actor attachments cannot retain phantom geometry
+
+The [physical attachment correction](actor-attachment-membership-reference.md)
+requires actual status/infection/forcefield keys for current contact and distinct
+legacy film/impact keys for contact and Script bounds. Retained logical records
+and positive flags no longer invent absent children. Four public-contact and one
+bounds regression fail before; all12 focused cases pass after. Genuine supplied
+artwork additionally proves contact/renderer removal and explicit reattachment
+while logical state remains. These are controlled reconstruction states, not a
+fresh original encounter or broader lifetime qualification.
+
+Format/check passes1220 tests /38816 assertions; literal affected E2E passes16
+mock/SWF cases with zero skips/flaky results, build `Ci7L3avYUTRSJpt48ArqF` and800
+unchanged input hashes. Existing positive geometry, native mask/root/stroke,
+ownership, protection and actual Shield Turret save controls remain intact.
+Complete actor geometry/clock separation, Engine text bounds and ordinary/full-game
+parity remain unfinished. This local follow-up does not alter published PR157.
+

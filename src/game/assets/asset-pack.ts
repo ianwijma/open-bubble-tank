@@ -21,7 +21,7 @@ import {
   type ScriptBoundsSource,
 } from './projectile-bounds';
 import { protectionRadius, protectionScale } from '../core/protection-size';
-import { legacyShieldFilm, shieldClipFrame } from '../core/shield-art';
+import { shieldClipFrame } from '../core/shield-art';
 import { MINIMAP } from '../core/minimap';
 import { HUD } from '../core/hud';
 import { WIN_SCREEN } from '../core/win-screen';
@@ -1367,13 +1367,14 @@ export class AssetPack {
         this.symbolHit(id, age, point.x / scale.x, point.y / scale.y, 0, undefined, 0, childInverse)
       );
     };
-    const film = legacyShieldFilm(tank);
-    const hasHit = film || tank.displayChildren.includes('shield-hit');
-    const diameter = !hasHit
-      ? 0
-      : tank.side === 'player'
-        ? (tank.shieldDiameter ?? this.protectionRadius(tank) * 2)
-        : tank.radius * 2;
+    const film = tank.displayChildren.includes('shield-film');
+    const hasHit = tank.displayChildren.includes('shield-hit');
+    const diameter =
+      !film && !hasHit
+        ? 0
+        : tank.side === 'player'
+          ? (tank.shieldDiameter ?? this.protectionRadius(tank) * 2)
+          : tank.radius * 2;
     for (const clip of tank.shieldClips) {
       if (!tank.displayChildren.includes(clip.key)) continue;
       if (this.mode === 'swf') {
@@ -1386,7 +1387,7 @@ export class AssetPack {
         return true;
     }
     if (this.mode === 'swf') {
-      if (tank.statusDecoration) {
+      if (tank.statusDecoration && tank.displayChildren.includes('status')) {
         const decoration = tank.statusDecoration;
         for (const [index, mark] of decoration.marks.entries()) {
           const point = rotate({ x: x - mark.x, y: y - mark.y }, -mark.angle);
@@ -1398,7 +1399,7 @@ export class AssetPack {
             return true;
         }
       }
-      if (tank.status.infect > 0) {
+      if (tank.status.infect > 0 && tank.displayChildren.includes('infection')) {
         const point = rotate({ x, y }, -tank.infectionAngle),
           scale = (tank.radius * 1.5) / 36;
         const childInverse = descendContact(inverse, contactTransform(tank.infectionAngle, scale));
@@ -1431,7 +1432,11 @@ export class AssetPack {
         return true;
     } else if (film && Math.hypot(x, y) <= (Number.isNaN(diameter) ? 130 : diameter) / 2)
       return true;
-    if (tank.forcefieldAttached && tank.design.parts.some((part) => part.type === 5005)) {
+    if (
+      tank.forcefieldAttached &&
+      tank.displayChildren.includes('forcefield') &&
+      tank.design.parts.some((part) => part.type === 5005)
+    ) {
       const maskHit = tank.design.parts.some((part) => {
         const point = rotate(
           { x: (x - part.x) / part.scale, y: (y - part.y) / part.scale },

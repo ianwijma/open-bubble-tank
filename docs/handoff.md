@@ -157,3 +157,11 @@ code's literal10-case crossing/Main/contact browser validation is recorded in th
 public-boundary reference. Third stack branch `stack/effect-geometry-03` will
 carry this coherent query/native-evidence layer above PR156, with no master merge
 until five layers are assembled and the final combined head is green.
+
+Local continuation above PR157 fixes [phantom removed-attachment geometry](actor-attachment-membership-reference.md).
+Contact and legacy shield Script bounds now require actual physical children,
+matching the existing renderer owner. Retained records/flags cannot stand in for
+parentage. Four contact regressions plus one bounds case fail before;1220 rule
+tests and16 affected mock/SWF browser cases pass after, with800 build inputs
+unchanged. This does not complete actor pose/clock composition. Keep this coherent
+fix with the following stack layer and retain the final five-layer merge gate.

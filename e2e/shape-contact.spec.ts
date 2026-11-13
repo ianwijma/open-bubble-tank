@@ -127,6 +127,17 @@ for (const native of [false, true])
       retainedProjectileMiss: false,
     });
     expect(proof.primitives.transparentInk).toBe(0);
+    expect(proof.membership).toHaveLength(native ? 6 : 1);
+    for (const control of proof.membership) {
+      expect(control.beforeViews).toBeGreaterThan(0);
+      expect(control.afterViews).toBe(0);
+      expect([
+        control.before,
+        control.after,
+        control.restored,
+        control.logicalStateRetained,
+      ]).toEqual([true, false, true, true]);
+    }
     expect(proof.primitives.cacheSize).toBe(256);
     expect(proof.primitives.releasedCache).toBe(0);
     expect(proof.panels).toHaveLength(native ? 8 : 3);
