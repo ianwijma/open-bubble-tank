@@ -95,6 +95,68 @@ artifact manifest SHA256 is
 
 ## Fresh production preflight
 
-The independent live preflight, source/build/loaded-response identity, decoded
-pixels, bounded clock interval and cleanup record are appended after acquisition.
-Only one fresh public-UI home attempt is authorized for this correction.
+Exactly one new public-UI home attempt completed in this checkout under ignored
+`reference-captures/current-build-home-scaling-20261114-01/`. Shared preview status
+and an owned blank-tab entry were checked; its exposed API cannot supply actual
+Page screenshot options/sidecars. That tab was closed, and the documented owned
+Playwright fallback was used without CDP. No other browser or port was touched.
+
+Source head `fe2286440a123953cba052fa34fa893220a898a5`, tree
+`fa4a6fd14f7ad145095dee0a36b25946d3ce46f8`, built production ID
+`41Gv6C5peRp5gFn-_ysqz`. All921 tracked inputs were frozen before build and
+unchanged after capture; SWF and acquisition-script hashes also remained fixed.
+The SWF digest is
+`f5827841c682f988f23dcf470ab4ab59c1ffc497acb4ca0f21077d03f942c153`.
+All11 actually loaded JS response digests match the frozen pre-navigation build
+and final disk bytes. Their sorted URL/NUL/digest/LF aggregate is
+`ed6f1bb20eb604ef1b97978f71497ba729c8cbf1add00c4508f6d8d50770a870`.
+Chrome157.0.8103.38, Playwright1.64.1 and Bun1.3.9 were reused without installs.
+
+Exact orchestration/acquisition/verification commands and argument arrays are
+retained in `run.py`, `run.json`, `capture.mts`, `verify.py` and decoder reports:
+
+```sh
+python3 reference-captures/current-build-home-scaling-20261114-01/run.py
+# runner: bun run build
+# runner: node node_modules/next/dist/bin/next start --hostname 127.0.0.1 --port 4535
+# runner: bun reference-captures/current-build-home-scaling-20261114-01/capture.mts
+python3 tools/decode-capture-pngs.py --output reference-captures/current-build-home-scaling-20261114-01/independent-decodes.json reference-captures/current-build-home-scaling-20261114-01/*.png
+python3 reference-captures/current-build-home-scaling-20261114-01/verify.py
+```
+
+The fresh default context used1000×900/DPR1 and the real file input, normal
+Play/Choose-your-tanks PLAY and Close-secondary-help buttons. No settings changed,
+movement/fire keys were held or aim override performed. Eight home captures span
+8,145ms from first browser-before to last browser-after on one monotonic origin.
+All eight have valid endpoint geometry, bbox `(60,78.5,880,720)`, scale1.6 and
+enclosure `[60,940)×[78,799)`. The extra pause PNG is also geometry-valid.
+All nine original1000×900 PNGs independently decode identically in Pillow/FFmpeg;
+sidecar/persisted-byte hash/IHDR checks pass. Independent literal layout math
+checks the mapping; offline contrast scans bracket painted stage edges at
+X60–939 and Y79–798 on every home image. Those integer paint brackets do not
+independently resolve the unknown game's fractional edge coverage; the synthetic
+fiducials establish that bounded fractional contract.
+
+Inspected original home00/home07 and pause PNGs show the full home tutorial,
+compact map and central yellow/blue paint. HUD entry paint changes/fades, so
+stable pixels are explicitly unproved. The Pause dialog was publicly verified
+and visually says paused; its existing temporary text remains visible. No actor
+identity, classifier, controller or progression was attempted.
+**currentHomeOnly=true, overlapQualified=false, controllerAllowed=false.**
+
+The helper hash is
+`80c56097f2f62d62e9063fc94e2ef0046036a1ff16782d70165ad8be2d709603`.
+The acquisition report SHA256 is `006cf99b4717f022a96b99ca7b18fada054152f1fde9c2619a18649f9ffd64f7`;
+synthetic qualification-summary SHA256 is `89e3da32ad16f8300c9b711c04959302d973e06a1d5aca4259b9a9ad2b28deb3`.
+Both families retain hash inventories and all rejected/mutant/raw evidence.
+The pre-existing57-entry artifact inventory still matches, including all eight
+rejected old home sidecars; no prior evidence was rewritten or relabeled.
+
+Finally blocks released inputs, verified/captured public Pause, closed context
+and browser, then stopped the owned server. All24 observed PID/start-time
+fingerprints and referenced crashpad2670818 are absent; ports4535/10535 were
+verified free before and after. Process sampling is not a continuous transient
+process audit. The temporary dependency symlink is removed at handback; parent
+.next/resources and original inputs were never written. No remote action,
+controller/ordinary playthrough, original/Adobe/pixel-equivalence/global-event or
+full-game completion claim belongs to this correction.
