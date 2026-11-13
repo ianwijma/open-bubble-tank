@@ -132,3 +132,14 @@ generic effects, complete native/mock/text geometry, public root-coordinate
 mapping and eventual browser integration remain distinct work. Preserve the
 unchanged original fixtures and historical stash; never restore the old
 all-active-mask policy from it. No full-game or Adobe parity follows.
+
+Local follow-up above PR156 preserves [actual text settings](text-contact-settings-reference.md)
+and adds [native retained geometry](retained-native-geometry-reference.md). The
+geometry reader consumes already constructed clips in current render order and
+rejects unresolved children/content without creating or advancing artwork. The
+affected browser run passes51 original-mask vector controls and13 retained stroke
+cases, alongside the intact primitive/protection/projectile checks. All1200 rule
+tests pass;2 mock/supplied browser cases pass without skips/flakes and777 build
+inputs match. This remains local, with no additional PR or master update. Bind
+complete text/root-coordinate and actor/effect owners before gameplay migration;
+the original-runtime coordinate and text qualifications are separately delegated.

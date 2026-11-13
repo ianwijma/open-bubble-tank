@@ -9,6 +9,8 @@ import { mockCreditsLeaf } from './mock-credits';
 import type { Projectile, Rect, Tank, TankDesign, TankPart } from '../core/types';
 import { Random, rotate } from '../core/math';
 import { SwfClip } from './swf-clip';
+import { retainedClipGeometry } from './retained-geometry';
+import type { DisplayGeometryContent } from '../core/display-geometry';
 import { partSnapshot } from './part-snapshot';
 import { PartPlayback } from './part-playback';
 import {
@@ -1114,6 +1116,35 @@ export class AssetPack {
   }
   clipScriptBounds(pose: SwfClip) {
     return scriptBounds(this.scriptGeometry, pose.id, pose.age, undefined, undefined, [], 0, pose);
+  }
+  /** Geometry of a caller-owned retained native pose, without playback or alpha
+   * fallbacks. Text/bitmap/dynamic graphics require their own qualified provider.
+   */
+  nativeClipGeometry(pose: SwfClip) {
+    if (this.mode !== 'swf') throw new Error('Native geometry requires supplied SWF definitions');
+    return retainedClipGeometry(pose, {
+      isSprite: (id) => this.sprites.has(id),
+      leaf: (id, ratio): DisplayGeometryContent | undefined => {
+        const morph = this.morphs.get(id),
+          shape = morph ? undefined : this.shapes.get(id),
+          bounds = morph?.startBounds ?? shape?.bounds;
+        if (!bounds || (!morph && !shape?.runs)) return undefined;
+        // Script bounds keep the declared morph start rectangle. Contact uses
+        // the actual placement ratio through the existing native shape visitor.
+        const selectedRatio = Number.isFinite(ratio)
+          ? Math.max(0, Math.min(65535, Math.round(ratio)))
+          : 0;
+        return {
+          kind: 'leaf',
+          bounds: { ...bounds },
+          hit: (point, inverse) => {
+            const result = this.leafContact(id, point.x, point.y, selectedRatio, inverse);
+            if (result === undefined) throw new Error(`Unresolved native leaf geometry ${id}`);
+            return result;
+          },
+        };
+      },
+    });
   }
   tankDisplayBounds = (tank: Tank) =>
     tankScriptBounds(tank, this.scriptGeometry, {

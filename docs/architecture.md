@@ -390,3 +390,10 @@ application caller. Runtime mask references retain independent ancestry; public
 receiver attachment and argument mapping are explicit. The
 [traversal boundary](field-query-traversal-reference.md) records the frozen mask
 controls and remaining complete-provider/root-coordinate qualification.
+
+`assets/retained-geometry.ts` projects already constructed `SwfClip` instances in
+current render order without clock/constructor fallbacks. AssetPack's native
+binding supplies original declared leaf bounds and geometric fill/stroke contact;
+unsupported content rejects rather than reading raster alpha. The
+[native boundary](retained-native-geometry-reference.md) records actual vector
+comparisons to frozen mask controls and remaining text/dynamic-owner integration.

@@ -17,6 +17,8 @@ import { decorateStatus, applyProjectileStatus } from '../../src/game/simulation
 import { detachForcefield } from '../../src/game/simulation/forcefield';
 import { createProjectile } from '../../src/game/simulation/create-projectile';
 import { projectileTankContact } from '../../src/game/simulation/projectile-contact';
+import { nativeMaskGeometryProof } from './native-mask-geometry';
+import { displayGeometryHit } from '../../src/game/core/display-geometry';
 
 /** Same geometric cases as the project-authored AVM2 reference probe. */
 function primitiveProof() {
@@ -168,6 +170,24 @@ function primitiveProof() {
     roundCap: pack.hitClip(clip(90005), 19, 20),
     outsideRoundCap: pack.hitClip(clip(90005), 18.5, 18.5),
   };
+  const retainedHit = (id: number, x: number, y: number) =>
+    displayGeometryHit(pack.nativeClipGeometry(clip(id)), { x, y });
+  const retainedStrokes = {
+    fullHit: retainedHit(90004, 20.25, 40),
+    fullMiss: retainedHit(90004, 20.75, 40),
+    halfHit: retainedHit(91003, 10.375, 20),
+    halfBounds: retainedHit(91003, 9.875, 20),
+    halfMiss: retainedHit(91003, 10.625, 20),
+    enlargedHit: retainedHit(91004, 80.4, 160),
+    enlargedMiss: retainedHit(91004, 80.8, 160),
+    nestedHit: retainedHit(91006, r * 21.3 - 10 * r, 4 * r * 21.3 + 40 * r),
+    nestedMiss: retainedHit(91006, r * 21.7 - 10 * r, 4 * r * 21.7 + 40 * r),
+    reflectedHit: retainedHit(91007, -10.375, 20),
+    singular: retainedHit(91008, 0, 0),
+    roundCap: retainedHit(90005, 19, 20),
+    outsideRoundCap: retainedHit(90005, 18.5, 18.5),
+  };
+  const retainedTransparentFill = retainedHit(90001, 40, 40);
   sprites[0] = { ...sprites[0], placements: [placement(90004, 1)] };
   // Use a fresh pack: the earlier opaque proof has already cached root680's display list.
   const provider = new AssetPack('swf');
@@ -234,6 +254,8 @@ function primitiveProof() {
   return {
     results,
     strokes,
+    retainedStrokes,
+    retainedTransparentFill,
     providers,
     transparentInk,
     cacheSize,
@@ -243,6 +265,7 @@ function primitiveProof() {
 
 export async function showShapeContact(pack: AssetPack, host: HTMLElement) {
   const primitives = primitiveProof(),
+    nativeGeometry = nativeMaskGeometryProof(pack),
     app = new Application(),
     textures = new SwfTextures();
   await app.init({
@@ -404,7 +427,7 @@ export async function showShapeContact(pack: AssetPack, host: HTMLElement) {
     capture('Forcefield · fresh clone mask contact', field, fieldPoint);
     detachForcefield(field);
     panels.at(-1)!.detached = pack.hitTest(field, fieldPoint.global.x, fieldPoint.global.y);
-    return { mode: pack.mode, primitives, panels };
+    return { mode: pack.mode, primitives, panels, nativeGeometry };
   } finally {
     app.destroy({ removeView: true }, { children: true });
     textures.destroy();

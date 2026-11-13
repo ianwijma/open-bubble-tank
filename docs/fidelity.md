@@ -1831,3 +1831,22 @@ Formatting and the supplied-file full check pass1196 tests /19444 assertions;
 the focused parser/original-file cohort passes10 tests /664 assertions. No
 application browser flow was changed or repeated for this metadata-only slice.
 
+## Read native geometry from retained clips
+
+The [native retained-clip boundary](retained-native-geometry-reference.md) now
+projects current render order, actual child/birth identities and placement morph
+ratios without clock, constructor, entropy or age-reconstruction writes. Original
+declared rectangles feed Script bounds; native fill/stroke geometry feeds contact.
+Unsupported text/bitmap/dynamic content rejects rather than using raster alpha.
+The unused API does not migrate gameplay queries or promise complete field geometry.
+
+The browser compares actual supplied1539/1544 contours against all51 selected
+frozen original mask controls, with the complete key set required. All13 retained
+thin-stroke controls and transparent-fill contact also pass; existing protection,
+primitive and projectile assertions remain intact. Format/check passes1200 tests
+/19461 assertions. Literal affected E2E passes2 mock/supplied cases with zero
+skips/flaky results, build `NJRTYdp8_WZkh3KuZR9Ws`;777 input hashes match and both
+paint sheets were inspected. Owned4015/4016 servers exited. Complete text/root
+mapping, actor protection/runtime masks, effect lines/poses, morph/Engine edge
+qualification, full mock composition and ordinary/Adobe/full-game parity remain open.
+
