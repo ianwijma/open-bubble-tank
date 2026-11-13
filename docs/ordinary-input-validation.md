@@ -133,3 +133,15 @@ still partial evidence; causal damage attribution and full progression remain
 unproved. The audit checkout lacked Prettier, so its attempted format command
 failed without installing dependencies or changing tracked files. The parent
 later ran the complete formatting/check workflow when integrating this record.
+
+The subsequent observer-only repair did not pass its offline gate: ten of twelve
+annotated checks passed across349 retained images, with close blue/gold actors
+recovered and no duplicate actor/pickup IDs. Other blue enemies remained
+unclassified, disconnected player lobes became false targets, and HUD contours
+could still merge into actor candidates. No fresh game, build, browser/server,
+calibration or earned offer occurred. All423 original evidence hashes remained
+unchanged;3265/9265 were free. The bounded report is retained at
+`/home/ian/.t3/worktrees/open-bubble-tank/t3-bced646c/reference-captures/observer-repair-3265/report.md`.
+Its ignored prototypes are incomplete, not production behavior or a validated
+pilot. Further observer correction or direct public-input verification is still
+needed before claiming ordinary full progression.

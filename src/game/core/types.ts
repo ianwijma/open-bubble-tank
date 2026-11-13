@@ -259,6 +259,7 @@ export interface Projectile extends Vec {
   motion?: Vec;
   /** EnemyTurret retains objHomeTank independently of the current wrapper's arrays. */
   turretHome?: Tank;
+  /** Retained _-BL movTarget/objAvatar; target subclasses own their separate home/close rules. */
   homing?: { home?: Tank; target?: Tank; avatar: Tank; close: boolean };
   trailCounter?: number;
   trailPoint?: Vec;

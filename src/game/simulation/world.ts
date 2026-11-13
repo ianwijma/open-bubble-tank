@@ -257,8 +257,8 @@ export class World {
       bullet.motion ??= direction(bullet.angle, bullet.speed);
     }
     this.projectileTimelines.initialize(bullet);
-    initializeSapper(this, bullet, home);
-    initializeAvatarSeeker(this, bullet);
+    initializeSapper(this, bullet, home, target);
+    initializeAvatarSeeker(this, bullet, target);
     initializeHomingProjectile(this, bullet, home, target);
     if (bullet.kind === 'infect' && bullet.targetId === null) expireInfectionTarget(this, bullet);
     this.bullets.push(bullet);

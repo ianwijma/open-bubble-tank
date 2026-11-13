@@ -24,6 +24,8 @@ export function convertDrones(world: World, owner: Tank) {
         damage: 15,
         targetId: world.field.enemies[index]?.uid ?? null,
       }),
+      undefined,
+      world.field.enemies[index],
     );
   }
   // Includes failed replacement Setup and any earlier pending Setup removal.
