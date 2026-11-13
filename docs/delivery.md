@@ -18,11 +18,13 @@ clear. Up to five layers may be in flight together. Keep fixes on their owning
 branch, propagate them through dependent layers, and validate each resulting head.
 Do not open a sixth layer or fold a partial batch into master merely to avoid a wait.
 
-For each finalized PR, create an isolated get-green agent. Require its current-head
-GitHub Actions run and the named `Rules, build and mock browser` job to complete
-successfully, and address actionable review findings. Pending, missing or failed
-Actions is not green. Escalate uncertain fundamental changes from the child to the
-parent. Never remove assertions or suites merely to obtain green checks.
+For each finalized PR, create an isolated get-green agent to inspect current-head
+Actions and reviews, repair concrete failures and escalate uncertain fundamental
+changes to the parent. Pending, missing or failed Actions is not green, but an
+intermediate wait does not block assembling the later layers. The merge gate is the
+last PR's complete combined head, with a successful named `Rules, build and mock
+browser` job and no actionable review findings. Never remove assertions or suites
+merely to obtain green checks.
 
 Once five layers exist, assemble all changes on the last PR's branch and target that
 PR directly at master. A dependent top branch already contains its ancestors; verify
