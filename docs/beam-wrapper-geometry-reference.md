@@ -227,3 +227,29 @@ adapter claim, not substituting425.25 or changing production geometry by inferen
 | `export_pcode/scripts/_-0D.pcode`             | `5b30ed4cca2a726a56569c8da70a24c652282c92836692cdbd6fd1f97fc8b5ae` |
 | `export_pcode/scripts/_-BL.pcode`             | `3b365d3e31350a90d69f814b9692c88af83e600ae957e3bea3645c69114fb64f` |
 | `export_pcode/scripts/_-ct/ABeamCannon.pcode` | `973aae522d4b758abce1423f20423d76df368c5cb5a55b28e9f5c63602291f11` |
+
+
+## Integration in the fifth projectile layer
+
+The parent cherry-picked the research above fourth-layer9af7048. All four
+published ancestor heads are included; no production rule was changed by this
+fifth layer. The source comparison therefore still describes its actual9ccf27d
+probe environment, not a new original runtime on the combined branch. The parent
+independently reemitted identical probe bytes and verified the43 retained rows,
+REA DOM and runtime identities using the integrated verifier.
+
+Combined formatting, TypeScript and987 tests /8,791 assertions pass. Production
+build `-O0mZbOlOyR60UzQ_7DSK` and all17 affected mock/supplied-art browser cases
+pass, with zero skips, unexpected failures or flaky results. All696 pre-build
+source/tool/doc hashes match after that run; later changes are scoped Markdown
+records only. The native beam contract gallery was inspected. Private3325/3326
+servers stopped and no test browser/server remains in the parent checkout. The
+final exact-head hosted Actions/review gate is still required before merging.
+See [the combined batch record](projectile-display-batch-validation.md).
+
+The next geometry repair must preserve sibling bullet ownership while restoring
+the receiver's actual authored/dynamic shape query and Script width. Use the
+existing asset/display-tree geometry boundaries and actual actor parentage, not
+an arbitrary union of child hits or a larger radius fitted to one row. Extend
+original controls for field scaling, new-field setup and masks where needed, and
+retain the current contradiction until a source-backed repair passes them.

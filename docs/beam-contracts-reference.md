@@ -165,9 +165,12 @@ The following existing approximations are deliberately **not repaired by inferen
 - `_‑L2` uses dynamic `_‑W.width` for its loop ceiling and calls the wrapper's
   `_‑W.hitTestPoint(..., true)` **after** resizing its own beam children. The
   recreation still uses its existing425×scale circular wall and fixed diameter
-  adapter. Own-beam/other-child contributions to the wrapper's width and geometric
-  hit result need a controlled original-runtime comparison before changing that
-  fundamental boundary. Static circular-wall tests do not prove equivalence.
+  adapter. The [original wrapper comparison](beam-wrapper-geometry-reference.md) now
+  establishes that the ordinary bullet layer is a sibling, so resizing this beam
+  does not change field width. The425 adapter fails a tested phase; actor artwork
+  and dynamic width also affect separate synthetic controls. Restoring the full
+  wrapper shape/width query remains open. Do not infer a425.25 replacement from
+  finite horizontal samples. Static circular-wall tests do not prove equivalence.
 - Actual-parent candidate/sample Point conversions use the existing ActorParents
   translation/float32/twip model. The shared mounted-emitter conversion, arbitrary
   nested matrices/scale, negative-MIN width setter behavior and exact native
