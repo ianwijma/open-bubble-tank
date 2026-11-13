@@ -1739,3 +1739,8 @@ The [registration correction](effect-registration-position-reference.md) preserv
 ## Local physical field population seam
 
 The [population projection](field-population-reference.md) now combines actual authored/tutorial, actor, pickup and bottom117 owners in source order, preserving invisible/dead/empty/detached children and excluding queued requests and World siblings. It retains same-ID object distinctions and current owner poses without initialization, entropy, UID or stage-clock writes. Seven cases pass49 assertions and reject eight isolated semantic mutations. Format/check passes1,147 tests /17,417 assertions. The seam has no application caller yet; no browser flow/E2E or original-runtime query equality is claimed. Complete native/mock leaf geometry, actor protection, effect poses/drawn lines, masks and Script arithmetic remain before field-query migration. PR154 is unchanged and the full recreation remains incomplete.
+
+
+## Field shape-mask qualification remains open
+
+The [tagged-source investigation](field-query-mask-qualification.md) found a potential disagreement between the new draft's all-active-mask conjunction and Ruffle0.7.1's changing depth latch for overlaps/end-depth controls. The field's existing nonoverlapping finite controls do not distinguish those policies. Static text also has advanced-rendering bounds versus ordinary glyph-contact branches; raster alpha cannot establish that contract. Tagged source is not authenticated compiled-runtime or Adobe proof. The local traversal draft is stashed, not integrated; twelve passing synthetic/frozen-width cases do not waive the shape question. A distinct preserved-original qualification is the next step. PR154 and production queries remain unchanged.
