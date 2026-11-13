@@ -15,6 +15,7 @@ import {
   mockProjectileBounds,
   projectileScriptBounds,
   scriptBounds,
+  scriptTwipBounds,
   type ScriptBoundsSource,
 } from './projectile-bounds';
 import { protectionRadius, protectionScale } from '../core/protection-size';
@@ -1097,6 +1098,12 @@ export class AssetPack {
     const pose = this.forcefieldClone(tank).parts.get(part.key)!;
     pose.advance(tank.artAge - tank.forcefieldStartedAt + 1, part.y);
     return pose;
+  }
+  /** Exact width/height bounds for a qualified retained clip and its parent-space matrix.
+   * Separate from legacy continuous metrics; field population/ownership is the caller's work.
+   */
+  clipScriptTwipBounds(pose: SwfClip, matrix?: SwfMatrix) {
+    return scriptTwipBounds(this.scriptGeometry, pose.id, pose.age, matrix, undefined, [], 0, pose);
   }
   clipScriptBounds(pose: SwfClip) {
     return scriptBounds(this.scriptGeometry, pose.id, pose.age, undefined, undefined, [], 0, pose);

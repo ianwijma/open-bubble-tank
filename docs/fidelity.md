@@ -1578,3 +1578,8 @@ bun run format
 ## Projectile stack delivery verification
 
 - PRs140–144 are all merged through the single PR144 mergecafcebd321997a6113a3a32ce92f81f63118a4bf. Its fetched master tree equals exact tested head1ca0d1d9/tree200855540fa2a90169d3ed7517fb3094432dac8d. Latest exact-head pull-request run43367078955 attempt1 and named job131693913299 completed successfully. Reviews/inline threads were empty across every included layer; advisory CodeRabbit skips did not hold the merge. All parent watches stopped; protected legacy22d9def7 remains unchanged. This establishes delivery of the bounded projectile contracts, not full-game parity or resolution of the remaining field geometry/ordinary progression requirements.
+
+## Qualified Script width arithmetic boundary
+
+- [The local arithmetic reference](script-bounds-arithmetic.md) records 17 additional preserved-original controls, all 70 previous controls, and exact agreement for the eight measured scale widths. The new `scriptTwipBounds` / `AssetPack.clipScriptTwipBounds` API composes float32 matrices, rounds transformed leaf twips before integer translation, and unions integer extents. Measured width and `getBounds(target).width` differ under nested transforms; their contracts remain separate.
+- Existing gameplay, creator, protection and projectile callers retain their continuous visitor. No field population, ownership or partial query is implemented here, so the beam origin5.2 mismatch remains415 versus original421. Formatting/check pass 1,007 tests /8,830 assertions; no production build/e2e, ordinary reachability, Adobe or full-game parity is claimed. The reference includes the bounded runtime provenance and the disclosed derived-result write in the otherwise read-only research checkout.

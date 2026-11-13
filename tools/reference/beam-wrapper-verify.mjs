@@ -14,9 +14,10 @@ import {
 } from '../../src/game/assets/swf.mjs';
 
 const [originalPath, probePath, out] = process.argv.slice(2);
-const geometryAudit = process.argv[5] === '--geometry-audit';
+const scriptBoundsAudit = process.argv[5] === '--script-bounds-audit';
+const geometryAudit = process.argv[5] === '--geometry-audit' || scriptBoundsAudit;
 if (!out || process.argv.length > 6 || (process.argv[5] && !geometryAudit))
-  throw new Error('Supply ORIGINAL PROBE CAPTURE_DIR [--geometry-audit].');
+  throw new Error('Supply ORIGINAL PROBE CAPTURE_DIR [--geometry-audit|--script-bounds-audit].');
 const sha = (bytes) => createHash('sha256').update(bytes).digest('hex');
 const equal = (a, b, message) => {
   if (JSON.stringify(a) !== JSON.stringify(b)) throw new Error(message);
@@ -145,7 +146,23 @@ const auditRows = [
   ),
   'BT3_BEAM_SWEEP restored-audit 5.2 0 0 421 425 421 1381.4',
 ];
-if (geometryAudit) equal(allLines.slice(42, -1), auditRows, 'Incomplete/changed geometry audit.');
+const boundsFixture = scriptBoundsAudit
+  ? JSON.parse(
+      await readFile(
+        new URL('../../tests/fixtures/script-bounds-original.json', import.meta.url),
+        'utf8',
+      ),
+    )
+  : undefined;
+const boundsRows = boundsFixture?.cases.map((control) => control.trace) ?? [];
+if (scriptBoundsAudit)
+  equal(probe.sha256, boundsFixture.probeSha256, 'Bounds fixture/probe identity changed.');
+if (geometryAudit)
+  equal(
+    allLines.slice(42, -1),
+    [...auditRows, ...boundsRows],
+    'Incomplete/changed geometry/bounds audit.',
+  );
 const lines = geometryAudit ? [...allLines.slice(0, 42), ...allLines.slice(-1)] : allLines;
 const ids = lines.filter((line) => line.startsWith('BT3_BEAM_ID '));
 equal(
@@ -259,6 +276,7 @@ let circleSample = 0;
 while (circleSample < 850 && Math.abs(5.2 + circleSample) <= 425) circleSample += 6;
 result.observation = {
   geometryAudit: geometryAudit ? auditRows : undefined,
+  scriptBoundsAudit: scriptBoundsAudit ? boundsRows : undefined,
   ids,
   samples,
   edges,

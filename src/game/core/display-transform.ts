@@ -51,6 +51,33 @@ export function displayMatrixPoint(matrix: Readonly<DisplayMatrix>, point: Vec):
     y: (roundedTwip(add(multiply(matrix.b, point.x), multiply(matrix.d, point.y))) + matrix.ty) | 0,
   };
 }
+
+/** Declared integer twips, before any pixel conversion or raster padding. */
+export interface DisplayRectangle {
+  xMin: number;
+  yMin: number;
+  xMax: number;
+  yMax: number;
+}
+
+/** Script bounds transform each corner with the same arithmetic as a display Point. */
+export function displayMatrixRectangle(
+  matrix: Readonly<DisplayMatrix>,
+  rectangle: Readonly<DisplayRectangle>,
+): DisplayRectangle {
+  const points = [
+    { x: rectangle.xMin, y: rectangle.yMin },
+    { x: rectangle.xMin, y: rectangle.yMax },
+    { x: rectangle.xMax, y: rectangle.yMin },
+    { x: rectangle.xMax, y: rectangle.yMax },
+  ].map((point) => displayMatrixPoint(matrix, point));
+  return {
+    xMin: Math.min(...points.map((point) => point.x)),
+    yMin: Math.min(...points.map((point) => point.y)),
+    xMax: Math.max(...points.map((point) => point.x)),
+    yMax: Math.max(...points.map((point) => point.y)),
+  };
+}
 export function inverseDisplayMatrix(matrix: Readonly<DisplayMatrix>): DisplayMatrix | null {
   const det = subtract(multiply(matrix.a, matrix.d), multiply(matrix.b, matrix.c));
   if (!(Math.abs(det) > 2 ** -23)) return null;
