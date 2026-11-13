@@ -149,6 +149,13 @@ export interface SymbolResult {
     morphs: ReturnType<typeof parseMorphShapeTag>[];
     fonts: FontInfo[];
     texts: TextInfo[];
+    csmTextSettings?: {
+      id: number;
+      useFlashType: number;
+      gridFit: number;
+      thickness: number;
+      sharpness: number;
+    }[];
     editTexts: {
       id: number;
       bounds: { xMin: number; yMin: number; xMax: number; yMax: number };

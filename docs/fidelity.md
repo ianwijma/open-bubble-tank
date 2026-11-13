@@ -1817,3 +1817,17 @@ Formatting/check passes 1193 tests / 19427 assertions; the focused 18 cases pass
 179 assertions and reject all three isolated semantic mutations. No application
 E2E is claimed for the unused seam.
 
+## Preserve native text mode before geometric contact integration
+
+The [text-settings inventory](text-contact-settings-reference.md) now retains
+actual tag74 renderer/grid-fit/floating-point fields. Independent original byte
+decoding matches all422 records; tutorial1667's eight static text leaves1659–1666
+all explicitly select advanced rendering. Tagged text contact distinguishes
+world-bounds hits from glyph contact, so the current raster-alpha fallback cannot
+prove the correct geometric branch. No contact or paint caller is changed here.
+Original-runtime text controls and complete provider integration remain required;
+this metadata addition does not establish Adobe or full-game parity.
+Formatting and the supplied-file full check pass1196 tests /19444 assertions;
+the focused parser/original-file cohort passes10 tests /664 assertions. No
+application browser flow was changed or repeated for this metadata-only slice.
+

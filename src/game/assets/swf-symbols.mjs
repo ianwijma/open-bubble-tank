@@ -11,6 +11,7 @@
  *                        frames, sound starts) + nested tag census
  *   - DefineText/2     → glyph runs decoded to real strings (via font code tables)
  *   - DefineEditText   → initial text, font, size, color, flags
+ *   - CSMTextSettings  → per-text advanced renderer/grid-fit selection and floats
  *   - DefineFont2/3    → name, glyph count, code table (character coverage)
  *   - DefineFontName   → font name + copyright
  *   - DefineButton1/2  → state records with transforms, color and supported filters
@@ -1067,6 +1068,19 @@ export function parseTextTag(body, tagCode) {
   return { id, tagCode, bounds, matrix: m, records };
 }
 
+/** SWF19 CSMTextSettings: UI16, packed2/3/3 flags, two little-endian FLOATs, UI8. */
+export function parseCSMTextSettingsTag(body) {
+  if (body.byteLength < 12) throw new Error('truncated CSMTextSettings');
+  const view = new DataView(body.buffer, body.byteOffset, body.byteLength);
+  return {
+    id: view.getUint16(0, true),
+    useFlashType: body[2] >> 6,
+    gridFit: (body[2] >> 3) & 7,
+    thickness: view.getFloat32(3, true),
+    sharpness: view.getFloat32(7, true),
+  };
+}
+
 export function parseButtonTag(body, tagCode) {
   const br = new BR(body);
   const id = br.bytes(2);
@@ -1138,6 +1152,7 @@ export async function extractSymbols(bytes, { log = () => {}, images = [], svg =
     sprites: [],
     morphs: [],
     texts: [],
+    csmTextSettings: [],
     editTexts: [],
     fonts: [],
     fontNames: [],
@@ -1178,6 +1193,9 @@ export async function extractSymbols(bytes, { log = () => {}, images = [], svg =
         case 11:
         case 33:
           symbols.texts.push(parseTextTag(tag.body, tag.code));
+          break;
+        case 74:
+          symbols.csmTextSettings.push(parseCSMTextSettingsTag(tag.body));
           break;
         case 75: {
           const f = parseFontTag(tag.body, 75);
