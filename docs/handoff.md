@@ -23,11 +23,13 @@ is integrated locally as `4a36616`, with a procedural mock branch, bounded rende
 cache, optional-file guard and complete finite native sample coverage. The parent
 literal production browser gate passes18 mock/native cases, zero skips; rule
 checks pass1,291 tests /75,956 assertions. Complete cross-field ordering and
-fractional-opacity composition remain open. Actor-phase draft `8d31935` reports
-both frozen constructor/ENTER/EXIT cohorts through 550, eight fail-before regressions
-and six final actor/mounted/tank browser passes; its broad run retains an advancing
-native timeout. Review/integrate each scoped draft, preserving its evidence and
-limits. The first current-build home capture rejected 8/8 scaled-ancestor frames. The
+fractional-opacity composition remain open. Actor-phase draft `8d31935` is picked locally as `cc6151b` above PR161. Both frozen
+constructor/ENTER/EXIT cohorts through550 and eight fail-before regressions are
+retained. Parent checks pass1,299 tests /81,252 assertions, with24/24 combined
+mock/native browser cases on build `H96NgJsILo0CzxuxWl2PP`. Its earlier broad run
+still retains the advancing native timeout. First-trigger constructor scheduling,
+lazy construction and historical Y/entropy replay remain unqualified. Keep these
+limits separate from the targeted green gate. The first current-build home capture rejected 8/8 scaled-ancestor frames. The
 separate capture follow-up now qualifies bounded positive 2D scale/translation
 (`fe22864`, evidence `ea733a3`) and accepts eight fresh home frames over 8.145s.
 All prior rejects remain unchanged. This endpoint geometry qualification still has

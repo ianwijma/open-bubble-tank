@@ -2082,3 +2082,17 @@ literal affected production browser run passes18 mock/native cases with zero
 skips. Cross-field global group ordering, fractional-opacity composition, Adobe
 and full-game parity remain unqualified. This is local next-stack work above the
 PR160 merge, not part of the already delivered tree.
+
+
+## Actor constructor/entry/script phase follow-up
+
+The [actor phase repair](actor-artwork-phase-reference.md) separates constructor
+frame0, pre-Main stage entry and post-Main scripts for already materialized mounted
+roots. Both unchanged original captures agree through550 in both construction
+cohorts; final own-Y reads and retained identities are covered. Compatibility
+`artAge` edits cannot seek a stage-owned root. Parent checks pass1,299 tests /
+81,252 assertions and24 affected mock/native browser cases above the under-avatar
+layer. The initialized Massive Cannon gallery explicitly initializes its stop
+before triggering; it is not a first-ever-trigger oracle. Lazy source construction,
+historical placement/entropy replay, first-trigger scheduling and status/protection
+phases remain open. The earlier native full-pilot timeout is preserved.

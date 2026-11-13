@@ -210,3 +210,19 @@ BT3_SWF_FILE=/home/ian/Projects/ianwijma/documented-bubble-tank-3/re/bt3/uncompr
 
 This is a reviewable local phase repair with a preserved native pilot timeout.
 It is not an assertion that the timing/provider package or the game is complete.
+
+## Parent integration above the under-avatar layer — 2026-11-14
+
+The phase repair is picked as `cc6151b` above PR161 head `fea1917`, retaining the
+under-avatar native/mock projection and cache cleanup. Parent rule checks pass
+1,299 tests /81,252 assertions. A fresh literal affected production browser run
+passes24/24 mock/native cases, with zero skips, on build
+`H96NgJsILo0CzxuxWl2PP`. It includes the actor/mounted/tank galleries, physical
+actor/pickup/effect ownership, crossing/orphan/collapse and both new under-avatar
+cases. Private spec copies change only fixture URL/oracle import routing.
+
+Commands, source/spec hashes, results and cleanup are under
+`test-results/actor-phase-integration/`. Owned ports4575/4576 are free after the
+Playwright-owned server exits. This focused parent gate does not rerun or replace
+the preserved broad native pilot timeout above. No first-trigger, host-entropy,
+complete constructor/provider or full-game acceptance claim is added.
