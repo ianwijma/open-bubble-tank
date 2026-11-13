@@ -10,6 +10,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 ## Open Bubble Tank project rules
 
+- For project status, remaining-work estimates, or completion updates, read and update `docs/completion-checklist.md`. Return its fixed seven-row overview with the same IDs and fields; use its evidence and checkpoint rules.
 - The goal is faithful recreation, not reinterpretation. Treat the sibling research repository as evidence and prefer decompiled code when summaries conflict.
 - Read `docs/fidelity.md` before claiming a feature or the complete game has parity. Keep remaining differences explicit.
 - Keep rendering, browser services, and simulation separate. Preserve original per-frame units and stable part IDs.

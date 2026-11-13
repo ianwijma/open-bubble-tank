@@ -9,8 +9,11 @@ import { mockCreditsLeaf } from './mock-credits';
 import type { Projectile, Rect, Tank, TankDesign, TankPart } from '../core/types';
 import { Random, rotate } from '../core/math';
 import { SwfClip } from './swf-clip';
+import { retainedClipGeometry } from './retained-geometry';
+import type { DisplayGeometryContent } from '../core/display-geometry';
 import { partSnapshot } from './part-snapshot';
-import { PartPlayback } from './part-playback';
+import { MountedParts, PartPlayback } from './part-playback';
+import { observeActorArtwork } from '../core/actor-artwork';
 import {
   mockProjectileBounds,
   projectileScriptBounds,
@@ -19,7 +22,7 @@ import {
   type ScriptBoundsSource,
 } from './projectile-bounds';
 import { protectionRadius, protectionScale } from '../core/protection-size';
-import { legacyShieldFilm, shieldClipFrame } from '../core/shield-art';
+import { shieldClipFrame } from '../core/shield-art';
 import { MINIMAP } from '../core/minimap';
 import { HUD } from '../core/hud';
 import { WIN_SCREEN } from '../core/win-screen';
@@ -149,6 +152,13 @@ export interface SymbolResult {
     morphs: ReturnType<typeof parseMorphShapeTag>[];
     fonts: FontInfo[];
     texts: TextInfo[];
+    csmTextSettings?: {
+      id: number;
+      useFlashType: number;
+      gridFit: number;
+      thickness: number;
+      sharpness: number;
+    }[];
     editTexts: {
       id: number;
       bounds: { xMin: number; yMin: number; xMax: number; yMax: number };
@@ -254,7 +264,7 @@ export class AssetPack {
   private classFrames = new Map<number, Raster>();
   private classPoses = new Map<number, SwfClip>();
   private positivePosters = new Map<number, Raster>();
-  private partClips = new WeakMap<Tank, { design: TankDesign; parts: Map<string, PartPlayback> }>();
+  private partClips = new WeakMap<Tank, MountedParts>();
   private infections = new WeakMap<Tank, { startedAt: number; clip: SwfClip }>();
   private statuses = new StatusPlayback(this);
   private forcefieldClones = new WeakMap<
@@ -995,15 +1005,16 @@ export class AssetPack {
   partClip(tank: Tank, part: TankPart) {
     let owner = this.partClips.get(tank);
     if (!owner || owner.design !== tank.design) {
-      owner = { design: tank.design, parts: new Map() };
+      owner = new MountedParts(tank.design);
       this.partClips.set(tank, owner);
+      observeActorArtwork(tank, owner);
     }
     const age = tank.artAge + 1;
-    let playback = owner.parts.get(part.key);
+    let playback = owner.parts.get(part.key)?.playback;
     if (!playback || playback.clip.age > age) {
       // Painting/contact queries share a private stream rather than consuming gameplay RNG.
       playback = new PartPlayback(this.newPartClip(tank, part));
-      owner.parts.set(part.key, playback);
+      owner.parts.set(part.key, { part, playback });
     }
     return playback.advance(
       age,
@@ -1107,6 +1118,59 @@ export class AssetPack {
   }
   clipScriptBounds(pose: SwfClip) {
     return scriptBounds(this.scriptGeometry, pose.id, pose.age, undefined, undefined, [], 0, pose);
+  }
+  /** Authored geometry of a caller-owned retained pose, without playback or alpha
+   * fallbacks. Owners must compose runtime drawings/masks separately; unsupported
+   * text is bounded to the eight measured tutorial leaves and CSM settings.
+   * Other text classes/modes and bitmaps reject without paint/glyph fallbacks.
+   */
+  nativeClipGeometry(pose: SwfClip) {
+    if (this.mode !== 'swf') throw new Error('Native geometry requires supplied SWF definitions');
+    return retainedClipGeometry(pose, {
+      isSprite: (id) => this.sprites.has(id),
+      leaf: (id, ratio): DisplayGeometryContent | undefined => {
+        const text = this.texts.get(id);
+        if (text) {
+          const settings = this.symbols?.symbols.csmTextSettings?.filter((s) => s.id === id);
+          const setting = settings?.[0];
+          if (
+            id < 1659 ||
+            id > 1666 ||
+            settings?.length !== 1 ||
+            setting?.useFlashType !== 1 ||
+            setting.gridFit !== 2 ||
+            setting.thickness !== 0 ||
+            setting.sharpness !== 0 ||
+            !Object.values(text.bounds).every(
+              (n) => Number.isInteger(n) && Math.abs(n) < 2147483648,
+            ) ||
+            text.bounds.xMin > text.bounds.xMax ||
+            text.bounds.yMin > text.bounds.yMax
+          )
+            throw new Error(`Unsupported native StaticText metadata ${id}`);
+          // DefineText's glyph matrix does not alter the declared Engine rectangle.
+          return { kind: 'advanced-static-text', bounds: { ...text.bounds } };
+        }
+        const morph = this.morphs.get(id),
+          shape = morph ? undefined : this.shapes.get(id),
+          bounds = morph?.startBounds ?? shape?.bounds;
+        if (!bounds || (!morph && !shape?.runs)) return undefined;
+        // Script bounds keep the declared morph start rectangle. Contact uses
+        // the actual placement ratio through the existing native shape visitor.
+        const selectedRatio = Number.isFinite(ratio)
+          ? Math.max(0, Math.min(65535, Math.round(ratio)))
+          : 0;
+        return {
+          kind: 'leaf',
+          bounds: { ...bounds },
+          hit: (point, inverse) => {
+            const result = this.leafContact(id, point.x, point.y, selectedRatio, inverse);
+            if (result === undefined) throw new Error(`Unresolved native leaf geometry ${id}`);
+            return result;
+          },
+        };
+      },
+    });
   }
   tankDisplayBounds = (tank: Tank) =>
     tankScriptBounds(tank, this.scriptGeometry, {
@@ -1328,13 +1392,14 @@ export class AssetPack {
         this.symbolHit(id, age, point.x / scale.x, point.y / scale.y, 0, undefined, 0, childInverse)
       );
     };
-    const film = legacyShieldFilm(tank);
-    const hasHit = film || tank.displayChildren.includes('shield-hit');
-    const diameter = !hasHit
-      ? 0
-      : tank.side === 'player'
-        ? (tank.shieldDiameter ?? this.protectionRadius(tank) * 2)
-        : tank.radius * 2;
+    const film = tank.displayChildren.includes('shield-film');
+    const hasHit = tank.displayChildren.includes('shield-hit');
+    const diameter =
+      !film && !hasHit
+        ? 0
+        : tank.side === 'player'
+          ? (tank.shieldDiameter ?? this.protectionRadius(tank) * 2)
+          : tank.radius * 2;
     for (const clip of tank.shieldClips) {
       if (!tank.displayChildren.includes(clip.key)) continue;
       if (this.mode === 'swf') {
@@ -1347,7 +1412,7 @@ export class AssetPack {
         return true;
     }
     if (this.mode === 'swf') {
-      if (tank.statusDecoration) {
+      if (tank.statusDecoration && tank.displayChildren.includes('status')) {
         const decoration = tank.statusDecoration;
         for (const [index, mark] of decoration.marks.entries()) {
           const point = rotate({ x: x - mark.x, y: y - mark.y }, -mark.angle);
@@ -1359,7 +1424,7 @@ export class AssetPack {
             return true;
         }
       }
-      if (tank.status.infect > 0) {
+      if (tank.status.infect > 0 && tank.displayChildren.includes('infection')) {
         const point = rotate({ x, y }, -tank.infectionAngle),
           scale = (tank.radius * 1.5) / 36;
         const childInverse = descendContact(inverse, contactTransform(tank.infectionAngle, scale));
@@ -1392,7 +1457,11 @@ export class AssetPack {
         return true;
     } else if (film && Math.hypot(x, y) <= (Number.isNaN(diameter) ? 130 : diameter) / 2)
       return true;
-    if (tank.forcefieldAttached && tank.design.parts.some((part) => part.type === 5005)) {
+    if (
+      tank.forcefieldAttached &&
+      tank.displayChildren.includes('forcefield') &&
+      tank.design.parts.some((part) => part.type === 5005)
+    ) {
       const maskHit = tank.design.parts.some((part) => {
         const point = rotate(
           { x: (x - part.x) / part.scale, y: (y - part.y) / part.scale },

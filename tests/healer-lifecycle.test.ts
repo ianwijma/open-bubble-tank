@@ -72,6 +72,8 @@ test('queued outgoing patient data aborts the incoming Healer catch retry, while
   owner.rotation = 30;
   gun.counter = 2;
   const sentinel = createTank(world.nextId(), design, 'enemy', -100, 150);
+  world.actorArtwork.construct(patient);
+  world.actorArtwork.construct(sentinel);
   world.fields.set('1,0', {
     col: 1,
     row: 0,

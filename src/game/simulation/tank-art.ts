@@ -1,7 +1,7 @@
 import type { Tank } from '../core/types';
 import { legacyShieldFilm } from '../core/shield-art';
 
-/** Attached MovieClips advance on the stage clock, independently of actor Run. */
+/** Retained actor artwork ages independently of parentage and actor Run. */
 export function advanceTankArt(tank: Tank) {
   tank.artAge++;
   if (!tank.displayChildren.length) return;

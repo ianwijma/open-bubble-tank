@@ -1,6 +1,6 @@
 import { rotate } from '../core/math';
 import { protectionScale } from '../core/protection-size';
-import { legacyShieldFilm, shieldClipFrame } from '../core/shield-art';
+import { shieldClipFrame } from '../core/shield-art';
 import type { Tank, TankPart } from '../core/types';
 import { partById } from '../data/catalog';
 import { INFECTED_ART, PROTECTION_ART, shieldClipSymbol } from '../data/status-art';
@@ -87,7 +87,7 @@ export function tankScriptBounds(tank: Tank, source: ScriptBoundsSource, clips: 
   for (const clip of tank.shieldClips)
     if (tank.displayChildren.includes(clip.key))
       scaled(shieldClipSymbol(clip), shieldClipFrame(clip), clip.angle, clip.diameter);
-  const film = legacyShieldFilm(tank),
+  const film = tank.displayChildren.includes('shield-film'),
     turret = tank.side !== 'player',
     diameter = turret ? tank.radius * 2 : (tank.shieldDiameter ?? clips.protectionRadius(tank) * 2);
   if (film)
@@ -97,7 +97,7 @@ export function tankScriptBounds(tank: Tank, source: ScriptBoundsSource, clips: 
       0,
       diameter,
     );
-  if (film || tank.displayChildren.includes('shield-hit'))
+  if (tank.displayChildren.includes('shield-hit'))
     scaled(
       turret ? PROTECTION_ART.turretShieldHit : PROTECTION_ART.shieldHit,
       Math.min(16, tank.shieldHitAge + 1),

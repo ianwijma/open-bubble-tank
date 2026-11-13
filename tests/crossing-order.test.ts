@@ -92,6 +92,7 @@ test('a repeated escape replaces the next wrapper from logical destination coord
     0,
   );
   abandoned.enemies = [actor];
+  world.actorArtwork.construct(actor);
   world.attachActor(actor, abandoned);
   const frozen = { x: world.transit!.offset.x - world.player.x, y: 0 };
   world.damage(world.player, 2);

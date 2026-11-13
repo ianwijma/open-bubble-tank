@@ -131,11 +131,22 @@ export class WorldDisplays {
     });
   }
   /** Main's translation and fixed World origin are separate display ancestors. Zoom is a view addition. */
+  mainMatrix(main: Readonly<Vec>): DisplayMatrix {
+    return { ...DISPLAY_IDENTITY, tx: displayTwips(main.x), ty: displayTwips(main.y) };
+  }
+  /** Actual World → Main → stage chain, without grouping rounded products. */
+  worldAncestry(main: Readonly<Vec>): readonly Readonly<DisplayMatrix>[] {
+    return Object.freeze([
+      Object.freeze({ ...DISPLAY_IDENTITY, tx: STAGE.cx * 20, ty: STAGE.cy * 20 }),
+      Object.freeze(this.mainMatrix(main)),
+    ]);
+  }
   worldMatrix(main: Readonly<Vec>): DisplayMatrix {
-    return displayMatrixProduct(
-      { ...DISPLAY_IDENTITY, tx: displayTwips(main.x), ty: displayTwips(main.y) },
-      { ...DISPLAY_IDENTITY, tx: STAGE.cx * 20, ty: STAGE.cy * 20 },
-    );
+    return displayMatrixProduct(this.mainMatrix(main), {
+      ...DISPLAY_IDENTITY,
+      tx: STAGE.cx * 20,
+      ty: STAGE.cy * 20,
+    });
   }
   /** A detached field retains its own root/slot transforms but loses World/Main ancestry. */
   fieldMatrix(field: Field, main: Readonly<Vec>, slot?: FieldSlot): DisplayMatrix {

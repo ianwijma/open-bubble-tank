@@ -177,6 +177,16 @@ test.skipIf(!existsSync(file))(
     });
     const { symbols, svgByCid, errors } = (await extractSymbols(bytes)) as unknown as SymbolResult;
     expect(errors).toEqual([]);
+    expect(symbols.csmTextSettings).toHaveLength(422);
+    expect(new Set(symbols.csmTextSettings!.map((s) => s.id)).size).toBe(422);
+    for (let id = 1659; id <= 1666; id++)
+      expect(symbols.csmTextSettings!.find((s) => s.id === id)).toEqual({
+        id,
+        useFlashType: 1,
+        gridFit: 2,
+        thickness: 0,
+        sharpness: 0,
+      });
     expect(svgByCid.size).toBe(1071);
     expect(symbols.morphs).toHaveLength(55);
     for (const morph of symbols.morphs) {

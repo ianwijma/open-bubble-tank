@@ -221,7 +221,7 @@ test('removed seeker refs remain stale and their current coordinates are used wh
   for (let i = 0; i < 7; i++) world.fireGun(owner, gun, input);
   expect(world.bullets).toHaveLength(7);
   expect(stale.readyForDelete).toBe(true);
-  expect(queue(world).at(-1)!.x).toBe(123);
+  expect(world.runtimeFor(world.field).queuedEffectRequests.at(-1)!.x).toBe(123);
   expect(gun.mineRefs).not.toContain(stale);
 });
 
@@ -237,7 +237,7 @@ test('ordinary layer wrappers clean up on removal, retain spawn coordinates for 
   }
   const first = world.bullets[0];
   expect(first.readyForDelete).toBe(true);
-  expect(queue(world).at(-1)!.x).not.toBe(123);
+  expect(world.runtimeFor(world.field).queuedEffectRequests.at(-1)!.x).not.toBe(123);
   const ally = createTank(world.nextId(), owner.design, 'ally', 0, 200);
   world.fireGun(ally, ally.guns[0], input);
   const shot = world.bullets.at(-1)!;

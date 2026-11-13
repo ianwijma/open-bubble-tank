@@ -65,6 +65,48 @@ test('next-field requests attach the original modified object to the outgoing re
   expect(world.runtimeFor(next).effects).toEqual([]);
 });
 
+test('queued effect arguments retain Number precision until CreateEffect writes the clip position', () => {
+  const world = new World([], [], 1),
+    runtime = world.runtimeFor(world.field),
+    supplied = { x: 13.049, y: -23.049 },
+    effect = world.addCombatEffect(supplied, 'rocketTrail'),
+    observed: { x: number; y: number }[] = [],
+    flush = runtime.flushEffects.bind(runtime);
+  world.player.life = 1;
+  runtime.flushEffects = (register) =>
+    flush((request) => {
+      observed.push({ x: request.x, y: request.y });
+      register(request);
+    });
+  expect([effect.x, effect.y]).toEqual([0, 0]);
+  // The queued Number arguments are independent of later edits to the clip.
+  effect.x = 99;
+  effect.y = 100;
+  expect(world.effectEngine.parent(effect)).toBeUndefined();
+  world.step(emptyInput());
+  expect(observed).toEqual([supplied]);
+  expect(effect).toMatchObject({ x: 13, y: -23 });
+  expect(world.effectEngine.parent(effect)).toBe(world.effectEngine.layer(world.field, 'bottom'));
+});
+
+test('immediate CreateEffect applies signed twip setters before attachment', () => {
+  const world = new World([], [], 1);
+  for (const [supplied, assigned] of [
+    [
+      { x: -13.049, y: 23.049 },
+      { x: -13, y: 23 },
+    ],
+    [
+      { x: -0.049, y: 0.049 },
+      { x: 0, y: 0 },
+    ],
+  ]) {
+    const effect = world.addCombatEffect(supplied, 'rocketTrail', {}, true);
+    expect(effect).toMatchObject(assigned);
+    expect(world.effectEngine.parent(effect)).toBe(world.effectEngine.layer(world.field, 'bottom'));
+  }
+});
+
 test('registered names resolve the first layer while actual child identity survives unregistration', () => {
   const { effects, owner } = engine(),
     other = field(),
@@ -166,7 +208,7 @@ test('World preserves a new completion carrier born inside an earlier carrier ca
 test('World does not pre-remove later completed artwork before an earlier callback', () => {
   const { world } = chargedWorld();
   const later = world.addCombatEffect({ x: 0, y: 0 }, 'impact', {}, true);
-  later.age = 3;
+  later.playback!.pose.advance(3); // Explicit artificial final-at-next-ENTER setup.
   let observed = false;
   world.spawnVolley = () => {
     observed = true;
@@ -194,4 +236,26 @@ test('arrival clears the old instances before promoting fresh registrations', ()
   expect(world.effectEngine.parent(effect)).toBeUndefined();
   expect(world.effectEngine.resolve('bottom')).toBe(world.effectEngine.layer(next, 'bottom'));
   expect(world.effectEngine.layerAttached(world.effectEngine.layer(old, 'bottom')!)).toBe(false);
+});
+
+test('queued damage-burst scale and actual clip edits survive independently of frozen registration arguments', () => {
+  const world = new World([], [], 1);
+  world.mode = 'paused';
+  const effect = world.addCombatEffect({ x: 13.049, y: -23.049 }, 'damageBurst', {
+    randomRotation: false,
+  });
+  effect.scale = 0.5; // Source EnemyFlakBullet.as20–23 writes the clip before enqueue.
+  effect.rotation = 31;
+  effect.x = 90;
+  effect.y = 80;
+  for (let i = 0; i < 7; i++) world.step(emptyInput());
+  const request = world.runtimeFor(world.field).queuedEffectRequests[0];
+  const pose = effect.playback!.pose;
+  expect([request.x, request.y, effect.x, effect.y]).toEqual([13.049, -23.049, 90, 80]);
+  expect(effect.frame).toBe(7);
+  world.effectEngine.createRequest(request, world.field, () => {
+    throw new Error('Unexpected rotation entropy');
+  });
+  expect(effect.playback!.pose).toBe(pose);
+  expect(effect).toMatchObject({ x: 13, y: -23, scale: 0.5, rotation: 31, frame: 7 });
 });

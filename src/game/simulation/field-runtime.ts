@@ -20,6 +20,10 @@ export class FieldRuntime {
   get effectQueue(): readonly Effect[] {
     return this.effectRequests.map(({ clip }) => clip).filter(isArtwork);
   }
+  /** Raw queue arguments remain separate from actual MovieClip display setters. */
+  get queuedEffectRequests(): readonly EffectRequest[] {
+    return Object.freeze([...this.effectRequests]);
+  }
   queueEffect(request: EffectRequest) {
     this.effectRequests.push(request);
   }

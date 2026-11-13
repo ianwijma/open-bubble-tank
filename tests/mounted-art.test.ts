@@ -34,6 +34,7 @@ function setup() {
     'player',
   );
   const tank = world.player;
+  world.actorArtwork.construct(tank); // Explicit omitted host construction ownership.
   const pose = (index = 0) => pack.partClip(tank, tank.guns[index].part).children.get(19)!.clip;
   const fire = (index = 0) => world.fireGun(tank, tank.guns[index], emptyInput());
   return { pack, world, tank, pose, fire };

@@ -44,7 +44,10 @@ export async function showActorRenderOwnership(pack: AssetPack, host: HTMLElemen
   world.field.enemies = [a, c];
   world.allies.push(b);
   importActorFixtures(world);
-  for (const tank of actors) world.attachActor(tank, world.field);
+  for (const tank of actors) {
+    world.actorArtwork.construct(tank);
+    world.attachActor(tank, world.field);
+  }
   world.pause();
   await renderer.init(host, DEFAULT_SETTINGS);
   const sheet = document.createElement('canvas');

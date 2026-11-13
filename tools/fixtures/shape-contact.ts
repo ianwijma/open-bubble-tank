@@ -7,7 +7,7 @@ import { SwfClip } from '../../src/game/assets/swf-clip';
 import { rasterMorphSVG } from '../../src/game/assets/morph-raster';
 import { shapeToSVG } from '../../src/game/assets/swf-symbols.mjs';
 import { STARTER } from '../../src/game/data/catalog';
-import type { DecoratedStatus, Tank } from '../../src/game/core/types';
+import type { DecoratedStatus, Tank, TankChild } from '../../src/game/core/types';
 import { rotate } from '../../src/game/core/math';
 import { TankView } from '../../src/game/render/tank-view';
 import { SwfTextures } from '../../src/game/render/swf-textures';
@@ -17,6 +17,11 @@ import { decorateStatus, applyProjectileStatus } from '../../src/game/simulation
 import { detachForcefield } from '../../src/game/simulation/forcefield';
 import { createProjectile } from '../../src/game/simulation/create-projectile';
 import { projectileTankContact } from '../../src/game/simulation/projectile-contact';
+import { nativeMaskGeometryProof } from './native-mask-geometry';
+import { nativeRootGeometryProof } from './native-root-geometry';
+import { nativeTextGeometryProof } from './native-text-geometry';
+import { addTankChild, removeTankChild } from '../../src/game/simulation/tank-display';
+import { displayGeometryHit } from '../../src/game/core/display-geometry';
 
 /** Same geometric cases as the project-authored AVM2 reference probe. */
 function primitiveProof() {
@@ -168,6 +173,24 @@ function primitiveProof() {
     roundCap: pack.hitClip(clip(90005), 19, 20),
     outsideRoundCap: pack.hitClip(clip(90005), 18.5, 18.5),
   };
+  const retainedHit = (id: number, x: number, y: number) =>
+    displayGeometryHit(pack.nativeClipGeometry(clip(id)), { x, y });
+  const retainedStrokes = {
+    fullHit: retainedHit(90004, 20.25, 40),
+    fullMiss: retainedHit(90004, 20.75, 40),
+    halfHit: retainedHit(91003, 10.375, 20),
+    halfBounds: retainedHit(91003, 9.875, 20),
+    halfMiss: retainedHit(91003, 10.625, 20),
+    enlargedHit: retainedHit(91004, 80.4, 160),
+    enlargedMiss: retainedHit(91004, 80.8, 160),
+    nestedHit: retainedHit(91006, r * 21.3 - 10 * r, 4 * r * 21.3 + 40 * r),
+    nestedMiss: retainedHit(91006, r * 21.7 - 10 * r, 4 * r * 21.7 + 40 * r),
+    reflectedHit: retainedHit(91007, -10.375, 20),
+    singular: retainedHit(91008, 0, 0),
+    roundCap: retainedHit(90005, 19, 20),
+    outsideRoundCap: retainedHit(90005, 18.5, 18.5),
+  };
+  const retainedTransparentFill = retainedHit(90001, 40, 40);
   sprites[0] = { ...sprites[0], placements: [placement(90004, 1)] };
   // Use a fresh pack: the earlier opaque proof has already cached root680's display list.
   const provider = new AssetPack('swf');
@@ -234,6 +257,8 @@ function primitiveProof() {
   return {
     results,
     strokes,
+    retainedStrokes,
+    retainedTransparentFill,
     providers,
     transparentInk,
     cacheSize,
@@ -243,6 +268,9 @@ function primitiveProof() {
 
 export async function showShapeContact(pack: AssetPack, host: HTMLElement) {
   const primitives = primitiveProof(),
+    nativeGeometry = nativeMaskGeometryProof(pack),
+    rootGeometry = nativeRootGeometryProof(pack),
+    textGeometry = nativeTextGeometryProof(pack),
     app = new Application(),
     textures = new SwfTextures();
   await app.init({
@@ -269,6 +297,50 @@ export async function showShapeContact(pack: AssetPack, host: HTMLElement) {
     damage?: number;
     detached?: boolean;
   }[] = [];
+  const membership: {
+    kind: TankChild;
+    before: boolean;
+    after: boolean;
+    restored: boolean;
+    beforeViews: number;
+    afterViews: number;
+    logicalStateRetained: boolean;
+  }[] = [];
+  const checkMembership = (tank: Tank, kind: TankChild, point: { x: number; y: number }) => {
+    const view = new TankView(tank.design, pack, textures),
+      logical = () =>
+        JSON.stringify({
+          status: tank.status,
+          decoration: tank.statusDecoration,
+          shield: tank.shield,
+          forcefieldAttached: tank.forcefieldAttached,
+          forcefieldReady: tank.forcefieldReady,
+        });
+    try {
+      view.update(tank);
+      const beforeViews = view.container.children.filter((child) => child.label === kind).length,
+        before = pack.hitTest(tank, point.x, point.y),
+        state = logical();
+      removeTankChild(tank, kind);
+      view.update(tank);
+      const afterViews = view.container.children.filter((child) => child.label === kind).length,
+        after = pack.hitTest(tank, point.x, point.y),
+        logicalStateRetained = state === logical();
+      addTankChild(tank, kind);
+      view.update(tank);
+      membership.push({
+        kind,
+        before,
+        after,
+        restored: pack.hitTest(tank, point.x, point.y),
+        beforeViews,
+        afterViews,
+        logicalStateRetained,
+      });
+    } finally {
+      view.destroy();
+    }
+  };
   const pointOutsideParts = (tank: Tank, label = 'protection') => {
     for (let y = -50; y <= 50; y += 2)
       for (let x = -100; x <= 100; x += 2) {
@@ -330,13 +402,17 @@ export async function showShapeContact(pack: AssetPack, host: HTMLElement) {
         );
         decorateStatus(world, t, kind);
         world.releaseCarrier(t, t.guns[0]);
-        capture(kind + ' · retained mark contact', t, pointOutsideParts(t, kind));
+        const point = pointOutsideParts(t, kind);
+        capture(kind + ' · retained mark contact', t, point);
+        checkMembership(t, 'status', point.global);
       }
       const infected = createTank(world.nextId(), design, 'enemy');
       applyProjectileStatus(world, infected, 'infect');
       // Each child has an authored blank delay before its pop on frames10–17.
       infected.artAge = 12;
-      capture('Infection · overlay contact', infected, pointOutsideParts(infected, 'infection'));
+      const point = pointOutsideParts(infected, 'infection');
+      capture('Infection · overlay contact', infected, point);
+      checkMembership(infected, 'infection', point.global);
     }
     const world = new World([], [], 44);
     world.player = createTank(
@@ -402,9 +478,18 @@ export async function showShapeContact(pack: AssetPack, host: HTMLElement) {
     field.guns.find((g) => g.part.type === 2001)!.angle = 90;
     const fieldPoint = pointOutsideParts(field);
     capture('Forcefield · fresh clone mask contact', field, fieldPoint);
+    checkMembership(field, 'forcefield', fieldPoint.global);
     detachForcefield(field);
     panels.at(-1)!.detached = pack.hitTest(field, fieldPoint.global.x, fieldPoint.global.y);
-    return { mode: pack.mode, primitives, panels };
+    return {
+      mode: pack.mode,
+      primitives,
+      panels,
+      nativeGeometry,
+      rootGeometry,
+      textGeometry,
+      membership,
+    };
   } finally {
     app.destroy({ removeView: true }, { children: true });
     textures.destroy();

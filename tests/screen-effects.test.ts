@@ -130,7 +130,8 @@ test('pause can pass the final frame and loop; resume only removes a clip observ
   frames(w, 1);
   expect(w.effects).toEqual([effect]);
   expect(w.player.status.ink).toBe(timer - 1);
-  effect.age = 99;
+  effect.age = 99; // Compatibility telemetry is independent of the native timeline.
+  effect.playback!.pose.gotoAndPlay(99);
   w.pause();
   frames(w, 100);
   expect(effect.age).toBe(199);
@@ -173,6 +174,7 @@ test('collapse completion starts escape before creating its original immediate s
   const w = setup();
   w.beginCollapse(0);
   w.collapse!.age = 119;
+  w.collapse!.effect.playback!.pose.advance(119);
   const jump = w.jump.bind(w);
   w.jump = (direction, deadhead) => {
     expect(w.effects.some((e) => e.symbol === art.collapseFlash.symbol)).toBe(false);

@@ -89,15 +89,8 @@ test('both field queues register in the outgoing engine layer; arrival discards 
   const next = world.transit!.next,
     runtime = world.runtimeFor(next);
   next.enemies = [];
-  world.queueEffect(
-    {
-      ...world.addCombatEffect({ x: 12, y: 13 }, 'impact'),
-      uid: world.nextId(),
-      x: -40,
-      y: 25,
-    },
-    next,
-  );
+  world.addCombatEffect({ x: 12, y: 13 }, 'impact');
+  world.addCombatEffect({ x: -40, y: 25 }, 'impact', {}, false, next);
   world.step(emptyInput());
   expect(runtime.effects).toEqual([]);
   expect(world.effects.map((e) => [e.x, e.y])).toEqual([
@@ -133,7 +126,16 @@ test('teleport uses both authored registration endpoints, boundary clamp, one-pe
   const gun = guns[1];
   gun.part = { ...gun.part, x: 10, y: 0, scale: 1 };
   world.fireGun(world.player, gun, { ...emptyInput(), aim: { x: 375, y: 225 } });
-  expect(queue(world).map((e) => [e.symbol, e.x, e.y, e.duration])).toEqual([
+  expect(
+    world
+      .runtimeFor(world.field)
+      .queuedEffectRequests.map(({ clip, x, y }) => [
+        'symbol' in clip ? clip.symbol : undefined,
+        x,
+        y,
+        'duration' in clip ? clip.duration : undefined,
+      ]),
+  ).toEqual([
     [1769, 20, 0, 12],
     [1769, 100, 0, 12],
   ]);
@@ -143,7 +145,9 @@ test('teleport uses both authored registration endpoints, boundary clamp, one-pe
   expect(queue(world)).toHaveLength(2);
   world.player.teleportReady = true;
   world.fireGun(world.player, guns[3], { ...emptyInput(), aim: { x: 2000, y: 225 } });
-  expect(queue(world).at(-1)!.x).toBeCloseTo(423.75 * world.field.scale);
+  expect(world.runtimeFor(world.field).queuedEffectRequests.at(-1)!.x).toBeCloseTo(
+    423.75 * world.field.scale,
+  );
 });
 
 test('burst damage and its clip share the emitter center and exact 145px radius', () => {
@@ -157,7 +161,15 @@ test('burst damage and its clip share the emitter center and exact 145px radius'
   importActorFixtures(world);
   world.fireGun(world.player, gun, emptyInput());
   expect(enemies.map((e) => e.life)).toEqual([75, 100]);
-  expect(queue(world).map((e) => [e.symbol, e.x, e.y])).toEqual([[1789, pos.x, pos.y]]);
+  expect(
+    world
+      .runtimeFor(world.field)
+      .queuedEffectRequests.map(({ clip, x, y }) => [
+        'symbol' in clip ? clip.symbol : undefined,
+        x,
+        y,
+      ]),
+  ).toEqual([[1789, pos.x, pos.y]]);
 });
 
 test('ripple remains ready until a target is close, then replaces ally force and emits once', () => {
@@ -336,3 +348,27 @@ for (const type of [3011, 3012])
     expect(world.player.x).toBe(80);
     expect(world.fieldDisplays.readPose(field).pose.x).toBe(-80);
   });
+
+test('rocket drawing follows immediate registration and targets that exact constructed child', () => {
+  const world = setup(3015),
+    rocket = shot(world, 3015);
+  rocket.x = rocket.y = 0;
+  rocket.angle = rocket.heading = 0;
+  rocket.wobbleAmplitude = 0;
+  const created: number[] = [];
+  const create = world.effectEngine.create.bind(world.effectEngine);
+  world.effectEngine.create = (...args) => {
+    const clip = args[0];
+    if ('duration' in clip && clip.symbol === 2175) {
+      expect(clip.playback!.lineTarget!.lines).toEqual([]);
+      created.push(clip.x);
+    }
+    create(...args);
+  };
+  for (let i = 0; i < 6; i++) tickBullet(world, rocket, emptyInput());
+  expect(created).toEqual([30, 60]);
+  expect(world.effects.map((clip) => clip.playback!.lineTarget!.lines)).toEqual([
+    [],
+    [{ x: -30, y: 0, width: 2, color: 0xffffff, alpha: 0.3 }],
+  ]);
+});

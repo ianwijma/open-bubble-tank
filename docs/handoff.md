@@ -4,7 +4,33 @@ The objective in [goals.markdown](../goals.markdown) remains the full faithful o
 
 Use [delivery](delivery.md) for the current five-layer workflow: build dependents while CI runs, assemble every layer on the last PR, target that PR at master, and require its combined current-head Actions/review gate before one master merge. Earlier entries below describe historical checkpoints; held hashes, browser PIDs and pending layers are not evidence of current state. Verify the actual remote/process state before acting, and dismiss repeated notifications for already merged PRs.
 
-The fourth [combat ancestry and avatar bridge](retained-combat-ancestry-reference.md) is published as PR153, `stack/retained-display-04` head34955e58905eee1a4679918bb6fc7996f7704a2c, above repaired PR152 head1f28a46. The [fifth integration](retained-display-batch-validation.md) now includes a verified ordinary-input pilot correction. The parent75/76 native failure and one independent repeat both reach a playing/pending-transit stall after first secondary-help Close. Source movement/birth gates and Close semantics are preserved: the pilot now steers inward while cleared-field rewards arrive instead of coasting into a crossing before upgrade. Both corrected playthroughs pass: mock68,999/native67,433, all six upgrades, help once, Boss Badge, no downgrades. Build-Op3ze2z_uXkObma46lfY has all729 prebuild inputs unchanged; production src is unchanged from34955e5. The74 unaffected prior browser cases retain their earlier build identity. Formatting/check pass1,131 tests/16,325 assertions; two new pilot regressions fail before and pass after, and the source-state test still pins ignored movement during the stranded crossing. Owned3775/3776 and the independent diagnostic3815/3816 are stopped/free. All original failures/proofs remain in ignored artifacts. Prepare the final fifth PR directly at master, verify all four exact ancestors, and require its current-head hosted gate before one master merge. Repaired PR152's required job is confirmed successful; PR153 last observation was pending. Watches150–153 persist. Master6125acdef18d9bc3c238d460930e238fc4c71f6d and protected legacy22d9def7 remain unchanged. A separate original camera-method qualification is active locally and must not delay this batch. Full native field queries, ordinary earned progression and original/Adobe/full-game parity remain open.
+The [retained display batch](retained-display-batch-validation.md) landed through one PR154 merge897d2e741b8a1d23f563f8bb8a2e6bd684932b9b. Exact-head pull-request run43407815305 attempt1/job131826378222 succeeded on73cdc4ffe42e4ce8a7bfc03d72df5e7877f0de8f. Fresh full review/comment/thread reads found one informational CodeRabbit skip and zero reviews/inline findings. Fetched master has the identical tested treee67613371458570ad8cb339c1a5f42b4dd38573d; all five exact heads are ancestors and GitHub marks PRs150–154 merged. All watches for that batch are stopped. Legacy22d9def7 is unchanged. Do not act on delayed old notifications or recreate intermediate watches. The source-preserving pilot repair and its original failures retain their actual build identities in the batch record; this delivery does not complete the full recreation objective.
+
+The current fifth combined branch is `stack/effect-geometry-05`, containing the
+exact PR155–158 heads plus qualified native text binding, retained generic effects,
+the physical orbital-fixture repair and retained actor/mount clocks. Its827 tracked
+code/test files match actor delegate commitf5b5bbf exactly. That source passed62
+broad and6 final mock/SWF cases, including both accelerated wins. Parent combined
+validation passed70/71 with an advancing native pilot timing out at64,000 frames;
+that failure remains real, not green. The direct-loop performance candidate and
+per-stage MessageChannel experiment were rejected; neither belongs to final
+production/fixture source. Formatting and1,291 tests /75,956 assertions pass. Read
+[the batch validation record](effect-geometry-batch-validation.md) for preserved
+failures, the overwritten diagnostic trace limitation and the required fresh
+hosted named-job/review gate. Keep master897d2e7 and legacy22d9def fixed until that
+final combined gate succeeds, then merge once. The existing constructor/EXIT
+phase discrepancy, under-avatar paint and full-game/ordinary acceptance remain
+open. Do not resurrect old PR watches or open a sixth layer.
+
+The first next-stack foundation is prepared for `stack/effect-geometry-01`, targeting master897d2e7. Its local continuation remains `t3/retained-effect-poses-draft`, rebased onto that merged master with the entire tree unchanged62c16cb3dbf7d6e781e457fd2b9fcf772bce3127. Signed replay stalled in1Password; the parent restarted the rebase with explicit --no-gpg-sign under the authorized fallback. Current rebased commits are25d0786 (original camera), ca2e546 (effect metadata),174e62e (registration precision),d91bf96 (physical population),9ad13eb (mask qualification gap). Old hashes remain historical references, not current branch tips. The original [generic-effect clock qualification](effect-clock-original-reference.md), child69b5615, is picked asb20027b with both fidelity sections preserved. Parent independently reverified both owned capture copies:21,636 rows/259,632 binary Numbers each, REA events still equality-ineligible. The59 frame and45 identity/correspondence candidate differences are unrepaired;399 original lookup holes and unavailable isPlaying reads stay explicit. No blanket native-pose reconstruction is justified by matching root clocks. The separate mask task remains active on3915/9915 and was told the authorized new master checkpoint. It must not touch completed effect task3875/9875 resources.
+
+The local [effect registration position correction](effect-registration-position-reference.md) now preserves queued Number coordinates while applying signed-twip X/Y setters at CreateEffect attachment. Two new regressions fail before and pass after; format/check passes1,140 tests /17,368 assertions. The literal affected browser run passes12 mock/supplied-art cases on buildcnC5ZnrgsKzrSI2ZEdSt-, zero skips/flaky results, with804 unchanged input hashes and3775/3776 stopped/free. Original generic-clock qualification is now complete, with owner/descendant integration still open; no PR/push/deployment or published-head change occurred.
+
+The next local [physical field population seam](field-population-reference.md) combines the actual retained field/tutorial tree, ActorParents order, PickupDisplays poses and concrete bottom117 engine children. It excludes World siblings/queued requests and preserves zero-alpha/dead/empty/detached children and same-ID object identities. Seven cases pass49 assertions; eight semantic mutation controls reject. Full format/check passes1,147 tests /17,417 assertions. This has no application query caller yet: finish native/mock leaf/mask/actor/effect geometry and separate Script traversal before replacing the radius adapter. No new browser E2E or runtime equality is claimed, and published PR154 remains fixed.
+
+Before integrating the next shape traversal, read [the mask qualification finding](field-query-mask-qualification.md). Tagged Ruffle source uses a changing depth latch, potentially differing from conjunction for overlapping masks/end-depth cases; its static-text path also distinguishes advanced bounds from ordinary glyph contact. The compiled-runtime match is unproved. The draft is safely retained in named stash73013f30bad8d3395f7c08026f60d4bda25146dc, not in production. Do not apply/drop unrelated older stashes. A distinct original mask qualification is being prepared on3915/9915, independently of generic-effect clocks on3875/9875. Neither research task changes the fixed published PR154 head.
+
+The next local [effect correspondence correction](effect-clock-correspondence-reference.md) follows render placements rather than retained Map insertion order. Production is unchanged: corrected comparison reduces59frame/45identity differences to26conversion-frame/0identity. The isolated child-before-parent control matches all660 sampled frames/correspondences; it is not yet a production owner or a justification for resetting every removed child. Use that finding for the next retained-effect implementation, preserving the399 original null-lookup and global phase/geometry limits. PR155 remains fixed at8a0b055 and its get-green child returned named run43414772139/job131849787257 pending after successful format/check, with only an informational CodeRabbit skip and zero reviews/inline findings. Parent owns its watch/continuation; do not poll.
 
 The next display batch has three coherent layers prepared: World sibling poses (`stack/retained-display-01`), pickup ownership plus qualified animation (`stack/retained-display-02`), and the preserved-original collapse oracle plus [retained renderer consumers](retained-renderer-reference.md) (`stack/retained-display-03`). The combined local tree passes 1,109 tests / 16,078 assertions and 44 affected mock/native browser cases, with no skips/flaky results. Master is held for five layers and the final combined current-head gate. Actual engine effect parents and pickup poses are now consumed; complete field geometry/masks/order and retained effect poses remain next. Do not equate absent Vercel statuses with authenticated provider skip proof. Original numeric controls are bounded by the [probe reference](world-layer-original-reference.md), including the detached concatenatedMatrix discrepancy.
 
@@ -103,3 +129,116 @@ pickup captures qualify constructor/script/parentless/removal phases and native
 child transforms; source SpawnLifeBubbles/Setup execute with a null avatar, not
 World.Run. Global entropy/event ordering and ordinary/full-game parity remain
 open. All work stays local; this is not a sixth PR or a change to PRs145–149.
+
+## Current effect/geometry stack
+
+PRs150–154 landed through one tested PR154 merge `897d2e741b8a1d23f563f8bb8a2e6bd684932b9b`.
+PR155 (`stack/effect-geometry-01`, fixed head `8a0b055`) is the first layer of the
+next five-PR batch; its hosted Actions result remains pending in the last inspection.
+Build dependent layers while it runs, retaining one final combined gate/master
+merge and `stack/**` deployment suppression. Legacy `22d9def7` is unchanged.
+
+The corrected effect replay uses actual render order rather than Map insertion
+history; see [the correspondence review](effect-clock-correspondence-reference.md).
+The original mask controls now qualify the changing latch and runtime reference
+lifetime. The [unused field traversal](field-query-traversal-reference.md) applies
+those policies with separate Script bounds and shape contact. It requires explicit
+geometry for every physical slot and does not replace gameplay queries. Retained
+generic effects, complete native/mock/text geometry, public root-coordinate
+mapping and eventual browser integration remain distinct work. Preserve the
+unchanged original fixtures and historical stash; never restore the old
+all-active-mask policy from it. No full-game or Adobe parity follows.
+
+Local follow-up above PR156 preserves [actual text settings](text-contact-settings-reference.md)
+and adds [native retained geometry](retained-native-geometry-reference.md). The
+geometry reader consumes already constructed clips in current render order and
+rejects unresolved children/content without creating or advancing artwork. The
+affected browser run passes51 original-mask vector controls and13 retained stroke
+cases, alongside the intact primitive/protection/projectile checks. All1200 rule
+tests pass;2 mock/supplied browser cases pass without skips/flakes and777 build
+inputs match. This remains local, with no additional PR or master update. Bind
+complete text/root-coordinate and actor/effect owners before gameplay migration;
+the original-runtime coordinate and text qualifications are separately delegated.
+
+The next local integration includes both returned qualifications. Player-root
+arguments are Main-relative in the measured original route; the separate
+[public field boundary](player-root-field-query-reference.md) is bound and its
+native36-row/108-hit comparison passes. Loaded-root mapping remains unexecuted.
+[Original StaticText](text-contact-runtime-reference.md) instead requires explicit
+Engine-bounds dispatch, ignores the measured assigned runtime mask and differs
+from its wrapper at zero scale; do not feed it through generic mask/inverse rules.
+Exact Engine arithmetic is still open and no text provider is installed. Joint
+formatting/check passes1215 tests /38792 assertions; the unchanged production
+code's literal10-case crossing/Main/contact browser validation is recorded in the
+public-boundary reference. Third stack branch `stack/effect-geometry-03` will
+carry this coherent query/native-evidence layer above PR156, with no master merge
+until five layers are assembled and the final combined head is green.
+
+Local continuation above PR157 fixes [phantom removed-attachment geometry](actor-attachment-membership-reference.md).
+Contact and legacy shield Script bounds now require actual physical children,
+matching the existing renderer owner. Retained records/flags cannot stand in for
+parentage. Four contact regressions plus one bounds case fail before;1220 rule
+tests and16 affected mock/SWF browser cases pass after, with800 build inputs
+unchanged. This does not complete actor pose/clock composition. Keep this coherent
+fix with the following stack layer and retain the final five-layer merge gate.
+
+Fourth layer `stack/effect-geometry-04` combines that attachment correction with
+the [qualified StaticText Engine helper](text-engine-runtime-reference.md).
+Parent-owned copies of both fresh captures independently reverify2,554 rows /
+168,564 Numbers each. The joint supplied-file formatting/check passes1,225 tests
+/60,367 assertions; the preceding16-case browser run covers the unchanged
+attachment production/fixture code. The helper has no native/gameplay caller yet.
+Keep text-specific dispatch and retained generic-effect integration local until
+they can form the final combined fifth PR. Preserve all three earlier stack
+heads, deployment suppression, master and legacy; validate that final exact head
+before the single master merge. Source-qualified evidence is not full-game parity.
+
+The local [advanced-text integration](native-static-text-integration.md) selects
+actual qualified tutorial metadata and adds an explicit `parentAncestry` query
+seam. Keep this immediate-parent-through-Main list distinct from the existing
+shape `parentToStage` matrix: float32 composition is not associative. All1,890
+applicable frozen text controls now exercise native provider/public/internal
+dispatch; actual retained tutorial frames3–6 are supported, while dynamic-text
+content and unmeasured text mask roles/modes remain rejected. No World gameplay
+consumer or scheduler migration is included. Combine this local commit with the
+retained-effect task for the fifth PR and repeat the final combined gate. The
+original evidence families, master897d2e7 and legacy22d9def7 remain unchanged.
+
+The parent then binds field queries to actual World/Main ancestry and permits
+text siblings outside every authored mask range, preserving rejection for
+potential overlap. Its1,232-test check and2-case native/mock browser run preserve
+all1,890 text contacts and existing controls; see the integration reference.
+The original tutorial type inventory corrects the earlier SimpleButton label:
+1655 is DefineEditText,1657 is a bitmap-filled shape, and1658 is a sprite.
+
+The [actor clock qualification](actor-clock-original-reference.md) is now picked
+locally and both owned copies independently reverify. Actual retained mounted
+references keep advancing through detach and original cache restoration. Replace
+the host attached-only art clock assumption using that evidence, without tying
+gameplay Run, constructor lifetime or geometry reads to stage membership. The
+joint parent check passes1,243 tests /66,179 assertions. Keep the final fifth PR
+local until the retained-effect and actor-clock corrections are combined and
+verified; no fifth PR or master merge has occurred at this handoff.
+
+
+The local [retained actor clock repair](actor-artwork-lifetime-reference.md) now
+uses weak explicit construction ownership independently of actor parentage and
+Run arrays. Already materialized mounted trees continue through cache/actor/mount
+removal and preserve identity/current pose on reattachment; inside-ENTER birth
+cohorts hold their initial frame. Its isolated branch first picks the complete
+generic-effect dependency3336159 asabc4dce, preserving both documentation appends.
+Pick only the subsequent actor commit when integrating onto a parent that already
+contains3336159. The combined supplied-file check passes1,291 tests /75,956
+assertions; final browser/build/hash/cleanup details are in the reference. Lazy
+constructor/entropy/provider, positive-Y constructor phase, GC/global-session and
+ordinary/Adobe/full-game limits remain explicit. Master897d2e7 and legacy22d9def7
+are untouched. Parent owns the final exact-head gate and single master merge.
+
+Final actor validation passes62 broad mock/SWF browser cases plus6 final
+actor/orbital/contact cases after the independent5c5919 fixture pick (local8261c98).
+Final buildOAkNWlFodnb1OZkC9AOYP and the supplied-file check above pass with832
+post-format inputs unchanged;175 repository evidence inputs and98 read-only
+external inputs also match. The broader buildVSO8Y1UZcJFIv4mx0VHwY preserves both
+seed17 accelerated wins at65,976/64,639 frames. Owned4215/4216 are free with no
+recorded process survivors. Both dependency picks remain separate from the actor
+commit; do not duplicate them on the already integrated parent.

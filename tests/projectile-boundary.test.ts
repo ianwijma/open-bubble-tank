@@ -196,7 +196,7 @@ test('state2 moves before the virtual wall test, skipping all subtype and wipe b
   tick(w, b);
   expect([b.x, b.y, b.angle, b.speed, b.enemy, b.dead]).toEqual([418, 0, 90, 1, true, true]);
   expect(misses(w)).toEqual([0, 1]);
-  expect(w.runtimeFor(w.field).effectQueue.map((e) => [e.x, e.y])).toEqual([[418, 0]]);
+  expect(w.runtimeFor(w.field).queuedEffectRequests.map(({ x, y }) => [x, y])).toEqual([[418, 0]]);
   expect(w.bullets).toEqual([]); // no Starburst split.
 });
 

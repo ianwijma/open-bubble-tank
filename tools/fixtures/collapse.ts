@@ -70,15 +70,18 @@ export async function showCollapseProof(pack: AssetPack, host: HTMLElement) {
   const bottom = world.addCombatEffect(
     { x: 100, y: 40 },
     'impact',
-    { layer: 'bottom', frame: 1, randomRotation: false },
+    { layer: 'bottom', randomRotation: false },
     true,
   );
   const top = world.addCombatEffect(
     { x: 100, y: 40 },
     'impact',
-    { layer: 'top', frame: 1, randomRotation: false },
+    { layer: 'top', randomRotation: false },
     true,
   );
+  // The gallery intentionally keeps these two comparison roots at frame1.
+  bottom.playback!.pose.gotoAndStop(1);
+  top.playback!.pose.gotoAndStop(1);
   setFieldFixtureLayout(world);
   world.beginCollapse(30);
   const effect = world.collapse!.effect;

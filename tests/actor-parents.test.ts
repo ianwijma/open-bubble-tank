@@ -115,9 +115,10 @@ test('sync only updates ancestry; raw arrays cannot attach or reorder enemyLayer
   expect(world.actorParents.hasParent(rawOnly)).toBe(false);
 });
 
-test('stage artwork advances an attached display-only actor without running its absent array entry', () => {
+test('retained artwork advances a display-only actor through direct removal without Run', () => {
   const world = new World([], [], 1),
     actor = createTank(world.nextId(), STARTER, 'enemy');
+  world.actorArtwork.construct(actor);
   world.attachActor(actor, world.field);
   world.pause();
   world.step(emptyInput());
@@ -126,7 +127,8 @@ test('stage artwork advances an attached display-only actor without running its 
   expect(world.field.enemies).not.toContain(actor);
   world.actorParents.detach(actor);
   world.step(emptyInput());
-  expect(actor.artAge).toBe(1);
+  // Original actor-clock qualification contradicts the former detached-art freeze.
+  expect(actor.artAge).toBe(2);
 });
 
 for (const id of [3007, 3016])

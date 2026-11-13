@@ -1709,3 +1709,360 @@ The corrected PR153 head34955e5 passes1,129 unit tests /16,312 assertions and75 
 The independent supplied-art repeat at34955e5 also reaches level3/life4 with a retained transit age2. Its read-only samples identify the state after first secondary-help Close: source mode becomes ordinary while movement/birth gates remain set. Cleared-field coasting with pending rewards precedes upgrade during the crossing. The [fifth integration](retained-display-batch-validation.md) preserves production source behavior and changes only the accelerated pilot to steer inward until forced rewards arrive. Two new public-input regressions fail before and pass after; the existing source-state case now also pins ineffective direction input rather than silently resuming travel. Formatting/check pass1,131 tests /16,325 assertions.
 
 Fresh literal build-Op3ze2z_uXkObma46lfY passes both affected mock/supplied-art playthroughs at68,999/67,433frames with the same offered designs, all six levels, help once, no downgrades and Boss Badge. All729 prebuild inputs match, production src has no difference from34955e5, and owned3775/3776 are free. The74 unaffected prior cases retain their original build identity; this is not one new76-case passing run. No controller skip, production recovery, provider/RNG/seed/frame-cap/timeout/assertion relaxation is used. Original failing trajectories remain available. Hosted combined-head validation, ordinary realtime earned progression and original/Adobe/full-game parity remain separate requirements.
+
+## Original ordinary camera numeric qualification
+
+The distinct [world-motion original-method control](world-motion-original-reference.md)
+executes actual public AdjustBubblefieldObjects161 times with the genuine original
+vector and background dependencies. Four fresh source Number sequences and one
+controlled teleport freeze400 rows /12,400 binary Numbers; original parent
+Position at40 is170.55 per positive axis, supporting the receiver-local bridge.
+Two fresh captures preserve original bytes/order/ABCs/bindings and match every
+frozen word;15 adversarial mutations reject. Candidate public-step checks and
+finite Point replay match, with12 constructor-versus-attachment mask setup
+differences explicit. Formatting/check passes1,136 tests /17,347 assertions.
+Production is unchanged. REA events remain incomplete/equality-ineligible;
+original World.Run, ordinary/native progression/controller causality, global
+constructor/event/RNG, Adobe/pixel/audio and full-game parity remain unproved.
+
+
+## Local numeric effect metadata preparation
+
+The [repeatable numeric import](effect-display-metadata-reference.md) adds15 original effect SymbolClass bindings with qualified pcode digests,23 sprite timelines and200 geometry leaf references (190 shapes/10 morphs). Two imports are byte-identical; an independent owned parse audit matches every selected original record and resolves all leaves. Metadata contains no media, vector paths or SWF payloads. All15 original root constructors are plain MovieClips with no root frame-script registration/stop call, but generic unparented/removed clocks and descendant runtime poses still need their own active qualification. This data is not consumed by production yet and does not implement the complete field query. Joint local formatting/check with original camera evidence passes1,138 tests /17,360 assertions; application E2E is not repeated for unused metadata. Published PR154 stays fixed and watched separately.
+
+
+## Local effect registration position boundary
+
+The [registration correction](effect-registration-position-reference.md) preserves raw queued Number arguments and applies signed-twip setters only when CreateEffect assigns the clip's X/Y. Qualified source/pcode fixes that ordering; this is not a new runtime capture of fractional CreateEffect calls. Both new queued/immediate regressions fail before and pass after. Formatting/check passes1,140 tests /17,368 assertions; buildcnC5ZnrgsKzrSI2ZEdSt- passes12 affected mock/supplied-art browser cases with zero skips/flaky results and804 unchanged input hashes. Owned3775/3776 are free. Generic effect clocks/retained native poses and complete field queries remain unresolved; published PR154 is unchanged and full-game/Adobe parity remains unproved.
+
+
+## Local physical field population seam
+
+The [population projection](field-population-reference.md) now combines actual authored/tutorial, actor, pickup and bottom117 owners in source order, preserving invisible/dead/empty/detached children and excluding queued requests and World siblings. It retains same-ID object distinctions and current owner poses without initialization, entropy, UID or stage-clock writes. Seven cases pass49 assertions and reject eight isolated semantic mutations. Format/check passes1,147 tests /17,417 assertions. The seam has no application caller yet; no browser flow/E2E or original-runtime query equality is claimed. Complete native/mock leaf geometry, actor protection, effect poses/drawn lines, masks and Script arithmetic remain before field-query migration. PR154 is unchanged and the full recreation remains incomplete.
+
+
+## Field shape-mask qualification remains open
+
+The [tagged-source investigation](field-query-mask-qualification.md) found a potential disagreement between the new draft's all-active-mask conjunction and Ruffle0.7.1's changing depth latch for overlaps/end-depth controls. The field's existing nonoverlapping finite controls do not distinguish those policies. Static text also has advanced-rendering bounds versus ordinary glyph-contact branches; raster alpha cannot establish that contract. Tagged source is not authenticated compiled-runtime or Adobe proof. The local traversal draft is stashed, not integrated; twelve passing synthetic/frozen-width cases do not waive the shape question. A distinct preserved-original qualification is the next step. PR154 and production queries remain unchanged.
+
+## Original generic effect construction clocks
+
+The distinct [effect-clock qualification](effect-clock-original-reference.md)
+executes actual constructors for all15 catalog roots in before/inside ENTER
+cohorts, original field Setup/AddEffectToQueue and engine registration/CreateEffect/
+Run. Two fresh original-browser captures independently reproduce21,636 binary
+pose rows /259,632 Numbers each, including retained historical descendants,
+delayed registration, completion while parented and continuing removed wraps.
+Original header/order/all3,022 tags/ABCs/bindings are preserved except CID0 plus
+one added glue ABC; deterministic reemission matches. Eighteen consistent-forgery
+and byte/runtime controls reject per capture. Prior probe families remain unchanged.
+
+Inside births retain frame1 through the following ENTER2/EXIT2; registration does
+not restart playback. Inside mine registers at final6 and completes on that same
+ENTER7 poll. Collapse's103-frame child remains stopped103 across root wraps while
+its14-frame descendant continues; root placements keep changing the stopped
+child's own matrix. Direct isPlaying reads are unavailable, and399 original null
+child lookups (397 ENTER/two callback) remain explicit rather than fabricated poses.
+REA events remain incomplete/equality-ineligible. The raw-SpriteInfo SwfClip
+candidate replay records59 frame and45 identity/correspondence differences;
+registration-owned generic age remains an explicitly tested, unrepaired gap.
+
+Formatting/typecheck and1,157 tests /17,736 assertions pass. This is local research
+only: no production/caller/renderer migration, original field queue draining or
+World.Run, ordinary reachability, global event/entropy, complete geometry,
+Adobe/pixel/audio or full-game parity claim. PR154 and its CI/watch remain
+parent-owned and unchanged; parent separately owns static metadata and integration.
+
+
+
+## Retained display batch delivered and local evidence reviewed
+
+The five-layer batch landed through PR154 merge897d2e741b8a1d23f563f8bb8a2e6bd684932b9b after exact-head latest-attempt run43407815305/job131826378222 succeeded and the parent re-read full feedback (zero reviews/inline findings, one informational skip). Fetched master has the tested treee67613371458570ad8cb339c1a5f42b4dd38573d and all five heads; GitHub marks150–154 merged. Batch watches are stopped; legacy22d9def7 remains unchanged. Local follow-up was rebased with its entire tree identical, then the generic-effect original qualification was integrated separately. Parent-owned copies of both captures reverify21,636 rows/259,632 Numbers each. These remain bounded runtime controls with incomplete/equality-ineligible events, not a repair of59 frame/45 identity differences,399 lookup holes or complete field geometry. No full-game/Adobe completion is claimed.
+
+
+## Corrected effect replay paths
+
+The [candidate correspondence review](effect-clock-correspondence-reference.md) found a tool defect: Map insertion order differs from actual getChildAt/render order after earlier depths are replaced. The corrected walk eliminates all45 identity/correspondence and33 collapse-frame differences without changing production or frozen data. The remaining26 conversion-child frames match in an isolated child-before-parent advancement experiment, consistent with tagged scheduler order. All660 sampled frame/correspondence checks match that control; before/inside root ownership, complete pose/ENTER geometry and production migration remain separate work. No runtime oracle is rewritten and no full-game/Adobe claim is made.
+
+
+## Finite original mask-query qualification
+
+The distinct [field-mask runtime controls](field-mask-runtime-reference.md) execute
+actual builtins on preserved original geometric leaves inside declared project
+wrappers. Two fresh owned-browser captures match 97 rows / 2522 binary64 values
+and independent REA DOM. Overlap order and exact end-depth controls support the
+changing latch and reject all-active-mask conjunction/inclusive mask-end as the
+loaded runtime contract. Explicit runtime mask references persist through actual
+reparent/removal; visibility, alpha, receiver/direct queries and Script bounds
+are independently frozen. Twenty-one adversarial controls reject, and all 50 older
+reference files / 22 emitted modes remain byte-identical. Production and the
+parent's stashed traversal are unchanged. REA events remain incomplete and ineligible for equality; compiled source revision, complete field/text traversal, ordinary
+reachability, Adobe/pixel/audio and full-game parity remain unproved.
+
+## Qualified mask traversal seam, without gameplay migration
+
+The [separate bounds/shape traversal](field-query-traversal-reference.md) now
+applies the finite original mask policy: changing depth latch, exact end-depth
+admission, hidden authored masks versus geometric runtime references, and
+reference retention independently of physical parentage. Tests compare unchanged
+binary oracle results using only independently measured leaf Points; synthetic
+owner-routing controls are labelled separately. Script bounds transform declared
+leaves before union and retain invisible/masked geometry. The public adapter
+requires explicit stage attachment and argument ancestry, while the field helper
+is explicitly stage-space only. There is no application caller or complete
+native/mock provider. Public player-root mapping, static text, complete effect
+poses, hot-path population cost and ordinary/original/Adobe/full-game parity
+remain unresolved. PR155 and its published head are unchanged by this local layer.
+Formatting/check passes 1193 tests / 19427 assertions; the focused 18 cases pass
+179 assertions and reject all three isolated semantic mutations. No application
+E2E is claimed for the unused seam.
+
+## Preserve native text mode before geometric contact integration
+
+The [text-settings inventory](text-contact-settings-reference.md) now retains
+actual tag74 renderer/grid-fit/floating-point fields. Independent original byte
+decoding matches all422 records; tutorial1667's eight static text leaves1659–1666
+all explicitly select advanced rendering. Tagged text contact distinguishes
+world-bounds hits from glyph contact, so the current raster-alpha fallback cannot
+prove the correct geometric branch. No contact or paint caller is changed here.
+Original-runtime text controls and complete provider integration remain required;
+this metadata addition does not establish Adobe or full-game parity.
+Formatting and the supplied-file full check pass1196 tests /19444 assertions;
+the focused parser/original-file cohort passes10 tests /664 assertions. No
+application browser flow was changed or repeated for this metadata-only slice.
+
+## Read native geometry from retained clips
+
+The [native retained-clip boundary](retained-native-geometry-reference.md) now
+projects current render order, actual child/birth identities and placement morph
+ratios without clock, constructor, entropy or age-reconstruction writes. Original
+declared rectangles feed Script bounds; native fill/stroke geometry feeds contact.
+Unsupported definition leaves such as text/bitmaps reject rather than using raster
+alpha; independently owned runtime drawings/masks require explicit composition.
+The unused API does not migrate gameplay queries or promise complete field geometry.
+
+The browser compares actual supplied1539/1544 contours against all51 selected
+frozen original mask controls, with the complete key set required. All13 retained
+thin-stroke controls and transparent-fill contact also pass; existing protection,
+primitive and projectile assertions remain intact. Format/check passes1200 tests
+/19461 assertions. Literal affected E2E passes2 mock/supplied cases with zero
+skips/flaky results, build `NJRTYdp8_WZkh3KuZR9Ws`;777 input hashes match and both
+paint sheets were inspected. Owned4015/4016 servers exited. Complete text/root
+mapping, actor protection/runtime masks, effect lines/poses, morph/Engine edge
+qualification, full mock composition and ordinary/Adobe/full-game parity remain open.
+
+## Original public player-root query argument qualification
+
+The distinct [root-query runtime controls](root-query-runtime-reference.md)
+freeze36 rows /2592 binary Numbers from genuine original1544/1543 under separate
+Main translations, fractional setters and bounded Main/wrapper affine transforms.
+Two fresh owned browsers identify actual Main root/shared loaderInfo/null loader
+and agree with independent REA DOM and loaded JS/WASM bytes. At Main1000, raw
+centre(0,0) hits while actual localToGlobal(1000,0) misses; converting back to Main
+arguments restores the hit. The measured public route is root-relative. The
+loaded-root stage branch remains unexecuted and unqualified. All3022 original
+tags/header/order/ABCs/non-document bindings are preserved except declared CID0,
+plus three classified additions; re-emission matches. Twenty-three mutations
+reject per capture, including synchronized Boolean/Point and root/mapping/byte
+forgeries. Existing candidate arithmetic matches180 separately frozen Point
+checks. Formatting/check passes1201 tests /20323 assertions; production callers
+and all prior probe families remain unchanged. REA events remain incomplete and
+equality-ineligible; compiled source, arbitrary boundary/transform, ordinary/global,
+Adobe/pixel/audio and full-game parity remain unproved. PR155/156 and the parent’s
+five-layer master gate remain parent-owned.
+
+## Bind the qualified player-root query path
+
+The [public field boundary](player-root-field-query-reference.md) now maps
+arguments through Main independently of the field/World/Main receiver chain.
+The internal stage-space API remains separate. Native vector controls compare
+all36 original root cases,108 hits and72 dimensions; the same production build
+passes10 affected mock/SWF crossing/Main/upgrade/contact cases without skips or
+flaky results. Formatting/check passes1206 tests /20345 assertions. Actual served
+fixture bytes match a fresh current-source build; the recorded single-fixture
+formatting/hash overlap is explicit. Detached receivers still miss; Script width
+excludes Main translation. No loaded-root route, automatic identity inference,
+complete field-provider or gameplay migration is claimed.
+
+## Original advanced StaticText contact qualification
+
+The [text runtime controls](text-contact-runtime-reference.md) preserve all original
+text/CSM/ABC payloads and classify project-derived normal/advanced controls
+separately. Two fresh captures freeze322 rows /13524 Numbers each; parent-owned
+copies independently reverify and all30 mutations reject. Original advanced text
+hits empty margins and rotated world-AABB corners outside its local rectangle,
+while the derived normal control misses. Measured StaticText ignores its assigned
+runtime mask and can directly hit a zero-scaled line while its MovieClip wrapper
+misses. The current common mask/inverse-before-leaf rules must not be applied to
+those text leaves. Exact Engine-bounds arithmetic, broader glyph modes and
+authored text masks remain unqualified, so no text provider/gameplay migration
+is installed. REA events remain incomplete/equality-ineligible; Adobe, global and
+complete-game parity remain unproved.
+
+The joint native/root/text evidence checkout passes formatting/typecheck and1215
+tests /38792 assertions. Parent-owned root and text captures independently
+reverify with23 and30 rejecting controls respectively. The text qualification
+adds only evidence/tools after the10-case production browser run; its pick does
+not change that tested production/fixture code. These remain finite comparisons,
+not complete field or original/Adobe/gameplay parity.
+
+## Removed actor attachments cannot retain phantom geometry
+
+The [physical attachment correction](actor-attachment-membership-reference.md)
+requires actual status/infection/forcefield keys for current contact and distinct
+legacy film/impact keys for contact and Script bounds. Retained logical records
+and positive flags no longer invent absent children. Four public-contact and one
+bounds regression fail before; all12 focused cases pass after. Genuine supplied
+artwork additionally proves contact/renderer removal and explicit reattachment
+while logical state remains. These are controlled reconstruction states, not a
+fresh original encounter or broader lifetime qualification.
+
+Format/check passes1220 tests /38816 assertions; literal affected E2E passes16
+mock/SWF cases with zero skips/flaky results, build `Ci7L3avYUTRSJpt48ArqF` and800
+unchanged input hashes. Existing positive geometry, native mask/root/stroke,
+ownership, protection and actual Shield Turret save controls remain intact.
+Complete actor geometry/clock separation, Engine text bounds and ordinary/full-game
+parity remain unfinished. This local follow-up does not alter published PR157.
+
+
+## Bounded StaticText Engine arithmetic
+
+The separate [text-engine controls](text-engine-runtime-reference.md) reobserve all
+322 earlier text-contact cases bit-for-bit and add genuine matrix getters and
+fractional boundary samples. Two fresh owned REA captures freeze2,554 rows /
+168,564 Numbers each, independently verify all3,022 original tags and loaded
+runtime bytes, and reject38 synchronized forgeries per capture. Declared twips
+plus measured own ancestry match1,890 advanced contact results and5,102 applicable
+matrix checks; ideal Number boxes, per-ancestor re-boxing and universal inverse
+policies disagree with measured controls. The pure core helper composes matrices,
+rounds transformed corners with the existing frozen Point arithmetic and tests
+inclusive stage-twip bounds. Point argument quantization remains separate.
+
+No native provider, shared mask/inverse traversal, renderer or gameplay consumer
+selects the helper yet. StaticText options/runtime masks and MovieClip container
+guards require class-specific dispatch; normal glyphs, authored text masks,
+scrollRect and broader inputs remain unqualified. Complete actor/effect owners
+and World consumers remain separate work. Formatting/typecheck/full check passes
+1,220 tests /60,343 assertions. No application browser consumer changes; both fresh
+REA reference flows pass. REA events remain incomplete/equality-ineligible, and
+compiled-source, Adobe and complete-game parity remain unproved.
+
+The parent independently reverified both text-engine captures in owned copies
+after integration with the attachment correction. The joint supplied-file check
+passes **1,225 tests /60,367 assertions**. The pure helper/evidence pick does not
+change the production or fixture code exercised by the preceding16-case browser
+run. Advanced-text native dispatch is still separate work; no extra application
+browser validation is claimed for this unused helper.
+
+## Bounded advanced-text native dispatch
+
+The local [StaticText integration](native-static-text-integration.md) now binds
+the eight measured tutorial leaves to actual declared rectangles and advanced
+CSM metadata. Explicit immediate-parent-through-Main ancestry preserves bottom-up
+float32 products; a grouped matrix is never silently treated as an exact chain.
+Direct text uses its qualified bounds branch before inverse/assigned-mask checks;
+text-bearing wrappers retain their inverse and mask/depth guards. Shape-only and
+Script contracts remain unchanged. Authored text mask combinations, scrollRect,
+unmeasured modes/classes and missing ancestry reject instead of guessing contact.
+All1,890 applicable frozen contacts pass the native provider/public traversal
+with their original dimensions. Actual tutorial frames3–6 read current retained
+text children without clock/entropy writes; frame1's DefineEditText remains outside
+this provider. No gameplay field consumer migrates, no original oracle is edited,
+and complete field/ordinary/global-event/Adobe/full-game parity remains open.
+
+Parent review binds both field query entry points to actual World/Main ancestry
+and permits tutorial siblings beyond every authored mask end; potentially
+overlapping text-mask ranges still reject. Two routing/range regressions fail
+before and pass after. The parent formatting/check passes1,232 tests /66,118
+assertions; literal affected E2E passes2 mock/SWF cases without skips/flaky results,
+all892 captured inputs unchanged. All native text/mask/root/stroke/attachment
+controls remain intact; this is not original complete-field qualification.
+
+## Original retained actor clock qualification
+
+Two fresh [actor clock captures](actor-clock-original-reference.md) retain genuine
+TankData-created catalog parts and a living built-in Floaty. Measured artwork
+continues through ancestor detach, direct actor removal and direct mounted-root
+removal; stopped rotor roots retain playing descendants. Actual original `_‑G0`
+restores the same NPC and mounted identities without restarting frames. The
+attached-only host artwork clock policy is insufficient for these references.
+The private callback comparison remains unresolved and is not a failure claim.
+
+Parent-owned copies independently reverify27,972/28,372 MovieClip rows and
+335,664/340,464 binary Numbers. The two captures preserve distinct random outcomes
+and reentrant EXIT rows rather than claiming event equality. All40 rejecting
+controls pass in the original qualification. The joint parent check passes
+1,243 tests /66,179 assertions. No actor-clock production repair is included yet;
+this evidence-only pick does not change the preceding tested browser code.
+Departure/gameplay Run, other part/status/protection/collection lifetimes, global
+event/RNG, compiled-source identity, ordinary/Adobe/full-game parity remain open.
+## Local retained generic effect playback
+
+The [retained effect layer](retained-effect-playback-reference.md) replaces generic
+registration/attachment ages and renderer reconstruction with construction-owned
+numeric playback for all15 audited roots. Both measured birth epochs, delayed
+registration, current-frame completion/callbacks, pause/Main4, removed root wraps,
+conversion retirement and the stopped103/advancing14 collapse tree are retained.
+Existing children now enter before parent removals, consistent with tagged source
+and the unchanged original oracle; the existing2069 stop script is unchanged.
+
+All660 sampled retained multi-frame comparisons/correspondences match. Exact
+EXIT numeric checks cover2,830 current child matrices/positions/alpha and349
+historical/current sprite own poses/scales. Root placement starts at0; raw queue
+arguments remain independent until CreateEffect. Painting and the future field
+population seam read the same retained pose. Rocket graphics belong to the
+original named child, with no read-time redraw on a replacement. Unsupported
+native/legacy mock paths remain explicit. Shape-wrapper identity reuse, some
+rotation getter binary rounding,399 transient wrapper holes, complete ENTER
+geometry, complete field queries, global events/RNG, Adobe and full-game parity
+remain open. No mask work or stashed field-query draft is integrated. This work
+is local above569c406; PR155 and all remote/protected refs remain unchanged.
+
+
+Final local validation of this layer passes formatting/TypeScript and1,209 rule
+tests /27,536 assertions, then all69 affected mock/supplied-SWF browser cases on
+buildGmLvlQCLFKiOxw7V4b81n with zero skips/flaky results. Both seed17 pilots retain
+all controls/providers/frame caps/timeouts and finish at68,999/67,433 frames with
+the actual base input digests. Earlier gallery/timing failures and the base
+controls remain in the reference. Combined clip advancement now separates child
+entry/parent tags from forward render-order scripts; pending-script summaries and
+unchanged-tag reuse avoid redundant work while stopped descendants keep entering.
+The browser accelerator yields every50 logical frames, independently of its
+unchanged1,000-frame reporting cadence. All757 final inputs and85 prior evidence
+inputs match their recorded hashes; owned3955/3956 are free and1,195 process
+fingerprints have no survivors. Source/evidence gaps above remain open; no full
+original/Adobe/global-event or complete field-query claim is made.
+
+
+## Retained actor artwork lifetime correction
+
+The [bounded actor correction](actor-artwork-lifetime-reference.md) replaces the
+attached-field-only clock with explicit World construction ownership and a weak
+ENTER cohort. Cached/directly removed retained actors and replaced avatars keep
+their artwork age; already materialized mounts advance without paint/contact
+reads. Reattachment retains current trees and child identity, stopped rotor roots
+remain stopped, and inside-ENTER actors hold their first frame. Raw arrays and
+physical attachment cannot construct, reset or rediscover a clock. No gameplay
+Run, timer, RNG or UID work is added by tracking.
+
+The complete generic-effect/scheduler dependency3336159 is picked locally
+asabc4dce before final actor validation. Six initial actor regressions fail on
+88a98ef; the combined supplied-file check passes1,291 tests /75,956 assertions,
+including the original actor contracts and660 effect correspondences. The prior
+detached actor freeze expectations are host assumptions contradicted by the new
+source-qualified evidence; other behavior/removal-error assertions remain.
+
+This is not complete actor provider/constructor parity. Mounts still construct
+lazily with host entropy, and positive-Y constructor/ENTER/EXIT separation,
+complete actor/status/protection pose ownership, naked-child retention after all
+owners disappear, cross-World/GC/global-session equivalence and ordinary original/
+Adobe/full-game parity remain open. Final browser/build/hash evidence is retained
+in the implementation reference; parent still owns the combined fifth-head gate
+and the single master merge. No remote action belongs to this local correction.
+
+Local browser verification passes62 broad cases onVSO8Y1UZcJFIv4mx0VHwY and6 final
+actor/orbital/contact cases onOAkNWlFodnb1OZkC9AOYP after the independent5c5919
+fixture repair, with zero skips/flakes. Both unchanged seed17 accelerated pilots
+win at65,976/64,639 frames; no ordinary original-input parity follows. All832
+final inputs,175 frozen repository evidence inputs and98 read-only external
+inputs match. Owned4215/4216 are stopped/free; protected refs remain held.

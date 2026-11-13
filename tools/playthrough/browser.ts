@@ -100,8 +100,12 @@ export async function runPlaythrough(
         progress(
           `Run · frame${frame} · level${world.progression.level} · life${world.player.life} · ${world.stats.kills} kills`,
         );
-        await new Promise<void>((resolve) => setTimeout(resolve, 0));
       }
+      // The real viewport yields between stage callbacks. Keep accelerated jobs
+      // short too: WeakRef.deref retains targets until synchronous work ends, so
+      // 1,000-step jobs otherwise keep expired clip trees ticking for that batch.
+      // This changes no input, simulated milliseconds, frame cap or test budget.
+      if (frame % 50 === 0) await new Promise<void>((resolve) => setTimeout(resolve, 0));
     }
     if (world.mode !== 'won')
       throw new Error(

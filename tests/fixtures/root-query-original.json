@@ -1,0 +1,698 @@
+{
+  "scope": "Distinct original public hitTestPoint root argument-space qualification.\nOne declared wrapper retains original1544/1543. Original methods/getters/ABCs,\nRNG, clock and geometry remain unchanged. F8 synchronously applies declared\nMain/wrapper setters and executes actual Point/hit/identity getters.\n",
+  "originalSha256": "f5827841c682f988f23dcf470ab4ab59c1ffc497acb4ca0f21077d03f942c153",
+  "probeSha256": "7b116288e45b06c19cf3564cbdd7137fcadcf5fa66da2d2dff6517423a0b286d",
+  "emitterSha256": "f350c5b161e12fb80e0348de8c00fffacd4d846fb40d4e780e3aebd68ec232fc",
+  "fields": [
+    "receiverId",
+    "parentId",
+    "rootId",
+    "stageId",
+    "mainRootId",
+    "mainParentId",
+    "loaderInfoId",
+    "mainLoaderInfoId",
+    "rootLoaderInfoId",
+    "loaderId",
+    "rootLoaderId",
+    "rootIsMain",
+    "parentIsExpected",
+    "stageIsMainStage",
+    "rootIsStage",
+    "loaderInfoIsMain",
+    "loaderInfoContentIsMain",
+    "rootLoaderInfoContentIsMain",
+    "x",
+    "y",
+    "scaleX",
+    "scaleY",
+    "rotation",
+    "main.x",
+    "main.y",
+    "main.scaleX",
+    "main.scaleY",
+    "main.rotation",
+    "own.a",
+    "own.b",
+    "own.c",
+    "own.d",
+    "own.tx",
+    "own.ty",
+    "concatenated.a",
+    "concatenated.b",
+    "concatenated.c",
+    "concatenated.d",
+    "concatenated.tx",
+    "concatenated.ty",
+    "mainOwn.a",
+    "mainOwn.b",
+    "mainOwn.c",
+    "mainOwn.d",
+    "mainOwn.tx",
+    "mainOwn.ty",
+    "wrapperOwn.a",
+    "wrapperOwn.b",
+    "wrapperOwn.c",
+    "wrapperOwn.d",
+    "wrapperOwn.tx",
+    "wrapperOwn.ty",
+    "input.x",
+    "input.y",
+    "stagePoint.x",
+    "stagePoint.y",
+    "rootPoint.x",
+    "rootPoint.y",
+    "rootMappedStage.x",
+    "rootMappedStage.y",
+    "rawMappedStage.x",
+    "rawMappedStage.y",
+    "stageMappedStage.x",
+    "stageMappedStage.y",
+    "stageMappedLocal.x",
+    "stageMappedLocal.y",
+    "rawHit",
+    "stageHit",
+    "rootHit",
+    "stageHitAgain",
+    "width",
+    "height"
+  ],
+  "wrappers": [
+    {
+      "label": "geometric",
+      "id": 60000,
+      "class": "RootQuery60000",
+      "children": [
+        {
+          "symbol": 1544,
+          "depth": 1,
+          "name": "target",
+          "x": 0,
+          "clipDepth": null
+        }
+      ]
+    }
+  ],
+  "addedTags": [
+    {
+      "code": 39,
+      "sha256": "76f288064aa20a5c300b719403bb3d72357ec79efe4a8c3446eab388c3d5220f"
+    },
+    {
+      "code": 82,
+      "sha256": "fc1f4ebb93a73ac858c6f849667f3ec58701556d6b57db63eacc92fcbb19fc92"
+    },
+    {
+      "code": 76,
+      "sha256": "66e6b8950fc6b7bd34f692266982942ed52eaba95684e14d274221f94df1792f"
+    }
+  ],
+  "originalAbcPayloadHashes": [
+    "130eef8fcef585dc1ae00f427903d11c35a79feb22e11d4e93219f987c719a1c",
+    "d849764541e5f8b5b7d3b9bbdb31960ad9e47b8fd4a3e24652ccfa408c8be596"
+  ],
+  "runtimeModules": [
+    {
+      "sha256": "1ed33b9b71a6b01b9aafafed660be343ffeb2d246c5d79e6425a32bf93e38207",
+      "bytes": 14302754
+    },
+    {
+      "sha256": "26036a94567088dfb3de88a759e8ed10a4cea07b29500af36f345eef42420098",
+      "bytes": 465885
+    },
+    {
+      "sha256": "d27c6bdce2a34afb32e8dfa40970bc7e86cbcb912f92db7eb3e1ac70e943bd82",
+      "bytes": 108322
+    }
+  ],
+  "viewer": {
+    "sha256": "34f10c038f3c88d6c5e747161b38ecd5bd697318a32ec82743aac796fb7945a5",
+    "bytes": 3579
+  },
+  "binaryWords": [
+    [1073741824, 0],
+    [1072693248, 0],
+    [1074790400, 0],
+    [1075052544, 0],
+    [0, 0],
+    [2147483648, 0],
+    [1079590912, 0],
+    [1076101120, 0],
+    [1083129856, 0],
+    [1074266112, 0],
+    [1084178432, 0],
+    [1083150336, 0],
+    [1084188672, 0],
+    [1084715008, 0],
+    [1080107008, 0],
+    [3226779648, 0],
+    [1081155584, 0],
+    [3227828224, 0],
+    [1080188928, 0],
+    [3226697728, 0],
+    [1081196544, 0],
+    [3227787264, 0],
+    [1083294720, 0],
+    [1083435008, 0],
+    [1068079513, 2576980378],
+    [3215563161, 2576980378],
+    [1069128089, 2576980378],
+    [3216611737, 2576980378],
+    [1076107673, 2576980378],
+    [1075039436, 3435973837],
+    [1076114227, 858993459],
+    [1075026329, 2576980378],
+    [1083129958, 1717986918],
+    [1083130060, 3435973837],
+    [3228106752, 0],
+    [1072955392, 0],
+    [1072168960, 0],
+    [1077805056, 0],
+    [1072779788, 3758096384],
+    [1071906816, 0],
+    [3218604032, 0],
+    [1071958236, 536870912],
+    [1084283673, 2576980378],
+    [1081242009, 2576980378],
+    [1083148185, 2576980378],
+    [3228028928, 0],
+    [1084286796, 3435973837],
+    [1081290137, 2576980378],
+    [1084245273, 2576980378],
+    [1081774080, 0],
+    [1084245299, 858993459],
+    [1081774284, 3435973837],
+    [1084763673, 2576980378],
+    [1083541145, 2576980378],
+    [1078099968, 0],
+    [3224698880, 0],
+    [1072273817, 2576980378],
+    [1072902963, 858993459],
+    [3225288704, 0],
+    [1072049045, 2147483648],
+    [3218708889, 2684354560],
+    [1071854387, 1073741824],
+    [1072734384, 536870912],
+    [1072483532, 3221225472],
+    [1069951893, 2147483648],
+    [1070637232, 1073741824],
+    [1072745676, 3221225472],
+    [1083203532, 3435973837],
+    [1078101606, 1717986918],
+    [1083203584, 0],
+    [1084308428, 3435973837],
+    [1081390080, 0],
+    [1083359590, 1717986918],
+    [1081257574, 1717986918],
+    [1080054579, 858993459],
+    [1080175820, 3435973837],
+    [1083214080, 0],
+    [3227971584, 0],
+    [1078427648, 0],
+    [3224620236, 3435973837],
+    [1083214131, 858993459],
+    [1084312780, 3435973837],
+    [1081434931, 858993459],
+    [1083366502, 1717986918],
+    [1081295872, 0],
+    [1084125132, 3435973837],
+    [3224456396, 3435973837],
+    [1082576588, 3435973837],
+    [3229241344, 0],
+    [1084773990, 1717986918],
+    [1083142656, 0],
+    [1084236953, 2576980378],
+    [1082718105, 2576980378]
+  ],
+  "samples": [
+    {
+      "case": "identity",
+      "phase": "centre",
+      "role": "wrapper",
+      "className": "RootQuery60000",
+      "parentClass": "BT3RootQueryProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 1, 2, 1, 2, 3, 3, 3, 4, 4, 1, 1, 1, 4, 1, 1, 1, 4, 4, 1, 1, 4, 4, 4, 1, 1, 4, 1, 4, 5,
+        1, 4, 4, 1, 4, 5, 1, 4, 4, 1, 4, 5, 1, 4, 4, 1, 4, 5, 1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+        4, 4, 4, 4, 1, 1, 1, 1, 6, 6
+      ]
+    },
+    {
+      "case": "identity",
+      "phase": "interior",
+      "role": "wrapper",
+      "className": "RootQuery60000",
+      "parentClass": "BT3RootQueryProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 1, 2, 1, 2, 3, 3, 3, 4, 4, 1, 1, 1, 4, 1, 1, 1, 4, 4, 1, 1, 4, 4, 4, 1, 1, 4, 1, 4, 5,
+        1, 4, 4, 1, 4, 5, 1, 4, 4, 1, 4, 5, 1, 4, 4, 1, 4, 5, 1, 4, 4, 7, 3, 7, 3, 7, 3, 7, 3, 7, 3,
+        7, 3, 7, 3, 1, 1, 1, 1, 6, 6
+      ]
+    },
+    {
+      "case": "identity",
+      "phase": "far",
+      "role": "wrapper",
+      "className": "RootQuery60000",
+      "parentClass": "BT3RootQueryProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 1, 2, 1, 2, 3, 3, 3, 4, 4, 1, 1, 1, 4, 1, 1, 1, 4, 4, 1, 1, 4, 4, 4, 1, 1, 4, 1, 4, 5,
+        1, 4, 4, 1, 4, 5, 1, 4, 4, 1, 4, 5, 1, 4, 4, 1, 4, 5, 1, 4, 4, 8, 4, 8, 4, 8, 4, 8, 4, 8, 4,
+        8, 4, 8, 4, 4, 4, 4, 4, 6, 6
+      ]
+    },
+    {
+      "case": "identity",
+      "phase": "centre",
+      "role": "target",
+      "className": "flash.display::MovieClip",
+      "parentClass": "RootQuery60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        9, 0, 1, 2, 1, 2, 3, 3, 3, 4, 4, 1, 1, 1, 4, 1, 1, 1, 4, 4, 1, 1, 4, 4, 4, 1, 1, 4, 1, 4, 4,
+        1, 4, 4, 1, 4, 4, 1, 4, 4, 1, 4, 5, 1, 4, 4, 1, 4, 5, 1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+        4, 4, 4, 4, 1, 1, 1, 1, 6, 6
+      ]
+    },
+    {
+      "case": "identity",
+      "phase": "interior",
+      "role": "target",
+      "className": "flash.display::MovieClip",
+      "parentClass": "RootQuery60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        9, 0, 1, 2, 1, 2, 3, 3, 3, 4, 4, 1, 1, 1, 4, 1, 1, 1, 4, 4, 1, 1, 4, 4, 4, 1, 1, 4, 1, 4, 4,
+        1, 4, 4, 1, 4, 4, 1, 4, 4, 1, 4, 5, 1, 4, 4, 1, 4, 5, 1, 4, 4, 7, 3, 7, 3, 7, 3, 7, 3, 7, 3,
+        7, 3, 7, 3, 1, 1, 1, 1, 6, 6
+      ]
+    },
+    {
+      "case": "identity",
+      "phase": "far",
+      "role": "target",
+      "className": "flash.display::MovieClip",
+      "parentClass": "RootQuery60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        9, 0, 1, 2, 1, 2, 3, 3, 3, 4, 4, 1, 1, 1, 4, 1, 1, 1, 4, 4, 1, 1, 4, 4, 4, 1, 1, 4, 1, 4, 4,
+        1, 4, 4, 1, 4, 4, 1, 4, 4, 1, 4, 5, 1, 4, 4, 1, 4, 5, 1, 4, 4, 8, 4, 8, 4, 8, 4, 8, 4, 8, 4,
+        8, 4, 8, 4, 4, 4, 4, 4, 6, 6
+      ]
+    },
+    {
+      "case": "main1000",
+      "phase": "centre",
+      "role": "wrapper",
+      "className": "RootQuery60000",
+      "parentClass": "BT3RootQueryProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 1, 2, 1, 2, 3, 3, 3, 4, 4, 1, 1, 1, 4, 1, 1, 1, 4, 4, 1, 1, 4, 8, 4, 1, 1, 4, 1, 4, 5,
+        1, 4, 4, 1, 4, 5, 1, 8, 4, 1, 4, 5, 1, 8, 4, 1, 4, 5, 1, 4, 4, 4, 4, 8, 4, 4, 4, 8, 4, 8, 4,
+        10, 4, 8, 4, 1, 4, 1, 4, 6, 6
+      ]
+    },
+    {
+      "case": "main1000",
+      "phase": "interior",
+      "role": "wrapper",
+      "className": "RootQuery60000",
+      "parentClass": "BT3RootQueryProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 1, 2, 1, 2, 3, 3, 3, 4, 4, 1, 1, 1, 4, 1, 1, 1, 4, 4, 1, 1, 4, 8, 4, 1, 1, 4, 1, 4, 5,
+        1, 4, 4, 1, 4, 5, 1, 8, 4, 1, 4, 5, 1, 8, 4, 1, 4, 5, 1, 4, 4, 7, 3, 11, 3, 7, 3, 11, 3, 11,
+        3, 12, 3, 11, 3, 1, 4, 1, 4, 6, 6
+      ]
+    },
+    {
+      "case": "main1000",
+      "phase": "far",
+      "role": "wrapper",
+      "className": "RootQuery60000",
+      "parentClass": "BT3RootQueryProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 1, 2, 1, 2, 3, 3, 3, 4, 4, 1, 1, 1, 4, 1, 1, 1, 4, 4, 1, 1, 4, 8, 4, 1, 1, 4, 1, 4, 5,
+        1, 4, 4, 1, 4, 5, 1, 8, 4, 1, 4, 5, 1, 8, 4, 1, 4, 5, 1, 4, 4, 8, 4, 10, 4, 8, 4, 10, 4, 10,
+        4, 13, 4, 10, 4, 4, 4, 4, 4, 6, 6
+      ]
+    },
+    {
+      "case": "main1000",
+      "phase": "centre",
+      "role": "target",
+      "className": "flash.display::MovieClip",
+      "parentClass": "RootQuery60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        9, 0, 1, 2, 1, 2, 3, 3, 3, 4, 4, 1, 1, 1, 4, 1, 1, 1, 4, 4, 1, 1, 4, 8, 4, 1, 1, 4, 1, 4, 4,
+        1, 4, 4, 1, 4, 4, 1, 8, 4, 1, 4, 5, 1, 8, 4, 1, 4, 5, 1, 4, 4, 4, 4, 8, 4, 4, 4, 8, 4, 8, 4,
+        10, 4, 8, 4, 1, 4, 1, 4, 6, 6
+      ]
+    },
+    {
+      "case": "main1000",
+      "phase": "interior",
+      "role": "target",
+      "className": "flash.display::MovieClip",
+      "parentClass": "RootQuery60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        9, 0, 1, 2, 1, 2, 3, 3, 3, 4, 4, 1, 1, 1, 4, 1, 1, 1, 4, 4, 1, 1, 4, 8, 4, 1, 1, 4, 1, 4, 4,
+        1, 4, 4, 1, 4, 4, 1, 8, 4, 1, 4, 5, 1, 8, 4, 1, 4, 5, 1, 4, 4, 7, 3, 11, 3, 7, 3, 11, 3, 11,
+        3, 12, 3, 11, 3, 1, 4, 1, 4, 6, 6
+      ]
+    },
+    {
+      "case": "main1000",
+      "phase": "far",
+      "role": "target",
+      "className": "flash.display::MovieClip",
+      "parentClass": "RootQuery60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        9, 0, 1, 2, 1, 2, 3, 3, 3, 4, 4, 1, 1, 1, 4, 1, 1, 1, 4, 4, 1, 1, 4, 8, 4, 1, 1, 4, 1, 4, 4,
+        1, 4, 4, 1, 4, 4, 1, 8, 4, 1, 4, 5, 1, 8, 4, 1, 4, 5, 1, 4, 4, 8, 4, 10, 4, 8, 4, 10, 4, 10,
+        4, 13, 4, 10, 4, 4, 4, 4, 4, 6, 6
+      ]
+    },
+    {
+      "case": "main-offset",
+      "phase": "centre",
+      "role": "wrapper",
+      "className": "RootQuery60000",
+      "parentClass": "BT3RootQueryProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 1, 2, 1, 2, 3, 3, 3, 4, 4, 1, 1, 1, 4, 1, 1, 1, 4, 4, 1, 1, 4, 14, 15, 1, 1, 4, 1, 4,
+        5, 1, 4, 4, 1, 4, 5, 1, 14, 15, 1, 4, 5, 1, 14, 15, 1, 4, 5, 1, 4, 4, 4, 4, 14, 15, 4, 4,
+        14, 15, 14, 15, 16, 17, 14, 15, 1, 4, 1, 4, 6, 6
+      ]
+    },
+    {
+      "case": "main-offset",
+      "phase": "interior",
+      "role": "wrapper",
+      "className": "RootQuery60000",
+      "parentClass": "BT3RootQueryProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 1, 2, 1, 2, 3, 3, 3, 4, 4, 1, 1, 1, 4, 1, 1, 1, 4, 4, 1, 1, 4, 14, 15, 1, 1, 4, 1, 4,
+        5, 1, 4, 4, 1, 4, 5, 1, 14, 15, 1, 4, 5, 1, 14, 15, 1, 4, 5, 1, 4, 4, 7, 3, 18, 19, 7, 3,
+        18, 19, 18, 19, 20, 21, 18, 19, 1, 4, 1, 4, 6, 6
+      ]
+    },
+    {
+      "case": "main-offset",
+      "phase": "far",
+      "role": "wrapper",
+      "className": "RootQuery60000",
+      "parentClass": "BT3RootQueryProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 1, 2, 1, 2, 3, 3, 3, 4, 4, 1, 1, 1, 4, 1, 1, 1, 4, 4, 1, 1, 4, 14, 15, 1, 1, 4, 1, 4,
+        5, 1, 4, 4, 1, 4, 5, 1, 14, 15, 1, 4, 5, 1, 14, 15, 1, 4, 5, 1, 4, 4, 8, 4, 22, 15, 8, 4,
+        22, 15, 22, 15, 23, 17, 22, 15, 4, 4, 4, 4, 6, 6
+      ]
+    },
+    {
+      "case": "main-offset",
+      "phase": "centre",
+      "role": "target",
+      "className": "flash.display::MovieClip",
+      "parentClass": "RootQuery60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        9, 0, 1, 2, 1, 2, 3, 3, 3, 4, 4, 1, 1, 1, 4, 1, 1, 1, 4, 4, 1, 1, 4, 14, 15, 1, 1, 4, 1, 4,
+        4, 1, 4, 4, 1, 4, 4, 1, 14, 15, 1, 4, 5, 1, 14, 15, 1, 4, 5, 1, 4, 4, 4, 4, 14, 15, 4, 4,
+        14, 15, 14, 15, 16, 17, 14, 15, 1, 4, 1, 4, 6, 6
+      ]
+    },
+    {
+      "case": "main-offset",
+      "phase": "interior",
+      "role": "target",
+      "className": "flash.display::MovieClip",
+      "parentClass": "RootQuery60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        9, 0, 1, 2, 1, 2, 3, 3, 3, 4, 4, 1, 1, 1, 4, 1, 1, 1, 4, 4, 1, 1, 4, 14, 15, 1, 1, 4, 1, 4,
+        4, 1, 4, 4, 1, 4, 4, 1, 14, 15, 1, 4, 5, 1, 14, 15, 1, 4, 5, 1, 4, 4, 7, 3, 18, 19, 7, 3,
+        18, 19, 18, 19, 20, 21, 18, 19, 1, 4, 1, 4, 6, 6
+      ]
+    },
+    {
+      "case": "main-offset",
+      "phase": "far",
+      "role": "target",
+      "className": "flash.display::MovieClip",
+      "parentClass": "RootQuery60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        9, 0, 1, 2, 1, 2, 3, 3, 3, 4, 4, 1, 1, 1, 4, 1, 1, 1, 4, 4, 1, 1, 4, 14, 15, 1, 1, 4, 1, 4,
+        4, 1, 4, 4, 1, 4, 4, 1, 14, 15, 1, 4, 5, 1, 14, 15, 1, 4, 5, 1, 4, 4, 8, 4, 22, 15, 8, 4,
+        22, 15, 22, 15, 23, 17, 22, 15, 4, 4, 4, 4, 6, 6
+      ]
+    },
+    {
+      "case": "main-fraction",
+      "phase": "centre",
+      "role": "wrapper",
+      "className": "RootQuery60000",
+      "parentClass": "BT3RootQueryProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 1, 2, 1, 2, 3, 3, 3, 4, 4, 1, 1, 1, 4, 1, 1, 1, 4, 4, 1, 1, 4, 24, 25, 1, 1, 4, 1, 4,
+        5, 1, 4, 4, 1, 4, 5, 1, 24, 25, 1, 4, 5, 1, 24, 25, 1, 4, 5, 1, 4, 4, 4, 4, 24, 25, 4, 4,
+        24, 25, 24, 25, 26, 27, 24, 25, 1, 1, 1, 1, 6, 6
+      ]
+    },
+    {
+      "case": "main-fraction",
+      "phase": "interior",
+      "role": "wrapper",
+      "className": "RootQuery60000",
+      "parentClass": "BT3RootQueryProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 1, 2, 1, 2, 3, 3, 3, 4, 4, 1, 1, 1, 4, 1, 1, 1, 4, 4, 1, 1, 4, 24, 25, 1, 1, 4, 1, 4,
+        5, 1, 4, 4, 1, 4, 5, 1, 24, 25, 1, 4, 5, 1, 24, 25, 1, 4, 5, 1, 4, 4, 7, 3, 28, 29, 7, 3,
+        28, 29, 28, 29, 30, 31, 28, 29, 1, 1, 1, 1, 6, 6
+      ]
+    },
+    {
+      "case": "main-fraction",
+      "phase": "far",
+      "role": "wrapper",
+      "className": "RootQuery60000",
+      "parentClass": "BT3RootQueryProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 1, 2, 1, 2, 3, 3, 3, 4, 4, 1, 1, 1, 4, 1, 1, 1, 4, 4, 1, 1, 4, 24, 25, 1, 1, 4, 1, 4,
+        5, 1, 4, 4, 1, 4, 5, 1, 24, 25, 1, 4, 5, 1, 24, 25, 1, 4, 5, 1, 4, 4, 8, 4, 32, 25, 8, 4,
+        32, 25, 32, 25, 33, 27, 32, 25, 4, 4, 4, 4, 6, 6
+      ]
+    },
+    {
+      "case": "main-fraction",
+      "phase": "centre",
+      "role": "target",
+      "className": "flash.display::MovieClip",
+      "parentClass": "RootQuery60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        9, 0, 1, 2, 1, 2, 3, 3, 3, 4, 4, 1, 1, 1, 4, 1, 1, 1, 4, 4, 1, 1, 4, 24, 25, 1, 1, 4, 1, 4,
+        4, 1, 4, 4, 1, 4, 4, 1, 24, 25, 1, 4, 5, 1, 24, 25, 1, 4, 5, 1, 4, 4, 4, 4, 24, 25, 4, 4,
+        24, 25, 24, 25, 26, 27, 24, 25, 1, 1, 1, 1, 6, 6
+      ]
+    },
+    {
+      "case": "main-fraction",
+      "phase": "interior",
+      "role": "target",
+      "className": "flash.display::MovieClip",
+      "parentClass": "RootQuery60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        9, 0, 1, 2, 1, 2, 3, 3, 3, 4, 4, 1, 1, 1, 4, 1, 1, 1, 4, 4, 1, 1, 4, 24, 25, 1, 1, 4, 1, 4,
+        4, 1, 4, 4, 1, 4, 4, 1, 24, 25, 1, 4, 5, 1, 24, 25, 1, 4, 5, 1, 4, 4, 7, 3, 28, 29, 7, 3,
+        28, 29, 28, 29, 30, 31, 28, 29, 1, 1, 1, 1, 6, 6
+      ]
+    },
+    {
+      "case": "main-fraction",
+      "phase": "far",
+      "role": "target",
+      "className": "flash.display::MovieClip",
+      "parentClass": "RootQuery60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        9, 0, 1, 2, 1, 2, 3, 3, 3, 4, 4, 1, 1, 1, 4, 1, 1, 1, 4, 4, 1, 1, 4, 24, 25, 1, 1, 4, 1, 4,
+        4, 1, 4, 4, 1, 4, 4, 1, 24, 25, 1, 4, 5, 1, 24, 25, 1, 4, 5, 1, 4, 4, 8, 4, 32, 25, 8, 4,
+        32, 25, 32, 25, 33, 27, 32, 25, 4, 4, 4, 4, 6, 6
+      ]
+    },
+    {
+      "case": "main-affine",
+      "phase": "centre",
+      "role": "wrapper",
+      "className": "RootQuery60000",
+      "parentClass": "BT3RootQueryProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 1, 2, 1, 2, 3, 3, 3, 4, 4, 1, 1, 1, 4, 1, 1, 1, 4, 4, 1, 1, 4, 8, 34, 35, 36, 37, 1,
+        4, 5, 1, 4, 4, 38, 39, 40, 41, 8, 34, 38, 39, 40, 41, 8, 34, 1, 4, 5, 1, 4, 4, 4, 4, 8, 34,
+        4, 4, 8, 34, 8, 34, 42, 43, 32, 34, 1, 4, 1, 4, 6, 6
+      ]
+    },
+    {
+      "case": "main-affine",
+      "phase": "interior",
+      "role": "wrapper",
+      "className": "RootQuery60000",
+      "parentClass": "BT3RootQueryProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 1, 2, 1, 2, 3, 3, 3, 4, 4, 1, 1, 1, 4, 1, 1, 1, 4, 4, 1, 1, 4, 8, 34, 35, 36, 37, 1,
+        4, 5, 1, 4, 4, 38, 39, 40, 41, 8, 34, 38, 39, 40, 41, 8, 34, 1, 4, 5, 1, 4, 4, 7, 3, 44, 45,
+        7, 3, 44, 45, 44, 45, 46, 47, 44, 45, 1, 4, 1, 4, 6, 6
+      ]
+    },
+    {
+      "case": "main-affine",
+      "phase": "far",
+      "role": "wrapper",
+      "className": "RootQuery60000",
+      "parentClass": "BT3RootQueryProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 1, 2, 1, 2, 3, 3, 3, 4, 4, 1, 1, 1, 4, 1, 1, 1, 4, 4, 1, 1, 4, 8, 34, 35, 36, 37, 1,
+        4, 5, 1, 4, 4, 38, 39, 40, 41, 8, 34, 38, 39, 40, 41, 8, 34, 1, 4, 5, 1, 4, 4, 8, 4, 48, 49,
+        32, 4, 50, 51, 48, 49, 52, 53, 48, 49, 4, 4, 4, 4, 6, 6
+      ]
+    },
+    {
+      "case": "main-affine",
+      "phase": "centre",
+      "role": "target",
+      "className": "flash.display::MovieClip",
+      "parentClass": "RootQuery60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        9, 0, 1, 2, 1, 2, 3, 3, 3, 4, 4, 1, 1, 1, 4, 1, 1, 1, 4, 4, 1, 1, 4, 8, 34, 35, 36, 37, 1,
+        4, 4, 1, 4, 4, 38, 39, 40, 41, 8, 34, 38, 39, 40, 41, 8, 34, 1, 4, 5, 1, 4, 4, 4, 4, 8, 34,
+        4, 4, 8, 34, 8, 34, 42, 43, 32, 34, 1, 4, 1, 4, 6, 6
+      ]
+    },
+    {
+      "case": "main-affine",
+      "phase": "interior",
+      "role": "target",
+      "className": "flash.display::MovieClip",
+      "parentClass": "RootQuery60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        9, 0, 1, 2, 1, 2, 3, 3, 3, 4, 4, 1, 1, 1, 4, 1, 1, 1, 4, 4, 1, 1, 4, 8, 34, 35, 36, 37, 1,
+        4, 4, 1, 4, 4, 38, 39, 40, 41, 8, 34, 38, 39, 40, 41, 8, 34, 1, 4, 5, 1, 4, 4, 7, 3, 44, 45,
+        7, 3, 44, 45, 44, 45, 46, 47, 44, 45, 1, 4, 1, 4, 6, 6
+      ]
+    },
+    {
+      "case": "main-affine",
+      "phase": "far",
+      "role": "target",
+      "className": "flash.display::MovieClip",
+      "parentClass": "RootQuery60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        9, 0, 1, 2, 1, 2, 3, 3, 3, 4, 4, 1, 1, 1, 4, 1, 1, 1, 4, 4, 1, 1, 4, 8, 34, 35, 36, 37, 1,
+        4, 4, 1, 4, 4, 38, 39, 40, 41, 8, 34, 38, 39, 40, 41, 8, 34, 1, 4, 5, 1, 4, 4, 8, 4, 48, 49,
+        32, 4, 50, 51, 48, 49, 52, 53, 48, 49, 4, 4, 4, 4, 6, 6
+      ]
+    },
+    {
+      "case": "nested-affine",
+      "phase": "centre",
+      "role": "wrapper",
+      "className": "RootQuery60000",
+      "parentClass": "BT3RootQueryProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 1, 2, 1, 2, 3, 3, 3, 4, 4, 1, 1, 1, 4, 1, 1, 1, 54, 55, 56, 57, 58, 8, 34, 35, 36, 37,
+        59, 60, 61, 62, 54, 55, 63, 64, 65, 66, 67, 45, 38, 39, 40, 41, 8, 34, 59, 60, 61, 62, 54,
+        55, 4, 4, 67, 45, 68, 55, 69, 45, 8, 34, 70, 71, 72, 73, 4, 4, 1, 4, 74, 75
+      ]
+    },
+    {
+      "case": "nested-affine",
+      "phase": "interior",
+      "role": "wrapper",
+      "className": "RootQuery60000",
+      "parentClass": "BT3RootQueryProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 1, 2, 1, 2, 3, 3, 3, 4, 4, 1, 1, 1, 4, 1, 1, 1, 54, 55, 56, 57, 58, 8, 34, 35, 36, 37,
+        59, 60, 61, 62, 54, 55, 63, 64, 65, 66, 67, 45, 38, 39, 40, 41, 8, 34, 59, 60, 61, 62, 54,
+        55, 7, 3, 76, 77, 78, 79, 80, 77, 44, 45, 81, 82, 83, 84, 1, 4, 1, 4, 74, 75
+      ]
+    },
+    {
+      "case": "nested-affine",
+      "phase": "far",
+      "role": "wrapper",
+      "className": "RootQuery60000",
+      "parentClass": "BT3RootQueryProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 1, 2, 1, 2, 3, 3, 3, 4, 4, 1, 1, 1, 4, 1, 1, 1, 54, 55, 56, 57, 58, 8, 34, 35, 36, 37,
+        59, 60, 61, 62, 54, 55, 63, 64, 65, 66, 67, 45, 38, 39, 40, 41, 8, 34, 59, 60, 61, 62, 54,
+        55, 8, 4, 85, 86, 87, 88, 85, 86, 48, 49, 89, 90, 91, 92, 4, 4, 4, 4, 74, 75
+      ]
+    },
+    {
+      "case": "nested-affine",
+      "phase": "centre",
+      "role": "target",
+      "className": "flash.display::MovieClip",
+      "parentClass": "RootQuery60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        9, 0, 1, 2, 1, 2, 3, 3, 3, 4, 4, 1, 1, 1, 4, 1, 1, 1, 4, 4, 1, 1, 4, 8, 34, 35, 36, 37, 1,
+        4, 4, 1, 4, 4, 63, 64, 65, 66, 67, 45, 38, 39, 40, 41, 8, 34, 59, 60, 61, 62, 54, 55, 4, 4,
+        67, 45, 68, 55, 69, 45, 8, 34, 70, 71, 72, 73, 4, 4, 1, 4, 6, 6
+      ]
+    },
+    {
+      "case": "nested-affine",
+      "phase": "interior",
+      "role": "target",
+      "className": "flash.display::MovieClip",
+      "parentClass": "RootQuery60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        9, 0, 1, 2, 1, 2, 3, 3, 3, 4, 4, 1, 1, 1, 4, 1, 1, 1, 4, 4, 1, 1, 4, 8, 34, 35, 36, 37, 1,
+        4, 4, 1, 4, 4, 63, 64, 65, 66, 67, 45, 38, 39, 40, 41, 8, 34, 59, 60, 61, 62, 54, 55, 7, 3,
+        76, 77, 78, 79, 80, 77, 44, 45, 81, 82, 83, 84, 1, 4, 1, 4, 6, 6
+      ]
+    },
+    {
+      "case": "nested-affine",
+      "phase": "far",
+      "role": "target",
+      "className": "flash.display::MovieClip",
+      "parentClass": "RootQuery60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        9, 0, 1, 2, 1, 2, 3, 3, 3, 4, 4, 1, 1, 1, 4, 1, 1, 1, 4, 4, 1, 1, 4, 8, 34, 35, 36, 37, 1,
+        4, 4, 1, 4, 4, 63, 64, 65, 66, 67, 45, 38, 39, 40, 41, 8, 34, 59, 60, 61, 62, 54, 55, 8, 4,
+        85, 86, 87, 88, 85, 86, 48, 49, 89, 90, 91, 92, 4, 4, 4, 4, 6, 6
+      ]
+    }
+  ],
+  "evidenceId": "ev_0b3d6dbdf80719faaf4c0b8bef30d7fbf01aa035ba3617d21629a5fe236bc0ae"
+}

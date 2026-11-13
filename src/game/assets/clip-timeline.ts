@@ -24,14 +24,17 @@ export class ClipTimeline {
     this.enterFrame();
     return this.runFrameScripts(y);
   }
+  get hasPendingScript() {
+    return this.pendingScript;
+  }
   /** Stage construction/advancement precedes Main's ENTER listener. */
   enterFrame() {
     if (!this.started) {
       this.started = true;
-      this.pendingScript = true;
+      this.pendingScript = this.actions[this.frame] !== undefined;
     } else if (this.playing && this.count > 1) {
       this.frame = (this.frame % this.count) + 1;
-      this.pendingScript = true;
+      this.pendingScript = this.actions[this.frame] !== undefined;
     }
     return this.frame;
   }

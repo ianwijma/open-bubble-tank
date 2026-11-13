@@ -90,10 +90,26 @@ test('attached status and shield geometry expands width without changing gamepla
   expect(tankScriptBounds(tank, source, clips)!.width).toBe(155);
   tank.statusDecoration = undefined;
   tank.shield = 100;
+  tank.displayChildren.push('shield-film', 'shield-hit');
   tank.radius = 50;
   expect(tankScriptBounds(tank, source, clips)!.width).toBeCloseTo(100);
   tank.shield = 0;
+  tank.displayChildren = tank.displayChildren.filter(
+    (key) => key !== 'shield-film' && key !== 'shield-hit',
+  );
   tank.radius = radius;
+  expect(tankScriptBounds(tank, source, clips)!.width).toBe(52);
+});
+
+test('retained legacy shield scalars cannot expand Script bounds after physical removal', () => {
+  const { tank, source, clips } = setup();
+  tank.shield = 100;
+  tank.radius = 50;
+  expect(tankScriptBounds(tank, source, clips)!.width).toBe(52);
+  tank.displayChildren.push('shield-film');
+  expect(tankScriptBounds(tank, source, clips)!.width).toBe(100);
+  tank.displayChildren = tank.displayChildren.filter((key) => key !== 'shield-film');
+  expect(tank.shield).toBe(100);
   expect(tankScriptBounds(tank, source, clips)!.width).toBe(52);
 });
 
