@@ -5,6 +5,7 @@ import type { DisplayGeometryContent } from '../src/game/core/display-geometry';
 import {
   fieldScriptBounds,
   fieldStageShapeHit,
+  fieldPlayerRootHitTestPoint,
   type FieldGeometrySource,
 } from '../src/game/simulation/field-queries';
 import { createTank } from '../src/game/simulation/tank';
@@ -121,6 +122,25 @@ test('stage-space shape contact follows Main/World/root ancestry and rejects a d
   expect(detached).not.toEqual(stage);
   expect(fieldStageShapeHit(world, world.field, geometry, detached)).toBe(false);
   expect(fieldStageShapeHit(world, world.field, geometry, stage)).toBe(false);
+});
+
+test('public player-root arguments remain distinct from stage Points under Main translation', () => {
+  const world = new World([], [], 31),
+    geometry = source(),
+    tank = createTank(77, STARTER, 'enemy', 900, 0);
+  world.attachActor(tank, world.field);
+  world.mainEffects.position = { x: 1000, y: 0 };
+  // World's fixed centre puts the actor at root(1175,225), stage(2175,225).
+  expect(fieldPlayerRootHitTestPoint(world, world.field, geometry, { x: 1175, y: 225 })).toBe(true);
+  expect(fieldPlayerRootHitTestPoint(world, world.field, geometry, { x: 2175, y: 225 })).toBe(
+    false,
+  );
+  expect(fieldStageShapeHit(world, world.field, geometry, { x: 2175, y: 225 })).toBe(true);
+  expect(width(world, geometry)).toBe(1600.75);
+  world.fieldDisplays.detach(world.field);
+  expect(fieldPlayerRootHitTestPoint(world, world.field, geometry, { x: 1175, y: 225 })).toBe(
+    false,
+  );
 });
 
 test('queue flush and concrete bottom reparenting change the next query immediately without a cached population', () => {

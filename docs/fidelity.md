@@ -1870,3 +1870,16 @@ equality-ineligible; compiled source, arbitrary boundary/transform, ordinary/glo
 Adobe/pixel/audio and full-game parity remain unproved. PR155/156 and the parent’s
 five-layer master gate remain parent-owned.
 
+## Bind the qualified player-root query path
+
+The [public field boundary](player-root-field-query-reference.md) now maps
+arguments through Main independently of the field/World/Main receiver chain.
+The internal stage-space API remains separate. Native vector controls compare
+all36 original root cases,108 hits and72 dimensions; the same production build
+passes10 affected mock/SWF crossing/Main/upgrade/contact cases without skips or
+flaky results. Formatting/check passes1206 tests /20345 assertions. Actual served
+fixture bytes match a fresh current-source build; the recorded single-fixture
+formatting/hash overlap is explicit. Detached receivers still miss; Script width
+excludes Main translation. No loaded-root route, automatic identity inference,
+complete field-provider or gameplay migration is claimed.
+

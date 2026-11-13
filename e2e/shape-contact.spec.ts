@@ -2,6 +2,7 @@ import { expect, test } from '@playwright/test';
 import { existsSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import original from '../tests/fixtures/field-mask-original.json' with { type: 'json' };
+import rootOriginal from '../tests/fixtures/root-query-original.json' with { type: 'json' };
 function originalValue(row: (typeof original.samples)[number], field: string) {
   const words = original.binaryWords[row.wordIndices[original.fields.indexOf(field)]],
     bytes = new DataView(new ArrayBuffer(8));
@@ -61,7 +62,30 @@ for (const native of [false, true])
           height: originalValue(expected, 'height'),
         });
       }
-    } else expect(proof.nativeGeometry).toBeNull();
+      expect(proof.rootGeometry).toHaveLength(36);
+      expect(proof.rootGeometry.map(key).sort()).toEqual(rootOriginal.samples.map(key).sort());
+      for (const row of proof.rootGeometry) {
+        const expected = rootOriginal.samples.find((s) => key(s) === key(row))!,
+          value = (field: string) => {
+            const words =
+                rootOriginal.binaryWords[expected.wordIndices[rootOriginal.fields.indexOf(field)]],
+              view = new DataView(new ArrayBuffer(8));
+            view.setUint32(0, words[0]);
+            view.setUint32(4, words[1]);
+            return view.getFloat64(0);
+          };
+        expect([
+          Number(row.rawHit),
+          Number(row.stageHit),
+          Number(row.rootHit),
+          row.width,
+          row.height,
+        ]).toEqual(['rawHit', 'stageHit', 'rootHit', 'width', 'height'].map(value));
+      }
+    } else {
+      expect(proof.nativeGeometry).toBeNull();
+      expect(proof.rootGeometry).toBeNull();
+    }
     expect(proof.primitives.results).toEqual({
       opaque: true,
       hidden: true,

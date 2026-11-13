@@ -1,6 +1,7 @@
 import {
   displayGeometryBounds,
   displayGeometryHit,
+  displayGeometryHitTestPoint,
   type DisplayGeometryContent,
   type DisplayGeometryNode,
 } from '../core/display-geometry';
@@ -83,5 +84,27 @@ export function fieldStageShapeHit(
     readFieldGeometry(world, field, source),
     stagePoint,
     world.worldDisplays.worldMatrix(world.mainEffects.position),
+  );
+}
+
+/** Qualified player-root public hitTestPoint arguments, independently of the
+ * receiver's field/World/Main ancestry. Loaded-root semantics are not selected.
+ */
+export function fieldPlayerRootHitTestPoint(
+  world: World,
+  field: Field,
+  source: FieldGeometrySource,
+  argument: Readonly<Vec>,
+) {
+  if (!world.fieldDisplays.readPose(field).rooted) return false;
+  const main = world.mainEffects.position;
+  return displayGeometryHitTestPoint(
+    {
+      node: readFieldGeometry(world, field, source),
+      onStage: true,
+      parentToStage: world.worldDisplays.worldMatrix(main),
+      argumentToStage: world.worldDisplays.mainMatrix(main),
+    },
+    argument,
   );
 }

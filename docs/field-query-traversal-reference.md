@@ -61,14 +61,17 @@ child or legacy-query fallback. No complete native/mock provider is installed.
 Static-text advanced-rendering versus glyph contact, retained effect poses and
 drawn lines, actor protection masks and complete mock geometry remain work.
 
-The public `hitTestPoint` argument mapping needs its own discriminating original
-control with a nonidentity Main. The existing mask captures reset Main to zero.
+The public player-root `hitTestPoint` argument mapping now has its own
+[discriminating original controls](root-query-runtime-reference.md) with a
+nonidentity Main. The older mask captures reset Main to zero.
 Tagged Ruffle v0.7.1 source at `core/src/avm2/globals/flash/display/display_object.rs`
 lines 719–760 predicts a player-root-relative argument branch versus loaded-root
 stage arguments; its fetched SHA-256 is
 `3830a495c32197555194d6b3fabab9f26631983cb511a9ce4b8618c18c944312`.
 That static source is not authenticated to the loaded WASM or Adobe runtime.
-`fieldStageShapeHit` explicitly names its narrower internal stage-space contract.
+`fieldStageShapeHit` retains its internal stage-space contract;
+[`fieldPlayerRootHitTestPoint`](player-root-field-query-reference.md) separately
+selects the measured player-root path. Loaded-root behavior remains unqualified.
 
 Do not replace the gameplay field circle, beam wall/width, spawn or spacing
 queries with this seam until those requirements are met. Singular/nonfinite

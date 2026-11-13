@@ -18,6 +18,7 @@ import { detachForcefield } from '../../src/game/simulation/forcefield';
 import { createProjectile } from '../../src/game/simulation/create-projectile';
 import { projectileTankContact } from '../../src/game/simulation/projectile-contact';
 import { nativeMaskGeometryProof } from './native-mask-geometry';
+import { nativeRootGeometryProof } from './native-root-geometry';
 import { displayGeometryHit } from '../../src/game/core/display-geometry';
 
 /** Same geometric cases as the project-authored AVM2 reference probe. */
@@ -266,6 +267,7 @@ function primitiveProof() {
 export async function showShapeContact(pack: AssetPack, host: HTMLElement) {
   const primitives = primitiveProof(),
     nativeGeometry = nativeMaskGeometryProof(pack),
+    rootGeometry = nativeRootGeometryProof(pack),
     app = new Application(),
     textures = new SwfTextures();
   await app.init({
@@ -427,7 +429,7 @@ export async function showShapeContact(pack: AssetPack, host: HTMLElement) {
     capture('Forcefield · fresh clone mask contact', field, fieldPoint);
     detachForcefield(field);
     panels.at(-1)!.detached = pack.hitTest(field, fieldPoint.global.x, fieldPoint.global.y);
-    return { mode: pack.mode, primitives, panels, nativeGeometry };
+    return { mode: pack.mode, primitives, panels, nativeGeometry, rootGeometry };
   } finally {
     app.destroy({ removeView: true }, { children: true });
     textures.destroy();
