@@ -3,7 +3,8 @@
 The fifth combined layer includes the exact published heads of PRs155–158:
 `8a0b055`, `8ec5406`, `03d935f` and `bfc5fa6`. Master remains
 `897d2e741b8a1d23f563f8bb8a2e6bd684932b9b`; the preserved recreation checkpoint
-remains `22d9def7321bada8a2148a69a79a3392682bb390`. The fifth combined branch is `stack/effect-geometry-05`; its
+remains `22d9def7321bada8a2148a69a79a3392682bb390`. The fifth combined branch `stack/effect-geometry-05` is published as
+[PR160](https://github.com/ianwijma/open-bubble-tank/pull/160) against master. Its
 fresh hosted gate remains pending. No intermediate success substitutes for it.
 
 ## Combined local failure and measured repair

@@ -8,14 +8,14 @@ scope.
 
 ## Current snapshot
 
-- Checked: 2026-11-14 02:00 AEDT, Australia/Sydney.
-- Inspected source: final production/fixture files match `f5b5bbf373bbe3f5fca40eb1eff4272a3150bf7f`; the rejected `ce508d2` effect-iteration change is reverted locally.
-- Dirty state at inspection: the effect loop reversion and validation/checklist metadata are pending commit. No other production changes are pending.
-- Live source: [main thread](t3-thread://v2/a713d3ff-a5f3-472b-97bd-83fd799395a5/93d9eb80-8a0a-44ac-8262-07b1ceb7992a). Local, published and merged evidence remain distinct.
-- Delivery: PRs150–154 merged; PRs155–158 remain open. The fifth combined PR is being finalized for the required hosted gate. Parent combined validation passed70/71; the advancing SWF pilot timed out. Source-identical delegate validation passed62 broad plus6 final cases with both pilots winning. The manual accelerator performance limit remains open; no failed run is relabeled green.
+- Checked: 2026-11-14 02:05 AEDT, Australia/Sydney.
+- Inspected published source: PR160 at `fd12ea858dea2a9e6586f67ccd9a7d95ae373730`. All827 tracked code/test files match verified delegate `f5b5bbf`; this status-only record follows that inspection.
+- Dirty state at inspection: clean before this status-only update. No uncommitted production code.
+- Live source: [combined PR160](https://github.com/ianwijma/open-bubble-tank/pull/160) and [main thread](t3-thread://v2/a713d3ff-a5f3-472b-97bd-83fd799395a5/93d9eb80-8a0a-44ac-8262-07b1ceb7992a). Local, published and merged evidence remain distinct.
+- Delivery: PR160 is the fifth combined PR against master, containing exact PR155–158 heads. Hosted current-head Actions/review acceptance is pending. Parent combined validation passed70/71 with an advancing native pilot timeout; source-identical delegate validation passed62 broad plus6 final cases and both pilots. The manual accelerator performance limit remains open; no failed run is relabeled green. Master and protected legacy are unchanged.
 - Packages complete: **0/7**.
 - Checkpoints complete: **7/21**. These are completion gates of unequal size, not a percentage of effort or a PR estimate.
-- Changes since previous update: rejected two accelerator/performance experiments, restored the verified production source, and recorded all results and evidence limits. Original actor constructor/EXIT phase discrepancies remain open. No checkpoint changes.
+- Changes since previous update: published the assembled fifth PR and restored the verified source after rejecting both performance experiments. Formatting and1,291 tests /75,956 assertions pass. No checkpoint changes.
 
 ## Fixed overview
 
