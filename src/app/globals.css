@@ -1055,6 +1055,15 @@ kbd {
 }
 .modal-scrim:has(.win-screen) {
   background: transparent;
+  backdrop-filter: none;
+}
+.win-bitmap {
+  position: absolute;
+  inset: 0;
+  width: 550px;
+  height: 450px;
+  z-index: 1;
+  pointer-events: none;
 }
 .win-screen-button {
   border-radius: 0;
@@ -1184,6 +1193,9 @@ kbd {
 .modal-scrim:has(.upgrade-screen) {
   background: transparent;
   backdrop-filter: none;
+}
+.modal-scrim.upgrade-retained-child {
+  z-index: 9;
 }
 .modal-scrim:has(.edit-confirm-screen) {
   backdrop-filter: none;

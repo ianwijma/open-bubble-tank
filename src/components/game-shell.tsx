@@ -1,5 +1,5 @@
 'use client';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { AssetPack } from '@/game/assets/asset-pack';
 import type { Profile, Settings, TankDesign } from '@/game/core/types';
 import { STARTER } from '@/game/data/catalog';
@@ -8,6 +8,7 @@ import { World } from '@/game/simulation/world';
 import { AudioManager } from '@/game/services/audio';
 import { StageRuntime } from '@/game/services/stage-runtime';
 import { UpgradeMenu } from '@/game/services/upgrade-menu';
+import { WinScreen, winShade } from '@/game/services/win-screen';
 import { MenuSettingsState } from '@/game/core/settings-screen';
 import { loadProfile, saveProfile, submitCreatedTank } from '@/game/services/profile';
 import { AssetGate } from './asset-gate';
@@ -62,6 +63,12 @@ export default function GameShell() {
   const [musicRequest, setMusicRequest] = useState<{ mode: 'menu' | 'game' }>({ mode: 'menu' });
   const [upgrade, setUpgrade] = useState<UpgradeContext | null>(null);
   const upgradeRef = useRef<UpgradeContext | null>(null);
+  const [win, setWin] = useState<WinScreen | null>(null);
+  const winRef = useRef<WinScreen | null>(null);
+  const liveProfile = useRef(profile);
+  useLayoutEffect(() => {
+    liveProfile.current = profile;
+  }, [profile]);
   const [stage] = useState(() => new StageRuntime());
   const [profileClass] = useState(() => new ProfileClassAllowance());
   const [menuMotion, setMenuMotion] = useState(() => new MainMenuMotion());
@@ -128,7 +135,13 @@ export default function GameShell() {
     audio?.requestMusic(musicRequest.mode);
   }, [audio, musicRequest]);
   useEffect(() => () => pack?.dispose(), [pack]);
-  useEffect(() => () => upgradeRef.current?.menu.dispose(), []);
+  useEffect(
+    () => () => {
+      upgradeRef.current?.menu.dispose();
+      winRef.current?.dispose();
+    },
+    [],
+  );
   useEffect(() => {
     // The source profile library stays live while creator/viewer children are open.
     if (world && profile) world.avatarLibrary = profile.tanks.filter((tank) => tank.avatar);
@@ -182,6 +195,29 @@ export default function GameShell() {
     next.onAchievement = (name) =>
       updateProfile((p) => ({ ...p, achievements: [...new Set([...p.achievements, name])] }));
     next.onUpgradeMenuOpen = () => openUpgradeMenu(next, true);
+    next.onWinScreenOpen = () => {
+      if (!pack || winRef.current) return;
+      const screen = new WinScreen(stage, winShade(pack), (action) => {
+        if (winRef.current !== screen) return;
+        winRef.current = null;
+        setWin(null);
+        if (action === 'continue') next.continueAfterWin();
+        else {
+          // Deactivation removes the World listener and all owned browser services.
+          next.onWinScreenOpen = () => {};
+          next.onUpgradeMenuOpen = () => {};
+          setWorld(null);
+          setMenuSettings(new MenuSettingsState((liveProfile.current ?? profile).settings.mainFps));
+          setMenuMotion(new MainMenuMotion());
+          setMusicRequest({ mode: 'menu' });
+          setScreen('menu');
+          setOverlay(null);
+        }
+        refresh();
+      });
+      winRef.current = screen;
+      setWin(screen);
+    };
     setWorld(next);
     setMusicRequest({ mode: 'game' });
     showScreen('game');
@@ -189,21 +225,27 @@ export default function GameShell() {
   }
   function openUpgradeMenu(target: World, automatic: boolean) {
     upgradeRef.current?.menu.dispose();
-    const menu = new UpgradeMenu(stage, () => {
-      if (upgradeRef.current?.menu !== menu) return;
-      if (automatic) target.finishUpgrade();
-      else {
-        target.offers = [];
-        target.resume();
-      }
-      upgradeRef.current = null;
-      setUpgrade(null);
-      setEditor(null);
-      setViewer(null);
-      setOverlay(null);
-      setScreen('game');
-      refresh();
-    });
+    const menu = new UpgradeMenu(
+      stage,
+      () => {
+        if (upgradeRef.current?.menu !== menu) return;
+        if (automatic) target.finishUpgrade();
+        else {
+          target.offers = [];
+          target.resume();
+        }
+        upgradeRef.current = null;
+        setUpgrade(null);
+        setEditor(null);
+        setViewer(null);
+        setOverlay(null);
+        setScreen('game');
+        refresh();
+      },
+      target.player.design.classId,
+    );
+    if (automatic) menu.setupOffers(target.player.design.classId, target.offers);
+    else menu.showConfirmation();
     const context = { menu, world: target, automatic };
     upgradeRef.current = context;
     setUpgrade(context);
@@ -215,7 +257,7 @@ export default function GameShell() {
   }
   function edit(initial: TankDesign, upgrade = false) {
     world?.pause();
-    upgradeRef.current?.menu.motion.showChild('creator');
+    upgradeRef.current?.menu.showChild('creator');
     setEditor({
       initial,
       saveName: screen === 'menu' ? '' : initial.name,
@@ -248,8 +290,7 @@ export default function GameShell() {
           context.menu.complete();
         } else {
           // _-Zo(false) calls SecondSetup on the same menu after an unsaved return.
-          context.menu.motion.returnToOffers();
-          context.world.offers = context.world.getOffers();
+          context.menu.returnToOffers(context.world.player.design.classId);
           showScreen('game');
           setEditor(null);
           setOverlay(context.automatic ? null : 'edit-choice');
@@ -264,7 +305,7 @@ export default function GameShell() {
   }
   function loadEditorTank(tank?: TankDesign) {
     if (!editor || !viewer) return;
-    upgradeRef.current?.menu.motion.showChild('creator');
+    upgradeRef.current?.menu.showChild('creator');
     const initial =
       tank ??
       (viewer.avatar
@@ -436,19 +477,21 @@ export default function GameShell() {
                     onMenu={menu}
                   />
                 ) : null}
-                {screen === 'game' && world.mode === 'upgrade' && upgrade ? (
+                {upgrade ? (
                   <UpgradePanel
                     pack={pack}
                     stage={stage}
                     menu={upgrade.menu}
-                    offers={world.offers}
+                    active={screen === 'game' && (upgrade.automatic || overlay === 'edit-choice')}
                     current={world.player.design}
                     onSelect={(tank) => {
-                      if (!world.placeUpgrade(tank)) return;
-                      upgrade.menu.motion.beginClosing();
+                      if (upgrade.automatic) {
+                        if (!world.placeUpgrade(tank)) return;
+                      } else world.editPlayer(tank);
+                      upgrade.menu.beginClosing();
                       refresh();
                     }}
-                    onEdit={(tank) => edit(tank, true)}
+                    onEdit={(tank) => edit(tank, upgrade.automatic)}
                   />
                 ) : null}
                 {screen === 'game' && world.mode === 'secondary-help' ? (
@@ -465,6 +508,10 @@ export default function GameShell() {
                     pack={pack}
                     onYes={() => {
                       world.offers = world.getOffers();
+                      upgradeRef.current?.menu.setupOffers(
+                        world.player.design.classId,
+                        world.offers,
+                      );
                       setOverlay('edit-choice');
                     }}
                     onNo={() => {
@@ -472,31 +519,8 @@ export default function GameShell() {
                     }}
                   />
                 ) : null}
-                {screen === 'game' && overlay === 'edit-choice' && upgrade ? (
-                  <UpgradePanel
-                    pack={pack}
-                    stage={stage}
-                    menu={upgrade.menu}
-                    offers={world.offers}
-                    current={world.player.design}
-                    onSelect={(tank) => {
-                      world.editPlayer(tank);
-                      upgrade.menu.motion.beginClosing();
-                      refresh();
-                    }}
-                    onEdit={(tank) => edit(tank)}
-                  />
-                ) : null}
-                {screen === 'game' && world.mode === 'won' ? (
-                  <WinPanel
-                    pack={pack}
-                    fps={profile.settings.fps}
-                    onMenu={menu}
-                    onContinue={() => {
-                      world.continueAfterWin();
-                      refresh();
-                    }}
-                  />
+                {screen === 'game' && world.mode === 'won' && win ? (
+                  <WinPanel pack={pack} screen={win} />
                 ) : null}
               </>
             ) : null}
@@ -519,7 +543,7 @@ export default function GameShell() {
                 onSave={saveTank}
                 onExit={exitEditor}
                 onLoad={(limits) => {
-                  upgradeRef.current?.menu.motion.showChild('viewer');
+                  upgradeRef.current?.menu.showChild('viewer');
                   setViewer(limits);
                   showScreen('viewer');
                 }}

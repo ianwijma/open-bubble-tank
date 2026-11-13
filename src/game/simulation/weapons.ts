@@ -13,7 +13,6 @@ import type {
   TankPart,
   Vec,
 } from '../core/types';
-import { ENEMIES } from '../data/catalog';
 import { WEAPONS, type WeaponSpec } from '../data/weapons';
 import emitterData from '../data/emitters.json';
 import allyData from '../data/allies.json';
@@ -271,23 +270,8 @@ export function fireGun(world: World, t: Tank, gun: GunState, input: InputFrame)
     return;
   }
   if (id === 4003) {
-    const candidates =
-      world.roster.units.get('SmallFighter') ??
-      ENEMIES.filter((e) => e.name === 'Pew Pew' || e.name === 'Flittering Terror');
-    gun.spawnDesign ??= world.rng.pick(candidates);
-    const pos = world.muzzle(t, gun);
-    world.field.enemies.push(
-      createTank(
-        world.nextId(),
-        gun.spawnDesign,
-        'enemy',
-        pos.x,
-        pos.y,
-        undefined,
-        undefined,
-        world,
-      ),
-    );
+    const pos = world.actorParents.pointAt(t, world.muzzle(t, gun), world.currentWrapper)!;
+    world.spawnEnemy(gun.spawnDesign!, pos);
     return;
   }
   if (id === 4023) {
@@ -299,7 +283,7 @@ export function fireGun(world: World, t: Tank, gun: GunState, input: InputFrame)
     for (let i = 0; i < runtime.bullets.length; i++)
       if (runtime.bullets[i].kind === 'apocalypse') {
         runtime.bullets[i].dead = true;
-        runtime.bullets.splice(i, 1);
+        world.removeBullet(runtime.bullets[i], world.currentWrapper);
         world.addCombatEffect(
           { x: t.x + mount.x + offset.x, y: t.y + mount.y + offset.y },
           'neutralize',

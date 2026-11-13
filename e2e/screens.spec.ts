@@ -102,11 +102,14 @@ for (const native of [false, true]) {
     // The fixture mounts the production component; no test hooks enter the game.
     const errors: string[] = [];
     page.on('pageerror', (e) => errors.push(e.message));
-    await page.goto('http://127.0.0.1:3102');
+    await page.goto(`http://127.0.0.1:${process.env.BT3_FIXTURE_PORT ?? 3102}`);
     await page.getByLabel('Fixture').selectOption('win-screen');
     if (native) await page.getByLabel('Original SWF').setInputFiles(swf);
     else await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
     await expect(page.getByRole('status')).toContainText('Ready', { timeout: 60000 });
+    const host = page.locator('#stage');
+    await expect(host).toHaveAttribute('data-ready', 'true');
+    await page.getByRole('button', { name: 'Complete boss field', exact: true }).click();
     const dialog = page.getByRole('dialog', {
       name: "You've Proven Yourself The Greatest!",
       exact: true,
@@ -114,6 +117,10 @@ for (const native of [false, true]) {
     await expect(dialog.getByRole('button')).toHaveCount(2);
     await expect(dialog).not.toContainText('Parts Pack Manager');
     await expect(dialog).not.toContainText('FIELDS');
+    await expect(dialog.locator('[data-win-age]')).toHaveAttribute('data-win-age', '0');
+    for (let i = 0; i < 3; i++)
+      await page.getByRole('button', { name: 'Win advance 20', exact: true }).click();
+    await page.getByRole('button', { name: 'Win advance 5', exact: true }).click();
     await expect(dialog.locator('[data-win-age]')).toHaveAttribute('data-win-age', '63');
     await expect(dialog.locator('[data-blur-passes]')).toHaveAttribute('data-blur-passes', '19');
     const resume = dialog.getByRole('button', { name: 'Continue Your Game', exact: true });
@@ -122,7 +129,13 @@ for (const native of [false, true]) {
     await page.screenshot({ path: `test-results/${native ? 'swf' : 'mock'}-win-screen.png` });
     await resume.click();
     await expect(page.getByRole('status')).toHaveAttribute('data-win-action', 'continue');
-    await dialog.getByRole('button', { name: 'Main Menu', exact: true }).click();
+    await expect(dialog).toHaveCount(0);
+    await page.getByRole('button', { name: 'Win new game', exact: true }).click();
+    await expect(host).toHaveAttribute('data-ready', 'true');
+    await page.getByRole('button', { name: 'Complete boss field', exact: true }).click();
+    for (let i = 0; i < 2; i++)
+      await page.getByRole('button', { name: 'Win advance 20', exact: true }).click();
+    await page.getByRole('button', { name: 'Main Menu', exact: true }).click();
     await expect(page.getByRole('status')).toHaveAttribute('data-win-action', 'menu');
     expect(errors).toEqual([]);
   });

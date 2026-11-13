@@ -1,5 +1,5 @@
 import type { Tank, TankDesign } from '../core/types';
-import { tankRadius } from '../data/catalog';
+import { ENEMIES, tankRadius } from '../data/catalog';
 import { createDegradation, degradeTank } from './degradation';
 import { tankRosterIdentity } from '../core/tank-identity';
 import { initialTankChildren } from './tank-display';
@@ -93,6 +93,13 @@ export function createTank(
       if (part.type === 6002) acquireHealerTarget(state, t, population, rng);
       else acquireBehaviorTarget(state, side, population, rng);
     }
+    // Weapon.Setup acquires its target before _-1k.SeperatePartSetup caches a code.
+    const fighters =
+      part.type === 4003
+        ? (world?.roster.units.get('SmallFighter') ??
+          ENEMIES.filter((enemy) => ['Pew Pew', 'Flittering Terror'].includes(enemy.name)))
+        : undefined;
+    const spawnDesign = fighters ? fighters[rng.int(0, fighters.length - 1)] : undefined;
     return [
       {
         part,
@@ -105,6 +112,7 @@ export function createTank(
         wallFlower,
         behaviorTarget,
         targeting,
+        spawnDesign,
       },
     ];
   });

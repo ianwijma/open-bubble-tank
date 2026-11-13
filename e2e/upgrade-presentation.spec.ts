@@ -4,6 +4,7 @@ import { resolve } from 'node:path';
 import { waitForMainMenu } from './helpers/main-menu';
 import { visitAdjacentFieldAndReturn } from './helpers/field-travel';
 import { exitCreator } from './helpers/creator';
+import { observeUpgradePreviewRenderer } from './helpers/upgrade-preview';
 import { DEFAULT_SETTINGS } from '../src/game/core/constants';
 import type { TankDesign } from '../src/game/core/types';
 const avatars: TankDesign[] = JSON.parse(
@@ -42,6 +43,7 @@ for (const native of [false, true])
         progression: [starter, avatars.find((t) => t.name === 'Sturdy')!, guard],
       },
     );
+    await observeUpgradePreviewRenderer(page);
     const errors: string[] = [];
     page.on('pageerror', (error) => errors.push(error.message));
     await page.goto('/');
@@ -119,11 +121,32 @@ for (const native of [false, true])
     await bitmap.evaluate((node) => {
       (node as HTMLElement).dataset.retainedMenu = 'same-menu';
     });
+    const retainedPreview = await menu.locator('canvas').first().elementHandle();
+    const previewAge = Number(await retainedPreview!.getAttribute('data-upgrade-age'));
+    const renderer = await retainedPreview!.getAttribute('data-observed-upgrade-renderer');
+    const fit = await retainedPreview!.getAttribute('data-upgrade-bounds');
+    expect(renderer).toBeTruthy();
+    const assertRetainedPreview = async (afterAge: number) => {
+      expect(await retainedPreview!.evaluate((node) => node.isConnected)).toBe(true);
+      await expect
+        .poll(async () => Number(await retainedPreview!.getAttribute('data-upgrade-age')))
+        .toBeGreaterThan(afterAge);
+      expect(await retainedPreview!.getAttribute('data-observed-upgrade-renderer')).toBe(renderer);
+      expect(await retainedPreview!.getAttribute('data-upgrade-bounds')).toBe(fit);
+      return Number(await retainedPreview!.getAttribute('data-upgrade-age'));
+    };
     await menu.getByRole('button', { name: 'Edit Nimble', exact: true }).click();
     await expect(bitmap).toHaveAttribute('data-upgrade-child', 'creator');
+    const creatorAge = await assertRetainedPreview(previewAge);
+    await expect(menu).toHaveCount(0); // The retained pane is absent from accessibility.
+    await expect(page.locator('.creator')).toBeVisible();
     await page.getByRole('button', { name: 'Load a Tank...', exact: true }).click();
     await expect(bitmap).toHaveAttribute('data-upgrade-child', 'viewer');
+    const viewerAge = await assertRetainedPreview(creatorAge);
+    await expect(menu).toHaveCount(0);
+    await expect(page.locator('.tank-viewer')).toHaveAttribute('data-viewer-ready', 'true');
     await page.getByRole('button', { name: 'Return to Tank Creator', exact: true }).click();
+    await assertRetainedPreview(viewerAge);
     await expect(bitmap).toHaveAttribute('data-upgrade-child', 'creator');
     await expect(bitmap).toHaveAttribute('data-retained-menu', 'same-menu');
     await expect(bitmap).toHaveAttribute('data-upgrade-counter', '39');
@@ -131,12 +154,17 @@ for (const native of [false, true])
     await exitCreator(page); // Existing progression slot: direct Destroy, no card reversal.
     await expect(bitmap).toHaveCount(0);
     await expect(menu).toHaveCount(0);
+    expect(await retainedPreview!.evaluate((node) => node.isConnected)).toBe(false);
+    const disposedAge = await retainedPreview!.getAttribute('data-upgrade-age');
+    const disposedDraws = await retainedPreview!.getAttribute('data-observed-upgrade-draws');
     await page.getByRole('button', { name: 'Edit your tank', exact: true }).click();
     await page
       .getByRole('dialog', { name: 'Edit your tank?', exact: true })
       .getByRole('button', { name: 'YES', exact: true })
       .click();
     await expect(bitmap).toHaveAttribute('data-upgrade-counter', '39');
+    expect(await retainedPreview!.getAttribute('data-upgrade-age')).toBe(disposedAge);
+    expect(await retainedPreview!.getAttribute('data-observed-upgrade-draws')).toBe(disposedDraws);
     await menu
       .getByRole('button', { name: 'Choose Nimble', exact: true })
       .click({ position: { x: 88, y: 190 } });
@@ -144,6 +172,10 @@ for (const native of [false, true])
     await expect(page.getByLabel('Tank health')).toContainText('Nimble');
     await expect(menu).toBeVisible();
     await expect(menu.getByRole('button', { name: 'Choose Nimble', exact: true })).toBeDisabled();
+    await expect(menu.getByRole('button', { name: 'Edit Nimble', exact: true })).toBeDisabled();
+    await expect(
+      menu.getByRole('button', { name: 'Edit Your Current Tank', exact: true }),
+    ).toBeEnabled();
     await page.mouse.move(0, 0);
     await expect(cards.first()).toHaveAttribute('data-upgrade-card-frame', '2');
     await expect

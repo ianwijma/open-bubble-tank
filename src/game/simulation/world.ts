@@ -122,6 +122,7 @@ export class World {
   mapPosition = { col: 0, row: 0 };
   private previousMapPosition = { col: 0, row: 0 };
   private runtimes = new WeakMap<Field, FieldRuntime>();
+  private projectileParents = new WeakMap<Projectile, FieldRuntime>();
   get currentWrapper(): Field {
     return this.currentField;
   }
@@ -146,7 +147,19 @@ export class World {
     return this.runtime.bullets;
   }
   set bullets(value: Projectile[]) {
-    this.runtime.bullets = value;
+    this.replaceBullets(this.runtime, value);
+  }
+  private replaceBullets(runtime: FieldRuntime, bullets: Projectile[]) {
+    const retained = new Set(bullets);
+    for (const bullet of runtime.bullets)
+      if (!retained.has(bullet) && this.projectileParents.get(bullet) === runtime)
+        this.projectileParents.delete(bullet);
+    runtime.bullets = bullets;
+    for (const bullet of bullets) this.projectileParents.set(bullet, runtime);
+  }
+  /** A detached wrapper's bullet layer still parents its surviving children. */
+  hasBulletParent(bullet: Projectile) {
+    return this.projectileParents.has(bullet);
   }
   get pickups() {
     return this.runtime.pickups;
@@ -236,6 +249,7 @@ export class World {
     initializeHomingProjectile(this, bullet, home, target);
     if (bullet.kind === 'infect' && bullet.targetId === null) expireInfectionTarget(this, bullet);
     this.bullets.push(bullet);
+    this.projectileParents.set(bullet, this.runtime);
     if (bullet.enemy) this.stats.enemyShots++;
     else {
       this.stats.shots++;
@@ -246,11 +260,32 @@ export class World {
     }
     return true;
   }
-  removeBullet(bullet: Projectile) {
-    const index = this.bullets.indexOf(bullet);
-    if (index < 0) return;
+  removeBullet(bullet: Projectile, field = this.field) {
+    const runtime = this.runtimeFor(field);
+    const index = runtime.bullets.indexOf(bullet);
+    if (index < 0) return false;
     forgetLayerMine(this, bullet);
-    this.bullets.splice(index, 1);
+    runtime.bullets.splice(index, 1);
+    if (this.projectileParents.get(bullet) === runtime) this.projectileParents.delete(bullet);
+    return true;
+  }
+  /** currentBFTarget.SpawnNewEnemy has no crossing birth gate. */
+  spawnEnemy(design: TankDesign, point: Vec) {
+    const field = this.currentWrapper;
+    const enemy = createTank(
+      this.nextId(),
+      design,
+      'enemy',
+      point.x,
+      point.y,
+      undefined,
+      undefined,
+      this,
+    );
+    this.actorParents.attach(enemy, field);
+    this.callbackFields.set(enemy, field);
+    field.enemies.push(enemy);
+    return enemy;
   }
   fieldVisit = new FieldVisit(true);
   fields = new Map<string, Field>();
@@ -346,6 +381,8 @@ export class World {
   secondaryHelpSeen = false;
   onSecondaryHelp: () => void = () => {};
   onUpgradeMenuOpen: () => void = () => {};
+  /** CompletedABubblefield notification, before the calling field completes its tail. */
+  onWinScreenOpen: () => void = () => {};
   onBackgroundChange: (running: boolean) => void = () => {};
   private backgroundActive = true;
   /** Last World command; Settings can independently force the browser background on/off. */
@@ -552,7 +589,10 @@ export class World {
       for (const bullet of runtime.bullets)
         if (bullet.owner === this.player.uid && bullet.anchor?.part.type === 2017)
           bullet.dead = true;
-      runtime.bullets = runtime.bullets.filter((bullet) => !bullet.dead);
+      this.replaceBullets(
+        runtime,
+        runtime.bullets.filter((bullet) => !bullet.dead),
+      );
     }
   }
   startRocketTimer(owner: Tank, gun: GunState) {
@@ -945,24 +985,17 @@ export class World {
     spawnPickups(this, pos, amount, this.runtimeFor(this.currentField).pickups);
   }
   private completeField(field: Field, visit: FieldVisit) {
-    if (!visit.tryComplete(field)) return;
-    field.cleared = true;
-    const dot = this.fields.get(`${this.mapPosition.col},${this.mapPosition.row}`);
-    if (dot) dot.cleared = true;
-    this.editSlider.trigger(this.progression.level, this.mapMode);
+    if (!visit.canComplete(field)) return;
+    // _-0D calls World.CompletedABubblefield before _-K2, _-FR, map and wipe writes.
     this.stats.completed++;
     this.revision++;
-    const runtime = this.runtimeFor(field);
-    for (const b of runtime.pickups) b.forced = true;
-    for (const b of runtime.bullets)
-      if (b.enemy && (['mine', 'seekerMine'].includes(b.kind) || projectileFlags(b).seeker))
-        b.wipe = true;
     // CompletedABubblefield checks the current wrapper, even if the next one called it.
     if (this.currentField.boss && !this.bossDefeated) {
       this.bossDefeated = true;
       if (this.flow.state === 'playing') {
         this.flow.openWin();
         this.backgroundState(false);
+        this.onWinScreenOpen();
         this.emit('win');
       }
       this.award('Boss Badge');
@@ -977,7 +1010,18 @@ export class World {
       ];
       if (extremes.includes(this.stats.visited)) this.award('Masochist');
     }
+    const runtime = this.runtimeFor(field);
+    for (const b of runtime.pickups) b.forced = true;
+    this.editSlider.trigger(this.progression.level, this.mapMode);
+    visit.completed = true;
+    field.cleared = true;
+    const dot = this.fields.get(`${this.mapPosition.col},${this.mapPosition.row}`);
+    if (dot) dot.cleared = true;
+    for (const b of runtime.bullets)
+      if (b.enemy && (['mine', 'seekerMine'].includes(b.kind) || projectileFlags(b).seeker))
+        b.wipe = true;
   }
+
   private checkProgression() {
     const p = this.player;
     if (p.life <= 0) {
@@ -1041,7 +1085,7 @@ export class World {
     this.revision++;
   }
   continueAfterWin() {
-    this.mode = 'playing';
+    if (!this.flow.closeWin()) return;
     this.backgroundState(true);
     this.revision++;
   }
@@ -1230,7 +1274,7 @@ export class World {
       if (this.fieldVisit.completed) {
         const outgoing = this.runtimeFor(this.currentField);
         for (const bullet of outgoing.bullets) bullet.dead = true;
-        outgoing.bullets = [];
+        this.replaceBullets(outgoing, []);
         outgoing.pickups = [];
         outgoing.enemyRemovals = [];
         outgoing.allyRemovals = [];

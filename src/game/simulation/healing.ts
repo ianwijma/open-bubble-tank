@@ -42,13 +42,20 @@ export function tickHealer(world: World, owner: Tank, gun: GunState) {
     patient = healerPatient(world, owner, gun);
     state.allies = count;
   }
-  const oldBeam = world.bullets.find((bullet) => bullet.uid === gun.beamId && !bullet.dead);
+  // Numeric IDs remain a fixture adapter; real mounts keep their actual beam_mc.
+  const retainedBeam = gun.beamRef;
+  const oldBeam = retainedBeam
+    ? world.hasBulletParent(retainedBeam)
+      ? retainedBeam
+      : undefined
+    : world.bullets.find((bullet) => bullet.uid === gun.beamId && !bullet.dead);
   const stop = () => {
-    if (oldBeam) {
+    // StopFiring asks CURRENT currentBFTarget, not the retained beam's old parent.
+    if (oldBeam && world.removeBullet(oldBeam, world.currentWrapper)) {
       oldBeam.dead = true;
-      world.removeBullet(oldBeam);
     }
     gun.beamId = undefined;
+    gun.beamRef = undefined;
   };
   const reacquire = (retryReadError: boolean) => {
     let caught = false;
@@ -100,8 +107,9 @@ export function tickHealer(world: World, owner: Tank, gun: GunState) {
     return;
   }
   if (oldBeam) {
-    oldBeam.x = origin.x;
-    oldBeam.y = origin.y;
+    const outgoing = world.actorParents.pointAt(owner, origin, world.currentWrapper)!;
+    oldBeam.x = outgoing.x;
+    oldBeam.y = outgoing.y;
     oldBeam.angle = owner.rotation + gun.angle;
     gun.counter = 0;
     return;
@@ -134,6 +142,7 @@ export function tickHealer(world: World, owner: Tank, gun: GunState) {
     beamLength: 0,
   };
   gun.beamId = beam.uid;
+  gun.beamRef = beam;
   world.addBullet(beam);
   gun.counter = 0;
 }

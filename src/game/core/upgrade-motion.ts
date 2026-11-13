@@ -48,7 +48,7 @@ export class UpgradeMenuMotion {
     return true;
   }
 
-  /** SecondSetup may rebuild offers; it does not restart this presentation. */
+  /** SecondSetup reuses initialized offers and does not restart this presentation. */
   returnToOffers() {
     if (this.finished) return false;
     this.child = null;

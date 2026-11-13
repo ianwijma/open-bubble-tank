@@ -25,6 +25,14 @@ export const UPGRADE_SCREEN = geometry as {
   shade: UpgradePiece;
   foreground: UpgradePiece[];
   viewers: { matrix: SwfMatrix; cards: UpgradePiece[] };
+  rootFrames: { frame: number; pieces: UpgradePiece[] }[];
+  loading: UpgradePiece & {
+    label: UpgradePiece;
+    animation: UpgradePiece & {
+      loopStart: number;
+      frames: { depth: number; symbol: number; matrix: SwfMatrix; alpha: number }[][];
+    };
+  };
   edit: UpgradePiece;
   preview: { width: number; height: number };
   widgets: UpgradeWidget[];

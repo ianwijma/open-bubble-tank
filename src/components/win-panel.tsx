@@ -1,71 +1,40 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import type { AssetPack } from '@/game/assets/asset-pack';
-import { WIN_SCREEN, WinScreenState, winScreenPresentation } from '@/game/core/win-screen';
+import { WIN_SCREEN } from '@/game/core/win-screen';
+import type { WinScreen } from '@/game/services/win-screen';
 import { Dialog } from './ui';
 
 /** Authored win art, with the retired Parts Pack Manager promotion intentionally omitted. */
-export function WinPanel({
-  pack,
-  fps = 50,
-  onContinue,
-  onMenu,
-}: {
-  pack: AssetPack;
-  fps?: number;
-  onContinue: () => void;
-  onMenu: () => void;
-}) {
+export function WinPanel({ pack, screen }: { pack: AssetPack; screen: WinScreen }) {
   const [hovered, setHovered] = useState('');
-  const timeline = useRef(new WinScreenState());
-  const [age, setAge] = useState(0);
-  useEffect(() => {
-    let request = 0,
-      previous: number | undefined,
-      carry = 0;
-    const step = 1000 / Math.max(1, fps);
-    const tick = (time: number) => {
-      if (previous !== undefined) carry += time - previous;
-      previous = time;
-      let changed = false;
-      while (carry >= step && !timeline.current.complete) {
-        timeline.current.advance();
-        carry -= step;
-        changed = true;
-      }
-      if (changed) setAge(timeline.current.age);
-      if (!timeline.current.complete) request = requestAnimationFrame(tick);
-    };
-    request = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(request);
-  }, [fps]);
-  const shade = WIN_SCREEN.backdrop;
-  const backdrop = pack.uiFrames.get(shade.symbol)?.[0];
-  const presentation = winScreenPresentation(age);
+  const backdrop = useRef<HTMLCanvasElement>(null),
+    foreground = useRef<HTMLDivElement>(null),
+    container = useRef<HTMLDivElement>(null);
+  useLayoutEffect(
+    () =>
+      screen.observe(() => {
+        const canvas = backdrop.current!,
+          context = canvas.getContext('2d')!;
+        context.clearRect(0, 0, 550, 450);
+        screen.drawBackdrop(context);
+        foreground.current!.style.opacity = String(screen.motion.alpha);
+        foreground.current!.style.zIndex = screen.foregroundRaised ? '2' : '0';
+        const data = container.current!.dataset;
+        data.winAge = String(screen.motion.age);
+        data.blurPasses = String(screen.motion.blurPasses);
+        data.contentFrame = String(screen.motion.contentFrame);
+        data.foregroundRaised = String(screen.foregroundRaised);
+        data.captureCount = String(screen.captureCount);
+        data.savedFrames = String(screen.history?.savedFrames ?? 0);
+      }),
+    [screen],
+  );
   return (
     <Dialog title="You've Proven Yourself The Greatest!" className="stage-dialog win-screen">
-      <div data-win-age={age} data-blur-passes={presentation.blurPasses}>
-        {backdrop ? (
-          <img
-            alt=""
-            aria-hidden="true"
-            src={backdrop.url}
-            style={{
-              position: 'absolute',
-              left: shade.x + backdrop.x,
-              top: shade.y + backdrop.y,
-              width: backdrop.width,
-              height: backdrop.height,
-              pointerEvents: 'none',
-            }}
-          />
-        ) : (
-          <div
-            aria-hidden="true"
-            style={{ position: 'absolute', inset: 0, background: '#00000040' }}
-          />
-        )}
-        <div style={{ opacity: presentation.alpha }}>
+      <div ref={container}>
+        <canvas ref={backdrop} className="win-bitmap" width={550} height={450} aria-hidden="true" />
+        <div ref={foreground} style={{ opacity: 0, position: 'absolute', inset: 0 }}>
           {WIN_SCREEN.pieces.map((piece) => {
             const button = piece.name === 'ws_continue_mc' || piece.name === 'ws_main_menu';
             const label = piece.name === 'ws_continue_mc' ? 'Continue Your Game' : 'Main Menu';
@@ -93,8 +62,9 @@ export function WinPanel({
                   key={piece.symbol}
                   className="win-screen-button"
                   aria-label={label}
-                  disabled={presentation.alpha === 0}
-                  onClick={piece.name === 'ws_continue_mc' ? onContinue : onMenu}
+                  onClick={() =>
+                    screen.complete(piece.name === 'ws_continue_mc' ? 'continue' : 'menu')
+                  }
                   onPointerEnter={() => setHovered(piece.name)}
                   onPointerLeave={() => setHovered('')}
                   onFocus={() => setHovered(piece.name)}
