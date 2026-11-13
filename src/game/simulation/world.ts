@@ -1184,9 +1184,10 @@ export class World {
         tutorial,
         enemies: wave.designs.map((design) => {
           const t = createTank(this.nextId(), design, 'enemy', 0, 0, undefined, undefined, this);
-          // _-0D._-Ar constructs the tank before consuming these three pose draws.
-          t.x = this.rng.int(-200, 200) * wave.scale;
-          t.y = this.rng.int(-200, 200) * wave.scale;
+          // _-0D._-Ar finishes Setup, then samples against BF_BG_mc's authored
+          // scale 1. AttachNewBubblefield applies wave.scale only after population.
+          t.x = this.rng.int(-200, 200);
+          t.y = this.rng.int(-200, 200);
           t.rotation = this.rng.int(-180, 180);
           return t;
         }),
