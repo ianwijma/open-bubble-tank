@@ -65,6 +65,47 @@ test('next-field requests attach the original modified object to the outgoing re
   expect(world.runtimeFor(next).effects).toEqual([]);
 });
 
+test('queued effect arguments retain Number precision until CreateEffect writes the clip position', () => {
+  const world = new World([], [], 1),
+    runtime = world.runtimeFor(world.field),
+    supplied = { x: 13.049, y: -23.049 },
+    effect = world.addCombatEffect(supplied, 'rocketTrail'),
+    observed: { x: number; y: number }[] = [],
+    flush = runtime.flushEffects.bind(runtime);
+  world.player.life = 1;
+  runtime.flushEffects = (register) =>
+    flush((request) => {
+      observed.push({ x: request.x, y: request.y });
+      register(request);
+    });
+  // The queued Number arguments are independent of later edits to the clip.
+  effect.x = 99;
+  effect.y = 100;
+  expect(world.effectEngine.parent(effect)).toBeUndefined();
+  world.step(emptyInput());
+  expect(observed).toEqual([supplied]);
+  expect(effect).toMatchObject({ x: 13, y: -23 });
+  expect(world.effectEngine.parent(effect)).toBe(world.effectEngine.layer(world.field, 'bottom'));
+});
+
+test('immediate CreateEffect applies signed twip setters before attachment', () => {
+  const world = new World([], [], 1);
+  for (const [supplied, assigned] of [
+    [
+      { x: -13.049, y: 23.049 },
+      { x: -13, y: 23 },
+    ],
+    [
+      { x: -0.049, y: 0.049 },
+      { x: 0, y: 0 },
+    ],
+  ]) {
+    const effect = world.addCombatEffect(supplied, 'rocketTrail', {}, true);
+    expect(effect).toMatchObject(assigned);
+    expect(world.effectEngine.parent(effect)).toBe(world.effectEngine.layer(world.field, 'bottom'));
+  }
+});
+
 test('registered names resolve the first layer while actual child identity survives unregistration', () => {
   const { effects, owner } = engine(),
     other = field(),

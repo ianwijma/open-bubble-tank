@@ -1463,8 +1463,9 @@ export class World {
   private registerEffectRequest(request: EffectRequest) {
     const { clip, x, y, name, randomRotation, callback } = request;
     if (randomRotation) clip.rotation = Math.round(this.rng.next() * 360);
-    clip.x = x;
-    clip.y = y;
+    // CreateEffect assigns MovieClip properties; queued arguments stay Numbers.
+    clip.x = displayPixel(x);
+    clip.y = displayPixel(y);
     this.effectEngine.create(clip, name, this.currentField, callback);
   }
   award(name: string) {

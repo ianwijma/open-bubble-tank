@@ -364,3 +364,11 @@ artwork pass also advances it. Removed/parentless referenced clips remain alive
 through weak clock registrations. Painting and native bounds/contact can consume
 the same retained tree. Artwork entropy is an injectable host stream; no gameplay
 RNG/UID draws are added, and complete source entropy equivalence stays unproved.
+
+
+Effect queue requests retain their original Number coordinates independently of
+subsequent clip edits. `World.registerEffectRequest` applies the existing signed
+twip setters to the actual clip X/Y before the engine attaches it, preserving
+optional rotation → X → Y → name/layer/completion ordering. This [registration
+boundary](effect-registration-position-reference.md) does not yet supply generic
+retained effect clocks or a complete native field-query population.
