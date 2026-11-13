@@ -1668,3 +1668,27 @@ Two fresh-browser captures independently match frozen words, raw traces, REA DOM
 The [local renderer continuation](retained-renderer-reference.md) replaces derived camera/collapse transforms with retained field-slot, avatar and World sibling poses. Actual registered effect children supply their parent transform and retained object-keyed native/mock views; compatibility completion contexts and UIDs do not determine effect paint. The independent original oracle checks cached getters, effective coefficients, per-write avatar motion and Points at five collapse ages, separate Main ancestry and the finish prefix. The old linear avatar expectation is replaced by frozen original values. Artificial gallery edits explicitly supply omitted move/follow/goto operations; the actor reparent position assertion remains unchanged.
 
 Joint formatting/check passes 1,109 tests / 16,078 assertions. Production build `wtvomZbcwV1LMW9O2u0Ea` and the literal affected browser run pass 44 mock/supplied-SWF cases without skips or flaky results; all 712 input digests match. Replaying the preceding actual effect view fails both new ownership cases, then source restoration is verified. All 90 original evidence snapshots independently re-verify in an owned copy, with REA events still incomplete. Scoped paint was inspected and owned 3735/3736 servers are free. Complete native field geometry/masks/order, retained effect playback, ordinary earned boss/win, global entropy/event equality and original/Adobe/full-game parity remain unproved. This local continuation follows PR149; it does not retroactively change that delivered build.
+
+
+## Original actor and field Point inverse qualification
+
+The distinct [actor-point preserved-original probe](actor-point-original-reference.md)
+freezes112 rows /2,576 binary Number values from actual original field1551,
+identity actor layer1547 and TankData avatar clips. It measures both builtin
+Point APIs at collapse0/51/119, supplied off-grid stage Points, separate fractional
+Main, current/next field and copied bullet/top parents, rotations90/30/60, actual
+removeChild and reparenting under a detached field. Original Setup, DeathAnimPart2
+and119 synchronous ShrinkBubblefield calls execute; constructor/setter/parenting
+glue and absence of World.Run/ordinary scheduling remain explicit.
+
+Two fresh owned-browser captures independently match frozen words, raw trace,
+REA DOM, original header/ABCs/all tag bytes/order/bindings and loaded module
+identities. The proposed existing core inverse-then-Point arithmetic matches
+all112 inverse and84 forward controls;36 round trips lose information. At119
+field(100,40) becomes stage(176.65,311.65), then local(99.95,39.95). No finite
+control contradicts that arithmetic, but detached concatenatedMatrix remains
+ineligible as its oracle. Thirteen consistent-forgery/parent/signed-zero/byte
+mutations reject. Check passes1,109 tests /16,078 assertions; production is
+unchanged. REA events remain incomplete/equality-ineligible; arbitrary affine,
+nonfinite/singular, compiled runtime source, event/global RNG, Adobe/pixel/audio
+and full-game equivalence remain unproved. Parent owns production integration.
