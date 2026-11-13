@@ -18,14 +18,115 @@ async function readMetrics(page: Page, canvas: Locator) {
     (element) => {
       const box = element.getBoundingClientRect();
       const style = getComputedStyle(element);
-      // The bbox is a content mapping only for a borderless, unpadded, untransformed canvas.
+      // Only positive diagonal 2D transforms preserve the content-to-bbox mapping.
+      // Typed OM preserves 3D/rotation syntax which getComputedStyle can flatten to matrix().
+      const chain = [];
       let transformed = false;
       for (let ancestor: Element | null = element; ancestor;) {
         const css = getComputedStyle(ancestor);
+        const unsupported: string[] = [];
+        const rect = ancestor.getBoundingClientRect();
+        const properties = {
+          transform: css.transform,
+          transformOrigin: css.transformOrigin,
+          transformBox: css.transformBox,
+          translate: css.translate,
+          rotate: css.rotate,
+          scale: css.scale,
+          perspective: css.perspective,
+          perspectiveOrigin: css.perspectiveOrigin,
+          transformStyle: css.transformStyle,
+          zoom: css.zoom,
+          offsetPath: css.offsetPath,
+        };
         transformed ||=
           [css.transform, css.translate, css.rotate, css.scale, css.perspective].some(
             (value) => value !== 'none',
           ) || css.zoom !== '1';
+        if (!(ancestor instanceof HTMLElement)) unsupported.push('non-html-ancestor');
+        if ([css.translate, css.rotate, css.scale].some((value) => value !== 'none'))
+          unsupported.push('individual-transform');
+        if (css.perspective !== 'none' || css.transformStyle !== 'flat')
+          unsupported.push('perspective-or-preserve-3d');
+        if (css.zoom !== '1') unsupported.push('zoom');
+        if (css.offsetPath !== 'none') unsupported.push('motion-path');
+        const components: { type: string; is2D: boolean; value: string }[] = [];
+        let matrix: number[] | null = null;
+        if (css.transform !== 'none') {
+          const origin = css.transformOrigin.split(/\s+/);
+          if (
+            origin.length < 2 ||
+            origin.length > 3 ||
+            !origin.every(
+              (value) =>
+                /^-?(?:\d+(?:\.\d*)?|\.\d+)px$/.test(value) && Number.isFinite(parseFloat(value)),
+            ) ||
+            (origin.length === 3 && parseFloat(origin[2]) !== 0)
+          )
+            unsupported.push('transform-origin');
+          if (!['view-box', 'border-box'].includes(css.transformBox))
+            unsupported.push('transform-box');
+          try {
+            // Finite qualification targets Chromium with CSS Typed OM. Fail closed elsewhere.
+            const typed = (
+              ancestor as unknown as {
+                computedStyleMap(): {
+                  get(name: string): Iterable<{ is2D: boolean; toString(): string }>;
+                };
+              }
+            )
+              .computedStyleMap()
+              .get('transform');
+            for (const component of typed) {
+              const type = component.constructor.name;
+              const value = String(component);
+              components.push({ type, is2D: component.is2D, value });
+              if (
+                !component.is2D ||
+                !['CSSScale', 'CSSTranslate', 'CSSMatrixComponent'].includes(type)
+              )
+                unsupported.push('transform-component');
+              // Reject cancelling reflections too, rather than judging only the final matrix.
+              if (type === 'CSSScale') {
+                const scale = component as unknown as {
+                  x: { value: number };
+                  y: { value: number };
+                };
+                if (!(scale.x.value > 0 && scale.y.value > 0))
+                  unsupported.push('nonpositive-scale');
+              }
+              if (type === 'CSSMatrixComponent') {
+                const own = (component as unknown as { matrix: DOMMatrixReadOnly }).matrix;
+                if (!own.is2D || own.b !== 0 || own.c !== 0 || own.a <= 0 || own.d <= 0)
+                  unsupported.push('nonpositive-or-nondiagonal-component');
+              }
+            }
+            if (!components.length) unsupported.push('missing-transform-components');
+            const m = new DOMMatrixReadOnly(css.transform);
+            matrix = [m.a, m.b, m.c, m.d, m.e, m.f];
+            if (
+              !css.transform.startsWith('matrix(') ||
+              !m.is2D ||
+              !matrix.every(Number.isFinite) ||
+              m.b !== 0 ||
+              m.c !== 0 ||
+              m.a <= 0 ||
+              m.d <= 0
+            )
+              unsupported.push('nonpositive-or-nondiagonal-matrix');
+          } catch {
+            unsupported.push('unreadable-transform');
+          }
+        }
+        chain.push({
+          tag: ancestor.tagName,
+          id: ancestor.id,
+          bbox: { x: rect.x, y: rect.y, width: rect.width, height: rect.height },
+          properties,
+          components,
+          matrix,
+          unsupported,
+        });
         ancestor = ancestor.parentElement ?? (ancestor.getRootNode() as ShadowRoot).host ?? null;
       }
       const visual = window.visualViewport;
@@ -53,6 +154,7 @@ async function readMetrics(page: Page, canvas: Locator) {
             connected: element.isConnected,
             bbox: { x: box.x, y: box.y, width: box.width, height: box.height },
             transformed,
+            geometry: { supported: chain.every((entry) => entry.unsupported.length === 0), chain },
             borderAndPadding: [
               style.borderLeftWidth,
               style.borderRightWidth,
@@ -156,7 +258,10 @@ export async function captureViewport(page: Page, canvas: Locator, outputPrefix:
     const { bbox, borderAndPadding } = layout.canvas;
     if (!layout.topLevel || !layout.canvas.isCanvas || !layout.canvas.connected)
       reasons.push(`${phase}-requires-connected-top-level-canvas`);
-    if (layout.canvas.transformed || borderAndPadding.some((value) => parseFloat(value) !== 0))
+    if (
+      !layout.canvas.geometry.supported ||
+      borderAndPadding.some((value) => parseFloat(value) !== 0)
+    )
       reasons.push(`${phase}-unsupported-canvas-box`);
     if (layout.dpr !== 1) reasons.push(`${phase}-unsupported-dpr`);
     const visual = layout.visualViewport;
@@ -207,11 +312,11 @@ export async function captureViewport(page: Page, canvas: Locator, outputPrefix:
       reasons.push('browser-clock-discontinuity');
   }
   const result = {
-    schemaVersion: 1,
+    schemaVersion: 2,
     valid: reasons.length === 0,
     reasons,
     scope:
-      'DPR1, top-level axis-aligned borderless canvas, unzoomed CSS viewport. Endpoint geometry only; no continuous registration, pixel-content, game/controller reliability or all-browser guarantee.',
+      'DPR1, top-level borderless unpadded canvas; finite positive axis-aligned 2D CSS scale/translation chain, unzoomed CSS viewport. Endpoint geometry only; no continuous registration, pixel-content, game/controller reliability or all-browser guarantee.',
     screenshotOptions,
     png: bytes
       ? {
