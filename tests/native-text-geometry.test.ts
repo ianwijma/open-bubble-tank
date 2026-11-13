@@ -220,6 +220,27 @@ test('explicit ancestry preserves nonassociative twip products through nested co
   expect(seenTx).toBe(2);
 });
 
+test('text beyond every authored mask end remains queryable without authorizing masked text', () => {
+  const { pack } = metadataPack();
+  const text = pack.nativeClipGeometry(new SwfClip(1659, pack));
+  const mask: DisplayGeometryNode = {
+    matrix: DISPLAY_IDENTITY,
+    depth: 4,
+    clipDepth: 8,
+    content: { kind: 'leaf', bounds, hit: () => false },
+  };
+  const tree = (depth?: number): DisplayGeometryNode => ({
+    matrix: DISPLAY_IDENTITY,
+    content: { kind: 'container', children: [mask, { ...text, depth }] },
+  });
+  // Runtime addChild follows authored depths. Source exact-end admission also
+  // means depth8 is outside this mask; neither case assigns a text mask role.
+  for (const depth of [8, 20, undefined]) expect(publicHit(tree(depth))).toBe(true);
+  expect(() => publicHit(tree(6))).toThrow('Unsupported authored mask/StaticText');
+  const hidden = { ...tree(), matrix: { ...DISPLAY_IDENTITY, a: 0 } };
+  expect(publicHit(hidden)).toBe(false);
+});
+
 test.skipIf(!existsSync(file))(
   'all 1890 applicable frozen contacts pass actual supplied metadata through native provider and public/internal traversal',
   async () => {
@@ -255,8 +276,8 @@ test.skipIf(!existsSync(file))(
       throw new Error('Unexpected entropy');
     });
     pose.construct();
-    // The tutorial also contains SimpleButtons. Those are deliberately outside
-    // this leaf integration, so a complete tutorial provider must still reject.
+    // Frame1 contains DefineEditText1655, deliberately outside this advanced
+    // StaticText integration; a complete tutorial provider must still reject it.
     expect(() => pack.nativeClipGeometry(pose)).toThrow(
       'Unsupported retained geometry symbol 1655',
     );

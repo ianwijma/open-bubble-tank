@@ -143,6 +143,22 @@ test('public player-root arguments remain distinct from stage Points under Main 
   );
 });
 
+test('field text receives actual World/Main ancestry beyond the existing authored mask ranges', () => {
+  const world = new World([], [], 31),
+    geometry = source();
+  // Synthetic text isolates owner/range routing, not native tutorial contours.
+  geometry.tutorial = () => ({
+    kind: 'advanced-static-text',
+    bounds: { xMin: 0, xMax: 20, yMin: 0, yMax: 20 },
+  });
+  world.mainEffects.position = { x: 1000.075, y: -20.075 };
+  expect(fieldPlayerRootHitTestPoint(world, world.field, geometry, { x: 275, y: 225 })).toBe(true);
+  expect(fieldStageShapeHit(world, world.field, geometry, { x: 1275.05, y: 204.95 })).toBe(true);
+  expect(fieldStageShapeHit(world, world.field, geometry, { x: 275, y: 225 })).toBe(false);
+  world.fieldDisplays.detach(world.field);
+  expect(fieldPlayerRootHitTestPoint(world, world.field, geometry, { x: 275, y: 225 })).toBe(false);
+});
+
 test('queue flush and concrete bottom reparenting change the next query immediately without a cached population', () => {
   const world = new World([], [], 31),
     geometry = source(),

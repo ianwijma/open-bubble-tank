@@ -1966,6 +1966,6 @@ Script contracts remain unchanged. Authored text mask combinations, scrollRect,
 unmeasured modes/classes and missing ancestry reject instead of guessing contact.
 All1,890 applicable frozen contacts pass the native provider/public traversal
 with their original dimensions. Actual tutorial frames3–6 read current retained
-text children without clock/entropy writes; frame1's SimpleButton remains outside
+text children without clock/entropy writes; frame1's DefineEditText remains outside
 this provider. No gameplay field consumer migrates, no original oracle is edited,
 and complete field/ordinary/global-event/Adobe/full-game parity remains open.

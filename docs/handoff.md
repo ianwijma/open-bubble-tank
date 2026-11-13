@@ -182,7 +182,7 @@ actual qualified tutorial metadata and adds an explicit `parentAncestry` query
 seam. Keep this immediate-parent-through-Main list distinct from the existing
 shape `parentToStage` matrix: float32 composition is not associative. All1,890
 applicable frozen text controls now exercise native provider/public/internal
-dispatch; actual retained tutorial frames3–6 are supported, while SimpleButton
+dispatch; actual retained tutorial frames3–6 are supported, while dynamic-text
 content and unmeasured text mask roles/modes remain rejected. No World gameplay
 consumer or scheduler migration is included. Combine this local commit with the
 retained-effect task for the fifth PR and repeat the final combined gate. The

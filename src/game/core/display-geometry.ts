@@ -177,7 +177,16 @@ function hitAtTwips(
       for (const ancestor of ancestors)
         containerWorld = displayMatrixProduct(ancestor, containerWorld);
       if (!inverseDisplayMatrix(containerWorld)) return false;
-      if (content.children.some((child) => (child.clipDepth ?? 0) > 0))
+      // A runtime addChild above all authored mask ends is not masked text.
+      // Reject potential overlap conservatively, independently of which mask
+      // hits this query; do not reject disjoint tutorial siblings outright.
+      const lastMaskEnd = Math.max(0, ...content.children.map((child) => child.clipDepth ?? 0));
+      if (
+        lastMaskEnd > 0 &&
+        content.children.some(
+          (child) => containsText(child) && (child.depth ?? Infinity) < lastMaskEnd,
+        )
+      )
         throw new Error('Unsupported authored mask/StaticText combination');
     }
     const childAncestors = ancestors && [node.matrix, ...ancestors];

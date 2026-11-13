@@ -51,8 +51,8 @@ it does not change shape-only contracts. No Script rectangle is relabelled a
 fully qualified Engine gate for arbitrary shape/morph containers.
 
 Tagged StaticText source does not inspect `SKIP_MASK`, but being a text masker
-is not measured. Accordingly text `isRuntimeMask`, text `clipDepth`, authored
-depth-mask/text combinations, alternate invisible-mask option paths, explicit
+is not measured. Accordingly text `isRuntimeMask`, text `clipDepth`, potentially
+overlapping authored depth-mask/text combinations, alternate invisible-mask option paths, explicit
 scrollRect and nonfinite text ancestry reject. Only the measured assigned-mask
 bypass is implemented. Owners must supply a no-scrollRect external ancestor
 chain; matrices alone cannot reveal an omitted ancestor property. Runtime mask
@@ -64,8 +64,11 @@ The native reader still only consumes current retained poses. It never starts,
 advances or rebuilds a clip from age, touches a clock/RNG, or reads paint. Tests
 have the owner explicitly construct tutorial1667 frames3–6, then verify its
 actual eight text children and repeated reads without pose/object changes.
-Frame1 still rejects its unsupported SimpleButton1655; this does not complete
-every tutorial frame or install a general SimpleButton provider.
+Frame1 still rejects its unsupported DefineEditText1655; this does not complete
+every tutorial frame or install a dynamic-text provider. Parent byte-tag inventory
+corrects the initial SimpleButton description:1655 is tag37, while frame2 uses
+Sprite1658 and bitmap-filled Shape1657 with JPEG3 image1656. These are definition
+identities, not additional original-runtime contact qualification.
 
 The new unit and development-only browser proof route **all1,890 applicable
 frozen contacts** through actual supplied native leaf metadata and both public
@@ -131,3 +134,38 @@ ordinary progression, compiled-source authentication, Adobe, pixel/audio and
 full-game parity remain unproved. The shared SwfClip scheduler and effect task's
 ports/ownership remain untouched. This local change is for combination with the
 retained-effect task as the fifth PR, not a separately published delivery.
+
+## Parent field binding review
+
+The parent integration preserves the actual separate World-origin and Main
+matrices in `WorldDisplays.worldAncestry`. Both existing field query entry points
+pass this immediate-parent-to-stage list to the text-aware traversal, in addition
+to their unchanged grouped matrix for legacy shapes. Main's fractional position
+setters remain separate from query Point quantization.
+
+Authored masks cannot reach a text-bearing direct child whose depth is at or
+above every mask end. The source depth test admits exact end depths, and runtime
+addChild entries follow authored ranges. The traversal now permits that disjoint
+case; potential overlap still throws even if this particular query would miss
+the mask. This admits the field's runtime tutorial sibling above its existing
+under/exterior mask ranges without claiming authored masked-text qualification.
+
+Two parent regressions fail before this binding: a synthetic text leaf in the
+actual field population has no explicit ancestry, and a disjoint mask sibling
+causes an unsupported-role error. Both pass after the correction. They isolate
+API/physical-range composition, not an original full-field runtime measurement.
+The original1,890-contact cohort and all existing shape/mask controls remain the
+qualified component evidence; complete native field/provider integration remains
+unfinished. Final combined validation is recorded below after the parent run.
+
+The parent run passes formatting/typecheck and **1,232 tests /66,118 assertions**.
+Literal affected E2E completes build `9GxqcFz0owJVhzpTpPsmn` and **2 mock/SWF cases**,
+zero skips/failures/flaky results. All892 post-formatter inputs remain unchanged
+through the run. All1,890 text contacts,3,780 dimensions,51 mask,36 root,13 stroke
+and6 native/1 mock attachment controls remain intact. Proof JSON and both inspected
+paint sheets are byte-identical to the child's qualified run; no new text-pixel
+claim follows. Owned4195/4196 servers exited and both ports were free. Ignored
+`test-results/field-text-binding/` retains before/after regression logs, actual
+tag inventory, routing equality, hashes, browser report/proofs and verification.
+This paragraph and the corrected type descriptions are post-run documentation;
+the test comment correction does not alter any assertion or executable behavior.

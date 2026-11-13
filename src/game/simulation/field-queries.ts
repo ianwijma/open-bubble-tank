@@ -84,6 +84,7 @@ export function fieldStageShapeHit(
     readFieldGeometry(world, field, source),
     stagePoint,
     world.worldDisplays.worldMatrix(world.mainEffects.position),
+    world.worldDisplays.worldAncestry(world.mainEffects.position),
   );
 }
 
@@ -103,6 +104,7 @@ export function fieldPlayerRootHitTestPoint(
       node: readFieldGeometry(world, field, source),
       onStage: true,
       parentToStage: world.worldDisplays.worldMatrix(main),
+      parentAncestry: world.worldDisplays.worldAncestry(main),
       argumentToStage: world.worldDisplays.mainMatrix(main),
     },
     argument,
