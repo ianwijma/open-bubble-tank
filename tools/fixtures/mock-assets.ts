@@ -40,7 +40,9 @@ export async function showMockAssetsProof(native: AssetPack, host: HTMLElement) 
         : packs[column].mode === 'swf'
           ? renderer.nativeShots
           : renderer.projectiles,
-      frame: new Rectangle(-120, -40, 240, 80),
+      // The retained source avatar stays at World-local0. Place the isolated
+      // live-mount comparison in separate crop halves without moving that avatar.
+      frame: new Rectangle(entities ? -60 : -120, -40, 240, 80),
       resolution: 2,
     }) as HTMLCanvasElement;
     const pixels = frame.getContext('2d')!.getImageData(0, 0, frame.width, frame.height).data;
@@ -104,7 +106,7 @@ export async function showMockAssetsProof(native: AssetPack, host: HTMLElement) 
         world.nextId(),
         { ...STARTER, parts: [body, { ...STARTER.parts[1], type: 2001, x: 24, y: 0 }] },
         'player',
-        -60,
+        0,
         0,
       );
       world.field.enemies = [
