@@ -1,6 +1,6 @@
 import { FIELD_RADIUS, STAGE } from '../core/constants';
 import { angleTo, direction, distance, length, rotate } from '../core/math';
-import { displayPixel } from '../core/display-values';
+import { fireDamageBeam } from './beams';
 import { triggerMassiveCharge } from '../core/mounted-art';
 import { refreshForcefield } from './forcefield';
 import { attachMountedShield } from './shields';
@@ -197,6 +197,7 @@ export function fireGun(world: World, t: Tank, gun: GunState, input: InputFrame)
   const id = gun.part.type,
     spec = WEAPONS[id];
   if (!spec) return;
+  if (id === 2017) return fireDamageBeam(world, t, gun);
   if (id === 4017 && !triggerSuppressionCycle(gun)) return;
   if (id === 3010) {
     attachMountedShield(t, gun, () => world.protectionRadius(t) * 2);
@@ -434,18 +435,6 @@ export function spawnVolley(
       const art = (projectileArt as Record<string, { symbol: number; scale: number }>)[
         gun.part.type
       ];
-      // A maintained beam has one live segment per mounted gun.
-      const old =
-        kind === 'beam'
-          ? world.bullets.find((b) => !b.dead && b.owner === t.uid && b.anchor === gun)
-          : null;
-      if (old) {
-        old.x = displayPixel(pos.x);
-        old.y = displayPixel(pos.y);
-        old.angle = angle;
-        old.heading = angle;
-        continue;
-      }
       const b: Projectile = {
         uid: world.nextId(),
         owner: t.uid,

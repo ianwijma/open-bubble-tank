@@ -48,6 +48,7 @@ import {
   orderSecondaries,
 } from './weapons';
 import { tickBullet, starSplit, releaseCarrier, explode } from './projectiles';
+import { stopDamageBeam } from './beams';
 import { createTank, deactivateTankData } from './tank';
 import { spawnPickups, tickPickups } from './pickups';
 import { damageTank } from './damage';
@@ -595,15 +596,7 @@ export class World {
     );
   }
   stopPrimaryFire() {
-    for (const { runtime } of this.attachedFields()) {
-      for (const bullet of runtime.bullets)
-        if (bullet.owner === this.player.uid && bullet.anchor?.part.type === 2017)
-          bullet.dead = true;
-      this.replaceBullets(
-        runtime,
-        runtime.bullets.filter((bullet) => !bullet.dead),
-      );
-    }
+    for (const gun of this.player.guns) if (gun.part.type === 2017) stopDamageBeam(this, gun);
   }
   startRocketTimer(owner: Tank, gun: GunState) {
     this.wallTimers.repeat(owner.uid, 100, 10, (index) => {

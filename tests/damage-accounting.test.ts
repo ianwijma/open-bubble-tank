@@ -180,9 +180,11 @@ test('direct Damage, beam contact and turret interception retain their source ab
   const { world, target } = setup();
   world.damage(target, 1);
   const beam = shot(world, { kind: 'beam', symbol: 1992, damage: 2 });
+  world.addBullet(beam);
   tickDamageBeam(world, beam, [target]);
   tickDamageBeam(world, beam, [target]);
   expect(target.life).toBe(97);
+  world.removeBullet(beam); // Keep the following independent turret-contact case isolated.
   const turret = shot(world, {
     owner: target.uid,
     turretHome: target,
