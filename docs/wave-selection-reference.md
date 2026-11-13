@@ -98,3 +98,33 @@ Native win, creator and ink-gallery paint were inspected. Logs, report and pilot
 proofs remain ignored under the existing evidence directories (`ported-*`). These
 are scoped recreation checks; ordinary earned boss/win and original/Adobe parity
 remain unproved. No PR, push or deployment was created for the local port.
+
+## Bounded availability/template bytecode audit
+
+`tools/audit-wave-templates.ts` independently follows the labels, stack and local
+values in the four exported template methods. It records each `WaveOption`
+constructor's literal chance/scale and each `AddInstruction` key/min/max, without
+executing that constructor or its random draws. It then compares the complete
+ordered results with `availableWaves`. Unsupported instructions, missing values,
+nontermination and unvisited constructor sites fail the audit.
+
+```sh
+bun tools/audit-wave-templates.ts /home/ian/Projects/ianwijma/documented-bubble-tank-3
+```
+
+The recovered `_‑3y.pcode` SHA256 is
+`c7f4520c2c57aee210df3f8e352a7954be6656fa55130656085341bce9f3aeb4`.
+All1,344 cases pass: distances−1 through40 and every boolean combination of the
+five source flags `_-TO`, `_-T2`, `_-WG`, `_-YZ` and `_-2H`. They visit all99
+WaveOption constructor sites (90 distinct literal templates). Source's builtin-only
+condition is `TO && !T2 && !WG && !YZ && !2H`; the audit explicitly maps its
+complement to the recreation's `includeLocal` argument. It does not equate the
+current saved-enemy option with every original service/parts-pack configuration.
+
+Controlled mutations of the15→14 threshold and30→31 chance are rejected at
+distance15 and10 respectively. An unknown opcode is also rejected. Original
+exports remain untouched; the ignored `template-audit.json` and
+`template-mutations/results.json` retain the results. This establishes bounded
+agreement of the imported template payload/order/conditions with the walked
+bytecode. It is not AVM2 execution, a proof beyond the supplied domain, verification
+of `_‑Wd`'s caller, the full RNG stream or original/Adobe/full-game parity.
