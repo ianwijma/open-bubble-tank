@@ -65,3 +65,9 @@ The old circular beam wall remains explicitly unresolved. Owner-death/replacemen
 callback guards remain unchanged. Separate pickup work is prepared locally and
 belongs to a later batch, after propagating this carrier change. No source capture,
 SWF/media, dependency or build output is committed here.
+
+## Delivered
+
+The final exact-head gate passed: pull-request run43383715769, attempt1, job131747165658 **Rules, build and mock browser**, success on c91ebe48d3a42f54acc12f7bd1f57214b65088dc. Full fresh discussion/review inspection found only CodeRabbit skip/promotional comments, zero submitted reviews and zero inline threads. Base master remained cafcebd3, the PR was clean/mergeable and every ancestor head was verified before merging. The intermediate PRs were retargeted at master for the combined delivery; no intermediate master merge or additional branch push occurred.
+
+PR149 merged as6125acdef18d9bc3c238d460930e238fc4c71f6d. Fetched master has tested tree55e359e8943c73fedc0dec664785f7a28c8071a7, exactly equal to the tested final head. All five PRs145–149 are confirmed closed/merged. The parent149 watch is stopped; legacy22d9def7321bada8a2148a69a79a3392682bb390 is preserved. Ignored merge-preflight/result records remain beside the local validation artifacts. Missing Vercel status was not treated as provider-confirmed skip proof, and no provider retry/billing change was made. Complete recreation remains unfinished.
