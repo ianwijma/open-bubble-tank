@@ -5,9 +5,12 @@ export class FieldVisit {
   completed = false;
   constructor(public starting = false) {}
 
+  canComplete(field: Field) {
+    return !this.starting && !this.completed && !field.destroyed && field.enemies.length === 0;
+  }
+
   tryComplete(field: Field) {
-    if (this.starting || this.completed || field.destroyed || field.enemies.length > 0)
-      return false;
+    if (!this.canComplete(field)) return false;
     this.completed = true;
     return true;
   }

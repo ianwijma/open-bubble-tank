@@ -67,6 +67,11 @@ export class WorldFlow {
     this.state = 'stopped';
     this.dialogs.add('won');
   }
+  closeWin() {
+    if (!this.dialogs.delete('won')) return false;
+    this.state = this.saved;
+    return true;
+  }
   cross() {
     this.saved = this.state;
     this.state = 'transit';

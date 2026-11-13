@@ -112,7 +112,12 @@ export async function runPlaythrough(
     panel.style.position = 'absolute';
     panel.style.inset = '0';
     host.appendChild(panel);
-    const unmount = showWinScreen(pack, panel, (action) => (host.dataset.winAction = action));
+    const unmount = showWinScreen(
+      pack,
+      panel,
+      (action) => (host.dataset.winAction = action),
+      false,
+    );
     sheet.style.width = '550px';
     sheet.style.height = '1250px';
     host.after(sheet);

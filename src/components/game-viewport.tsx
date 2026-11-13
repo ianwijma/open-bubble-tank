@@ -45,7 +45,7 @@ export function GameViewport({
   }, [isUpgradeOpen]);
   const mode = world.mode;
   useEffect(() => {
-    if (mode === 'playing' || mode === 'transit' || mode === 'collapse')
+    if (mode === 'playing' || mode === 'transit' || mode === 'collapse' || mode === 'stopped')
       host.current?.focus({ preventScroll: true });
   }, [mode]);
   useLayoutEffect(() => {
