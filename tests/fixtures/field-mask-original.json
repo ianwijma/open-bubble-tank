@@ -1,0 +1,1424 @@
+{
+  "scope": "Project-only timeline/control glue around unchanged original geometric sprites.\nNo original method, ABC, frame script, RNG, clock or engine patch. F8 performs\nsynchronous builtin hitTestPoint(shape=true), width/height, bounds and Point reads.\nAuthored arbitrary overlaps are project controls, not ordinary encounters.\n",
+  "originalSha256": "f5827841c682f988f23dcf470ab4ab59c1ffc497acb4ca0f21077d03f942c153",
+  "probeSha256": "8e9cdee399283d7fa7c534ff7404e1010b7cd196db1902ce602dfbcda669e0e0",
+  "emitterSha256": "857ed98f2fa457b0c962263061a149a13b06b8136ae93488c3010c9c20f0f4bd",
+  "fields": [
+    "objectId",
+    "parentId",
+    "maskId",
+    "childIndex",
+    "hit",
+    "hitAgain",
+    "ownCenterHit",
+    "ownCenter.x",
+    "ownCenter.y",
+    "width",
+    "height",
+    "widthAgain",
+    "heightAgain",
+    "x",
+    "y",
+    "visible",
+    "alpha",
+    "point.x",
+    "point.y",
+    "pointIsInput",
+    "roundTrip.x",
+    "roundTrip.y",
+    "bounds.x",
+    "bounds.y",
+    "bounds.width",
+    "bounds.height"
+  ],
+  "wrappers": [
+    {
+      "label": "overlap-miss-hit",
+      "id": 60000,
+      "class": "FieldMask60000",
+      "children": [
+        {
+          "symbol": 1539,
+          "depth": 1,
+          "name": "m1",
+          "x": 1000,
+          "clipDepth": 10
+        },
+        {
+          "symbol": 1539,
+          "depth": 3,
+          "name": "m2",
+          "x": 0,
+          "clipDepth": 12
+        },
+        {
+          "symbol": 1544,
+          "depth": 5,
+          "name": "target",
+          "x": 0,
+          "clipDepth": null
+        }
+      ]
+    },
+    {
+      "label": "overlap-hit-miss",
+      "id": 60001,
+      "class": "FieldMask60001",
+      "children": [
+        {
+          "symbol": 1539,
+          "depth": 1,
+          "name": "m1",
+          "x": 0,
+          "clipDepth": 10
+        },
+        {
+          "symbol": 1539,
+          "depth": 3,
+          "name": "m2",
+          "x": 1000,
+          "clipDepth": 12
+        },
+        {
+          "symbol": 1544,
+          "depth": 5,
+          "name": "target",
+          "x": 0,
+          "clipDepth": null
+        }
+      ]
+    },
+    {
+      "label": "overlap-hit-hit",
+      "id": 60002,
+      "class": "FieldMask60002",
+      "children": [
+        {
+          "symbol": 1539,
+          "depth": 1,
+          "name": "m1",
+          "x": 0,
+          "clipDepth": 10
+        },
+        {
+          "symbol": 1539,
+          "depth": 3,
+          "name": "m2",
+          "x": 0,
+          "clipDepth": 12
+        },
+        {
+          "symbol": 1544,
+          "depth": 5,
+          "name": "target",
+          "x": 0,
+          "clipDepth": null
+        }
+      ]
+    },
+    {
+      "label": "overlap-miss-miss",
+      "id": 60003,
+      "class": "FieldMask60003",
+      "children": [
+        {
+          "symbol": 1539,
+          "depth": 1,
+          "name": "m1",
+          "x": 1000,
+          "clipDepth": 10
+        },
+        {
+          "symbol": 1539,
+          "depth": 3,
+          "name": "m2",
+          "x": 1000,
+          "clipDepth": 12
+        },
+        {
+          "symbol": 1544,
+          "depth": 5,
+          "name": "target",
+          "x": 0,
+          "clipDepth": null
+        }
+      ]
+    },
+    {
+      "label": "end-9",
+      "id": 60004,
+      "class": "FieldMask60004",
+      "children": [
+        {
+          "symbol": 1539,
+          "depth": 1,
+          "name": "m1",
+          "x": 1000,
+          "clipDepth": 10
+        },
+        {
+          "symbol": 1544,
+          "depth": 9,
+          "name": "target",
+          "x": 0,
+          "clipDepth": null
+        }
+      ]
+    },
+    {
+      "label": "end-10",
+      "id": 60005,
+      "class": "FieldMask60005",
+      "children": [
+        {
+          "symbol": 1539,
+          "depth": 1,
+          "name": "m1",
+          "x": 1000,
+          "clipDepth": 10
+        },
+        {
+          "symbol": 1544,
+          "depth": 10,
+          "name": "target",
+          "x": 0,
+          "clipDepth": null
+        }
+      ]
+    },
+    {
+      "label": "end-11",
+      "id": 60006,
+      "class": "FieldMask60006",
+      "children": [
+        {
+          "symbol": 1539,
+          "depth": 1,
+          "name": "m1",
+          "x": 1000,
+          "clipDepth": 10
+        },
+        {
+          "symbol": 1544,
+          "depth": 11,
+          "name": "target",
+          "x": 0,
+          "clipDepth": null
+        }
+      ]
+    },
+    {
+      "label": "nonoverlap-miss-hit",
+      "id": 60007,
+      "class": "FieldMask60007",
+      "children": [
+        {
+          "symbol": 1539,
+          "depth": 1,
+          "name": "m1",
+          "x": 1000,
+          "clipDepth": 4
+        },
+        {
+          "symbol": 1539,
+          "depth": 6,
+          "name": "m2",
+          "x": 0,
+          "clipDepth": 10
+        },
+        {
+          "symbol": 1544,
+          "depth": 8,
+          "name": "target",
+          "x": 0,
+          "clipDepth": null
+        }
+      ]
+    },
+    {
+      "label": "nonoverlap-hit-miss",
+      "id": 60008,
+      "class": "FieldMask60008",
+      "children": [
+        {
+          "symbol": 1539,
+          "depth": 1,
+          "name": "m1",
+          "x": 0,
+          "clipDepth": 4
+        },
+        {
+          "symbol": 1539,
+          "depth": 6,
+          "name": "m2",
+          "x": 1000,
+          "clipDepth": 10
+        },
+        {
+          "symbol": 1544,
+          "depth": 8,
+          "name": "target",
+          "x": 0,
+          "clipDepth": null
+        }
+      ]
+    },
+    {
+      "label": "nonoverlap-hit-hit",
+      "id": 60009,
+      "class": "FieldMask60009",
+      "children": [
+        {
+          "symbol": 1539,
+          "depth": 1,
+          "name": "m1",
+          "x": 0,
+          "clipDepth": 4
+        },
+        {
+          "symbol": 1539,
+          "depth": 6,
+          "name": "m2",
+          "x": 0,
+          "clipDepth": 10
+        },
+        {
+          "symbol": 1544,
+          "depth": 8,
+          "name": "target",
+          "x": 0,
+          "clipDepth": null
+        }
+      ]
+    },
+    {
+      "label": "ancestor-hit",
+      "id": 60010,
+      "class": "FieldMask60010",
+      "children": [
+        {
+          "symbol": 1539,
+          "depth": 1,
+          "name": "m1",
+          "x": 0,
+          "clipDepth": 4
+        },
+        {
+          "symbol": 60000,
+          "depth": 2,
+          "name": "target",
+          "x": 0,
+          "clipDepth": null
+        }
+      ]
+    },
+    {
+      "label": "ancestor-miss",
+      "id": 60011,
+      "class": "FieldMask60011",
+      "children": [
+        {
+          "symbol": 1539,
+          "depth": 1,
+          "name": "m1",
+          "x": 1000,
+          "clipDepth": 4
+        },
+        {
+          "symbol": 60000,
+          "depth": 2,
+          "name": "target",
+          "x": 0,
+          "clipDepth": null
+        }
+      ]
+    },
+    {
+      "label": "runtime",
+      "id": 60012,
+      "class": "FieldMask60012",
+      "children": [
+        {
+          "symbol": 1539,
+          "depth": 1,
+          "name": "m1",
+          "x": 0,
+          "clipDepth": null
+        },
+        {
+          "symbol": 1544,
+          "depth": 2,
+          "name": "target",
+          "x": 0,
+          "clipDepth": null
+        }
+      ]
+    },
+    {
+      "label": "visibility",
+      "id": 60013,
+      "class": "FieldMask60013",
+      "children": [
+        {
+          "symbol": 1539,
+          "depth": 1,
+          "name": "m1",
+          "x": 0,
+          "clipDepth": 10
+        },
+        {
+          "symbol": 1544,
+          "depth": 5,
+          "name": "target",
+          "x": 0,
+          "clipDepth": null
+        }
+      ]
+    }
+  ],
+  "addedTags": [
+    {
+      "code": 39,
+      "sha256": "d272a04d0042192537ca0a678039055fe0dd0b88b0602cc8514cccc57513ab31"
+    },
+    {
+      "code": 39,
+      "sha256": "6f7edd1b1db60d07b0b877c66d5daa0fb8200a870661d62e49c2c00a51f6524d"
+    },
+    {
+      "code": 39,
+      "sha256": "6221baed025ed94aa9765d2b1f31a1c18615c09de7731ef6e95dc6831a1f83fd"
+    },
+    {
+      "code": 39,
+      "sha256": "191dcdba11f193f6d5a4ec6f20433fb291619a805e0b30432d650059e29cee4f"
+    },
+    {
+      "code": 39,
+      "sha256": "cb56bbe3efd7c0d2741f8757bda2b3ee3b8092a21d78ba7bf5b8bbf297399934"
+    },
+    {
+      "code": 39,
+      "sha256": "dc8e5d48878f4cc82f74034e32e710786219a0850c39c2a577eee5cbf1ecc5ce"
+    },
+    {
+      "code": 39,
+      "sha256": "8f5792e1afc39dadcc8270111312e2f2a401ce3eef2e2dc4403a74391ee6c756"
+    },
+    {
+      "code": 39,
+      "sha256": "f4648dab0c5e9d97b725c379543ff9817158f99b0e7c688969549ec76884b3a1"
+    },
+    {
+      "code": 39,
+      "sha256": "820c5412107c5ce835bd18192cd14467cb488447f208516ec2034a95458f885e"
+    },
+    {
+      "code": 39,
+      "sha256": "f0f4f69f5471316d5262dc47b8086ea300601e3dc7862cab09216262e310c2e6"
+    },
+    {
+      "code": 39,
+      "sha256": "bef3197bcb6ded5fe3efb6e276370c8ccd84132b976ae28996cec03f84201ee3"
+    },
+    {
+      "code": 39,
+      "sha256": "23f0007353566947dd836fa396ef0f3e3bc771be7cc2de697994e88dde820da1"
+    },
+    {
+      "code": 39,
+      "sha256": "d0eef0aa0353c2ddb700ee0fa6cd44ba53c2f488cfb05aa8895fb5db8b13d7cd"
+    },
+    {
+      "code": 39,
+      "sha256": "475b6a5b8c760e2ea62739eefd8c1635cc7095ae3bd838165b9f1ab3b431ca6b"
+    },
+    {
+      "code": 82,
+      "sha256": "f00ebf2f07937dc17fb9ddb727d9f6e9e9d771839fb89e005e859a7fe6f27ebc"
+    },
+    {
+      "code": 76,
+      "sha256": "37fffa4497eb2a81fb232af0ad2550ba7d60de81699db24b4e0eb53bfc7d9a19"
+    }
+  ],
+  "originalAbcPayloadHashes": [
+    "130eef8fcef585dc1ae00f427903d11c35a79feb22e11d4e93219f987c719a1c",
+    "d849764541e5f8b5b7d3b9bbdb31960ad9e47b8fd4a3e24652ccfa408c8be596"
+  ],
+  "runtimeModules": [
+    {
+      "sha256": "1ed33b9b71a6b01b9aafafed660be343ffeb2d246c5d79e6425a32bf93e38207",
+      "bytes": 14302754
+    },
+    {
+      "sha256": "26036a94567088dfb3de88a759e8ed10a4cea07b29500af36f345eef42420098",
+      "bytes": 465885
+    },
+    {
+      "sha256": "d27c6bdce2a34afb32e8dfa40970bc7e86cbcb912f92db7eb3e1ac70e943bd82",
+      "bytes": 108322
+    }
+  ],
+  "viewer": {
+    "sha256": "34f10c038f3c88d6c5e747161b38ecd5bd697318a32ec82743aac796fb7945a5",
+    "bytes": 3579
+  },
+  "binaryWords": [
+    [1073741824, 0],
+    [1072693248, 0],
+    [0, 0],
+    [1075838976, 0],
+    [1084022272, 0],
+    [1082817536, 0],
+    [3229252608, 0],
+    [1074266112, 0],
+    [1079590912, 0],
+    [3226025984, 0],
+    [1074790400, 0],
+    [1083129856, 0],
+    [3230613504, 0],
+    [1082262016, 0],
+    [1075052544, 0],
+    [1083640064, 0],
+    [1075314688, 0],
+    [1075970048, 0],
+    [3220176896, 0],
+    [1083544985, 2576980378],
+    [3229980160, 0],
+    [3215563161, 2576980378],
+    [1068079513, 2576980378],
+    [1082081280, 0],
+    [1082097049, 2576980378]
+  ],
+  "samples": [
+    {
+      "case": "overlap-miss-hit",
+      "phase": "baseline",
+      "role": "wrapper",
+      "className": "FieldMask60000",
+      "parentClass": "BT3FieldMaskProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [0, 1, 2, 3, 1, 1, 1, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 4, 5]
+    },
+    {
+      "case": "overlap-miss-hit",
+      "phase": "baseline",
+      "role": "target",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [7, 0, 2, 0, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
+    },
+    {
+      "case": "overlap-miss-hit",
+      "phase": "baseline",
+      "role": "m1",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        10, 0, 2, 2, 2, 2, 1, 11, 2, 5, 5, 5, 5, 11, 2, 1, 1, 2, 2, 2, 12, 2, 13, 6, 5, 5
+      ]
+    },
+    {
+      "case": "overlap-miss-hit",
+      "phase": "baseline",
+      "role": "m2",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60000",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [14, 0, 2, 1, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
+    },
+    {
+      "case": "overlap-hit-miss",
+      "phase": "baseline",
+      "role": "wrapper",
+      "className": "FieldMask60001",
+      "parentClass": "BT3FieldMaskProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [0, 1, 2, 3, 2, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 4, 5]
+    },
+    {
+      "case": "overlap-hit-miss",
+      "phase": "baseline",
+      "role": "target",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60001",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [7, 0, 2, 0, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
+    },
+    {
+      "case": "overlap-hit-miss",
+      "phase": "baseline",
+      "role": "m1",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60001",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [10, 0, 2, 2, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
+    },
+    {
+      "case": "overlap-hit-miss",
+      "phase": "baseline",
+      "role": "m2",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60001",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        14, 0, 2, 1, 2, 2, 1, 11, 2, 5, 5, 5, 5, 11, 2, 1, 1, 2, 2, 2, 12, 2, 13, 6, 5, 5
+      ]
+    },
+    {
+      "case": "overlap-hit-hit",
+      "phase": "baseline",
+      "role": "wrapper",
+      "className": "FieldMask60002",
+      "parentClass": "BT3FieldMaskProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [0, 1, 2, 3, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
+    },
+    {
+      "case": "overlap-hit-hit",
+      "phase": "baseline",
+      "role": "target",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60002",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [7, 0, 2, 0, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
+    },
+    {
+      "case": "overlap-hit-hit",
+      "phase": "baseline",
+      "role": "m1",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60002",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [10, 0, 2, 2, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
+    },
+    {
+      "case": "overlap-hit-hit",
+      "phase": "baseline",
+      "role": "m2",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60002",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [14, 0, 2, 1, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
+    },
+    {
+      "case": "overlap-miss-miss",
+      "phase": "baseline",
+      "role": "wrapper",
+      "className": "FieldMask60003",
+      "parentClass": "BT3FieldMaskProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 2, 2, 2, 15, 5, 15, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 6, 15, 5
+      ]
+    },
+    {
+      "case": "overlap-miss-miss",
+      "phase": "baseline",
+      "role": "target",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60003",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [7, 0, 2, 0, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
+    },
+    {
+      "case": "overlap-miss-miss",
+      "phase": "baseline",
+      "role": "m1",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60003",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        10, 0, 2, 2, 2, 2, 1, 11, 2, 5, 5, 5, 5, 11, 2, 1, 1, 2, 2, 2, 12, 2, 13, 6, 5, 5
+      ]
+    },
+    {
+      "case": "overlap-miss-miss",
+      "phase": "baseline",
+      "role": "m2",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60003",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        14, 0, 2, 1, 2, 2, 1, 11, 2, 5, 5, 5, 5, 11, 2, 1, 1, 2, 2, 2, 12, 2, 13, 6, 5, 5
+      ]
+    },
+    {
+      "case": "end-9",
+      "phase": "baseline",
+      "role": "wrapper",
+      "className": "FieldMask60004",
+      "parentClass": "BT3FieldMaskProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 2, 2, 2, 15, 5, 15, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 6, 15, 5
+      ]
+    },
+    {
+      "case": "end-9",
+      "phase": "baseline",
+      "role": "target",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60004",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [7, 0, 2, 1, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
+    },
+    {
+      "case": "end-9",
+      "phase": "baseline",
+      "role": "m1",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60004",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        10, 0, 2, 2, 2, 2, 1, 11, 2, 5, 5, 5, 5, 11, 2, 1, 1, 2, 2, 2, 12, 2, 13, 6, 5, 5
+      ]
+    },
+    {
+      "case": "end-10",
+      "phase": "baseline",
+      "role": "wrapper",
+      "className": "FieldMask60005",
+      "parentClass": "BT3FieldMaskProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 1, 2, 2, 15, 5, 15, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 6, 15, 5
+      ]
+    },
+    {
+      "case": "end-10",
+      "phase": "baseline",
+      "role": "target",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60005",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [7, 0, 2, 1, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
+    },
+    {
+      "case": "end-10",
+      "phase": "baseline",
+      "role": "m1",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60005",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        10, 0, 2, 2, 2, 2, 1, 11, 2, 5, 5, 5, 5, 11, 2, 1, 1, 2, 2, 2, 12, 2, 13, 6, 5, 5
+      ]
+    },
+    {
+      "case": "end-11",
+      "phase": "baseline",
+      "role": "wrapper",
+      "className": "FieldMask60006",
+      "parentClass": "BT3FieldMaskProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 1, 2, 2, 15, 5, 15, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 6, 15, 5
+      ]
+    },
+    {
+      "case": "end-11",
+      "phase": "baseline",
+      "role": "target",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60006",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [7, 0, 2, 1, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
+    },
+    {
+      "case": "end-11",
+      "phase": "baseline",
+      "role": "m1",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60006",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        10, 0, 2, 2, 2, 2, 1, 11, 2, 5, 5, 5, 5, 11, 2, 1, 1, 2, 2, 2, 12, 2, 13, 6, 5, 5
+      ]
+    },
+    {
+      "case": "nonoverlap-miss-hit",
+      "phase": "baseline",
+      "role": "wrapper",
+      "className": "FieldMask60007",
+      "parentClass": "BT3FieldMaskProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [0, 1, 2, 3, 1, 1, 1, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 4, 5]
+    },
+    {
+      "case": "nonoverlap-miss-hit",
+      "phase": "baseline",
+      "role": "target",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60007",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [7, 0, 2, 0, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
+    },
+    {
+      "case": "nonoverlap-miss-hit",
+      "phase": "baseline",
+      "role": "m1",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60007",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        10, 0, 2, 2, 2, 2, 1, 11, 2, 5, 5, 5, 5, 11, 2, 1, 1, 2, 2, 2, 12, 2, 13, 6, 5, 5
+      ]
+    },
+    {
+      "case": "nonoverlap-miss-hit",
+      "phase": "baseline",
+      "role": "m2",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60007",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [14, 0, 2, 1, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
+    },
+    {
+      "case": "nonoverlap-hit-miss",
+      "phase": "baseline",
+      "role": "wrapper",
+      "className": "FieldMask60008",
+      "parentClass": "BT3FieldMaskProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [0, 1, 2, 3, 2, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 4, 5]
+    },
+    {
+      "case": "nonoverlap-hit-miss",
+      "phase": "baseline",
+      "role": "target",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60008",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [7, 0, 2, 0, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
+    },
+    {
+      "case": "nonoverlap-hit-miss",
+      "phase": "baseline",
+      "role": "m1",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60008",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [10, 0, 2, 2, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
+    },
+    {
+      "case": "nonoverlap-hit-miss",
+      "phase": "baseline",
+      "role": "m2",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60008",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        14, 0, 2, 1, 2, 2, 1, 11, 2, 5, 5, 5, 5, 11, 2, 1, 1, 2, 2, 2, 12, 2, 13, 6, 5, 5
+      ]
+    },
+    {
+      "case": "nonoverlap-hit-hit",
+      "phase": "baseline",
+      "role": "wrapper",
+      "className": "FieldMask60009",
+      "parentClass": "BT3FieldMaskProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [0, 1, 2, 3, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
+    },
+    {
+      "case": "nonoverlap-hit-hit",
+      "phase": "baseline",
+      "role": "target",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60009",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [7, 0, 2, 0, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
+    },
+    {
+      "case": "nonoverlap-hit-hit",
+      "phase": "baseline",
+      "role": "m1",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60009",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [10, 0, 2, 2, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
+    },
+    {
+      "case": "nonoverlap-hit-hit",
+      "phase": "baseline",
+      "role": "m2",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60009",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [14, 0, 2, 1, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
+    },
+    {
+      "case": "ancestor-hit",
+      "phase": "baseline",
+      "role": "wrapper",
+      "className": "FieldMask60010",
+      "parentClass": "BT3FieldMaskProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [0, 1, 2, 3, 1, 1, 1, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 4, 5]
+    },
+    {
+      "case": "ancestor-hit",
+      "phase": "baseline",
+      "role": "target",
+      "className": "FieldMask60000",
+      "parentClass": "FieldMask60010",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [7, 0, 2, 1, 1, 1, 1, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 4, 5]
+    },
+    {
+      "case": "ancestor-hit",
+      "phase": "baseline",
+      "role": "m1",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60010",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [10, 0, 2, 2, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
+    },
+    {
+      "case": "ancestor-miss",
+      "phase": "baseline",
+      "role": "wrapper",
+      "className": "FieldMask60011",
+      "parentClass": "BT3FieldMaskProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [0, 1, 2, 3, 2, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 4, 5]
+    },
+    {
+      "case": "ancestor-miss",
+      "phase": "baseline",
+      "role": "target",
+      "className": "FieldMask60000",
+      "parentClass": "FieldMask60011",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [7, 0, 2, 1, 1, 1, 1, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 4, 5]
+    },
+    {
+      "case": "ancestor-miss",
+      "phase": "baseline",
+      "role": "m1",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60011",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        10, 0, 2, 2, 2, 2, 1, 11, 2, 5, 5, 5, 5, 11, 2, 1, 1, 2, 2, 2, 12, 2, 13, 6, 5, 5
+      ]
+    },
+    {
+      "case": "runtime",
+      "phase": "baseline",
+      "role": "wrapper",
+      "className": "FieldMask60012",
+      "parentClass": "BT3FieldMaskProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [0, 1, 2, 3, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
+    },
+    {
+      "case": "runtime",
+      "phase": "baseline",
+      "role": "target",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60012",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [7, 0, 2, 1, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
+    },
+    {
+      "case": "runtime",
+      "phase": "baseline",
+      "role": "m1",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60012",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [10, 0, 2, 2, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
+    },
+    {
+      "case": "runtime",
+      "phase": "assigned",
+      "role": "wrapper",
+      "className": "FieldMask60012",
+      "parentClass": "BT3FieldMaskProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [0, 1, 2, 3, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
+    },
+    {
+      "case": "runtime",
+      "phase": "assigned",
+      "role": "target",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60012",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [7, 0, 10, 1, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
+    },
+    {
+      "case": "runtime",
+      "phase": "assigned",
+      "role": "m1",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60012",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [10, 0, 2, 2, 2, 2, 2, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
+    },
+    {
+      "case": "runtime",
+      "phase": "mask-miss",
+      "role": "wrapper",
+      "className": "FieldMask60012",
+      "parentClass": "BT3FieldMaskProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 2, 2, 2, 2, 2, 15, 5, 15, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 6, 15, 5
+      ]
+    },
+    {
+      "case": "runtime",
+      "phase": "mask-miss",
+      "role": "target",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60012",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [7, 0, 10, 1, 2, 2, 2, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
+    },
+    {
+      "case": "runtime",
+      "phase": "mask-miss",
+      "role": "m1",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60012",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        10, 0, 2, 2, 2, 2, 2, 11, 2, 5, 5, 5, 5, 11, 2, 1, 1, 2, 2, 2, 12, 2, 13, 6, 5, 5
+      ]
+    },
+    {
+      "case": "runtime",
+      "phase": "mask-hidden",
+      "role": "wrapper",
+      "className": "FieldMask60012",
+      "parentClass": "BT3FieldMaskProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [0, 1, 2, 3, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
+    },
+    {
+      "case": "runtime",
+      "phase": "mask-hidden",
+      "role": "target",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60012",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [7, 0, 10, 1, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
+    },
+    {
+      "case": "runtime",
+      "phase": "mask-hidden",
+      "role": "m1",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60012",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [10, 0, 2, 2, 2, 2, 2, 2, 2, 5, 5, 5, 5, 2, 2, 2, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
+    },
+    {
+      "case": "runtime",
+      "phase": "mask-alpha0",
+      "role": "wrapper",
+      "className": "FieldMask60012",
+      "parentClass": "BT3FieldMaskProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [0, 1, 2, 3, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
+    },
+    {
+      "case": "runtime",
+      "phase": "mask-alpha0",
+      "role": "target",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60012",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [7, 0, 10, 1, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
+    },
+    {
+      "case": "runtime",
+      "phase": "mask-alpha0",
+      "role": "m1",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60012",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [10, 0, 2, 2, 2, 2, 2, 2, 2, 5, 5, 5, 5, 2, 2, 1, 2, 2, 2, 2, 2, 2, 6, 6, 5, 5]
+    },
+    {
+      "case": "runtime",
+      "phase": "different-parent",
+      "role": "wrapper",
+      "className": "FieldMask60012",
+      "parentClass": "BT3FieldMaskProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [0, 1, 2, 3, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
+    },
+    {
+      "case": "runtime",
+      "phase": "different-parent",
+      "role": "target",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60012",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [7, 0, 10, 2, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
+    },
+    {
+      "case": "runtime",
+      "phase": "different-parent",
+      "role": "m1",
+      "className": "flash.display::MovieClip",
+      "parentClass": "flash.display::MovieClip",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        10, 16, 2, 2, 2, 2, 2, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5
+      ]
+    },
+    {
+      "case": "runtime",
+      "phase": "different-parent",
+      "role": "holder",
+      "className": "flash.display::MovieClip",
+      "parentClass": "BT3FieldMaskProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        16, 1, 2, 17, 2, 2, 2, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5
+      ]
+    },
+    {
+      "case": "runtime",
+      "phase": "mask-removed",
+      "role": "wrapper",
+      "className": "FieldMask60012",
+      "parentClass": "BT3FieldMaskProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [0, 1, 2, 3, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
+    },
+    {
+      "case": "runtime",
+      "phase": "mask-removed",
+      "role": "target",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60012",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [7, 0, 10, 2, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
+    },
+    {
+      "case": "runtime",
+      "phase": "mask-removed",
+      "role": "m1",
+      "className": "flash.display::MovieClip",
+      "parentClass": "null",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        10, 2, 2, 18, 2, 2, 2, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5
+      ]
+    },
+    {
+      "case": "runtime",
+      "phase": "mask-removed-miss",
+      "role": "wrapper",
+      "className": "FieldMask60012",
+      "parentClass": "BT3FieldMaskProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [0, 1, 2, 3, 2, 2, 2, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
+    },
+    {
+      "case": "runtime",
+      "phase": "mask-removed-miss",
+      "role": "target",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60012",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [7, 0, 10, 2, 2, 2, 2, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
+    },
+    {
+      "case": "runtime",
+      "phase": "mask-removed-miss",
+      "role": "m1",
+      "className": "flash.display::MovieClip",
+      "parentClass": "null",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        10, 2, 2, 18, 2, 2, 2, 11, 2, 5, 5, 5, 5, 11, 2, 1, 1, 2, 2, 2, 12, 2, 13, 6, 5, 5
+      ]
+    },
+    {
+      "case": "runtime",
+      "phase": "target-removed",
+      "role": "wrapper",
+      "className": "FieldMask60012",
+      "parentClass": "BT3FieldMaskProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [0, 1, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+    },
+    {
+      "case": "runtime",
+      "phase": "target-removed",
+      "role": "target",
+      "className": "flash.display::MovieClip",
+      "parentClass": "null",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        7, 2, 10, 18, 2, 2, 2, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8
+      ]
+    },
+    {
+      "case": "runtime",
+      "phase": "target-removed",
+      "role": "m1",
+      "className": "flash.display::MovieClip",
+      "parentClass": "null",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        10, 2, 2, 18, 2, 2, 2, 11, 2, 5, 5, 5, 5, 11, 2, 1, 1, 2, 2, 2, 12, 2, 13, 6, 5, 5
+      ]
+    },
+    {
+      "case": "runtime",
+      "phase": "detached-unmasked",
+      "role": "wrapper",
+      "className": "FieldMask60012",
+      "parentClass": "BT3FieldMaskProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [0, 1, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+    },
+    {
+      "case": "runtime",
+      "phase": "detached-unmasked",
+      "role": "target",
+      "className": "flash.display::MovieClip",
+      "parentClass": "null",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [7, 2, 2, 18, 2, 2, 2, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
+    },
+    {
+      "case": "runtime",
+      "phase": "detached-unmasked",
+      "role": "m1",
+      "className": "flash.display::MovieClip",
+      "parentClass": "null",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        10, 2, 2, 18, 2, 2, 2, 11, 2, 5, 5, 5, 5, 11, 2, 1, 1, 2, 2, 2, 12, 2, 13, 6, 5, 5
+      ]
+    },
+    {
+      "case": "runtime",
+      "phase": "cleared",
+      "role": "wrapper",
+      "className": "FieldMask60012",
+      "parentClass": "BT3FieldMaskProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [0, 1, 2, 3, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
+    },
+    {
+      "case": "runtime",
+      "phase": "cleared",
+      "role": "target",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60012",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [7, 0, 2, 2, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
+    },
+    {
+      "case": "runtime",
+      "phase": "cleared",
+      "role": "m1",
+      "className": "flash.display::MovieClip",
+      "parentClass": "null",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        10, 2, 2, 18, 2, 2, 2, 11, 2, 5, 5, 5, 5, 11, 2, 1, 1, 2, 2, 2, 12, 2, 13, 6, 5, 5
+      ]
+    },
+    {
+      "case": "visibility",
+      "phase": "baseline",
+      "role": "wrapper",
+      "className": "FieldMask60013",
+      "parentClass": "BT3FieldMaskProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [0, 1, 2, 3, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
+    },
+    {
+      "case": "visibility",
+      "phase": "baseline",
+      "role": "target",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60013",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [7, 0, 2, 1, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
+    },
+    {
+      "case": "visibility",
+      "phase": "baseline",
+      "role": "m1",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60013",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [10, 0, 2, 2, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
+    },
+    {
+      "case": "visibility",
+      "phase": "mask-hidden",
+      "role": "wrapper",
+      "className": "FieldMask60013",
+      "parentClass": "BT3FieldMaskProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [0, 1, 2, 3, 2, 2, 2, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
+    },
+    {
+      "case": "visibility",
+      "phase": "mask-hidden",
+      "role": "target",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60013",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [7, 0, 2, 1, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
+    },
+    {
+      "case": "visibility",
+      "phase": "mask-hidden",
+      "role": "m1",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60013",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [10, 0, 2, 2, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 2, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
+    },
+    {
+      "case": "visibility",
+      "phase": "mask-alpha0",
+      "role": "wrapper",
+      "className": "FieldMask60013",
+      "parentClass": "BT3FieldMaskProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [0, 1, 2, 3, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
+    },
+    {
+      "case": "visibility",
+      "phase": "mask-alpha0",
+      "role": "target",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60013",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [7, 0, 2, 1, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
+    },
+    {
+      "case": "visibility",
+      "phase": "mask-alpha0",
+      "role": "m1",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60013",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [10, 0, 2, 2, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 2, 2, 2, 2, 2, 2, 6, 6, 5, 5]
+    },
+    {
+      "case": "visibility",
+      "phase": "target-hidden",
+      "role": "wrapper",
+      "className": "FieldMask60013",
+      "parentClass": "BT3FieldMaskProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [0, 1, 2, 3, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
+    },
+    {
+      "case": "visibility",
+      "phase": "target-hidden",
+      "role": "target",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60013",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [7, 0, 2, 1, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 2, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
+    },
+    {
+      "case": "visibility",
+      "phase": "target-hidden",
+      "role": "m1",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60013",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [10, 0, 2, 2, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
+    },
+    {
+      "case": "visibility",
+      "phase": "target-alpha0",
+      "role": "wrapper",
+      "className": "FieldMask60013",
+      "parentClass": "BT3FieldMaskProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [0, 1, 2, 3, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
+    },
+    {
+      "case": "visibility",
+      "phase": "target-alpha0",
+      "role": "target",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60013",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [7, 0, 2, 1, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 2, 2, 2, 2, 2, 2, 9, 9, 8, 8]
+    },
+    {
+      "case": "visibility",
+      "phase": "target-alpha0",
+      "role": "m1",
+      "className": "flash.display::MovieClip",
+      "parentClass": "FieldMask60013",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [10, 0, 2, 2, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
+    },
+    {
+      "case": "field1551",
+      "phase": "baseline",
+      "role": "wrapper",
+      "className": "Bubblefield",
+      "parentClass": "BT3FieldMaskProbe",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        0, 1, 2, 3, 1, 1, 1, 2, 2, 19, 19, 19, 19, 2, 2, 1, 1, 2, 2, 2, 2, 2, 20, 20, 19, 19
+      ]
+    },
+    {
+      "case": "field1551",
+      "phase": "baseline",
+      "role": "target",
+      "className": "flash.display::MovieClip",
+      "parentClass": "Bubblefield",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [7, 0, 2, 10, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
+    },
+    {
+      "case": "field1551",
+      "phase": "baseline",
+      "role": "m1",
+      "className": "flash.display::MovieClip",
+      "parentClass": "Bubblefield",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [10, 0, 2, 1, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
+    },
+    {
+      "case": "field1551",
+      "phase": "baseline",
+      "role": "m2",
+      "className": "flash.display::MovieClip",
+      "parentClass": "Bubblefield",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        14, 0, 2, 7, 2, 2, 2, 21, 21, 19, 19, 19, 19, 21, 21, 1, 1, 2, 2, 2, 22, 22, 20, 20, 19, 19
+      ]
+    },
+    {
+      "case": "field1551",
+      "phase": "exterior-point",
+      "role": "m2",
+      "className": "flash.display::MovieClip",
+      "parentClass": "Bubblefield",
+      "pointClass": "flash.geom::Point",
+      "wordIndices": [
+        14, 0, 2, 7, 1, 1, 2, 21, 21, 19, 19, 19, 19, 21, 21, 1, 1, 23, 2, 2, 24, 22, 20, 20, 19, 19
+      ]
+    }
+  ],
+  "evidenceId": "ev_069716d93d18cc60378b033a7d2233e0e8d7eb00d233371a5068d6100aa04dfe"
+}

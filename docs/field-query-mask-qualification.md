@@ -1,4 +1,15 @@
-# Field shape traversal: runtime qualification required
+# Field shape traversal: qualification record
+
+The distinct [original-runtime mask controls](field-mask-runtime-reference.md)
+now qualify the finite overlap/end-depth and runtime-reference question with two
+fresh preserved-original captures. The loaded runtime agrees with the changing
+latch, including an ordinary child exactly at the end depth. Runtime mask
+references survive reparent/removal and remain separate from authored ranges.
+This resolves the finite mask-policy gap below; compiled source identity,
+complete text/field queries, ordinary reachability and Adobe/full-game parity
+remain open. No production traversal or stashed draft is applied here.
+
+The following is the retained pre-capture finding and investigation brief.
 
 The physical population seam is committed as `e3e92cc`. A subsequent local
 geometry-traversal draft is **not integrated**: tagged emulator source exposes

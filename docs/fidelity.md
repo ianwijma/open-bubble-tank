@@ -1783,3 +1783,19 @@ The five-layer batch landed through PR154 merge897d2e741b8a1d23f563f8bb8a2e6bd68
 ## Corrected effect replay paths
 
 The [candidate correspondence review](effect-clock-correspondence-reference.md) found a tool defect: Map insertion order differs from actual getChildAt/render order after earlier depths are replaced. The corrected walk eliminates all45 identity/correspondence and33 collapse-frame differences without changing production or frozen data. The remaining26 conversion-child frames match in an isolated child-before-parent advancement experiment, consistent with tagged scheduler order. All660 sampled frame/correspondence checks match that control; before/inside root ownership, complete pose/ENTER geometry and production migration remain separate work. No runtime oracle is rewritten and no full-game/Adobe claim is made.
+
+
+## Finite original mask-query qualification
+
+The distinct [field-mask runtime controls](field-mask-runtime-reference.md) execute
+actual builtins on preserved original geometric leaves inside declared project
+wrappers. Two fresh owned-browser captures match 97 rows / 2522 binary64 values
+and independent REA DOM. Overlap order and exact end-depth controls support the
+changing latch and reject all-active-mask conjunction/inclusive mask-end as the
+loaded runtime contract. Explicit runtime mask references persist through actual
+reparent/removal; visibility, alpha, receiver/direct queries and Script bounds
+are independently frozen. Twenty-one adversarial controls reject, and all 50 older
+reference files / 22 emitted modes remain byte-identical. Production and the
+parent's stashed traversal are unchanged. REA events remain incomplete and ineligible for equality; compiled source revision, complete field/text traversal, ordinary
+reachability, Adobe/pixel/audio and full-game parity remain unproved.
+
