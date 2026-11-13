@@ -272,16 +272,10 @@ export class World {
   /** currentBFTarget.SpawnNewEnemy has no crossing birth gate. */
   spawnEnemy(design: TankDesign, point: Vec) {
     const field = this.currentWrapper;
-    const enemy = createTank(
-      this.nextId(),
-      design,
-      'enemy',
-      point.x,
-      point.y,
-      undefined,
-      undefined,
-      this,
-    );
+    const enemy = createTank(this.nextId(), design, 'enemy', 0, 0, undefined, undefined, this);
+    // TankData._-Tr completes Setup before SpawnNewEnemy assigns its display pose.
+    enemy.x = point.x;
+    enemy.y = point.y;
     this.actorParents.attach(enemy, field);
     this.callbackFields.set(enemy, field);
     field.enemies.push(enemy);
@@ -1172,16 +1166,10 @@ export class World {
         cleared: false,
         tutorial,
         enemies: wave.designs.map((design) => {
-          const t = createTank(
-            this.nextId(),
-            design,
-            'enemy',
-            this.rng.int(-200, 200) * wave.scale,
-            this.rng.int(-200, 200) * wave.scale,
-            undefined,
-            undefined,
-            this,
-          );
+          const t = createTank(this.nextId(), design, 'enemy', 0, 0, undefined, undefined, this);
+          // _-0D._-Ar constructs the tank before consuming these three pose draws.
+          t.x = this.rng.int(-200, 200) * wave.scale;
+          t.y = this.rng.int(-200, 200) * wave.scale;
           t.rotation = this.rng.int(-180, 180);
           return t;
         }),

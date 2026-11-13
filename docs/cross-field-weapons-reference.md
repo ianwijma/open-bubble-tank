@@ -82,6 +82,56 @@ not ordinary-input or original-runtime evidence. Supplied-art history and win pa
 were inspected. All owned servers stopped. Local evidence remains uncommitted under
 `test-results/spawner-setup-validation/` and the deployment-controls capture directory.
 
+## Field births finish construction before their display pose
+
+`_-0D._-Ar` (`_-0D.as`1460 onward) imports each instruction's tank, calls
+`TankData._-Tr(3, gWorldRef)`, then draws X, Y and rotation, parents the result,
+installs its callback and appends it. The matching pcode's `ofs0032` path calls
+`_-Tr` before the first rounded−200..200 draw; `ofs00b8` assigns Y and `ofs00a1`
+assigns rotation before attachment. TankData registers each weapon/behavior during
+`_-Tr`, and registration synchronously calls Setup. Those modeled constructor and
+Setup draws therefore precede all three field-pose draws.
+
+The previous `World.jump` evaluated random X/Y arguments before entering
+`createTank`, moving acquisition/part/spawner randomness later in the shared
+stream. Fresh fields now construct at the default origin first, then draw and
+assign X, Y and rotation. Source `SpawnNewEnemy` (`_-0D.as`474 onward and matching
+pcode2061 onward) also calls `_-Tr` before assigning its supplied X/Y. That route
+now follows the same zero-origin construction boundary, retaining its final
+emitter coordinates, parent/callback owner and immediate live-array behavior.
+
+The new regression triggers the builtin boss with explicit eligibility, preserves
+both cached fighter choices and final pose, and requires all acquisition/selection
+draws before the X/Y/rotation suffix. It fails against the previous ordering and
+passes after the correction. This is an instrumented construction contract, not
+ordinary boss reachability or a synchronized source entropy trace. The regression
+and existing Setup/cross-field ownership cases pass together (seven tests).
+
+Formatting, TypeScript and 919 unit tests / 8,471 assertions pass. Production
+build `UrmN28T1hGK2VdbDJckqv` passes this literal browser command:
+
+```sh
+BT3_SWF_FILE=/home/ian/Projects/ianwijma/documented-bubble-tank-3/re/bt3/uncompressed.swf bun run test:e2e --config test-results/wave-selection-validation/birth-order.config.ts
+```
+
+All 14 mock/supplied-art cases pass with zero skips, flaky results or page errors:
+actor behavior, active/cached crossing, accelerated progression, ink, mounted
+targeting and the public creator/save/local-source route. Private fixture copies
+change only URL3102 to3166; the caller uses its original spec/helpers. Both owned
+3165/3166 servers stopped. Accelerated pilots reach all six upgrades, boss defeat,
+badge and Continue in 72,034 mock / 71,183 supplied-art frames. Native history,
+win and targeting paint were inspected. These seeded accelerated fixtures do not
+establish ordinary earned progression. The ignored browser report and pilot
+proofs are under `test-results/wave-selection-validation/birth-order-*`.
+
+Source AS/pcode hashes and the failing-before/focused logs are ignored under
+`reference-captures/wave-selection-audit/birth-order-*`. The `_‑0D.pcode` identity
+is `5b30ed4cca2a726a56569c8da70a24c652282c92836692cdbd6fd1f97fc8b5ae`;
+`TankData.pcode` is
+`4f1eec91c07616eaa1895078047c1423a21ce0253192d61161dfdc8f120491f0`.
+Art frame scripts, the complete source constructor draw stream, display-setter
+precision and original/Adobe/full-game equivalence remain unproved.
+
 ## Shield Turrets: bounded audit, no simulation correction
 
 [The4032 caller/source audit](shield-turret-source-audit.md) proves a valid
