@@ -75,6 +75,19 @@ those families. Their lazy providers and separate descendant ownership remain
 explicit limits. The existing shield-hit 16, turret-film 25 and forcefield jump
 rules were not changed to fit Wiggle/rotor evidence.
 
+Parent review also reproduced a concrete phase discrepancy on both this combined
+source and an import-time restoration of the actual 88a98ef production modules.
+The original negative/positive-Y constructor roots both report frame1; the host's
+initial getters report1/51. At the measured first EXIT, the original reports1/51
+while combined advancement reports2/52. At the49th EXIT the original reports49/99
+while the host reports1/51. The selected negative-Y ENTER windows above do not
+cover these constructor, EXIT and jump-boundary differences. Parent diagnostic
+files are under `test-results/fifth-integration/actor-phase-*`; the baseline's
+restored module list and hashes are in `actor-phase-baseline-restoration.json`.
+No original fixture, phase assertion or production phase rule was changed to fit
+this result. The lifetime correction is not a complete phase correction, and the
+same baseline discrepancy does not establish causation for the pilot timeout.
+
 The browser control executes actual reconstruction departure/cache/revisit with
 controlled scalars, then explicit actor/mount removals. Its retained pose gallery
 and contact grid verify the reconstruction consumers. Original captures executed

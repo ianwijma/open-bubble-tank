@@ -60,13 +60,6 @@ export class EffectPlayback {
   private cohort = 0;
   private clocks = new Set<WeakRef<Clock>>();
   private lifetimes = new WeakMap<SwfClip, Clock>();
-  private *live() {
-    for (const reference of this.clocks) {
-      const clock = reference.deref();
-      if (clock) yield clock;
-      else this.clocks.delete(reference);
-    }
-  }
   construct(effect: Effect): RetainedEffectPlayback {
     if (effect.playback) return effect.playback;
     const root = metadata.roots.find((root) => root.symbol === effect.symbol);
@@ -102,7 +95,12 @@ export class EffectPlayback {
   /** Stage entry precedes Main/World.Run, including current-frame completion reads. */
   enterFrame() {
     this.cohort++;
-    for (const clock of this.live()) {
+    for (const reference of this.clocks) {
+      const clock = reference.deref();
+      if (!clock) {
+        this.clocks.delete(reference);
+        continue;
+      }
       if (!clock.initialized) {
         clock.pose.enterFrame();
         clock.initialized = true;
@@ -113,7 +111,12 @@ export class EffectPlayback {
    * Every root constructor is plain; the existing2069 stop action runs normally.
    */
   exitFrame() {
-    for (const clock of this.live()) {
+    for (const reference of this.clocks) {
+      const clock = reference.deref();
+      if (!clock) {
+        this.clocks.delete(reference);
+        continue;
+      }
       if (!clock.initialized) {
         clock.pose.enterFrame();
         clock.initialized = true;

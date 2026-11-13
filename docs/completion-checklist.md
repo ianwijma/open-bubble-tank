@@ -8,15 +8,14 @@ scope.
 
 ## Current snapshot
 
-- Checked: 2026-11-14 00:41 AEDT, Australia/Sydney.
-- Inspected local source HEAD: `5c5919b61d502dae21416bc90ce3ae88d18e4a24`.
-- Dirty state at inspection: no uncommitted production code; AGENTS/checklist status metadata is pending separately.
-- Working tree at initial inspection: clean. This documentation and concurrent main-thread edits postdate that baseline; their validation is recorded separately.
-- Live source: [main thread](t3-thread://v2/a713d3ff-a5f3-472b-97bd-83fd799395a5/93d9eb80-8a0a-44ac-8262-07b1ceb7992a), inspected through message position 32134; technical updates and delivery continue independently of this snapshot.
-- Delivery: PRs 150–154 merged; PRs 155–158 verified open. Native text/effects and the orbital fixture repair are local; the fifth combined PR is not yet published. PR158's hosted job failed; its fixture repair is not retroactive hosted success.
+- Checked: 2026-11-14 01:33 AEDT, Australia/Sydney.
+- Inspected local source HEAD: `fcb6c4fffa9d11b76222184489f3d55f4f4fded2`, with the measured effect-iteration repair pending locally.
+- Dirty state at inspection: one production file replaces generator traversal with direct weak-reference iteration; actor phase and batch validation documentation are updated separately.
+- Live source: [main thread](t3-thread://v2/a713d3ff-a5f3-472b-97bd-83fd799395a5/93d9eb80-8a0a-44ac-8262-07b1ceb7992a). This snapshot records current local evidence; published and merged evidence remain distinct.
+- Delivery: PRs150–154 merged; PRs155–158 remain open. The fifth combined PR is not published. The first combined71-case run passed70 and timed out in the advancing SWF pilot; the measured repair passes1,291 rule tests and awaits the combined browser rerun. PR158's orbital fixture repair passes both combined browser modes locally, without retroactive hosted success.
 - Packages complete: **0/7**.
 - Checkpoints complete: **7/21**. These are completion gates of unequal size, not a percentage of effort or a PR estimate.
-- Changes since previous update: retained effects integrated locally; the hosted orbital fixture failure is repaired locally with unchanged assertions. Actor clock correction and the final combined delivery gate remain open. No checkpoint changes.
+- Changes since previous update: retained actor lifetime correction integrated; the combined pilot runtime-budget failure is preserved and profiled. Original actor constructor/EXIT phase discrepancies are confirmed on both current and restored baseline code. No checkpoint changes.
 
 ## Fixed overview
 
@@ -62,7 +61,7 @@ Distinguish local, published and merged work.
 - [x] **2.1** Retained field, actor, projectile and pickup ownership/position behavior has source-backed implementation and scoped browser coverage.
       Evidence: [crossing contracts](crossing-source-reference.md), [delivered retained-display batch](retained-display-batch-validation.md).
 - [ ] **2.2** Remaining detached actor/part/status/protection and generic-effect clock/constructor/callback repairs are integrated and pass affected checks.
-      Evidence so far: [actor clock qualification](actor-clock-original-reference.md), [local retained effects](retained-effect-playback-reference.md). Original actor evidence identifies a production clock gap; local effect results do not close the whole checkpoint.
+      Evidence so far: [actor clock qualification](actor-clock-original-reference.md), [local retained effects](retained-effect-playback-reference.md). The actor lifetime correction is local; constructor/EXIT phase discrepancies and status/protection clock coverage remain open. The first combined browser rerun also exposes a pilot performance gate.
 - [ ] **2.3** Controlled original crossing comparisons cover initiation, both active fields, arrival, cached return, nested pause/upgrade/help/death and relevant Timer/event/RNG ordering; unresolved differences are fixed or explicitly accepted.
       Evidence gap: source/scoped controls exist, while complete crossing-runtime acceptance remains open in the ledger.
 
