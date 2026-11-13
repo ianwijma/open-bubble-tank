@@ -52,6 +52,7 @@ import { showWinScreen } from './screens';
 import { showDegradationProof } from './degradation';
 import { showCrossingProof, showNestedCrossingProof } from './crossing';
 import { showPickupProof } from './pickups';
+import { showPickupOwnership } from './pickup-ownership';
 import { showPlayerClocks } from './player-clocks';
 import { showCombatEffectsProof } from './combat-effects';
 import { showProjectileOrderProof } from './projectile-order';
@@ -529,6 +530,12 @@ async function reset() {
       status.dataset.playerClocks = JSON.stringify(proof);
       status.textContent = 'Ready · production player clock loop';
     });
+    return;
+  }
+  if (fixture.value === 'pickup-ownership') {
+    status.textContent = 'Rendering pickup ownership…';
+    status.dataset.pickupOwnership = JSON.stringify(await showPickupOwnership(pack, stage));
+    status.textContent = 'Ready · retained pickup ownership';
     return;
   }
   if (fixture.value === 'pickups') {

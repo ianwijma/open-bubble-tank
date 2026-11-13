@@ -1,3 +1,4 @@
+import { importPickupFixtures } from './pickup-attachments';
 import { importActorFixtures } from './actor-attachments';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { DEFAULT_SETTINGS } from '../../src/game/core/constants';
@@ -80,6 +81,7 @@ export async function showCrossingProof(pack: AssetPack, host: HTMLElement) {
     forced: false,
     dead: false,
   });
+  importPickupFixtures(world);
   world.queueEffect(
     {
       uid: world.nextId(),

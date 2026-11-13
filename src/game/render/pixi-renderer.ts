@@ -3,7 +3,7 @@ import type { AssetPack, Raster } from '../assets/asset-pack';
 import { STAGE } from '../core/constants';
 import { DEG } from '../core/math';
 import { MainBackgroundView } from './main-background-view';
-import type { Field, Settings, Tank } from '../core/types';
+import type { Field, Pickup, Settings, Tank } from '../core/types';
 import type { World } from '../simulation/world';
 import { whipSamples } from '../simulation/whip';
 import { drawMockProjectile } from './mock-projectile-view';
@@ -29,7 +29,7 @@ export class GameRenderer {
   nativePickups = new Container();
   pickupArt = new Container();
   private mockShots = new Map<Field, Graphics>();
-  private mockPickups = new Map<Field, Graphics>();
+  private mockPickups = new Map<Pickup, Graphics>();
   private combatEffects?: CombatEffectsView;
   mapArt = new Container();
   private minimap?: MinimapView;
@@ -44,7 +44,7 @@ export class GameRenderer {
   private tankNodes = new Map<Tank, TankView>();
   private actorLayers = new Map<Field, Container>();
   private bulletNodes = new Map<number, SwfSymbolView>();
-  private pickupNodes = new Map<number, SwfSymbolView>();
+  private pickupNodes = new Map<Pickup, SwfSymbolView>();
   private fieldNodes = new Map<Field, Sprite>();
   highlights = new Container();
   private highlightNodes = new Map<Field, SwfSymbolView>();
@@ -150,10 +150,10 @@ export class GameRenderer {
     }
     return node;
   }
-  private nativeSymbol(
+  private nativeSymbol<Key>(
     id: number,
-    uid: number,
-    nodes: Map<number, SwfSymbolView>,
+    uid: Key,
+    nodes: Map<Key, SwfSymbolView>,
     layer: Container,
   ) {
     let view = nodes.get(uid);
@@ -169,7 +169,7 @@ export class GameRenderer {
     }
     return view;
   }
-  private pruneSymbols(nodes: Map<number, SwfSymbolView>, active: Set<number>) {
+  private pruneSymbols<Key>(nodes: Map<Key, SwfSymbolView>, active: Set<Key>) {
     for (const [uid, view] of nodes)
       if (!active.has(uid)) {
         view.destroy();
@@ -296,7 +296,7 @@ export class GameRenderer {
       }
     // The avatar is a sibling above the field enemy layers, not one of their children.
     this.entities.setChildIndex(playerNode.container, this.entities.children.length - 1);
-    for (const nodes of [this.mockShots, this.mockPickups])
+    for (const nodes of [this.mockShots])
       for (const [field, graphics] of nodes)
         if (!activeFields.includes(field)) {
           graphics.destroy();
@@ -388,43 +388,50 @@ export class GameRenderer {
       }
     }
     this.pruneSymbols(this.bulletNodes, nativeBulletIds);
-    for (const graphics of this.mockPickups.values()) graphics.clear();
-    const nativePickupIds = new Set<number>();
-    for (const { runtime, field, transform } of states) {
-      let drawing = this.mockPickups.get(field);
-      if (!drawing) {
-        drawing = new Graphics();
-        this.mockPickups.set(field, drawing);
-        this.pickupArt.addChild(drawing);
-      }
-      drawing.position.set(transform.x, transform.y);
-      drawing.scale.set(transform.scale);
-      for (const b of runtime.pickups) {
+    const displayedPickups = new Set<Pickup>();
+    let pickupIndex = 0;
+    for (const { field, transform } of states) {
+      for (const b of world.pickupDisplays.owned(field)) {
+        const clip = world.pickupDisplays.read(b)!.clip;
+        displayedPickups.add(b);
         if (this.assets.mode === 'swf') {
-          const view = this.nativeSymbol(
-            b.value === 50 ? 1820 : b.value === 5 ? 1817 : 1816,
-            b.uid,
-            this.pickupNodes,
-            this.nativePickups,
-          );
+          const view = this.nativeSymbol(clip.symbol, b, this.pickupNodes, this.nativePickups);
+          this.nativePickups.setChildIndex(view.root, pickupIndex++);
           const point = fieldPoint(b, transform);
           view.root.position.set(point.x, point.y);
           view.root.angle = b.rotation;
           view.root.scale.set(transform.scale);
-          view.update(world.stats.frames + b.uid);
-          nativePickupIds.add(b.uid);
+          // Native constructor/frame-script scheduling is unresolved. This held
+          // authored preview must never be passed off as the current native pose.
+          view.update(clip.presentation.frame, clip.presentation.frame);
           continue;
         }
-        const r = b.value === 50 ? 8 : b.value === 5 ? 4 : 2;
-        drawing.circle(b.x, b.y, r + 2).fill({ color: 0x9dff35, alpha: 0.08 });
+        let drawing = this.mockPickups.get(b);
+        if (!drawing) {
+          drawing = new Graphics();
+          this.mockPickups.set(b, drawing);
+          this.pickupArt.addChild(drawing);
+        }
+        this.pickupArt.setChildIndex(drawing, pickupIndex++);
+        drawing.clear();
+        const point = fieldPoint(b, transform);
+        drawing.position.set(point.x, point.y);
+        drawing.scale.set(transform.scale);
+        const r = clip.symbol === 1820 ? 8 : clip.symbol === 1817 ? 4 : 2;
+        drawing.circle(0, 0, r + 2).fill({ color: 0x9dff35, alpha: 0.08 });
         drawing
-          .circle(b.x, b.y, r)
+          .circle(0, 0, r)
           .fill({ color: 0x5bc52e, alpha: 0.4 })
           .stroke({ color: 0xb6ff63, alpha: 0.85, width: 0.7 });
-        drawing.circle(b.x - r * 0.35, b.y - r * 0.35, Math.max(0.5, r * 0.18)).fill(0xeaffb9);
+        drawing.circle(-r * 0.35, -r * 0.35, Math.max(0.5, r * 0.18)).fill(0xeaffb9);
       }
     }
-    this.pruneSymbols(this.pickupNodes, nativePickupIds);
+    this.pruneSymbols(this.pickupNodes, displayedPickups);
+    for (const [pickup, drawing] of this.mockPickups)
+      if (!displayedPickups.has(pickup)) {
+        drawing.destroy();
+        this.mockPickups.delete(pickup);
+      }
     this.combatEffects?.update(
       states.flatMap(({ runtime, transform }) =>
         runtime.effects.map((effect) => {
@@ -468,6 +475,7 @@ export class GameRenderer {
     for (const tex of this.ownedTextures) tex.destroy(true);
     this.tankNodes.clear();
     this.actorLayers.clear();
+    this.mockPickups.clear();
     this.fieldNodes.clear();
   }
 }

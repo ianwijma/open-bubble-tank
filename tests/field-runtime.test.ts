@@ -1,3 +1,4 @@
+import { importPickupFixtures } from './fixtures/pickup-attachments';
 import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import { STARTER } from '../src/game/data/catalog';
@@ -119,6 +120,7 @@ test('arrival retains destination shots, pickups and allies but clears registere
     dead: false,
   };
   runtime.pickups.push(pickup);
+  importPickupFixtures(world);
   const ally = createTank(
     world.nextId(),
     { ...design, parts: [STARTER.parts[0]] },
@@ -177,6 +179,7 @@ test('destination pickups can collect during travel and force collection on thei
   };
   const distant = { ...pickup, uid: world.nextId(), x: 100, y: 100 };
   runtime.pickups.push(pickup, distant);
+  importPickupFixtures(world);
   world.step(emptyInput());
   expect(pickup.dead).toBe(true);
   expect(distant.forced).toBe(true);

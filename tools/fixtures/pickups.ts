@@ -1,3 +1,4 @@
+import { importPickupFixtures } from './pickup-attachments';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { DEFAULT_SETTINGS } from '../../src/game/core/constants';
 import { STARTER } from '../../src/game/data/catalog';
@@ -36,6 +37,7 @@ export async function showPickupProof(pack: AssetPack, host: HTMLElement) {
     dead: false,
   };
   world.pickups.push(pickup);
+  importPickupFixtures(world);
   const canvas = document.createElement('canvas');
   canvas.width = 550;
   canvas.height = 450;

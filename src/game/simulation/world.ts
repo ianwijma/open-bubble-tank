@@ -59,6 +59,7 @@ import { tickBullet, starSplit, releaseCarrier, explode } from './projectiles';
 import { stopDamageBeam } from './beams';
 import { createTank, deactivateTankData } from './tank';
 import { spawnPickups, tickPickups } from './pickups';
+import { PickupDisplays, PickupChildRemovalError, clearPickups } from './pickup-display';
 import { damageTank } from './damage';
 import { rollBossWave, rollWave, UnitRoster } from './waves';
 import { tickStatusDecoration, tickStatusTail } from './status';
@@ -126,6 +127,7 @@ export class World {
   }
   hitSoundTimer = -1;
   readonly actorParents = new ActorParents();
+  readonly pickupDisplays = new PickupDisplays();
   readonly effectEngine = new RegisteredEffects();
   player: Tank;
   private currentField!: Field;
@@ -524,6 +526,7 @@ export class World {
         !(error instanceof CrossingTargetReadError) &&
         !(error instanceof DeactivatedActorRunError) &&
         !(error instanceof FieldChildRemovalError) &&
+        !(error instanceof PickupChildRemovalError) &&
         !(error instanceof EffectLayerReadError) &&
         !(error instanceof EffectChildRemovalError) &&
         !(error instanceof EffectCompletionReadError)
@@ -796,7 +799,7 @@ export class World {
     this.field.destroyed = true;
     this.field.cleared = true;
     this.bullets = [];
-    this.pickups = [];
+    clearPickups(this, this.field);
     this.allies = [];
     for (const carrier of this.runtime.pending) this.effectEngine.discard(carrier);
     this.player.x = this.player.y = 0;
@@ -1036,7 +1039,14 @@ export class World {
     runtime.enemyRemovals = [];
   }
   dropBubbles(pos: Vec, amount: number) {
-    spawnPickups(this, pos, amount, this.runtimeFor(this.currentField).pickups);
+    spawnPickups(
+      this,
+      pos,
+      amount,
+      this.runtimeFor(this.currentField).pickups,
+      false,
+      this.currentField,
+    );
   }
   private completeField(field: Field, visit: FieldVisit) {
     if (!visit.canComplete(field)) return;
@@ -1340,7 +1350,7 @@ export class World {
         const outgoing = this.runtimeFor(this.currentField);
         for (const bullet of outgoing.bullets) bullet.dead = true;
         this.replaceBullets(outgoing, []);
-        outgoing.pickups = [];
+        clearPickups(this, this.currentField);
         outgoing.enemyRemovals = [];
         outgoing.allyRemovals = [];
         // _-0D.Deactivate clears _-I4 only for a completed wrapper. Engine

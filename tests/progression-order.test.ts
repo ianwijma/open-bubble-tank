@@ -1,3 +1,4 @@
+import { importPickupFixtures } from './fixtures/pickup-attachments';
 import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import { STARTER } from '../src/game/data/catalog';
@@ -20,6 +21,7 @@ function pickup(world: World, value: number) {
     forced: true,
     dead: false,
   });
+  importPickupFixtures(world);
 }
 function incoming(world: World, damage: number) {
   const enemy = createTank(

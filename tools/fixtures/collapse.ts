@@ -1,3 +1,4 @@
+import { importPickupFixtures } from './pickup-attachments';
 import { importActorFixtures } from './actor-attachments';
 import { captureCanvas } from './pixi-capture';
 import { Container, Graphics, Point, Rectangle } from 'pixi.js';
@@ -62,6 +63,7 @@ export async function showCollapseProof(pack: AssetPack, host: HTMLElement) {
     forced: false,
     dead: false,
   });
+  importPickupFixtures(world);
   const bottom = world.addCombatEffect(
     { x: 100, y: 40 },
     'impact',

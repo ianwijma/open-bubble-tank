@@ -1,3 +1,4 @@
+import { importPickupFixtures } from './fixtures/pickup-attachments';
 import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import { STARTER } from '../src/game/data/catalog';
@@ -352,6 +353,7 @@ test('completed-wrapper deactivation clears its shots and pickups before detachm
     forced: false,
     dead: false,
   });
+  importPickupFixtures(world);
   world.jump({ x: 1, y: 0 });
   world.player.x = world.transit!.target.x;
   world.player.y = world.transit!.target.y;

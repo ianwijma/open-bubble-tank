@@ -1,3 +1,4 @@
+import { importPickupFixtures } from './fixtures/pickup-attachments';
 import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import { World, emptyInput } from '../src/game/simulation/world';
@@ -54,6 +55,7 @@ test('manual triggers precede combat, cooldowns follow it, and HUD retains the i
     forced: false,
     dead: false,
   });
+  importPickupFixtures(world);
   world.step(emptyInput());
   expect(world.player.life).toBe(6);
   expect(world.hud.readout(world.player, world.secondaryCounter).life).toBe(1);
