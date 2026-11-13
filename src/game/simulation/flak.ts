@@ -1,5 +1,6 @@
 import { projectileOutside } from './projectile-boundary';
 import { direction } from '../core/math';
+import { displayPixel } from '../core/display-values';
 import type { Projectile } from '../core/types';
 import type { World } from './world';
 
@@ -17,6 +18,6 @@ export function tickFlak(world: World, bullet: Projectile) {
     return;
   }
   const movement = direction(bullet.angle, bullet.speed);
-  bullet.x += movement.x;
-  bullet.y += movement.y;
+  bullet.x = displayPixel(bullet.x + movement.x);
+  bullet.y = displayPixel(bullet.y + movement.y);
 }

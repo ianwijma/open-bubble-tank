@@ -35,6 +35,7 @@ export async function showSpecialProjectilesProof(pack: AssetPack, host: HTMLEle
     -180,
   );
   world.field.enemies = [master];
+  world.actorParents.sync(world);
   const make = (options: Partial<Projectile>) =>
     createProjectile(world.nextId(), {
       owner: world.player.uid,

@@ -251,6 +251,7 @@ test('conversion target selection excludes the last entry; detached avatar-seeke
   const middle = createTank(world.nextId(), enemy.design, 'enemy', 0, 100);
   const last = createTank(world.nextId(), enemy.design, 'enemy', 1, 0);
   world.field.enemies.push(middle, last);
+  world.actorParents.sync(world);
   world.rng.next = () => 0.999;
   world.bullets.push(shot({ enemy: true, symbol: 1809 }));
   const gun = {
@@ -265,6 +266,7 @@ test('conversion target selection excludes the last entry; detached avatar-seeke
   expect(b.targetId).toBe(middle.uid);
   expect(b.angle).toBeCloseTo(90);
   world.field.enemies = [enemy, last];
+  world.actorParents.sync(world);
   tick(world, b);
   expect(b.targetId).toBe(enemy.uid);
   expect(b.angle).toBeCloseTo(0);
@@ -305,6 +307,7 @@ test('hit location uses the nearest authored detail, including weapons, first ti
 
 test('two Sapper mounts each retain one shot and respawn independently after removal', () => {
   const { world, enemy } = setup();
+  world.actorParents.sync(world);
   enemy.guns = [0, 1].map((i) => ({
     part: { ...STARTER.parts[1], type: 4012, key: String(i) },
     counter: 0,

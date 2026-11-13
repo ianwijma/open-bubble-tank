@@ -1,5 +1,6 @@
 import { STAGE } from '../core/constants';
 import { rotate } from '../core/math';
+import { displayPixel } from '../core/display-values';
 import type { Projectile, Vec } from '../core/types';
 import type { World } from './world';
 
@@ -58,7 +59,7 @@ export function tickWhip(world: World, b: Projectile) {
   // Detached emitter references can outlive the owner; retain the last safe position.
   if (owner && b.anchor) {
     const emitter = world.muzzle(owner, b.anchor);
-    b.x = emitter.x;
-    b.y = emitter.y;
+    b.x = displayPixel(emitter.x);
+    b.y = displayPixel(emitter.y);
   }
 }

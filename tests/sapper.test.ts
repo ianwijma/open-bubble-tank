@@ -31,6 +31,7 @@ function setup(playerX = 100) {
   master.life = 60;
   master.guns[0].counter = Infinity;
   world.field.enemies = [master];
+  world.actorParents.sync(world);
   const bullet: Projectile = {
     uid: world.nextId(),
     owner: master.uid,
@@ -163,6 +164,7 @@ test('returning sapper steers to rotated gun registration, then contacts the mas
   bullet.x = 0;
   bullet.y = 10;
   bullet.returning = true;
+  bullet.homing!.target = master;
   bullet.artFrame = 2;
   master.life = 56;
   world.hitTest = (tank, x, y) => tank === master && x === 0 && y === 10;
@@ -184,6 +186,7 @@ test('sapper caches current master life lazily and direct healing preserves body
   master.degradation.minimum = 8;
   const before = { ...master.degradation };
   bullet.returning = true;
+  bullet.homing!.target = master;
   world.hitTest = (tank) => tank === master;
   tickSapper(world, bullet);
   expect(master.life).toBe(24);
@@ -197,6 +200,7 @@ test('sapper contains check retains dead-but-attached masters and removes after 
   tickSapper(world, bullet);
   expect(bullet.dead).toBe(false);
   world.field.enemies = [];
+  world.actorParents.sync(world);
   const position = { x: bullet.x, y: bullet.y };
   tickSapper(world, bullet);
   expect(bullet.dead).toBe(true);
@@ -207,6 +211,7 @@ test('sapper contains check retains dead-but-attached masters and removes after 
 test('sapper Setup proximity survives until first contact; the five-unit boundary is strict and zoom-independent', () => {
   const initial = setup(4.5);
   initial.world.player.x = 100;
+  initial.world.actorParents.sync(initial.world);
   tickSapper(initial.world, initial.bullet);
   expect(initial.bullet.returning).toBe(true);
   for (const zoom of [0.5, 1, 1.5]) {
@@ -214,11 +219,13 @@ test('sapper Setup proximity survives until first contact; the five-unit boundar
     world.viewZoom = zoom;
     world.player.x = 10.5;
     bullet.x = 6;
+    world.actorParents.sync(world);
     tickSapper(world, bullet);
     expect(bullet.returning).toBe(true);
     const boundary = setup();
     boundary.world.viewZoom = zoom;
     boundary.world.player.x = 5;
+    boundary.world.actorParents.sync(boundary.world);
     tickSapper(boundary.world, boundary.bullet);
     expect(boundary.bullet.returning).toBe(false);
   }

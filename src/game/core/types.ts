@@ -99,6 +99,8 @@ export interface GunState {
   beamId?: number;
   /** EBehaviorHealer retains beam_mc directly, independently of a wrapper's array. */
   beamRef?: Projectile;
+  /** _-3C keeps its shot even when the parented projectile outlives a cached wrapper. */
+  sapperRef?: Projectile;
   shieldDiameter?: number;
   shieldFilm?: ShieldClip;
   shieldGeneration?: number;
@@ -257,11 +259,14 @@ export interface Projectile extends Vec {
   motion?: Vec;
   /** EnemyTurret retains objHomeTank independently of the current wrapper's arrays. */
   turretHome?: Tank;
+  /** Retained _-BL movTarget/objAvatar; target subclasses own their separate home/close rules. */
   homing?: { home?: Tank; target?: Tank; avatar: Tank; close: boolean };
   trailCounter?: number;
   trailPoint?: Vec;
   deflected?: Vec;
   removeAfterFrame?: boolean;
+  /** _-PJ movement gate is independent of the queued-removal vector. */
+  movementEnabled?: boolean;
   infectionTries?: number;
   mineState?: { armed: boolean; movement: Vec };
   wipe?: boolean;

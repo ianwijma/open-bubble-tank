@@ -1,5 +1,6 @@
 import { projectileOutside } from './projectile-boundary';
 import { direction } from '../core/math';
+import { displayPixel } from '../core/display-values';
 import type { Projectile } from '../core/types';
 import { projectileTankContact } from './projectile-contact';
 import type { World } from './world';
@@ -25,6 +26,6 @@ export function tickGrow(world: World, bullet: Projectile) {
   bullet.angle = bullet.heading + world.rng.int(-5, 5);
   projectileTankContact(world, bullet);
   const movement = direction(bullet.angle, bullet.speed);
-  bullet.x += movement.x;
-  bullet.y += movement.y;
+  bullet.x = displayPixel(bullet.x + movement.x);
+  bullet.y = displayPixel(bullet.y + movement.y);
 }

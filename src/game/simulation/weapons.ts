@@ -1,5 +1,6 @@
 import { FIELD_RADIUS, STAGE } from '../core/constants';
 import { angleTo, direction, distance, length, rotate } from '../core/math';
+import { fireDamageBeam } from './beams';
 import { triggerMassiveCharge } from '../core/mounted-art';
 import { refreshForcefield } from './forcefield';
 import { attachMountedShield } from './shields';
@@ -24,6 +25,7 @@ import { advanceRotatingCycle, triggerSuppressionCycle } from './weapon-cycles';
 import { projectileFlags } from './projectile-flags';
 import { recordLayerMine } from './mine-layers';
 import mineArt from '../data/mine-art.json';
+import { fireSapper } from './sapper';
 import { convertDrones } from './converter';
 import { tickBehavior } from './behaviors';
 import { weaponAimPoint, finishWeaponAim } from './weapon-targets';
@@ -195,6 +197,7 @@ export function fireGun(world: World, t: Tank, gun: GunState, input: InputFrame)
   const id = gun.part.type,
     spec = WEAPONS[id];
   if (!spec) return;
+  if (id === 2017) return fireDamageBeam(world, t, gun);
   if (id === 4017 && !triggerSuppressionCycle(gun)) return;
   if (id === 3010) {
     attachMountedShield(t, gun, () => world.protectionRadius(t) * 2);
@@ -386,7 +389,7 @@ export function fireGun(world: World, t: Tank, gun: GunState, input: InputFrame)
     world.bullets.filter((b) => !b.dead && b.anchor === gun && b.kind === 'orbital').length >= 6
   )
     return;
-  if (id === 4012 && world.bullets.some((b) => b.anchor === gun && b.kind === 'sapper')) return;
+  if (id === 4012) return fireSapper(world, t, gun);
   const spawned = world.spawnVolley(t, gun, spec);
   if (id === 4009 || id === 4021)
     recordLayerMine(world, gun, spawned[0] ?? null, world.muzzle(t, gun));
@@ -432,18 +435,6 @@ export function spawnVolley(
       const art = (projectileArt as Record<string, { symbol: number; scale: number }>)[
         gun.part.type
       ];
-      // A maintained beam has one live segment per mounted gun.
-      const old =
-        kind === 'beam'
-          ? world.bullets.find((b) => !b.dead && b.owner === t.uid && b.anchor === gun)
-          : null;
-      if (old) {
-        old.x = pos.x;
-        old.y = pos.y;
-        old.angle = angle;
-        old.heading = angle;
-        continue;
-      }
       const b: Projectile = {
         uid: world.nextId(),
         owner: t.uid,

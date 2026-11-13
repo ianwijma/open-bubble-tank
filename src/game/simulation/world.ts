@@ -1,5 +1,6 @@
 import { CLASS_SPEED, FIELD_RADIUS, MAX_LIFE, STAGE } from '../core/constants';
 import { clamp, direction, distance, length, Random, rotate } from '../core/math';
+import { displayPixel } from '../core/display-values';
 import { protectionRadius } from '../core/protection-size';
 import { advanceTankArt } from './tank-art';
 import { detachForcefield } from './forcefield';
@@ -47,6 +48,7 @@ import {
   orderSecondaries,
 } from './weapons';
 import { tickBullet, starSplit, releaseCarrier, explode } from './projectiles';
+import { stopDamageBeam } from './beams';
 import { createTank, deactivateTankData } from './tank';
 import { spawnPickups, tickPickups } from './pickups';
 import { damageTank } from './damage';
@@ -242,9 +244,12 @@ export class World {
     }
   }
   /** _-0D.SpawnNewBullet declines new shots while _-5d is set. Timers still run. */
-  addBullet(bullet: Projectile, home?: Tank, target?: Tank, setup?: () => void) {
+  addBullet(bullet: Projectile, home?: Tank, target?: Tank, prepare?: () => void) {
     if (this.transit) return false;
-    setup?.();
+    prepare?.();
+    // SpawnNewBullet assigns display coordinates before virtual Setup reads them.
+    bullet.x = displayPixel(bullet.x);
+    bullet.y = displayPixel(bullet.y);
     if (bullet.kind === 'healBeam')
       bullet.healingHome ??= home ?? this.allTanks().find((tank) => tank.uid === bullet.owner);
     if (bullet.kind === 'apocalypse') bullet.missExempt ??= true;
@@ -253,10 +258,12 @@ export class World {
       bullet.motion ??= direction(bullet.angle, bullet.speed);
     }
     this.projectileTimelines.initialize(bullet);
-    initializeSapper(this, bullet);
-    initializeAvatarSeeker(this, bullet);
+    initializeSapper(this, bullet, home, target);
+    initializeAvatarSeeker(this, bullet, target);
     initializeHomingProjectile(this, bullet, home, target);
     if (bullet.kind === 'infect' && bullet.targetId === null) expireInfectionTarget(this, bullet);
+    // Source SpawnNewBullet writes this AFTER virtual Setup, even if Setup queued removal.
+    bullet.movementEnabled = true;
     this.bullets.push(bullet);
     this.projectileParents.set(bullet, this.runtime);
     if (bullet.enemy) this.stats.enemyShots++;
@@ -589,15 +596,7 @@ export class World {
     );
   }
   stopPrimaryFire() {
-    for (const { runtime } of this.attachedFields()) {
-      for (const bullet of runtime.bullets)
-        if (bullet.owner === this.player.uid && bullet.anchor?.part.type === 2017)
-          bullet.dead = true;
-      this.replaceBullets(
-        runtime,
-        runtime.bullets.filter((bullet) => !bullet.dead),
-      );
-    }
+    for (const gun of this.player.guns) if (gun.part.type === 2017) stopDamageBeam(this, gun);
   }
   startRocketTimer(owner: Tank, gun: GunState) {
     this.wallTimers.repeat(owner.uid, 100, 10, (index) => {

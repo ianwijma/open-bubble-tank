@@ -22,7 +22,7 @@ BT3_REFERENCE_PORT=3185 bun run reference
 ```
 
 Select the generated file in the local reference viewer, focus the player, then
-press F8. The one-shot key handler constructs the first original builtin avatar
+press F8. The one-shot key handler constructs an original `_‑Zx` avatar-class root from `_‑HJ._‑UH[0]`
 through TankData, parents it, constructs the original `_-ct._-DO`, calls Setup,
 assigns that avatar as `movTarget`, and invokes the original EnemyAim directly.
 It emits a before marker; the after marker is absent because the original read
@@ -37,7 +37,7 @@ ReferenceError: Error #1069: Property inner_mc not found on _-Zx and there is no
     at BT3TurretTargetProbe/probeTurretTarget()
 ```
 
-The `--named-inner` control names the first avatar part `inner_mc` before `_-Tr`.
+The `--named-inner` control names the first constructed part `inner_mc` before `_-Tr`.
 It produces the same original read error. The `--rejected-birth` control also
 invokes original SpawnNewBullet on an uninitialized wrapper whose missing bullet
 layer closes its gate. The returned object is identical to the supplied turret;
@@ -134,3 +134,15 @@ creator/save tests. No builtin roster contains 4032. Arbitrary detached matrices
 complete constructor/art RNG and callback scheduling, an ordinary earned local
 turret encounter, synchronized original/Adobe comparisons and full-game parity
 remain unproved. The goal stays incomplete.
+
+
+### Input-table clarification from the later target probe
+
+The historical emitter reads `_‑HJ._‑UH`, the enemy recipe library, and constructs
+that recipe through `TankData._‑Tr(1,null)` as an original avatar-class `_‑Zx`
+root. It does not read the avatar-default `_‑7G` table. The original missing-member
+and rejected-birth observations remain bounded to those constructed objects;
+they must not be described as an ordinary default-avatar encounter. The later
+seeker target probe separately reads `_‑7G[0]` and records actual runtime
+`TankData.strID=A10000063` for each Basic Tank control. Neither controlled
+construction is an ordinary progression or Adobe comparison.

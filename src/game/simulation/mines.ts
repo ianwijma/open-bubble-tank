@@ -1,5 +1,6 @@
 import { projectileOutside } from './projectile-boundary';
 import { angleTo, direction, distance } from '../core/math';
+import { displayPixel } from '../core/display-values';
 import type { Projectile, Rect } from '../core/types';
 import type { World } from './world';
 import { projectileCallback, projectileTankContact } from './projectile-contact';
@@ -57,8 +58,8 @@ export function tickSeekerMine(world: World, b: Projectile) {
   if ((b.scatter ?? 0) > 0) {
     b.scatter!--;
     state.movement = direction(b.angle, b.speed);
-    b.x += state.movement.x * 2;
-    b.y += state.movement.y * 2;
+    b.x = displayPixel(b.x + state.movement.x * 2);
+    b.y = displayPixel(b.y + state.movement.y * 2);
   }
   if (!state.armed) {
     if (distance(b, world.player) <= 75 + world.player.radius) {
@@ -68,8 +69,8 @@ export function tickSeekerMine(world: World, b: Projectile) {
   } else {
     b.angle = angleTo(b, world.player);
     state.movement = direction(b.angle, b.speed);
-    b.x += state.movement.x;
-    b.y += state.movement.y;
+    b.x = displayPixel(b.x + state.movement.x);
+    b.y = displayPixel(b.y + state.movement.y);
   }
 }
 

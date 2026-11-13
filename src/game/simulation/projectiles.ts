@@ -1,4 +1,5 @@
-import { angleTo, DEG, direction, distance, rotate } from '../core/math';
+import { angleTo, DEG, direction, distance } from '../core/math';
+import { displayPixel } from '../core/display-values';
 import type { GunState, InputFrame, Projectile, Tank } from '../core/types';
 import type { World } from './world';
 import { removeTankChild } from './tank-display';
@@ -21,6 +22,7 @@ import { tickGrow } from './grow';
 import { tickFlak } from './flak';
 import { projectileOutside, reportProjectileMiss } from './projectile-boundary';
 import { deflectFirstEnemy, tickDeflected } from './bubble-buster';
+import { createProjectile } from './create-projectile';
 export { starSplit } from './starburst';
 
 export function tickBullet(world: World, b: Projectile, _input: InputFrame) {
@@ -70,7 +72,6 @@ export function tickBullet(world: World, b: Projectile, _input: InputFrame) {
     tickTurret(world, b);
     return;
   }
-  const owner = world.allTanks().find((t) => t.uid === b.owner);
   if (b.kind === 'apocalypse') {
     if (b.detonating) {
       b.artFrame = ++b.detonating + 1;
@@ -118,17 +119,7 @@ export function tickBullet(world: World, b: Projectile, _input: InputFrame) {
     target = targets.filter((t) => !t.dead).sort((a, c) => distance(a, b) - distance(c, b))[0];
   if (b.kind === 'infect' && !target) expireInfectionTarget(world, b);
   if (b.kind === 'beam') {
-    if (!owner || !b.anchor || owner.status.jam > 0) {
-      b.dead = true;
-      return;
-    }
-    if (owner.side !== 'player') {
-      const pos = world.muzzle(owner, b.anchor);
-      b.x = pos.x;
-      b.y = pos.y;
-      b.angle = owner.rotation + b.anchor.angle;
-    }
-    tickDamageBeam(world, b, targets);
+    tickDamageBeam(world, b, world.field.enemies);
     return;
   }
   if (b.kind === 'infect' && target) b.angle = angleTo(b, target);
@@ -150,11 +141,18 @@ export function tickBullet(world: World, b: Projectile, _input: InputFrame) {
         Math.PI;
   }
   const velocity = direction(b.angle, b.speed);
-  b.x += velocity.x;
-  b.y += velocity.y;
+  b.x = displayPixel(b.x + velocity.x);
+  b.y = displayPixel(b.y + velocity.y);
   if (b.kind === 'rocket' && !b.dead) rocketTrail(world, b);
 }
 export function releaseCarrier(world: World, t: Tank, gun: GunState) {
+  // _-BL/_-CO splice arrPrimaryWeapons before PartCallTrigger; the child and
+  // arrSeekerCarrierRefs survive through all six births until Deactivate/removeChild.
+  t.guns = t.guns.filter((g) => g !== gun);
+  // _-Ng converts its emitter first; its six offsets are on the outgoing field axes.
+  const global = world.actorParents.localToGlobal(t, gun.part),
+    point = world.actorParents.fieldLocal(global, world.currentWrapper);
+  if (!point) throw new Error('Carrier trigger has no current field transform');
   for (const [x, y] of [
     [-22, 0],
     [22, 0],
@@ -163,17 +161,28 @@ export function releaseCarrier(world: World, t: Tank, gun: GunState) {
     [-9, 0],
     [9, 0],
   ]) {
-    world.spawnVolley(t, gun, { rate: 0, speed: 5, damage: 2, kind: 'seeker' });
-    const delta = rotate({ x, y }, t.rotation + gun.angle),
-      b = world.bullets[world.bullets.length - 1];
-    if (!world.transit && b) {
-      b.x += delta.x;
-      b.y += delta.y;
-    }
+    world.addBullet(
+      createProjectile(world.nextId(), {
+        owner: t.uid,
+        enemy: true,
+        kind: 'seeker',
+        symbol: 1809,
+        x: point.x + x,
+        y: point.y + y,
+        angle: t.rotation + gun.angle,
+        speed: 5,
+        damage: 2,
+        targetId: world.player.uid,
+        // Preserve accepted-shot RNG consumption pending the full constructor audit.
+        orbit: world.transit ? 0 : world.rng.int(0, 359),
+      }),
+      t,
+      world.player,
+    );
   }
   t.removedParts.add(gun.part.key);
+  if (gun.targeting) gun.targeting.target = null;
   removeTankChild(t, `part:${gun.part.key}`);
-  t.guns = t.guns.filter((g) => g !== gun);
   if (t.design.parts.every((p) => p.type === 4013) && !t.guns.some((g) => g.part.type === 4013))
     world.kill(t);
 }

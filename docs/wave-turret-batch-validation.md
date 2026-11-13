@@ -94,7 +94,21 @@ contact/art fixtures validate adjacent retained-status rendering; the new
 five-/seven-detail selection boundaries are covered directly by unit/source
 evidence rather than claimed as an original pixel differential.
 
-The final hosted Actions/review gate remains pending publication and inspection.
+The final exact-head PR-triggered [CI run43349448457](https://github.com/ianwijma/open-bubble-tank/actions/runs/43349448457)
+and latest-attempt named [job131636666459](https://github.com/ianwijma/open-bubble-tank/actions/runs/43349448457/job/131636666459)
+passed on `c5fb4ed9e1f48887ecd85bf81e62109c6e79e562`. Fresh comments/reviews/
+threads had no actionable findings; CodeRabbit's fewer-than-ten-stars skip was
+informational. All four current remote layer heads were unchanged and ancestors
+of that tested head, and current master was its ancestor.
+
+PR139 merged once as `12bf09d1c28405a3fb484e8edf8f73f9736cdfad`. Fetched master
+has exactly the tested tree `da9189093b3c0ad116f49da969bb80c960e6821e`.
+GitHub confirms PRs135–139 merged. All five parent watches were stopped. The
+protected legacy ref remains `22d9def7321bada8a2148a69a79a3392682bb390`.
+The separately prepared projectile follow-ups were excluded from this merge;
+their later rebase onto it preserved each complete tree. Local exact merge and
+rebase evidence is under `test-results/wave-final-validation/`.
+
 The ordinary supplied-art session on the fourth-layer head is a separate
 normal-time/public-input investigation; its eventual results must retain that
 exact code/build identity. It is not the seeded accelerated pilot, does not

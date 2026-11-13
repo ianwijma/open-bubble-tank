@@ -3,7 +3,8 @@
 
 Usage: python3 tools/reference/turret-target-probe.py INPUT_SWF OUTPUT_SWF [--named-inner] [--rejected-birth]
 Load the result in the reference viewer and press F8 after loading. The one-shot
-key handler constructs the original first builtin avatar and _-ct._-DO, then
+key handler constructs an original avatar-class root from the first enemy-library recipe
+and _-ct._-DO, then
 calls the original EnemyAim with that avatar as movTarget. No method is patched.
 This is controlled Ruffle execution, not an ordinary encounter or Adobe evidence.
 Only this project-authored emitter belongs in git; never commit its SWF output.
@@ -49,7 +50,7 @@ for name in names:
     namespace = 2 if name == '_-DO' else 3 if name == 'MovieClip' else 4 if name == 'EnemyTurret' else 1
     cp += bytes([7]) + u(namespace) + u(si[name])
 runtime_index = len(names) + 1
-cp += bytes([0x1b]) + u(1)  # MultinameL for the builtin avatar table's index0.
+cp += bytes([0x1b]) + u(1)  # MultinameL for the enemy-library table's index0.
 
 
 def op(code, *args): return bytes([code]) + b''.join(u(arg) for arg in args)

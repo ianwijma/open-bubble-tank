@@ -101,8 +101,7 @@ test('Grow jitter uses immutable heading and contact half-step follows its new m
   tickGrow(world, bullet);
   expect(bullet.angle).toBe(95);
   expect(bullet.heading).toBe(90);
-  expect(bullet.x).toBeCloseTo(Math.cos((95 * Math.PI) / 180) * 10);
-  expect(bullet.y).toBeCloseTo(Math.sin((95 * Math.PI) / 180) * 10);
+  expect([bullet.x, bullet.y]).toEqual([-0.85, 9.95]);
   expect(samples[2][0]).toBeCloseTo(-Math.cos((95 * Math.PI) / 180) * 5);
   expect(samples[2][1]).toBeCloseTo(-Math.sin((95 * Math.PI) / 180) * 5);
   tickGrow(world, bullet);

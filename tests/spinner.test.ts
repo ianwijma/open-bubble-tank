@@ -40,15 +40,22 @@ test('fifth-update volley combines travel/radial velocity and retains the radian
       a = 51 + i * 90,
       vx = 10 * Math.cos((a * Math.PI) / 180),
       vy = 5 + 10 * Math.sin((a * Math.PI) / 180);
-    expect(shot.x).toBeCloseTo(10 * Math.cos(a));
-    expect(shot.y).toBeCloseTo(20 + 10 * Math.sin(a));
+    // Keep the source's degree-as-radians quirk, then apply each birth display setter.
+    expect([shot.x, shot.y]).toEqual(
+      [
+        [7.4, 26.7],
+        [-9.3, 23.6],
+        [0.9, 10],
+        [8.45, 25.25],
+      ][i],
+    );
     expect(shot.speed).toBeCloseTo(Math.hypot(vx, vy));
     expect(shot.angle).toBeCloseTo((Math.atan2(vy, vx) * 180) / Math.PI);
   }
   expect(b.y).toBeCloseTo(25);
   expect(b.angle).toBe(90);
   advance(world, b, 5);
-  expect(world.bullets[4].x).toBeCloseTo(10 * Math.cos(57));
+  expect(world.bullets[4].x).toBe(8.95);
   expect(b.age).toBe(0); // The source's private counter is independent of generic age.
 });
 
@@ -166,5 +173,5 @@ test('declined transit volleys consume their counter and angle without a catch-u
   expect(world.bullets).toHaveLength(0);
   tickSpinner(world, b);
   expect(world.bullets).toHaveLength(4);
-  expect(world.bullets[0].x).toBeCloseTo(10 * Math.cos(57));
+  expect(world.bullets[0].x).toBe(8.95);
 });
