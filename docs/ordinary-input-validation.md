@@ -149,3 +149,56 @@ unchanged;3265/9265 were free. The bounded report is retained at
 Its ignored prototypes are incomplete, not production behavior or a validated
 pilot. Further observer correction or direct public-input verification is still
 needed before claiming ordinary full progression.
+
+## Second offline observer pass
+
+At parent `e7e4b00`, an isolated ignored copy improves those concrete failures
+without changing production, tests, the old recordings or a running game.
+`reference-captures/observer-repair-current/` in the parent worktree retains the
+prototype, complete candidate lists, overlays, evaluator and mutation results.
+It is not a reusable validated pilot and is intentionally not committed.
+
+All **349** retained normalized550×450/451 images were processed in80.885 seconds.
+These include setup/menu/paused images, not349 independent combat observations.
+The original12 annotated controls now pass, including both previously missed
+blue enemies. Four added controls reject the two known player-lobe targets and
+two health-panel targets: **16/16** total, with no duplicate actor/pickup IDs.
+
+The changes preserve supported nearby bodies before repairing small open cyan
+contours. Closing every contour would merge a separate close enemy into the
+player. A local two-sample stroke uncertainty band prevents targeting the named
+disconnected player lobes; it marks them unknown, without claiming their identity.
+It is not the old circular centre exclusion. The independent close-blue control
+remains a target at its measured three-pixel separation. A public-layout-specific
+gauge detector requires two long parallel light strokes and short end strokes
+before treating its actual panel region as occluded. It does not delete a whole
+bottom strip; the retained bottom actor and gold actor at y411 still pass.
+
+Controlled removals discriminate these changes against the same annotations:
+
+| Observer variant | Annotated checks passing |
+| --- | --- |
+| Current bounded prototype | 16/16 |
+| No unknown-contour repair | 14/16 |
+| Original one-pixel uncertainty band | 14/16 |
+| No detected health-panel occlusion | 14/16 |
+| Unconditional contour closing | 15/16 |
+
+The original and overlay for the close-enemy and HUD controls were inspected,
+along with the additional-review images `segment-1-time-20.png` and
+`segment-8-time-50.png`. Remaining visible objects can still be unknown. This is
+neither an exhaustive human-labelled corpus nor measured general precision/recall;
+670 actor partitions across the corpus are not670 verified enemies. General
+HUD/overlap/temporal self identity, motion/braking and independent arrival evidence
+remain unresolved. `selfReliable` remains false and the overall offline live gate
+remains false. No live calibration was attempted or relabelled as passed.
+
+All423 original manifest entries match both before and afterward; the original
+manifest SHA-256 remains
+`2c14f5735738e875e7f1e88de55a1578001f929b55d81210c0ea02996d82f705`.
+Python syntax and all four rejecting mutation controls pass. Repository formatting
+was run for this documentation-only integration. No application rule/browser flow
+changed, so no fresh application check/build/E2E is claimed. No server, browser,
+input action, game/seed/profile mutation, PR operation, deployment or provider
+change occurred. Ordinary progression and original/Adobe/full-game parity remain
+unproved.
