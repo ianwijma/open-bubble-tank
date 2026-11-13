@@ -1850,3 +1850,23 @@ paint sheets were inspected. Owned4015/4016 servers exited. Complete text/root
 mapping, actor protection/runtime masks, effect lines/poses, morph/Engine edge
 qualification, full mock composition and ordinary/Adobe/full-game parity remain open.
 
+## Original public player-root query argument qualification
+
+The distinct [root-query runtime controls](root-query-runtime-reference.md)
+freeze36 rows /2592 binary Numbers from genuine original1544/1543 under separate
+Main translations, fractional setters and bounded Main/wrapper affine transforms.
+Two fresh owned browsers identify actual Main root/shared loaderInfo/null loader
+and agree with independent REA DOM and loaded JS/WASM bytes. At Main1000, raw
+centre(0,0) hits while actual localToGlobal(1000,0) misses; converting back to Main
+arguments restores the hit. The measured public route is root-relative. The
+loaded-root stage branch remains unexecuted and unqualified. All3022 original
+tags/header/order/ABCs/non-document bindings are preserved except declared CID0,
+plus three classified additions; re-emission matches. Twenty-three mutations
+reject per capture, including synchronized Boolean/Point and root/mapping/byte
+forgeries. Existing candidate arithmetic matches180 separately frozen Point
+checks. Formatting/check passes1201 tests /20323 assertions; production callers
+and all prior probe families remain unchanged. REA events remain incomplete and
+equality-ineligible; compiled source, arbitrary boundary/transform, ordinary/global,
+Adobe/pixel/audio and full-game parity remain unproved. PR155/156 and the parent’s
+five-layer master gate remain parent-owned.
+
