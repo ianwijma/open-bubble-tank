@@ -1,7 +1,8 @@
-import type { Effect, GunState, Pickup, Projectile, Tank } from '../core/types';
+import type { Effect, Field, GunState, Pickup, Projectile, Tank } from '../core/types';
 
 /** Live Bubblefield collections. Revisits restore enemies, never this detached runtime. */
 export class FieldRuntime {
+  constructor(readonly field: Field) {}
   /** Death callbacks queue removal; normal Run flushes before the next actor pass. */
   enemyRemovals: Tank[] = [];
   allyRemovals: Tank[] = [];

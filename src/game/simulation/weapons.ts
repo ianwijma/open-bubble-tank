@@ -317,39 +317,57 @@ export function fireGun(world: World, t: Tank, gun: GunState, input: InputFrame)
   }
   if (id === 4026) return; // Its trigger is empty; contact belongs to BehaviorRun.
   if (id === 4032) {
-    const turret = world.bullets.find((b) => b.uid === gun.turretId && (b.build ?? 1) < 4);
-    const pos = world.muzzle(t, gun, 0),
-      angle = angleTo(pos, turret ?? { x: 0, y: 0 });
-    gun.angle = angle - t.rotation;
+    // PartCallTrigger neither aims nor polls the target's frame/parent.
+    const builder = gun.turretTarget != null;
+    const mount = world.actorParents.localToGlobal(t, gun.part);
+    const pos = world.actorParents.fieldLocal(mount, world.currentWrapper);
+    if (!pos) throw new Error('Turret trigger has no current field transform');
+    const angle = actorAngle(t.rotation + gun.angle);
     const bullet: Projectile = {
       uid: world.nextId(),
-      owner: t.uid,
-      enemy: true,
-      x: pos.x,
-      y: pos.y,
-      angle,
-      heading: angle,
-      speed: 10,
-      damage: 0,
-      radius: turret ? 2 : 8,
-      kind: turret ? 'builder' : 'turret',
+      owner: -1,
+      enemy: false,
+      x: 0,
+      y: 0,
+      angle: 0,
+      heading: 0,
+      speed: NaN,
+      damage: 1,
+      radius: builder ? 2 : 8,
+      kind: builder ? 'builder' : 'turret',
       age: 0,
       life: Infinity,
       explode: 0,
-      targetId: turret?.uid ?? null,
+      targetId: null,
       hit: new Set(),
       dead: false,
-      symbol: turret ? 2440 : 2444,
+      symbol: builder ? 2440 : 2444,
       artFrame: 1,
       artScale: 1,
       orbit: 0,
-      health: 10,
-      build: 1,
-      origin: { ...pos },
+      health: builder ? undefined : 0,
+      build: builder ? undefined : 1,
+      stopped: true,
+      motion: { x: 0, y: 0 },
     };
-    world.addBullet(bullet);
-    if (!turret) {
-      gun.turretId = bullet.uid;
+    world.addBullet(bullet, t, undefined, () => {
+      // SpawnNewBullet writes pose and runs Setup only inside its birth gate.
+      Object.assign(bullet, {
+        owner: t.uid,
+        enemy: true,
+        x: pos.x,
+        y: pos.y,
+        angle,
+        heading: angle,
+        speed: 10,
+        damage: 0,
+        stopped: false,
+        motion: direction(angle, 10),
+        ...(builder ? {} : { health: 10, origin: { ...pos } }),
+      });
+    });
+    if (!builder) {
+      gun.turretTarget = bullet;
       (gun.turretRefs ??= []).push(bullet);
     }
     return;

@@ -2,8 +2,10 @@ import { expect, test } from 'bun:test';
 import { STARTER } from '../src/game/data/catalog';
 import { createTank } from '../src/game/simulation/tank';
 import { World, emptyInput } from '../src/game/simulation/world';
+import { cacheEmptyField } from './fixtures/empty-field';
 function scenario() {
   const world = new World([], [], 1);
+  cacheEmptyField(world);
   world.rng.next = () => 0.5;
   const make = () =>
     createTank(world.nextId(), { ...STARTER, avatar: false, speed: 0, parts: [] }, 'enemy', 10, 20);

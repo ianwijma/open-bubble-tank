@@ -24,6 +24,7 @@ function shot(world: World, options: Partial<Projectile> = {}) {
     angle: 0,
     speed: 10,
     damage: 1,
+    ...(options.kind === 'turret' ? { turretHome: world.player } : {}),
     ...options,
   });
 }
@@ -266,7 +267,7 @@ test('turret interception includes Setup movement and the incoming deflected vec
       damage: 3,
       ...(deflected ? { deflected: { x: 6, y: 0 } } : {}),
     });
-    w.addBullet(turret);
+    w.addBullet(turret, w.player);
     w.addBullet(incoming);
     expect(turret.motion).toEqual({ x: 10, y: 0 });
     const expected = deflected ? { x: 12, y: 0 } : { x: 15, y: -1 };
@@ -279,13 +280,14 @@ test('turret interception includes Setup movement and the incoming deflected vec
   }
 });
 
-test('a turret retains a dead attached owner until that owner leaves its field collection', () => {
+test('a turret retains a dead attached owner until its actual parent is removed', () => {
   const w = setup();
   w.player.dead = true;
   const turret = shot(w, { kind: 'turret', symbol: 2444, stopped: true });
   tick(w, turret);
   expect(turret.dead).toBe(false);
-  turret.owner = -1;
+  w.player = { ...w.player, uid: w.nextId() };
+  w.actorParents.setAvatar(w.player);
   tick(w, turret);
   expect(turret.dead).toBe(true);
   expect(misses(w)).toEqual([0, 0]);

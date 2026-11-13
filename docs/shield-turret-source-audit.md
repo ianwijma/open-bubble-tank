@@ -5,6 +5,11 @@ No simulation correction is included. Two matching AS/pcode contracts contradict
 proposed cached-target and rejected-birth expectations; changing parent filtering
 alone would leave those contracts wrong.
 
+This audit is a historical checkpoint. The later [retention/runtime follow-up](shield-turret-retention-reference.md)
+observes the missing-member read in original code and implements both objections
+together with retained parent/home and trigger contracts. Its evidence and limits
+supersede the unresolved runtime status below; the source objections themselves stand.
+
 ## Supported offline caller
 
 No builtin avatar, enemy or boss design contains4032. This is protected by
@@ -26,10 +31,12 @@ codes. The supported recreation caller is the optional saved-enemy adapter:
 4. GameShell's public **My enemy tanks** option starts unchecked. Only enabling
    it passes saved nonavatar records into `World`. `UnitRoster.load` evaluates
    the literal strict rules, then may choose a matching local record. The design
-   matches `Balanced`; an unmodified seed6 World loads it initially and a
-   distance7 `rollWave` selects two copies. No forced roster injection or RNG
-   override is used. This demonstrates a supported adapter route, not an earned
-   ordinary encounter or a builtin original route.
+   matches `Balanced`; the recorded audit base uses an unmodified seed6 World
+   whose distance7 wave selects two copies. With source count preparation and
+   table rejection restored, the same two-copy witness uses seed10 (seed6 now
+   produces one). No forced roster injection or RNG override is used, and every
+   two-copy assertion is retained. This demonstrates a supported adapter route,
+   not an earned ordinary encounter or a builtin original route.
 
 The companion public browser case imports that valid layout, opens the real
 creator, checks its measured class and validation, saves a fresh local record,

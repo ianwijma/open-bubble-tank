@@ -27,12 +27,13 @@ import type {
   WorldEvent,
   WorldMode,
 } from '../core/types';
-import { AVATARS, BOSSES, STARTER } from '../data/catalog';
+import { AVATARS, STARTER } from '../data/catalog';
 import { WEAPONS, type WeaponSpec } from '../data/weapons';
 import emitterData from '../data/emitters.json';
 import { moveActor } from './actor-movement';
 import { ActorParents } from './actor-parents';
 import { HealerTargetReadError } from './healer-target';
+import { TurretTargetReadError } from './turrets';
 import { SpikeTargetReadError } from './spikes';
 import { initializeHomingProjectile, HomingTargetReadError } from './homing-projectiles';
 import { FieldRuntime } from './field-runtime';
@@ -49,7 +50,7 @@ import { tickBullet, starSplit, releaseCarrier, explode } from './projectiles';
 import { createTank, deactivateTankData } from './tank';
 import { spawnPickups, tickPickups } from './pickups';
 import { damageTank } from './damage';
-import { rollWave, UnitRoster } from './waves';
+import { rollBossWave, rollWave, UnitRoster } from './waves';
 import { tickStatusDecoration, tickStatusTail } from './status';
 import fieldGeometry from '../data/field-geometry.json';
 import { nextMapMode, type MapMode } from '../core/minimap';
@@ -135,7 +136,7 @@ export class World {
   runtimeFor(field: Field): FieldRuntime {
     let runtime = this.runtimes.get(field);
     if (!runtime) {
-      runtime = new FieldRuntime();
+      runtime = new FieldRuntime(field);
       this.runtimes.set(field, runtime);
     }
     return runtime;
@@ -160,6 +161,10 @@ export class World {
   /** A detached wrapper's bullet layer still parents its surviving children. */
   hasBulletParent(bullet: Projectile) {
     return this.projectileParents.has(bullet);
+  }
+  bulletGlobal(bullet: Projectile) {
+    const parent = this.projectileParents.get(bullet);
+    return parent ? this.actorParents.layerGlobal(bullet, parent.field) : null;
   }
   get pickups() {
     return this.runtime.pickups;
@@ -237,12 +242,16 @@ export class World {
     }
   }
   /** _-0D.SpawnNewBullet declines new shots while _-5d is set. Timers still run. */
-  addBullet(bullet: Projectile, home?: Tank, target?: Tank) {
+  addBullet(bullet: Projectile, home?: Tank, target?: Tank, setup?: () => void) {
     if (this.transit) return false;
+    setup?.();
     if (bullet.kind === 'healBeam')
       bullet.healingHome ??= home ?? this.allTanks().find((tank) => tank.uid === bullet.owner);
     if (bullet.kind === 'apocalypse') bullet.missExempt ??= true;
-    if (bullet.kind === 'turret') bullet.motion ??= direction(bullet.angle, bullet.speed);
+    if (bullet.kind === 'turret') {
+      bullet.turretHome = home;
+      bullet.motion ??= direction(bullet.angle, bullet.speed);
+    }
     this.projectileTimelines.initialize(bullet);
     initializeSapper(this, bullet);
     initializeAvatarSeeker(this, bullet);
@@ -272,16 +281,10 @@ export class World {
   /** currentBFTarget.SpawnNewEnemy has no crossing birth gate. */
   spawnEnemy(design: TankDesign, point: Vec) {
     const field = this.currentWrapper;
-    const enemy = createTank(
-      this.nextId(),
-      design,
-      'enemy',
-      point.x,
-      point.y,
-      undefined,
-      undefined,
-      this,
-    );
+    const enemy = createTank(this.nextId(), design, 'enemy', 0, 0, undefined, undefined, this);
+    // TankData._-Tr completes Setup before SpawnNewEnemy assigns its display pose.
+    enemy.x = point.x;
+    enemy.y = point.y;
     this.actorParents.attach(enemy, field);
     this.callbackFields.set(enemy, field);
     field.enemies.push(enemy);
@@ -472,6 +475,7 @@ export class World {
       // AVM2 dispatch ends this Main.Run listener on an uncaught target read; the next frame runs.
       if (
         !(error instanceof HealerTargetReadError) &&
+        !(error instanceof TurretTargetReadError) &&
         !(error instanceof SpikeTargetReadError) &&
         !(error instanceof HomingTargetReadError) &&
         !(error instanceof CrossingTargetReadError) &&
@@ -1161,7 +1165,7 @@ export class World {
       const boss =
         !deadhead && !this.bossTriggered && this.player.life >= 1000 && this.progression.level >= 5;
       const wave = boss
-        ? { scale: 1, designs: [BOSSES[0]] }
+        ? rollBossWave(this.rng)
         : rollWave(deadhead ? -1 : Math.hypot(col, row), this.rng, this.localTanks, this.roster);
       if (boss) this.bossTriggered = true;
       next = {
@@ -1172,16 +1176,10 @@ export class World {
         cleared: false,
         tutorial,
         enemies: wave.designs.map((design) => {
-          const t = createTank(
-            this.nextId(),
-            design,
-            'enemy',
-            this.rng.int(-200, 200) * wave.scale,
-            this.rng.int(-200, 200) * wave.scale,
-            undefined,
-            undefined,
-            this,
-          );
+          const t = createTank(this.nextId(), design, 'enemy', 0, 0, undefined, undefined, this);
+          // _-0D._-Ar constructs the tank before consuming these three pose draws.
+          t.x = this.rng.int(-200, 200) * wave.scale;
+          t.y = this.rng.int(-200, 200) * wave.scale;
           t.rotation = this.rng.int(-180, 180);
           return t;
         }),
@@ -1202,8 +1200,10 @@ export class World {
       for (const enemy of next.enemies)
         if (enemy.dataActive)
           for (const gun of enemy.guns)
-            if (Math.floor(gun.part.type / 1000) !== 3 && gun.targeting)
+            if (Math.floor(gun.part.type / 1000) !== 3 && gun.targeting) {
               gun.targeting.target = this.player;
+              if (gun.part.type === 4032) gun.turretTarget = this.player;
+            }
     }
     this.mapPosition = { col, row };
     this.fields.set(`${col},${row}`, next);

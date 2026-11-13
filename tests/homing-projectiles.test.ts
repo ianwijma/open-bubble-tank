@@ -6,6 +6,7 @@ import { tickBullet } from '../src/game/simulation/projectiles';
 import { createTank } from '../src/game/simulation/tank';
 import { World, emptyInput } from '../src/game/simulation/world';
 import { HomingTargetReadError } from '../src/game/simulation/homing-projectiles';
+import { cacheEmptyField } from './fixtures/empty-field';
 
 function setup() {
   const world = new World([], [], 18);
@@ -258,6 +259,7 @@ test('explicit home and target references survive same-UID replacements and a ca
     old = cached.field,
     retained = shot(cached, { owner: cachedHome.uid });
   cached.rng.next = () => 0.5;
+  cacheEmptyField(cached);
   cached.player.life = 99; // Keep interface progression from opening an upgrade prompt.
   cached.player.x = 425;
   cached.jump({ x: 1, y: 0 });

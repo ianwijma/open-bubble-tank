@@ -93,6 +93,16 @@ export async function showScreenEffectsProof(pack: AssetPack, host: HTMLElement)
       samePixels: sample().hash === firstHash,
     };
     world.resume();
+    // This gallery pins effect randomness; its arrival destination is not a wave fixture.
+    world.cache.store({
+      col: 1,
+      row: 0,
+      scale: 1,
+      enemies: [],
+      cleared: false,
+      boss: false,
+      tutorial: 0,
+    });
     world.jump({ x: 1, y: 0 });
     draw(1.5);
     const crossing = { inFront: inFront(), samePixels: sample().hash === firstHash };

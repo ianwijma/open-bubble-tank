@@ -86,7 +86,8 @@ export interface GunState {
   autoTargetId?: number | null;
   rotatingCycle?: { remaining: number; active: boolean };
   suppressionCycle?: { delay: number; spacing: number };
-  turretId?: number;
+  /** _-DO.movTarget can retain a turret, or the avatar assigned by cached attachment. */
+  turretTarget?: Projectile | Tank | null;
   turretRefs?: Projectile[];
   spawnDesign?: TankDesign;
   patientId?: number;
@@ -254,6 +255,8 @@ export interface Projectile extends Vec {
   contactFrames?: number;
   stopped?: boolean;
   motion?: Vec;
+  /** EnemyTurret retains objHomeTank independently of the current wrapper's arrays. */
+  turretHome?: Tank;
   homing?: { home?: Tank; target?: Tank; avatar: Tank; close: boolean };
   trailCounter?: number;
   trailPoint?: Vec;

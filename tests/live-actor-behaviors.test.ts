@@ -3,6 +3,7 @@ import { expect, test } from 'bun:test';
 import { STARTER } from '../src/game/data/catalog';
 import { createTank } from '../src/game/simulation/tank';
 import { World, emptyInput } from '../src/game/simulation/world';
+import { cacheEmptyField } from './fixtures/empty-field';
 function scenario(ids: number[], { x = 0, y = 0, speed = 2 } = {}) {
   const world = new World([], [], 1);
   world.rng.next = () => 0.5;
@@ -150,6 +151,7 @@ test('Healer retains its beam/patient owner and writes the post-run patient dest
 
 test('destination behavior retains an outgoing ally and uses current-wrapper population through travel', () => {
   const { world } = scenario([], { speed: 0 });
+  cacheEmptyField(world);
   const ally = createTank(
     world.nextId(),
     { ...STARTER, avatar: false, speed: 0, parts: [] },

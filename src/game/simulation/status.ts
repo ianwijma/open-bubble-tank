@@ -15,7 +15,7 @@ export function decorateStatus(world: World, tank: Tank, kind: DecoratedStatus, 
     duration,
     marks: Array.from({ length: Math.min(5, parts.length) }, (_, index) => {
       // At five or more parts the original picks with replacement, even if marks overlap.
-      const part = parts.length < 5 ? parts[index] : world.rng.pick(parts);
+      const part = parts.length < 5 ? parts[index] : parts[world.rng.int(0, parts.length - 1)];
       return { x: part.x, y: part.y, angle: world.rng.int(-180, 180), frame: world.rng.int(1, 4) };
     }),
   };
