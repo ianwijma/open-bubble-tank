@@ -102,3 +102,25 @@ This repairs current contact/bounds eligibility, not the complete actor geometry
 projection. Existing present-attachment pose/state conditions, lazy asset playback,
 part/protection transform precision, complete field queries, ordinary reachability,
 global event/RNG, original/Adobe/pixel/audio and full-game parity remain work.
+
+## Hosted orbital fixture follow-up
+
+PR158 head `bfc5fa6` completed hosted run43427686285 with148 passing cases,
+four skips and one failure: the mock orbital-width gallery. Its fixture set only
+`tank.shield=100`, without adding the film or hit, then expected wider physical
+geometry. The new geometry correctly kept its91.33143367767335px width unchanged.
+This was an omitted fixture construction phase, not a reason to restore phantom
+logical-state contact. The [failed job](https://github.com/ianwijma/open-bubble-tank/actions/runs/43427686285/job/131893065647)
+and local `test-results/fifth-integration/pr158-failure.log` retain the failure.
+
+The fixture now explicitly adds hit then film, matching source attachment order.
+Every existing launch-width/distance, stopped-root/child-age and page-error
+assertion remains unchanged. No production geometry behavior is relaxed.
+Formatting/check pass1,285 tests /75,912 assertions on the local combined effect/
+text draft. Literal affected E2E passes4 mock/SWF orbital/contact cases, zero
+skips/failures/flaky results, build `UXNtpgdl9EgTzTXOYyTjK`. All910 captured inputs
+remain unchanged through that run. Both orbital paint sheets were inspected;
+owned4255/4256 servers exited and their ports were free. Exact config, routing,
+hashes, report and verification are local under `test-results/orbital-fixture-repair/`.
+The fix belongs to the final combined fifth PR; the hosted PR158 head is not
+retrospectively labelled green. Full combined hosted validation remains required.

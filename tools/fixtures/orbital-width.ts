@@ -5,6 +5,7 @@ import { STARTER } from '../../src/game/data/catalog';
 import { WEAPONS } from '../../src/game/data/weapons';
 import { GameRenderer } from '../../src/game/render/pixi-renderer';
 import { createTank } from '../../src/game/simulation/tank';
+import { addTankChild } from '../../src/game/simulation/tank-display';
 import { World } from '../../src/game/simulation/world';
 
 /** Production Script width, retained status pose and orbital spawn callback. */
@@ -86,6 +87,10 @@ export async function showOrbitalWidth(pack: AssetPack, host: HTMLElement) {
     const later = read();
     draw(2, 'Same root · live child age10');
     tank.shield = 100;
+    // The fixture supplies the omitted source addChild phase: the retained hit
+    // is added before its film. A positive logical flag cannot attach geometry.
+    addTankChild(tank, 'shield-hit');
+    addTankChild(tank, 'shield-film');
     const shield = launch();
     draw(3, 'Attached shield changes launch radius');
     return { initial, first, later, shield, radius: tank.radius };
