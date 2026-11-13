@@ -1,3 +1,4 @@
+import { importActorFixtures } from './actor-attachments';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { STARTER } from '../../src/game/data/catalog';
 import { DEFAULT_SETTINGS } from '../../src/game/core/constants';
@@ -26,6 +27,7 @@ export async function showProjectileOrderProof(pack: AssetPack, host: HTMLElemen
     0,
   );
   world.field.enemies = [target];
+  importActorFixtures(world);
   let edge = 100;
   for (let x = 50; x <= 100; x += 0.25)
     if (pack.hitTest(target, x, 0)) {
@@ -92,7 +94,7 @@ export async function showProjectileOrderProof(pack: AssetPack, host: HTMLElemen
       targetId: world.player.uid,
     });
     // SpawnNewBullet -> _-BL.Setup invokes _-QM.RotateTowardTarget before Run/state2.
-    world.actorParents.sync(world);
+    importActorFixtures(world);
     world.addBullet(buster);
     world.addBullet(deflected, target, world.player);
     const origin = world.actorParents.fieldGlobal(deflected, world.field)!,

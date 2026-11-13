@@ -1,3 +1,4 @@
+import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import { STARTER } from '../src/game/data/catalog';
 import type { Projectile } from '../src/game/core/types';
@@ -99,6 +100,7 @@ test('ally contact opens the layer gate, takes priority over avatar and repeats 
   const { world, b } = setup({ speed: 0 });
   const ally = createTank(world.nextId(), { ...STARTER, life: 100 }, 'ally');
   world.allies.push(ally);
+  importActorFixtures(world);
   world.player.life = 40;
   world.hitTest = (tank) => tank === ally || tank === world.player;
   advance(world, b, 2);
@@ -117,6 +119,7 @@ test('avatar alone cannot open the layer gate; a current width sample can enable
   expect(world.player.life).toBe(40);
   const blocker = createTank(world.nextId(), STARTER, 'enemy', 20, 0);
   world.field.enemies.push(blocker);
+  importActorFixtures(world);
   b.x = 10;
   world.hitTest = (tank, x, y) =>
     y === 0 && ((tank === blocker && x === 20) || (tank === world.player && x === 0));
@@ -131,6 +134,7 @@ test('volley precedes contact damage and movement, even when contact reports a h
   const { world, b } = setup();
   const ally = createTank(world.nextId(), { ...STARTER, life: 100 }, 'ally');
   world.allies.push(ally);
+  importActorFixtures(world);
   const events: string[] = [];
   const add = world.addBullet.bind(world);
   world.addBullet = (shot) => {

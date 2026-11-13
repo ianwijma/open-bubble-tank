@@ -1,3 +1,4 @@
+import { importActorFixtures } from './actor-attachments';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import type { Projectile } from '../../src/game/core/types';
 import { DEFAULT_SETTINGS } from '../../src/game/core/constants';
@@ -109,6 +110,7 @@ export async function showHealerLifecycle(pack: AssetPack, host: HTMLElement) {
     const world = makeWorld();
     const patient = createTank(world.nextId(), design, 'enemy', 100, 0, 100, 50);
     world.field.enemies = [patient];
+    importActorFixtures(world);
     const owner = createTank(
       world.nextId(),
       healer,
@@ -120,7 +122,8 @@ export async function showHealerLifecycle(pack: AssetPack, host: HTMLElement) {
       world,
     );
     world.field.enemies = [owner, patient];
-    world.actorParents.sync(world);
+    importActorFixtures(world);
+    importActorFixtures(world);
     if (mode === 'killed') world.addBullet(shell(world, { x: -100 }));
     const gun = owner.guns.find((gun) => gun.part.type === 6002)!;
     gun.counter = 2;
@@ -152,6 +155,7 @@ export async function showHealerLifecycle(pack: AssetPack, host: HTMLElement) {
   const owner = createTank(world.nextId(), design, 'enemy');
   const patient = createTank(world.nextId(), design, 'enemy', 100, 0, 100, 1);
   world.field.enemies = [owner, patient];
+  importActorFixtures(world);
   world.addBullet(shell(world));
   const beam = shell(world, {
     owner: owner.uid,

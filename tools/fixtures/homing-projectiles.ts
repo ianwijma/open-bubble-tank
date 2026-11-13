@@ -1,3 +1,4 @@
+import { importActorFixtures } from './actor-attachments';
 import { Rectangle } from 'pixi.js';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { DEFAULT_SETTINGS } from '../../src/game/core/constants';
@@ -40,7 +41,7 @@ export async function showHomingProjectiles(pack: AssetPack, host: HTMLElement) 
   ctx.fillRect(0, 0, 550, 450);
   await renderer.init(host, DEFAULT_SETTINGS);
   const tick = () => {
-    world.actorParents.sync(world);
+    importActorFixtures(world);
     tickBullet(world, b, emptyInput());
   };
   try {
@@ -77,6 +78,7 @@ export async function showHomingProjectiles(pack: AssetPack, host: HTMLElement) 
     );
     patient.rotation = 90;
     world.field.enemies = [patient];
+    importActorFixtures(world);
     tick();
     const acquired = { uid: b.targetId, angle: b.angle, x: b.x, y: b.y };
     tick();

@@ -1,3 +1,4 @@
+import { importActorFixtures } from './actor-attachments';
 import { captureCanvas } from './pixi-capture';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { DEFAULT_SETTINGS } from '../../src/game/core/constants';
@@ -30,6 +31,7 @@ export async function showSeekerMineProof(pack: AssetPack, host: HTMLElement) {
     -180,
   );
   world.field.enemies = [owner];
+  importActorFixtures(world);
   const make = (changes: Partial<Projectile> = {}): Projectile => ({
     uid: world.nextId(),
     owner: owner.uid,
@@ -110,7 +112,7 @@ export async function showSeekerMineProof(pack: AssetPack, host: HTMLElement) {
       effects: world.effects.map((e) => e.symbol),
     };
     world.bullets = [];
-    world.effects = [];
+    for (const effect of world.effects) world.effectEngine.discard(effect);
     world.mode = 'paused';
     const idle = make();
     world.addBullet(idle);

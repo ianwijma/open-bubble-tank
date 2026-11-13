@@ -5,13 +5,13 @@ import { partById } from '../data/catalog';
 import { SwfSymbolView, type RasterTextures } from './swf-symbol-view';
 import { SwfTankStatusView } from './swf-tank-status-view';
 import { SwfProtectionView } from './swf-protection-view';
-import { legacyShieldFilm } from '../core/shield-art';
 
 /** Shared live pose for the world and tank-information portrait. No simulation clocks advance here. */
 export class TankView {
   container = new Container();
   private parts: { root: Container; animation?: SwfSymbolView; sprite?: Sprite }[];
   private shield = new Graphics();
+  private mockStatus = new Graphics();
   private mountedShields = new Map<TankChild, Graphics>();
   private status?: SwfTankStatusView;
   private protection?: SwfProtectionView;
@@ -37,14 +37,11 @@ export class TankView {
       }
       root.position.set(p.x, p.y);
       root.scale.set(p.scale);
-      this.container.addChild(root);
       return { root, animation, sprite };
     });
-    this.container.addChild(this.shield);
     if (assets.mode === 'swf') {
       this.status = new SwfTankStatusView(assets, textures);
       this.protection = new SwfProtectionView(assets, textures);
-      this.container.addChild(this.status.root, this.protection.root);
     }
   }
   update(t: Tank) {
@@ -53,7 +50,10 @@ export class TankView {
     this.shield.alpha = t.alpha;
     for (const [i, part] of t.design.parts.entries()) {
       const view = this.parts[i];
-      view.root.visible = !t.hiddenParts.has(part.key) && !t.removedParts.has(part.key);
+      view.root.visible =
+        t.displayChildren.includes(`part:${part.key}`) &&
+        !t.hiddenParts.has(part.key) &&
+        !t.removedParts.has(part.key);
       view.root.angle = t.guns.find((g) => g.part.key === part.key)?.angle ?? part.rotation;
       if (view.root.visible) {
         view.animation?.setParentAlpha(t.alpha);
@@ -74,7 +74,7 @@ export class TankView {
       }
     }
     this.shield.clear();
-    const shieldFilm = legacyShieldFilm(t);
+    const shieldFilm = t.displayChildren.includes('shield-film');
     if (!this.protection) {
       const films = t.shieldClips.filter((clip) => clip.kind === 'film');
       const keys = new Set<TankChild>(films.map((clip) => clip.key));
@@ -100,7 +100,10 @@ export class TankView {
     if (
       !this.protection &&
       (shieldFilm ||
-        (t.design.parts.some((p) => p.type === 5005) && t.forcefieldReady && t.forcefieldAttached))
+        (t.design.parts.some((p) => p.type === 5005) &&
+          t.forcefieldReady &&
+          t.forcefieldAttached &&
+          t.displayChildren.includes('forcefield')))
     ) {
       const diameter = shieldFilm
         ? t.side === 'player'
@@ -116,11 +119,14 @@ export class TankView {
     this.protection?.update(t);
     this.orderChildren(t);
     this.container.filters = this.status?.infectionFilter ? [this.status.infectionFilter] : null;
-    if (!this.status && t.status.stun > 0)
-      this.shield.star(0, -t.radius - 6, 5, 5, 2).fill(0xffffff);
+    this.mockStatus.clear();
+    if (!this.status && t.displayChildren.includes('status') && t.status.stun > 0)
+      this.mockStatus.star(0, -t.radius - 6, 5, 5, 2).fill(0xffffff);
     if (this.status) this.container.tint = 0xffffff;
-    else if (t.status.infect > 0) this.container.tint = 0xb1ed80;
-    else if (t.status.sticky > 0) this.container.tint = 0xbbb0ff;
+    else if (t.displayChildren.includes('infection') && t.status.infect > 0)
+      this.container.tint = 0xb1ed80;
+    else if (t.displayChildren.includes('status') && t.status.sticky > 0)
+      this.container.tint = 0xbbb0ff;
     else this.container.tint = 0xffffff;
   }
   private orderChildren(tank: Tank) {
@@ -132,21 +138,38 @@ export class TankView {
     entries.push(...(this.protection?.displayEntries() ?? []));
     entries.push(...this.mountedShields);
     if (!this.protection)
-      entries.push([legacyShieldFilm(tank) ? 'shield-film' : 'forcefield', this.shield]);
-    const order = new Map(tank.displayChildren.map((key, i) => [key, i]));
-    entries.sort((a, b) => (order.get(a[0]) ?? Infinity) - (order.get(b[0]) ?? Infinity));
-    for (const [index, [, child]] of entries.entries()) {
-      child.label = entries[index][0];
-      if (child.parent !== this.container) this.container.addChildAt(child, index);
-      else if (this.container.getChildIndex(child) !== index)
-        this.container.setChildIndex(child, index);
-    }
+      entries.push(
+        [tank.displayChildren.includes('shield-film') ? 'shield-film' : 'forcefield', this.shield],
+        ['status', this.mockStatus],
+      );
+    // Absence means removeChild, not an implicit last-place entry. Keep detached
+    // part/clip views available for explicit reattachment of the same identity.
+    const attached = new Set(tank.displayChildren);
+    for (const [key, child] of entries)
+      if (!attached.has(key) && child.parent === this.container) this.container.removeChild(child);
+    let index = 0;
+    for (const key of tank.displayChildren)
+      for (const [entryKey, child] of entries) {
+        if (key !== entryKey) continue;
+        child.label = key;
+        if (child.parent !== this.container) this.container.addChildAt(child, index);
+        else if (this.container.getChildIndex(child) !== index)
+          this.container.setChildIndex(child, index);
+        index++;
+      }
   }
   destroy() {
     this.container.filters = null;
     this.status?.destroy();
     this.protection?.destroy();
-    for (const part of this.parts) part.animation?.destroy();
+    for (const part of this.parts) {
+      part.animation?.destroy();
+      part.root.destroy({ children: true });
+    }
+    this.shield.destroy();
+    this.mockStatus.destroy();
+    for (const view of this.mountedShields.values()) view.destroy();
+    this.mountedShields.clear();
     this.container.destroy({ children: true });
   }
 }

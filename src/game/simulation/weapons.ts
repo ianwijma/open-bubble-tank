@@ -17,7 +17,6 @@ import type {
 import { WEAPONS, type WeaponSpec } from '../data/weapons';
 import emitterData from '../data/emitters.json';
 import allyData from '../data/allies.json';
-import { createTank } from './tank';
 import type { World } from './world';
 import projectileArt from '../data/projectile-art.json';
 import { decorateStatus } from './status';
@@ -265,11 +264,11 @@ export function fireGun(world: World, t: Tank, gun: GunState, input: InputFrame)
     const design: TankDesign = id === 3007 ? allyData.swarm : allyData.mine,
       key = design.id;
     const max = t.guns.filter((g) => g.part.type === id).length;
-    if (world.allies.filter((a) => a.design.id === key).length >= max) return;
-    const pos = world.muzzle(t, gun);
-    world.allies.push(
-      createTank(world.nextId(), design, 'ally', pos.x, pos.y, undefined, undefined, world),
-    );
+    const field = world.currentWrapper;
+    if (world.runtimeFor(field).allies.filter((a) => a.design.id === key).length >= max) return;
+    const global = world.actorParents.fieldGlobal(world.muzzle(t, gun), world.field)!,
+      pos = world.actorParents.fieldLocal(global, field)!;
+    world.spawnAlly(design, pos);
     return;
   }
   if (id === 4003) {

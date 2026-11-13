@@ -1,3 +1,4 @@
+import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import { World, emptyInput } from '../src/game/simulation/world';
 import { STARTER } from '../src/game/data/catalog';
@@ -51,7 +52,7 @@ test('projectile callbacks choose native art separately from damage and splash',
   for (const [type, expected] of matrix) {
     const world = setup(type);
     const bullet = shot(world, type);
-    queue(world).splice(0); // Constructor/Setup effects are separate from this collision callback.
+    world.runtimeFor(world.field).clearEffectQueue(); // Separate Constructor/Setup from collision.
     projectileImpact(world, bullet);
     expect(queue(world).map((e) => e.symbol)).toEqual(expected);
   }
@@ -86,12 +87,15 @@ test('both field queues register in the outgoing engine layer; arrival discards 
   const next = world.transit!.next,
     runtime = world.runtimeFor(next);
   next.enemies = [];
-  runtime.effectQueue.push({
-    ...world.addCombatEffect({ x: 12, y: 13 }, 'impact'),
-    uid: world.nextId(),
-    x: -40,
-    y: 25,
-  });
+  world.queueEffect(
+    {
+      ...world.addCombatEffect({ x: 12, y: 13 }, 'impact'),
+      uid: world.nextId(),
+      x: -40,
+      y: 25,
+    },
+    next,
+  );
   world.step(emptyInput());
   expect(runtime.effects).toEqual([]);
   expect(world.effects.map((e) => [e.x, e.y])).toEqual([
@@ -148,6 +152,7 @@ test('burst damage and its clip share the emitter center and exact 145px radius'
     createTank(100 + i, { ...STARTER, avatar: false, life: 100 }, 'enemy', pos.x + offset, pos.y),
   );
   world.field.enemies = enemies;
+  importActorFixtures(world);
   world.fireGun(world.player, gun, emptyInput());
   expect(enemies.map((e) => e.life)).toEqual([75, 100]);
   expect(queue(world).map((e) => [e.symbol, e.x, e.y])).toEqual([[1789, pos.x, pos.y]]);
@@ -176,6 +181,7 @@ test('ripple remains ready until a target is close, then replaces ally force and
   const ally = createTank(101, { ...STARTER, avatar: false }, 'ally', 10, 0);
   ally.velocity = { x: 999, y: 999 };
   world.allies.push(ally);
+  importActorFixtures(world);
   tickGuns(world, enemy, emptyInput());
   expect(queue(world).map((e) => e.symbol)).toEqual([52]);
   expect(gun.counter).toBe(0);
@@ -237,7 +243,7 @@ test('Area Burst immediately detaches only hostile destroyable shots, without im
     friendly = shot(world, 5006);
   Object.assign(friendly, pos);
   seekerMine.detonating = 1; // Armed/seeking still does not mean destroyable.
-  queue(world).splice(0);
+  world.runtimeFor(world.field).clearEffectQueue();
   world.fireGun(world.player, gun, emptyInput());
   expect(world.bullets).toEqual([outside, nonfinite, ordinary, mine, seekerMine, rocket, friendly]);
   expect([seeker, orbital, sapper].every((bullet) => !bullet.dead)).toBe(true);
@@ -265,6 +271,7 @@ test('Area Stun changes state immediately through shields and forcefields, with 
   );
   enemies[0].shield = 100;
   world.field.enemies = enemies;
+  importActorFixtures(world);
   world.fireGun(world.player, gun, emptyInput());
   expect(enemies.map((enemy) => [enemy.stunned, enemy.status.stun])).toEqual([
     [true, 101],
@@ -295,6 +302,7 @@ test('Area Burst flushes lethal enemies before returning and preserves their non
       pos.y,
     );
   world.field.enemies = [enemy];
+  importActorFixtures(world);
   world.fireGun(world.player, gun, emptyInput());
   expect(world.field.enemies).toEqual([]);
   expect(world.runtimeFor(world.field).enemyRemovals).toEqual([]);

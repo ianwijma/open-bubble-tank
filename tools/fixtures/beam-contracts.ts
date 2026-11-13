@@ -1,3 +1,4 @@
+import { importActorFixtures } from './actor-attachments';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { DEFAULT_SETTINGS } from '../../src/game/core/constants';
 import { STARTER } from '../../src/game/data/catalog';
@@ -32,7 +33,8 @@ export async function showBeamContracts(pack: AssetPack, host: HTMLElement) {
   const victim = createTank(world.nextId(), design, 'enemy', 50, 0, 100, 1),
     healthy = createTank(world.nextId(), design, 'enemy', 100, 0);
   world.field.enemies = [victim, healthy];
-  world.actorParents.sync(world);
+  importActorFixtures(world);
+  importActorFixtures(world);
   world.addBullet(
     createProjectile(world.nextId(), {
       owner: world.player.uid,
@@ -130,7 +132,8 @@ export async function showBeamContracts(pack: AssetPack, host: HTMLElement) {
       0,
     );
   world.field.enemies = [excluded, carrier];
-  world.actorParents.sync(world);
+  importActorFixtures(world);
+  importActorFixtures(world);
   world.hitTest = pack.hitTest;
   for (let i = 0; i < 2; i++) world.step({ ...emptyInput(), fire: true });
   const carrierProof = {

@@ -1,3 +1,4 @@
+import { importActorFixtures } from './fixtures/actor-attachments';
 import { FieldVisit } from '../src/game/core/field-visit';
 import { expect, test } from 'bun:test';
 import { STARTER } from '../src/game/data/catalog';
@@ -27,6 +28,7 @@ function turretWorld() {
     200,
   );
   world.field.enemies = [owner];
+  importActorFixtures(world);
   world.field.cleared = false;
   world.fieldVisit = new FieldVisit();
   world.actorParents.sync(world);

@@ -1,3 +1,4 @@
+import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import { STARTER, ENEMIES } from '../src/game/data/catalog';
 import { createTank } from '../src/game/simulation/tank';
@@ -39,6 +40,7 @@ test('each spawner retains its Setup fighter across roster growth and repeated s
   world.rng.next = () => draws.shift() ?? 0.5;
   const owner = createTank(world.nextId(), design([4003, 4003]), 'enemy', 0, 0, 100, 100, world);
   world.field.enemies = [owner];
+  importActorFixtures(world);
   world.actorParents.sync(world);
   world.roster.units.set('SmallFighter', [ENEMIES[3]]);
   world.rng.next = () => {

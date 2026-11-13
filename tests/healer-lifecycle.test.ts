@@ -1,3 +1,4 @@
+import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import { STARTER } from '../src/game/data/catalog';
 import { World, emptyInput } from '../src/game/simulation/world';
@@ -65,6 +66,7 @@ test('queued outgoing patient data aborts the incoming Healer catch retry, while
   const outgoing = world.field;
   const patient = createTank(world.nextId(), design, 'enemy', 350, 0, 100, 1);
   outgoing.enemies = [patient];
+  world.attachActor(patient, outgoing);
   const owner = createTank(world.nextId(), healer, 'enemy', -250, 0, 100, 100, world);
   const gun = owner.guns.find((gun) => gun.part.type === 6002)!;
   owner.rotation = 30;
@@ -110,6 +112,7 @@ test('a queued dead patient has an empty display, so its beam retains contact co
   const owner = createTank(world.nextId(), design, 'enemy');
   const patient = createTank(world.nextId(), design, 'enemy', 100, 0, 100, 1);
   world.field.enemies = [owner, patient];
+  importActorFixtures(world);
   const killer = shell(world);
   const beam = shell(world, {
     owner: owner.uid,
@@ -148,6 +151,7 @@ for (const mode of ['healthy', 'killed', 'jammed'] as const)
     const world = setup();
     const patient = createTank(world.nextId(), design, 'enemy', 100, 0, 100, 50);
     world.field.enemies = [patient];
+    importActorFixtures(world);
     const owner = createTank(
       world.nextId(),
       healer,
@@ -159,6 +163,7 @@ for (const mode of ['healthy', 'killed', 'jammed'] as const)
       world,
     );
     world.field.enemies = [owner, patient];
+    importActorFixtures(world);
     world.actorParents.sync(world);
     world.muzzle = () => ({ x: 0, y: 0 });
     world.hitTest = (tank) => tank === owner || tank === patient;
@@ -194,6 +199,7 @@ test('raw acquisition reads deactivated NPC data instead of filtering it, while 
   const patient = createTank(world.nextId(), design, 'enemy', 100, 0, 100, 1);
   const owner = createTank(world.nextId(), design, 'enemy');
   world.field.enemies = [patient, owner];
+  importActorFixtures(world);
   world.actorParents.sync(world);
   world.damage(patient, 2);
   const state = createBehaviorTarget();
@@ -210,6 +216,7 @@ test('direct AddLife on deactivated NPC increments before failure without restor
   const world = setup();
   const patient = createTank(world.nextId(), design, 'enemy', 100, 0, 100, 1);
   world.field.enemies = [patient];
+  importActorFixtures(world);
   world.damage(patient, 2);
   patient.hiddenParts.add(design.parts[0].key);
   const debt = patient.degradation.debt;
@@ -248,6 +255,7 @@ test('primary final callbacks see live data before the owning field receives dea
     'enemy',
   );
   world.field.enemies = [owner];
+  importActorFixtures(world);
   const observed: { active: boolean; queued: boolean }[] = [];
   const add = world.addBullet.bind(world);
   world.addBullet = (bullet, home, target) => {
@@ -269,7 +277,9 @@ test('an allied boundary exit empties its still-parented display before healing 
   const owner = createTank(world.nextId(), design, 'enemy', 400, 0);
   const patient = createTank(world.nextId(), design, 'ally', 414, 0, 100, 50);
   world.field.enemies = [owner];
+  importActorFixtures(world);
   world.allies = [patient];
+  importActorFixtures(world);
   const beam = shell(world, {
     owner: owner.uid,
     enemy: true,
@@ -301,6 +311,7 @@ test('a born healing beam does not resolve its home or patient through active UI
   const owner = createTank(world.nextId(), design, 'enemy');
   const patient = createTank(world.nextId(), design, 'enemy', 100, 0, 100, 50);
   world.field.enemies = [owner, patient];
+  importActorFixtures(world);
   const beam = shell(world, {
     owner: owner.uid,
     enemy: true,
@@ -327,6 +338,7 @@ test('a host collision failure still escapes the scoped source listener boundary
   const owner = createTank(world.nextId(), design, 'enemy');
   const patient = createTank(world.nextId(), design, 'enemy', 100, 0, 100, 50);
   world.field.enemies = [owner, patient];
+  importActorFixtures(world);
   world.addBullet(
     shell(world, {
       owner: owner.uid,

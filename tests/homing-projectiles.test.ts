@@ -1,3 +1,4 @@
+import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import type { Projectile } from '../src/game/core/types';
 import { STARTER } from '../src/game/data/catalog';
@@ -23,6 +24,7 @@ function enemy(world: World, x: number, y = 0) {
     y,
   );
   world.field.enemies.push(tank);
+  importActorFixtures(world);
   return tank;
 }
 function shot(world: World, changes: Partial<Projectile> = {}) {
@@ -246,7 +248,10 @@ test('explicit home and target references survive same-UID replacements and a ca
   expect([b.x, b.y]).toEqual([0.05, -0.05]);
   expect(b.homing!.home).toBe(home);
   expect(b.homing!.target).toBe(target);
+  world.actorParents.detach(home);
+  world.actorParents.detach(target);
   world.field.enemies = [{ ...home }, { ...target, y: 200 }];
+  importActorFixtures(world);
   world.actorParents.sync(world);
   // Detached target no longer gates orbital pursuit; detached home removes it.
   tick(world, b);

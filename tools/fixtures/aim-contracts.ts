@@ -1,3 +1,4 @@
+import { importActorFixtures } from './actor-attachments';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { DEFAULT_SETTINGS } from '../../src/game/core/constants';
 import { STARTER } from '../../src/game/data/catalog';
@@ -71,6 +72,7 @@ export async function showAimContracts(pack: AssetPack, host: HTMLElement) {
     ),
     gun = owner.guns[0];
   contact.field.enemies = [owner];
+  importActorFixtures(contact);
   const point = contact.muzzle(owner, gun, 13, 6);
   Object.assign(contact.player, point);
   const successful: number[] = [];
@@ -83,7 +85,7 @@ export async function showAimContracts(pack: AssetPack, host: HTMLElement) {
       }
     return hit;
   };
-  contact.actorParents.sync(contact);
+  importActorFixtures(contact);
   tickGuns(contact, owner, emptyInput());
   const first = contact.player.life;
   for (let i = 0; i < 14; i++) tickGuns(contact, owner, emptyInput());

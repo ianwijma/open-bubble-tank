@@ -1,3 +1,4 @@
+import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import { STARTER } from '../src/game/data/catalog';
 import { createTank } from '../src/game/simulation/tank';
@@ -25,6 +26,7 @@ function carrier(release = true) {
   );
   owner.rotation = 90;
   world.field.enemies = [owner];
+  importActorFixtures(world);
   world.actorParents.sync(world);
   const gun = owner.guns[0];
   if (release) world.releaseCarrier(owner, gun);

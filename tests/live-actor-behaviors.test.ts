@@ -1,3 +1,4 @@
+import { importActorFixtures } from './fixtures/actor-attachments';
 import { tickGuns } from '../src/game/simulation/weapons';
 import { expect, test } from 'bun:test';
 import { STARTER } from '../src/game/data/catalog';
@@ -25,6 +26,7 @@ function scenario(ids: number[], { x = 0, y = 0, speed = 2 } = {}) {
     world,
   );
   world.field.enemies = [tank];
+  importActorFixtures(world);
   world.field.cleared = false;
   return { world, tank };
 }
@@ -144,6 +146,7 @@ test('Healer retains its beam/patient owner and writes the post-run patient dest
     50,
   );
   world.field.enemies.push(patient);
+  importActorFixtures(world);
   world.step(emptyInput());
   expect(tank.guns[0].patientId).toBe(patient.uid);
   expect(tank.movement.swarmPoint).toEqual({ x: 250, y: 0 });
@@ -160,6 +163,7 @@ test('destination behavior retains an outgoing ally and uses current-wrapper pop
     30,
   );
   world.allies = [ally];
+  importActorFixtures(world);
   world.player.x = 425;
   world.jump({ x: 1, y: 0 });
   world.transit!.offset = { x: 800, y: 0 };
@@ -182,6 +186,7 @@ test('destination behavior retains an outgoing ally and uses current-wrapper pop
   state.target = ally;
   state.allies = 1;
   world.transit!.next.enemies = [incoming];
+  importActorFixtures(world);
   world.step(emptyInput());
   expect(state.target).toBe(ally);
   expect(incoming.movement.swarmPoint).toEqual({ x: -750, y: 30 });
@@ -204,6 +209,7 @@ test('allied 7001 and 4001 primary weapons keep authored order before behavior w
     world,
   );
   world.allies = [ally];
+  importActorFixtures(world);
   world.actorParents.sync(world);
   const fired: { type: number; destination: unknown }[] = [];
   world.spawnVolley = (_owner, gun) => {

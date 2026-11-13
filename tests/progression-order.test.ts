@@ -1,3 +1,4 @@
+import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import { STARTER } from '../src/game/data/catalog';
 import { World, emptyInput, nearestExit } from '../src/game/simulation/world';
@@ -29,6 +30,7 @@ function incoming(world: World, damage: number) {
     0,
   );
   world.field.enemies = [enemy];
+  importActorFixtures(world);
   const gun = {
     part: { ...STARTER.parts[1], type: 4001 },
     counter: 0,

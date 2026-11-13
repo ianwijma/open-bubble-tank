@@ -1,3 +1,4 @@
+import { importActorFixtures } from './fixtures/actor-attachments';
 import { FieldVisit } from '../src/game/core/field-visit';
 import { describe, expect, test } from 'bun:test';
 import { World, emptyInput } from '../src/game/simulation/world';
@@ -57,6 +58,7 @@ describe('original gameplay contracts', () => {
     w.field.cleared = false;
     w.fieldVisit = new FieldVisit();
     w.field.enemies = [enemy];
+    importActorFixtures(w);
     const life = w.player.life;
     w.damage(enemy, 1000);
     expect(w.player.life).toBe(life);
@@ -352,6 +354,7 @@ describe('advanced parts', () => {
     w.field.cleared = false;
     w.fieldVisit = new FieldVisit();
     w.field.enemies = [carrier, createTank(901, ENEMIES[0], 'enemy', 0, 300)];
+    importActorFixtures(w);
     const released: number[] = [];
     const addBullet = w.addBullet.bind(w);
     w.addBullet = (bullet) => {
@@ -386,6 +389,7 @@ describe('advanced parts', () => {
     w.field.cleared = false;
     w.fieldVisit = new FieldVisit();
     w.field.enemies = [enemy];
+    importActorFixtures(w);
     // Use the actual 80-frame cadence: simultaneous builders collide with one another.
     step(w, 380);
     expect(w.bullets.find((b) => b.kind === 'turret')?.build).toBe(4);
@@ -427,6 +431,7 @@ test('Drone Converter changes enemy homing projectiles, never enemy tanks', () =
   w.field.cleared = false;
   w.fieldVisit = new FieldVisit();
   w.field.enemies = [enemy];
+  importActorFixtures(w);
   const gun = {
     part: { ...STARTER.parts[1], type: 4002 },
     counter: 0,

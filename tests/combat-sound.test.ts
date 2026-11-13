@@ -1,3 +1,4 @@
+import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import { STARTER } from '../src/game/data/catalog';
 import type { Projectile } from '../src/game/core/types';
@@ -22,6 +23,7 @@ function setup() {
     0,
   );
   world.field.enemies = [tank];
+  importActorFixtures(world);
   world.actorParents.sync(world);
   const shot = (options: Partial<Projectile> = {}) =>
     createProjectile(world.nextId(), {

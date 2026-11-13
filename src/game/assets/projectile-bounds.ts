@@ -1,3 +1,4 @@
+import { displayMatrixProduct, displayMatrixRectangle } from '../core/display-transform';
 import type { SwfClip } from './swf-clip';
 import type { Projectile, Vec } from '../core/types';
 import type { Bounds, DisplayPlacement, SwfMatrix } from './asset-pack';
@@ -61,13 +62,74 @@ function union(a: Bounds | undefined, b: Bounds | undefined): Bounds | undefined
   };
 }
 
-/**
- * Ruffle v0.7.1 TDisplayObject::bounds_with_transform / hit_test_object use
- * Script bounds: transform each leaf before union, including invisible and mask
- * children, without mask intersections or filter growth.
- * https://github.com/ruffle-rs/ruffle/blob/v0.7.1/core/src/display_object.rs#L1312
- */
+interface BoundsArithmetic {
+  multiply(left: SwfMatrix, right: SwfMatrix): SwfMatrix;
+  transform(bounds: Bounds, matrix: SwfMatrix): Bounds;
+}
+const continuousBounds: BoundsArithmetic = { multiply, transform: transformed };
+const twipBounds: BoundsArithmetic = {
+  multiply: displayMatrixProduct,
+  transform: (bounds, matrix) => {
+    const rectangle = displayMatrixRectangle(matrix, {
+      // Recover the declared integer twips from the legacy pixel-source API.
+      // This is metadata decoding, not a truncating DisplayObject setter.
+      xMin: Math.round(bounds.x * 20),
+      yMin: Math.round(bounds.y * 20),
+      xMax: Math.round((bounds.x + bounds.width) * 20),
+      yMax: Math.round((bounds.y + bounds.height) * 20),
+    });
+    return {
+      x: rectangle.xMin,
+      y: rectangle.yMin,
+      width: rectangle.xMax - rectangle.xMin,
+      height: rectangle.yMax - rectangle.yMin,
+    };
+  },
+};
+
+/** Existing continuous approximation; retained callers need individual source qualification. */
 export function scriptBounds(
+  source: ScriptBoundsSource,
+  id: number,
+  age: number,
+  matrix: SwfMatrix = identity,
+  override?: Override,
+  path: readonly string[] = [],
+  depth = 0,
+  pose?: SwfClip,
+): Bounds | undefined {
+  return visitBounds(continuousBounds, source, id, age, matrix, override, path, depth, pose);
+}
+
+/**
+ * DisplayObject width/height arithmetic: compose float32 matrices, transform
+ * declared leaf twips with ties-even BEFORE integer translation, then union.
+ * Mask/alpha children participate; this is neither paint nor getBounds(target).
+ * Keep integer extents until the final pixel conversion. See docs/script-bounds-arithmetic.md.
+ */
+export function scriptTwipBounds(
+  source: ScriptBoundsSource,
+  id: number,
+  age: number,
+  matrix: SwfMatrix = identity,
+  override?: Override,
+  path: readonly string[] = [],
+  depth = 0,
+  pose?: SwfClip,
+): Bounds | undefined {
+  const bounds = visitBounds(twipBounds, source, id, age, matrix, override, path, depth, pose);
+  return (
+    bounds && {
+      x: bounds.x / 20,
+      y: bounds.y / 20,
+      width: bounds.width / 20,
+      height: bounds.height / 20,
+    }
+  );
+}
+
+function visitBounds(
+  arithmetic: BoundsArithmetic,
   source: ScriptBoundsSource,
   id: number,
   age: number,
@@ -79,7 +141,7 @@ export function scriptBounds(
 ): Bounds | undefined {
   if (depth > 24) return undefined;
   const leaf = source.leafBounds(id);
-  if (leaf) return transformed(leaf, matrix);
+  if (leaf) return arithmetic.transform(leaf, matrix);
   let result: Bounds | undefined;
   for (const p of pose?.placements ?? source.displayList(id, age)) {
     const childPath = [...path, p.name ?? `#${p.depth}`],
@@ -88,11 +150,12 @@ export function scriptBounds(
       change = override?.(p, childAge, childPath);
     result = union(
       result,
-      scriptBounds(
+      visitBounds(
+        arithmetic,
         source,
         p.charId,
         change?.age ?? childAge,
-        multiply(matrix, change?.matrix ?? p.matrix),
+        arithmetic.multiply(matrix, change?.matrix ?? p.matrix),
         override,
         childPath,
         depth + 1,

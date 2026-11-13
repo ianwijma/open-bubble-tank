@@ -1,3 +1,4 @@
+import { importActorFixtures } from './actor-attachments';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { DEFAULT_SETTINGS } from '../../src/game/core/constants';
 import { STARTER } from '../../src/game/data/catalog';
@@ -40,7 +41,9 @@ export async function showWeaponTargets(pack: AssetPack, host: HTMLElement) {
       world,
     );
   world.allies = [ally];
+  importActorFixtures(world);
   world.field.enemies = [owner];
+  importActorFixtures(world);
   owner.guns[0].targeting = { master: 'enemy', target: ally, allies: 1 };
   owner.guns[1].targeting = { master: 'enemy', target: world.player, allies: 1 };
   await renderer.init(host, DEFAULT_SETTINGS);
@@ -54,6 +57,7 @@ export async function showWeaponTargets(pack: AssetPack, host: HTMLElement) {
         world.allies.push(
           createTank(world.nextId(), base, 'ally', -80, 80, undefined, undefined, world),
         );
+      importActorFixtures(world);
       for (const gun of owner.guns) gun.counter = WEAPONS[4001].rate - 1;
       world.step(emptyInput());
       if (frame === 1) {

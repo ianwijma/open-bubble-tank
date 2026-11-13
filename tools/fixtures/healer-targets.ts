@@ -1,3 +1,4 @@
+import { importActorFixtures } from './actor-attachments';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { DEFAULT_SETTINGS } from '../../src/game/core/constants';
 import { STARTER } from '../../src/game/data/catalog';
@@ -47,6 +48,7 @@ export async function showHealerTargets(pack: AssetPack, host: HTMLElement) {
     healer = tank(normal, 'enemy', -100, true),
     patient = tank(normal, 'enemy', 100, false, 50);
   normal.field.enemies = [healer, patient];
+  importActorFixtures(normal);
   const draw = async (world: World, cell: number, title: string, frames: number) => {
     const renderer = new GameRenderer(pack);
     await renderer.init(host, DEFAULT_SETTINGS);
@@ -77,6 +79,7 @@ export async function showHealerTargets(pack: AssetPack, host: HTMLElement) {
   const owner = tank(fault, 'ally', -100, true),
     sentinel = tank(fault, 'ally', 120);
   fault.allies = [owner, sentinel];
+  importActorFixtures(fault);
   fault.rng.next = () => 1; // Inclusive1..length reads missing index2 in both PartCallRun attempts.
   const stage = new StageRuntime(fault.mainEffects);
   stage.random = () => 0.5;

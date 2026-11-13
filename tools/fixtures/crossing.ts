@@ -1,3 +1,4 @@
+import { importActorFixtures } from './actor-attachments';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { DEFAULT_SETTINGS } from '../../src/game/core/constants';
 import type { Projectile } from '../../src/game/core/types';
@@ -5,6 +6,12 @@ import { STARTER } from '../../src/game/data/catalog';
 import { GameRenderer } from '../../src/game/render/pixi-renderer';
 import { createTank } from '../../src/game/simulation/tank';
 import { World, emptyInput } from '../../src/game/simulation/world';
+
+// Actor layers are now real parents; sample their tank children and the avatar sibling.
+const renderedTanks = (renderer: GameRenderer) => [
+  ...renderer.entities.children.slice(0, -1).flatMap((layer) => layer.children),
+  ...renderer.entities.children.slice(-1),
+];
 
 /** Four real renderer frames with two field-owned populations, without game debug APIs. */
 export async function showCrossingProof(pack: AssetPack, host: HTMLElement) {
@@ -26,6 +33,7 @@ export async function showCrossingProof(pack: AssetPack, host: HTMLElement) {
   world.player.life = 40;
   world.field.tutorial = 0;
   world.field.enemies = [createTank(world.nextId(), design, 'enemy', 350, -80)];
+  importActorFixtures(world);
   const old = world.field;
   const bullet = (x: number): Projectile => ({
     uid: world.nextId(),
@@ -72,20 +80,23 @@ export async function showCrossingProof(pack: AssetPack, host: HTMLElement) {
     forced: false,
     dead: false,
   });
-  runtime.effects.push({
-    uid: world.nextId(),
-    x: -230,
-    y: 50,
-    kind: 'hit',
-    age: 0,
-    duration: 500,
-    radius: 30,
-    color: 0xffffff,
-  });
+  world.queueEffect(
+    {
+      uid: world.nextId(),
+      x: -230,
+      y: 50,
+      kind: 'hit',
+      age: 0,
+      duration: 500,
+      radius: 30,
+      color: 0xffffff,
+    },
+    next,
+  );
   world.hitTest = pack.hitTest;
   world.hitPart = pack.hitPart;
   world.hitProjectile = pack.hitProjectile;
-  world.actorParents.sync(world);
+  importActorFixtures(world);
   await renderer.init(host, DEFAULT_SETTINGS);
   const snapshots = [];
   try {
@@ -119,7 +130,7 @@ export async function showCrossingProof(pack: AssetPack, host: HTMLElement) {
             y: shot.y + offset.y,
           })),
         ),
-        renderedTanks: renderer.entities.children.map((child) => ({ x: child.x, y: child.y })),
+        renderedTanks: renderedTanks(renderer).map((child) => ({ x: child.x, y: child.y })),
         renderedShots: renderer.nativeShots.children.map((child) => ({ x: child.x, y: child.y })),
       });
     }
@@ -170,14 +181,17 @@ export async function showNestedCrossingProof(pack: AssetPack, host: HTMLElement
     100,
     100,
   );
+  // This fixture replaces the generated population; supply its omitted removeChild phase.
+  for (const tank of world.actorParents.owned(abandoned)) world.actorParents.detach(tank);
   abandoned.enemies = [actor];
   world.player.x = world.transit!.offset.x - 200;
-  world.actorParents.sync(world);
+  importActorFixtures(world);
   world.damage(world.player, 2);
   const latest = world.transit!.next;
+  for (const tank of world.actorParents.owned(latest)) world.actorParents.detach(tank);
   latest.enemies = [];
   latest.tutorial = 0;
-  world.actorParents.sync(world);
+  importActorFixtures(world);
   await renderer.init(host, DEFAULT_SETTINGS);
   const read = () => {
     renderer.draw(world, { ...DEFAULT_SETTINGS, shake: false });
@@ -197,7 +211,7 @@ export async function showNestedCrossingProof(pack: AssetPack, host: HTMLElement
         x: 275 + retained.offset.x + actor.x - world.player.x,
         y: 225 + retained.offset.y + actor.y - world.player.y,
       };
-      const rendered = renderer.entities.children.map((child) => child.getGlobalPosition());
+      const rendered = renderedTanks(renderer).map((child) => child.getGlobalPosition());
       actor.alpha = 0;
       const without = read();
       let bodyPixels = 0;

@@ -1,3 +1,4 @@
+import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import type { TankDesign } from '../src/game/core/types';
 import { STARTER } from '../src/game/data/catalog';
@@ -50,6 +51,7 @@ function enemy(world: World, x: number, y = 0, carrier = false) {
   );
   tank.radius = 20;
   world.field.enemies.push(tank);
+  importActorFixtures(world);
   world.actorParents.attach(tank, world.field);
   return tank;
 }

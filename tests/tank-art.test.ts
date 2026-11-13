@@ -1,3 +1,4 @@
+import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import { STARTER } from '../src/game/data/catalog';
 import { createTank } from '../src/game/simulation/tank';
@@ -45,7 +46,8 @@ test('shield film keeps its own26-frame stage clock independently of the25-frame
   w.pause();
   frames(w, 60);
   expect([w.player.artAge, w.player.shieldAge, w.player.shield]).toEqual([60, 60, 25]);
-  expect(w.runtimeFor(w.field).pending[0].frame).toBe(11);
+  // Constructor before ENTER1: EXIT1=1, EXIT60=10 (original measured cohort).
+  expect(w.runtimeFor(w.field).pending[0].frame).toBe(10);
   expect((w.player.shieldAge % 26) + 1).toBe(9);
 });
 
@@ -53,10 +55,12 @@ test('transit advances avatar and both field populations once without running av
   const w = new World([], [], 10);
   const origin = createTank(w.nextId(), { ...STARTER, avatar: false }, 'enemy');
   w.field.enemies = [origin];
+  importActorFixtures(w);
   w.jump({ x: 1, y: 0 });
   const next = w.transit!.next;
   const destination = createTank(w.nextId(), { ...STARTER, avatar: false }, 'enemy');
   next.enemies = [destination];
+  w.attachActor(destination, next);
   const inactive = createTank(w.nextId(), STARTER, 'enemy');
   const detached = { ...next, col: 99, enemies: [inactive] };
   w.fields.set('99,0', detached);

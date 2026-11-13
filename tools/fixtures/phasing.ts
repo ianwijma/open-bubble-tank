@@ -1,3 +1,4 @@
+import { importActorFixtures } from './actor-attachments';
 import { Application } from 'pixi.js';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { STARTER } from '../../src/game/data/catalog';
@@ -32,6 +33,7 @@ export async function showPhasing(pack: AssetPack, host: HTMLElement) {
     world,
   );
   world.field.enemies = [tank];
+  importActorFixtures(world);
   world.field.cleared = false;
   tank.guns[0].phasing!.counter = 0;
   // Retain one art pose: changing body geometry must not masquerade as an alpha change.

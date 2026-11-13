@@ -1,3 +1,4 @@
+import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import { SwfClip, type ClipSource } from '../src/game/assets/swf-clip';
 import type { DisplayPlacement, SwfMatrix } from '../src/game/assets/asset-pack';
@@ -70,6 +71,7 @@ function setup(artPose = pose(), values: Partial<Projectile> = {}) {
 function enemy(world: World, x = 0) {
   const tank = createTank(world.nextId(), { ...STARTER, life: 200 }, 'enemy', x, 0);
   world.field.enemies.push(tank);
+  importActorFixtures(world);
   return tank;
 }
 const queue = (world: World) => world.runtimeFor(world.field).effectQueue;

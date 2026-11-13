@@ -1,3 +1,4 @@
+import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import { createTank } from '../src/game/simulation/tank';
 import { World, emptyInput } from '../src/game/simulation/world';
@@ -108,6 +109,7 @@ test('the hidden allied autocannon runs in the primary pass before an earlier-au
   world.rng.next = () => 0.5;
   const enemy = createTank(world.nextId(), { ...design([]), avatar: false }, 'enemy', 100, 0);
   world.field.enemies = [enemy];
+  importActorFixtures(world);
   const ally = createTank(
     world.nextId(),
     { ...design([6001, 7001]), avatar: false },
@@ -119,6 +121,7 @@ test('the hidden allied autocannon runs in the primary pass before an earlier-au
     world,
   );
   world.allies = [ally];
+  importActorFixtures(world);
   ally.movement.swarmPoint = { x: -999, y: -999 };
   ally.guns[1].counter = 11;
   const firing = world.fireGun.bind(world),
@@ -179,6 +182,7 @@ test('Phasing inherits rotating EnemyAim before its ally-count acquisition, whil
   world.rng.next = () => 0.99;
   const ally = createTank(world.nextId(), { ...design([]), avatar: false }, 'ally', 0, 100);
   world.allies = [ally];
+  importActorFixtures(world);
   const tank = createTank(
     world.nextId(),
     { ...design([6004, 6001]), avatar: false },
@@ -194,6 +198,7 @@ test('Phasing inherits rotating EnemyAim before its ally-count acquisition, whil
     gun.behaviorTarget!.allies = 0;
   }
   world.field.enemies = [tank];
+  importActorFixtures(world);
   world.actorParents.sync(world);
   tickGuns(world, tank, emptyInput());
   expect(tank.guns.map((gun) => gun.angle)).toEqual([90, 25]);

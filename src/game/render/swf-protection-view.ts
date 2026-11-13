@@ -4,7 +4,7 @@ import type { Tank, TankChild } from '../core/types';
 import { partById } from '../data/catalog';
 import { PROTECTION_ART, shieldClipSymbol } from '../data/status-art';
 import { protectionScale } from '../core/protection-size';
-import { legacyShieldFilm, shieldClipFrame } from '../core/shield-art';
+import { shieldClipFrame } from '../core/shield-art';
 import { SwfSymbolView, type RasterTextures } from './swf-symbol-view';
 
 /** AGunShield/_-DO display clips and APassiveForcefield's cloned-tank silhouette mask. */
@@ -41,6 +41,7 @@ export class SwfProtectionView {
       this.mounted.delete(key);
     }
     for (const clip of tank.shieldClips) {
+      if (!tank.displayChildren.includes(clip.key)) continue;
       let view = this.mounted.get(clip.key);
       if (!view) {
         view = this.view(shieldClipSymbol(clip), clip.diameter);
@@ -51,7 +52,7 @@ export class SwfProtectionView {
       view.update(shieldClipFrame(clip));
       view.root.angle = clip.angle;
     }
-    if (legacyShieldFilm(tank)) {
+    if (tank.displayChildren.includes('shield-film')) {
       const turret = tank.side !== 'player';
       const diameter = turret
         ? tank.radius * 2
@@ -80,7 +81,7 @@ export class SwfProtectionView {
       this.hit.root.angle = tank.shieldHitAngle;
     }
     if (tank.design.parts.some((part) => part.type === 5005)) {
-      if (!tank.forcefieldAttached) {
+      if (!tank.forcefieldAttached || !tank.displayChildren.includes('forcefield')) {
         if (this.field) this.field.root.visible = false;
         return;
       }
@@ -140,6 +141,7 @@ export class SwfProtectionView {
     for (const view of this.mounted.values()) view.destroy();
     this.field?.destroy();
     for (const { view } of this.maskParts) view.destroy();
+    this.fieldMask?.destroy({ children: true });
     this.root.destroy({ children: true });
   }
 }

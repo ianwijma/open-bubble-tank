@@ -1,3 +1,4 @@
+import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import { World, emptyInput } from '../src/game/simulation/world';
 import { createTank } from '../src/game/simulation/tank';
@@ -28,6 +29,7 @@ function setup() {
     ),
     gun = owner.guns[0];
   world.field.enemies = [owner];
+  importActorFixtures(world);
   world.player.life = 40;
   world.player.radius = 0.1;
   Object.assign(world.player, world.muzzle(owner, gun, 13, 6));
@@ -72,6 +74,7 @@ test('a remembered earlier ally stops the source candidate loop, then a later al
       0,
     );
   world.allies = [first, second];
+  importActorFixtures(world);
   gun.spikeContacts = [{ target: first, remaining: 2 }];
   let probes = 0;
   world.hitTest = (t) => {
@@ -126,6 +129,7 @@ test('Spike memory distinguishes a replacement clip with the same UID', () => {
   const first = createTank(99, { ...STARTER, avatar: false, life: 100 }, 'ally');
   const replacement = createTank(99, { ...STARTER, avatar: false, life: 100 }, 'ally');
   world.allies = [replacement];
+  importActorFixtures(world);
   gun.spikeContacts = [{ target: first, remaining: 15 }];
   world.hitTest = (target) => target === replacement;
   run(world, owner);
@@ -166,7 +170,9 @@ test('Spike Setup and Run consume no ordinary target draws', () => {
     world,
   );
   world.field.enemies = [owner];
+  importActorFixtures(world);
   world.allies = [createTank(99, { ...STARTER, avatar: false, parts: [] }, 'ally')];
+  importActorFixtures(world);
   world.hitTest = () => false;
   run(world, owner);
   expect(draws).toBe(0);
@@ -187,6 +193,7 @@ test('lethal Spike contact aborts the source Run before force and memory, while 
     'ally',
   );
   world.allies = [victim, sentinel];
+  importActorFixtures(world);
   world.hitTest = (target) => target.side === 'ally';
   world.field.cleared = false;
   world.step(emptyInput());

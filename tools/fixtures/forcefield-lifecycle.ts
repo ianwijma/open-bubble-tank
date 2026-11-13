@@ -53,8 +53,10 @@ export async function showForcefieldLifecycle(pack: AssetPack, host: HTMLElement
   const mock = native ? undefined : new TankView(tank.design, pack, textures);
   const root = native?.root ?? mock!.container;
   app.stage.addChild(root);
+  // A detached forcefield has no tank child; extract an empty target for that zero-paint control.
+  const empty = new Container();
   const protection = () =>
-    native?.root ?? (mock!.container.children[tank.design.parts.length] as Container);
+    native?.root ?? mock!.container.children.find((child) => child.label === 'forcefield') ?? empty;
   const update = () => (native ? native.update(tank) : mock!.update(tank));
   const canvas = document.createElement('canvas');
   canvas.width = 550;
@@ -153,6 +155,7 @@ export async function showForcefieldLifecycle(pack: AssetPack, host: HTMLElement
       ready: tank.forcefieldReady,
     };
   } finally {
+    empty.destroy();
     native?.destroy();
     mock?.destroy();
     app.destroy({ removeView: true }, { children: true });

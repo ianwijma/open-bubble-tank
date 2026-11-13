@@ -1,3 +1,4 @@
+import { importActorFixtures } from './actor-attachments';
 import { captureCanvas } from './pixi-capture';
 import { Rectangle } from 'pixi.js';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
@@ -35,7 +36,8 @@ export async function showSpecialProjectilesProof(pack: AssetPack, host: HTMLEle
     -180,
   );
   world.field.enemies = [master];
-  world.actorParents.sync(world);
+  importActorFixtures(world);
+  importActorFixtures(world);
   const make = (options: Partial<Projectile>) =>
     createProjectile(world.nextId(), {
       owner: world.player.uid,
@@ -52,8 +54,8 @@ export async function showSpecialProjectilesProof(pack: AssetPack, host: HTMLEle
   const tick = (b: Projectile) => tickBullet(world, b, emptyInput());
   const clear = () => {
     world.bullets = [];
-    world.effects = [];
-    world.runtimeFor(world.field).effectQueue = [];
+    for (const effect of world.effects) world.effectEngine.discard(effect);
+    world.runtimeFor(world.field).clearEffectQueue();
   };
   await renderer.init(host, DEFAULT_SETTINGS);
   const canvas = document.createElement('canvas');

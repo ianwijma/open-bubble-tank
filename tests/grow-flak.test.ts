@@ -1,3 +1,4 @@
+import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import type { Projectile } from '../src/game/core/types';
 import { STARTER } from '../src/game/data/catalog';
@@ -19,6 +20,7 @@ function setup(kind: 'grow' | 'flak') {
     0,
   );
   world.field.enemies = [target];
+  importActorFixtures(world);
   world.hitTest = () => false;
   world.hitProjectile = () => false;
   const bullet = createProjectile(world.nextId(), {

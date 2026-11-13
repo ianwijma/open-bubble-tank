@@ -1,3 +1,4 @@
+import { importActorFixtures } from './actor-attachments';
 import { Application, Graphics } from 'pixi.js';
 import { AssetPack, type SpriteInfo } from '../../src/game/assets/asset-pack';
 import { SwfClip } from '../../src/game/assets/swf-clip';
@@ -354,6 +355,7 @@ export async function showShapeContact(pack: AssetPack, host: HTMLElement) {
     world.fireGun(t, t.guns[0], emptyInput());
     const hit = (p: { x: number; y: number }) => {
       world.field.enemies = [createTank(world.nextId(), design, 'enemy', 2000, 2000)];
+      importActorFixtures(world);
       const shot = createProjectile(world.nextId(), {
         owner: -1,
         enemy: true,

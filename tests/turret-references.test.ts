@@ -1,3 +1,4 @@
+import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import { World, emptyInput } from '../src/game/simulation/world';
 import { createTank } from '../src/game/simulation/tank';
@@ -19,6 +20,7 @@ function setup() {
   owner.rotation = 0;
   owner.movement.stationary = true;
   world.field.enemies = [owner];
+  importActorFixtures(world);
   world.field.cleared = false;
   world.fieldVisit = new FieldVisit();
   world.actorParents.sync(world);

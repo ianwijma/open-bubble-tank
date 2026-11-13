@@ -1,3 +1,4 @@
+import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import { allyHealthFrame, enemyHealthWidth, TacticalHudState } from '../src/game/core/tactical-hud';
 import { STARTER } from '../src/game/data/catalog';
@@ -95,7 +96,9 @@ test('travel advances ally HUD positions while passive artwork and pause remain 
   world.player.design = design;
   const enemy = createTank(1000, STARTER, 'enemy', 350, 0);
   world.field.enemies = [enemy];
+  importActorFixtures(world);
   world.allies = [createTank(1001, STARTER, 'ally', -50, 0)];
+  importActorFixtures(world);
   world.step(emptyInput());
   expect(world.tacticalHud.passives.some((p) => p.kind === 'radar')).toBe(true);
   world.jump({ x: 1, y: 0 });
@@ -125,7 +128,9 @@ test('secondary summons get a health ring on their creation frame', () => {
 test('Apocalypse suspends interface clocks, clears enemy readouts and prevents editing', () => {
   const world = new World([], [STARTER, design], 50);
   world.field.enemies = [createTank(1000, STARTER, 'enemy', 350, 0)];
+  importActorFixtures(world);
   world.allies = [createTank(1001, STARTER, 'ally', -50, 0)];
+  importActorFixtures(world);
   world.step(emptyInput());
   world.editSlider.trigger(1, 1);
   const x = world.editSlider.x;
@@ -144,6 +149,7 @@ test('Q does not redirect base-game homing; future hooks clear on field entry an
   const world = new World([], [], 50);
   const enemy = createTank(1000, STARTER, 'enemy', 100, 0);
   world.field.enemies = [enemy, createTank(1001, STARTER, 'enemy', 200, 0)];
+  importActorFixtures(world);
   world.cycleLock();
   world.cycleLock();
   expect(world.nearestEnemy(world.player)).toBe(enemy);

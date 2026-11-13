@@ -1,3 +1,4 @@
+import { importActorFixtures } from './actor-attachments';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { DEFAULT_SETTINGS } from '../../src/game/core/constants';
 import type { Projectile, TankDesign } from '../../src/game/core/types';
@@ -51,8 +52,10 @@ export async function showNpcDeactivation(pack: AssetPack, host: HTMLElement) {
     );
     const survivor = createTank(world.nextId(), body, 'enemy', -150, 100);
     world.field.enemies = scenario.side === 'enemy' ? [victim, survivor] : [survivor];
+    importActorFixtures(world);
     world.allies = scenario.side === 'ally' ? [victim] : [];
-    world.actorParents.sync(world);
+    importActorFixtures(world);
+    importActorFixtures(world);
     // This source branch precondition does not claim ordinary infection reachability.
     applyProjectileStatus(world, victim, 'infect');
     const births: {

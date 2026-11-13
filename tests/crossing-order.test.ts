@@ -1,3 +1,4 @@
+import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import { STARTER } from '../src/game/data/catalog';
 import { World, emptyInput } from '../src/game/simulation/world';
@@ -82,6 +83,7 @@ test('a repeated escape replaces the next wrapper from logical destination coord
     0,
   );
   abandoned.enemies = [actor];
+  world.attachActor(actor, abandoned);
   const frozen = { x: world.transit!.offset.x - world.player.x, y: 0 };
   world.damage(world.player, 2);
   expect(world.transit!.next !== abandoned).toBe(true);
@@ -192,6 +194,7 @@ test('arrival caches raw final-frame removals; an empty reattached actor can int
     world,
   );
   world.currentWrapper.enemies = [actor];
+  importActorFixtures(world);
   world.bullets.push(
     createProjectile(world.nextId(), {
       owner: world.player.uid,
@@ -247,6 +250,7 @@ test('a cache alias reparents the actor without erasing older array references o
     100,
   );
   world.currentWrapper.enemies = [actor];
+  importActorFixtures(world);
   world.hitTest = () => false;
   for (const direction of [1, -1]) {
     world.jump({ x: direction, y: 0 });
@@ -294,6 +298,7 @@ test('an older removal queue cannot detach a cached actor from its new layer', (
     100,
   );
   world.currentWrapper.enemies = [actor];
+  importActorFixtures(world);
   world.hitTest = () => false;
   for (const direction of [1, -1]) {
     world.jump({ x: direction, y: 0 });

@@ -1,3 +1,5 @@
+import { showActorRenderOwnership } from './actor-render-ownership';
+import { importActorFixtures } from './actor-attachments';
 import { showNpcDeactivation } from './npc-deactivation';
 import { showAudioWindows } from './audio-windows';
 import { showHomingProjectiles } from './homing-projectiles';
@@ -173,6 +175,14 @@ async function reset() {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
     status.dataset.audioWindows = JSON.stringify(await showAudioWindows(pack, stage));
     status.textContent = 'Ready · decoded source sound windows';
+    return;
+  }
+  if (fixture.value === 'actor-render-ownership') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    status.dataset.actorRenderOwnership = JSON.stringify(
+      await showActorRenderOwnership(pack, stage),
+    );
+    status.textContent = 'Ready · actual actor display ownership';
     return;
   }
   if (fixture.value === 'npc-deactivation') {
@@ -618,6 +628,7 @@ async function reset() {
       createTank(1000, design('healer', 6002), 'enemy', -170, 0),
       createTank(1001, design('patient'), 'enemy', 90, 0, 100, 50),
     ];
+    importActorFixtures(world);
   } else if (fixture.value === 'damage') {
     world.player = createTank(
       world.player.uid,
@@ -629,6 +640,7 @@ async function reset() {
       1,
     );
     world.field.enemies = [createTank(1000, design('target'), 'enemy', 100, 0, 1000, 1000)];
+    importActorFixtures(world);
   } else if (fixture.value === 'downgrade') {
     const lower = { ...design('lower', 3010), avatar: true };
     const higher = {
@@ -659,10 +671,12 @@ async function reset() {
       1,
     );
     world.field.enemies = [createTank(1000, design('shield'), 'enemy', 120, 0)];
+    importActorFixtures(world);
     world.field.enemies[0].shield = 1000;
     frames = 5;
   } else if (fixture.value === 'ink') {
     world.field.enemies = [createTank(1000, design('inked target'), 'enemy', 100, 0)];
+    importActorFixtures(world);
     applyProjectileStatus(world, world.player, 'ink');
   } else if (fixture.value === 'statuses') {
     world.field.enemies = ['sticky', 'jam', 'stun', 'weaken', 'infect'].map((kind, index) => {
@@ -687,8 +701,10 @@ async function reset() {
       applyProjectileStatus(world!, tank, kind as 'sticky' | 'jam' | 'stun' | 'weaken' | 'infect');
       return tank;
     });
+    importActorFixtures(world);
   } else {
     world.field.enemies = [createTank(1000, design('turret', 4032), 'enemy', 180, -50)];
+    importActorFixtures(world);
     frames =
       { 'turret-1': 110, 'turret-2': 200, 'turret-3': 280, 'turret-4': 380 }[fixture.value] ?? 110;
   }

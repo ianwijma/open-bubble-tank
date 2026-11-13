@@ -92,6 +92,11 @@ assigns rotation before attachment. TankData registers each weapon/behavior duri
 `_-Tr`, and registration synchronously calls Setup. Those modeled constructor and
 Setup draws therefore precede all three field-pose draws.
 
+The later [fresh-field scale audit](field-birth-order-reference.md) additionally
+establishes that those X/Y draws use the background's authored scale 1 before the
+wave scale setter. The boss fixture below has scale 1 and cannot distinguish that
+separate normal-wave correction.
+
 The previous `World.jump` evaluated random X/Y arguments before entering
 `createTank`, moving acquisition/part/spawner randomness later in the shared
 stream. Fresh fields now construct at the default origin first, then draw and

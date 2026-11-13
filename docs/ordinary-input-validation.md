@@ -50,6 +50,10 @@ reload, new validation or independent review of that merge followed.
   screenshots and the final recorded Paused frame were inspected; the full video
   was not watched end to end. It has no audio stream, and headless muted playback
   establishes no audio fidelity.
+  A later geometry audit reported intermittent malformed frames. Successful
+  decoding therefore does not make this continuously registered video evidence;
+  see the [bounded capture contract](browser-capture-reference.md). Individual
+  retained screenshots and public observations keep their own limited scope.
 - The browser owner recorded zero page errors, console errors/messages, failed
   requests or blocked external attempts through closure. No concrete game runtime
   failure was observed; no private telemetry or source-listener state was read.

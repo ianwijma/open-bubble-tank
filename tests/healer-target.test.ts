@@ -1,3 +1,4 @@
+import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import { STARTER } from '../src/game/data/catalog';
 import { Random } from '../src/game/core/math';
@@ -70,7 +71,9 @@ function live(side: 'ally' | 'enemy' = 'enemy', paintedPatient = false) {
   const patient = actor(101, side, 50, paintedPatient);
   patient.x = 100;
   world.field.enemies = side === 'enemy' ? [owner, patient] : [];
+  importActorFixtures(world);
   world.allies = side === 'ally' ? [owner, patient] : [];
+  importActorFixtures(world);
   world.field.cleared = false;
   world.actorParents.sync(world);
   return { world, owner, patient, gun: owner.guns[0] };
@@ -139,6 +142,7 @@ test('source selector wrapper does not bound the ally scan to valid injured cand
   const { world, owner, patient, gun } = live('ally');
   world.player.life = world.player.maxLife;
   world.allies = [patient, owner];
+  importActorFixtures(world);
   world.rng.next = () => 0;
   expect(healerPatient(world, owner, gun)!.uid).toBe(owner.uid);
   expect(gun.behaviorTarget!.target).toBe(owner);
@@ -172,6 +176,7 @@ test('source read aborts the remaining world frame while stage callbacks/artwork
 test('full-patient reacquisition retries its read error inside PartCallRun before frame abort', () => {
   const { world, owner, gun } = live('ally');
   world.allies = [owner];
+  importActorFixtures(world);
   world.player.life = world.player.maxLife;
   gun.behaviorTarget!.target = world.player;
   gun.behaviorTarget!.master = 'ally';
@@ -247,6 +252,7 @@ test('stopping removes a beam immediately even when the next acquisition aborts 
   expect(world.bullets).toHaveLength(1);
   world.player.life = world.player.maxLife;
   world.allies = [owner];
+  importActorFixtures(world);
   world.step(emptyInput());
   expect(world.bullets).toHaveLength(0);
   expect(gun.beamId).toBeUndefined();
@@ -299,6 +305,7 @@ test('incoming Healer Setup and active reselection use the current wrapper and p
   world.transit!.offset = { x: 800, y: 0 };
   const incoming = createTank(102, owner.design, 'enemy', 0, 0, undefined, undefined, world);
   world.transit!.next.enemies = [incoming];
+  importActorFixtures(world);
   expect(incoming.guns[0].behaviorTarget!.target).toBe(patient);
   world.step(emptyInput());
   expect(incoming.movement.swarmPoint).toEqual({ x: -700, y: 0 });

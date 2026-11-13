@@ -1,3 +1,4 @@
+import { importActorFixtures } from './actor-attachments';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { DEFAULT_SETTINGS } from '../../src/game/core/constants';
 import { STARTER } from '../../src/game/data/catalog';
@@ -34,6 +35,7 @@ export async function showOrbitalWidth(pack: AssetPack, host: HTMLElement) {
     world,
   );
   world.field.enemies = [tank];
+  importActorFixtures(world);
   const renderer = new GameRenderer(pack),
     gallery = document.createElement('canvas');
   gallery.width = 550;

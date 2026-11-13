@@ -55,7 +55,10 @@ export async function showScreenEffectsProof(pack: AssetPack, host: HTMLElement)
     return hash;
   };
   const setEffects = (effects: Effect[]) => {
-    world.runtimeFor(world.field).effects = effects;
+    // Explicitly reattach preconfigured clip identities for this artificial gallery.
+    for (const effect of world.effects) world.effectEngine.discard(effect);
+    for (const effect of effects)
+      world.effectEngine.create(effect, effect.layer ?? 'top', world.currentWrapper);
   };
   const inFront = () =>
     renderer.app.stage.getChildIndex(renderer.screenEffects) >

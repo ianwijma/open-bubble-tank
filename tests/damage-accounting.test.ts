@@ -1,3 +1,4 @@
+import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import type { Projectile } from '../src/game/core/types';
 import { STARTER } from '../src/game/data/catalog';
@@ -29,6 +30,7 @@ function setup(forcefield = false) {
     'enemy',
   );
   world.field.enemies = [target];
+  importActorFixtures(world);
   world.actorParents.sync(world);
   world.hitTest = (tank) => tank === target;
   return { world, target };
@@ -74,6 +76,7 @@ test('callback-triggered area damage happens before counting and contributes no 
   const { world, target } = setup();
   const neighbor = createTank(world.nextId(), { ...target.design }, 'enemy', 20, 0);
   world.field.enemies.push(neighbor);
+  importActorFixtures(world);
   const events: [number, number, number][] = [];
   const damage = world.damage.bind(world);
   world.damage = (tank, amount, bullet) => {
@@ -135,6 +138,7 @@ test('enemy Spinner counts each ally/avatar hit frame after the impact callback'
   const { world } = setup();
   const ally = createTank(world.nextId(), { ...STARTER, life: 100 }, 'ally');
   world.allies.push(ally);
+  importActorFixtures(world);
   world.hitTest = () => true;
   const b = shot(world, { kind: 'spin', symbol: 2033, enemy: true, damage: 3 });
   const counts: number[] = [];

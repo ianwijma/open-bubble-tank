@@ -44,6 +44,8 @@ function cachedHealer() {
     world,
   );
   original.enemies = [patient, owner];
+  world.attachActor(patient, original);
+  world.attachActor(owner, original);
   world.actorParents.sync(world);
   world.muzzle = () => ({ x: 0, y: 0 }); // Fixed emitter isolates wrapper translation from mount transforms.
   const gun = owner.guns.find((g) => g.part.type === 6002)!;

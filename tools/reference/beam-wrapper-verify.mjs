@@ -14,7 +14,10 @@ import {
 } from '../../src/game/assets/swf.mjs';
 
 const [originalPath, probePath, out] = process.argv.slice(2);
-if (!out) throw new Error('Supply ORIGINAL PROBE CAPTURE_DIR.');
+const scriptBoundsAudit = process.argv[5] === '--script-bounds-audit';
+const geometryAudit = process.argv[5] === '--geometry-audit' || scriptBoundsAudit;
+if (!out || process.argv.length > 6 || (process.argv[5] && !geometryAudit))
+  throw new Error('Supply ORIGINAL PROBE CAPTURE_DIR [--geometry-audit|--script-bounds-audit].');
 const sha = (bytes) => createHash('sha256').update(bytes).digest('hex');
 const equal = (a, b, message) => {
   if (JSON.stringify(a) !== JSON.stringify(b)) throw new Error(message);
@@ -110,7 +113,57 @@ const result = {
 
 const observed = JSON.parse(await readFile(resolve(out, 'observation.json'), 'utf8'));
 const scenario = JSON.parse(await readFile(resolve(out, 'scenario.json'), 'utf8'));
-const lines = observed.trace.filter((line) => line.startsWith('BT3_BEAM'));
+const allLines = observed.trace.filter((line) => line.startsWith('BT3_BEAM'));
+// The opt-in extension retains all43 baseline assertions unchanged. Extra rows
+// have a separate exact oracle and must occur together just before completion.
+const auditRows = [
+  ...[
+    [0.5, 205, 696],
+    [1, 421, 1391.9],
+    [1.25, 523, 1739.9],
+    [2, 841, 2783.8],
+  ].flatMap(([scale, line, width]) => [
+    `BT3_BEAM_SWEEP children 5.2 0 0 ${line} ${line + 4} ${line} ${width}`,
+    `BT3_BEAM_AUDIT children ${425 * scale} 0 ${width} 1 ${scale} ${scale} ${width} true false`,
+  ]),
+  ...[
+    [0.5, 205, 690.7],
+    [1.25, 523, 1726.8],
+    [2, 841, 2762.9],
+  ].flatMap(([scale, line, width]) => [
+    `BT3_BEAM_SWEEP root 5.2 0 0 ${line} ${line + 4} ${line} ${width}`,
+    `BT3_BEAM_AUDIT root 425.2 0 ${width} ${scale} 1 0.9924774169921875 1381.4 true false`,
+  ]),
+  ...[0, 430, 600, 900].flatMap((x) =>
+    ['unmasked', 'masked'].map(
+      (label) =>
+        `BT3_BEAM_AUDIT ${label} ${x} 0 ${x === 900 ? 1610 : 1381.4} 1 1 0.9924774169921875 1381.4 ${label === 'masked' && x === 900 ? 'false' : 'true'} true`,
+    ),
+  ),
+  ...[0, 430, 600, 900].map(
+    (x) =>
+      `BT3_BEAM_AUDIT under ${x} 0 ${x === 900 ? 1610 : 1381.4} 1 1 0.9924774169921875 1381.4 ${x === 0} true`,
+  ),
+  'BT3_BEAM_SWEEP restored-audit 5.2 0 0 421 425 421 1381.4',
+];
+const boundsFixture = scriptBoundsAudit
+  ? JSON.parse(
+      await readFile(
+        new URL('../../tests/fixtures/script-bounds-original.json', import.meta.url),
+        'utf8',
+      ),
+    )
+  : undefined;
+const boundsRows = boundsFixture?.cases.map((control) => control.trace) ?? [];
+if (scriptBoundsAudit)
+  equal(probe.sha256, boundsFixture.probeSha256, 'Bounds fixture/probe identity changed.');
+if (geometryAudit)
+  equal(
+    allLines.slice(42, -1),
+    [...auditRows, ...boundsRows],
+    'Incomplete/changed geometry/bounds audit.',
+  );
+const lines = geometryAudit ? [...allLines.slice(0, 42), ...allLines.slice(-1)] : allLines;
 const ids = lines.filter((line) => line.startsWith('BT3_BEAM_ID '));
 equal(
   ids,
@@ -186,7 +239,7 @@ const retained = dom.match(/<pre[^>]*id="trace"[^>]*>([\s\S]*?)<\/pre>/)?.[1];
 if (!retained) throw new Error('Missing REA-retained trace.');
 equal(
   retained.split('\n').filter((s) => s.startsWith('BT3_BEAM')),
-  lines,
+  allLines,
   'Collector differs from independent REA DOM.',
 );
 if (
@@ -222,6 +275,8 @@ if (
 let circleSample = 0;
 while (circleSample < 850 && Math.abs(5.2 + circleSample) <= 425) circleSample += 6;
 result.observation = {
+  geometryAudit: geometryAudit ? auditRows : undefined,
+  scriptBoundsAudit: scriptBoundsAudit ? boundsRows : undefined,
   ids,
   samples,
   edges,
@@ -243,7 +298,7 @@ await writeFile(resolve(out, 'verified-preservation.json'), JSON.stringify(resul
 console.log(
   JSON.stringify({
     preserved: result.proof.allOriginalPayloadsAndOrderPreserved,
-    rows: lines.length,
+    rows: allLines.length,
     probeSha256: probe.sha256,
     observation: result.observation.radius425PhaseControl,
   }),

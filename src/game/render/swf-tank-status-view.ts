@@ -20,25 +20,25 @@ export class SwfTankStatusView {
       for (const view of this.marks) view.destroy();
       this.marks = [];
       this.decoration = tank.statusDecoration;
-      if (this.decoration)
-        for (const mark of this.decoration.marks) {
-          const view = new SwfSymbolView(
-            STATUS_ART[this.decoration.kind],
-            this.assets,
-            this.textures,
-          );
-          view.root.position.set(mark.x, mark.y);
-          view.root.angle = mark.angle;
-          this.root.addChild(view.root);
-          this.marks.push(view);
-        }
     }
-    if (this.decoration)
+    if (this.decoration && tank.displayChildren.includes('status') && this.marks.length === 0)
+      for (const mark of this.decoration.marks) {
+        const view = new SwfSymbolView(
+          STATUS_ART[this.decoration.kind],
+          this.assets,
+          this.textures,
+        );
+        view.root.position.set(mark.x, mark.y);
+        view.root.angle = mark.angle;
+        this.root.addChild(view.root);
+        this.marks.push(view);
+      }
+    if (this.decoration && tank.displayChildren.includes('status'))
       for (const [index, view] of this.marks.entries()) {
         view.setParentAlpha(tank.alpha);
         view.updatePose(this.assets.statusClip(tank, index));
       }
-    if (tank.status.infect > 0) {
+    if (tank.displayChildren.includes('infection') && tank.status.infect > 0) {
       if (!this.infected) {
         this.infected = new SwfSymbolView(INFECTED_ART, this.assets, this.textures);
         this.root.addChild(this.infected.root);
