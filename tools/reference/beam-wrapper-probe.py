@@ -4,6 +4,7 @@
 python3 tools/reference/beam-wrapper-probe.py ORIGINAL.swf OUTPUT.swf
 Append --geometry-audit for isolated child/root scale and depth-mask controls.
 Append --script-bounds-audit for that matrix plus preserved-leaf arithmetic controls.
+Append --under-avatar-audit for geometry controls plus original under-bubble size setters.
 Load OUTPUT in the reference viewer and press F8 once after loading. Uses the
 original avatar-default Aggressor table entry11 and original PartCallTrigger /
 SpawnNewBullet / TestForCollision. Sibling versus deliberately nested bullet
@@ -30,9 +31,10 @@ def tag(code, data=b''):
 
 
 ROOT = 'BT3BeamWrapperProbe'
-if len(sys.argv) not in (3, 4) or (len(sys.argv) == 4 and sys.argv[3] not in ('--geometry-audit', '--script-bounds-audit')):
-    raise SystemExit('Supply ORIGINAL OUTPUT [--geometry-audit|--script-bounds-audit].')
+if len(sys.argv) not in (3, 4) or (len(sys.argv) == 4 and sys.argv[3] not in ('--geometry-audit', '--script-bounds-audit', '--under-avatar-audit')):
+    raise SystemExit('Supply ORIGINAL OUTPUT [--geometry-audit|--script-bounds-audit|--under-avatar-audit].')
 bounds_audit = len(sys.argv) > 3 and sys.argv[3] == '--script-bounds-audit'
+under_audit = len(sys.argv) > 3 and sys.argv[3] == '--under-avatar-audit'
 audit = len(sys.argv) > 3
 names = [ROOT, 'Main', 'trace', 'stage', 'addEventListener', 'removeEventListener',
          'onProbeKey', 'keyCode', 'TankData', '_-HJ', 'getInstance', '_-7G',
@@ -45,8 +47,10 @@ names = [ROOT, 'Main', 'trace', 'stage', 'addEventListener', 'removeEventListene
          'strID', 'intObjID', 'toPrecision', 'line_mc', 'mask_mc', 'endCap_mc',
          'hitTestPoint', 'localToGlobal', 'contains', 'TestForCollision', '_-W',
          'getQualifiedClassName', 'StopFiring', 'arrEnemies']
-if bounds_audit:
+if bounds_audit or under_audit:
     names += ['transform', 'matrix', 'Matrix', 'a', 'b', 'c', 'd', 'tx', 'ty', 'getBounds', 'visible', 'alpha']
+if under_audit:
+    names += ['Math', 'sqrt', 'ByteArray', 'writeDouble', 'position', 'readUnsignedInt']
 labels = ['BT3_BEAM_ID', 'BT3_BEAM_TOPOLOGY', 'BT3_BEAM_SAMPLE', 'BT3_BEAM_SWEEP',
           'BT3_BEAM_DONE', 'BT3_BEAM_EDGE', 'far', '29_mc', 'sibling', 'nested', 'bare', 'actor', 'restored']
 if audit:
@@ -54,6 +58,8 @@ if audit:
                'avatarUnderBubble_mc', 'effectLayer_under_mc', 'under', 'restored-audit']
 if bounds_audit:
     labels += ['BT3_BEAM_BOUNDS']
+if under_audit:
+    labels += ['BT3_UNDER_SIZE', 'BT3_UNDER_BITS', 'before', 'width', 'height', 'repeat-width', 'repeat-height']
 strings = [''] + names + ['flash.display', 'flash.geom', 'flash.utils', 'keyDown'] + labels
 si = {s: i for i, s in enumerate(strings)}
 q = {n: i + 1 for i, n in enumerate(names)}
@@ -63,7 +69,7 @@ cp += u(5) + b''.join(b'\x16' + u(si[s]) for s in ['', 'flash.display', 'flash.g
 cp += u(2) + u(1) + u(1)
 cp += u(len(names) + 2)
 for name in names:
-    ns = 2 if name == 'MovieClip' else 3 if name in ('Point', 'Matrix') else 4 if name == 'getQualifiedClassName' else 1
+    ns = 2 if name == 'MovieClip' else 3 if name in ('Point', 'Matrix') else 4 if name in ('getQualifiedClassName', 'ByteArray') else 1
     cp += b'\x07' + u(ns) + u(si[name])
 array_index = len(names) + 1
 cp += b'\x1b' + u(1)
@@ -219,6 +225,7 @@ if audit:
     probe += assign(4, 'scaleX', integer(1)) + assign(4, 'scaleY', integer(1))
     # Authored depth10 mask covers only depth12, not depth18 enemyLayer.
     probe += get(4) + text('avatarUnderBubble_mc') + value_call('getChildByName', 1) + put(11)
+    probe += construct('ByteArray') + put(14)
     for x in [0, 430, 600, 900]:
         probe += assign(10, 'x', integer(x))
         probe += get(4) + prop('enemyLayer_mc') + get(10) + call('addChild', 1)
@@ -295,6 +302,63 @@ if bounds_audit:
         probe += emit('BT3_BEAM_BOUNDS', [integer(index)] + [precise(get(11) + prop(p)) for p in ['width', 'height']]
                       + [precise(get(14) + prop(p)) for p in ['x', 'y', 'width', 'height']])
     probe += get(7) + get(11) + call('removeChild', 1)
+if under_audit:
+    # Source _-DF writes width THEN height on the same original1544 instance.
+    # Keep Number scale getters distinct from effective float32 coefficients.
+    probe += get(4) + text('avatarUnderBubble_mc') + value_call('getChildByName', 1) + put(11)
+    under_cases = [
+        {'diameter': 45, 'scaleX': 1, 'scaleY': 1},
+        {'diameter': 65, 'scaleX': 1, 'scaleY': 1},
+        {'diameter': 73.1, 'scaleX': 1.25, 'scaleY': 0.625},
+        {'diameter': 101, 'scaleX': 0.5, 'scaleY': 2},
+        {'diameter': 121.7, 'scaleX': 1, 'scaleY': 1},
+        {'diameter': 146.25, 'scaleX': 1, 'scaleY': 1},
+        {'radial': {'x': 13, 'y': 7, 'radius': 10}, 'scaleX': 1, 'scaleY': 1},
+        {'diameter': 121.7, 'scaleX': 1, 'scaleY': 1, 'repeat': True},
+        {'diameter': 73.1, 'scaleX': 1, 'scaleY': 1, 'rootScale': 0.5},
+    ]
+
+    def under_number(value):
+        from fractions import Fraction
+        fraction = Fraction(str(value))
+        return integer(fraction.numerator) + integer(fraction.denominator) + b'\xa3'
+
+    def under_sample(index, phase):
+        code = get(11) + prop('transform') + prop('matrix') + put(12)
+        code += emit('BT3_UNDER_SIZE', [integer(index), text(phase), precise(get(13))]
+            + [precise(get(11) + prop(p)) for p in ['width', 'height', 'scaleX', 'scaleY']]
+            + [precise(get(12) + prop(p)) for p in ['a', 'b', 'c', 'd', 'tx', 'ty']])
+        # Number.toPrecision's decimal text is not a bit-level carrier. Preserve
+        # getters through original ByteArray.writeDouble and exact uint32 words.
+        code += op(0x5d, q['trace']) + text('BT3_UNDER_BITS') + integer(index) + text(phase)
+        values = [get(13)] + [get(11) + prop(p) for p in ['width', 'height', 'scaleX', 'scaleY']]
+        values += [get(12) + prop(p) for p in ['a', 'b', 'c', 'd', 'tx', 'ty']]
+        for value in values:
+            code += assign(14, 'position', integer(0)) + get(14) + value + call('writeDouble', 1)
+            code += assign(14, 'position', integer(0))
+            code += get(14) + value_call('readUnsignedInt', 0) + get(14) + value_call('readUnsignedInt', 0)
+        return code + call('trace', 3 + len(values) * 2)
+
+    for index, case in enumerate(under_cases):
+        probe += assign(11, 'scaleX', under_number(case['scaleX'])) + assign(11, 'scaleY', under_number(case['scaleY']))
+        probe += assign(4, 'scaleX', under_number(case.get('rootScale', 1)))
+        probe += assign(4, 'scaleY', under_number(case.get('rootScale', 1)))
+        if 'radial' in case:
+            detail = case['radial']
+            # Exact TankData._-ZD Number expression, then _-Q0's *2 +45.
+            square = detail['x'] * detail['x'] + detail['y'] * detail['y']
+            value = op(0x60, q['Math']) + integer(square) + value_call('sqrt', 1)
+            value += integer(detail['radius']) + b'\xa0' + integer(2) + b'\xa2' + integer(45) + b'\xa0'
+        else:
+            value = under_number(case['diameter'])
+        probe += value + put(13)
+        probe += under_sample(index, 'before')
+        probe += assign(11, 'width', get(13)) + under_sample(index, 'width')
+        probe += assign(11, 'height', get(13)) + under_sample(index, 'height')
+        if case.get('repeat'):
+            probe += assign(11, 'width', get(13)) + under_sample(index, 'repeat-width')
+            probe += assign(11, 'height', get(13)) + under_sample(index, 'repeat-height')
+    probe += assign(4, 'scaleX', integer(1)) + assign(4, 'scaleY', integer(1))
 probe += get(6) + call('StopFiring', 0)
 probe += get(0) + get(7) + call('removeChild', 1)
 probe += emit('BT3_BEAM_DONE', [])
@@ -317,7 +381,7 @@ def body(index, code, stack, count, depth, maximum):
 
 bodies = u(4) + body(0, ctor, 4, 1, 1, 2)
 bodies += body(1, get(0) + b'\x30\x47', 1, 1, 1, 2)
-bodies += body(2, script, 2, 1, 0, 2) + body(3, key, 24, 15 if bounds_audit else 12 if audit else 11, 1, 2)
+bodies += body(2, script, 2, 1, 0, 2) + body(3, key, 32 if under_audit else 24, 15 if bounds_audit or under_audit else 12 if audit else 11, 1, 2)
 abc = struct.pack('<HH', 16, 46) + cp + methods + u(0) + classes + scripts + bodies
 probe_tag = tag(82, struct.pack('<I', 0) + b'beam-wrapper-probe\0' + abc)
 
@@ -379,4 +443,5 @@ print(json.dumps({'original_sha256': hashlib.sha256(original_bytes).hexdigest(),
         for outer, inner in cases] + [
         {'outer': identity, 'inner': identity, 'visible': visible, 'alpha': alpha}
         for visible, alpha in [(False, 1), (True, 0), (False, 0)]]}
-        if bounds_audit else {})}, indent=2))
+        if bounds_audit else {}),
+    **({'under_avatar_cases': under_cases} if under_audit else {})}, indent=2))
