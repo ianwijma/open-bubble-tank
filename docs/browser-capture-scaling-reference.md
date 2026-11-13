@@ -160,3 +160,23 @@ process audit. The temporary dependency symlink is removed at handback; parent
 .next/resources and original inputs were never written. No remote action,
 controller/ordinary playthrough, original/Adobe/pixel-equivalence/global-event or
 full-game completion claim belongs to this correction.
+
+## Parent integration above artwork phases — 2026-11-14
+
+The two tooling/evidence commits are picked as `1108f8c` and `d75fb85` above
+PR162 head `318cc88`. The capture helper remains byte-identical to the qualified
+child (`80c56097f2f62d62e9063fc94e2ef0046036a1ff16782d70165ad8be2d709603`).
+Fresh parent qualification passes30/30 synthetic cases, retaining all25 rejected
+controls. The legacy run preserves12 valid and4 rejected PNGs and decodes84
+video frames with zero invalid corner-fiducial frames. Pillow and FFmpeg agree
+on all46 new PNGs. All833 files in the child's artifact inventory still match
+their saved sizes and SHA256 digests; that inventory and its inputs are read-only.
+
+`bun run format` and `bun run check` pass1,299 tests /81,252 assertions on the
+combined source. The parent runs no new game/controller attempt; the fresh home
+preflight above retains its actual older source/build identity and its explicit
+limits. No production flow changes in this layer, so the preceding24-case artwork
+browser gate is not rerun. Commands, manifests, full PNGs, video, independent
+decode report and cleanup flags are under
+`test-results/capture-scaling-integration/`. Both qualifiers close their own
+contexts/browsers; no server/port is used.

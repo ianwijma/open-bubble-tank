@@ -35,8 +35,11 @@ separate capture follow-up now qualifies bounded positive 2D scale/translation
 All prior rejects remain unchanged. This endpoint geometry qualification still has
 `currentHomeOnly=true`, `overlapQualified=false`, `controllerAllowed=false`; it
 establishes no observer/live-controller readiness. Review/integrate that tooling
-as its own next-stack layer. These
-follow-ups are not part of the delivered PR 160 tree.
+as its own next-stack layer. Parent integration picks those commits as `1108f8c`
+and `d75fb85` above PR162; fresh30/30 controls,46 independently decoded PNGs,
+84 valid video frames and833 unchanged child artifacts pass. No new current-game
+preflight is inferred from the older child's build. These follow-ups are not part
+of the delivered PR160 tree.
 
 The first next-stack foundation is prepared for `stack/effect-geometry-01`, targeting master897d2e7. Its local continuation remains `t3/retained-effect-poses-draft`, rebased onto that merged master with the entire tree unchanged62c16cb3dbf7d6e781e457fd2b9fcf772bce3127. Signed replay stalled in1Password; the parent restarted the rebase with explicit --no-gpg-sign under the authorized fallback. Current rebased commits are25d0786 (original camera), ca2e546 (effect metadata),174e62e (registration precision),d91bf96 (physical population),9ad13eb (mask qualification gap). Old hashes remain historical references, not current branch tips. The original [generic-effect clock qualification](effect-clock-original-reference.md), child69b5615, is picked asb20027b with both fidelity sections preserved. Parent independently reverified both owned capture copies:21,636 rows/259,632 binary Numbers each, REA events still equality-ineligible. The59 frame and45 identity/correspondence candidate differences are unrepaired;399 original lookup holes and unavailable isPlaying reads stay explicit. No blanket native-pose reconstruction is justified by matching root clocks. The separate mask task remains active on3915/9915 and was told the authorized new master checkpoint. It must not touch completed effect task3875/9875 resources.
 
