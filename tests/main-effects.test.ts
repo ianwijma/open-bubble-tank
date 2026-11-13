@@ -202,9 +202,12 @@ test('Massive completion requests gated shake then flash before spawning, with f
       },
       'player',
     );
-    world
-      .runtimeFor(world.field)
-      .pending.push({ owner: world.player, gun: world.player.guns[0], total: 26, frame: 26 });
+    world.registerEffectCallback({
+      owner: world.player,
+      gun: world.player.guns[0],
+      total: 26,
+      frame: 26,
+    });
     const spawn = world.spawnVolley.bind(world);
     let called = false;
     world.spawnVolley = (...args) => {

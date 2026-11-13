@@ -112,7 +112,7 @@ export async function showSeekerMineProof(pack: AssetPack, host: HTMLElement) {
       effects: world.effects.map((e) => e.symbol),
     };
     world.bullets = [];
-    world.effects = [];
+    for (const effect of world.effects) world.effectEngine.discard(effect);
     world.mode = 'paused';
     const idle = make();
     world.addBullet(idle);

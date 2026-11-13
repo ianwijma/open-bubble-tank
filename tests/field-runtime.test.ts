@@ -127,7 +127,7 @@ test('arrival retains destination shots, pickups and allies but clears registere
     -100,
   );
   runtime.allies.push(ally);
-  runtime.effects.push({
+  runtime.effectQueue.push({
     uid: world.nextId(),
     x: 0,
     y: -100,

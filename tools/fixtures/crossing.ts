@@ -74,7 +74,7 @@ export async function showCrossingProof(pack: AssetPack, host: HTMLElement) {
     forced: false,
     dead: false,
   });
-  runtime.effects.push({
+  runtime.effectQueue.push({
     uid: world.nextId(),
     x: -230,
     y: 50,

@@ -239,13 +239,20 @@ test('Massive Cannon completion follows the bullet phase and observes looping au
   expect(loop.bullets).toEqual([]); // Frame1 was reached again, not a latched completion.
 });
 
-test('arrival drops callbacks from both registered effect populations without completing them', () => {
+test('arrival clears the one registered callback engine while the next layer remains empty', () => {
   const world = setup(3008);
   world.fireGun(world.player, world.player.guns[0], emptyInput());
   world.jump({ x: 1, y: 0 });
   const transit = world.transit!,
     runtime = world.runtimeFor(transit.next);
-  runtime.pending.push({ owner: world.player, gun: world.player.guns[0], total: 26, frame: 1 });
+  world.registerEffectCallback({
+    owner: world.player,
+    gun: world.player.guns[0],
+    total: 26,
+    frame: 1,
+  });
+  expect(world.runtimeFor(world.currentWrapper).pending).toHaveLength(2);
+  expect(runtime.pending).toHaveLength(0);
   world.player.x = transit.target.x;
   world.player.y = transit.target.y;
   world.step(emptyInput());

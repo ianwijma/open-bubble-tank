@@ -33,6 +33,13 @@ import { WEAPONS, type WeaponSpec } from '../data/weapons';
 import emitterData from '../data/emitters.json';
 import { moveActor } from './actor-movement';
 import { ActorParents } from './actor-parents';
+import {
+  RegisteredEffects,
+  EffectChildRemovalError,
+  EffectCompletionReadError,
+  EffectLayerReadError,
+  type PendingEffect,
+} from './registered-effects';
 import { HealerTargetReadError } from './healer-target';
 import { TurretTargetReadError } from './turrets';
 import { SpikeTargetReadError } from './spikes';
@@ -115,6 +122,7 @@ export class World {
   }
   hitSoundTimer = -1;
   readonly actorParents = new ActorParents();
+  readonly effectEngine = new RegisteredEffects();
   player: Tank;
   private currentField!: Field;
   private fieldContext: Field | null = null;
@@ -138,7 +146,7 @@ export class World {
   runtimeFor(field: Field): FieldRuntime {
     let runtime = this.runtimes.get(field);
     if (!runtime) {
-      runtime = new FieldRuntime(field);
+      runtime = new FieldRuntime(field, this.effectEngine);
       this.runtimes.set(field, runtime);
     }
     return runtime;
@@ -177,20 +185,11 @@ export class World {
   get effects() {
     return this.runtime.effects;
   }
-  set effects(value: Effect[]) {
-    this.runtime.effects = value;
-  }
   get allies() {
     return this.runtime.allies;
   }
   set allies(value: Tank[]) {
     this.runtime.allies = value;
-  }
-  private get pending() {
-    return this.runtime.pending;
-  }
-  private set pending(value: FieldRuntime['pending']) {
-    this.runtime.pending = value;
   }
   activeFields() {
     return [
@@ -446,6 +445,10 @@ export class World {
     );
     this.field = { col: 0, row: 0, scale: 1, enemies: [], cleared: true, boss: false, tutorial: 1 };
     this.fields.set('0,0', this.field);
+    this.effectEngine.createFieldLayers(this.field);
+    this.effectEngine.register(this.effectEngine.layer(this.field, 'top')!);
+    this.effectEngine.register(this.effectEngine.layer(this.field, 'bottom')!);
+    this.effectEngine.register(this.effectEngine.screen);
     this.actorParents.sync(this);
   }
   nextId() {
@@ -501,7 +504,10 @@ export class World {
         !(error instanceof HomingTargetReadError) &&
         !(error instanceof CrossingTargetReadError) &&
         !(error instanceof DeactivatedActorRunError) &&
-        !(error instanceof FieldChildRemovalError)
+        !(error instanceof FieldChildRemovalError) &&
+        !(error instanceof EffectLayerReadError) &&
+        !(error instanceof EffectChildRemovalError) &&
+        !(error instanceof EffectCompletionReadError)
       )
         throw error;
     } finally {
@@ -511,14 +517,11 @@ export class World {
   /** Attached ENTER_FRAME art continues when Main4 skips the World.Run listener. */
   advanceArtwork() {
     this.actorParents.sync(this);
+    this.effectEngine.advanceArtwork();
     const attached = new Set<Tank>([this.player]);
     for (const { runtime } of this.attachedFields()) {
-      for (const effect of runtime.effects) effect.age++;
       for (const bullet of runtime.bullets)
         if (!bullet.dead) this.projectileTimelines.advance(bullet);
-      for (const effect of runtime.pending) {
-        effect.frame = (effect.frame % effect.total) + 1;
-      }
     }
     for (const { field } of this.attachedFields())
       for (const tank of this.actorParents.owned(field)) attached.add(tank);
@@ -622,26 +625,7 @@ export class World {
     });
   }
   private pollEffects() {
-    for (const { field, offset, runtime } of this.activeFields())
-      this.inField(field, offset, () => {
-        runtime.effects = runtime.effects.filter(
-          (effect) =>
-            effect.frame !== undefined || effect.age % effect.duration < effect.duration - 1,
-        );
-        runtime.pending = runtime.pending.filter((effect) => {
-          if (effect.owner.dead || (effect.owner.side === 'player' && effect.owner !== this.player))
-            return false;
-          if (effect.frame < effect.total) return true;
-          if (effect.kind === 'shield') {
-            killMountedShield(effect.owner, effect.gun);
-            return false;
-          }
-          if (this.screenShake) this.mainEffects.shake(20);
-          this.mainEffects.flash();
-          this.spawnVolley(effect.owner, effect.gun, WEAPONS[3008]);
-          return false;
-        });
-      });
+    this.effectEngine.poll();
   }
   private tickActiveFields(input: InputFrame) {
     this.actorParents.sync(this);
@@ -765,8 +749,7 @@ export class World {
     // Engine completion removes the shrink listener before the120th field ENTER_FRAME.
     if (c.age >= c.effect.duration) {
       this.finishCollapse();
-      const runtime = this.runtimeFor(c.field);
-      runtime.effects = runtime.effects.filter((effect) => effect !== c.effect);
+      this.effectEngine.discard(c.effect);
       return;
     }
     if (c.shakeTimer-- <= 0) {
@@ -792,7 +775,7 @@ export class World {
     this.bullets = [];
     this.pickups = [];
     this.allies = [];
-    this.pending = [];
+    for (const carrier of this.runtime.pending) this.effectEngine.discard(carrier);
     this.player.x = this.player.y = 0;
     this.collapse = null;
     this.flow.restoreControl();
@@ -890,10 +873,30 @@ export class World {
   scheduleShield(owner: Tank, gun: GunState) {
     owner.shieldManaged = true;
     // Every trigger queues a callback bound to that mount, without cancelling earlier ones.
-    this.pending.push({ kind: 'shield', owner, gun, frame: 1, total: 25 });
+    this.registerEffectCallback({ kind: 'shield', owner, gun, frame: 1, total: 25 });
   }
   scheduleShot(owner: Tank, gun: GunState, frames: number) {
-    this.pending.push({ owner, gun, total: frames, frame: 1 });
+    this.registerEffectCallback({ owner, gun, total: frames, frame: 1 });
+  }
+  registerEffectCallback(carrier: PendingEffect) {
+    this.effectEngine.create(
+      carrier,
+      carrier.kind === 'shield' ? 'top' : 'bottom',
+      this.currentField,
+      () => {
+        if (
+          carrier.owner.dead ||
+          (carrier.owner.side === 'player' && carrier.owner !== this.player)
+        )
+          return;
+        if (carrier.kind === 'shield') killMountedShield(carrier.owner, carrier.gun);
+        else {
+          if (this.screenShake) this.mainEffects.shake(20);
+          this.mainEffects.flash();
+          this.spawnVolley(carrier.owner, carrier.gun, WEAPONS[3008]);
+        }
+      },
+    );
   }
   /** Source counters record nominal contact damage before Damage applies protection. */
   damageDoneIncr(amount: number) {
@@ -1247,6 +1250,7 @@ export class World {
       age: 0,
       stopShoot,
     };
+    this.effectEngine.createFieldLayers(next);
     for (const tank of next.enemies) {
       this.attachActor(tank, next);
     }
@@ -1273,6 +1277,10 @@ export class World {
       dy = tr.target.y - this.player.y;
     if (dx * dx + dy * dy < 25) {
       this.actorParents.sync(this);
+      // _-4j clears the engine before Deactivate/cache writes and layer promotion.
+      this.effectEngine.clear();
+      this.effectEngine.unregister('top');
+      this.effectEngine.unregister('bottom');
       this.player.x -= tr.offset.x;
       this.player.y -= tr.offset.y;
       this.player.velocity = { x: 0, y: 0 };
@@ -1287,18 +1295,16 @@ export class World {
         outgoing.allyRemovals = [];
         this.currentField.enemies = [];
       }
+      for (const kind of ['top', 'bottom'] as const)
+        this.effectEngine.detachLayer(this.effectEngine.layer(this.currentField, kind)!);
       this.cache.store(
         this.currentField,
         this.previousMapPosition.col,
         this.previousMapPosition.row,
       );
-      // _-8Y clears the single global effects engine without completing callbacks.
-      for (const { runtime } of this.attachedFields()) {
-        runtime.effects = [];
-        runtime.effectQueue = [];
-        runtime.pending = [];
-      }
       this.field = tr.next;
+      this.effectEngine.register(this.effectEngine.layer(this.field, 'top')!);
+      this.effectEngine.register(this.effectEngine.layer(this.field, 'bottom')!);
       this.targetLocks.clear();
       this.fieldVisit = tr.visit;
       this.player.shield = 0;
@@ -1316,16 +1322,20 @@ export class World {
     }
   }
   addEffect(pos: Vec, kind: Effect['kind'], radius: number, color: number, duration: number) {
-    this.effects.push({
-      uid: this.nextId(),
-      x: pos.x,
-      y: pos.y,
-      kind,
-      radius,
-      color,
-      duration,
-      age: 0,
-    });
+    this.effectEngine.create(
+      {
+        uid: this.nextId(),
+        x: pos.x,
+        y: pos.y,
+        kind,
+        radius,
+        color,
+        duration,
+        age: 0,
+      },
+      'top',
+      this.currentField,
+    );
   }
   addCombatEffect(
     pos: Vec,
@@ -1341,7 +1351,7 @@ export class World {
   }
   private registerEffect(effect: Effect) {
     if (effect.randomRotation) effect.rotation = Math.round(this.rng.next() * 360);
-    this.runtimeFor(this.currentField).effects.push(effect);
+    this.effectEngine.create(effect, effect.layer ?? 'top', this.currentField);
   }
   award(name: string) {
     if (this.achievements.has(name)) return;

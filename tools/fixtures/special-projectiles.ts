@@ -54,7 +54,7 @@ export async function showSpecialProjectilesProof(pack: AssetPack, host: HTMLEle
   const tick = (b: Projectile) => tickBullet(world, b, emptyInput());
   const clear = () => {
     world.bullets = [];
-    world.effects = [];
+    for (const effect of world.effects) world.effectEngine.discard(effect);
     world.runtimeFor(world.field).effectQueue = [];
   };
   await renderer.init(host, DEFAULT_SETTINGS);
