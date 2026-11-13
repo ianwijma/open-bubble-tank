@@ -1724,3 +1724,8 @@ differences explicit. Formatting/check passes1,136 tests /17,347 assertions.
 Production is unchanged. REA events remain incomplete/equality-ineligible;
 original World.Run, ordinary/native progression/controller causality, global
 constructor/event/RNG, Adobe/pixel/audio and full-game parity remain unproved.
+
+
+## Local numeric effect metadata preparation
+
+The [repeatable numeric import](effect-display-metadata-reference.md) adds15 original effect SymbolClass bindings with qualified pcode digests,23 sprite timelines and200 geometry leaf references (190 shapes/10 morphs). Two imports are byte-identical; an independent owned parse audit matches every selected original record and resolves all leaves. Metadata contains no media, vector paths or SWF payloads. All15 original root constructors are plain MovieClips with no root frame-script registration/stop call, but generic unparented/removed clocks and descendant runtime poses still need their own active qualification. This data is not consumed by production yet and does not implement the complete field query. Joint local formatting/check with original camera evidence passes1,138 tests /17,360 assertions; application E2E is not repeated for unused metadata. Published PR154 stays fixed and watched separately.
