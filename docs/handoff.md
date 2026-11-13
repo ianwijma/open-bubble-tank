@@ -176,3 +176,14 @@ Keep text-specific dispatch and retained generic-effect integration local until
 they can form the final combined fifth PR. Preserve all three earlier stack
 heads, deployment suppression, master and legacy; validate that final exact head
 before the single master merge. Source-qualified evidence is not full-game parity.
+
+The local [advanced-text integration](native-static-text-integration.md) selects
+actual qualified tutorial metadata and adds an explicit `parentAncestry` query
+seam. Keep this immediate-parent-through-Main list distinct from the existing
+shape `parentToStage` matrix: float32 composition is not associative. All1,890
+applicable frozen text controls now exercise native provider/public/internal
+dispatch; actual retained tutorial frames3–6 are supported, while SimpleButton
+content and unmeasured text mask roles/modes remain rejected. No World gameplay
+consumer or scheduler migration is included. Combine this local commit with the
+retained-effect task for the fifth PR and repeat the final combined gate. The
+original evidence families, master897d2e7 and legacy22d9def7 remain unchanged.

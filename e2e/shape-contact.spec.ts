@@ -3,6 +3,25 @@ import { existsSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import original from '../tests/fixtures/field-mask-original.json' with { type: 'json' };
 import rootOriginal from '../tests/fixtures/root-query-original.json' with { type: 'json' };
+import textOriginal from '../tests/fixtures/text-engine-original.json' with { type: 'json' };
+const textControlKey = (row: {
+  case: string;
+  phase: string;
+  role: string;
+  point: string;
+  space: string;
+}) => [row.case, row.phase, row.role, row.point, row.space].join('/');
+function textControlValues(row: (typeof textOriginal.samples)[number]) {
+  return Object.fromEntries(
+    ['hit', 'width', 'height'].map((field) => {
+      const words = textOriginal.binaryWords[row.wordIndices[textOriginal.fields.indexOf(field)]];
+      const bytes = new DataView(new ArrayBuffer(8));
+      bytes.setUint32(0, words[0]);
+      bytes.setUint32(4, words[1]);
+      return [field, bytes.getFloat64(0)];
+    }),
+  );
+}
 function originalValue(row: (typeof original.samples)[number], field: string) {
   const words = original.binaryWords[row.wordIndices[original.fields.indexOf(field)]],
     bytes = new DataView(new ArrayBuffer(8));
@@ -82,9 +101,30 @@ for (const native of [false, true])
           row.height,
         ]).toEqual(['rawHit', 'stageHit', 'rootHit', 'width', 'height'].map(value));
       }
+      const textRows = textOriginal.samples.filter(
+        (s) => s.role !== 'mask' && s.case !== 'derived-normal',
+      );
+      expect(proof.textGeometry).toHaveLength(1890);
+      expect(proof.textGeometry.map(textControlKey).sort()).toEqual(
+        textRows.map(textControlKey).sort(),
+      );
+      const textExpected = new Map(textRows.map((s) => [textControlKey(s), textControlValues(s)]));
+      for (const row of proof.textGeometry) {
+        const expected = textExpected.get(textControlKey(row))!;
+        expect({ key: textControlKey(row), hit: Number(row.hit) }).toEqual({
+          key: textControlKey(row),
+          hit: expected.hit,
+        });
+        if (row.onStage) expect(row.internalHit, textControlKey(row)).toBe(row.hit);
+        expect([row.width, row.height], textControlKey(row)).toEqual([
+          expected.width,
+          expected.height,
+        ]);
+      }
     } else {
       expect(proof.nativeGeometry).toBeNull();
       expect(proof.rootGeometry).toBeNull();
+      expect(proof.textGeometry).toBeNull();
     }
     expect(proof.primitives.results).toEqual({
       opaque: true,

@@ -1953,3 +1953,19 @@ passes **1,225 tests /60,367 assertions**. The pure helper/evidence pick does no
 change the production or fixture code exercised by the preceding16-case browser
 run. Advanced-text native dispatch is still separate work; no extra application
 browser validation is claimed for this unused helper.
+
+## Bounded advanced-text native dispatch
+
+The local [StaticText integration](native-static-text-integration.md) now binds
+the eight measured tutorial leaves to actual declared rectangles and advanced
+CSM metadata. Explicit immediate-parent-through-Main ancestry preserves bottom-up
+float32 products; a grouped matrix is never silently treated as an exact chain.
+Direct text uses its qualified bounds branch before inverse/assigned-mask checks;
+text-bearing wrappers retain their inverse and mask/depth guards. Shape-only and
+Script contracts remain unchanged. Authored text mask combinations, scrollRect,
+unmeasured modes/classes and missing ancestry reject instead of guessing contact.
+All1,890 applicable frozen contacts pass the native provider/public traversal
+with their original dimensions. Actual tutorial frames3–6 read current retained
+text children without clock/entropy writes; frame1's SimpleButton remains outside
+this provider. No gameplay field consumer migrates, no original oracle is edited,
+and complete field/ordinary/global-event/Adobe/full-game parity remains open.

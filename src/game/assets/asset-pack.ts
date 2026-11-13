@@ -1119,13 +1119,36 @@ export class AssetPack {
   }
   /** Authored geometry of a caller-owned retained pose, without playback or alpha
    * fallbacks. Owners must compose runtime drawings/masks separately; unsupported
-   * definition leaves (including text/bitmaps) require a qualified provider.
+   * text is bounded to the eight measured tutorial leaves and CSM settings.
+   * Other text classes/modes and bitmaps reject without paint/glyph fallbacks.
    */
   nativeClipGeometry(pose: SwfClip) {
     if (this.mode !== 'swf') throw new Error('Native geometry requires supplied SWF definitions');
     return retainedClipGeometry(pose, {
       isSprite: (id) => this.sprites.has(id),
       leaf: (id, ratio): DisplayGeometryContent | undefined => {
+        const text = this.texts.get(id);
+        if (text) {
+          const settings = this.symbols?.symbols.csmTextSettings?.filter((s) => s.id === id);
+          const setting = settings?.[0];
+          if (
+            id < 1659 ||
+            id > 1666 ||
+            settings?.length !== 1 ||
+            setting?.useFlashType !== 1 ||
+            setting.gridFit !== 2 ||
+            setting.thickness !== 0 ||
+            setting.sharpness !== 0 ||
+            !Object.values(text.bounds).every(
+              (n) => Number.isInteger(n) && Math.abs(n) < 2147483648,
+            ) ||
+            text.bounds.xMin > text.bounds.xMax ||
+            text.bounds.yMin > text.bounds.yMax
+          )
+            throw new Error(`Unsupported native StaticText metadata ${id}`);
+          // DefineText's glyph matrix does not alter the declared Engine rectangle.
+          return { kind: 'advanced-static-text', bounds: { ...text.bounds } };
+        }
         const morph = this.morphs.get(id),
           shape = morph ? undefined : this.shapes.get(id),
           bounds = morph?.startBounds ?? shape?.bounds;

@@ -19,6 +19,7 @@ import { createProjectile } from '../../src/game/simulation/create-projectile';
 import { projectileTankContact } from '../../src/game/simulation/projectile-contact';
 import { nativeMaskGeometryProof } from './native-mask-geometry';
 import { nativeRootGeometryProof } from './native-root-geometry';
+import { nativeTextGeometryProof } from './native-text-geometry';
 import { addTankChild, removeTankChild } from '../../src/game/simulation/tank-display';
 import { displayGeometryHit } from '../../src/game/core/display-geometry';
 
@@ -269,6 +270,7 @@ export async function showShapeContact(pack: AssetPack, host: HTMLElement) {
   const primitives = primitiveProof(),
     nativeGeometry = nativeMaskGeometryProof(pack),
     rootGeometry = nativeRootGeometryProof(pack),
+    textGeometry = nativeTextGeometryProof(pack),
     app = new Application(),
     textures = new SwfTextures();
   await app.init({
@@ -479,7 +481,15 @@ export async function showShapeContact(pack: AssetPack, host: HTMLElement) {
     checkMembership(field, 'forcefield', fieldPoint.global);
     detachForcefield(field);
     panels.at(-1)!.detached = pack.hitTest(field, fieldPoint.global.x, fieldPoint.global.y);
-    return { mode: pack.mode, primitives, panels, nativeGeometry, rootGeometry, membership };
+    return {
+      mode: pack.mode,
+      primitives,
+      panels,
+      nativeGeometry,
+      rootGeometry,
+      textGeometry,
+      membership,
+    };
   } finally {
     app.destroy({ removeView: true }, { children: true });
     textures.destroy();
