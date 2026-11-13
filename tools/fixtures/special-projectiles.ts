@@ -21,6 +21,7 @@ export async function showSpecialProjectilesProof(pack: AssetPack, host: HTMLEle
   world.hitProjectile = pack.hitProjectile;
   world.projectileBounds = (b) => pack.projectileBounds(b);
   world.field.tutorial = 0;
+  world.fieldDisplays.selectTutorial(world.field, 0);
   world.player.life = 40;
   const master = createTank(
     world.nextId(),

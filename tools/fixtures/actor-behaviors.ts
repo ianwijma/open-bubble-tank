@@ -14,6 +14,7 @@ export async function showActorBehaviors(pack: AssetPack, host: HTMLElement) {
   world.hitTest = () => false;
   world.player.life = 40;
   world.field.tutorial = 0;
+  world.fieldDisplays.selectTutorial(world.field, 0);
   const tanks = [
     [6001, -250, -100],
     [6003, -130, 90],

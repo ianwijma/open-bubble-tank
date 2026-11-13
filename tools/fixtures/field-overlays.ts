@@ -1,3 +1,4 @@
+import type { TutorialStage } from '../../src/game/core/tutorial';
 import { Application, Container } from 'pixi.js';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { World } from '../../src/game/simulation/world';
@@ -55,9 +56,11 @@ export async function showFieldOverlayProof(pack: AssetPack, host: HTMLElement) 
     const stages = [];
     for (let stage = 0; stage <= 4; stage++) {
       world.field.tutorial = stage;
+      world.fieldDisplays.selectTutorial(world.field, stage as TutorialStage);
       stages.push(coverage(draw()).count);
     }
     world.field.tutorial = 1;
+    world.fieldDisplays.selectTutorial(world.field, 1);
     const initial = coverage(draw());
     world.field.scale = 2;
     const scaledField = coverage(draw());

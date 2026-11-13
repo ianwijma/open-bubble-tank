@@ -1,3 +1,5 @@
+import { showEffectOwnershipProof } from './effect-ownership';
+import { setFieldFixtureLayout } from './field-layout';
 import { showActorRenderOwnership } from './actor-render-ownership';
 import { importActorFixtures } from './actor-attachments';
 import { showNpcDeactivation } from './npc-deactivation';
@@ -517,6 +519,13 @@ async function reset() {
     status.textContent = 'Ready · projectile alpha contact order';
     return;
   }
+  if (fixture.value === 'effect-ownership') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    const proof = await showEffectOwnershipProof(pack, stage);
+    status.dataset.effectOwnership = JSON.stringify(proof);
+    status.textContent = 'Ready · physical effect ownership';
+    return;
+  }
   if (fixture.value === 'combat-effects') {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
     const proof = await showCombatEffectsProof(pack, stage);
@@ -627,6 +636,7 @@ async function reset() {
   world.player.x = 0;
   world.player.y = 100;
   world.field.tutorial = 0;
+  world.fieldDisplays.selectTutorial(world.field, 0);
   world.field.cleared = false;
   world.fieldVisit = new FieldVisit();
   let frames = 30;
@@ -662,9 +672,11 @@ async function reset() {
     world = new World([], [STARTER, lower, higher], 50);
     world.secondaryHelpSeen = true; // This fixture isolates restored weapon artwork and firing.
     world.field.tutorial = 0;
+    world.fieldDisplays.selectTutorial(world.field, 0);
   } else if (fixture.value === 'travel') {
     world.player.x = 425;
     world.player.y = 0;
+    setFieldFixtureLayout(world);
     world.jump({ x: 1, y: 0 });
     frames = 1;
   } else if (fixture.value === 'protection') {
@@ -724,6 +736,7 @@ async function reset() {
       b,
       b.kind === 'turret' ? world!.allTanks().find((t) => t.uid === b.owner) : undefined,
     );
+  setFieldFixtureLayout(world);
   renderer = new GameRenderer(pack);
   await renderer.init(stage, DEFAULT_SETTINGS);
   simulate(frames);

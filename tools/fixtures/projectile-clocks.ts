@@ -19,6 +19,7 @@ export async function showProjectileClocksProof(pack: AssetPack, host: HTMLEleme
   world.projectileBounds = (b) => pack.projectileBounds(b);
   world.field.enemies = [];
   world.field.tutorial = 0;
+  world.fieldDisplays.selectTutorial(world.field, 0);
   const make = (kind: 'whip' | 'grow' | 'flak' | 'sapper') => {
     world.bullets = [];
     const b = createProjectile(world.nextId(), {

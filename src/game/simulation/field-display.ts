@@ -221,6 +221,13 @@ export class FieldDisplays {
     });
     this.revision++;
   }
+  /** Explicit bfStartDisplay.gotoAndStop selection; map metadata is not this retained clip. */
+  selectTutorial(field: Field, stage: TutorialStage) {
+    const state = this.wrapper(field);
+    state.tutorialStage = stage;
+    state.tutorialFrame = TUTORIAL.stages[stage].frame;
+    this.revision++;
+  }
   /** AttachNewBubblefield ofs0591: four child scaleY-then-X assignments. */
   setupChildren(field: Field, scale: number) {
     const state = this.wrapper(field);

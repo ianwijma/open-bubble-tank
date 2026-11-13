@@ -11,6 +11,7 @@ export async function showAimContracts(pack: AssetPack, host: HTMLElement) {
   const world = new World([], [], 3),
     renderer = new GameRenderer(pack);
   world.field.tutorial = 0;
+  world.fieldDisplays.selectTutorial(world.field, 0);
   world.player = createTank(
     world.nextId(),
     {

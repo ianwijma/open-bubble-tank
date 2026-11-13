@@ -20,6 +20,7 @@ export async function showPickupProof(pack: AssetPack, host: HTMLElement) {
     1,
   );
   world.field.tutorial = 0;
+  world.fieldDisplays.selectTutorial(world.field, 0);
   world.hitTest = pack.hitTest;
   let edge = 0;
   for (let x = 0; x < 100; x += 0.5) if (pack.hitTest(world.player, x, 0)) edge = x;

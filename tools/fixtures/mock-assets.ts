@@ -98,6 +98,7 @@ export async function showMockAssetsProof(native: AssetPack, host: HTMLElement) 
     for (let column = 0; column < 2; column++) {
       const world = worlds[column];
       world.field.tutorial = 0;
+      world.fieldDisplays.selectTutorial(world.field, 0);
       const body = { ...STARTER.parts[0], type: 1003, radius: 22.5, x: 0, y: 0 };
       world.player = createTank(
         world.nextId(),

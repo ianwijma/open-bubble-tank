@@ -85,6 +85,7 @@ export function showPlayerClocks(
     1,
   );
   world.field.tutorial = 0;
+  world.fieldDisplays.selectTutorial(world.field, 0);
   const root = createRoot(host);
   root.render(<ClockViewport world={world} pack={pack} />);
   const inspect = () =>

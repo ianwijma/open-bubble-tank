@@ -26,6 +26,7 @@ export async function showBeamContracts(pack: AssetPack, host: HTMLElement) {
   );
   world.field.cleared = false;
   world.field.tutorial = 0;
+  world.fieldDisplays.selectTutorial(world.field, 0);
   world.hitPart = pack.hitPart;
   world.hitProjectile = pack.hitProjectile;
   // A fixed emitter isolates the shared grid from the separate mounted-matrix audit.

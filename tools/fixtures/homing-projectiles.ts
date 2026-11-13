@@ -18,6 +18,7 @@ export async function showHomingProjectiles(pack: AssetPack, host: HTMLElement) 
   world.hitTest = pack.hitTest;
   world.hitProjectile = pack.hitProjectile;
   world.field.tutorial = 0;
+  world.fieldDisplays.selectTutorial(world.field, 0);
   const b = createProjectile(world.nextId(), {
     owner: world.player.uid,
     enemy: false,

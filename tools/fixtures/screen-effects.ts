@@ -1,3 +1,4 @@
+import { setFieldFixtureLayout } from './field-layout';
 import { captureCanvas } from './pixi-capture';
 import { Rectangle } from 'pixi.js';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
@@ -15,6 +16,7 @@ export async function showScreenEffectsProof(pack: AssetPack, host: HTMLElement)
     renderer = new GameRenderer(pack);
   world.field.enemies = [];
   world.field.tutorial = 0;
+  world.fieldDisplays.selectTutorial(world.field, 0);
   world.hitTest = () => false;
   world.rng.next = () => 0;
   await renderer.init(host, DEFAULT_SETTINGS);
@@ -85,6 +87,7 @@ export async function showScreenEffectsProof(pack: AssetPack, host: HTMLElement)
     world.player.x = 150;
     world.player.y = -70;
     world.field.scale = 2;
+    setFieldFixtureLayout(world);
     const zoomHash = capture('Ink20 · changed camera and zoom', 1.5);
     // Replacement preserves the registered global clip even though the new avatar timer resets.
     world.editPlayer({ ...STARTER, id: 'screen-proof-replacement' });
@@ -112,6 +115,7 @@ export async function showScreenEffectsProof(pack: AssetPack, host: HTMLElement)
     // Record arrival cleanup while keeping the six-panel final gallery focused on original clips.
     world.player.x = world.transit!.target.x;
     world.player.y = world.transit!.target.y;
+    setFieldFixtureLayout(world);
     world.step(emptyInput());
     draw();
     const arrival = { count: world.effects.length, ink: sample().ink };

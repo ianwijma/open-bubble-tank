@@ -18,6 +18,7 @@ export async function showProjectileOrderProof(pack: AssetPack, host: HTMLElemen
   world.hitProjectile = pack.hitProjectile;
   world.projectileWidth = pack.projectileWidth;
   world.field.tutorial = 0;
+  world.fieldDisplays.selectTutorial(world.field, 0);
   const body = { ...STARTER.parts[0], type: 1003, x: 0, y: 0, scale: 1, radius: 22.5 };
   const target = createTank(
     world.nextId(),

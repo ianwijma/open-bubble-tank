@@ -17,7 +17,14 @@ import { FieldCaptions } from './field-captions';
 import { TacticalHudView } from './tactical-hud-view';
 import { TankView } from './tank-view';
 import { CombatEffectsView } from './combat-effects-view';
-import { fieldPoint, fieldTransform, type FieldTransform } from './field-transform';
+import {
+  avatarTransform,
+  fieldPoint,
+  fieldTransform,
+  worldLayerTransform,
+  type FieldTransform,
+} from './field-transform';
+import { projectEffects } from './effect-projection';
 
 export class GameRenderer {
   app = new Application();
@@ -206,12 +213,8 @@ export class GameRenderer {
       this.externalMainEffects ? 0 : main.position.x,
       this.externalMainEffects ? 0 : main.position.y,
     );
-    this.root.position.set(STAGE.cx - world.player.x, STAGE.cy - world.player.y);
+    this.root.position.set(STAGE.cx, STAGE.cy);
     this.root.scale.set(settings.zoom);
-    this.root.position.set(
-      STAGE.cx - world.player.x * settings.zoom,
-      STAGE.cy - world.player.y * settings.zoom,
-    );
     const activeFields = world.attachedFields().map(({ field }) => field);
     this.captions?.update(world);
     for (const [field, node] of this.fieldNodes)
@@ -226,13 +229,15 @@ export class GameRenderer {
       }
     const states = world.attachedFields().map((state) => ({
       ...state,
-      transform: fieldTransform(world, state.field, state.offset),
+      transform: fieldTransform(world, state.field, 'actors'),
     }));
-    for (const { field, transform } of states) {
+    for (const { field } of states) {
       const node = this.fieldNode(field),
         raster = this.assets.extras.get(1537),
-        scale = field.scale * transform.scale;
-      node.visible = !field.destroyed;
+        transform = fieldTransform(world, field, 'background'),
+        scale = transform.scale;
+      node.visible = world.fieldDisplays.read(field).root.rooted;
+      node.alpha = transform.alpha ?? 1;
       if (raster) {
         node.position.set(transform.x + raster.x * scale, transform.y + raster.y * scale);
         node.width = raster.width * scale;
@@ -248,11 +253,13 @@ export class GameRenderer {
           this.highlightNodes.set(field, highlight);
           this.highlights.addChild(highlight.root);
         }
-        highlight.root.position.set(transform.x, transform.y);
-        highlight.root.scale.set(
-          world.collapse?.field === field && world.collapse.age > 0 ? transform.scale : field.scale,
-        );
-        highlight.root.visible = !field.destroyed;
+        const source = world.worldDisplays.read(field, 'highlight');
+        const pose = worldLayerTransform(world, field, 'highlight');
+        const point = fieldPoint({ x: 0, y: 0 }, pose);
+        highlight.root.position.set(point.x, point.y);
+        highlight.root.scale.set(pose.scale);
+        highlight.setAlpha(source.pose.alpha);
+        highlight.root.visible = source.rooted;
         highlight.update(1);
       }
     }
@@ -274,13 +281,14 @@ export class GameRenderer {
         this.entities.addChild(layer);
       }
       this.entities.setChildIndex(layer, index);
+      layer.visible = (transform.alpha ?? 1) !== 0;
       return [...world.actorParents.owned(field)].map((tank, childIndex) => {
         const view = this.tank(tank, transform, layer);
         layer.setChildIndex(view.container, childIndex);
         return { tank, transform };
       });
     });
-    const playerTransform = fieldTransform(world, world.currentWrapper);
+    const playerTransform = avatarTransform(world);
     const playerNode = this.tank(world.player, playerTransform, this.entities);
     tanks.push({ tank: world.player, transform: playerTransform });
     const retained = new Set(tanks.map(({ tank }) => tank));
@@ -304,7 +312,8 @@ export class GameRenderer {
         }
     for (const graphics of this.mockShots.values()) graphics.clear();
     const nativeBulletIds = new Set<number>();
-    for (const { runtime, field, transform } of states) {
+    for (const { runtime, field } of states) {
+      const transform = worldLayerTransform(world, field, 'bullet');
       let drawing = this.mockShots.get(field);
       if (!drawing) {
         drawing = new Graphics();
@@ -390,7 +399,8 @@ export class GameRenderer {
     this.pruneSymbols(this.bulletNodes, nativeBulletIds);
     const displayedPickups = new Set<Pickup>();
     let pickupIndex = 0;
-    for (const { field, transform } of states) {
+    for (const { field } of states) {
+      const transform = fieldTransform(world, field, 'life');
       for (const b of world.pickupDisplays.owned(field)) {
         const clip = world.pickupDisplays.read(b)!.clip;
         displayedPickups.add(b);
@@ -401,6 +411,7 @@ export class GameRenderer {
           view.root.position.set(point.x, point.y);
           view.root.angle = b.rotation;
           view.root.scale.set(transform.scale);
+          view.setParentAlpha(transform.alpha ?? 1);
           view.updatePose(clip.pose);
           continue;
         }
@@ -418,6 +429,7 @@ export class GameRenderer {
           clip.symbol === 1820 ? 2.2500152587890625 : clip.symbol === 1817 ? 1.6759185791015625 : 1;
         const pulse = (clip.pose.placements[0]?.matrix.a ?? authoredScale) / authoredScale;
         drawing.scale.set(transform.scale * pulse);
+        drawing.alpha = transform.alpha ?? 1;
         const r = clip.symbol === 1820 ? 8 : clip.symbol === 1817 ? 4 : 2;
         drawing.circle(0, 0, r + 2).fill({ color: 0x9dff35, alpha: 0.08 });
         drawing
@@ -433,18 +445,7 @@ export class GameRenderer {
         drawing.destroy();
         this.mockPickups.delete(pickup);
       }
-    this.combatEffects?.update(
-      states.flatMap(({ runtime, transform }) =>
-        runtime.effects.map((effect) => {
-          if (effect.layer === 'screen') return effect;
-          const scale = effect.layer === 'bottom' ? transform.scale ** 2 : transform.scale;
-          return {
-            ...fieldPoint(effect, { ...transform, scale }),
-            scale: (effect.scale ?? 1) * scale,
-          };
-        }),
-      ),
-    );
+    this.combatEffects?.update(projectEffects(world));
     this.tacticalHud?.update(world.tacticalHud);
     this.minimap?.update(world);
     this.hud?.update(world);

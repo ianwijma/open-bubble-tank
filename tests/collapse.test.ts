@@ -4,7 +4,8 @@ import { STARTER } from '../src/game/data/catalog';
 import { createTank } from '../src/game/simulation/tank';
 import { createProjectile } from '../src/game/simulation/create-projectile';
 import { tickBullet } from '../src/game/simulation/projectiles';
-import { fieldPoint, fieldTransform } from '../src/game/render/field-transform';
+import { avatarTransform, fieldPoint, fieldTransform } from '../src/game/render/field-transform';
+import { setFieldFixtureLayout } from './fixtures/field-layout';
 import art from '../src/game/data/screen-effect-art.json';
 
 test('Apocalypse captures radial orientation, screen registration, scale and Main offset once', () => {
@@ -129,27 +130,31 @@ test('collapse birth finishes the selected frame even when that frame opens an u
   expect(later.age).toBe(1);
 });
 
-test('field and avatar shrink toward a fixed field center while a crossing destination stays full size', () => {
+test('field keeps its fixed center, avatar uses its retained pose and destination stays full size', () => {
   const w = new World([], [], 1);
   w.player.x = 200;
   w.player.y = -100;
+  setFieldFixtureLayout(w);
   w.jump({ x: 1, y: 0 });
   const next = w.transit!.next,
     offset = w.transit!.offset;
   w.beginCollapse(0);
   for (let i = 0; i < 51; i++) w.step(emptyInput());
   const transform = fieldTransform(w, w.field),
-    destination = fieldTransform(w, next, offset);
-  expect(transform).toEqual({ x: 0, y: 0, scale: 0.75 });
-  expect(fieldPoint({ x: 0, y: 0 }, transform)).toEqual({ x: 0, y: 0 });
-  const avatar = fieldPoint(w.player, transform);
-  expect({ x: 275 - w.player.x + avatar.x, y: 225 - w.player.y + avatar.y }).toEqual({
-    x: 225,
-    y: 250,
+    destination = fieldTransform(w, next);
+  expect(transform).toMatchObject({ x: -200, y: 100, scale: 0.75 });
+  expect(fieldPoint({ x: 0, y: 0 }, transform)).toEqual({ x: -200, y: 100 });
+  const avatar = fieldPoint(w.player, avatarTransform(w));
+  const pose = w.fieldDisplays.readAvatar().pose;
+  expect({ x: 275 + avatar.x, y: 225 + avatar.y }).toEqual({
+    x: 275 + pose.x,
+    y: 225 + pose.y,
   });
-  expect(destination).toEqual({ ...offset, scale: 1 });
+  // Compound position setters retain their own twip getters, rather than scaling raw camera coordinates.
+  expect(pose.x).not.toBe(-w.player.x * (1 - transform.scale));
+  expect(destination).toMatchObject({ x: offset.x - 200, y: offset.y + 100, scale: 1 });
   expect(fieldPoint({ x: -30, y: 20 }, destination)).toEqual({
-    x: offset.x - 30,
-    y: offset.y + 20,
+    x: offset.x - 230,
+    y: offset.y + 120,
   });
 });

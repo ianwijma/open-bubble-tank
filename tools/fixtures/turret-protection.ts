@@ -1,3 +1,4 @@
+import { setFieldFixtureLayout } from './field-layout';
 import { importActorFixtures } from './actor-attachments';
 import { Application } from 'pixi.js';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
@@ -166,6 +167,7 @@ export async function showTurretProtection(pack: AssetPack, host: HTMLElement) {
     world.jump({ x: 1, y: 0 });
     world.player.x = world.transit!.target.x;
     world.player.y = world.transit!.target.y;
+    setFieldFixtureLayout(world);
     tick(1);
     world.jump({ x: -1, y: 0 });
     gun.counter = 79;

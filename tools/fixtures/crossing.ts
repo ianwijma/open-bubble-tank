@@ -1,3 +1,9 @@
+import {
+  fieldPoint,
+  fieldTransform,
+  worldLayerTransform,
+} from '../../src/game/render/field-transform';
+import { setFieldFixtureLayout } from './field-layout';
 import { importPickupFixtures } from './pickup-attachments';
 import { importActorFixtures } from './actor-attachments';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
@@ -33,6 +39,7 @@ export async function showCrossingProof(pack: AssetPack, host: HTMLElement) {
   world.player.x = 425;
   world.player.life = 40;
   world.field.tutorial = 0;
+  world.fieldDisplays.selectTutorial(world.field, 0);
   world.field.enemies = [createTank(world.nextId(), design, 'enemy', 350, -80)];
   importActorFixtures(world);
   const old = world.field;
@@ -59,11 +66,13 @@ export async function showCrossingProof(pack: AssetPack, host: HTMLElement) {
   });
   const outgoing = bullet(350);
   world.bullets.push(outgoing);
+  setFieldFixtureLayout(world);
   world.jump({ x: 1, y: 0 });
   const next = world.transit!.next,
     runtime = world.runtimeFor(next),
     incoming = bullet(-300);
   next.tutorial = 0;
+  world.fieldDisplays.selectTutorial(next, 0);
   next.enemies = [createTank(world.nextId(), design, 'enemy', -230, -80)];
   runtime.bullets.push(incoming);
   const ally = createTank(world.nextId(), design, 'ally', -200, 0);
@@ -116,20 +125,18 @@ export async function showCrossingProof(pack: AssetPack, host: HTMLElement) {
       snapshots.push({
         mode: world.mode,
         playerX: world.player.x,
-        actors: states.flatMap(({ field, runtime, offset }) =>
+        actors: states.flatMap(({ field, runtime }) =>
           [...field.enemies, ...runtime.allies].map((tank) => ({
             uid: tank.uid,
             age: tank.age,
-            x: tank.x + offset.x,
-            y: tank.y + offset.y,
+            ...fieldPoint({ x: tank.x, y: tank.y }, fieldTransform(world, field, 'actors')),
           })),
         ),
-        bullets: states.flatMap(({ runtime, offset }) =>
+        bullets: states.flatMap(({ field, runtime }) =>
           runtime.bullets.map((shot) => ({
             uid: shot.uid,
             age: shot.age,
-            x: shot.x + offset.x,
-            y: shot.y + offset.y,
+            ...fieldPoint({ x: shot.x, y: shot.y }, worldLayerTransform(world, field, 'bullet')),
           })),
         ),
         renderedTanks: renderedTanks(renderer).map((child) => ({ x: child.x, y: child.y })),
@@ -166,6 +173,8 @@ export async function showNestedCrossingProof(pack: AssetPack, host: HTMLElement
   sample.height = 450;
   const pixels = sample.getContext('2d', { willReadFrequently: true })!;
   world.field.tutorial = 0;
+  world.fieldDisplays.selectTutorial(world.field, 0);
+  setFieldFixtureLayout(world);
   world.jump({ x: 1, y: 0 });
   const abandoned = world.transit!.next;
   abandoned.tutorial = 0;
@@ -187,12 +196,14 @@ export async function showNestedCrossingProof(pack: AssetPack, host: HTMLElement
   for (const tank of world.actorParents.owned(abandoned)) world.actorParents.detach(tank);
   abandoned.enemies = [actor];
   world.player.x = world.transit!.offset.x - 200;
+  setFieldFixtureLayout(world);
   importActorFixtures(world);
   world.damage(world.player, 2);
   const latest = world.transit!.next;
   for (const tank of world.actorParents.owned(latest)) world.actorParents.detach(tank);
   latest.enemies = [];
   latest.tutorial = 0;
+  world.fieldDisplays.selectTutorial(latest, 0);
   importActorFixtures(world);
   await renderer.init(host, DEFAULT_SETTINGS);
   const read = () => {
@@ -210,8 +221,8 @@ export async function showNestedCrossingProof(pack: AssetPack, host: HTMLElement
       const states = world.attachedFields();
       const retained = states.find(({ field }) => field === abandoned)!;
       const expected = {
-        x: 275 + retained.offset.x + actor.x - world.player.x,
-        y: 225 + retained.offset.y + actor.y - world.player.y,
+        x: 275 + fieldPoint(actor, fieldTransform(world, retained.field, 'actors')).x,
+        y: 225 + fieldPoint(actor, fieldTransform(world, retained.field, 'actors')).y,
       };
       const rendered = renderedTanks(renderer).map((child) => child.getGlobalPosition());
       actor.alpha = 0;
