@@ -6,21 +6,29 @@ Use [delivery](delivery.md) for the current five-layer workflow: build dependent
 
 The [retained display batch](retained-display-batch-validation.md) landed through one PR154 merge897d2e741b8a1d23f563f8bb8a2e6bd684932b9b. Exact-head pull-request run43407815305 attempt1/job131826378222 succeeded on73cdc4ffe42e4ce8a7bfc03d72df5e7877f0de8f. Fresh full review/comment/thread reads found one informational CodeRabbit skip and zero reviews/inline findings. Fetched master has the identical tested treee67613371458570ad8cb339c1a5f42b4dd38573d; all five exact heads are ancestors and GitHub marks PRs150–154 merged. All watches for that batch are stopped. Legacy22d9def7 is unchanged. Do not act on delayed old notifications or recreate intermediate watches. The source-preserving pilot repair and its original failures retain their actual build identities in the batch record; this delivery does not complete the full recreation objective.
 
-The current fifth combined branch is `stack/effect-geometry-05`, containing the
-exact PR155–158 heads plus qualified native text binding, retained generic effects,
-the physical orbital-fixture repair and retained actor/mount clocks. Its827 tracked
-code/test files match actor delegate commitf5b5bbf exactly. That source passed62
-broad and6 final mock/SWF cases, including both accelerated wins. Parent combined
-validation passed70/71 with an advancing native pilot timing out at64,000 frames;
-that failure remains real, not green. The direct-loop performance candidate and
-per-stage MessageChannel experiment were rejected; neither belongs to final
-production/fixture source. Formatting and1,291 tests /75,956 assertions pass. Read
-[the batch validation record](effect-geometry-batch-validation.md) for preserved
-failures, the overwritten diagnostic trace limitation and the required fresh
-hosted named-job/review gate. Keep master897d2e7 and legacy22d9def fixed until that
-final combined gate succeeds, then merge once. The existing constructor/EXIT
-phase discrepancy, under-avatar paint and full-game/ordinary acceptance remain
-open. Do not resurrect old PR watches or open a sixth layer.
+The [effect/geometry batch](effect-geometry-batch-validation.md) landed through one
+PR 160 merge, `e01a7fe403b1fb1dc5c31ada8ce732206b3d5439`. Exact-head pull-request
+run 43449089556, attempt 1/job 131966365335, succeeded on
+`58bd67415b97ef5cc630f0471b78ad0ef234f0de`. Fetched master has the identical tested
+tree `e41154b62b78bffea9e5036f61b69b9f62f2b12e`; all five exact heads are ancestors
+and GitHub marks PRs 155–158/160 merged. All five watches are stopped; legacy
+`22d9def` is preserved. Do not restart their watches or act on delayed old-head
+notifications. Hosted rules passed 1,286 with 5 source-SWF cases skipped; the
+mock/synthetic browser selection passed 150 with 4 skips. Parent manual 70/71 and
+its advancing native timeout remain distinct from that green gate. The rejected
+performance experiments remain discarded. Full recreation is incomplete.
+
+Next work stays local above that checkpoint. Native under-avatar draft `5e5ce20`
+has two bounded original paint captures and 17 affected browser passes; mock paint
+and complete cross-field ordering remain open. Actor-phase draft `8d31935` reports
+both frozen constructor/ENTER/EXIT cohorts through 550, eight fail-before regressions
+and six final actor/mounted/tank browser passes; its broad run retains an advancing
+native timeout. Review/integrate each scoped draft, preserving its evidence and
+limits. Fresh current-build home capture preflight rejected 8/8 frames because the
+normal stage has a scaled ancestor. Extend that capture contract through explicit
+qualification instead of weakening its guard or altering product layout. No
+observer/live-controller readiness follows from those rejected captures. These
+follow-ups are not part of the delivered PR 160 tree.
 
 The first next-stack foundation is prepared for `stack/effect-geometry-01`, targeting master897d2e7. Its local continuation remains `t3/retained-effect-poses-draft`, rebased onto that merged master with the entire tree unchanged62c16cb3dbf7d6e781e457fd2b9fcf772bce3127. Signed replay stalled in1Password; the parent restarted the rebase with explicit --no-gpg-sign under the authorized fallback. Current rebased commits are25d0786 (original camera), ca2e546 (effect metadata),174e62e (registration precision),d91bf96 (physical population),9ad13eb (mask qualification gap). Old hashes remain historical references, not current branch tips. The original [generic-effect clock qualification](effect-clock-original-reference.md), child69b5615, is picked asb20027b with both fidelity sections preserved. Parent independently reverified both owned capture copies:21,636 rows/259,632 binary Numbers each, REA events still equality-ineligible. The59 frame and45 identity/correspondence candidate differences are unrepaired;399 original lookup holes and unavailable isPlaying reads stay explicit. No blanket native-pose reconstruction is justified by matching root clocks. The separate mask task remains active on3915/9915 and was told the authorized new master checkpoint. It must not touch completed effect task3875/9875 resources.
 

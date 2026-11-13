@@ -8,14 +8,14 @@ scope.
 
 ## Current snapshot
 
-- Checked: 2026-11-14 02:05 AEDT, Australia/Sydney.
-- Inspected published source: PR160 at `fd12ea858dea2a9e6586f67ccd9a7d95ae373730`. All827 tracked code/test files match verified delegate `f5b5bbf`; this status-only record follows that inspection.
-- Dirty state at inspection: clean before this status-only update. No uncommitted production code.
-- Live source: [combined PR160](https://github.com/ianwijma/open-bubble-tank/pull/160) and [main thread](t3-thread://v2/a713d3ff-a5f3-472b-97bd-83fd799395a5/93d9eb80-8a0a-44ac-8262-07b1ceb7992a). Local, published and merged evidence remain distinct.
-- Delivery: PR160 is the fifth combined PR against master, containing exact PR155–158 heads. Hosted current-head Actions/review acceptance is pending. Parent combined validation passed70/71 with an advancing native pilot timeout; source-identical delegate validation passed62 broad plus6 final cases and both pilots. The manual accelerator performance limit remains open; no failed run is relabeled green. Master and protected legacy are unchanged.
+- Checked: 2026-11-14 02:56 AEDT, Australia/Sydney.
+- Inspected master: `e01a7fe403b1fb1dc5c31ada8ce732206b3d5439`, identical tested tree `e41154b62b78bffea9e5036f61b69b9f62f2b12e`; local draft starts from this merge.
+- Dirty state at inspection: clean before this delivery/status metadata update. No uncommitted production changes.
+- Live source: [merged PR160](https://github.com/ianwijma/open-bubble-tank/pull/160) and [main thread](t3-thread://v2/a713d3ff-a5f3-472b-97bd-83fd799395a5/93d9eb80-8a0a-44ac-8262-07b1ceb7992a). Local drafts remain separate from delivered code.
+- Delivery: PRs155–158 and160 are merged through one master merge after exact-head run43449089556/attempt1/job131966365335 success and fresh review/ref checks. All five heads are ancestors, the tested tree is delivered and their watches are stopped. Legacy `22d9def` remains unchanged. Hosted rules:1,286 passed/5 source-SWF skips; browser selection:150 passed/4 skips. The manual native accelerator timeout remains open.
 - Packages complete: **0/7**.
 - Checkpoints complete: **7/21**. These are completion gates of unequal size, not a percentage of effort or a PR estimate.
-- Changes since previous update: published the assembled fifth PR and restored the verified source after rejecting both performance experiments. Formatting and1,291 tests /75,956 assertions pass. No checkpoint changes.
+- Changes since previous update: delivered the five-layer effect/geometry batch. Native under-avatar and actor-phase repairs have returned as local drafts. Fresh home capture rejected8/8 scaled-ancestor frames; capture qualification is next. No checkpoint changes: subsequent required fidelity changes and whole-game acceptance remain unfinished.
 
 ## Fixed overview
 
@@ -27,11 +27,11 @@ evidence below. Keep this table as the concise user-facing report.
 | --- | ------------------------------ | ------------------ | ---------------- | -------------------------------------------------------------------------------------------------------- |
 | 1   | Advanced weapons and collision | In progress        | 1/3              | Finish production geometry integration and remaining original weapon/damage comparisons.                 |
 | 2   | Field crossings and timing     | In progress        | 1/3              | Finish actor/part/status/protection clocks and combined callback/crossing comparisons.                |
-| 3   | Visual accuracy                | In progress        | 1/3              | Verify combined effect/layer fixes, resolve the under-avatar audit and finish screen comparisons.     |
+| 3   | Visual accuracy                | In progress        | 1/3              | Integrate the under-avatar draft, finish mock/full layer order and remaining screen comparisons.     |
 | 4   | Creator and HUD                | Needs verification | 1/3              | Close remaining creator control/font/input differences and HUD/transition comparisons.                   |
 | 5   | Audio and medals               | Needs verification | 1/3              | Verify synchronized audio behavior and all retained medal edge conditions against the original.          |
 | 6   | Full ordinary playthrough      | Needs verification | 1/3              | Record normal-input progression through boss/win and compare the ending with the original.               |
-| 7   | Final integration              | In progress        | 1/3              | Finish the fifth PR, pass its exact-head gate, merge once and reconcile final acceptance evidence. |
+| 7   | Final integration              | In progress        | 1/3              | Deliver remaining fidelity changes and reconcile complete-game acceptance evidence. |
 
 Statuses: **In progress** = implementation or repair remains; **Needs
 verification** = the remaining gate is comparison or acceptance evidence;
@@ -61,7 +61,7 @@ Distinguish local, published and merged work.
 - [x] **2.1** Retained field, actor, projectile and pickup ownership/position behavior has source-backed implementation and scoped browser coverage.
       Evidence: [crossing contracts](crossing-source-reference.md), [delivered retained-display batch](retained-display-batch-validation.md).
 - [ ] **2.2** Remaining detached actor/part/status/protection and generic-effect clock/constructor/callback repairs are integrated and pass affected checks.
-      Evidence so far: [actor clock qualification](actor-clock-original-reference.md), [local retained effects](retained-effect-playback-reference.md). The actor lifetime correction is local; constructor/EXIT phase discrepancies and status/protection clock coverage remain open. The first combined browser rerun also exposes a pilot performance gate.
+      Evidence so far: [actor clock qualification](actor-clock-original-reference.md), [local retained effects](retained-effect-playback-reference.md). The actor lifetime correction is delivered; the constructor/EXIT repair8d31935 remains a local draft, and status/protection clock coverage and manual pilot performance remain open.
 - [ ] **2.3** Controlled original crossing comparisons cover initiation, both active fields, arrival, cached return, nested pause/upgrade/help/death and relevant Timer/event/RNG ordering; unresolved differences are fixed or explicitly accepted.
       Evidence gap: source/scoped controls exist, while complete crossing-runtime acceptance remains open in the ledger.
 
@@ -70,7 +70,7 @@ Distinguish local, published and merged work.
 - [x] **3.1** Supplied-file artwork/font loading, native sprite/morph playback and mock fallback are implemented and have scoped rendering/browser checks.
       Evidence: [presentation contracts and verification](fidelity.md).
 - [ ] **3.2** Remaining retained effect/field-layer rendering and animation fixes are integrated and validated on the combined build.
-      Evidence so far: [local retained effects](retained-effect-playback-reference.md), [retained renderer](retained-renderer-reference.md). The live audit also reports a likely missing under-avatar rendering layer; its disposition is pending.
+      Evidence so far: retained effects are delivered through [PR160](effect-geometry-batch-validation.md). Native under-avatar repair5e5ce20 is local; its mock counterpart and complete cross-field order remain open.
 - [ ] **3.3** The ledger's catalog, masks/filters/antialiasing, nested animation/morph and menu/pause/settings/upgrade/win comparisons are recorded and discrepancies resolved or explicitly accepted.
       Evidence gap: full visual and transition comparison remains open; a numeric geometry match alone does not close it.
 
@@ -106,7 +106,7 @@ Distinguish local, published and merged work.
 - [x] **7.1** The preceding five-layer retained-display batch has passed its final combined hosted gate and landed on master with merge/tree evidence.
       Evidence: [PRs 150–154 delivery record](retained-display-batch-validation.md).
 - [ ] **7.2** All subsequent required changes are included in the final combined head, required checks/reviews are resolved and the tested tree is delivered to master under the existing delivery policy.
-      Evidence gap: PRs 155–158 are open and the fifth combined head is local. [PR158 hosted job](https://github.com/ianwijma/open-bubble-tank/actions/runs/43427686285/job/131893065647) failed on the orbital fixture; [the local repair](actor-attachment-membership-reference.md#hosted-orbital-fixture-follow-up) passes its four affected browser cases without assertion changes. This is not a successful final hosted gate or delivery to master.
+      Evidence so far: [PR155–158/160 delivery](effect-geometry-batch-validation.md) has the exact successful named job and identical fetched master tree. Further required actor phases, under-avatar/mock/order and full-field/provider work remain local or unimplemented, so this all-subsequent-changes gate stays open.
 - [ ] **7.3** Packages 1–6 are Done; the final delivered build passes formatting, rule checks and the full applicable offline browser suite, with supplied-file coverage and any unavailable cases explicitly recorded. Fidelity/handoff documents agree with this checklist.
       Evidence gap: final whole-game acceptance is pending. Historical test totals from different builds are not a single final passing run.
 
@@ -124,3 +124,5 @@ Distinguish local, published and merged work.
 - **2026-11-14 — Baseline:** established fixed packages 1–7 and checkpoints 1.1–7.3. Checked 1.1, 2.1, 3.1, 4.1, 5.1, 6.1 and 7.1 from existing bounded evidence. All final package acceptance gates remain open. Earlier chat PR forecasts are superseded by this checklist.
 
 - **2026-11-14 00:41 AEDT — No checkpoint changes:** local source `5c5919b` includes retained effects/text and the explicit orbital shield attachment repair. Joint check:1,285 tests /75,912 assertions. The focused production build passes4 mock/SWF cases; the effect child separately passed69 cases on its identified build. These are not one final combined acceptance run. PRs155–158 remain open, actor clocks remain in progress, and the final fifth PR/master gate remains pending.
+
+- **2026-11-14 02:56 AEDT — No checkpoint changes:** merged PRs155–158/160 once as `e01a7fe`, with exact-head successful named job and tested-tree equality. Native paint and actor-phase drafts remain local; current home capture is rejected for scaled ancestry. This delivered batch does not complete all subsequent fidelity changes or whole-game acceptance.
