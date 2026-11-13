@@ -24,6 +24,12 @@ const metadata = {
   sourceSha256: createHash('sha256').update(input).digest('hex'),
   symbol: 1551,
   bottomSymbol: 117,
+  shapes: Object.fromEntries(
+    symbols.shapes
+      .filter((shape) => selected.has(shape.id) && shape.bounds)
+      .sort((a, b) => a.id - b.id)
+      .map((shape) => [shape.id, shape.bounds]),
+  ),
   sprites: Object.fromEntries(
     [...selected]
       .filter((id) => sprites.has(id))

@@ -82,3 +82,42 @@ is no compiled-revision, ordinary encounter or complete event/RNG proof. Owned
 byte-decoded rows, process identities and results are under
 `test-results/under-avatar-sizing/`. Prior default43 and geometry70 emissions
 remain byte-identical. Native resolver binding and combined validation follow.
+
+## Native constructor binding
+
+The local integration now binds `resolveUnderAvatarSize` in the World constructor,
+before its first captured-reference request. `positiveAxisAlignedSize` implements
+only the qualified positive, unrotated branch: requested pixels divided by the
+untransformed authored leaf size, retaining the other cached Number scale.
+`RetainedTransform` applies source scale setters separately from float32 matrix
+coefficients. Width/height getters use integer-twip rectangle transformation.
+The repeatable field importer now records selected original shape bounds as well
+as sprite placements; no artwork is bundled. The production resolver checks that
+1544 still contains exactly identity-placed1543 before using its bounds.
+
+`tests/under-avatar-size.test.ts` compares every one of the29 captured phases,
+all11 binary values per phase, directly with frozen original ByteArray words.
+It includes asymmetric prior scales, repeated setters and the ancestor-scale
+control. Native World coverage separately checks the metadata-derived radial
+request and pure repeated reads. Unsupported rotation, skew, reflection or
+nonpositive/nonfinite requests return unresolved; an explicitly unresolved
+constructor seam remains covered. This does not qualify arbitrary width/height
+setters or establish a complete field query.
+
+Joint formatting/typecheck and1,040 unit tests /9,132 assertions pass after
+integrating actor rendering, retained wrapper state and the registered engine.
+Fresh production build `PJ5UgL86BDxw9hCUwWTF2` and62 combined mock/supplied-art
+browser cases pass, with zero skips/flaky results. All678 source digests match.
+The private specs preserve every assertion and change only ports/import routing.
+Mock/SWF actor ownership galleries and supplied-art nested crossing were inspected;
+owned3545/3546 servers stopped. Exact command:
+
+```sh
+BT3_SWF_FILE=/home/ian/Projects/ianwijma/documented-bubble-tank-3/re/bt3/uncompressed.swf bun run test:e2e --config test-results/field-wrapper-joint/playwright.config.mts
+```
+
+Ignored logs, the browser report, private spec manifest, prebuild hashes and
+`validation-summary.json` remain in `test-results/field-wrapper-joint/`. Earlier
+individual-tree browser results retain their original scope. These browser cases
+check affected rendering/lifecycle integration; the29 binary tests qualify the
+sizing values. Retained field geometry is not yet composed into a complete query.

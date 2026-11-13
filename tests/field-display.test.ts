@@ -235,7 +235,7 @@ test('superseded wrappers retain their own rooted pose and stage clocks; detache
 });
 
 test('under-avatar sizing captures source detail radius, width-before-height and rejects unresolved geometry', () => {
-  const world = new World([], [], 5);
+  const world = new World([], [], 5, undefined, undefined, undefined, () => undefined);
   const tiny: TankDesign = {
     ...STARTER,
     id: 'tiny',

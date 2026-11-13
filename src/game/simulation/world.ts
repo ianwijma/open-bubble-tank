@@ -87,6 +87,7 @@ import {
 } from './world-flow';
 import { FieldCache } from './field-cache';
 import { FieldDisplays, type UnderAvatarSizeResolver } from './field-display';
+import { resolveUnderAvatarSize } from './under-avatar-size';
 
 export interface Transit {
   next: Field;
@@ -425,7 +426,7 @@ export class World {
     readonly mainEffects = new MainEffects(),
     readonly profileClass = new ProfileClassAllowance(),
     public avatarLibrary: readonly TankDesign[] = localTanks.filter((tank) => tank.avatar),
-    underAvatarSizeResolver?: UnderAvatarSizeResolver,
+    underAvatarSizeResolver: UnderAvatarSizeResolver = resolveUnderAvatarSize,
   ) {
     this.fieldDisplays = new FieldDisplays(underAvatarSizeResolver);
     this.rng = new Random(seed);

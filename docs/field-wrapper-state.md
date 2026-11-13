@@ -9,6 +9,8 @@ width/height setters, or establish full-game parity. Read the historical
 [crossing contracts](crossing-source-reference.md) and
 [fidelity ledger](fidelity.md) alongside this implementation.
 
+Later integration binds the [binary-qualified positive under-avatar setter](under-avatar-sizing-reference.md#native-constructor-binding) by default in World. The unresolved controls below remain an explicit constructor seam, and plain FieldDisplays still requires a resolver. The original preparation claims/results below retain their historical scope; complete field composition/query is still unfinished.
+
 ## Implemented owner and read boundary
 
 `World.fieldDisplays` owns a `FieldDisplays` model keyed by the actual `Field`
