@@ -165,3 +165,14 @@ parentage. Four contact regressions plus one bounds case fail before;1220 rule
 tests and16 affected mock/SWF browser cases pass after, with800 build inputs
 unchanged. This does not complete actor pose/clock composition. Keep this coherent
 fix with the following stack layer and retain the final five-layer merge gate.
+
+Fourth layer `stack/effect-geometry-04` combines that attachment correction with
+the [qualified StaticText Engine helper](text-engine-runtime-reference.md).
+Parent-owned copies of both fresh captures independently reverify2,554 rows /
+168,564 Numbers each. The joint supplied-file formatting/check passes1,225 tests
+/60,367 assertions; the preceding16-case browser run covers the unchanged
+attachment production/fixture code. The helper has no native/gameplay caller yet.
+Keep text-specific dispatch and retained generic-effect integration local until
+they can form the final combined fifth PR. Preserve all three earlier stack
+heads, deployment suppression, master and legacy; validate that final exact head
+before the single master merge. Source-qualified evidence is not full-game parity.

@@ -1946,3 +1946,10 @@ and World consumers remain separate work. Formatting/typecheck/full check passes
 1,220 tests /60,343 assertions. No application browser consumer changes; both fresh
 REA reference flows pass. REA events remain incomplete/equality-ineligible, and
 compiled-source, Adobe and complete-game parity remain unproved.
+
+The parent independently reverified both text-engine captures in owned copies
+after integration with the attachment correction. The joint supplied-file check
+passes **1,225 tests /60,367 assertions**. The pure helper/evidence pick does not
+change the production or fixture code exercised by the preceding16-case browser
+run. Advanced-text native dispatch is still separate work; no extra application
+browser validation is claimed for this unused helper.
