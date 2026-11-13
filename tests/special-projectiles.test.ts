@@ -305,6 +305,7 @@ test('hit location uses the nearest authored detail, including weapons, first ti
 
 test('two Sapper mounts each retain one shot and respawn independently after removal', () => {
   const { world, enemy } = setup();
+  world.actorParents.sync(world);
   enemy.guns = [0, 1].map((i) => ({
     part: { ...STARTER.parts[1], type: 4012, key: String(i) },
     counter: 0,

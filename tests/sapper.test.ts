@@ -31,6 +31,7 @@ function setup(playerX = 100) {
   master.life = 60;
   master.guns[0].counter = Infinity;
   world.field.enemies = [master];
+  world.actorParents.sync(world);
   const bullet: Projectile = {
     uid: world.nextId(),
     owner: master.uid,
@@ -197,6 +198,7 @@ test('sapper contains check retains dead-but-attached masters and removes after 
   tickSapper(world, bullet);
   expect(bullet.dead).toBe(false);
   world.field.enemies = [];
+  world.actorParents.sync(world);
   const position = { x: bullet.x, y: bullet.y };
   tickSapper(world, bullet);
   expect(bullet.dead).toBe(true);

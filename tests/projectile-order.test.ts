@@ -230,6 +230,7 @@ test('friendly seekers/infection ignore shots, Sappers ignore enemy shots, and a
   {
     const { world, target } = setup();
     world.player.x = 200;
+    world.actorParents.sync(world);
     const sapper = bullet(world, { kind: 'sapper', symbol: 1831, owner: target.uid, enemy: true });
     const enemyShot = bullet(world, { enemy: true, speed: 0 });
     world.bullets.push(sapper, enemyShot);

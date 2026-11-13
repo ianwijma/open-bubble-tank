@@ -99,6 +99,8 @@ export interface GunState {
   beamId?: number;
   /** EBehaviorHealer retains beam_mc directly, independently of a wrapper's array. */
   beamRef?: Projectile;
+  /** _-3C keeps its shot even when the parented projectile outlives a cached wrapper. */
+  sapperRef?: Projectile;
   shieldDiameter?: number;
   shieldFilm?: ShieldClip;
   shieldGeneration?: number;

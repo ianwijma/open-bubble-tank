@@ -1,24 +1,62 @@
 import { projectileOutside } from './projectile-boundary';
 import { angleTo, direction, distance, rotate } from '../core/math';
 import { displayPixel } from '../core/display-values';
-import type { Projectile, Tank, Vec } from '../core/types';
+import type { GunState, Projectile, Tank, Vec } from '../core/types';
 import { tankHitLocation } from './hit-location';
 import type { World } from './world';
+import { createProjectile } from './create-projectile';
 
 interface SapperState {
   movement: Vec;
   forcedContact: boolean;
+  home?: Tank;
   master?: Tank;
   maximumLife?: number;
 }
 const states = new WeakMap<Projectile, SapperState>();
 const attachedTanks = (world: World) => [...world.field.enemies, ...world.allies];
 
+/** _-3C retains SpawnNewBullet's object, including an uninitialized rejected birth. */
+export function fireSapper(world: World, owner: Tank, gun: GunState) {
+  if (gun.sapperRef && world.hasBulletParent(gun.sapperRef)) return;
+  const point = world.actorParents.pointAt(owner, world.muzzle(owner, gun), world.currentWrapper);
+  if (!point) throw new Error('Sapper trigger has no current field transform');
+  const bullet = createProjectile(world.nextId(), {
+    owner: -1,
+    enemy: false,
+    kind: 'sapper',
+    symbol: 1831,
+    x: 0,
+    y: 0,
+    angle: 0,
+    speed: NaN,
+    damage: 1,
+    artFrame: 3,
+  });
+  gun.sapperRef = bullet;
+  world.addBullet(bullet, owner, world.player, () => {
+    Object.assign(bullet, {
+      owner: owner.uid,
+      enemy: true,
+      x: point.x,
+      y: point.y,
+      angle: owner.rotation + gun.angle,
+      heading: owner.rotation + gun.angle,
+      speed: 6,
+      damage: 3,
+      anchor: gun,
+      partType: 4012,
+      // Preserve the accepted-shot entropy adapter pending complete constructor verification.
+      orbit: world.rng.int(0, 359),
+    });
+  });
+}
+
 function steer(world: World, bullet: Projectile, state: SapperState) {
   let destination: Vec | undefined;
   if (!bullet.returning) destination = tankHitLocation(world.player);
   else {
-    const master = state.master ?? attachedTanks(world).find((tank) => tank.uid === bullet.owner);
+    const master = state.master ?? state.home;
     if (master && bullet.anchor) {
       const offset = rotate(bullet.anchor.part, master.rotation);
       destination = { x: master.x + offset.x, y: master.y + offset.y };
@@ -30,9 +68,13 @@ function steer(world: World, bullet: Projectile, state: SapperState) {
 }
 
 /** _-Jp constructor stops on frame3; base Setup immediately steers toward the avatar. */
-export function initializeSapper(world: World, bullet: Projectile) {
+export function initializeSapper(world: World, bullet: Projectile, home?: Tank) {
   if (bullet.kind !== 'sapper' || states.has(bullet)) return;
-  const state: SapperState = { movement: { x: 0, y: 0 }, forcedContact: false };
+  const state: SapperState = {
+    movement: { x: 0, y: 0 },
+    forcedContact: false,
+    home: home ?? attachedTanks(world).find((tank) => tank.uid === bullet.owner),
+  };
   states.set(bullet, state);
   bullet.returning = false;
   bullet.artFrame = 3;
@@ -51,11 +93,11 @@ export function tickSapper(world: World, bullet: Projectile) {
   }
   steer(world, bullet, state);
   if (!state.master) {
-    state.master = attachedTanks(world).find((tank) => tank.uid === bullet.owner);
+    state.master = state.home;
     state.maximumLife = state.master?.life;
   }
   const master = state.master;
-  if (!master || !attachedTanks(world).includes(master)) {
+  if (!master || !world.actorParents.inField(master, world.field)) {
     impact();
     bullet.dead = true;
     return;
