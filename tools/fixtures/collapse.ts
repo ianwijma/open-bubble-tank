@@ -106,7 +106,7 @@ export async function showCollapseProof(pack: AssetPack, host: HTMLElement) {
       );
       const avatar = renderer.entities.children.at(-1)!;
       const effects = (renderer as unknown as { combatEffects: CombatEffectsView }).combatEffects;
-      const bottomLayer = effects.bottom;
+      const bottomLayer = effects.lower(world.field)!.content;
       const topLayer = effects.top;
       const b = bottomLayer.children.at(-1)!,
         t = topLayer.children.at(-1)!;

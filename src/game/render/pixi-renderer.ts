@@ -24,7 +24,7 @@ import {
   worldLayerTransform,
   type FieldTransform,
 } from './field-transform';
-import { projectEffects } from './effect-projection';
+import { projectEffects, projectLowerEffectMasks } from './effect-projection';
 import { FieldUnderAvatarView } from './field-under-avatar-view';
 
 export class GameRenderer {
@@ -468,7 +468,7 @@ export class GameRenderer {
         drawing.destroy();
         this.mockPickups.delete(pickup);
       }
-    this.combatEffects?.update(projectEffects(world));
+    this.combatEffects?.update(projectEffects(world), projectLowerEffectMasks(world));
     this.tacticalHud?.update(world.tacticalHud);
     this.minimap?.update(world);
     this.hud?.update(world);

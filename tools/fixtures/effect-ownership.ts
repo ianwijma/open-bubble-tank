@@ -38,7 +38,9 @@ export async function showEffectOwnershipProof(pack: AssetPack, host: HTMLElemen
   const bottom = effects.bottom,
     top = effects.top;
   const nodes = (layer: Container) =>
-    layer.children.filter((c) => pack.mode !== 'swf' || !(c instanceof Graphics));
+    (layer === bottom ? effects.lower(world.field)!.content : layer).children.filter(
+      (c) => pack.mode !== 'swf' || !(c instanceof Graphics),
+    );
   try {
     const before = draw();
     const first = combatEffect(

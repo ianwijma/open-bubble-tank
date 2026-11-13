@@ -2096,3 +2096,16 @@ layer. The initialized Massive Cannon gallery explicitly initializes its stop
 before triggering; it is not a first-ever-trigger oracle. Lazy source construction,
 historical placement/entropy replay, first-trigger scheduling and status/protection
 phases remain open. The earlier native full-pilot timeout is preserved.
+
+
+## Field-owned lower-effect paint mask
+
+The [lower-effect mask repair](field-lower-effect-mask-reference.md) restores
+original1539/1538 masking of field-owned lower117 content, using the mask slot's
+independent retained transform. Two original controlled paint captures agree on
+1,620 values each; the native/mock browser fixture and actual engine reparenting
+control pass with the26-case affected browser gate. Unchanged rules pass1,299
+tests /81,252 assertions. Empty mask projections skip rendering while preserving
+identity; existing screen-effect camera/zoom pixel checks pass. Opaque finite
+controls do not qualify fractional opacity, arbitrary transforms, complete World
+root ordering, queue draining, ordinary encounters or full-game/Adobe fidelity.

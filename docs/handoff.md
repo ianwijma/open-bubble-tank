@@ -41,6 +41,17 @@ and `d75fb85` above PR162; fresh30/30 controls,46 independently decoded PNGs,
 preflight is inferred from the older child's build. These follow-ups are not part
 of the delivered PR160 tree.
 
+The next local fourth layer (`stack/artwork-fidelity-04`) restores the lower-effect
+mask, not complete World ordering. Read [its source/runtime and validation record](field-lower-effect-mask-reference.md).
+Two fresh original captures match36×45 pixel controls; eight mutations reject.
+Rules pass1,299 tests /81,252 assertions and the final production browser gate
+passes26/26 mock/native cases, zero skips. The earlier24/26 run and its mock
+bare-stencil/native empty-mask screen failures remain preserved with their fixes.
+No source clocks, inputs or assertions changed. The separate World-order audit
+shows why sorting attached fields is insufficient: selected current/next siblings
+are raised, superseded layers remain interleaved, and replacement avatars use
+child-count-relative insertion. Global ordering remains open.
+
 The first next-stack foundation is prepared for `stack/effect-geometry-01`, targeting master897d2e7. Its local continuation remains `t3/retained-effect-poses-draft`, rebased onto that merged master with the entire tree unchanged62c16cb3dbf7d6e781e457fd2b9fcf772bce3127. Signed replay stalled in1Password; the parent restarted the rebase with explicit --no-gpg-sign under the authorized fallback. Current rebased commits are25d0786 (original camera), ca2e546 (effect metadata),174e62e (registration precision),d91bf96 (physical population),9ad13eb (mask qualification gap). Old hashes remain historical references, not current branch tips. The original [generic-effect clock qualification](effect-clock-original-reference.md), child69b5615, is picked asb20027b with both fidelity sections preserved. Parent independently reverified both owned capture copies:21,636 rows/259,632 binary Numbers each, REA events still equality-ineligible. The59 frame and45 identity/correspondence candidate differences are unrepaired;399 original lookup holes and unavailable isPlaying reads stay explicit. No blanket native-pose reconstruction is justified by matching root clocks. The separate mask task remains active on3915/9915 and was told the authorized new master checkpoint. It must not touch completed effect task3875/9875 resources.
 
 The local [effect registration position correction](effect-registration-position-reference.md) now preserves queued Number coordinates while applying signed-twip X/Y setters at CreateEffect attachment. Two new regressions fail before and pass after; format/check passes1,140 tests /17,368 assertions. The literal affected browser run passes12 mock/supplied-art cases on buildcnC5ZnrgsKzrSI2ZEdSt-, zero skips/flaky results, with804 unchanged input hashes and3775/3776 stopped/free. Original generic-clock qualification is now complete, with owner/descendant integration still open; no PR/push/deployment or published-head change occurred.
