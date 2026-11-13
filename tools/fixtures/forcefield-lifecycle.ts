@@ -1,3 +1,5 @@
+import { importAvatarFixture } from './avatar-attachments';
+import { setFieldFixtureLayout } from './field-layout';
 import { Application, Container, Rectangle } from 'pixi.js';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { STARTER } from '../../src/game/data/catalog';
@@ -44,6 +46,7 @@ export async function showForcefieldLifecycle(pack: AssetPack, host: HTMLElement
     50,
     20,
   );
+  importAvatarFixture(world);
   const tank = world.player,
     body = tank.design.parts[1],
     gunPart = tank.design.parts[2];
@@ -112,6 +115,7 @@ export async function showForcefieldLifecycle(pack: AssetPack, host: HTMLElement
     world.resume();
     tank.x = world.transit!.target.x;
     tank.y = world.transit!.target.y;
+    setFieldFixtureLayout(world);
     tick(1);
     world.field.enemies = [];
     capture('Arrival · passive Run still pending');

@@ -1,3 +1,5 @@
+import { importAvatarFixture } from './avatar-attachments';
+import { setFieldFixtureLayout } from './field-layout';
 import { Application } from 'pixi.js';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import type { Tank } from '../../src/game/core/types';
@@ -44,6 +46,7 @@ export async function showShieldOwnership(pack: AssetPack, host: HTMLElement) {
     ],
   };
   const tank = (world.player = createTank(world.nextId(), design, 'player', 0, 0, 50, 20));
+  importAvatarFixture(world);
   world.field.enemies = [];
   world.hitTest = () => false;
   let measurements = 0;
@@ -140,6 +143,7 @@ export async function showShieldOwnership(pack: AssetPack, host: HTMLElement) {
     world.jump({ x: 1, y: 0 });
     tank.x = world.transit!.target.x;
     tank.y = world.transit!.target.y;
+    setFieldFixtureLayout(world);
     tick(1);
     capture('Arrival · current film retained, immunity cleared');
     return {

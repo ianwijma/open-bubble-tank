@@ -1,3 +1,4 @@
+import { setFieldFixtureLayout } from './fixtures/field-layout';
 import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import { STARTER } from '../src/game/data/catalog';
@@ -301,8 +302,10 @@ test('incoming Healer Setup and active reselection use the current wrapper and p
   const { world, owner, patient } = live();
   cacheEmptyField(world);
   world.player.x = 425;
+  setFieldFixtureLayout(world);
   world.jump({ x: 1, y: 0 });
   world.transit!.offset = { x: 800, y: 0 };
+  setFieldFixtureLayout(world);
   const incoming = createTank(102, owner.design, 'enemy', 0, 0, undefined, undefined, world);
   world.transit!.next.enemies = [incoming];
   importActorFixtures(world);

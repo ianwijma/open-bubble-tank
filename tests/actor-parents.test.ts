@@ -1,3 +1,4 @@
+import { setFieldFixtureLayout } from './fixtures/field-layout';
 import { expect, test } from 'bun:test';
 import { STARTER } from '../src/game/data/catalog';
 import { createTank } from '../src/game/simulation/tank';
@@ -15,6 +16,7 @@ function scenario() {
   old.enemies = [outgoing];
   world.attachActor(outgoing, old);
   world.player.x = 425;
+  setFieldFixtureLayout(world);
   world.jump({ x: 1, y: 0 });
   const incoming = make(),
     next = world.transit!.next;
@@ -22,6 +24,7 @@ function scenario() {
   world.attachActor(incoming, next);
   next.scale = 1;
   world.transit!.offset = { x: 800, y: 0 };
+  setFieldFixtureLayout(world);
   world.transit!.target = { x: 483, y: 0 };
   world.actorParents.sync(world);
   return { world, old, next, outgoing, incoming };
@@ -40,6 +43,7 @@ test('active field parent conversion covers both populations and source Point tw
 test('arrival unroots the old wrapper without detaching retained enemy references; revisit reparents them', () => {
   const { world, old, next, outgoing } = scenario();
   world.player.x = 483;
+  setFieldFixtureLayout(world);
   world.step(emptyInput());
   expect(world.mode).toBe('playing');
   expect(world.field).toBe(next);
@@ -48,6 +52,7 @@ test('arrival unroots the old wrapper without detaching retained enemy reference
   world.jump({ x: -1, y: 0 });
   expect(world.transit!.next === old).toBe(false);
   world.transit!.offset = { x: -800, y: 0 };
+  setFieldFixtureLayout(world);
   world.actorParents.sync(world);
   expect(world.actorParents.point(outgoing, next)).toEqual({ x: -790, y: 20 });
 });
@@ -175,9 +180,17 @@ test('global conversions retain cached and detached local poses separately from 
   );
   const oldAvatar = world.player;
   expect(world.actorParents.localToGlobal(oldAvatar, { x: 0, y: 0 })).toEqual({ x: 275, y: 225 });
-  world.actorParents.setAvatar(createTank(world.nextId(), STARTER, 'player'));
+  world.player = createTank(world.nextId(), STARTER, 'player');
+  world.fieldDisplays.updateAvatar(
+    world.player,
+    world.currentWrapper,
+    world.transit?.next,
+    world.stats.frames,
+  );
+  world.actorParents.setAvatar(world.player);
   expect(world.actorParents.localToGlobal(oldAvatar, { x: 0, y: 0 })).toEqual({ x: 0, y: 0 });
   world.player.x = 483;
+  setFieldFixtureLayout(world);
   world.step(emptyInput());
   expect(world.actorParents.onStage(outgoing)).toBe(false);
   expect(world.actorParents.hasParent(outgoing)).toBe(true);

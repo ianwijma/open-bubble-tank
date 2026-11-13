@@ -1,3 +1,4 @@
+import { setFieldFixtureLayout } from './field-layout';
 import { importActorFixtures } from './actor-attachments';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { DEFAULT_SETTINGS } from '../../src/game/core/constants';
@@ -41,7 +42,9 @@ export async function showNpcDeactivation(pack: AssetPack, host: HTMLElement) {
     world.rng.next = () => 0.5;
     world.progression.level = 6;
     world.field.tutorial = 0;
+    world.fieldDisplays.selectTutorial(world.field, 0);
     world.player.x = 200;
+    setFieldFixtureLayout(world);
     world.hitTest = pack.hitTest;
     const victim = createTank(
       world.nextId(),

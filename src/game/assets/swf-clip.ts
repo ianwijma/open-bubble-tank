@@ -32,6 +32,10 @@ export class SwfClip {
   get frame() {
     return this.timeline?.frame ?? 1;
   }
+  /** Authored construction poses exist before the first registered frame script. */
+  construct() {
+    if (!this.age && this.timeline) this.sync(true);
+  }
   /** Constructor goto takes effect before the first retained frame-script pose. */
   start(frame = 1, playing = true, y = 0) {
     if (this.age) return;
@@ -51,6 +55,20 @@ export class SwfClip {
       this.sync();
     }
   }
+  /** Retained stage phase API; ordinary advance() retains its combined behavior. */
+  enterFrame() {
+    this.age++;
+    if (!this.timeline) return;
+    this.timeline.enterFrame();
+    this.sync(false, true);
+  }
+  runFrameScripts(y = 0) {
+    if (!this.timeline) return;
+    this.timeline.runFrameScripts(y);
+    this.sync(false, true);
+    for (const child of this.children.values())
+      child.clip.runFrameScripts(child.placement.matrix.ty / 20);
+  }
   gotoAndPlay(frame: number, y = 0) {
     if (!this.timeline) return;
     this.timeline.goto(frame, true, y);
@@ -64,7 +82,7 @@ export class SwfClip {
     this.timeline.goto(frame, false, y);
     this.sync();
   }
-  private sync() {
+  private sync(constructing = false, staged = false) {
     const placements = this.source.displayList(this.id, this.frame),
       active = new Set(placements.map((p) => p.depth));
     this.placements = placements;
@@ -79,12 +97,15 @@ export class SwfClip {
         child = {
           placement,
           clip: new SwfClip(placement.charId, this.source, this.random, this.depth + 1),
-          born: this.age,
+          born: Math.max(1, this.age),
         };
         this.children.set(placement.depth, child);
       }
       child.placement = placement;
-      child.clip.advance(this.age - child.born + 1, placement.matrix.ty / 20);
+      if (constructing) child.clip.construct();
+      else if (staged) {
+        while (child.clip.age < this.age - child.born + 1) child.clip.enterFrame();
+      } else child.clip.advance(this.age - child.born + 1, placement.matrix.ty / 20);
     }
   }
 }

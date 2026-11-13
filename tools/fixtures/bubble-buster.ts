@@ -18,6 +18,7 @@ export async function showBubbleBusterProof(pack: AssetPack, host: HTMLElement) 
   world.projectileBounds = (b) => pack.projectileBounds(b);
   world.field.enemies = [];
   world.field.tutorial = 0;
+  world.fieldDisplays.selectTutorial(world.field, 0);
   const make = (options: Partial<Projectile>) => {
     const b = createProjectile(world.nextId(), {
       owner: world.player.uid,

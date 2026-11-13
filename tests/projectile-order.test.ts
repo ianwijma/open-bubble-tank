@@ -1,3 +1,5 @@
+import { setFieldFixtureLayout } from '../tools/fixtures/field-layout';
+import { importAvatarFixture } from '../tools/fixtures/avatar-attachments';
 import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import { World, emptyInput } from '../src/game/simulation/world';
@@ -236,6 +238,7 @@ test('friendly seekers/infection ignore shots, Sappers ignore enemy shots, and a
   {
     const { world, target } = setup();
     world.player.x = 200;
+    setFieldFixtureLayout(world);
     world.actorParents.sync(world);
     const sapper = bullet(world, { kind: 'sapper', symbol: 1831, owner: target.uid, enemy: true });
     const enemyShot = bullet(world, { enemy: true, speed: 0 });
@@ -246,6 +249,7 @@ test('friendly seekers/infection ignore shots, Sappers ignore enemy shots, and a
   }
   const { world } = setup();
   world.player.x = 100;
+  setFieldFixtureLayout(world);
   const mine = bullet(world, {
     kind: 'seekerMine',
     symbol: 2178,
@@ -274,6 +278,7 @@ test('the shipped infection acquisition bug expires at setup and first Run rathe
     50,
     1,
   );
+  importAvatarFixture(world);
   world.fireGun(world.player, world.player.guns[0], emptyInput());
   const b = world.bullets[0];
   expect(b.targetId).toBeNull();
@@ -304,6 +309,7 @@ test('flak acquires source Seeker flags rather than sapper/friendly-seeker kinds
     1,
   );
   world.player = tank;
+  importAvatarFixture(world);
   world.bullets.push(
     bullet(world, { kind: 'sapper', symbol: 1831, x: 10 }),
     bullet(world, { kind: 'seeker', symbol: 1827, x: 20 }),

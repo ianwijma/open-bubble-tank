@@ -1,3 +1,5 @@
+import { setFieldFixtureLayout } from '../tools/fixtures/field-layout';
+import { importAvatarFixture } from '../tools/fixtures/avatar-attachments';
 import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import { FIELD_RADIUS } from '../src/game/core/constants';
@@ -19,6 +21,7 @@ function setup() {
     50,
     20,
   );
+  importAvatarFixture(world);
   world.field.enemies = [];
   world.hitTest = () => false;
   return { world, tank: world.player };
@@ -27,6 +30,7 @@ function arrive(world: World) {
   const tr = world.transit!;
   world.player.x = tr.target.x;
   world.player.y = tr.target.y;
+  setFieldFixtureLayout(world);
   world.step(emptyInput());
   expect(world.mode).toBe('playing');
 }
@@ -44,6 +48,7 @@ test('ordinary boundary cleanup exposes field combat before same-frame passive r
   ];
   importActorFixtures(world);
   tank.x = FIELD_RADIUS + 1;
+  setFieldFixtureLayout(world);
   world.bullets.push(
     createProjectile(world.nextId(), {
       owner: world.field.enemies[0].uid,
@@ -74,6 +79,7 @@ for (const status of ['jam', 'stun'] as const)
     tank.forcefield = 21;
     tank.forcefieldCounter = 7;
     tank.x = FIELD_RADIUS + 1;
+    setFieldFixtureLayout(world);
     world.step(emptyInput());
     expect(world.mode).toBe('transit');
     expect([tank.forcefieldAttached, tank.forcefieldReady, tank.forcefieldGeneration]).toEqual([
@@ -163,6 +169,7 @@ test('a trailing mounted part triggers the initial wrapper reorder, preserving d
     parts: [...tank.design.parts, { ...STARTER.parts[0], key: 'trailing-body' }],
   };
   world.player = createTank(world.nextId(), tank.design, 'player', 0, 0, 100, 100);
+  importAvatarFixture(world);
   const avatar = world.player;
   expect(avatar.displayChildren.slice(-3)).toEqual([
     'part:field',
@@ -219,6 +226,7 @@ test('a shield pushes its hit and film above the wrapper, then passive Run reuse
     ],
   };
   world.player = createTank(world.nextId(), design, 'player', 0, 0, 50, 20);
+  importAvatarFixture(world);
   world.field.enemies = [];
   const tank = world.player;
   world.damage(tank, 40);
@@ -253,6 +261,7 @@ test('arrival clears shield immunity and its callback but retains the attached f
     parts: [...tank.design.parts, { ...STARTER.parts[1], type: 3010, key: 'shield' }],
   };
   world.player = createTank(world.nextId(), tank.design, 'player', 0, 0, 50, 20);
+  importAvatarFixture(world);
   const avatar = world.player;
   world.fireGun(
     avatar,

@@ -1,3 +1,4 @@
+import { setFieldFixtureLayout } from './field-layout';
 import { importActorFixtures } from './actor-attachments';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { DEFAULT_SETTINGS } from '../../src/game/core/constants';
@@ -16,9 +17,11 @@ export async function showWeaponTargets(pack: AssetPack, host: HTMLElement) {
   world.hitProjectile = pack.hitProjectile;
   world.viewZoom = 0.75;
   world.field.tutorial = 0;
+  world.fieldDisplays.selectTutorial(world.field, 0);
   world.field.cleared = false;
   world.player.x = 160;
   world.player.y = -80;
+  setFieldFixtureLayout(world);
   const body = { ...STARTER.parts[0], type: 1003, radius: 22.5 },
     base = { ...STARTER, avatar: false, speed: 0, life: 100, parts: [body] },
     ally = createTank(world.nextId(), base, 'ally', 80, 100, undefined, undefined, world),

@@ -1,3 +1,5 @@
+import { setFieldFixtureLayout } from './field-layout';
+import { importAvatarFixture } from './avatar-attachments';
 import { importActorFixtures } from './actor-attachments';
 import { captureCanvas } from './pixi-capture';
 import { Rectangle } from 'pixi.js';
@@ -40,7 +42,9 @@ export async function showMockAssetsProof(native: AssetPack, host: HTMLElement) 
         : packs[column].mode === 'swf'
           ? renderer.nativeShots
           : renderer.projectiles,
-      frame: new Rectangle(-120, -40, 240, 80),
+      // The retained source avatar stays at World-local0. Place the isolated
+      // live-mount comparison in separate crop halves without moving that avatar.
+      frame: new Rectangle(entities ? -60 : -120, -40, 240, 80),
       resolution: 2,
     }) as HTMLCanvasElement;
     const pixels = frame.getContext('2d')!.getImageData(0, 0, frame.width, frame.height).data;
@@ -98,14 +102,16 @@ export async function showMockAssetsProof(native: AssetPack, host: HTMLElement) 
     for (let column = 0; column < 2; column++) {
       const world = worlds[column];
       world.field.tutorial = 0;
+      world.fieldDisplays.selectTutorial(world.field, 0);
       const body = { ...STARTER.parts[0], type: 1003, radius: 22.5, x: 0, y: 0 };
       world.player = createTank(
         world.nextId(),
         { ...STARTER, parts: [body, { ...STARTER.parts[1], type: 2001, x: 24, y: 0 }] },
         'player',
-        -60,
+        0,
         0,
       );
+      importAvatarFixture(world);
       world.field.enemies = [
         createTank(
           world.nextId(),
@@ -176,6 +182,7 @@ export async function showMockAssetsProof(native: AssetPack, host: HTMLElement) 
     const intercept = packs.map((pack) => {
       const world = new World([], [], 43);
       world.player.x = -200;
+      setFieldFixtureLayout(world);
       world.hitTest = () => false;
       world.hitProjectile = pack.hitProjectile;
       const shell = make(world, { artScale: 2.5 });

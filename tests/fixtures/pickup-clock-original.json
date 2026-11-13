@@ -1,0 +1,25 @@
+{
+  "before": {
+    "probeSha256": "f3b8ad375145985211637ec80e5bfd608b8e3a06ed41a8b8731a21488a149d77",
+    "traceSha256": "1a34999af79811205ab747d8144701d60dc39092ec9bdfe060877715bb50e6fd",
+    "samples": 4882
+  },
+  "originalSha256": "f5827841c682f988f23dcf470ab4ab59c1ffc497acb4ca0f21077d03f942c153",
+  "runtimeSha256": [
+    "26036a94567088dfb3de88a759e8ed10a4cea07b29500af36f345eef42420098",
+    "d27c6bdce2a34afb32e8dfa40970bc7e86cbcb912f92db7eb3e1ac70e943bd82",
+    "1ed33b9b71a6b01b9aafafed660be343ffeb2d246c5d79e6425a32bf93e38207"
+  ],
+  "browserVersion": {
+    "protocolVersion": "1.3",
+    "product": "Chrome/157.0.8103.38",
+    "revision": "@a733b5afbb3ba618844ff8876b89ad1a774b2f18",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36",
+    "jsVersion": "15.7.112.23"
+  },
+  "inside": {
+    "probeSha256": "b007fb5da19585122668eeb579b6df365684abf118beb65e50de1995336c8f8d",
+    "traceSha256": "253c6939f8e2dd5486adda348002fe69133e203212d25c1fb968debef3b66344",
+    "samples": 4906
+  }
+}

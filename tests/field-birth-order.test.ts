@@ -51,6 +51,10 @@ test('a normal scaled field samples fresh poses before the background scale sett
     expect(world.transit).toBeNull();
   }
   expect(world.mapPosition).toEqual({ col: 2, row: 0 });
+  // Isolate construction from corrected crossing duration and Main's entropy draws.
+  // Captured before the third jump on PR152 1f28a46, after 119 travel frames.
+  // The exact 33 construction draws and eight source spawn poses remain below.
+  world.rng.state = 612916067;
   const draws: number[][] = [];
   const int = world.rng.int.bind(world.rng);
   world.rng.int = (minimum, maximum) => {

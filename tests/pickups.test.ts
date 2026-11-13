@@ -1,3 +1,4 @@
+import { importPickupFixtures } from './fixtures/pickup-attachments';
 import { expect, test } from 'bun:test';
 import { World, emptyInput } from '../src/game/simulation/world';
 import { movePickup, pickupValues } from '../src/game/simulation/pickups';
@@ -19,6 +20,7 @@ function pickup(world: World, x: number, options: Partial<Pickup> = {}): Pickup 
     ...options,
   };
   world.pickups.push(value);
+  importPickupFixtures(world);
   return value;
 }
 

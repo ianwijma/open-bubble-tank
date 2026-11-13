@@ -20,6 +20,7 @@ export async function showHealerTargets(pack: AssetPack, host: HTMLElement) {
     world.rng.next = () => 0.5;
     world.hitTest = pack.hitTest;
     world.field.tutorial = 0;
+    world.fieldDisplays.selectTutorial(world.field, 0);
     world.field.cleared = false;
     return world;
   }

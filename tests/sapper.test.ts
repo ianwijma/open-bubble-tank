@@ -1,3 +1,4 @@
+import { setFieldFixtureLayout } from './fixtures/field-layout';
 import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import type { Projectile } from '../src/game/core/types';
@@ -9,7 +10,9 @@ import { emptyInput, World } from '../src/game/simulation/world';
 function setup(playerX = 100) {
   const world = new World([], [], 9);
   world.player.x = playerX;
+  setFieldFixtureLayout(world);
   world.player.y = 0;
+  setFieldFixtureLayout(world);
   world.player.life = 40;
   world.hitTest = () => false;
   world.hitProjectile = () => false;
@@ -215,6 +218,7 @@ test('sapper contains check retains dead-but-attached masters and removes after 
 test('sapper Setup proximity survives until first contact; the five-unit boundary is strict and zoom-independent', () => {
   const initial = setup(4.5);
   initial.world.player.x = 100;
+  setFieldFixtureLayout(initial.world);
   initial.world.actorParents.sync(initial.world);
   tickSapper(initial.world, initial.bullet);
   expect(initial.bullet.returning).toBe(true);
@@ -222,6 +226,7 @@ test('sapper Setup proximity survives until first contact; the five-unit boundar
     const { world, bullet } = setup();
     world.viewZoom = zoom;
     world.player.x = 10.5;
+    setFieldFixtureLayout(world);
     bullet.x = 6;
     world.actorParents.sync(world);
     tickSapper(world, bullet);
@@ -229,6 +234,7 @@ test('sapper Setup proximity survives until first contact; the five-unit boundar
     const boundary = setup();
     boundary.world.viewZoom = zoom;
     boundary.world.player.x = 5;
+    setFieldFixtureLayout(boundary.world);
     boundary.world.actorParents.sync(boundary.world);
     tickSapper(boundary.world, boundary.bullet);
     expect(boundary.bullet.returning).toBe(false);

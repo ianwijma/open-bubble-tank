@@ -3,7 +3,7 @@ import type { AssetPack } from '../assets/asset-pack';
 import { TUTORIAL } from '../core/tutorial';
 import type { Field } from '../core/types';
 import type { World } from '../simulation/world';
-import { fieldTransform } from './field-transform';
+import { fieldPoint, tutorialTransform } from './field-transform';
 import { SwfSymbolView, type RasterTextures } from './swf-symbol-view';
 
 /** Caption clips live at field-local (0,0), not in the fixed HUD or the scaled bubble background. */
@@ -18,22 +18,26 @@ export class FieldCaptions {
     const states = world.attachedFields();
     const fields = states.map(({ field }) => field);
     for (const [field, node] of this.nodes)
-      if (!fields.includes(field) || node.stage !== field.tutorial) {
+      if (
+        !fields.includes(field) ||
+        node.stage !== world.fieldDisplays.read(field).tutorial.stage
+      ) {
         node.native?.destroy();
         node.root.destroy({ children: true });
         this.nodes.delete(field);
       }
-    for (const { field, offset } of states) {
+    for (const { field } of states) {
+      const source = world.fieldDisplays.read(field).tutorial;
       let node = this.nodes.get(field);
       if (!node) {
         const container = new Container(),
-          layout = TUTORIAL.stages[field.tutorial];
+          layout = TUTORIAL.stages[source.stage];
         let native: SwfSymbolView | undefined;
         if (this.assets.mode === 'swf') {
           native = new SwfSymbolView(TUTORIAL.symbol, this.assets, this.textures);
           native.update(1, layout.frame);
           container.addChild(native.root);
-        } else if (field.tutorial === 0) {
+        } else if (source.stage === 0) {
           const logo = new Text({
             text: 'ARMOR GAMES',
             style: {
@@ -48,7 +52,7 @@ export class FieldCaptions {
           container.addChild(logo);
         } else
           for (const line of layout.texts) {
-            if (field.tutorial === 1 && line.text === 'w') continue;
+            if (source.stage === 1 && line.text === 'w') continue;
             const label = line.text
               .replace('Use asd', 'Use WASD')
               .replace('hold to shoot.', 'hold LMB to shoot.');
@@ -65,13 +69,17 @@ export class FieldCaptions {
             text.position.set(line.x, line.y - line.size * 0.8);
             container.addChild(text);
           }
-        node = { stage: field.tutorial, root: container, native };
+        node = { stage: source.stage, root: container, native };
         this.nodes.set(field, node);
         this.root.addChild(container);
       }
-      node.root.visible = !field.destroyed;
-      node.root.scale.set(fieldTransform(world, field).scale);
-      node.root.position.set(offset.x, offset.y);
+      const transform = tutorialTransform(world, field);
+      const point = fieldPoint({ x: 0, y: 0 }, transform);
+      node.root.visible = source.rooted;
+      node.root.scale.set(transform.scale);
+      node.root.position.set(point.x, point.y);
+      if (node.native) node.native.setParentAlpha(transform.alpha ?? 1);
+      else node.root.alpha = transform.alpha ?? 1;
     }
   }
   destroy() {

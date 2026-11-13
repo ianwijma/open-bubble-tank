@@ -1,3 +1,4 @@
+import { setFieldFixtureLayout } from '../tools/fixtures/field-layout';
 import { expect, test } from 'bun:test';
 import { STARTER, ENEMIES, BOSSES } from '../src/game/data/catalog';
 import { createTank } from '../src/game/simulation/tank';
@@ -18,6 +19,7 @@ function arrive(world: World) {
   const transit = world.transit!;
   world.player.x = transit.target.x;
   world.player.y = transit.target.y;
+  setFieldFixtureLayout(world);
   world.step(emptyInput());
   expect(world.transit).toBeNull();
 }
@@ -57,10 +59,12 @@ function cachedHealer() {
   const sentinel = createTank(world.nextId(), patientDesign, 'enemy', 150, 0, 1000, 1000, world);
   preload(world, 1, [sentinel]);
   world.player.x = 425;
+  setFieldFixtureLayout(world);
   world.jump({ x: 1, y: 0 });
   arrive(world);
   expect(oldRuntime.bullets).toContain(beam);
   world.player.x = -425;
+  setFieldFixtureLayout(world);
   world.jump({ x: -1, y: 0 });
   const incoming = world.transit!.next;
   expect(incoming).not.toBe(original);
@@ -105,6 +109,7 @@ test('incoming builtin boss spawner appends to outgoing layer after its actor pa
   preload(world, 1, [boss]);
   world.muzzle = () => ({ x: 17, y: 23 });
   world.player.x = 425;
+  setFieldFixtureLayout(world);
   world.jump({ x: 1, y: 0 });
   const incoming = world.transit!.next,
     offset = { ...world.transit!.offset };

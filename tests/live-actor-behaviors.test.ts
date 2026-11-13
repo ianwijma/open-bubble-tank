@@ -1,3 +1,4 @@
+import { setFieldFixtureLayout } from './fixtures/field-layout';
 import { importActorFixtures } from './fixtures/actor-attachments';
 import { tickGuns } from '../src/game/simulation/weapons';
 import { expect, test } from 'bun:test';
@@ -34,6 +35,7 @@ function scenario(ids: number[], { x = 0, y = 0, speed = 2 } = {}) {
 test('World translates with preceding rotation and source twips before updating behavior destinations', () => {
   const { world, tank } = scenario([6001]);
   world.player.x = 300;
+  setFieldFixtureLayout(world);
   tank.movement.frames = 2;
   tank.movement.rate = 3;
   tank.velocity = { x: 0.08, y: 0.08 };
@@ -54,6 +56,7 @@ test('Wall Flower and Aggressor share one destination in registered authored ord
   ]) {
     const { world, tank } = scenario(ids, { x: 100 });
     world.player.x = 200;
+    setFieldFixtureLayout(world);
     world.step(emptyInput());
     const wall = tank.guns.find((g) => g.part.type === 6005)!.wallFlower!;
     expect(tank.movement.wallFlower).toBe(true);
@@ -165,8 +168,10 @@ test('destination behavior retains an outgoing ally and uses current-wrapper pop
   world.allies = [ally];
   importActorFixtures(world);
   world.player.x = 425;
+  setFieldFixtureLayout(world);
   world.jump({ x: 1, y: 0 });
   world.transit!.offset = { x: 800, y: 0 };
+  setFieldFixtureLayout(world);
   const incoming = createTank(
     world.nextId(),
     {

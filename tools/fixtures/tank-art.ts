@@ -1,3 +1,4 @@
+import { importAvatarFixture } from './avatar-attachments';
 import { captureCanvas } from './pixi-capture';
 import { Application, Container, Rectangle } from 'pixi.js';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
@@ -55,6 +56,7 @@ export async function showTankArtProof(pack: AssetPack, host: HTMLElement) {
       'player',
     );
     world.player = tank;
+    importAvatarFixture(world);
     return tank;
   };
   const pause = (count: number) => {

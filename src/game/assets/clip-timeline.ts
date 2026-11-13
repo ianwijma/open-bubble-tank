@@ -14,17 +14,31 @@ export class ClipTimeline {
   frame = 1;
   playing = true;
   private started = false;
+  private pendingScript = false;
   constructor(
     private count: number,
     private actions: Readonly<Record<number, FrameAction>> = {},
     private random: () => number = Math.random,
   ) {}
   tick(y = 0) {
+    this.enterFrame();
+    return this.runFrameScripts(y);
+  }
+  /** Stage construction/advancement precedes Main's ENTER listener. */
+  enterFrame() {
     if (!this.started) {
       this.started = true;
-      this.run(y);
+      this.pendingScript = true;
     } else if (this.playing && this.count > 1) {
       this.frame = (this.frame % this.count) + 1;
+      this.pendingScript = true;
+    }
+    return this.frame;
+  }
+  /** Registered actions execute after Main, before the presented EXIT pose. */
+  runFrameScripts(y = 0) {
+    if (this.pendingScript) {
+      this.pendingScript = false;
       this.run(y);
     }
     return this.frame;
@@ -36,6 +50,7 @@ export class ClipTimeline {
     this.playing = playing;
     if (changed || !this.started) {
       this.started = true;
+      this.pendingScript = false;
       this.run(y);
     }
     return this.frame;

@@ -35,6 +35,7 @@ export async function showHealerLifecycle(pack: AssetPack, host: HTMLElement) {
     world.progression.level = 6;
     world.field.cleared = false;
     world.field.tutorial = 0;
+    world.fieldDisplays.selectTutorial(world.field, 0);
     world.hitTest = pack.hitTest;
     return world;
   }

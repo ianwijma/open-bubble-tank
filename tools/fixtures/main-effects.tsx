@@ -132,6 +132,7 @@ export function showMainEffects(
   runtime.random = () => 1;
   world.pause();
   world.field.tutorial = 0;
+  world.fieldDisplays.selectTutorial(world.field, 0);
   const root = createRoot(host);
   let upgradeCapture: object | undefined;
   root.render(

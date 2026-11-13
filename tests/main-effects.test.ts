@@ -1,3 +1,4 @@
+import { importAvatarFixture } from '../tools/fixtures/avatar-attachments';
 import { expect, test } from 'bun:test';
 import { MainEffects } from '../src/game/simulation/main-effects';
 import { StageRuntime } from '../src/game/services/stage-runtime';
@@ -202,6 +203,7 @@ test('Massive completion requests gated shake then flash before spawning, with f
       },
       'player',
     );
+    importAvatarFixture(world);
     world.registerEffectCallback({
       owner: world.player,
       gun: world.player.guns[0],

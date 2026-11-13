@@ -1,3 +1,4 @@
+import { importAvatarFixture } from '../tools/fixtures/avatar-attachments';
 import { expect, test } from 'bun:test';
 import { HudState, HUD, fireLayout, secondaryRate, weaponRows } from '../src/game/core/hud';
 import { STARTER } from '../src/game/data/catalog';
@@ -78,6 +79,7 @@ test('holding primary reveals HUD between shots, including when jammed', () => {
 test('secondary cooldown input and automatic weapons do not keep the fire HUD awake', () => {
   const world = new World([], [], 1);
   world.player = player(3010);
+  importAvatarFixture(world);
   world.player.life = 2;
   world.secondaryCounter = 200;
   world.step({ ...emptyInput(), secondary: true });
@@ -86,6 +88,7 @@ test('secondary cooldown input and automatic weapons do not keep the fire HUD aw
   world.step({ ...emptyInput(), secondary: true });
   expect(world.hud.fireIdle).toBe(1);
   world.player = player(5006);
+  importAvatarFixture(world);
   world.player.life = 2;
   for (let i = 0; i < 80; i++) world.step(emptyInput());
   expect(world.stats.shots).toBeGreaterThan(0);

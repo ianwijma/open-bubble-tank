@@ -1,3 +1,4 @@
+import { setFieldFixtureLayout } from './fixtures/field-layout';
 import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import { STARTER } from '../src/game/data/catalog';
@@ -8,7 +9,9 @@ import { cacheEmptyField } from './fixtures/empty-field';
 function carrier(release = true) {
   const world = new World([], [], 42);
   world.player.x = 200;
+  setFieldFixtureLayout(world);
   world.player.y = 0;
+  setFieldFixtureLayout(world);
   const owner = createTank(
     world.nextId(),
     {

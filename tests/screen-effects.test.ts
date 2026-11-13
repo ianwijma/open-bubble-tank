@@ -1,3 +1,4 @@
+import { setFieldFixtureLayout } from '../tools/fixtures/field-layout';
 import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import { STARTER } from '../src/game/data/catalog';
@@ -161,6 +162,7 @@ test('arrival clears both screen layers and field effects without resetting surv
   const timer = w.player.status.ink;
   w.player.x = w.transit!.target.x;
   w.player.y = w.transit!.target.y;
+  setFieldFixtureLayout(w);
   frames(w, 1);
   expect(w.transit).toBeNull();
   expect(w.effects).toEqual([]);

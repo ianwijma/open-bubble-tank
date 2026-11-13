@@ -1,3 +1,4 @@
+import { setFieldFixtureLayout } from '../tools/fixtures/field-layout';
 import { expect, test } from 'bun:test';
 import authored from '../src/game/data/field-display.json';
 import original from './fixtures/script-bounds-original.json';
@@ -28,6 +29,7 @@ const field = (tutorial: Field['tutorial'] = 0): Field => ({
 function arrive(world: World) {
   world.player.x = world.transit!.target.x;
   world.player.y = world.transit!.target.y;
+  setFieldFixtureLayout(world);
   world.step(emptyInput());
   expect(world.transit).toBeNull();
 }
@@ -337,8 +339,11 @@ test('collapse changes root and nested bottom separately, preserving four setup 
     writes: string[] = [];
   const avatar = world.fieldDisplays.readAvatar();
   world.fieldDisplays.onWrite = ({ instance, property }) => writes.push(`${instance}:${property}`);
-  world.fieldDisplays.onCollapseSiblingScale = (_, sibling, property) =>
+  const applySiblingScale = world.fieldDisplays.onCollapseSiblingScale;
+  world.fieldDisplays.onCollapseSiblingScale = (field, sibling, property, value) => {
+    applySiblingScale?.(field, sibling, property, value);
     writes.push(`${sibling}:${property}`);
+  };
   world.beginCollapse(20);
   world.step(emptyInput());
   const read = world.fieldDisplays.read(wrapper),

@@ -105,6 +105,12 @@ export class PlaythroughPilot {
         movement.x -= ((player.x / radial) * (radial - radius + 90)) / 25;
         movement.y -= ((player.y / radial) * (radial - radius + 90)) / 25;
       }
+    } else if (world.pickups.length && world.field.cleared) {
+      // Let forced rewards arrive before departure. Releasing the keys alone
+      // coasts through the wall and can open first-secondary help mid-crossing.
+      // Its source Close selects ordinary mode while movement remains disabled.
+      const gap = Math.hypot(player.x, player.y) || 1;
+      movement = { x: -player.x / gap, y: -player.y / gap };
     } else if (!world.pickups.length && world.field.cleared) {
       const key = `${world.field.col},${world.field.row}`;
       if (!this.route || this.fieldKey !== key) {

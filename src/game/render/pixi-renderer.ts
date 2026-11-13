@@ -3,7 +3,7 @@ import type { AssetPack, Raster } from '../assets/asset-pack';
 import { STAGE } from '../core/constants';
 import { DEG } from '../core/math';
 import { MainBackgroundView } from './main-background-view';
-import type { Field, Settings, Tank } from '../core/types';
+import type { Field, Pickup, Settings, Tank } from '../core/types';
 import type { World } from '../simulation/world';
 import { whipSamples } from '../simulation/whip';
 import { drawMockProjectile } from './mock-projectile-view';
@@ -17,7 +17,14 @@ import { FieldCaptions } from './field-captions';
 import { TacticalHudView } from './tactical-hud-view';
 import { TankView } from './tank-view';
 import { CombatEffectsView } from './combat-effects-view';
-import { fieldPoint, fieldTransform, type FieldTransform } from './field-transform';
+import {
+  avatarTransform,
+  fieldPoint,
+  fieldTransform,
+  worldLayerTransform,
+  type FieldTransform,
+} from './field-transform';
+import { projectEffects } from './effect-projection';
 
 export class GameRenderer {
   app = new Application();
@@ -29,7 +36,7 @@ export class GameRenderer {
   nativePickups = new Container();
   pickupArt = new Container();
   private mockShots = new Map<Field, Graphics>();
-  private mockPickups = new Map<Field, Graphics>();
+  private mockPickups = new Map<Pickup, Graphics>();
   private combatEffects?: CombatEffectsView;
   mapArt = new Container();
   private minimap?: MinimapView;
@@ -44,7 +51,7 @@ export class GameRenderer {
   private tankNodes = new Map<Tank, TankView>();
   private actorLayers = new Map<Field, Container>();
   private bulletNodes = new Map<number, SwfSymbolView>();
-  private pickupNodes = new Map<number, SwfSymbolView>();
+  private pickupNodes = new Map<Pickup, SwfSymbolView>();
   private fieldNodes = new Map<Field, Sprite>();
   highlights = new Container();
   private highlightNodes = new Map<Field, SwfSymbolView>();
@@ -150,10 +157,10 @@ export class GameRenderer {
     }
     return node;
   }
-  private nativeSymbol(
+  private nativeSymbol<Key>(
     id: number,
-    uid: number,
-    nodes: Map<number, SwfSymbolView>,
+    uid: Key,
+    nodes: Map<Key, SwfSymbolView>,
     layer: Container,
   ) {
     let view = nodes.get(uid);
@@ -169,7 +176,7 @@ export class GameRenderer {
     }
     return view;
   }
-  private pruneSymbols(nodes: Map<number, SwfSymbolView>, active: Set<number>) {
+  private pruneSymbols<Key>(nodes: Map<Key, SwfSymbolView>, active: Set<Key>) {
     for (const [uid, view] of nodes)
       if (!active.has(uid)) {
         view.destroy();
@@ -206,12 +213,8 @@ export class GameRenderer {
       this.externalMainEffects ? 0 : main.position.x,
       this.externalMainEffects ? 0 : main.position.y,
     );
-    this.root.position.set(STAGE.cx - world.player.x, STAGE.cy - world.player.y);
+    this.root.position.set(STAGE.cx, STAGE.cy);
     this.root.scale.set(settings.zoom);
-    this.root.position.set(
-      STAGE.cx - world.player.x * settings.zoom,
-      STAGE.cy - world.player.y * settings.zoom,
-    );
     const activeFields = world.attachedFields().map(({ field }) => field);
     this.captions?.update(world);
     for (const [field, node] of this.fieldNodes)
@@ -226,13 +229,15 @@ export class GameRenderer {
       }
     const states = world.attachedFields().map((state) => ({
       ...state,
-      transform: fieldTransform(world, state.field, state.offset),
+      transform: fieldTransform(world, state.field, 'actors'),
     }));
-    for (const { field, transform } of states) {
+    for (const { field } of states) {
       const node = this.fieldNode(field),
         raster = this.assets.extras.get(1537),
-        scale = field.scale * transform.scale;
-      node.visible = !field.destroyed;
+        transform = fieldTransform(world, field, 'background'),
+        scale = transform.scale;
+      node.visible = world.fieldDisplays.read(field).root.rooted;
+      node.alpha = transform.alpha ?? 1;
       if (raster) {
         node.position.set(transform.x + raster.x * scale, transform.y + raster.y * scale);
         node.width = raster.width * scale;
@@ -248,11 +253,13 @@ export class GameRenderer {
           this.highlightNodes.set(field, highlight);
           this.highlights.addChild(highlight.root);
         }
-        highlight.root.position.set(transform.x, transform.y);
-        highlight.root.scale.set(
-          world.collapse?.field === field && world.collapse.age > 0 ? transform.scale : field.scale,
-        );
-        highlight.root.visible = !field.destroyed;
+        const source = world.worldDisplays.read(field, 'highlight');
+        const pose = worldLayerTransform(world, field, 'highlight');
+        const point = fieldPoint({ x: 0, y: 0 }, pose);
+        highlight.root.position.set(point.x, point.y);
+        highlight.root.scale.set(pose.scale);
+        highlight.setAlpha(source.pose.alpha);
+        highlight.root.visible = source.rooted;
         highlight.update(1);
       }
     }
@@ -274,13 +281,14 @@ export class GameRenderer {
         this.entities.addChild(layer);
       }
       this.entities.setChildIndex(layer, index);
+      layer.visible = (transform.alpha ?? 1) !== 0;
       return [...world.actorParents.owned(field)].map((tank, childIndex) => {
         const view = this.tank(tank, transform, layer);
         layer.setChildIndex(view.container, childIndex);
         return { tank, transform };
       });
     });
-    const playerTransform = fieldTransform(world, world.currentWrapper);
+    const playerTransform = avatarTransform(world);
     const playerNode = this.tank(world.player, playerTransform, this.entities);
     tanks.push({ tank: world.player, transform: playerTransform });
     const retained = new Set(tanks.map(({ tank }) => tank));
@@ -296,7 +304,7 @@ export class GameRenderer {
       }
     // The avatar is a sibling above the field enemy layers, not one of their children.
     this.entities.setChildIndex(playerNode.container, this.entities.children.length - 1);
-    for (const nodes of [this.mockShots, this.mockPickups])
+    for (const nodes of [this.mockShots])
       for (const [field, graphics] of nodes)
         if (!activeFields.includes(field)) {
           graphics.destroy();
@@ -304,7 +312,8 @@ export class GameRenderer {
         }
     for (const graphics of this.mockShots.values()) graphics.clear();
     const nativeBulletIds = new Set<number>();
-    for (const { runtime, field, transform } of states) {
+    for (const { runtime, field } of states) {
+      const transform = worldLayerTransform(world, field, 'bullet');
       let drawing = this.mockShots.get(field);
       if (!drawing) {
         drawing = new Graphics();
@@ -388,55 +397,55 @@ export class GameRenderer {
       }
     }
     this.pruneSymbols(this.bulletNodes, nativeBulletIds);
-    for (const graphics of this.mockPickups.values()) graphics.clear();
-    const nativePickupIds = new Set<number>();
-    for (const { runtime, field, transform } of states) {
-      let drawing = this.mockPickups.get(field);
-      if (!drawing) {
-        drawing = new Graphics();
-        this.mockPickups.set(field, drawing);
-        this.pickupArt.addChild(drawing);
-      }
-      drawing.position.set(transform.x, transform.y);
-      drawing.scale.set(transform.scale);
-      for (const b of runtime.pickups) {
+    const displayedPickups = new Set<Pickup>();
+    let pickupIndex = 0;
+    for (const { field } of states) {
+      const transform = fieldTransform(world, field, 'life');
+      for (const b of world.pickupDisplays.owned(field)) {
+        const clip = world.pickupDisplays.read(b)!.clip;
+        displayedPickups.add(b);
         if (this.assets.mode === 'swf') {
-          const view = this.nativeSymbol(
-            b.value === 50 ? 1820 : b.value === 5 ? 1817 : 1816,
-            b.uid,
-            this.pickupNodes,
-            this.nativePickups,
-          );
+          const view = this.nativeSymbol(clip.symbol, b, this.pickupNodes, this.nativePickups);
+          this.nativePickups.setChildIndex(view.root, pickupIndex++);
           const point = fieldPoint(b, transform);
           view.root.position.set(point.x, point.y);
           view.root.angle = b.rotation;
           view.root.scale.set(transform.scale);
-          view.update(world.stats.frames + b.uid);
-          nativePickupIds.add(b.uid);
+          view.setParentAlpha(transform.alpha ?? 1);
+          view.updatePose(clip.pose);
           continue;
         }
-        const r = b.value === 50 ? 8 : b.value === 5 ? 4 : 2;
-        drawing.circle(b.x, b.y, r + 2).fill({ color: 0x9dff35, alpha: 0.08 });
+        let drawing = this.mockPickups.get(b);
+        if (!drawing) {
+          drawing = new Graphics();
+          this.mockPickups.set(b, drawing);
+          this.pickupArt.addChild(drawing);
+        }
+        this.pickupArt.setChildIndex(drawing, pickupIndex++);
+        drawing.clear();
+        const point = fieldPoint(b, transform);
+        drawing.position.set(point.x, point.y);
+        const authoredScale =
+          clip.symbol === 1820 ? 2.2500152587890625 : clip.symbol === 1817 ? 1.6759185791015625 : 1;
+        const pulse = (clip.pose.placements[0]?.matrix.a ?? authoredScale) / authoredScale;
+        drawing.scale.set(transform.scale * pulse);
+        drawing.alpha = transform.alpha ?? 1;
+        const r = clip.symbol === 1820 ? 8 : clip.symbol === 1817 ? 4 : 2;
+        drawing.circle(0, 0, r + 2).fill({ color: 0x9dff35, alpha: 0.08 });
         drawing
-          .circle(b.x, b.y, r)
+          .circle(0, 0, r)
           .fill({ color: 0x5bc52e, alpha: 0.4 })
           .stroke({ color: 0xb6ff63, alpha: 0.85, width: 0.7 });
-        drawing.circle(b.x - r * 0.35, b.y - r * 0.35, Math.max(0.5, r * 0.18)).fill(0xeaffb9);
+        drawing.circle(-r * 0.35, -r * 0.35, Math.max(0.5, r * 0.18)).fill(0xeaffb9);
       }
     }
-    this.pruneSymbols(this.pickupNodes, nativePickupIds);
-    this.combatEffects?.update(
-      states.flatMap(({ runtime, transform }) =>
-        runtime.effects.map((effect) => {
-          if (effect.layer === 'screen') return effect;
-          const scale = effect.layer === 'bottom' ? transform.scale ** 2 : transform.scale;
-          return {
-            ...fieldPoint(effect, { ...transform, scale }),
-            scale: (effect.scale ?? 1) * scale,
-          };
-        }),
-      ),
-    );
+    this.pruneSymbols(this.pickupNodes, displayedPickups);
+    for (const [pickup, drawing] of this.mockPickups)
+      if (!displayedPickups.has(pickup)) {
+        drawing.destroy();
+        this.mockPickups.delete(pickup);
+      }
+    this.combatEffects?.update(projectEffects(world));
     this.tacticalHud?.update(world.tacticalHud);
     this.minimap?.update(world);
     this.hud?.update(world);
@@ -468,6 +477,7 @@ export class GameRenderer {
     for (const tex of this.ownedTextures) tex.destroy(true);
     this.tankNodes.clear();
     this.actorLayers.clear();
+    this.mockPickups.clear();
     this.fieldNodes.clear();
   }
 }

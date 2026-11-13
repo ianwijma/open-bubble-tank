@@ -1,3 +1,5 @@
+import { importAvatarFixture } from '../tools/fixtures/avatar-attachments';
+import { importPickupFixtures } from './fixtures/pickup-attachments';
 import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import { STARTER } from '../src/game/data/catalog';
@@ -20,6 +22,7 @@ function pickup(world: World, value: number) {
     forced: true,
     dead: false,
   });
+  importPickupFixtures(world);
 }
 function incoming(world: World, damage: number) {
   const enemy = createTank(
@@ -143,6 +146,7 @@ test('primary shots run in the same field frame while passive shots wait until t
     50,
     2,
   );
+  importAvatarFixture(passive);
   passive.step(emptyInput());
   expect(passive.bullets[0].age).toBe(0);
   passive.step(emptyInput());

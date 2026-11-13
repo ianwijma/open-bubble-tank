@@ -1,3 +1,4 @@
+import { importAvatarFixture } from './avatar-attachments';
 import { Application, Rectangle } from 'pixi.js';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { STARTER } from '../../src/game/data/catalog';
@@ -39,6 +40,7 @@ export async function showMountedArt(pack: AssetPack, host: HTMLElement) {
     },
     'player',
   );
+  importAvatarFixture(world);
   const tank = world.player,
     view = new TankView(tank.design, pack, textures);
   app.stage.addChild(view.container);

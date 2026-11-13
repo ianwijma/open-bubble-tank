@@ -1,3 +1,5 @@
+import { setFieldFixtureLayout } from '../tools/fixtures/field-layout';
+import { importAvatarFixture } from '../tools/fixtures/avatar-attachments';
 import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import type { TankDesign } from '../src/game/core/types';
@@ -30,6 +32,7 @@ function setup() {
     50,
     40,
   );
+  importAvatarFixture(world);
   world.field.cleared = false;
   world.field.tutorial = 0;
   world.muzzle = () => ({ x: 0, y: 0 });
@@ -160,6 +163,7 @@ test('beam candidate Points follow actual reparented actors and contact converts
     target = enemy(world, 100);
   const beam = fire(world);
   world.player.x = 425;
+  setFieldFixtureLayout(world);
   world.jump({ x: 1, y: 0 }, false, { finalizeParts: false });
   const next = world.transit!.next;
   next.enemies = [target];
@@ -236,6 +240,7 @@ test('level-zero escape still triggers a retained unparented beam; arrival does 
   expect(world.hasBulletParent(rejected!)).toBe(false);
   world.player.x = world.transit!.target.x;
   world.player.y = world.transit!.target.y;
+  setFieldFixtureLayout(world);
   world.step({ ...emptyInput(), fire: true });
   expect(world.transit).toBeNull();
   world.step({ ...emptyInput(), fire: true });
@@ -257,6 +262,7 @@ test('after a real death crossing StopFiring preserves the old detached wrapper 
   world.damage(world.player, 2);
   world.player.x = world.transit!.target.x;
   world.player.y = world.transit!.target.y;
+  setFieldFixtureLayout(world);
   world.step({ ...emptyInput(), fire: true });
   expect(world.transit).toBeNull();
   expect(world.currentWrapper).not.toBe(original);

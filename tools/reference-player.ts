@@ -19,7 +19,7 @@ const html = `<!doctype html><html lang="en"><meta charset="utf-8"><title>Bubble
 <label>Original SWF <input id="swf" type="file" accept=".swf"></label>
 ${configured ? '<button id="configured">Load configured research SWF</button>' : ''}
 <button id="pause" disabled>Pause reference</button><button id="resume" disabled>Resume reference</button>
-<div id="stage"></div><output id="status" role="status">Choose a SWF</output><pre id="trace" aria-label="Flash trace"></pre></main>
+<div id="stage"></div><output id="status" role="status">Choose a SWF</output><pre id="trace" data-retain="${Number(process.env.BT3_REFERENCE_TRACE_LINES ?? 128)}" aria-label="Flash trace"></pre></main>
 <script>window.RufflePlayer={config:{publicPath:'/ruffle/',polyfills:false}};</script><script src="/ruffle/ruffle.js"></script><script type="module" src="/reference.js"></script></html>`;
 Bun.serve({
   hostname: '127.0.0.1',

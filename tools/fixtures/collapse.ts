@@ -1,3 +1,6 @@
+import { fieldPoint, worldLayerTransform } from '../../src/game/render/field-transform';
+import { setFieldFixtureLayout } from './field-layout';
+import { importPickupFixtures } from './pickup-attachments';
 import { importActorFixtures } from './actor-attachments';
 import { captureCanvas } from './pixi-capture';
 import { Container, Graphics, Point, Rectangle } from 'pixi.js';
@@ -22,6 +25,7 @@ export async function showCollapseProof(pack: AssetPack, host: HTMLElement) {
   world.field.enemies = [];
   world.field.scale = 1.4;
   world.field.tutorial = 0;
+  world.fieldDisplays.selectTutorial(world.field, 0);
   world.player.x = 140;
   world.player.y = -70;
   world.player.guns = [];
@@ -62,6 +66,7 @@ export async function showCollapseProof(pack: AssetPack, host: HTMLElement) {
     forced: false,
     dead: false,
   });
+  importPickupFixtures(world);
   const bottom = world.addCombatEffect(
     { x: 100, y: 40 },
     'impact',
@@ -74,6 +79,7 @@ export async function showCollapseProof(pack: AssetPack, host: HTMLElement) {
     { layer: 'top', frame: 1, randomRotation: false },
     true,
   );
+  setFieldFixtureLayout(world);
   world.beginCollapse(30);
   const effect = world.collapse!.effect;
   await renderer.init(host, settings);
@@ -107,6 +113,7 @@ export async function showCollapseProof(pack: AssetPack, host: HTMLElement) {
         avatar: avatar.getGlobalPosition(),
         avatarScale: avatar.scale.x,
         shot: renderer.nativeShots.children[0]?.getGlobalPosition() ?? null,
+        sourceShot: fieldPoint({ x: 60, y: 80 }, worldLayerTransform(world, world.field, 'bullet')),
         mockShotScale: renderer.projectiles.children[0]?.scale.x,
         fieldWidth: renderer.fields.children[0].width,
         bottom: pack.mode === 'swf' ? { x: b.x, y: b.y, scale: b.scale.x } : null,

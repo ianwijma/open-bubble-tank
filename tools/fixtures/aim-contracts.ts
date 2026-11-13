@@ -1,3 +1,5 @@
+import { setFieldFixtureLayout } from './field-layout';
+import { importAvatarFixture } from './avatar-attachments';
 import { importActorFixtures } from './actor-attachments';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { DEFAULT_SETTINGS } from '../../src/game/core/constants';
@@ -11,6 +13,7 @@ export async function showAimContracts(pack: AssetPack, host: HTMLElement) {
   const world = new World([], [], 3),
     renderer = new GameRenderer(pack);
   world.field.tutorial = 0;
+  world.fieldDisplays.selectTutorial(world.field, 0);
   world.player = createTank(
     world.nextId(),
     {
@@ -31,6 +34,7 @@ export async function showAimContracts(pack: AssetPack, host: HTMLElement) {
     80,
     world,
   );
+  importAvatarFixture(world);
   world.step({ ...emptyInput(), aim: { x: 275, y: 100 } });
   await renderer.init(host, DEFAULT_SETTINGS);
   const canvas = document.createElement('canvas');
@@ -55,6 +59,7 @@ export async function showAimContracts(pack: AssetPack, host: HTMLElement) {
     80,
     contact,
   );
+  importAvatarFixture(contact);
   const owner = createTank(
       contact.nextId(),
       {
@@ -75,6 +80,7 @@ export async function showAimContracts(pack: AssetPack, host: HTMLElement) {
   importActorFixtures(contact);
   const point = contact.muzzle(owner, gun, 13, 6);
   Object.assign(contact.player, point);
+  setFieldFixtureLayout(contact);
   const successful: number[] = [];
   contact.hitTest = (tank, x, y) => {
     const hit = pack.hitTest(tank, x, y);

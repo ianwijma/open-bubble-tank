@@ -1634,3 +1634,78 @@ Numeric field wrapper/root/authored-slot/tutorial/bottom identities and source s
 ## Combined field ownership and carrier batch
 
 The [five-layer validation record](field-display-batch-validation.md) joins exact Script arithmetic, actual actor ownership/rendering, fresh field births, retained wrapper state, binary-qualified under-avatar sizing and construction-clock carrier queues. Joint formatting/typecheck passes1,054 tests /9,338 assertions; production build dkr0p3LsXCBbE9WJEk8Gn and68 mock/supplied-art browser cases pass without skips/flaky results. All680 source digests match; scoped paint and owned server cleanup were checked. Final current-head hosted Actions/review verification remains required before one master merge. Complete dynamic field queries, actual pickup/effect poses, sibling ancestry and ordinary/full-game parity remain unfinished.
+
+## Local retained World sibling pose boundary
+
+The [World layer owner](world-layer-display-reference.md) binds source construction, movement, collapse, detach and promotion writes for bullet/top/highlight/screen instances. Top/screen share actual engine identities; lower117 remains in FieldDisplays. Pure matrix reads distinguish actual nesting and detached ancestry. Formatting/typecheck and1,060 tests /9,421 assertions pass; production build fNjhmQSpmM5S0syEdeo9b and10 affected mock/supplied-art cases pass without skips/flaky results, with682 input digests unchanged and owned3725/3726 servers stopped. The renderer still uses its prior field-transform adapter in this local boundary. Painted migration, complete field geometry and ordinary/full-game parity remain separate work; this change is not part of published PR149.
+
+## Field display batch delivery
+
+The [combined field batch](field-display-batch-validation.md#delivered) passed exact-head hosted run43383715769 / job131747165658 and landed through one PR149 merge6125acdef18d9bc3c238d460930e238fc4c71f6d. Fetched master exactly matches tested tree55e359e8943c73fedc0dec664785f7a28c8071a7; PRs145–149 are all confirmed merged. Reviews/inline threads were empty and inspected bot comments were informational. The watch is stopped and the legacy checkpoint is unchanged. The later local sibling-pose and pickup follow-ups are not part of that delivery. No complete-field-query, ordinary earned boss/win or full-game parity claim follows.
+## Retained pickup identity and physical life-layer children (ownership ancestor)
+
+- The local [pickup owner and source audit](pickup-display-ownership-reference.md) separates actual Pickup objects, ordered life-layer children, original Setup references and retained clip-lifetime handles from `_‑Ym`/FieldRuntime Run arrays and gameplay UIDs. Birth attaches before Setup/append; collection, outside callbacks and completed/collapse cleanup remove actual references explicitly. Array-only mutations, dead/value writes and duplicate UIDs cannot reconstruct artwork or ownership. Fixture bootstrap is explicit and confined to tools/tests.
+- Native and mock renderer views now use object identity and actual child order. Imported binary identities/counts distinguish1816/1817 (40 frames, registered random frame1) and1820 (`_‑5A`,31 frames, no registered script). Nine independent raw-byte/source-hash controls pass. Existing gameplay RNG/UID streams are preserved; complete original script entropy is unproved.
+- At the picked ownership ancestor, native playback was explicitly unresolved (`currentFrame=null`) and rendering held an authored frame1 preview. This historical limitation is superseded by the animation continuation below. No new original/REA runtime trace, native pose, clipping/geometry fallback, complete field query or ordinary/original/Adobe/full-game parity is claimed. The reference records source identities, reproduction, finite rule/browser evidence and the required pickup clock qualification before complete field composition.
+
+
+## Qualified retained pickup animation (local next batch)
+
+- The [pickup clock qualification](pickup-clock-reference.md) replaces permanent frame1 presentation with actual retained `SwfClip` trees, separate before-Main entry/frame-script phases, recurring random frame1 actions and source child placements. The inside-ENTER changed-frame jump advances at ENTER2; the self-target/unscripted constructor hold advances at ENTER3. Physical add/remove/Run-vector changes never reconstruct those lifetimes. Native painting and Script bounds use the same pose; the existing procedural mock paint follows its authored pulse.
+- The distinct preserved-original probe exercises actual1816/1817/1820 roots before and inside ENTER, parentless/attached/removed references, original Setup and SpawnLifeBubbles with controlled valid dependencies. Independent verifiers check both original ABCs, all3,018 nonbinding tags/order,9,788 root/child pose pairs,69 natural scripted wraps, sampled zero/one self-targets and17 rejecting controls per cohort. Numeric child transform error is0; repeated same-value `r` writes are not counted. Independent REA DOM/module identities are retained; incomplete REA events are not equality proof. Original World.Run, ordinary reachability, Adobe, global RNG/event ordering, complete field queries and full-game parity remain open.
+- Artwork entropy is explicitly host-provided and separate from unchanged gameplay RNG/UID streams. Per-clip observed-result replay checks24 retained objects at408 ENTER/EXIT checkpoint pairs (816 root/child phase poses), without claiming source global draw equality. Two source-based old-behavior controls fail for null/frozen playback and stats+UID reconstruction;39 focused cases pass6,113 assertions. All existing physical ownership/removal assertions remain.
+- `bun run format` and serial `bun run check` pass1,093 tests /15,451 assertions. The literal supplied-SWF `bun run test:e2e --config test-results/pickup-playback/playwright.config.mts` passes25 affected browser cases (1.8m), covering mock and original art with zero skips/retries/flaky results. Production BUILD_ID is `8WQ4Gf9uOP3EoZUT0dIji`. Finite original and mock/native pickup/crossing/clip captures were inspected. The private `.mts` specs change only ports/helper import routing and retain assertions. Evidence and cleanup live under ignored `reference-captures/pickup-{before,inside}-final/` and `test-results/pickup-playback/`. No remote action, SWF/media/dependency/build/capture commit, protected-ref write or parent-checkout mutation occurs.
+
+## Original collapse/avatar and World-layer numeric oracle
+
+The distinct [preserved-original World probe](world-layer-original-reference.md) freezes90 snapshots /1,890 binary Number values from actual original clips and builtin ByteArray. Public Setup(Main), TankData._-Tr, DeathAnimPart2 and119 synchronous original ShrinkBubblefield calls qualify cached scales, per-write avatar coordinates, nested bottom versus siblings, and global Points. Main fractional setters, finish transform prefix, next construction-current-position copies and detached retention are explicitly bounded glue controls; original World.Run, full DeathAnimPart3/arrival and event scheduling are not executed. At119 avatar is(-77.35,35.7), scale0.4166666666666692, global origin(197.65,260.7). Detached Ruffle concatenatedMatrix disagrees with its separately measured localToGlobal; both getters remain visible in the oracle.
+
+Two fresh-browser captures independently match frozen words, raw traces, REA DOM, original payloads/order/header/bindings and actual loaded module identities; twelve adversarial mutations reject. REA events remain incomplete/equality-ineligible. Compiled runtime revision, ordinary encounter/global RNG, Adobe/pixel/audio and complete-game parity remain unproven. Formatting/check passes1,060 tests /9,421 assertions. This research changes no production simulation, renderer or old collapse assertions; the parent owns those consumers separately.
+
+
+## Retained renderer consumer and original numeric checks
+
+The [local renderer continuation](retained-renderer-reference.md) replaces derived camera/collapse transforms with retained field-slot, avatar and World sibling poses. Actual registered effect children supply their parent transform and retained object-keyed native/mock views; compatibility completion contexts and UIDs do not determine effect paint. The independent original oracle checks cached getters, effective coefficients, per-write avatar motion and Points at five collapse ages, separate Main ancestry and the finish prefix. The old linear avatar expectation is replaced by frozen original values. Artificial gallery edits explicitly supply omitted move/follow/goto operations; the actor reparent position assertion remains unchanged.
+
+Joint formatting/check passes 1,109 tests / 16,078 assertions. Production build `wtvomZbcwV1LMW9O2u0Ea` and the literal affected browser run pass 44 mock/supplied-SWF cases without skips or flaky results; all 712 input digests match. Replaying the preceding actual effect view fails both new ownership cases, then source restoration is verified. All 90 original evidence snapshots independently re-verify in an owned copy, with REA events still incomplete. Scoped paint was inspected and owned 3735/3736 servers are free. Complete native field geometry/masks/order, retained effect playback, ordinary earned boss/win, global entropy/event equality and original/Adobe/full-game parity remain unproved. This local continuation follows PR149; it does not retroactively change that delivered build.
+
+
+## Original actor and field Point inverse qualification
+
+The distinct [actor-point preserved-original probe](actor-point-original-reference.md)
+freezes112 rows /2,576 binary Number values from actual original field1551,
+identity actor layer1547 and TankData avatar clips. It measures both builtin
+Point APIs at collapse0/51/119, supplied off-grid stage Points, separate fractional
+Main, current/next field and copied bullet/top parents, rotations90/30/60, actual
+removeChild and reparenting under a detached field. Original Setup, DeathAnimPart2
+and119 synchronous ShrinkBubblefield calls execute; constructor/setter/parenting
+glue and absence of World.Run/ordinary scheduling remain explicit.
+
+Two fresh owned-browser captures independently match frozen words, raw trace,
+REA DOM, original header/ABCs/all tag bytes/order/bindings and loaded module
+identities. The proposed existing core inverse-then-Point arithmetic matches
+all112 inverse and84 forward controls;36 round trips lose information. At119
+field(100,40) becomes stage(176.65,311.65), then local(99.95,39.95). No finite
+control contradicts that arithmetic, but detached concatenatedMatrix remains
+ineligible as its oracle. Thirteen consistent-forgery/parent/signed-zero/byte
+mutations reject. Check passes1,109 tests /16,078 assertions; production is
+unchanged. REA events remain incomplete/equality-ineligible; arbitrary affine,
+nonfinite/singular, compiled runtime source, event/global RNG, Adobe/pixel/audio
+and full-game equivalence remain unproved. Parent owns production integration.
+
+
+## Retained combat ancestry and receiver-local avatar bridge
+
+The [combat ancestry continuation](retained-combat-ancestry-reference.md) reads actual field/actor/avatar and World sibling parents, preserves detached/replaced identities and consumes independently frozen original Point inverses. The shared Tank x/y bridge now follows physical display writes and receiver-local conversions; the independently accumulated0.6px movement discrepancy is removed. Crossing marker conversion, source trigonometric operation order and movement callback order are restored. Eighteen focused cases pass213 assertions; formatting/typecheck and1,129 rule tests /16,312 assertions pass. Final affected browser validation is still in progress. Original capture verification passes112 rows; REA events remain incomplete/equality-ineligible. Dynamic field composition/width/shape queries, event/global RNG equality, ordinary progression and original/Adobe/full-game parity remain unproved.
+
+
+## Retained display combined progression gate remains open
+
+The corrected PR153 head34955e5 passes1,129 unit tests /16,312 assertions and75 of76 affected browser cases, without skips/flaky results. Supplied-art accelerated progression exhausts200,000 frames at level3/life4 without boss/win; the mock case wins at74,791. The failure is preserved, not waived as infrastructure. Buildm_zE0SvnTHQIiuzzdBixP and728 input hashes are verified; private specs preserve assertions/budgets, changing only port/import routing. Both owned servers are stopped and3775/3776 are free. The [batch integration record](retained-display-batch-validation.md) is held locally pending diagnosis and a valid combined gate. Native part/status/projectile streams are seeded; independent pickup-art entropy alone is not evidence of a reachable gameplay-variance cause. A baseline native success and a failing corrected native run do not isolate production versus controller causality. Full-game recreation remains incomplete.
+
+
+## Reward-coasting validation pilot continuation
+
+The independent supplied-art repeat at34955e5 also reaches level3/life4 with a retained transit age2. Its read-only samples identify the state after first secondary-help Close: source mode becomes ordinary while movement/birth gates remain set. Cleared-field coasting with pending rewards precedes upgrade during the crossing. The [fifth integration](retained-display-batch-validation.md) preserves production source behavior and changes only the accelerated pilot to steer inward until forced rewards arrive. Two new public-input regressions fail before and pass after; the existing source-state case now also pins ineffective direction input rather than silently resuming travel. Formatting/check pass1,131 tests /16,325 assertions.
+
+Fresh literal build-Op3ze2z_uXkObma46lfY passes both affected mock/supplied-art playthroughs at68,999/67,433frames with the same offered designs, all six levels, help once, no downgrades and Boss Badge. All729 prebuild inputs match, production src has no difference from34955e5, and owned3775/3776 are free. The74 unaffected prior cases retain their original build identity; this is not one new76-case passing run. No controller skip, production recovery, provider/RNG/seed/frame-cap/timeout/assertion relaxation is used. Original failing trajectories remain available. Hosted combined-head validation, ordinary realtime earned progression and original/Adobe/full-game parity remain separate requirements.

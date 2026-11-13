@@ -1,3 +1,6 @@
+import { setFieldFixtureLayout } from '../tools/fixtures/field-layout';
+import { importAvatarFixture } from '../tools/fixtures/avatar-attachments';
+import { importPickupFixtures } from './fixtures/pickup-attachments';
 import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import { World, emptyInput } from '../src/game/simulation/world';
@@ -24,6 +27,7 @@ function setup(...weapons: number[]) {
     50,
     1,
   );
+  importAvatarFixture(world);
   world.hitTest = () => false;
   return world;
 }
@@ -54,6 +58,7 @@ test('manual triggers precede combat, cooldowns follow it, and HUD retains the i
     forced: false,
     dead: false,
   });
+  importPickupFixtures(world);
   world.step(emptyInput());
   expect(world.player.life).toBe(6);
   expect(world.hud.readout(world.player, world.secondaryCounter).life).toBe(1);
@@ -72,6 +77,7 @@ test('large-class manual triggers use the prior part aim, then aim updates in Av
     50,
     1,
   );
+  importAvatarFixture(world);
   const gun = world.player.guns[0];
   gun.part = { ...gun.part, x: 0, y: 0 };
   gun.angle = 30;
@@ -173,6 +179,7 @@ test('player launcher uses 100ms Timer callbacks and current emitters through ja
   world.advanceTime(99);
   expect(world.bullets).toEqual([]);
   world.player.x = 50;
+  setFieldFixtureLayout(world);
   world.pause();
   applyProjectileStatus(world, world.player, 'jam');
   applyProjectileStatus(world, world.player, 'stun');
@@ -207,6 +214,7 @@ test('normal crossing/replacement cancel timers; direct death/Destroy attachment
     expect(escaped.stats.shots).toBe(0);
     escaped.player.x = escaped.transit!.target.x;
     escaped.player.y = escaped.transit!.target.y;
+    setFieldFixtureLayout(escaped);
     escaped.step(emptyInput(), 0);
     expect(escaped.mode).toBe('playing');
     escaped.advanceTime(1000);
@@ -223,6 +231,7 @@ test('Massive Cannon completion follows the bullet phase and observes looping au
   frames(world, 20); // EXIT25 is25; the next ENTER reaches26 before Run polls.
   expect(world.bullets).toEqual([]);
   world.player.x = 40;
+  setFieldFixtureLayout(world);
   world.resume();
   world.step(emptyInput());
   expect(world.bullets[0].damage).toBe(100);
@@ -255,6 +264,7 @@ test('arrival clears the one registered callback engine while the next layer rem
   expect(runtime.pending).toHaveLength(0);
   world.player.x = transit.target.x;
   world.player.y = transit.target.y;
+  setFieldFixtureLayout(world);
   world.step(emptyInput());
   expect(world.mode).toBe('playing');
   expect(runtime.pending).toEqual([]);
@@ -322,6 +332,7 @@ test('normal boundary FinalPartCall clears readouts before the initiation frame 
   world.step(emptyInput());
   expect(world.tacticalHud.passives).toHaveLength(1);
   world.player.x = 425;
+  setFieldFixtureLayout(world);
   world.step(emptyInput());
   expect(world.mode).toBe('transit');
   expect(world.tacticalHud.passives).toHaveLength(1);

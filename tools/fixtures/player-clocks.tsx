@@ -1,3 +1,4 @@
+import { importAvatarFixture } from './avatar-attachments';
 import { createRoot } from 'react-dom/client';
 import { useState } from 'react';
 import { GameViewport } from '../../src/components/game-viewport';
@@ -84,7 +85,9 @@ export function showPlayerClocks(
     50,
     1,
   );
+  importAvatarFixture(world);
   world.field.tutorial = 0;
+  world.fieldDisplays.selectTutorial(world.field, 0);
   const root = createRoot(host);
   root.render(<ClockViewport world={world} pack={pack} />);
   const inspect = () =>

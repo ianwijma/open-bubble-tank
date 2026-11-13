@@ -14,6 +14,7 @@ export async function showOrbitalWidth(pack: AssetPack, host: HTMLElement) {
   world.displayWidth = pack.tankDisplayWidth;
   world.protectionRadius = pack.protectionRadius;
   world.field.tutorial = 0;
+  world.fieldDisplays.selectTutorial(world.field, 0);
   const tank = createTank(
     world.nextId(),
     {

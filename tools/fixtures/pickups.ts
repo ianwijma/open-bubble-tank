@@ -1,3 +1,5 @@
+import { importAvatarFixture } from './avatar-attachments';
+import { importPickupFixtures } from './pickup-attachments';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { DEFAULT_SETTINGS } from '../../src/game/core/constants';
 import { STARTER } from '../../src/game/data/catalog';
@@ -18,7 +20,9 @@ export async function showPickupProof(pack: AssetPack, host: HTMLElement) {
     50,
     1,
   );
+  importAvatarFixture(world);
   world.field.tutorial = 0;
+  world.fieldDisplays.selectTutorial(world.field, 0);
   world.hitTest = pack.hitTest;
   let edge = 0;
   for (let x = 0; x < 100; x += 0.5) if (pack.hitTest(world.player, x, 0)) edge = x;
@@ -36,6 +40,7 @@ export async function showPickupProof(pack: AssetPack, host: HTMLElement) {
     dead: false,
   };
   world.pickups.push(pickup);
+  importPickupFixtures(world);
   const canvas = document.createElement('canvas');
   canvas.width = 550;
   canvas.height = 450;

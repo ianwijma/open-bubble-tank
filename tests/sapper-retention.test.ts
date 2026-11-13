@@ -1,3 +1,4 @@
+import { setFieldFixtureLayout } from './fixtures/field-layout';
 import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import type { Field, TankDesign } from '../src/game/core/types';
@@ -55,7 +56,9 @@ function preload(world: World, col: number) {
 }
 function arrive(world: World) {
   world.player.x = world.transit!.target.x;
+  setFieldFixtureLayout(world);
   world.player.y = world.transit!.target.y;
+  setFieldFixtureLayout(world);
   world.step(emptyInput());
   expect(world.transit).toBeNull();
 }
@@ -93,10 +96,12 @@ test('cached Sapper mount keeps its detached-layer shot after a fresh wrapper is
   const original = world.field;
   preload(world, 1);
   world.player.x = 425;
+  setFieldFixtureLayout(world);
   world.jump({ x: 1, y: 0 });
   arrive(world);
   expect(world.hasBulletParent(bullet)).toBe(true);
   world.player.x = -425;
+  setFieldFixtureLayout(world);
   world.jump({ x: -1, y: 0 });
   arrive(world);
   expect(world.field).not.toBe(original);
@@ -135,7 +140,9 @@ test('Sapper steering transforms the projectile and target into the same global 
   bullet.x = 0;
   bullet.y = 20;
   world.player.x = 250;
+  setFieldFixtureLayout(world);
   world.player.y = 80;
+  setFieldFixtureLayout(world);
   world.actorParents.sync(world);
   tickSapper(world, bullet);
   expect(bullet.angle).toBeCloseTo((Math.atan2(60, 250) * 180) / Math.PI, 12);

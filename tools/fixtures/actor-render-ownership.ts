@@ -1,3 +1,5 @@
+import { importAvatarFixture } from './avatar-attachments';
+import { setFieldFixtureLayout } from './field-layout';
 import type { SwfClip } from '../../src/game/assets/swf-clip';
 import { Container, Rectangle } from 'pixi.js';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
@@ -128,6 +130,7 @@ export async function showActorRenderOwnership(pack: AssetPack, host: HTMLElemen
     for (const tank of world.actorParents.owned(next)) world.actorParents.detach(tank);
     next.enemies = [];
     world.transit!.offset = { x: 170, y: 0 };
+    setFieldFixtureLayout(world);
     world.actorParents.sync(world);
     draw();
     const oldParent = view(b)?.container.parent;
@@ -189,6 +192,7 @@ export async function showActorRenderOwnership(pack: AssetPack, host: HTMLElemen
       'player',
     );
     world.player = protectedTank;
+    importAvatarFixture(world);
     world.fireGun(
       protectedTank,
       protectedTank.guns.find((gun) => gun.part.type === 3010)!,

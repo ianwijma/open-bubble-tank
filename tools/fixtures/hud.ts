@@ -1,3 +1,4 @@
+import { importAvatarFixture } from './avatar-attachments';
 import { Application } from 'pixi.js';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { HUD, secondaryRate, weaponRows } from '../../src/game/core/hud';
@@ -49,6 +50,7 @@ export async function showHudProof(pack: AssetPack, host: HTMLElement) {
     world.hud.lifeY = HUD.life.y + 0.2;
     world.hud.fireY = HUD.fire.y;
     world.player = createTank(500, { ...design, parts: [] }, 'player', 0, 0, 100, 50);
+    importAvatarFixture(world);
     draw();
     const empty = alpha(470, 25);
     world.player = createTank(
@@ -60,10 +62,12 @@ export async function showHudProof(pack: AssetPack, host: HTMLElement) {
       100,
       50,
     );
+    importAvatarFixture(world);
     world.secondaryCounter = secondaryRate(world.player) / 2;
     draw();
     const secondaryOnly = { filled: alpha(470, 25), empty: alpha(520, 25) };
     world.player = createTank(502, design, 'player', 0, 0, 100, 50);
+    importAvatarFixture(world);
     world.player.guns[0].counter = WEAPONS[2001].rate / 2;
     world.secondaryCounter = secondaryRate(world.player) * 0.75;
     draw();

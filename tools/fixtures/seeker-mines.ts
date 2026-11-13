@@ -23,6 +23,7 @@ export async function showSeekerMineProof(pack: AssetPack, host: HTMLElement) {
       b.kind === 'turret' ? world.allTanks().find((t) => t.uid === b.owner) : undefined,
     );
   world.field.tutorial = 0;
+  world.fieldDisplays.selectTutorial(world.field, 0);
   const owner = createTank(
     world.nextId(),
     { ...STARTER, avatar: false, speed: 0, life: 100, parts: [STARTER.parts[0]] },

@@ -1,3 +1,4 @@
+import { importAvatarFixture } from '../tools/fixtures/avatar-attachments';
 import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import { World, emptyInput } from '../src/game/simulation/world';
@@ -21,6 +22,7 @@ function setup(...types: number[]) {
     },
     'player',
   );
+  importAvatarFixture(world);
   world.hitTest = () => false;
   world.player.life = 1;
   world.player.maxLife = 50;
@@ -310,3 +312,27 @@ test('Area Burst flushes lethal enemies before returning and preserves their non
   expect(world.bullets).toHaveLength(6);
   expect(world.bullets.every((bullet) => bullet.kind === 'seekerMine' && !bullet.dead)).toBe(true);
 });
+
+for (const type of [3011, 3012])
+  test(`teleporter ${type} moves the retained field through the full secondary frame`, () => {
+    const world = setup(type),
+      field = world.currentWrapper;
+    world.player.guns[0].part = { ...world.player.guns[0].part, x: 10, y: 0, scale: 1 };
+    const calls: number[] = [];
+    world.onCameraMove = (x) => {
+      calls.push(x);
+      if (x === 80) {
+        expect(world.fieldDisplays.readPose(field).pose.x).toBe(-80);
+        expect(world.fieldDisplays.readPose(field, 'avatarUnder').pose.x).toBe(80);
+        expect(world.worldDisplays.read(field, 'bullet').pose.x).toBe(0);
+      }
+    };
+    world.step({ ...emptyInput(), secondary: true, aim: { x: 375, y: 225 } });
+    expect(world.player.x).toBe(80);
+    expect(world.actorParents.point(world.player, field)).toEqual({ x: 80, y: 0 });
+    expect(calls).toEqual([0, 80]);
+    expect(world.worldDisplays.read(field, 'bullet').pose.x).toBe(-80);
+    world.step(emptyInput());
+    expect(world.player.x).toBe(80);
+    expect(world.fieldDisplays.readPose(field).pose.x).toBe(-80);
+  });

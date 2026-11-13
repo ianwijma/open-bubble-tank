@@ -1,3 +1,4 @@
+import { setFieldFixtureLayout } from './fixtures/field-layout';
 import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import type { Projectile } from '../src/game/core/types';
@@ -98,6 +99,7 @@ test('enemy seekers and orbitals steer toward rotated authored hit locations, no
     target.x = 100;
     target.design = { ...target.design, parts: [{ ...STARTER.parts[0], x: 30 }] };
     target.rotation = 90;
+    setFieldFixtureLayout(world);
     const b = shot(world, {
       kind: orbital ? 'orbital' : 'seeker',
       enemy: !orbital,
@@ -130,6 +132,7 @@ test('enemy seeker close latch uses strict5px and survives later steering away f
   for (const x of [4.99, 5]) {
     const world = setup();
     world.player.x = x;
+    setFieldFixtureLayout(world);
     const b = shot(world, {
       kind: 'seeker',
       symbol: 1809,
@@ -137,6 +140,7 @@ test('enemy seeker close latch uses strict5px and survives later steering away f
       targetId: world.player.uid,
     });
     world.player.x = 100;
+    setFieldFixtureLayout(world);
     tick(world, b);
     expect(b.dead).toBe(x < 5);
     expect(world.player.life).toBe(x < 5 ? 93 : 100);
@@ -176,6 +180,12 @@ test('owner detachment wipes orbitals before wall reporting; a dead but attached
   tick(world, b);
   expect(b.dead).toBe(false);
   world.player = createTank(world.nextId(), STARTER, 'player');
+  world.fieldDisplays.updateAvatar(
+    world.player,
+    world.currentWrapper,
+    world.transit?.next,
+    world.stats.frames,
+  );
   b.x = 1000;
   tick(world, b);
   expect(b.dead).toBe(true);
@@ -188,6 +198,7 @@ test('a lethal owner callback leaves its orbital attached until queued enemy rem
     home = enemy(world, 0),
     b = shot(world, { owner: home.uid, enemy: true, symbol: 1807 });
   world.player.x = 300;
+  setFieldFixtureLayout(world);
   world.kill(home);
   expect(b.dead).toBe(false);
   tick(world, b);
@@ -210,6 +221,12 @@ test('base Run refreshes collision avatar before Move while steering keeps the d
     y: 100,
   });
   world.player = createTank(world.nextId(), STARTER, 'player', 0, 0, 100, 100);
+  world.fieldDisplays.updateAvatar(
+    world.player,
+    world.currentWrapper,
+    world.transit?.next,
+    world.stats.frames,
+  );
   tick(world, b);
   expect(b.homing!.avatar).toBe(world.player);
   expect(b.homing!.target).toBe(old);
@@ -267,11 +284,14 @@ test('explicit home and target references survive same-UID replacements and a ca
   cacheEmptyField(cached);
   cached.player.life = 99; // Keep interface progression from opening an upgrade prompt.
   cached.player.x = 425;
+  setFieldFixtureLayout(cached);
   cached.jump({ x: 1, y: 0 });
   cached.transit!.next.enemies = [];
   cached.transit!.offset = { x: 800, y: 0 };
+  setFieldFixtureLayout(cached);
   cached.transit!.target = { x: 483, y: 0 };
   cached.player.x = 483;
+  setFieldFixtureLayout(cached);
   cached.step(emptyInput());
   expect(cached.field).not.toBe(old);
   expect(cached.actorParents.hasParent(cachedHome)).toBe(true);

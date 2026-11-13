@@ -1,3 +1,4 @@
+import { importPickupFixtures } from './fixtures/pickup-attachments';
 import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import { FieldVisit } from '../src/game/core/field-visit';
@@ -206,6 +207,7 @@ test('collected statistic counts objects while healing retains denomination valu
     forced: false,
     dead: false,
   }));
+  importPickupFixtures(world);
   collectPickups(world);
   expect(world.player.life).toBe(57);
   expect(world.stats.collected).toBe(3);

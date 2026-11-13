@@ -1,6 +1,7 @@
 import { CLASS_SPEED, FIELD_RADIUS, MAX_LIFE, STAGE } from '../core/constants';
 import { clamp, direction, distance, length, Random, rotate } from '../core/math';
-import { displayPixel } from '../core/display-values';
+import { displayPixel, displayTwips } from '../core/display-values';
+import { displayMatrixPoint, inverseDisplayMatrix } from '../core/display-transform';
 import { protectionRadius } from '../core/protection-size';
 import { advanceTankArt } from './tank-art';
 import { detachForcefield } from './forcefield';
@@ -59,6 +60,7 @@ import { tickBullet, starSplit, releaseCarrier, explode } from './projectiles';
 import { stopDamageBeam } from './beams';
 import { createTank, deactivateTankData } from './tank';
 import { spawnPickups, tickPickups } from './pickups';
+import { PickupDisplays, PickupChildRemovalError, clearPickups } from './pickup-display';
 import { damageTank } from './damage';
 import { rollBossWave, rollWave, UnitRoster } from './waves';
 import { tickStatusDecoration, tickStatusTail } from './status';
@@ -89,6 +91,7 @@ import {
 import { FieldCache } from './field-cache';
 import { FieldDisplays, type UnderAvatarSizeResolver } from './field-display';
 import { resolveUnderAvatarSize } from './under-avatar-size';
+import { WorldDisplays } from './world-display';
 
 export interface Transit {
   next: Field;
@@ -125,15 +128,16 @@ export class World {
   }
   hitSoundTimer = -1;
   readonly actorParents = new ActorParents();
+  readonly pickupDisplays = new PickupDisplays();
   readonly effectEngine = new RegisteredEffects();
   player: Tank;
   private currentField!: Field;
   private fieldContext: Field | null = null;
-  private contextOffset: Vec = { x: 0, y: 0 };
   private orphaned: { field: Field; screen: Vec }[] = [];
   private callbackFields = new WeakMap<Tank, Field>();
   readonly cache = new FieldCache();
   readonly fieldDisplays: FieldDisplays;
+  readonly worldDisplays: WorldDisplays;
   mapPosition = { col: 0, row: 0 };
   private previousMapPosition = { col: 0, row: 0 };
   private runtimes = new WeakMap<Field, FieldRuntime>();
@@ -178,7 +182,9 @@ export class World {
   }
   bulletGlobal(bullet: Projectile) {
     const parent = this.projectileParents.get(bullet);
-    return parent ? this.actorParents.layerGlobal(bullet, parent.field) : null;
+    return parent
+      ? this.worldDisplays.layerGlobal(bullet, parent.field, 'bullet', this.mainEffects.position)
+      : null;
   }
   get pickups() {
     return this.runtime.pickups;
@@ -227,23 +233,24 @@ export class World {
     ];
   }
   private avatarPosition() {
-    return { x: this.player.x + this.contextOffset.x, y: this.player.y + this.contextOffset.y };
+    return this.actorParents.point(this.player, this.currentField)!;
+  }
+  /** Tank scalars are a receiver-local bridge, not a second accumulated camera position. */
+  private projectAvatar(field: Field) {
+    const point = this.actorParents.point(this.player, field)!;
+    this.player.x = point.x;
+    this.player.y = point.y;
   }
   /** Every actor keeps field-local coordinates; only the shared avatar needs projection. */
-  private inField(field: Field, offset: Vec, run: () => void) {
+  private inField(field: Field, run: () => void) {
     const previous = this.fieldContext;
-    const previousOffset = this.contextOffset;
     this.fieldContext = field;
-    this.contextOffset = offset;
-    this.player.x += previousOffset.x - offset.x;
-    this.player.y += previousOffset.y - offset.y;
+    this.projectAvatar(field);
     try {
       run();
     } finally {
-      this.player.x += offset.x - previousOffset.x;
-      this.player.y += offset.y - previousOffset.y;
       this.fieldContext = previous;
-      this.contextOffset = previousOffset;
+      this.projectAvatar(previous ?? this.currentField);
     }
   }
   /** _-0D.SpawnNewBullet declines new shots while _-5d is set. Timers still run. */
@@ -430,6 +437,11 @@ export class World {
     underAvatarSizeResolver: UnderAvatarSizeResolver = resolveUnderAvatarSize,
   ) {
     this.fieldDisplays = new FieldDisplays(underAvatarSizeResolver);
+    this.worldDisplays = new WorldDisplays(this.fieldDisplays, this.effectEngine);
+    this.fieldDisplays.onCollapseSiblingScale = (field, kind, axis, value) =>
+      this.worldDisplays.setCollapseScale(field, kind, axis, value);
+    this.fieldDisplays.onCollapseHighlightAlpha = (field, value) =>
+      this.worldDisplays.setHighlightAlpha(field, value);
     this.rng = new Random(seed);
     this.roster = new UnitRoster(this.rng, localTanks);
     if (history.length)
@@ -456,6 +468,7 @@ export class World {
     this.fieldDisplays.updateAvatar(this.player, this.field, undefined, this.stats.frames);
     this.fields.set('0,0', this.field);
     this.effectEngine.createFieldLayers(this.field);
+    this.worldDisplays.construct(this.field, this.field, true);
     this.effectEngine.register(this.effectEngine.layer(this.field, 'top')!);
     this.effectEngine.register(this.effectEngine.layer(this.field, 'bottom')!);
     this.effectEngine.register(this.effectEngine.screen);
@@ -499,6 +512,7 @@ export class World {
   }
   step(input: InputFrame, milliseconds = 20, advanceMainEffects = true) {
     this.effectEngine.enterFrame();
+    this.pickupDisplays.enterFrame();
     this.advanceTime(milliseconds);
     if (advanceMainEffects) this.mainEffects.tick(() => this.rng.next());
     try {
@@ -516,6 +530,7 @@ export class World {
         !(error instanceof CrossingTargetReadError) &&
         !(error instanceof DeactivatedActorRunError) &&
         !(error instanceof FieldChildRemovalError) &&
+        !(error instanceof PickupChildRemovalError) &&
         !(error instanceof EffectLayerReadError) &&
         !(error instanceof EffectChildRemovalError) &&
         !(error instanceof EffectCompletionReadError)
@@ -527,7 +542,11 @@ export class World {
   }
   /** Attached ENTER_FRAME art continues when Main4 skips the World.Run listener. */
   advanceArtwork(enterCarrierFrame = true) {
-    if (enterCarrierFrame) this.effectEngine.enterFrame();
+    if (enterCarrierFrame) {
+      this.effectEngine.enterFrame();
+      this.pickupDisplays.enterFrame();
+    }
+    this.pickupDisplays.advanceArtwork();
     this.fieldDisplays.advanceArtwork();
     this.actorParents.sync(this);
     this.effectEngine.advanceArtwork();
@@ -556,6 +575,7 @@ export class World {
       return;
     }
     if (this.flow.state !== 'playing') return;
+    this.projectAvatar(this.currentField);
     this.stats.frames++;
     // State0 detects an exit before interface/field/avatar work. Its initiation frame
     // still reaches Avatar.Run; subsequent state2 frames skip it.
@@ -643,10 +663,9 @@ export class World {
   private tickActiveFields(input: InputFrame) {
     this.actorParents.sync(this);
     this.tacticalHud.updateAllies(this.allies, this.player, this.viewZoom);
-    this.inField(this.currentField, { x: 0, y: 0 }, () => this.tickField(input, this.fieldVisit));
+    this.inField(this.currentField, () => this.tickField(input, this.fieldVisit));
     const transit = this.transit;
-    if (transit)
-      this.inField(transit.next, transit.offset, () => this.tickField(input, transit.visit));
+    if (transit) this.inField(transit.next, () => this.tickField(input, transit.visit));
   }
   private tickField(input: InputFrame, visit: FieldVisit) {
     this.flushEnemyRemovals();
@@ -788,10 +807,10 @@ export class World {
     this.field.destroyed = true;
     this.field.cleared = true;
     this.bullets = [];
-    this.pickups = [];
+    clearPickups(this, this.field);
     this.allies = [];
     for (const carrier of this.runtime.pending) this.effectEngine.discard(carrier);
-    this.player.x = this.player.y = 0;
+    this.projectAvatar(this.currentField);
     this.collapse = null;
     this.flow.restoreControl();
     // Destroy calls _-1E directly; only ordinary boundary exits run FinalPartCall.
@@ -838,10 +857,15 @@ export class World {
         if (Math.abs(v) < 0.5) v = 0;
       }
       p.velocity[axis] = v;
-      p[axis] += v;
     }
-    this.onCameraMove(p.velocity.x, p.velocity.y);
-    this.fieldDisplays.moveCurrent(this.currentField, p.velocity);
+    this.adjustBubblefieldObjects(p.velocity);
+  }
+  /** Original shared camera operation, including teleport's destination-origin displacement. */
+  adjustBubblefieldObjects(delta: Vec) {
+    this.fieldDisplays.moveCurrent(this.currentField, delta);
+    this.projectAvatar(this.currentField);
+    this.onCameraMove(delta.x, delta.y);
+    this.worldDisplays.follow(this.currentField, this.transit?.next);
     this.fieldDisplays.updateMasks(this.currentField, this.transit?.next);
   }
 
@@ -1027,7 +1051,14 @@ export class World {
     runtime.enemyRemovals = [];
   }
   dropBubbles(pos: Vec, amount: number) {
-    spawnPickups(this, pos, amount, this.runtimeFor(this.currentField).pickups);
+    spawnPickups(
+      this,
+      pos,
+      amount,
+      this.runtimeFor(this.currentField).pickups,
+      false,
+      this.currentField,
+    );
   }
   private completeField(field: Field, visit: FieldVisit) {
     if (!visit.canComplete(field)) return;
@@ -1293,6 +1324,7 @@ export class World {
     this.fieldDisplays.attach(next, { x: currentRoot.x + offset.x, y: currentRoot.y + offset.y });
     this.fieldDisplays.attachBottom(next);
     this.effectEngine.createFieldLayers(next);
+    this.worldDisplays.construct(next, this.currentField);
     if (!next.enemies.length) this.editSlider.trigger(this.progression.level, this.mapMode);
     else if (this.editSlider.atRest) this.editSlider.hide();
     this.flow.cross();
@@ -1312,16 +1344,26 @@ export class World {
     const tr = this.transit;
     if (!tr) throw new CrossingTargetReadError();
     tr.age++;
-    const dx = tr.target.x - this.player.x,
-      dy = tr.target.y - this.player.y;
+    // The marker belongs to next.BF_over_detail_mc; the avatar belongs to World.
+    // Both original Point calls truncate separately, including fractional Main motion.
+    const stage = displayMatrixPoint(
+      this.worldDisplays.fieldMatrix(tr.next, this.mainEffects.position, 'detail'),
+      { x: displayTwips(-317 * tr.direction.x), y: displayTwips(-317 * tr.direction.y) },
+    );
+    const inverse = inverseDisplayMatrix(
+      this.worldDisplays.worldMatrix(this.mainEffects.position),
+    )!;
+    const target = displayMatrixPoint(inverse, stage);
+    const avatar = this.fieldDisplays.readAvatar().pose;
+    const dx = target.x / 20 - avatar.x,
+      dy = target.y / 20 - avatar.y;
     if (dx * dx + dy * dy < 25) {
+      const outgoingField = this.currentField;
       this.actorParents.sync(this);
       // _-4j clears the engine before Deactivate/cache writes and layer promotion.
       this.effectEngine.clear();
       this.effectEngine.unregister('top');
       this.effectEngine.unregister('bottom');
-      this.player.x -= tr.offset.x;
-      this.player.y -= tr.offset.y;
       this.player.velocity = { x: 0, y: 0 };
       // Deactivate clears only a completed wrapper. An uncleared detached
       // wrapper retains its collections; neither wrapper itself enters the cache.
@@ -1329,7 +1371,7 @@ export class World {
         const outgoing = this.runtimeFor(this.currentField);
         for (const bullet of outgoing.bullets) bullet.dead = true;
         this.replaceBullets(outgoing, []);
-        outgoing.pickups = [];
+        clearPickups(this, this.currentField);
         outgoing.enemyRemovals = [];
         outgoing.allyRemovals = [];
         // _-0D.Deactivate clears _-I4 only for a completed wrapper. Engine
@@ -1339,15 +1381,17 @@ export class World {
       }
       for (const kind of ['top', 'bottom'] as const)
         this.effectEngine.detachLayer(this.effectEngine.layer(this.currentField, kind)!);
+      this.worldDisplays.detachLayers(this.currentField);
+      this.fieldDisplays.detach(this.currentField);
       this.cache.store(
         this.currentField,
         this.previousMapPosition.col,
         this.previousMapPosition.row,
       );
-      this.fieldDisplays.detach(this.currentField);
       this.field = tr.next;
       this.effectEngine.register(this.effectEngine.layer(this.field, 'top')!);
       this.effectEngine.register(this.effectEngine.layer(this.field, 'bottom')!);
+      this.worldDisplays.promote(outgoingField);
       this.targetLocks.clear();
       this.fieldVisit = tr.visit;
       this.player.shield = 0;
@@ -1357,14 +1401,20 @@ export class World {
       for (const g of this.player.guns) g.counter = 0;
       this.transit = null;
       this.fieldDisplays.arrive(this.currentField);
+      this.projectAvatar(this.currentField);
       this.flow.arrive();
       this.revision++;
     } else {
-      this.player.x += dx * 0.09;
-      this.player.y += dy * 0.09;
-      this.fieldDisplays.moveCurrent(this.currentField, { x: dx * 0.09, y: dy * 0.09 });
+      const angle = (360 * Math.atan2(dy, dx)) / (2 * Math.PI),
+        speed = (Math.sqrt(dx * dx + dy * dy) / 10) * 0.9,
+        moveX = Math.cos((Math.PI * angle) / 180) * speed,
+        moveY = Math.sin((Math.PI * angle) / 180) * speed;
+      this.fieldDisplays.moveCurrent(this.currentField, { x: moveX, y: moveY });
+      this.projectAvatar(this.currentField);
+      this.onCameraMove(moveX, moveY);
       this.fieldDisplays.moveNext(this.currentField, tr.next, tr.offset, this.stats.frames);
-      this.onCameraMove(dx * 0.09, dy * 0.09);
+      this.worldDisplays.follow(this.currentField, tr.next);
+      this.fieldDisplays.updateMasks(this.currentField, tr.next);
     }
   }
   addEffect(pos: Vec, kind: Effect['kind'], radius: number, color: number, duration: number) {

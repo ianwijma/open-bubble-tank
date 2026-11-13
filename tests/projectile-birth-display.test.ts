@@ -1,3 +1,4 @@
+import { setFieldFixtureLayout } from './fixtures/field-layout';
 import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import type { Projectile } from '../src/game/core/types';
@@ -11,6 +12,7 @@ function setup() {
   const world = new World([], [], 42);
   world.hitTest = world.hitProjectile = () => false;
   world.player.x = world.player.y = 100;
+  setFieldFixtureLayout(world);
   const enemy = createTank(
     world.nextId(),
     {
@@ -102,6 +104,7 @@ for (const [kind, symbol] of [
 test('seeker-mine double scattering has its own display writes before arming', () => {
   const { world } = setup();
   world.player.x = world.player.y = 200;
+  setFieldFixtureLayout(world);
   const bullet = shot(world, 'seekerMine', 2178, { enemy: true, scatter: 4 });
   world.addBullet(bullet);
   for (let frame = 0; frame < 3; frame++) tickBullet(world, bullet, emptyInput());

@@ -145,6 +145,7 @@ export class FieldDisplays {
   private sizeInput?: AvatarSizeInput;
   private avatar: Instance;
   private currentAvatar?: Tank;
+  private avatarInstances = new WeakMap<Tank, Instance>();
   onWrite?: (write: { instance: number; property: PoseProperty; value: number }) => void;
   /** Parent's sibling owners can apply these source-ordered collapse writes. */
   onCollapseSiblingScale?: (
@@ -221,6 +222,13 @@ export class FieldDisplays {
     });
     this.revision++;
   }
+  /** Explicit bfStartDisplay.gotoAndStop selection; map metadata is not this retained clip. */
+  selectTutorial(field: Field, stage: TutorialStage) {
+    const state = this.wrapper(field);
+    state.tutorialStage = stage;
+    state.tutorialFrame = TUTORIAL.stages[stage].frame;
+    this.revision++;
+  }
   /** AttachNewBubblefield ofs0591: four child scaleY-then-X assignments. */
   setupChildren(field: Field, scale: number) {
     const state = this.wrapper(field);
@@ -281,6 +289,7 @@ export class FieldDisplays {
       this.avatar.pose.y = old.pose.y;
       old.parent = null;
       this.currentAvatar = avatar;
+      this.avatarInstances.set(avatar, this.avatar);
       this.revision++;
     }
     const details = Object.freeze(
@@ -347,7 +356,6 @@ export class FieldDisplays {
     to.slots.avatarUnder.pose.x = this.avatar.pose.x - to.root.pose.x;
     to.slots.avatarUnder.pose.y = this.avatar.pose.y - to.root.pose.y;
     this.sizeUnderAvatar(next, frame);
-    this.updateMasks(current, next);
   }
   /** SnapBackAllObject uses the actual promoted root transform; does not rebind _-0B. */
   arrive(field: Field) {
@@ -453,6 +461,16 @@ export class FieldDisplays {
       children: Object.freeze(instance.children.map((child) => this.readInstance(child))),
     });
   }
+  /** Hot Point queries need current ancestry, not a cloned tree and historical sizing ledger. */
+  readPose(field: Field, slot?: FieldSlot | 'bottom') {
+    const state = this.wrapper(field),
+      instance = slot === 'bottom' ? state.bottom : slot ? state.slots[slot] : state.root;
+    return Object.freeze({
+      pose: instance.pose.read(),
+      parent: typeof instance.parent === 'object' ? (instance.parent?.id ?? null) : instance.parent,
+      rooted: this.rooted(instance),
+    });
+  }
   read(field: Field): FieldDisplayRead {
     const state = this.wrapper(field);
     return Object.freeze({
@@ -497,8 +515,11 @@ export class FieldDisplays {
     this.avatar.stageUpdates++;
     this.revision++;
   }
-  readAvatar() {
-    return this.readInstance(this.avatar);
+  readAvatar(): FieldInstanceRead;
+  readAvatar(avatar: Tank): FieldInstanceRead | undefined;
+  readAvatar(avatar?: Tank) {
+    const instance = avatar ? this.avatarInstances.get(avatar) : this.avatar;
+    return instance ? this.readInstance(instance) : undefined;
   }
   get maskLatch() {
     return this.positiveMaskLatch;
