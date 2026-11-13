@@ -347,7 +347,6 @@ export class FieldDisplays {
     to.slots.avatarUnder.pose.x = this.avatar.pose.x - to.root.pose.x;
     to.slots.avatarUnder.pose.y = this.avatar.pose.y - to.root.pose.y;
     this.sizeUnderAvatar(next, frame);
-    this.updateMasks(current, next);
   }
   /** SnapBackAllObject uses the actual promoted root transform; does not rebind _-0B. */
   arrive(field: Field) {

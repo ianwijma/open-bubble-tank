@@ -89,6 +89,7 @@ import {
 import { FieldCache } from './field-cache';
 import { FieldDisplays, type UnderAvatarSizeResolver } from './field-display';
 import { resolveUnderAvatarSize } from './under-avatar-size';
+import { WorldDisplays } from './world-display';
 
 export interface Transit {
   next: Field;
@@ -134,6 +135,7 @@ export class World {
   private callbackFields = new WeakMap<Tank, Field>();
   readonly cache = new FieldCache();
   readonly fieldDisplays: FieldDisplays;
+  readonly worldDisplays: WorldDisplays;
   mapPosition = { col: 0, row: 0 };
   private previousMapPosition = { col: 0, row: 0 };
   private runtimes = new WeakMap<Field, FieldRuntime>();
@@ -430,6 +432,11 @@ export class World {
     underAvatarSizeResolver: UnderAvatarSizeResolver = resolveUnderAvatarSize,
   ) {
     this.fieldDisplays = new FieldDisplays(underAvatarSizeResolver);
+    this.worldDisplays = new WorldDisplays(this.fieldDisplays, this.effectEngine);
+    this.fieldDisplays.onCollapseSiblingScale = (field, kind, axis, value) =>
+      this.worldDisplays.setCollapseScale(field, kind, axis, value);
+    this.fieldDisplays.onCollapseHighlightAlpha = (field, value) =>
+      this.worldDisplays.setHighlightAlpha(field, value);
     this.rng = new Random(seed);
     this.roster = new UnitRoster(this.rng, localTanks);
     if (history.length)
@@ -456,6 +463,7 @@ export class World {
     this.fieldDisplays.updateAvatar(this.player, this.field, undefined, this.stats.frames);
     this.fields.set('0,0', this.field);
     this.effectEngine.createFieldLayers(this.field);
+    this.worldDisplays.construct(this.field, this.field, true);
     this.effectEngine.register(this.effectEngine.layer(this.field, 'top')!);
     this.effectEngine.register(this.effectEngine.layer(this.field, 'bottom')!);
     this.effectEngine.register(this.effectEngine.screen);
@@ -842,6 +850,7 @@ export class World {
     }
     this.onCameraMove(p.velocity.x, p.velocity.y);
     this.fieldDisplays.moveCurrent(this.currentField, p.velocity);
+    this.worldDisplays.follow(this.currentField, this.transit?.next);
     this.fieldDisplays.updateMasks(this.currentField, this.transit?.next);
   }
 
@@ -1293,6 +1302,7 @@ export class World {
     this.fieldDisplays.attach(next, { x: currentRoot.x + offset.x, y: currentRoot.y + offset.y });
     this.fieldDisplays.attachBottom(next);
     this.effectEngine.createFieldLayers(next);
+    this.worldDisplays.construct(next, this.currentField);
     if (!next.enemies.length) this.editSlider.trigger(this.progression.level, this.mapMode);
     else if (this.editSlider.atRest) this.editSlider.hide();
     this.flow.cross();
@@ -1315,6 +1325,7 @@ export class World {
     const dx = tr.target.x - this.player.x,
       dy = tr.target.y - this.player.y;
     if (dx * dx + dy * dy < 25) {
+      const outgoingField = this.currentField;
       this.actorParents.sync(this);
       // _-4j clears the engine before Deactivate/cache writes and layer promotion.
       this.effectEngine.clear();
@@ -1339,15 +1350,17 @@ export class World {
       }
       for (const kind of ['top', 'bottom'] as const)
         this.effectEngine.detachLayer(this.effectEngine.layer(this.currentField, kind)!);
+      this.worldDisplays.detachLayers(this.currentField);
+      this.fieldDisplays.detach(this.currentField);
       this.cache.store(
         this.currentField,
         this.previousMapPosition.col,
         this.previousMapPosition.row,
       );
-      this.fieldDisplays.detach(this.currentField);
       this.field = tr.next;
       this.effectEngine.register(this.effectEngine.layer(this.field, 'top')!);
       this.effectEngine.register(this.effectEngine.layer(this.field, 'bottom')!);
+      this.worldDisplays.promote(outgoingField);
       this.targetLocks.clear();
       this.fieldVisit = tr.visit;
       this.player.shield = 0;
@@ -1364,6 +1377,8 @@ export class World {
       this.player.y += dy * 0.09;
       this.fieldDisplays.moveCurrent(this.currentField, { x: dx * 0.09, y: dy * 0.09 });
       this.fieldDisplays.moveNext(this.currentField, tr.next, tr.offset, this.stats.frames);
+      this.worldDisplays.follow(this.currentField, tr.next);
+      this.fieldDisplays.updateMasks(this.currentField, tr.next);
       this.onCameraMove(dx * 0.09, dy * 0.09);
     }
   }
