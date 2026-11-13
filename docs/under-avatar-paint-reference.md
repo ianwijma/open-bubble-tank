@@ -101,23 +101,28 @@ original values reject a consistent forged trace even when all DOM digests agree
 
 Asset loading visits original1542 and1544 and rasterizes their leaves from the
 player-supplied SWF. `FieldUnderAvatarView` validates each one-leaf identity
-placement and uses original1541/1543 textures. There is no invented mask circle,
-halo, imported vector path or reconstructed avatar/map/transit position.
+placement and uses original1541/1543 textures. Native paint has no invented mask
+circle, halo, imported vector path or reconstructed avatar/map/transit position.
 
 A view belongs to the actual `Field` object and retains the root, mask-slot and
 under-slot instance IDs. Root placement uses `fieldTransform(world,field)`;
 children use their respective retained slot matrices. Source root collapse,
 mask0/180, child sizing and independent positions therefore survive. Unresolved
 under sizing is rejected rather than silently painting an authored-scale guess.
-Detached views remain retained and hidden; rooted orphan views keep their own
-poses. Disposal occurs with the renderer.
+Renderable detached/current wrappers retain hidden views; rooted orphan wrappers
+keep their own poses. Views outside `attachedFields()` are destroyed and removed.
+This bounds the renderer projection cache without changing model instance
+identity or clocks. A later projection can reconstruct paint from retained model
+poses; the renderer does not own source object lifetime.
 
 The branch is between the existing lower-effect group and pickup/actor groups.
 Its mask targets only the under container. Pickups/actors remain outside it.
 Existing global groups still flatten cross-field ordering, so this is not a
-complete original World display-list composition. Mock mode deliberately retains
-its prior omission of under-avatar paint; no new procedural approximation is
-introduced or described as native art.
+complete original World display-list composition. Mock mode uses a procedural
+50px-radius pale-blue disc with a 1px white outline and an exterior circular
+425px mask. It follows the same retained matrices and identities, but omits the
+original mask slit/contour. This explicit mock approximation never supplies native
+paint or geometric queries. Fractional-opacity composition remains unqualified.
 
 The production fixture compares the same finite masked controls, repeated reads,
 instance stability, orphan/detach/reattach and a51-write retained collapse matrix.
@@ -187,3 +192,23 @@ capture's Chrome root `/proc` snapshot was not separately retained before exit;
 its owned launcher session, exact CDP target, runtime bytes and termination result
 are retained. The repeat Chrome root and all server processes have `/proc`
 fingerprints. No process ownership is inferred from a reused PID alone.
+
+## Parent integration follow-up — 2026-11-14
+
+Native browser coverage now requires all 12 masked controls and all 45 points in
+both alpha-mask and actual-renderer results, retaining the red-channel rejection.
+The optional native case skips only when the supplied local SWF is unavailable.
+Mock coverage checks blank interior and opaque exterior center paint, without
+claiming agreement with the native slit oracle. Both modes assert stable current
+projection identities, pure reads, orphan/detach/reattach retention, collapse poses,
+and disposal of obsolete projections when one renderer switches between worlds.
+The renderer cache cleanup does not assert garbage-collector timing.
+
+Parent gate: `bun run format`, `bun run check` (1,291 tests /75,956 assertions),
+final typecheck and the literal affected production browser command pass. Build
+`oWY7oC_QoxTQoPgHHwbZw` passed18/18 mock/native cases, with zero skips. A final
+two-case capture repeat passed and both exterior paint PNGs were inspected.
+Private configs/spec copies change only fixture URL/import routing; all assertions
+remain intact. The initial private-config server-directory error started zero
+tests and is preserved separately. Artifacts and hashes are under
+`test-results/under-avatar-integration/`; owned ports4555/4556 are free.

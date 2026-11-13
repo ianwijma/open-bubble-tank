@@ -2066,3 +2066,19 @@ fixture repair, with zero skips/flakes. Both unchanged seed17 accelerated pilots
 win at65,976/64,639 frames; no ordinary original-input parity follows. All832
 final inputs,175 frozen repository evidence inputs and98 read-only external
 inputs match. Owned4215/4216 are stopped/free; protected refs remain held.
+
+
+## Under-avatar paint projection follow-up
+
+The [retained under-avatar branch](under-avatar-paint-reference.md) now paints
+original1541/1543 using supplied artwork and alpha-channel masking, below pickups
+and actors. Model transforms and instance identities drive the projection;
+obsolete renderer views are disposed without changing model lifetime. Native
+coverage checks all12 masked original poses at45 points each in both isolated
+mask and production-renderer paths, including rejection of red-channel masking.
+Mock paint is an explicit procedural circle/exterior-circle approximation without
+the authored slit. Formatting/check passes1,291 tests /75,956 assertions; the
+literal affected production browser run passes18 mock/native cases with zero
+skips. Cross-field global group ordering, fractional-opacity composition, Adobe
+and full-game parity remain unqualified. This is local next-stack work above the
+PR160 merge, not part of the already delivered tree.

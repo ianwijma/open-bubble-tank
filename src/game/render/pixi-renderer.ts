@@ -221,20 +221,24 @@ export class GameRenderer {
     this.root.scale.set(settings.zoom);
     const activeFields = world.attachedFields().map(({ field }) => field);
     this.captions?.update(world);
-    // Retain detached wrappers' display identities. Rooted orphan wrappers still paint.
-    for (const view of this.underAvatarNodes.values()) view.root.visible = false;
-    if (this.assets.mode === 'swf')
-      for (const field of activeFields) {
-        world.fieldDisplays.requireResolvedGeometry(field);
-        const read = world.fieldDisplays.read(field);
-        let view = this.underAvatarNodes.get(field);
-        if (!view) {
-          view = new FieldUnderAvatarView(read, this.assets, this.rasterTextures);
-          this.underAvatarNodes.set(field, view);
-          this.underAvatars.addChild(view.root);
-        }
-        view.update(read, fieldTransform(world, field));
+    // Project renderable owners only; obsolete wrapper projections must not retain
+    // historical worlds. The simulation retains source identities and poses.
+    for (const [field, view] of this.underAvatarNodes)
+      if (!activeFields.includes(field)) {
+        view.destroy();
+        this.underAvatarNodes.delete(field);
       }
+    for (const field of activeFields) {
+      world.fieldDisplays.requireResolvedGeometry(field);
+      const read = world.fieldDisplays.read(field);
+      let view = this.underAvatarNodes.get(field);
+      if (!view) {
+        view = new FieldUnderAvatarView(read, this.assets, this.rasterTextures);
+        this.underAvatarNodes.set(field, view);
+        this.underAvatars.addChild(view.root);
+      }
+      view.update(read, fieldTransform(world, field));
+    }
 
     for (const [field, node] of this.fieldNodes)
       if (!activeFields.includes(field)) {

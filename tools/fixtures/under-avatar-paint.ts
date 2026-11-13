@@ -10,6 +10,7 @@ import original from '../../tests/fixtures/under-avatar-paint-original.json';
 
 /** Finite independent original BitmapData observations; candidate never generates expectations. */
 export async function showUnderAvatarPaint(pack: AssetPack, host: HTMLElement) {
+  if (pack.mode === 'mock') return { results: [], game: await gameControls(pack, host) };
   const app = new Application();
   await app.init({
     width: 120,
@@ -90,7 +91,10 @@ async function gameControls(pack: AssetPack, host: HTMLElement) {
   let stable = true,
     pure = true,
     detachedRetained = true,
-    reattachedRetained = true;
+    reattachedRetained = true,
+    obsoleteReleased = true;
+  let previous: FieldUnderAvatarView | undefined;
+  let exteriorPaint = '';
   try {
     for (const [i, sample] of original.samples.entries()) {
       if (sample.mode !== 'masked') continue;
@@ -113,12 +117,18 @@ async function gameControls(pack: AssetPack, host: HTMLElement) {
       const before = JSON.stringify([world.fieldDisplays.read(world.field), world.rng.state]);
       draw();
       const view = views()?.get(world.field);
+      obsoleteReleased &&=
+        (!previous || previous.root.destroyed) &&
+        views()?.size === 1 &&
+        renderer.underAvatars.children.length === 1;
+      previous = view;
       const pixels = samplePixels();
       draw();
       stable &&= !!view && views()?.get(world.field) === view;
       pure &&= before === JSON.stringify([world.fieldDisplays.read(world.field), world.rng.state]);
       results.push({ channel: 'game', i, pixels });
       if (i === 6) {
+        exteriorPaint = renderer.app.canvas.toDataURL('image/png');
         // Changing raw gameplay/map scalars must not move the retained display.
         world.player.x += 31;
         world.player.y -= 27;
@@ -148,7 +158,15 @@ async function gameControls(pack: AssetPack, host: HTMLElement) {
           Math.abs(view.under.x - read.slots.avatarUnder.pose.x) < 1e-12;
       }
     }
-    return { results, stable, pure, detachedRetained, reattachedRetained };
+    return {
+      results,
+      stable,
+      pure,
+      detachedRetained,
+      reattachedRetained,
+      obsoleteReleased,
+      exteriorPaint,
+    };
   } finally {
     renderer.destroy();
   }
