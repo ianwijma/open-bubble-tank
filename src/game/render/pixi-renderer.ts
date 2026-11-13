@@ -401,9 +401,7 @@ export class GameRenderer {
           view.root.position.set(point.x, point.y);
           view.root.angle = b.rotation;
           view.root.scale.set(transform.scale);
-          // Native constructor/frame-script scheduling is unresolved. This held
-          // authored preview must never be passed off as the current native pose.
-          view.update(clip.presentation.frame, clip.presentation.frame);
+          view.updatePose(clip.pose);
           continue;
         }
         let drawing = this.mockPickups.get(b);
@@ -416,7 +414,10 @@ export class GameRenderer {
         drawing.clear();
         const point = fieldPoint(b, transform);
         drawing.position.set(point.x, point.y);
-        drawing.scale.set(transform.scale);
+        const authoredScale =
+          clip.symbol === 1820 ? 2.2500152587890625 : clip.symbol === 1817 ? 1.6759185791015625 : 1;
+        const pulse = (clip.pose.placements[0]?.matrix.a ?? authoredScale) / authoredScale;
+        drawing.scale.set(transform.scale * pulse);
         const r = clip.symbol === 1820 ? 8 : clip.symbol === 1817 ? 4 : 2;
         drawing.circle(0, 0, r + 2).fill({ color: 0x9dff35, alpha: 0.08 });
         drawing

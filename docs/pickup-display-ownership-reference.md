@@ -1,8 +1,11 @@
-# Retained pickup ownership and unresolved native playback
+# Retained pickup ownership and qualified animation continuation
 
 Prepared from `e4d1f2873f0693d1b2528bb22adfc6168e1ce896`. This bounded
 implementation restores actual pickup identity, physical life-layer membership
-and source removal phases. Native animation timing remains unresolved. There is
+and source removal phases. The subsequent [pickup clock qualification](pickup-clock-reference.md)
+replaces its held frame1 preview with retained source-backed animation. The audit
+and validation below describe the picked ownership ancestor; historical unresolved
+playback statements are superseded by that separate original-runtime evidence. There is
 no complete field width/hit query, ordinary boss/win, Adobe, pixel, audio or
 full-game parity claim. The [field inventory](live-field-display-ownership-audit.md),
 [wrapper state](field-wrapper-state.md) and [fidelity ledger](fidelity.md) retain

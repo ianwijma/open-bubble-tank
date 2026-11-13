@@ -352,3 +352,15 @@ The separately qualified `scriptTwipBounds` / `AssetPack.clipScriptTwipBounds` b
 `simulation/field-display.ts` now owns per-wrapper numeric authored/root/tutorial/bottom identities and source lifecycle transforms independently of `FieldCache`, actor Run arrays and effect requests. `core/retained-transform.ts` keeps Number setter caches separate from float32 matrices. World construction, attachment, movement, promotion, detachment and collapse mutate those retained instances; reads are frozen and clock/RNG-free. Under-avatar input is captured from source detail metadata. Normal Worlds bind the binary-qualified positive axis-aligned1544/1543 resolver before requests; unsupported transforms and explicitly unresolved constructor operations still reject geometric composition. [The implementation boundary](field-wrapper-state.md) records source/runtime controls and the remaining complete-query/renderer work.
 
 `simulation/world-display.ts` now retains bullet/top/highlight/screen sibling poses independently of field roots and engine membership. Source lifecycle calls bind the separate collapse hooks and retain orphan/detached ancestry; transform reads compose Main and fixed World origins without drawing entropy or advancing clocks. Lower117 continues through its actual FieldDisplays nesting. [The source boundary](world-layer-display-reference.md) records the remaining renderer and complete-query migration.
+
+`simulation/pickup-display.ts` owns actual ordered life-layer objects and their
+retained numeric `SwfClip` trees independently of Run vectors, gameplay UIDs and
+physical attachment. Source constructor/Setup/removal phases remain explicit. The
+[pickup clock qualification](pickup-clock-reference.md) establishes separate stage
+entry and frame-script phases, including the inside-ENTER changed-frame jump
+versus unchanged-frame hold. `World.step` enters that clock before Main work and
+runs pending scripts in its existing artwork finally pass; Main4's standalone
+artwork pass also advances it. Removed/parentless referenced clips remain alive
+through weak clock registrations. Painting and native bounds/contact can consume
+the same retained tree. Artwork entropy is an injectable host stream; no gameplay
+RNG/UID draws are added, and complete source entropy equivalence stays unproved.

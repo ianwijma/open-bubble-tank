@@ -1,4 +1,4 @@
-/** Pickup symbol identities/frame counts only; no original artwork or guessed playback clock. */
+/** Import numeric pickup timelines for retained poses; never vector/media payloads. */
 import { createHash } from 'node:crypto';
 import { readFile, writeFile } from 'node:fs/promises';
 import { decompressSWF } from '../src/game/assets/swf.mjs';
@@ -10,6 +10,14 @@ const input = await readFile(`${root}/re/bt3/uncompressed.swf`);
 const { bytes } = await decompressSWF(new Uint8Array(input));
 const { symbols } = (await extractSymbols(bytes, { svg: false })) as unknown as SymbolResult;
 const roots = [];
+const selected = new Set<number>();
+function visit(id: number) {
+  if (selected.has(id)) return;
+  const sprite = symbols.sprites.find((sprite) => sprite.id === id);
+  if (!sprite) return;
+  selected.add(id);
+  for (const p of sprite.placements) if (p.charId !== undefined) visit(p.charId);
+}
 for (const [value, className] of [
   [1, '_-Bd'],
   [5, '_-Oh'],
@@ -20,6 +28,7 @@ for (const [value, className] of [
   );
   const sprite = symbols.sprites.find((sprite) => sprite.id === symbol);
   if (!sprite) throw new Error(`Missing pickup ${className}`);
+  visit(symbol);
   // The AS/pcode identifies registration, not native script scheduling.
   const pcode = await readFile(`${root}/re/bt3/export_pcode/scripts/${className}.pcode`);
   roots.push({
@@ -36,6 +45,14 @@ await writeFile(
   JSON.stringify({
     sourceSha256: createHash('sha256').update(input).digest('hex'),
     roots,
+    sprites: Object.fromEntries(
+      [...selected]
+        .sort((a, b) => a - b)
+        .map((id) => {
+          const { frameCount, placements } = symbols.sprites.find((sprite) => sprite.id === id)!;
+          return [id, { id, frameCount, placements }];
+        }),
+    ),
   }) + '\n',
 );
-console.log('Imported three pickup identities and frame counts; native clock remains unresolved.');
+console.log(`Imported three pickup roots and ${selected.size} numeric sprite timelines.`);

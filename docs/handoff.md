@@ -87,3 +87,15 @@ The fifth layer implements [fresh capture and source frame ownership](upgrade-fr
 
 Local follow-up above final PR149 head c91ebe4 now retains [World sibling poses](world-layer-display-reference.md). All1,060 rule tests /9,421 assertions and10 affected mock/SWF browser cases pass;682 build inputs match. The change stays on `t3/retained-world-layer-poses`, without a push or sixth PR. Continue renderer/ancestor consumption with qualified source controls; existing linear collapse fixture expectations need source-backed replacement before claiming painted fidelity. Pickup ownership draft6b04efb remains separate, and a fresh isolated task is qualifying actual original constructor/frame scripts before replacing its held preview. The five published layers and protected refs remain unchanged by this follow-up.
 The local [pickup display seam](pickup-display-ownership-reference.md) retains actual pickup objects, ordered life-layer membership and original Setup/clip-lifetime references independently of Run arrays and numeric UIDs. Renderer views consume those physical children; source birth/removal/cleanup phases are explicit and host raw fixtures bootstrap only in tools/tests. Native pickup playback remains unresolved: supplied artwork deliberately holds an authored frame1 preview, never a synthetic age labeled as a native pose. Qualify the pickup constructor/frame-script entropy and cohorts before complete field queries. The reference records local validation and source/artifact identities; no original runtime parity or publication is inferred.
+
+
+## Local pickup animation continuation
+
+The ownership draft is integrated as `e36bbf8` on `c91ebe4`, preserving newer
+carrier queues, field artwork and under-avatar defaults. The separate
+[pickup clock reference](pickup-clock-reference.md) replaces the held frame1
+preview with retained source-backed animation. Before/inside-ENTER original
+pickup captures qualify constructor/script/parentless/removal phases and native
+child transforms; source SpawnLifeBubbles/Setup execute with a null avatar, not
+World.Run. Global entropy/event ordering and ordinary/full-game parity remain
+open. All work stays local; this is not a sixth PR or a change to PRs145–149.

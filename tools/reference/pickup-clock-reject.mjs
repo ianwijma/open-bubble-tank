@@ -11,6 +11,13 @@ if (!resolve(capture).startsWith(resolve('reference-captures') + sep))
   throw new Error('Caller-owned capture required.');
 const sha = (b) => createHash('sha256').update(b).digest('hex');
 const results = [];
+const declaredFixture = process.env.BT3_PICKUP_VERIFY_FIXTURE;
+if (declaredFixture && !resolve(declaredFixture).startsWith(resolve(capture) + sep))
+  throw new Error('Declared fixture must be caller-owned under capture.');
+const baseFixture = JSON.parse(
+  await readFile(declaredFixture ?? 'tests/fixtures/pickup-clock-original.json', 'utf8'),
+);
+
 async function prepare(name) {
   const out = resolve(capture, 'rejecting-controls', name);
   await mkdir(out, { recursive: true });
@@ -21,6 +28,7 @@ async function prepare(name) {
     'rea-evidence.json',
   ])
     await copyFile(resolve(capture, f), resolve(out, f));
+  await writeFile(resolve(out, 'control-fixture.json'), JSON.stringify(baseFixture));
   return out;
 }
 const run = (name, out, candidate, expected, fixture) => {
@@ -35,7 +43,10 @@ const run = (name, out, candidate, expected, fixture) => {
     ],
     {
       encoding: 'utf8',
-      env: { ...process.env, ...(fixture ? { BT3_PICKUP_VERIFY_FIXTURE: fixture } : {}) },
+      env: {
+        ...process.env,
+        BT3_PICKUP_VERIFY_FIXTURE: fixture ?? resolve(out, 'control-fixture.json'),
+      },
     },
   );
   if (!result.status || !result.stderr.includes(expected))
@@ -156,7 +167,7 @@ for (const [name, mutate, choose, expected] of controls) {
   if (changes !== 1) throw new Error(`Control must change exactly one row: ${name}/${changes}`);
   await writeFile(resolve(out, 'observation.json'), JSON.stringify(o));
   await writeFile(resolve(out, 'trace.jsonl'), o.trace.map(JSON.stringify).join('\n') + '\n');
-  const fixture = JSON.parse(await readFile('tests/fixtures/pickup-clock-original.json', 'utf8'));
+  const fixture = structuredClone(baseFixture);
   fixture[inside ? 'inside' : 'before'].traceSha256 = sha(
     o.trace.slice(o.trace.indexOf('BT3_PICKUP_BEGIN')).join('\n'),
   );

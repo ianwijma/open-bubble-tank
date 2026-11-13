@@ -1,19 +1,41 @@
 import type { Field, Pickup, Tank } from '../core/types';
 import metadata from '../data/pickup-display.json';
 import type { World } from './world';
+import { SwfClip } from '../assets/swf-clip';
+import { buildDisplayList } from '../assets/display-list';
+import type { SpriteInfo, DisplayPlacement } from '../assets/asset-pack';
 
-/** This is source registration metadata, NOT a qualified current native clip pose. */
+const sprites = metadata.sprites as unknown as Record<number, SpriteInfo>;
+const lists = new Map<string, DisplayPlacement[]>();
+const sourceClips = {
+  spriteInfo: (id: number) => sprites[id],
+  displayList(id: number, frame: number) {
+    if (!sprites[id]) return [];
+    const key = `${id}:${frame}`;
+    let list = lists.get(key);
+    if (!list) lists.set(key, (list = buildDisplayList(sprites[id], frame)));
+    return list;
+  },
+};
+interface Clock {
+  pose: SwfClip;
+  born: number;
+  initialized: boolean;
+  advanceAt: number;
+}
+
+/** Retained numeric pose; source mechanics and host artwork entropy are distinct. */
 export interface PickupClip {
   readonly symbol: number;
   readonly totalFrames: number;
   readonly registersFrame1: boolean;
+  readonly pose: SwfClip;
   readonly playback: Readonly<{
-    status: 'unresolved';
-    currentFrame: null;
-    reason: 'constructor-frame-script-entropy-and-stage-scheduling';
+    status: 'retained';
+    currentFrame: number;
+    entropy: 'host-artwork';
+    globalSourceEntropy: 'unproved';
   }>;
-  /** Deliberate static presentation until the original clock/entropy boundary is qualified. */
-  readonly presentation: Readonly<{ kind: 'held-authored-preview'; frame: 1 }>;
 }
 interface Instance {
   clip: PickupClip;
@@ -33,22 +55,61 @@ export class PickupChildRemovalError extends Error {
 export class PickupDisplays {
   private instances = new WeakMap<Pickup, Instance>();
   private layers = new WeakMap<Field, Set<Pickup>>();
+  private cohort = 0;
+  private clocks = new Set<WeakRef<Clock>>();
+  /** Independent host artwork entropy. Never consumes gameplay RNG or a UID. */
+  constructor(private artworkRandom: () => number = Math.random) {}
+  private *liveClocks() {
+    for (const reference of this.clocks) {
+      const clock = reference.deref();
+      if (clock) yield clock;
+      else this.clocks.delete(reference);
+    }
+  }
+  /** Before Main.Run: surviving timelines enter their next authored frame. */
+  enterFrame() {
+    this.cohort++;
+    for (const clock of this.liveClocks())
+      if (clock.initialized && this.cohort >= clock.advanceAt) clock.pose.enterFrame();
+  }
+  /** Initial frame scripts run after the constructor/Main listener, before EXIT.
+   * A changed-frame goto releases the inside-ENTER constructor's extra frame1
+   * hold; zero/one self-targets and the unscripted31-frame root retain it.
+   */
+  advanceArtwork() {
+    for (const clock of this.liveClocks()) {
+      if (!clock.initialized) {
+        clock.pose.enterFrame();
+        clock.pose.runFrameScripts();
+        clock.initialized = true;
+        clock.advanceAt = clock.born + (clock.pose.frame === 1 ? 2 : 1);
+      } else clock.pose.runFrameScripts();
+    }
+  }
 
   construct(pickup: Pickup, denomination = pickup.value): PickupClip {
     const existing = this.instances.get(pickup);
     if (existing) return existing.clip;
     const source = metadata.roots.find((root) => root.value === denomination);
     if (!source) throw new Error(`Unknown pickup denomination ${denomination}`);
+    const pose = new SwfClip(source.symbol, sourceClips, this.artworkRandom);
+    pose.construct();
+    const clock: Clock = { pose, born: this.cohort, initialized: false, advanceAt: Infinity };
+    this.clocks.add(new WeakRef(clock));
     const clip: PickupClip = Object.freeze({
       symbol: source.symbol,
       totalFrames: source.frameCount,
       registersFrame1: source.registersFrame1,
-      playback: Object.freeze({
-        status: 'unresolved',
-        currentFrame: null,
-        reason: 'constructor-frame-script-entropy-and-stage-scheduling',
-      }),
-      presentation: Object.freeze({ kind: 'held-authored-preview', frame: 1 }),
+      pose,
+      get playback() {
+        // Retaining the lifetime handle also retains its clock, even after removeChild.
+        return Object.freeze({
+          status: 'retained' as const,
+          currentFrame: clock.pose.frame,
+          entropy: 'host-artwork' as const,
+          globalSourceEntropy: 'unproved' as const,
+        });
+      },
     });
     this.instances.set(pickup, { clip, parent: null, callbackField: null, avatar: null });
     return clip;

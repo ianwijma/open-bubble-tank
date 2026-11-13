@@ -509,6 +509,7 @@ export class World {
   }
   step(input: InputFrame, milliseconds = 20, advanceMainEffects = true) {
     this.effectEngine.enterFrame();
+    this.pickupDisplays.enterFrame();
     this.advanceTime(milliseconds);
     if (advanceMainEffects) this.mainEffects.tick(() => this.rng.next());
     try {
@@ -538,7 +539,11 @@ export class World {
   }
   /** Attached ENTER_FRAME art continues when Main4 skips the World.Run listener. */
   advanceArtwork(enterCarrierFrame = true) {
-    if (enterCarrierFrame) this.effectEngine.enterFrame();
+    if (enterCarrierFrame) {
+      this.effectEngine.enterFrame();
+      this.pickupDisplays.enterFrame();
+    }
+    this.pickupDisplays.advanceArtwork();
     this.fieldDisplays.advanceArtwork();
     this.actorParents.sync(this);
     this.effectEngine.advanceArtwork();

@@ -2,6 +2,7 @@ import { Container } from 'pixi.js';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { DEFAULT_SETTINGS } from '../../src/game/core/constants';
 import type { Pickup } from '../../src/game/core/types';
+import type { SwfClip } from '../../src/game/assets/swf-clip';
 import { GameRenderer } from '../../src/game/render/pixi-renderer';
 import { spawnPickups } from '../../src/game/simulation/pickups';
 import { World } from '../../src/game/simulation/world';
@@ -32,7 +33,10 @@ export async function showPickupOwnership(pack: AssetPack, host: HTMLElement) {
   ctx.fillRect(0, 0, 550, 600);
   const nodes = () =>
     renderer as unknown as {
-      pickupNodes: Map<Pickup, { root: Container }>;
+      pickupNodes: Map<
+        Pickup,
+        { root: Container; renderedPose?: SwfClip; scriptBounds(): unknown }
+      >;
       mockPickups: Map<Pickup, Container>;
     };
   const view = (p: Pickup) =>
@@ -87,9 +91,25 @@ export async function showPickupOwnership(pack: AssetPack, host: HTMLElement) {
       (p, i) => world.pickupDisplays.read(p)!.clip === clips[i],
     );
     const reattachedView = !!view(b) && view(b) !== removed;
+    const animationFrames: number[][] = [];
+    for (let i = 0; i < 15; i++) world.advanceArtwork();
+    animationFrames.push(clips.map((c) => c.pose.frame));
+    panel('Retained animation at stage15');
+    for (let i = 0; i < 15; i++) world.advanceArtwork();
+    animationFrames.push(clips.map((c) => c.pose.frame));
+    panel('Retained animation at stage30');
+    const sharedPose =
+      pack.mode !== 'swf' ||
+      [a, b, c].every((p, i) => nodes().pickupNodes.get(p)?.renderedPose === clips[i].pose);
+    const sharedQuery =
+      pack.mode !== 'swf' ||
+      [a, b, c].every(
+        (p, i) =>
+          JSON.stringify(nodes().pickupNodes.get(p)?.scriptBounds()) ===
+          JSON.stringify(pack.clipScriptBounds(clips[i].pose)),
+      );
     const state = JSON.stringify(clips);
     for (let i = 0; i < 5; i++) {
-      world.advanceArtwork();
       draw();
     }
     const pureReads =
@@ -99,10 +119,13 @@ export async function showPickupOwnership(pack: AssetPack, host: HTMLElement) {
       symbol: clip.symbol,
       totalFrames: clip.totalFrames,
       ...clip.playback,
-      presentation: clip.presentation,
+      poseFrame: clip.pose.frame,
     }));
     return {
       snapshots,
+      animationFrames,
+      sharedPose,
+      sharedQuery,
       arrayRetention,
       uidIndependent,
       explicitRemoval,

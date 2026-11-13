@@ -149,7 +149,7 @@ test('stale callbacks retain source splice-before-removeChild failure instead of
   expect(children(world, next)).toEqual([a]);
 });
 
-test('playback separates source registration and authored preview from an unresolved native frame', () => {
+test('playback retains source roots and animated poses without consuming gameplay RNG', () => {
   const world = born(55);
   const clips = world.pickups.map((p) => world.pickupDisplays.read(p)!.clip);
   expect(clips.map((c) => [c.symbol, c.totalFrames, c.registersFrame1])).toEqual([
@@ -158,16 +158,18 @@ test('playback separates source registration and authored preview from an unreso
     [1816, 40, true],
   ]);
   for (const clip of clips) {
-    expect(clip.playback.status).toBe('unresolved');
-    expect(clip.playback.currentFrame).toBeNull();
-    expect(clip.presentation).toEqual({ kind: 'held-authored-preview', frame: 1 });
+    expect(clip.playback.status).toBe('retained');
+    expect(clip.playback.currentFrame).toBe(1);
+    expect(clip.playback.entropy).toBe('host-artwork');
+    expect(clip.playback.globalSourceEntropy).toBe('unproved');
   }
   const rng = world.rng.state;
   world.pause();
   for (let i = 0; i < 60; i++) world.step(emptyInput());
   expect(world.pickups.map((p) => world.pickupDisplays.read(p)!.clip)).toEqual(clips);
   expect(world.rng.state).toBe(rng);
-  expect(clips.every((clip) => clip.playback.currentFrame === null)).toBe(true);
+  expect(clips[0].playback.currentFrame).toBe(29);
+  expect(clips.every((clip) => clip.pose.age >= 59)).toBe(true);
 });
 
 test('completed outgoing Deactivate removes Run children before wrapper detachment', () => {

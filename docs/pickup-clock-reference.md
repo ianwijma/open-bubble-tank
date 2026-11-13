@@ -172,7 +172,7 @@ BT3_PROBE_OUT=reference-captures/NEW BT3_REFERENCE_URL=http://127.0.0.1:3665 BT3
 # For a fresh random run only, declare its raw trace identity (not behavior proof):
 node tools/reference/pickup-clock-fixture.mjs --declare-trace CAPTURE [--inside-enter]
 BT3_PICKUP_VERIFY_FIXTURE=CAPTURE/observation-fixture.json node tools/reference/pickup-clock-verify.mjs ORIGINAL PROBE CAPTURE [--inside-enter]
-node tools/reference/pickup-clock-reject.mjs ORIGINAL PROBE CAPTURE [--inside-enter]
+BT3_PICKUP_VERIFY_FIXTURE=CAPTURE/observation-fixture.json node tools/reference/pickup-clock-reject.mjs ORIGINAL PROBE CAPTURE [--inside-enter]
 node tools/reference/pickup-clock-fixture.mjs BEFORE_CAPTURE INSIDE_CAPTURE
 bun tools/import-pickup-display.ts /home/ian/Projects/ianwijma/documented-bubble-tank-3
 ```

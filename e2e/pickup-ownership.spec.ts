@@ -25,6 +25,8 @@ for (const native of [false, true])
       'lifetimeRetention',
       'reattachedView',
       'pureReads',
+      'sharedPose',
+      'sharedQuery',
     ])
       expect(proof[key], key).toBe(true);
     expect(proof.snapshots.map((s: { order: string[] }) => s.order)).toEqual([
@@ -34,8 +36,12 @@ for (const native of [false, true])
       ['B5', 'C1', 'A50', 'D5'],
       ['C1', 'A50', 'D5'],
       ['C1', 'A50', 'D5', 'B5'],
+      ['C1', 'A50', 'D5', 'B5'],
+      ['C1', 'A50', 'D5', 'B5'],
     ]);
-    expect(proof.snapshots.map((s: { count: number }) => s.count)).toEqual([3, 3, 3, 4, 3, 4]);
+    expect(proof.snapshots.map((s: { count: number }) => s.count)).toEqual([
+      3, 3, 3, 4, 3, 4, 4, 4,
+    ]);
     expect(
       proof.playback.map((p: { symbol: number; totalFrames: number }) => [p.symbol, p.totalFrames]),
     ).toEqual([
@@ -44,10 +50,13 @@ for (const native of [false, true])
       [1816, 40],
     ]);
     for (const playback of proof.playback) {
-      expect(playback.status).toBe('unresolved');
-      expect(playback.currentFrame).toBeNull();
-      expect(playback.presentation).toEqual({ kind: 'held-authored-preview', frame: 1 });
+      expect(playback.status).toBe('retained');
+      expect(playback.currentFrame).toBe(playback.poseFrame);
+      expect(playback.entropy).toBe('host-artwork');
+      expect(playback.globalSourceEntropy).toBe('unproved');
     }
+    expect(proof.animationFrames.map((f: number[]) => f[0])).toEqual([15, 30]);
+    expect(proof.animationFrames[0]).not.toEqual(proof.animationFrames[1]);
     await testInfo.attach('pickup-ownership', {
       body: JSON.stringify(proof, null, 2),
       contentType: 'application/json',
