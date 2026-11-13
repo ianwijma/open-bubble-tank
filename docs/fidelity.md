@@ -1924,3 +1924,25 @@ ownership, protection and actual Shield Turret save controls remain intact.
 Complete actor geometry/clock separation, Engine text bounds and ordinary/full-game
 parity remain unfinished. This local follow-up does not alter published PR157.
 
+
+## Bounded StaticText Engine arithmetic
+
+The separate [text-engine controls](text-engine-runtime-reference.md) reobserve all
+322 earlier text-contact cases bit-for-bit and add genuine matrix getters and
+fractional boundary samples. Two fresh owned REA captures freeze2,554 rows /
+168,564 Numbers each, independently verify all3,022 original tags and loaded
+runtime bytes, and reject38 synchronized forgeries per capture. Declared twips
+plus measured own ancestry match1,890 advanced contact results and5,102 applicable
+matrix checks; ideal Number boxes, per-ancestor re-boxing and universal inverse
+policies disagree with measured controls. The pure core helper composes matrices,
+rounds transformed corners with the existing frozen Point arithmetic and tests
+inclusive stage-twip bounds. Point argument quantization remains separate.
+
+No native provider, shared mask/inverse traversal, renderer or gameplay consumer
+selects the helper yet. StaticText options/runtime masks and MovieClip container
+guards require class-specific dispatch; normal glyphs, authored text masks,
+scrollRect and broader inputs remain unqualified. Complete actor/effect owners
+and World consumers remain separate work. Formatting/typecheck/full check passes
+1,220 tests /60,343 assertions. No application browser consumer changes; both fresh
+REA reference flows pass. REA events remain incomplete/equality-ineligible, and
+compiled-source, Adobe and complete-game parity remain unproved.
