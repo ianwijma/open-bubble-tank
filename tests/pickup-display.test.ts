@@ -1,3 +1,4 @@
+import { setFieldFixtureLayout } from '../tools/fixtures/field-layout';
 import { expect, test } from 'bun:test';
 import { World, emptyInput } from '../src/game/simulation/world';
 import { spawnPickups, tickPickups } from '../src/game/simulation/pickups';
@@ -180,6 +181,7 @@ test('completed outgoing Deactivate removes Run children before wrapper detachme
   world.jump({ x: 1, y: 0 });
   world.player.x = world.transit!.target.x;
   world.player.y = world.transit!.target.y;
+  setFieldFixtureLayout(world);
   world.step(emptyInput());
   expect(world.currentWrapper).not.toBe(old);
   expect(children(world, old)).toEqual([]);
@@ -194,6 +196,7 @@ test('uncleared outgoing wrapper retains life children; revisit creates a fresh 
   world.jump({ x: 1, y: 0 });
   world.player.x = world.transit!.target.x;
   world.player.y = world.transit!.target.y;
+  setFieldFixtureLayout(world);
   world.step(emptyInput());
   expect(children(world, old)).toEqual([a]);
   world.jump({ x: -1, y: 0 });

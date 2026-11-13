@@ -1,3 +1,4 @@
+import { setFieldFixtureLayout } from '../tools/fixtures/field-layout';
 import { expect, test } from 'bun:test';
 import { STARTER } from '../src/game/data/catalog';
 import { World, emptyInput } from '../src/game/simulation/world';
@@ -285,6 +286,7 @@ test('arrival Deactivate clears only a completed outgoing queue, without stoppin
     };
     w.player.x = w.transit!.target.x;
     w.player.y = w.transit!.target.y;
+    setFieldFixtureLayout(w);
     frames(w, 1);
     expect(w.transit).toBeNull();
     expect(w.effectEngine.parent(queued)).toBeUndefined();

@@ -231,8 +231,7 @@ export function fireGun(world: World, t: Tank, gun: GunState, input: InputFrame)
     world.addCombatEffect(start, 'teleport');
     world.addCombatEffect(dest, 'teleport');
     world.mainEffects.flash();
-    t.x += dest.x - start.x;
-    t.y += dest.y - start.y;
+    world.adjustBubblefieldObjects({ x: dest.x - start.x, y: dest.y - start.y });
     return;
   }
   if (id === 3002 || id === 3003) {

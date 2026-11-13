@@ -5,7 +5,8 @@ import type { TutorialStage } from '../../src/game/core/tutorial';
  * Call only after artificial player/offset/scale/tutorial edits; never from production or drawing.
  */
 export function setFieldFixtureLayout(world: World) {
-  for (const { field, offset } of world.attachedFields()) {
+  // Ordinary camera movement never rewrites superseded rooted wrappers.
+  for (const { field, offset } of world.activeFields()) {
     const read = world.fieldDisplays.read(field);
     world.fieldDisplays.moveCurrent(field, {
       x: read.root.pose.x - (offset.x - world.player.x),

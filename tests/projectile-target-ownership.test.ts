@@ -1,3 +1,4 @@
+import { setFieldFixtureLayout } from './fixtures/field-layout';
 import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import type { Field, Projectile } from '../src/game/core/types';
@@ -105,8 +106,16 @@ for (const kind of ['seeker', 'sapper'] as const)
         100,
         100,
       );
-    if (kind === 'sapper') world.player = target;
-    else world.field.enemies.push(target);
+    if (kind === 'sapper') {
+      world.player = target;
+      world.fieldDisplays.updateAvatar(
+        target,
+        world.currentWrapper,
+        world.transit?.next,
+        world.stats.frames,
+      );
+      setFieldFixtureLayout(world);
+    } else world.field.enemies.push(target);
     importActorFixtures(world);
     target.rotation = 90;
     const home = enemy(world, -100);
@@ -210,6 +219,12 @@ test('Sapper keeps its old steering/contact target while base Run refreshes the 
   const { world, home, bullet } = sapper(),
     old = world.player;
   world.player = createTank(world.nextId(), STARTER, 'player', 0, 0, 100, 100);
+  world.fieldDisplays.updateAvatar(
+    world.player,
+    world.currentWrapper,
+    world.transit?.next,
+    world.stats.frames,
+  );
   world.player.forcefield = 0;
   world.actorParents.sync(world);
   tick(world, bullet);

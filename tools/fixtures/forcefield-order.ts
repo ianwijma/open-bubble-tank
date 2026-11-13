@@ -1,3 +1,5 @@
+import { importAvatarFixture } from './avatar-attachments';
+import { setFieldFixtureLayout } from './field-layout';
 import { Application } from 'pixi.js';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { STARTER } from '../../src/game/data/catalog';
@@ -42,6 +44,7 @@ export async function showForcefieldOrder(pack: AssetPack, host: HTMLElement) {
     50,
     20,
   );
+  importAvatarFixture(world);
   world.field.enemies = [];
   world.hitTest = () => false;
   const tank = world.player,
@@ -113,6 +116,7 @@ export async function showForcefieldOrder(pack: AssetPack, host: HTMLElement) {
     world.jump({ x: 1, y: 0 });
     tank.x = world.transit!.target.x;
     tank.y = world.transit!.target.y;
+    setFieldFixtureLayout(world);
     tick(1);
     world.field.enemies = [];
     capture('Arrival · film remains, immunity cleared');

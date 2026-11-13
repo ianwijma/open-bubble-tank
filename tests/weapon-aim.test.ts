@@ -1,3 +1,4 @@
+import { setFieldFixtureLayout } from './fixtures/field-layout';
 import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import { createTank } from '../src/game/simulation/tank';
@@ -61,7 +62,9 @@ test('a spawner keeps its authored facing while a normal enemy cannon tracks its
       world,
     );
   world.player.x = 0;
+  setFieldFixtureLayout(world);
   world.player.y = -100;
+  setFieldFixtureLayout(world);
   world.actorParents.sync(world);
   tickGuns(world, tank, emptyInput());
   expect(tank.guns.map((g) => g.angle)).toEqual([25, -90]);
@@ -179,6 +182,7 @@ test('rotating Run stores the MovieClip signed-angle wrap on every active rotati
 test('Phasing inherits rotating EnemyAim before its ally-count acquisition, while Aggressor remains fixed', () => {
   const world = new World([], [], 3);
   world.player.x = 100;
+  setFieldFixtureLayout(world);
   world.rng.next = () => 0.99;
   const ally = createTank(world.nextId(), { ...design([]), avatar: false }, 'ally', 0, 100);
   world.allies = [ally];

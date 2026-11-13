@@ -67,12 +67,12 @@ export class WorldDisplays {
       top: this.instance(1718, top),
       highlight: this.instance(1780),
     };
-    const from = this.fields.read(current).root.pose;
+    const from = this.fields.readPose(current).pose;
     for (const layer of [layers.bullet, layers.top]) {
       layer.pose.x = from.x;
       layer.pose.y = from.y;
     }
-    const root = this.fields.read(field).root.pose;
+    const root = this.fields.readPose(field).pose;
     layers.highlight.pose.x = root.x;
     layers.highlight.pose.y = root.y;
     if (!first) {
@@ -86,7 +86,7 @@ export class WorldDisplays {
   follow(current: Field, next?: Field) {
     for (const field of [current, next]) {
       if (!field) continue;
-      const root = this.fields.read(field).root.pose;
+      const root = this.fields.readPose(field).pose;
       const layers = this.field(field);
       for (const layer of [layers.highlight, layers.bullet, layers.top]) {
         layer.pose.x = root.x;
@@ -139,15 +139,15 @@ export class WorldDisplays {
   }
   /** A detached field retains its own root/slot transforms but loses World/Main ancestry. */
   fieldMatrix(field: Field, main: Readonly<Vec>, slot?: FieldSlot): DisplayMatrix {
-    const read = this.fields.read(field);
-    const root = read.root.rooted
-      ? displayMatrixProduct(this.worldMatrix(main), read.root.pose.matrix)
-      : { ...read.root.pose.matrix };
-    return slot ? displayMatrixProduct(root, read.slots[slot].pose.matrix) : root;
+    const read = this.fields.readPose(field);
+    const root = read.rooted
+      ? displayMatrixProduct(this.worldMatrix(main), read.pose.matrix)
+      : { ...read.pose.matrix };
+    return slot ? displayMatrixProduct(root, this.fields.readPose(field, slot).pose.matrix) : root;
   }
   /**117 is a real nested child until removeChild; never approximate its scale by squaring a counter. */
   bottomMatrix(field: Field, main: Readonly<Vec>): DisplayMatrix {
-    const bottom = this.fields.read(field).bottom;
+    const bottom = this.fields.readPose(field, 'bottom');
     return bottom.parent === null
       ? { ...bottom.pose.matrix }
       : displayMatrixProduct(this.fieldMatrix(field, main, 'underEffects'), bottom.pose.matrix);

@@ -1,4 +1,6 @@
 import { importActorFixtures } from './actor-attachments';
+import { importAvatarFixture } from './avatar-attachments';
+import { setFieldFixtureLayout } from './field-layout';
 import { Rectangle } from 'pixi.js';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { DEFAULT_SETTINGS } from '../../src/game/core/constants';
@@ -110,6 +112,8 @@ export async function showHomingProjectiles(pack: AssetPack, host: HTMLElement) 
       damage: 7,
       targetId: close.player.uid,
     });
+    importAvatarFixture(close);
+    setFieldFixtureLayout(close);
     close.actorParents.sync(close);
     close.addBullet(seeker);
     const paintedContact = pack.hitTest(close.player, 0, 0);

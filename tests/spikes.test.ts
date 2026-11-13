@@ -1,3 +1,4 @@
+import { setFieldFixtureLayout } from './fixtures/field-layout';
 import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import { World, emptyInput } from '../src/game/simulation/world';
@@ -33,6 +34,7 @@ function setup() {
   world.player.life = 40;
   world.player.radius = 0.1;
   Object.assign(world.player, world.muzzle(owner, gun, 13, 6));
+  setFieldFixtureLayout(world);
   return { world, owner, gun };
 }
 test('Spike samples all seven authored emitters and records a hit immediately without a weapon timer or target', () => {
@@ -92,6 +94,7 @@ test('a remembered earlier ally stops the source candidate loop, then a later al
 test('the global radial broad-phase gate can reject a contact before pixel testing', () => {
   const { world, owner } = setup();
   world.player.x = world.player.y = 0;
+  setFieldFixtureLayout(world);
   owner.x = -275;
   owner.y = -225;
   let probes = 0;

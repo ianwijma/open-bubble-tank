@@ -1,3 +1,4 @@
+import { setFieldFixtureLayout } from '../tools/fixtures/field-layout';
 import { importPickupFixtures } from './fixtures/pickup-attachments';
 import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
@@ -47,6 +48,7 @@ function setup() {
   const world = new World([], [], 8);
   world.player.life = 40;
   world.player.x = 425;
+  setFieldFixtureLayout(world);
   const outgoing = createTank(world.nextId(), design, 'enemy', 100, 0);
   world.field.enemies = [outgoing];
   importActorFixtures(world);
@@ -87,6 +89,7 @@ test('destination collision projects the actual avatar locally and restores its 
   const transit = world.transit!;
   world.player.x = transit.target.x;
   world.player.y = transit.target.y;
+  setFieldFixtureLayout(world);
   const bullet = shot(world, world.player.x - transit.offset.x, world.player.y - transit.offset.y);
   bullet.speed = 0;
   runtime.bullets.push(bullet);
@@ -217,6 +220,7 @@ test('an enemy killed in the bullet loop is removed and completes its field on t
 test('boundary initiation runs both fields and the avatar once; later transit freezes avatar status', () => {
   const world = new World([], [STARTER, STARTER], 8);
   world.player.x = FIELD_RADIUS + 1;
+  setFieldFixtureLayout(world);
   world.player.status.infect = Infinity;
   world.player.infectCounter = 10;
   world.step(emptyInput());

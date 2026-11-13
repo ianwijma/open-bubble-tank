@@ -1,3 +1,5 @@
+import { importAvatarFixture } from '../tools/fixtures/avatar-attachments';
+import { setFieldFixtureLayout } from '../tools/fixtures/field-layout';
 import { importActorFixtures } from './fixtures/actor-attachments';
 import { FieldVisit } from '../src/game/core/field-visit';
 import { describe, expect, test } from 'bun:test';
@@ -171,11 +173,15 @@ describe('original gameplay contracts', () => {
   test('a field crossing animates, can pause mid-flight, and resumes at the same point', () => {
     const w = new World([], [], 8);
     w.player.x = 425;
+    setFieldFixtureLayout(w);
     w.jump({ x: 1, y: 0 });
     const target = w.transit!.target.x,
       start = w.player.x;
     step(w, 1);
-    expect(w.player.x).toBeCloseTo(start + (target - start) * 0.09);
+    expect(start).toBe(425);
+    expect(target).toBe(1070.9);
+    // DisplayObject root write precedes the receiver-local Point read.
+    expect(w.player.x).toBe(483.1);
     expect(w.transit?.age).toBe(1);
     w.pause();
     const paused = w.player.x;
@@ -246,6 +252,7 @@ describe('original gameplay contracts', () => {
       ],
     };
     w.player = createTank(100, design, 'player', 0, 0, 50, 1);
+    importAvatarFixture(w);
     step(w, 1, { secondary: true });
     expect(w.stats.shots).toBe(2);
     // The targetless _-XV is removed in this empty field's bullet phase.
@@ -311,6 +318,7 @@ describe('advanced parts', () => {
       100,
       50,
     );
+    importAvatarFixture(w);
     w.damage(w.player, 10);
     expect(w.player.life).toBe(50);
     expect(w.player.forcefield).toBe(30);
@@ -459,6 +467,7 @@ test('orbital seekers fill six slots without a target, orbit, and disappear with
     50,
     1,
   );
+  importAvatarFixture(w);
   step(w, 130);
   const seekers = w.bullets.filter((b) => b.kind === 'orbital');
   expect(seekers).toHaveLength(6);
@@ -471,6 +480,7 @@ test('orbital seekers fill six slots without a target, orbit, and disappear with
   step(w, 1);
   expect(first.dead).toBe(false); // Dead does not itself detach the source home clip.
   w.player = createTank(w.nextId(), STARTER, 'player');
+  importAvatarFixture(w);
   step(w, 1);
   expect(first.dead).toBe(true);
 });

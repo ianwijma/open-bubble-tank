@@ -1,3 +1,5 @@
+import { setFieldFixtureLayout } from './field-layout';
+import { importAvatarFixture } from './avatar-attachments';
 import { importActorFixtures } from './actor-attachments';
 import { captureCanvas } from './pixi-capture';
 import { Rectangle } from 'pixi.js';
@@ -109,6 +111,7 @@ export async function showMockAssetsProof(native: AssetPack, host: HTMLElement) 
         0,
         0,
       );
+      importAvatarFixture(world);
       world.field.enemies = [
         createTank(
           world.nextId(),
@@ -179,6 +182,7 @@ export async function showMockAssetsProof(native: AssetPack, host: HTMLElement) 
     const intercept = packs.map((pack) => {
       const world = new World([], [], 43);
       world.player.x = -200;
+      setFieldFixtureLayout(world);
       world.hitTest = () => false;
       world.hitProjectile = pack.hitProjectile;
       const shell = make(world, { artScale: 2.5 });

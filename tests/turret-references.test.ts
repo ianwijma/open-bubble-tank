@@ -1,3 +1,4 @@
+import { setFieldFixtureLayout } from './fixtures/field-layout';
 import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import { World, emptyInput } from '../src/game/simulation/world';
@@ -43,7 +44,9 @@ function cachedOwner() {
   cacheEmptyField(world);
   world.jump({ x: 1, y: 0 });
   world.player.x = world.transit!.target.x;
+  setFieldFixtureLayout(world);
   world.player.y = world.transit!.target.y;
+  setFieldFixtureLayout(world);
   // The detached layer keeps this local translation and loses the stage ancestors.
   const detachedPoint = { x: turret.x - world.player.x, y: turret.y - world.player.y };
   world.step(emptyInput());

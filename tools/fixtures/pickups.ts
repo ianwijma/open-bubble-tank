@@ -1,3 +1,4 @@
+import { importAvatarFixture } from './avatar-attachments';
 import { importPickupFixtures } from './pickup-attachments';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { DEFAULT_SETTINGS } from '../../src/game/core/constants';
@@ -19,6 +20,7 @@ export async function showPickupProof(pack: AssetPack, host: HTMLElement) {
     50,
     1,
   );
+  importAvatarFixture(world);
   world.field.tutorial = 0;
   world.fieldDisplays.selectTutorial(world.field, 0);
   world.hitTest = pack.hitTest;

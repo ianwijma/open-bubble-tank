@@ -1,3 +1,4 @@
+import { setFieldFixtureLayout } from '../tools/fixtures/field-layout';
 import { expect, test } from 'bun:test';
 import { STARTER } from '../src/game/data/catalog';
 import type { Effect, Field } from '../src/game/core/types';
@@ -188,6 +189,7 @@ test('arrival clears the old instances before promoting fresh registrations', ()
   expect(world.effectEngine.resolve('bottom')).toBe(world.effectEngine.layer(old, 'bottom'));
   world.player.x = world.transit!.target.x;
   world.player.y = world.transit!.target.y;
+  setFieldFixtureLayout(world);
   world.step(emptyInput());
   expect(world.effectEngine.parent(effect)).toBeUndefined();
   expect(world.effectEngine.resolve('bottom')).toBe(world.effectEngine.layer(next, 'bottom'));

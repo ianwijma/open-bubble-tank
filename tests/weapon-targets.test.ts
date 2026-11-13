@@ -1,3 +1,4 @@
+import { setFieldFixtureLayout } from '../tools/fixtures/field-layout';
 import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import { World, emptyInput } from '../src/game/simulation/world';
@@ -23,6 +24,7 @@ function scenario(ids = [4001]) {
   const world = new World([], [], 3);
   cacheEmptyField(world);
   world.player.x = 100;
+  setFieldFixtureLayout(world);
   const ally = createTank(world.nextId(), design([]), 'ally', 0, 100);
   world.allies = [ally];
   importActorFixtures(world);
@@ -42,6 +44,7 @@ test('cached attachment resets primary target only, preserving master, count and
   behavior.behaviorTarget = { master: 'enemy', target: ally, allies: 8 };
   const old = world.field;
   world.player.x = 425;
+  setFieldFixtureLayout(world);
   world.jump({ x: 1, y: 0 });
   world.transit!.next.scale = 1;
   world.transit!.next.enemies = [];
@@ -50,6 +53,7 @@ test('cached attachment resets primary target only, preserving master, count and
   world.transit!.target = { x: 483, y: 0 };
   owner.status.stun = 10; // Isolate reattachment from a subsequent offensive Run.
   world.player.x = 483;
+  setFieldFixtureLayout(world);
   world.step(emptyInput());
   expect(world.field).not.toBe(old);
   world.editPlayer(STARTER);
@@ -188,6 +192,7 @@ test('a retained target object is not replaced by a same-UID clip in another fie
   const { world, ally, owner, gun } = scenario();
   gun.targeting!.target = ally;
   world.player.x = 425;
+  setFieldFixtureLayout(world);
   world.jump({ x: 1, y: 0 });
   const next = world.transit!.next;
   next.enemies = [];
@@ -200,6 +205,7 @@ test('a retained target object is not replaced by a same-UID clip in another fie
 test('target choice during travel reads the outgoing wrapper even for an incoming owner', () => {
   const { world, ally } = scenario([]);
   world.player.x = 425;
+  setFieldFixtureLayout(world);
   world.jump({ x: 1, y: 0 });
   const next = world.transit!.next;
   next.enemies = [];

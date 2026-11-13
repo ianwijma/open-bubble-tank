@@ -1,6 +1,7 @@
 import { CLASS_SPEED, FIELD_RADIUS, MAX_LIFE, STAGE } from '../core/constants';
 import { clamp, direction, distance, length, Random, rotate } from '../core/math';
-import { displayPixel } from '../core/display-values';
+import { displayPixel, displayTwips } from '../core/display-values';
+import { displayMatrixPoint, inverseDisplayMatrix } from '../core/display-transform';
 import { protectionRadius } from '../core/protection-size';
 import { advanceTankArt } from './tank-art';
 import { detachForcefield } from './forcefield';
@@ -132,7 +133,6 @@ export class World {
   player: Tank;
   private currentField!: Field;
   private fieldContext: Field | null = null;
-  private contextOffset: Vec = { x: 0, y: 0 };
   private orphaned: { field: Field; screen: Vec }[] = [];
   private callbackFields = new WeakMap<Tank, Field>();
   readonly cache = new FieldCache();
@@ -182,7 +182,9 @@ export class World {
   }
   bulletGlobal(bullet: Projectile) {
     const parent = this.projectileParents.get(bullet);
-    return parent ? this.actorParents.layerGlobal(bullet, parent.field) : null;
+    return parent
+      ? this.worldDisplays.layerGlobal(bullet, parent.field, 'bullet', this.mainEffects.position)
+      : null;
   }
   get pickups() {
     return this.runtime.pickups;
@@ -231,23 +233,24 @@ export class World {
     ];
   }
   private avatarPosition() {
-    return { x: this.player.x + this.contextOffset.x, y: this.player.y + this.contextOffset.y };
+    return this.actorParents.point(this.player, this.currentField)!;
+  }
+  /** Tank scalars are a receiver-local bridge, not a second accumulated camera position. */
+  private projectAvatar(field: Field) {
+    const point = this.actorParents.point(this.player, field)!;
+    this.player.x = point.x;
+    this.player.y = point.y;
   }
   /** Every actor keeps field-local coordinates; only the shared avatar needs projection. */
-  private inField(field: Field, offset: Vec, run: () => void) {
+  private inField(field: Field, run: () => void) {
     const previous = this.fieldContext;
-    const previousOffset = this.contextOffset;
     this.fieldContext = field;
-    this.contextOffset = offset;
-    this.player.x += previousOffset.x - offset.x;
-    this.player.y += previousOffset.y - offset.y;
+    this.projectAvatar(field);
     try {
       run();
     } finally {
-      this.player.x += offset.x - previousOffset.x;
-      this.player.y += offset.y - previousOffset.y;
       this.fieldContext = previous;
-      this.contextOffset = previousOffset;
+      this.projectAvatar(previous ?? this.currentField);
     }
   }
   /** _-0D.SpawnNewBullet declines new shots while _-5d is set. Timers still run. */
@@ -572,6 +575,7 @@ export class World {
       return;
     }
     if (this.flow.state !== 'playing') return;
+    this.projectAvatar(this.currentField);
     this.stats.frames++;
     // State0 detects an exit before interface/field/avatar work. Its initiation frame
     // still reaches Avatar.Run; subsequent state2 frames skip it.
@@ -659,10 +663,9 @@ export class World {
   private tickActiveFields(input: InputFrame) {
     this.actorParents.sync(this);
     this.tacticalHud.updateAllies(this.allies, this.player, this.viewZoom);
-    this.inField(this.currentField, { x: 0, y: 0 }, () => this.tickField(input, this.fieldVisit));
+    this.inField(this.currentField, () => this.tickField(input, this.fieldVisit));
     const transit = this.transit;
-    if (transit)
-      this.inField(transit.next, transit.offset, () => this.tickField(input, transit.visit));
+    if (transit) this.inField(transit.next, () => this.tickField(input, transit.visit));
   }
   private tickField(input: InputFrame, visit: FieldVisit) {
     this.flushEnemyRemovals();
@@ -807,7 +810,7 @@ export class World {
     clearPickups(this, this.field);
     this.allies = [];
     for (const carrier of this.runtime.pending) this.effectEngine.discard(carrier);
-    this.player.x = this.player.y = 0;
+    this.projectAvatar(this.currentField);
     this.collapse = null;
     this.flow.restoreControl();
     // Destroy calls _-1E directly; only ordinary boundary exits run FinalPartCall.
@@ -854,10 +857,14 @@ export class World {
         if (Math.abs(v) < 0.5) v = 0;
       }
       p.velocity[axis] = v;
-      p[axis] += v;
     }
-    this.onCameraMove(p.velocity.x, p.velocity.y);
-    this.fieldDisplays.moveCurrent(this.currentField, p.velocity);
+    this.adjustBubblefieldObjects(p.velocity);
+  }
+  /** Original shared camera operation, including teleport's destination-origin displacement. */
+  adjustBubblefieldObjects(delta: Vec) {
+    this.fieldDisplays.moveCurrent(this.currentField, delta);
+    this.projectAvatar(this.currentField);
+    this.onCameraMove(delta.x, delta.y);
     this.worldDisplays.follow(this.currentField, this.transit?.next);
     this.fieldDisplays.updateMasks(this.currentField, this.transit?.next);
   }
@@ -1337,8 +1344,19 @@ export class World {
     const tr = this.transit;
     if (!tr) throw new CrossingTargetReadError();
     tr.age++;
-    const dx = tr.target.x - this.player.x,
-      dy = tr.target.y - this.player.y;
+    // The marker belongs to next.BF_over_detail_mc; the avatar belongs to World.
+    // Both original Point calls truncate separately, including fractional Main motion.
+    const stage = displayMatrixPoint(
+      this.worldDisplays.fieldMatrix(tr.next, this.mainEffects.position, 'detail'),
+      { x: displayTwips(-317 * tr.direction.x), y: displayTwips(-317 * tr.direction.y) },
+    );
+    const inverse = inverseDisplayMatrix(
+      this.worldDisplays.worldMatrix(this.mainEffects.position),
+    )!;
+    const target = displayMatrixPoint(inverse, stage);
+    const avatar = this.fieldDisplays.readAvatar().pose;
+    const dx = target.x / 20 - avatar.x,
+      dy = target.y / 20 - avatar.y;
     if (dx * dx + dy * dy < 25) {
       const outgoingField = this.currentField;
       this.actorParents.sync(this);
@@ -1346,8 +1364,6 @@ export class World {
       this.effectEngine.clear();
       this.effectEngine.unregister('top');
       this.effectEngine.unregister('bottom');
-      this.player.x -= tr.offset.x;
-      this.player.y -= tr.offset.y;
       this.player.velocity = { x: 0, y: 0 };
       // Deactivate clears only a completed wrapper. An uncleared detached
       // wrapper retains its collections; neither wrapper itself enters the cache.
@@ -1385,16 +1401,20 @@ export class World {
       for (const g of this.player.guns) g.counter = 0;
       this.transit = null;
       this.fieldDisplays.arrive(this.currentField);
+      this.projectAvatar(this.currentField);
       this.flow.arrive();
       this.revision++;
     } else {
-      this.player.x += dx * 0.09;
-      this.player.y += dy * 0.09;
-      this.fieldDisplays.moveCurrent(this.currentField, { x: dx * 0.09, y: dy * 0.09 });
+      const angle = (360 * Math.atan2(dy, dx)) / (2 * Math.PI),
+        speed = (Math.sqrt(dx * dx + dy * dy) / 10) * 0.9,
+        moveX = Math.cos((Math.PI * angle) / 180) * speed,
+        moveY = Math.sin((Math.PI * angle) / 180) * speed;
+      this.fieldDisplays.moveCurrent(this.currentField, { x: moveX, y: moveY });
+      this.projectAvatar(this.currentField);
+      this.onCameraMove(moveX, moveY);
       this.fieldDisplays.moveNext(this.currentField, tr.next, tr.offset, this.stats.frames);
       this.worldDisplays.follow(this.currentField, tr.next);
       this.fieldDisplays.updateMasks(this.currentField, tr.next);
-      this.onCameraMove(dx * 0.09, dy * 0.09);
     }
   }
   addEffect(pos: Vec, kind: Effect['kind'], radius: number, color: number, duration: number) {

@@ -1,3 +1,4 @@
+import { importAvatarFixture } from './avatar-attachments';
 import { showEffectOwnershipProof } from './effect-ownership';
 import { setFieldFixtureLayout } from './field-layout';
 import { showActorRenderOwnership } from './actor-render-ownership';
@@ -656,6 +657,7 @@ async function reset() {
       50,
       1,
     );
+    importAvatarFixture(world);
     world.field.enemies = [createTank(1000, design('target'), 'enemy', 100, 0, 1000, 1000)];
     importActorFixtures(world);
   } else if (fixture.value === 'downgrade') {
@@ -689,6 +691,7 @@ async function reset() {
       50,
       1,
     );
+    importAvatarFixture(world);
     world.field.enemies = [createTank(1000, design('shield'), 'enemy', 120, 0)];
     importActorFixtures(world);
     world.field.enemies[0].shield = 1000;

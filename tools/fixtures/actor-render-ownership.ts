@@ -1,3 +1,4 @@
+import { importAvatarFixture } from './avatar-attachments';
 import { setFieldFixtureLayout } from './field-layout';
 import type { SwfClip } from '../../src/game/assets/swf-clip';
 import { Container, Rectangle } from 'pixi.js';
@@ -191,6 +192,7 @@ export async function showActorRenderOwnership(pack: AssetPack, host: HTMLElemen
       'player',
     );
     world.player = protectedTank;
+    importAvatarFixture(world);
     world.fireGun(
       protectedTank,
       protectedTank.guns.find((gun) => gun.part.type === 3010)!,

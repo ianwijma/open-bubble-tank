@@ -1,3 +1,5 @@
+import { importAvatarFixture } from './avatar-attachments';
+import { setFieldFixtureLayout } from './field-layout';
 import { importActorFixtures } from './actor-attachments';
 import { Application, Graphics } from 'pixi.js';
 import { AssetPack, type SpriteInfo } from '../../src/game/assets/asset-pack';
@@ -349,6 +351,7 @@ export async function showShapeContact(pack: AssetPack, host: HTMLElement) {
       50,
       20,
     );
+    importAvatarFixture(world);
     world.hitTest = pack.hitTest;
     world.protectionRadius = pack.protectionRadius;
     const t = world.player;
@@ -377,6 +380,7 @@ export async function showShapeContact(pack: AssetPack, host: HTMLElement) {
     world.jump({ x: 1, y: 0 });
     t.x = world.transit!.target.x;
     t.y = world.transit!.target.y;
+    setFieldFixtureLayout(world);
     world.step(emptyInput());
     const retained = pointOutsideParts(t);
     capture('Arrival film · contact without immunity', t, retained, {

@@ -1,3 +1,4 @@
+import { importAvatarFixture } from '../tools/fixtures/avatar-attachments';
 import { importActorFixtures } from './fixtures/actor-attachments';
 import { FieldVisit } from '../src/game/core/field-visit';
 import { expect, test } from 'bun:test';
@@ -184,6 +185,7 @@ test('forcefield regeneration measures twenty damaged frames rather than tank ag
     50,
     1,
   );
+  importAvatarFixture(world);
   world.player.age = world.player.artAge = 19;
   world.damage(world.player, 20);
   frames(world, 1);
@@ -205,6 +207,7 @@ test('forcefield impact returns to idle and broken/rearm clips follow the author
     50,
     1,
   );
+  importAvatarFixture(world);
   const tank = world.player;
   world.spawnVolley(tank, tank.guns[0], WEAPONS[2001]);
   const shot = world.bullets[0];

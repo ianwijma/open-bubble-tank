@@ -1,3 +1,4 @@
+import { setFieldFixtureLayout } from '../tools/fixtures/field-layout';
 import { importPickupFixtures } from './fixtures/pickup-attachments';
 import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
@@ -16,7 +17,9 @@ test('the selected crossing frame still moves after its interface opens an upgra
   world.step(emptyInput());
   expect(world.mode).toBe('upgrade');
   expect(crossing.age).toBe(1);
-  expect(world.player.x).toBeCloseTo(before + (crossing.target.x - before) * 0.09);
+  // Current root's compound DisplayObject setter truncates before the field Point read.
+  expect(before).toBe(0);
+  expect(world.player.x).toBe(96.35);
   const position = world.player.x;
   world.step(emptyInput());
   expect(world.player.x).toBe(position);
@@ -29,6 +32,7 @@ test('arrival in the upgrade-opening frame retains the menu and shared crossing 
   const crossing = world.transit!;
   world.player.x = crossing.target.x;
   world.player.y = crossing.target.y;
+  setFieldFixtureLayout(world);
   world.player.life = world.player.maxLife;
   world.step(emptyInput());
   expect(world.transit === null).toBe(true);
@@ -70,6 +74,7 @@ test('secondary help closes to ordinary mode without completing its retained cro
 test('a repeated escape replaces the next wrapper from logical destination coordinates', () => {
   const world = new World([], [], 1);
   world.player.x = 10;
+  setFieldFixtureLayout(world);
   world.jump({ x: 1, y: 0 });
   const abandoned = world.transit!.next;
   const actor = createTank(
@@ -90,6 +95,7 @@ test('a repeated escape replaces the next wrapper from logical destination coord
   expect(world.transit!.next !== abandoned).toBe(true);
   expect([world.transit!.next.col, world.transit!.next.row]).toEqual([2, 0]);
   world.player.x += 25;
+  setFieldFixtureLayout(world);
   const retained = world.attachedFields().find(({ field }) => field === abandoned)!;
   expect(retained.offset.x - world.player.x).toBe(frozen.x);
   const age = actor.age,
@@ -119,6 +125,7 @@ test('a cached attachment restores actor references and frozen poses into a fres
   world.jump({ x: 1, y: 0 });
   world.player.x = world.transit!.target.x;
   world.player.y = world.transit!.target.y;
+  setFieldFixtureLayout(world);
   world.step(emptyInput());
   const saved = { x: actor.x, y: actor.y, rotation: actor.rotation };
   actor.x = 900;
@@ -135,9 +142,11 @@ test('a cached attachment restores actor references and frozen poses into a fres
 test('next-field damage uses current-wrapper marker geometry and its old invocation finishes', () => {
   const world = new World([], [], 1);
   world.player.x = 400;
+  setFieldFixtureLayout(world);
   world.jump({ x: 1, y: 0 });
   const oldNext = world.transit!;
   world.player.x = oldNext.offset.x - 350 * oldNext.next.scale;
+  setFieldFixtureLayout(world);
   const before = world.player.x;
   oldNext.next.enemies = [
     createTank(
@@ -212,6 +221,7 @@ test('arrival caches raw final-frame removals; an empty reattached actor can int
   world.jump({ x: 1, y: 0 });
   world.player.x = world.transit!.target.x;
   world.player.y = world.transit!.target.y;
+  setFieldFixtureLayout(world);
   world.hitTest = (tank) => tank === actor;
   world.step(emptyInput());
   expect(actor.dead).toBe(true);
@@ -257,11 +267,13 @@ test('a cache alias reparents the actor without erasing older array references o
     world.jump({ x: direction, y: 0 });
     world.player.x = world.transit!.target.x;
     world.player.y = world.transit!.target.y;
+    setFieldFixtureLayout(world);
     world.step(emptyInput());
   }
   const current = world.currentWrapper;
   expect(current.enemies).toContain(actor);
   world.player.x = -10;
+  setFieldFixtureLayout(world);
   world.jump({ x: 1, y: 0 });
   world.damage(world.player, 2);
   const next = world.transit!.next;
@@ -305,10 +317,12 @@ test('an older removal queue cannot detach a cached actor from its new layer', (
     world.jump({ x: direction, y: 0 });
     world.player.x = world.transit!.target.x;
     world.player.y = world.transit!.target.y;
+    setFieldFixtureLayout(world);
     world.step(emptyInput());
   }
   const current = world.currentWrapper;
   world.player.x = -10;
+  setFieldFixtureLayout(world);
   world.jump({ x: 1, y: 0 });
   world.damage(actor, 1000);
   world.damage(world.player, 2);
@@ -357,6 +371,7 @@ test('completed-wrapper deactivation clears its shots and pickups before detachm
   world.jump({ x: 1, y: 0 });
   world.player.x = world.transit!.target.x;
   world.player.y = world.transit!.target.y;
+  setFieldFixtureLayout(world);
   world.step(emptyInput());
   expect(runtime.bullets).toEqual([]);
   expect(runtime.pickups).toEqual([]);

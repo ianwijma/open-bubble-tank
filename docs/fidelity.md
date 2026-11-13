@@ -1692,3 +1692,8 @@ mutations reject. Check passes1,109 tests /16,078 assertions; production is
 unchanged. REA events remain incomplete/equality-ineligible; arbitrary affine,
 nonfinite/singular, compiled runtime source, event/global RNG, Adobe/pixel/audio
 and full-game equivalence remain unproved. Parent owns production integration.
+
+
+## Retained combat ancestry and receiver-local avatar bridge
+
+The [combat ancestry continuation](retained-combat-ancestry-reference.md) reads actual field/actor/avatar and World sibling parents, preserves detached/replaced identities and consumes independently frozen original Point inverses. The shared Tank x/y bridge now follows physical display writes and receiver-local conversions; the independently accumulated0.6px movement discrepancy is removed. Crossing marker conversion, source trigonometric operation order and movement callback order are restored. Eighteen focused cases pass213 assertions; formatting/typecheck and1,129 rule tests /16,312 assertions pass. Final affected browser validation is still in progress. Original capture verification passes112 rows; REA events remain incomplete/equality-ineligible. Dynamic field composition/width/shape queries, event/global RNG equality, ordinary progression and original/Adobe/full-game parity remain unproved.

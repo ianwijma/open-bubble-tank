@@ -1,3 +1,4 @@
+import { setFieldFixtureLayout } from '../tools/fixtures/field-layout';
 import { expect, test } from 'bun:test';
 import { World, emptyInput } from '../src/game/simulation/world';
 import { cacheEmptyField } from './fixtures/empty-field';
@@ -136,6 +137,7 @@ test('arrival detaches bullet/top before cache reads and removes highlight after
   };
   world.player.x = world.transit!.target.x;
   world.player.y = world.transit!.target.y;
+  setFieldFixtureLayout(world);
   world.step(emptyInput());
   expect(seen).toEqual(['cache', 'top', 'bottom']);
   expect(world.worldDisplays.read(old, 'bullet').identity).toBe(oldIdentity);

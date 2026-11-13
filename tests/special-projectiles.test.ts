@@ -1,3 +1,4 @@
+import { setFieldFixtureLayout } from './fixtures/field-layout';
 import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
 import { World, emptyInput } from '../src/game/simulation/world';
@@ -45,7 +46,9 @@ const queue = (world: World) => world.runtimeFor(world.field).effectQueue;
 test('Starburst spawns at its mounted registration rather than the unused preview emitter', () => {
   const { world } = setup();
   world.player.x = 30;
+  setFieldFixtureLayout(world);
   world.player.y = 40;
+  setFieldFixtureLayout(world);
   world.player.rotation = 90;
   const gun = {
     part: { ...STARTER.parts[1], type: 3005, x: 10, y: 5 },
@@ -335,7 +338,9 @@ test('two Sapper mounts each retain one shot and respawn independently after rem
 test('Spinner weapon retains ordinary aiming rather than its authored fixed mount angle', () => {
   const { world, enemy } = setup();
   world.player.x = enemy.x;
+  setFieldFixtureLayout(world);
   world.player.y = 100;
+  setFieldFixtureLayout(world);
   enemy.guns = [
     {
       part: { ...STARTER.parts[1], type: 4019, x: 0, y: 0 },

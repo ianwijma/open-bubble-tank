@@ -1,3 +1,4 @@
+import { importAvatarFixture } from './avatar-attachments';
 import { importActorFixtures } from './actor-attachments';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { DEFAULT_SETTINGS } from '../../src/game/core/constants';
@@ -24,6 +25,7 @@ export async function showBeamContracts(pack: AssetPack, host: HTMLElement) {
     50,
     40,
   );
+  importAvatarFixture(world);
   world.field.cleared = false;
   world.field.tutorial = 0;
   world.fieldDisplays.selectTutorial(world.field, 0);

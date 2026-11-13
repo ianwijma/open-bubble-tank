@@ -1,3 +1,4 @@
+import { importAvatarFixture } from '../tools/fixtures/avatar-attachments';
 import { expect, test } from 'bun:test';
 import { World, emptyInput } from '../src/game/simulation/world';
 import { STARTER } from '../src/game/data/catalog';
@@ -12,6 +13,7 @@ test('Apocalypse captures radial orientation, screen registration, scale and Mai
   const w = new World([], [], 1);
   w.player.x = 100;
   w.player.y = -50;
+  setFieldFixtureLayout(w);
   w.viewZoom = 0.75;
   w.mainEffects.position = { x: 1.55, y: -2.25 };
   w.field.scale = 1.4;
@@ -43,6 +45,7 @@ test('Apocalypse captures radial orientation, screen registration, scale and Mai
   expect(effect.rotation).toBeCloseTo((Math.atan2(206, 400) * 180) / Math.PI);
   expect(effect.rotation).not.toBe(bullet.angle);
   w.player.x = 200;
+  setFieldFixtureLayout(w);
   w.mainEffects.position = { x: 0, y: 0 };
   w.step(emptyInput());
   expect([effect.x, effect.y, effect.scale]).toEqual([-73.45, 35.25, effect.scale]);
@@ -91,6 +94,7 @@ test('collapse birth finishes the selected frame even when that frame opens an u
     { ...STARTER, parts: [STARTER.parts[0], { ...STARTER.parts[1], type: 5006 }] },
     'player',
   );
+  importAvatarFixture(w);
   const apocalypse = createProjectile(w.nextId(), {
     owner: w.player.uid,
     enemy: false,
@@ -134,6 +138,7 @@ test('field keeps its fixed center, avatar uses its retained pose and destinatio
   const w = new World([], [], 1);
   w.player.x = 200;
   w.player.y = -100;
+  setFieldFixtureLayout(w);
   setFieldFixtureLayout(w);
   w.jump({ x: 1, y: 0 });
   const next = w.transit!.next,

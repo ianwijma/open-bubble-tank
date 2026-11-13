@@ -1,3 +1,5 @@
+import { setFieldFixtureLayout } from '../tools/fixtures/field-layout';
+import { importAvatarFixture } from '../tools/fixtures/avatar-attachments';
 import { expect, test } from 'bun:test';
 import { STARTER } from '../src/game/data/catalog';
 import { World, emptyInput } from '../src/game/simulation/world';
@@ -21,6 +23,7 @@ function setup() {
     50,
     20,
   );
+  importAvatarFixture(world);
   world.field.enemies = [];
   world.hitTest = () => false;
   const tank = world.player;
@@ -118,6 +121,7 @@ test('arrival keeps all mounted films and their independent stage clocks without
   world.jump({ x: 1, y: 0 });
   tank.x = world.transit!.target.x;
   tank.y = world.transit!.target.y;
+  setFieldFixtureLayout(world);
   tick(world, 1);
   expect(tank.shield).toBe(0);
   expect(world.runtimeFor(world.field).pending).toHaveLength(0);
