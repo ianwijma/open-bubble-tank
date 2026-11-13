@@ -187,3 +187,19 @@ content and unmeasured text mask roles/modes remain rejected. No World gameplay
 consumer or scheduler migration is included. Combine this local commit with the
 retained-effect task for the fifth PR and repeat the final combined gate. The
 original evidence families, master897d2e7 and legacy22d9def7 remain unchanged.
+
+The parent then binds field queries to actual World/Main ancestry and permits
+text siblings outside every authored mask range, preserving rejection for
+potential overlap. Its1,232-test check and2-case native/mock browser run preserve
+all1,890 text contacts and existing controls; see the integration reference.
+The original tutorial type inventory corrects the earlier SimpleButton label:
+1655 is DefineEditText,1657 is a bitmap-filled shape, and1658 is a sprite.
+
+The [actor clock qualification](actor-clock-original-reference.md) is now picked
+locally and both owned copies independently reverify. Actual retained mounted
+references keep advancing through detach and original cache restoration. Replace
+the host attached-only art clock assumption using that evidence, without tying
+gameplay Run, constructor lifetime or geometry reads to stage membership. The
+joint parent check passes1,243 tests /66,179 assertions. Keep the final fifth PR
+local until the retained-effect and actor-clock corrections are combined and
+verified; no fifth PR or master merge has occurred at this handoff.

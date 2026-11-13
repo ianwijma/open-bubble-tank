@@ -1969,3 +1969,30 @@ with their original dimensions. Actual tutorial frames3–6 read current retaine
 text children without clock/entropy writes; frame1's DefineEditText remains outside
 this provider. No gameplay field consumer migrates, no original oracle is edited,
 and complete field/ordinary/global-event/Adobe/full-game parity remains open.
+
+Parent review binds both field query entry points to actual World/Main ancestry
+and permits tutorial siblings beyond every authored mask end; potentially
+overlapping text-mask ranges still reject. Two routing/range regressions fail
+before and pass after. The parent formatting/check passes1,232 tests /66,118
+assertions; literal affected E2E passes2 mock/SWF cases without skips/flaky results,
+all892 captured inputs unchanged. All native text/mask/root/stroke/attachment
+controls remain intact; this is not original complete-field qualification.
+
+## Original retained actor clock qualification
+
+Two fresh [actor clock captures](actor-clock-original-reference.md) retain genuine
+TankData-created catalog parts and a living built-in Floaty. Measured artwork
+continues through ancestor detach, direct actor removal and direct mounted-root
+removal; stopped rotor roots retain playing descendants. Actual original `_‑G0`
+restores the same NPC and mounted identities without restarting frames. The
+attached-only host artwork clock policy is insufficient for these references.
+The private callback comparison remains unresolved and is not a failure claim.
+
+Parent-owned copies independently reverify27,972/28,372 MovieClip rows and
+335,664/340,464 binary Numbers. The two captures preserve distinct random outcomes
+and reentrant EXIT rows rather than claiming event equality. All40 rejecting
+controls pass in the original qualification. The joint parent check passes
+1,243 tests /66,179 assertions. No actor-clock production repair is included yet;
+this evidence-only pick does not change the preceding tested browser code.
+Departure/gameplay Run, other part/status/protection/collection lifetimes, global
+event/RNG, compiled-source identity, ordinary/Adobe/full-game parity remain open.

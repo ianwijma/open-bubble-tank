@@ -5,6 +5,12 @@ not qualify actor playback or install a gameplay query adapter. Physical actor
 membership and attachment geometry are implemented separately; neither proves
 how retained authored children advance after their outer field is detached.
 
+The subsequent [original actor clock qualification](actor-clock-original-reference.md)
+now answers that bounded question: the measured mounted references continue
+through ancestor/own removal and survive original cache restoration without a
+frame reset. The implementation audit below is historical; its attached-only
+clock policy needs correction, not preservation as original behavior.
+
 ## Current implementation and demonstrated host policy
 
 `World.advanceArtwork` enumerates the avatar and `actorParents.owned(field)` only
