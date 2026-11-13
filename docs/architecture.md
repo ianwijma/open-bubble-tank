@@ -382,3 +382,11 @@ references; reread synchronously after display mutation rather than caching on
 field revision. The [population contract](field-population-reference.md) is not
 yet wired to application queries; complete leaf/mask/Script arithmetic and
 retained generic effect geometry remain required.
+
+`core/display-geometry.ts` supplies separate declared-leaf Script bounds and
+shape-contact traversals. `simulation/field-queries.ts` compiles the physical
+population through a mandatory provider, with no guessed geometry fallback or
+application caller. Runtime mask references retain independent ancestry; public
+receiver attachment and argument mapping are explicit. The
+[traversal boundary](field-query-traversal-reference.md) records the frozen mask
+controls and remaining complete-provider/root-coordinate qualification.

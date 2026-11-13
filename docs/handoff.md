@@ -113,3 +113,22 @@ pickup captures qualify constructor/script/parentless/removal phases and native
 child transforms; source SpawnLifeBubbles/Setup execute with a null avatar, not
 World.Run. Global entropy/event ordering and ordinary/full-game parity remain
 open. All work stays local; this is not a sixth PR or a change to PRs145–149.
+
+## Current effect/geometry stack
+
+PRs150–154 landed through one tested PR154 merge `897d2e741b8a1d23f563f8bb8a2e6bd684932b9b`.
+PR155 (`stack/effect-geometry-01`, fixed head `8a0b055`) is the first layer of the
+next five-PR batch; its hosted Actions result remains pending in the last inspection.
+Build dependent layers while it runs, retaining one final combined gate/master
+merge and `stack/**` deployment suppression. Legacy `22d9def7` is unchanged.
+
+The corrected effect replay uses actual render order rather than Map insertion
+history; see [the correspondence review](effect-clock-correspondence-reference.md).
+The original mask controls now qualify the changing latch and runtime reference
+lifetime. The [unused field traversal](field-query-traversal-reference.md) applies
+those policies with separate Script bounds and shape contact. It requires explicit
+geometry for every physical slot and does not replace gameplay queries. Retained
+generic effects, complete native/mock/text geometry, public root-coordinate
+mapping and eventual browser integration remain distinct work. Preserve the
+unchanged original fixtures and historical stash; never restore the old
+all-active-mask policy from it. No full-game or Adobe parity follows.

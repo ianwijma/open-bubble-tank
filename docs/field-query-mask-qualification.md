@@ -7,7 +7,9 @@ latch, including an ordinary child exactly at the end depth. Runtime mask
 references survive reparent/removal and remain separate from authored ranges.
 This resolves the finite mask-policy gap below; compiled source identity,
 complete text/field queries, ordinary reachability and Adobe/full-game parity
-remain open. No production traversal or stashed draft is applied here.
+remain open. The corrected, unused [traversal seam](field-query-traversal-reference.md)
+now consumes those policies; it does not replace an application query. The original
+stash is preserved as history, rather than an instruction to restore its old policy.
 
 The following is the retained pre-capture finding and investigation brief.
 

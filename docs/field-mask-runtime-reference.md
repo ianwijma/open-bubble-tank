@@ -5,8 +5,10 @@ The distinct `field-mask-*` family measures actual builtin
 and reference getters in the preserved BT3 movie. **The finite runtime controls
 support the changing depth latch and admit a child exactly at the mask end.**
 They reject all-active-mask conjunction and inclusive end-depth clipping as a
-contract for this loaded Ruffle runtime. Production traversal is unchanged;
-parent owns draft stash `73013f30bad8d3395f7c08026f60d4bda25146dc`.
+contract for this loaded Ruffle runtime. Application traversal was unchanged by
+this qualification. A later [unused traversal seam](field-query-traversal-reference.md)
+implements the measured policies; the original draft stash
+`73013f30bad8d3395f7c08026f60d4bda25146dc` remains historical evidence.
 
 ## Inputs and preservation
 

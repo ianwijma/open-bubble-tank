@@ -1799,3 +1799,21 @@ reference files / 22 emitted modes remain byte-identical. Production and the
 parent's stashed traversal are unchanged. REA events remain incomplete and ineligible for equality; compiled source revision, complete field/text traversal, ordinary
 reachability, Adobe/pixel/audio and full-game parity remain unproved.
 
+## Qualified mask traversal seam, without gameplay migration
+
+The [separate bounds/shape traversal](field-query-traversal-reference.md) now
+applies the finite original mask policy: changing depth latch, exact end-depth
+admission, hidden authored masks versus geometric runtime references, and
+reference retention independently of physical parentage. Tests compare unchanged
+binary oracle results using only independently measured leaf Points; synthetic
+owner-routing controls are labelled separately. Script bounds transform declared
+leaves before union and retain invisible/masked geometry. The public adapter
+requires explicit stage attachment and argument ancestry, while the field helper
+is explicitly stage-space only. There is no application caller or complete
+native/mock provider. Public player-root mapping, static text, complete effect
+poses, hot-path population cost and ordinary/original/Adobe/full-game parity
+remain unresolved. PR155 and its published head are unchanged by this local layer.
+Formatting/check passes 1193 tests / 19427 assertions; the focused 18 cases pass
+179 assertions and reject all three isolated semantic mutations. No application
+E2E is claimed for the unused seam.
+
