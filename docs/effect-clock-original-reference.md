@@ -262,3 +262,15 @@ assertions. No additional original runtime was launched and no application
 flow was changed by this evidence pick. The existing registration correction's
 12 browser cases retain their recorded earlier source/build identity. Frame,
 identity/correspondence and transient lookup limits above remain unrepaired.
+
+
+## Candidate correspondence follow-up
+
+The later [path/scheduling review](effect-clock-correspondence-reference.md)
+corrects Map insertion-order paths to current render-order paths. Against the
+same unchanged oracle, all45 identity/correspondence and33 collapse-frame
+differences disappear;26 conversion-retirement frame differences remain. An
+isolated child-before-parent advancement experiment matches all660 sampled
+retained frames/correspondences. That experiment is not integrated production
+playback, and the earlier raw comparison counts remain historical evidence.
+Transient lookup, geometry, event and full-game limits above remain unchanged.

@@ -1778,3 +1778,8 @@ parent-owned and unchanged; parent separately owns static metadata and integrati
 ## Retained display batch delivered and local evidence reviewed
 
 The five-layer batch landed through PR154 merge897d2e741b8a1d23f563f8bb8a2e6bd684932b9b after exact-head latest-attempt run43407815305/job131826378222 succeeded and the parent re-read full feedback (zero reviews/inline findings, one informational skip). Fetched master has the tested treee67613371458570ad8cb339c1a5f42b4dd38573d and all five heads; GitHub marks150–154 merged. Batch watches are stopped; legacy22d9def7 remains unchanged. Local follow-up was rebased with its entire tree identical, then the generic-effect original qualification was integrated separately. Parent-owned copies of both captures reverify21,636 rows/259,632 Numbers each. These remain bounded runtime controls with incomplete/equality-ineligible events, not a repair of59 frame/45 identity differences,399 lookup holes or complete field geometry. No full-game/Adobe completion is claimed.
+
+
+## Corrected effect replay paths
+
+The [candidate correspondence review](effect-clock-correspondence-reference.md) found a tool defect: Map insertion order differs from actual getChildAt/render order after earlier depths are replaced. The corrected walk eliminates all45 identity/correspondence and33 collapse-frame differences without changing production or frozen data. The remaining26 conversion-child frames match in an isolated child-before-parent advancement experiment, consistent with tagged scheduler order. All660 sampled frame/correspondence checks match that control; before/inside root ownership, complete pose/ENTER geometry and production migration remain separate work. No runtime oracle is rewritten and no full-game/Adobe claim is made.

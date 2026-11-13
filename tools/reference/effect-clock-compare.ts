@@ -12,6 +12,7 @@ import { SwfClip, type ClipSource } from '../../src/game/assets/swf-clip';
 import type { SymbolResult } from '../../src/game/assets/asset-pack';
 import original from '../../tests/fixtures/effect-clock-original.json';
 import { rows, sha } from './effect-clock-evidence.mjs';
+import { effectClockChildAtPath } from './effect-clock-correspondence';
 
 const [path, capture] = process.argv.slice(2);
 if (!capture) throw new Error('Supply ORIGINAL OWNED_CAPTURE');
@@ -43,9 +44,7 @@ for (const cohort of ['before', 'inside'])
       // Candidate replay input, compared with original observations; never expected output.
       clip.advance(Math.max(1, tick - (cohort === 'inside' ? 1 : 0)));
       for (const row of samples.filter((r) => r.tick === tick && r.kind === 'tree')) {
-        let current: SwfClip | undefined = clip;
-        for (const index of row.path.split('/').slice(1).map(Number))
-          current = current ? [...current.children.values()][index]?.clip : undefined;
+        const current = effectClockChildAtPath(clip, row.path);
         if (!current) {
           identities.push({ label, tick, id: row.id, path: row.path, missingCandidate: true });
           continue;
