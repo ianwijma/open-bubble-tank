@@ -268,8 +268,7 @@ test('the shipped infection acquisition bug expires at setup and first Run rathe
     1,
   );
   world.fireGun(world.player, world.player.guns[0], emptyInput());
-  const b = world.bullets[0],
-    start = { x: b.x, y: b.y };
+  const b = world.bullets[0];
   expect(b.targetId).toBeNull();
   expect(b.removeAfterFrame).toBe(true);
   expect(b.infectionTries).toBe(2);
@@ -277,8 +276,9 @@ test('the shipped infection acquisition bug expires at setup and first Run rathe
   world.step(emptyInput());
   expect(world.bullets).toEqual([]);
   expect(target.status.infect).toBe(0);
-  expect(b.x).toBeCloseTo(start.x + 6);
-  expect(b.y).toBeCloseTo(start.y);
+  // Emitter (8.5,0.5), starter scale71/76 and mount(-1,0), then the6px Run write.
+  // _-U4 still reaches both twip setters after the failed acquisition.
+  expect([b.x, b.y]).toEqual([12.9, 0.45]);
   expect(world.effects.map((e) => [e.symbol, e.rotation])).toEqual([
     [1767, 0],
     [1767, 0],

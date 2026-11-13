@@ -1,4 +1,5 @@
 import { angleTo, DEG, direction, distance, rotate } from '../core/math';
+import { displayPixel } from '../core/display-values';
 import type { GunState, InputFrame, Projectile, Tank } from '../core/types';
 import type { World } from './world';
 import { removeTankChild } from './tank-display';
@@ -150,8 +151,8 @@ export function tickBullet(world: World, b: Projectile, _input: InputFrame) {
         Math.PI;
   }
   const velocity = direction(b.angle, b.speed);
-  b.x += velocity.x;
-  b.y += velocity.y;
+  b.x = displayPixel(b.x + velocity.x);
+  b.y = displayPixel(b.y + velocity.y);
   if (b.kind === 'rocket' && !b.dead) rocketTrail(world, b);
 }
 export function releaseCarrier(world: World, t: Tank, gun: GunState) {
