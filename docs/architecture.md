@@ -372,3 +372,13 @@ twip setters to the actual clip X/Y before the engine attaches it, preserving
 optional rotation → X → Y → name/layer/completion ordering. This [registration
 boundary](effect-registration-position-reference.md) does not yet supply generic
 retained effect clocks or a complete native field-query population.
+
+
+`simulation/field-population.ts` projects the existing owners into one transient
+physical tree: authored slots/tutorial, ordered actor objects, retained pickup
+poses and actual bottom117 effect children. It never reads Run arrays or effect
+request contexts to infer membership. Frozen node wrappers contain live owner
+references; reread synchronously after display mutation rather than caching on
+field revision. The [population contract](field-population-reference.md) is not
+yet wired to application queries; complete leaf/mask/Script arithmetic and
+retained generic effect geometry remain required.

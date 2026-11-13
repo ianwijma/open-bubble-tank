@@ -1734,3 +1734,8 @@ The [repeatable numeric import](effect-display-metadata-reference.md) adds15 ori
 ## Local effect registration position boundary
 
 The [registration correction](effect-registration-position-reference.md) preserves raw queued Number arguments and applies signed-twip setters only when CreateEffect assigns the clip's X/Y. Qualified source/pcode fixes that ordering; this is not a new runtime capture of fractional CreateEffect calls. Both new queued/immediate regressions fail before and pass after. Formatting/check passes1,140 tests /17,368 assertions; buildcnC5ZnrgsKzrSI2ZEdSt- passes12 affected mock/supplied-art browser cases with zero skips/flaky results and804 unchanged input hashes. Owned3775/3776 are free. Generic effect clocks/retained native poses and complete field queries remain unresolved; published PR154 is unchanged and full-game/Adobe parity remains unproved.
+
+
+## Local physical field population seam
+
+The [population projection](field-population-reference.md) now combines actual authored/tutorial, actor, pickup and bottom117 owners in source order, preserving invisible/dead/empty/detached children and excluding queued requests and World siblings. It retains same-ID object distinctions and current owner poses without initialization, entropy, UID or stage-clock writes. Seven cases pass49 assertions and reject eight isolated semantic mutations. Format/check passes1,147 tests /17,417 assertions. The seam has no application caller yet; no browser flow/E2E or original-runtime query equality is claimed. Complete native/mock leaf geometry, actor protection, effect poses/drawn lines, masks and Script arithmetic remain before field-query migration. PR154 is unchanged and the full recreation remains incomplete.
