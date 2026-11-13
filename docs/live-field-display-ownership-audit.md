@@ -19,6 +19,8 @@ Read this with [the wrapper design audit](beam-wrapper-query-design-audit.md),
 Exact Script-bounds/setter arithmetic belongs to the separate arithmetic task.
 This audit specifies inputs and phase ownership; it does not choose width rounding.
 
+Later implementation status: [ordered actor ownership and renderer follow-up](actor-display-ownership-reference.md) supersede this audit's actor array-reconciliation and tank-renderer objections. Other field populations, exact transforms and complete queries remain open. The observations below describe the pinned audit base.
+
 ## Evidence and scope
 
 Original paths below are relative to

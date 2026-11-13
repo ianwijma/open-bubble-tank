@@ -41,7 +41,8 @@ export class GameRenderer {
   screenEffects = new Container();
   private rasterTextures = new SwfTextures();
   private ownedTextures: Texture[] = [];
-  private tankNodes = new Map<number, TankView>();
+  private tankNodes = new Map<Tank, TankView>();
+  private actorLayers = new Map<Field, Container>();
   private bulletNodes = new Map<number, SwfSymbolView>();
   private pickupNodes = new Map<number, SwfSymbolView>();
   private fieldNodes = new Map<Field, Sprite>();
@@ -175,18 +176,18 @@ export class GameRenderer {
         nodes.delete(uid);
       }
   }
-  private tank(t: Tank, transform: FieldTransform) {
-    let node = this.tankNodes.get(t.uid);
+  private tank(t: Tank, transform: FieldTransform, parent: Container) {
+    let node = this.tankNodes.get(t);
     if (node && node.design !== t.design) {
       node.destroy();
-      this.tankNodes.delete(t.uid);
+      this.tankNodes.delete(t);
       node = undefined;
     }
     if (!node) {
       node = new TankView(t.design, this.assets, this.rasterTextures);
-      this.entities.addChild(node.container);
-      this.tankNodes.set(t.uid, node);
+      this.tankNodes.set(t, node);
     }
+    if (node.container.parent !== parent) parent.addChild(node.container);
     node.update(t);
     const point = fieldPoint(t, transform);
     node.container.position.set(point.x, point.y);
@@ -263,24 +264,38 @@ export class GameRenderer {
       screenInFront
     )
       this.app.stage.swapChildren(this.screenEffects, this.mapArt);
-    const tanks = [
-      { tank: world.player, transform: fieldTransform(world, world.currentWrapper) },
-      ...states.flatMap(({ field, runtime, transform }) =>
-        [...field.enemies, ...runtime.allies]
-          .filter((tank) => !tank.dead && world.actorParents.inField(tank, field))
-          .map((tank) => ({ tank, transform })),
-      ),
-    ];
-    for (const [id, node] of this.tankNodes)
-      if (!tanks.some(({ tank }) => tank.uid === id)) {
-        node.destroy();
-        this.tankNodes.delete(id);
+    // Actual enemyLayer children, including empty/deactivated and display-only clips.
+    // Field transforms remain the separate presentation adapter above.
+    const tanks = states.flatMap(({ field, transform }, index) => {
+      let layer = this.actorLayers.get(field);
+      if (!layer) {
+        layer = new Container();
+        this.actorLayers.set(field, layer);
+        this.entities.addChild(layer);
       }
-    for (const { tank, transform } of tanks) this.tank(tank, transform);
-    // Keep the avatar above the enemy layer, as in the Flash display list.
-    const playerNode = this.tankNodes.get(world.player.uid);
-    if (playerNode)
-      this.entities.setChildIndex(playerNode.container, this.entities.children.length - 1);
+      this.entities.setChildIndex(layer, index);
+      return [...world.actorParents.owned(field)].map((tank, childIndex) => {
+        const view = this.tank(tank, transform, layer);
+        layer.setChildIndex(view.container, childIndex);
+        return { tank, transform };
+      });
+    });
+    const playerTransform = fieldTransform(world, world.currentWrapper);
+    const playerNode = this.tank(world.player, playerTransform, this.entities);
+    tanks.push({ tank: world.player, transform: playerTransform });
+    const retained = new Set(tanks.map(({ tank }) => tank));
+    for (const [tank, node] of this.tankNodes)
+      if (!retained.has(tank)) {
+        node.destroy();
+        this.tankNodes.delete(tank);
+      }
+    for (const [field, layer] of this.actorLayers)
+      if (!activeFields.includes(field)) {
+        layer.destroy();
+        this.actorLayers.delete(field);
+      }
+    // The avatar is a sibling above the field enemy layers, not one of their children.
+    this.entities.setChildIndex(playerNode.container, this.entities.children.length - 1);
     for (const nodes of [this.mockShots, this.mockPickups])
       for (const [field, graphics] of nodes)
         if (!activeFields.includes(field)) {
@@ -452,6 +467,7 @@ export class GameRenderer {
     this.rasterTextures.destroy();
     for (const tex of this.ownedTextures) tex.destroy(true);
     this.tankNodes.clear();
+    this.actorLayers.clear();
     this.fieldNodes.clear();
   }
 }

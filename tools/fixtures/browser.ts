@@ -1,3 +1,4 @@
+import { showActorRenderOwnership } from './actor-render-ownership';
 import { importActorFixtures } from './actor-attachments';
 import { showNpcDeactivation } from './npc-deactivation';
 import { showAudioWindows } from './audio-windows';
@@ -174,6 +175,14 @@ async function reset() {
     downgrade.disabled = secondary.disabled = hit.disabled = true;
     status.dataset.audioWindows = JSON.stringify(await showAudioWindows(pack, stage));
     status.textContent = 'Ready · decoded source sound windows';
+    return;
+  }
+  if (fixture.value === 'actor-render-ownership') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    status.dataset.actorRenderOwnership = JSON.stringify(
+      await showActorRenderOwnership(pack, stage),
+    );
+    status.textContent = 'Ready · actual actor display ownership';
     return;
   }
   if (fixture.value === 'npc-deactivation') {
