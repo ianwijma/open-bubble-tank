@@ -203,3 +203,26 @@ gameplay Run, constructor lifetime or geometry reads to stage membership. The
 joint parent check passes1,243 tests /66,179 assertions. Keep the final fifth PR
 local until the retained-effect and actor-clock corrections are combined and
 verified; no fifth PR or master merge has occurred at this handoff.
+
+
+The local [retained actor clock repair](actor-artwork-lifetime-reference.md) now
+uses weak explicit construction ownership independently of actor parentage and
+Run arrays. Already materialized mounted trees continue through cache/actor/mount
+removal and preserve identity/current pose on reattachment; inside-ENTER birth
+cohorts hold their initial frame. Its isolated branch first picks the complete
+generic-effect dependency3336159 asabc4dce, preserving both documentation appends.
+Pick only the subsequent actor commit when integrating onto a parent that already
+contains3336159. The combined supplied-file check passes1,291 tests /75,956
+assertions; final browser/build/hash/cleanup details are in the reference. Lazy
+constructor/entropy/provider, positive-Y constructor phase, GC/global-session and
+ordinary/Adobe/full-game limits remain explicit. Master897d2e7 and legacy22d9def7
+are untouched. Parent owns the final exact-head gate and single master merge.
+
+Final actor validation passes62 broad mock/SWF browser cases plus6 final
+actor/orbital/contact cases after the independent5c5919 fixture pick (local8261c98).
+Final buildOAkNWlFodnb1OZkC9AOYP and the supplied-file check above pass with832
+post-format inputs unchanged;175 repository evidence inputs and98 read-only
+external inputs also match. The broader buildVSO8Y1UZcJFIv4mx0VHwY preserves both
+seed17 accelerated wins at65,976/64,639 frames. Owned4215/4216 are free with no
+recorded process survivors. Both dependency picks remain separate from the actor
+commit; do not duplicate them on the already integrated parent.

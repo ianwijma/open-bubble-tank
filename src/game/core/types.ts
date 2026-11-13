@@ -177,7 +177,7 @@ export interface Tank extends Vec {
   /** Source direct-child order; browser objects remain renderer-owned. */
   displayChildren: TankChild[];
   age: number;
-  /** Attached artwork stage ticks, independent of gameplay Run. */
+  /** Retained artwork lifetime ticks, independent of parentage and gameplay Run. */
   artAge: number;
   movement: ActorMovementState;
   /** Existing procedural artwork offset, independent of simulation behavior clocks. */

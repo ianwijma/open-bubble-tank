@@ -2,6 +2,7 @@ import { importAvatarFixture } from './avatar-attachments';
 import { showEffectOwnershipProof } from './effect-ownership';
 import { setFieldFixtureLayout } from './field-layout';
 import { showActorRenderOwnership } from './actor-render-ownership';
+import { showActorArtwork } from './actor-artwork';
 import { importActorFixtures } from './actor-attachments';
 import { showNpcDeactivation } from './npc-deactivation';
 import { showAudioWindows } from './audio-windows';
@@ -469,6 +470,12 @@ async function reset() {
     const proof = await showScreenEffectsProof(pack, stage);
     status.dataset.screenEffects = JSON.stringify(proof);
     status.textContent = 'Ready · independent screen effects, pause looping and arrival cleanup';
+    return;
+  }
+  if (fixture.value === 'actor-artwork') {
+    downgrade.disabled = secondary.disabled = hit.disabled = true;
+    status.dataset.actorArtwork = JSON.stringify(await showActorArtwork(pack, stage));
+    status.textContent = 'Ready · retained actor lifetime, paint and contact';
     return;
   }
   if (fixture.value === 'tank-art') {

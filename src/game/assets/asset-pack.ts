@@ -12,7 +12,8 @@ import { SwfClip } from './swf-clip';
 import { retainedClipGeometry } from './retained-geometry';
 import type { DisplayGeometryContent } from '../core/display-geometry';
 import { partSnapshot } from './part-snapshot';
-import { PartPlayback } from './part-playback';
+import { MountedParts, PartPlayback } from './part-playback';
+import { observeActorArtwork } from '../core/actor-artwork';
 import {
   mockProjectileBounds,
   projectileScriptBounds,
@@ -263,7 +264,7 @@ export class AssetPack {
   private classFrames = new Map<number, Raster>();
   private classPoses = new Map<number, SwfClip>();
   private positivePosters = new Map<number, Raster>();
-  private partClips = new WeakMap<Tank, { design: TankDesign; parts: Map<string, PartPlayback> }>();
+  private partClips = new WeakMap<Tank, MountedParts>();
   private infections = new WeakMap<Tank, { startedAt: number; clip: SwfClip }>();
   private statuses = new StatusPlayback(this);
   private forcefieldClones = new WeakMap<
@@ -1004,15 +1005,16 @@ export class AssetPack {
   partClip(tank: Tank, part: TankPart) {
     let owner = this.partClips.get(tank);
     if (!owner || owner.design !== tank.design) {
-      owner = { design: tank.design, parts: new Map() };
+      owner = new MountedParts(tank.design);
       this.partClips.set(tank, owner);
+      observeActorArtwork(tank, owner);
     }
     const age = tank.artAge + 1;
-    let playback = owner.parts.get(part.key);
+    let playback = owner.parts.get(part.key)?.playback;
     if (!playback || playback.clip.age > age) {
       // Painting/contact queries share a private stream rather than consuming gameplay RNG.
       playback = new PartPlayback(this.newPartClip(tank, part));
-      owner.parts.set(part.key, playback);
+      owner.parts.set(part.key, { part, playback });
     }
     return playback.advance(
       age,

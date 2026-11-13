@@ -3,7 +3,7 @@ import { clamp, direction, distance, length, Random, rotate } from '../core/math
 import { displayPixel, displayTwips } from '../core/display-values';
 import { displayMatrixPoint, inverseDisplayMatrix } from '../core/display-transform';
 import { protectionRadius } from '../core/protection-size';
-import { advanceTankArt } from './tank-art';
+import { ActorArtwork } from './actor-artwork';
 import { detachForcefield } from './forcefield';
 import { removeTankChild } from './tank-display';
 import { killMountedShield } from './shields';
@@ -128,6 +128,7 @@ export class World {
   }
   hitSoundTimer = -1;
   readonly actorParents = new ActorParents();
+  readonly actorArtwork = new ActorArtwork();
   readonly pickupDisplays = new PickupDisplays();
   readonly effectEngine = new RegisteredEffects();
   player: Tank;
@@ -511,6 +512,7 @@ export class World {
     this.wallTimers.advance(milliseconds);
   }
   step(input: InputFrame, milliseconds = 20, advanceMainEffects = true) {
+    this.actorArtwork.enterFrame();
     this.effectEngine.enterFrame();
     this.pickupDisplays.enterFrame();
     this.advanceTime(milliseconds);
@@ -540,9 +542,10 @@ export class World {
       this.advanceArtwork(false);
     }
   }
-  /** Attached ENTER_FRAME art continues when Main4 skips the World.Run listener. */
+  /** Retained artwork continues when Main4 skips the World.Run listener. */
   advanceArtwork(enterCarrierFrame = true) {
     if (enterCarrierFrame) {
+      this.actorArtwork.enterFrame();
       this.effectEngine.enterFrame();
       this.pickupDisplays.enterFrame();
     }
@@ -550,14 +553,11 @@ export class World {
     this.fieldDisplays.advanceArtwork();
     this.actorParents.sync(this);
     this.effectEngine.advanceArtwork();
-    const attached = new Set<Tank>([this.player]);
     for (const { runtime } of this.attachedFields()) {
       for (const bullet of runtime.bullets)
         if (!bullet.dead) this.projectileTimelines.advance(bullet);
     }
-    for (const { field } of this.attachedFields())
-      for (const tank of this.actorParents.owned(field)) attached.add(tank);
-    for (const tank of attached) advanceTankArt(tank);
+    this.actorArtwork.advanceArtwork();
   }
   private stepFrame(input: InputFrame) {
     if (this.flow.state === 'collapse') {

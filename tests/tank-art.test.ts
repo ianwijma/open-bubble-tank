@@ -43,6 +43,7 @@ test('shield film keeps its own26-frame stage clock independently of the25-frame
     'player',
   );
   w.fireGun(w.player, w.player.guns[0], emptyInput());
+  w.actorArtwork.construct(w.player);
   w.pause();
   frames(w, 60);
   expect([w.player.artAge, w.player.shieldAge, w.player.shield]).toEqual([60, 60, 25]);
@@ -51,7 +52,7 @@ test('shield film keeps its own26-frame stage clock independently of the25-frame
   expect((w.player.shieldAge % 26) + 1).toBe(9);
 });
 
-test('transit advances avatar and both field populations once without running avatar gameplay', () => {
+test('transit advances avatar, both populations and retained inactive artwork without avatar Run', () => {
   const w = new World([], [], 10);
   const origin = createTank(w.nextId(), { ...STARTER, avatar: false }, 'enemy');
   w.field.enemies = [origin];
@@ -60,14 +61,16 @@ test('transit advances avatar and both field populations once without running av
   const next = w.transit!.next;
   const destination = createTank(w.nextId(), { ...STARTER, avatar: false }, 'enemy');
   next.enemies = [destination];
+  w.actorArtwork.construct(destination);
   w.attachActor(destination, next);
   const inactive = createTank(w.nextId(), STARTER, 'enemy');
+  w.actorArtwork.construct(inactive); // Omitted host constructor, independently of detached parentage.
   const detached = { ...next, col: 99, enemies: [inactive] };
   w.fields.set('99,0', detached);
   w.pause();
   frames(w, 5);
   expect([w.player.artAge, origin.artAge, destination.artAge, inactive.artAge]).toEqual([
-    5, 5, 5, 0,
+    5, 5, 5, 5,
   ]);
   expect([w.player.age, origin.age, destination.age]).toEqual([0, 0, 0]);
   w.resume();

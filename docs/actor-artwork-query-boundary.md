@@ -11,6 +11,13 @@ through ancestor/own removal and survive original cache restoration without a
 frame reset. The implementation audit below is historical; its attached-only
 clock policy needs correction, not preservation as original behavior.
 
+The subsequent [bounded lifetime correction](actor-artwork-lifetime-reference.md)
+now replaces that clock selection with explicit weak construction ownership and
+an ENTER cohort. Already materialized mounts advance independently of reads,
+including removed roots. The historical audit below still identifies the open
+lazy-construction/entropy/complete actor-provider boundary; clock repair alone
+does not make those getters pure geometry owners.
+
 ## Current implementation and demonstrated host policy
 
 `World.advanceArtwork` enumerates the avatar and `actorParents.owned(field)` only

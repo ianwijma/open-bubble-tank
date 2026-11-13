@@ -2032,3 +2032,37 @@ unchanged1,000-frame reporting cadence. All757 final inputs and85 prior evidence
 inputs match their recorded hashes; owned3955/3956 are free and1,195 process
 fingerprints have no survivors. Source/evidence gaps above remain open; no full
 original/Adobe/global-event or complete field-query claim is made.
+
+
+## Retained actor artwork lifetime correction
+
+The [bounded actor correction](actor-artwork-lifetime-reference.md) replaces the
+attached-field-only clock with explicit World construction ownership and a weak
+ENTER cohort. Cached/directly removed retained actors and replaced avatars keep
+their artwork age; already materialized mounts advance without paint/contact
+reads. Reattachment retains current trees and child identity, stopped rotor roots
+remain stopped, and inside-ENTER actors hold their first frame. Raw arrays and
+physical attachment cannot construct, reset or rediscover a clock. No gameplay
+Run, timer, RNG or UID work is added by tracking.
+
+The complete generic-effect/scheduler dependency3336159 is picked locally
+asabc4dce before final actor validation. Six initial actor regressions fail on
+88a98ef; the combined supplied-file check passes1,291 tests /75,956 assertions,
+including the original actor contracts and660 effect correspondences. The prior
+detached actor freeze expectations are host assumptions contradicted by the new
+source-qualified evidence; other behavior/removal-error assertions remain.
+
+This is not complete actor provider/constructor parity. Mounts still construct
+lazily with host entropy, and positive-Y constructor/ENTER/EXIT separation,
+complete actor/status/protection pose ownership, naked-child retention after all
+owners disappear, cross-World/GC/global-session equivalence and ordinary original/
+Adobe/full-game parity remain open. Final browser/build/hash evidence is retained
+in the implementation reference; parent still owns the combined fifth-head gate
+and the single master merge. No remote action belongs to this local correction.
+
+Local browser verification passes62 broad cases onVSO8Y1UZcJFIv4mx0VHwY and6 final
+actor/orbital/contact cases onOAkNWlFodnb1OZkC9AOYP after the independent5c5919
+fixture repair, with zero skips/flakes. Both unchanged seed17 accelerated pilots
+win at65,976/64,639 frames; no ordinary original-input parity follows. All832
+final inputs,175 frozen repository evidence inputs and98 read-only external
+inputs match. Owned4215/4216 are stopped/free; protected refs remain held.

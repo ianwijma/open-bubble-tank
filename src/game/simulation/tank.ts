@@ -116,6 +116,7 @@ export function createTank(
       },
     ];
   });
+  world?.actorArtwork.construct(t);
   return t;
 }
 /** Weapon.Deactivate clears targets; the retained tank/beam artwork remains separate. */
