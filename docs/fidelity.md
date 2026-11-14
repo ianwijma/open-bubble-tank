@@ -2,6 +2,11 @@
 
 The goal is a one-to-one recreation of the offline Bubble Tanks 3 experience. **That goal is not yet complete.** Tests protect specific recovered contracts; they do not establish that an entire playthrough or every screen is indistinguishable from Flash.
 
+The user's current closeout target is the [faithful classic release](classic-release.md),
+with remaining rare differences disclosed. This ledger retains the stricter
+comparison backlog and does not silently complete its open checkpoints. Current
+release validation is recorded separately from full original/Adobe parity.
+
 ## Source priority
 
 1. The decompiled ActionScript in `../documented-bubble-tank-3/re/bt3/export_scripts_deobf/scripts/`.

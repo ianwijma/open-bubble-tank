@@ -8,15 +8,38 @@ instructed quick PR checks and the longer full suite on master after merging;
 The stricter parity checklist remains evidence, not a claim that every open
 comparison must close before the selected classic release.
 
-PR165's cache head `899b29d` failed only the hosted advancing mock readiness
-deadline (run43524294793/job132226086587;151 other passes/4 skips). Its independent
-cache/review audit found no concrete regression or actionable feedback. The parent
-owns the CI split follow-up, fresh final-head gate/watch and one master merge.
-The new local quick production flow passes on build `5yHBRhSNE0V3bC6JMuW6y`;
-formatting/TypeScript and1,299 rules /81,252 assertions pass. The source game build
-`OeDq6Mv8QjISX6YXv_BZi` is held unchanged on4705 for the separate public-input
-acceptance worker. Do not rebuild or stop that held server until its owner finishes.
-No release or full normal-input boss completion is claimed yet.
+The artwork stack PRs161–165 is delivered through the single merge
+`e8cfa1e2a47f733b3fbce6e98293c61a15979620`, with exact tested tree
+`06ab088ee6147c5662a06bd63356468013e7090f` and every layer head included.
+Quick PR run43529919667 and full-master run43530817562 succeeded. The latter
+passed1,294 rules/5 source-file skips and152 browser cases/4 skips; local
+supplied-file rules pass1,299 and separate source-file browser gaps pass4/4.
+The old readiness failure remains historical failed evidence. All five watches
+are stopped; legacy `22d9def7` is unchanged.
+
+The final coherent closeout on `stack/classic-release-closeout` adds the missing
+project-owned SVG tab icon, confines disposable Playwright output to
+`test-results/playwright`, and records release evidence. No game simulation,
+rendering or component code changes. Build `NeitCZVuN_QLJJaHptjjQ` passes quick
+smoke, four native public routes and the full local rule check. Fresh browser
+output/mute controls, both unchanged complete accelerated pilots and source-file
+gap checks are retained under ignored
+`reference-captures/classic-closeout-recovery/`. Read
+[classic validation](classic-validation.md) and the
+[artifact incident/recovery record](validation-artifact-recovery.md) for scope.
+Older raw files removed by the runner are not claimed as retained. Ordinary
+public-input progression remains partial; subjective/synchronized original audio
+comparison remains open. The old public worker has finished and its server
+reservation no longer applies.
+
+This final acceptance/evidence PR follows the completed five-layer batch; require
+its current-head quick gate and review inspection before the authorized merge,
+then inspect the resulting master's full suite. Only after success, create the
+annotated `classic-v1` tag with exact commit/run provenance. Do not add another
+result-only commit after that gate. Modernization PR159 remains separate. Strict
+parity is still0/7 packages and7/21 checkpoints; release acceptance does not
+complete that backlog. Earlier paragraphs below are historical checkpoints,
+not current process or branch reservations.
 
 
 The objective in [goals.markdown](../goals.markdown) remains the full faithful offline Bubble Tanks3 recreation. It is incomplete. Read `AGENTS.md`, [architecture](architecture.md), [fidelity](fidelity.md) and [creator source/verification](creator-ui-reference.md) before continuing. Tests establish their specific contracts, not indistinguishability of the whole game.
