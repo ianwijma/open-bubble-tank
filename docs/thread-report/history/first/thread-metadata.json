@@ -1,0 +1,1451 @@
+{
+  "thread": {
+    "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+    "projectId": "4bc4dec5-e1fd-423f-aa17-42772fe82a57",
+    "title": "Faithful Offline Game Recreation",
+    "link": "[Faithful Offline Game Recreation](t3-thread://v2/a713d3ff-a5f3-472b-97bd-83fd799395a5/93d9eb80-8a0a-44ac-8262-07b1ceb7992a)",
+    "createdBy": "user",
+    "creationSource": "web",
+    "status": "completed",
+    "latestRunId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:211",
+    "activeRunId": null,
+    "providerInstanceId": "codex",
+    "model": "gpt-6.1-sol",
+    "runtimeMode": "full-access",
+    "interactionMode": "default",
+    "linkedPullRequest": null,
+    "pullRequests": [
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 3,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/3",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 4,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/4",
+        "source": "created",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 5,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/5",
+        "source": "created",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 6,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/6",
+        "source": "created",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 7,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/7",
+        "source": "created",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 8,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/8",
+        "source": "created",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 9,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/9",
+        "source": "created",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 10,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/10",
+        "source": "created",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 11,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/11",
+        "source": "created",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 12,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/12",
+        "source": "created",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 13,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/13",
+        "source": "created",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 14,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/14",
+        "source": "created",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 15,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/15",
+        "source": "created",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 16,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/16",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 17,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/17",
+        "source": "created",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 18,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/18",
+        "source": "created",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 19,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/19",
+        "source": "created",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 20,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/20",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 21,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/21",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 22,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/22",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 23,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/23",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 24,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/24",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 25,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/25",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 26,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/26",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 27,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/27",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 28,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/28",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 29,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/29",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 30,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/30",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 31,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/31",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 32,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/32",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 33,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/33",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 34,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/34",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 35,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/35",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 36,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/36",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 37,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/37",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 38,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/38",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 39,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/39",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 40,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/40",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 41,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/41",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 42,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/42",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 43,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/43",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 44,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/44",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 45,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/45",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 46,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/46",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 47,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/47",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 48,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/48",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 49,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/49",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 50,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/50",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 51,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/51",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 52,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/52",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 53,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/53",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 54,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/54",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 55,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/55",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 56,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/56",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 57,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/57",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 58,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/58",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 59,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/59",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 60,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/60",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 61,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/61",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 62,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/62",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 63,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/63",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 64,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/64",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 65,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/65",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 66,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/66",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 67,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/67",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 68,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/68",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 69,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/69",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 70,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/70",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 71,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/71",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 72,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/72",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 73,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/73",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 74,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/74",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 75,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/75",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 76,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/76",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 77,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/77",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 78,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/78",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 79,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/79",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 80,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/80",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 81,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/81",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 82,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/82",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 83,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/83",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 84,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/84",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 85,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/85",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 86,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/86",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 87,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/87",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 88,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/88",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 89,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/89",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 90,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/90",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 91,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/91",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 92,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/92",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 93,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/93",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 94,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/94",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 95,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/95",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 96,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/96",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 97,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/97",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 98,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/98",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 99,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/99",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 100,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/100",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 101,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/101",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 102,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/102",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 103,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/103",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 104,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/104",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 105,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/105",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 106,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/106",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 107,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/107",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 108,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/108",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 109,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/109",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 110,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/110",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 111,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/111",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 112,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/112",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 113,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/113",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 114,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/114",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 115,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/115",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 116,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/116",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 117,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/117",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 118,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/118",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 119,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/119",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 120,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/120",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 121,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/121",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 122,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/122",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 123,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/123",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 124,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/124",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 125,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/125",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 126,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/126",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 127,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/127",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 128,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/128",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 129,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/129",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 130,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/130",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 131,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/131",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 132,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/132",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 133,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/133",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 134,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/134",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 135,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/135",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 136,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/136",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 137,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/137",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 138,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/138",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 139,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/139",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 140,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/140",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 141,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/141",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 142,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/142",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 143,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/143",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 144,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/144",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 145,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/145",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 146,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/146",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 147,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/147",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 148,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/148",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 149,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/149",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 150,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/150",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 151,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/151",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 152,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/152",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 153,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/153",
+        "source": "created",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 154,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/154",
+        "source": "created",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 155,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/155",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 156,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/156",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 157,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/157",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 158,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/158",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 160,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/160",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 161,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/161",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 162,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/162",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 163,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/163",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 165,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/165",
+        "source": "created",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 164,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/164",
+        "source": "agent",
+        "state": "merged"
+      },
+      {
+        "host": "github.com",
+        "repository": "ianwijma/open-bubble-tank",
+        "number": 166,
+        "url": "https://github.com/ianwijma/open-bubble-tank/pull/166",
+        "source": "agent",
+        "state": "merged"
+      }
+    ],
+    "titleRegeneration": null,
+    "branch": "stack/classic-release-closeout",
+    "worktreePath": "/home/ian/.t3/worktrees/open-bubble-tank/t3-d84e5ece",
+    "parentThreadId": null,
+    "relationshipToParent": null,
+    "runCount": 193,
+    "itemCount": 35333,
+    "pendingRequestCount": 0,
+    "archived": false,
+    "settled": false,
+    "settledAt": null,
+    "snoozed": false,
+    "snoozedUntil": null,
+    "createdAt": "2026-10-31T13:55:24.516Z",
+    "updatedAt": "2026-11-14T12:36:54.123Z"
+  },
+  "recentRuns": [
+    {
+      "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:211",
+      "ordinal": 327,
+      "status": "completed",
+      "providerInstanceId": "codex",
+      "model": "gpt-6.1-sol",
+      "executedModel": null,
+      "requestedAt": "2026-11-14T00:06:45.843Z",
+      "startedAt": "2026-11-14T12:06:44.094Z",
+      "completedAt": "2026-11-14T12:06:54.060Z"
+    },
+    {
+      "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:210",
+      "ordinal": 326,
+      "status": "completed",
+      "providerInstanceId": "codex",
+      "model": "gpt-6.1-sol",
+      "executedModel": null,
+      "requestedAt": "2026-11-13T23:53:32.668Z",
+      "startedAt": "2026-11-14T12:06:33.386Z",
+      "completedAt": "2026-11-14T12:06:43.160Z"
+    },
+    {
+      "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:209",
+      "ordinal": 325,
+      "status": "completed",
+      "providerInstanceId": "codex",
+      "model": "gpt-6.1-sol",
+      "executedModel": null,
+      "requestedAt": "2026-11-13T23:49:29.100Z",
+      "startedAt": "2026-11-14T12:06:24.463Z",
+      "completedAt": "2026-11-14T12:06:32.436Z"
+    },
+    {
+      "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:208",
+      "ordinal": 324,
+      "status": "completed",
+      "providerInstanceId": "codex",
+      "model": "gpt-6.1-sol",
+      "executedModel": null,
+      "requestedAt": "2026-11-13T23:33:21.128Z",
+      "startedAt": "2026-11-14T12:06:05.276Z",
+      "completedAt": "2026-11-14T12:06:23.519Z"
+    },
+    {
+      "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:204",
+      "ordinal": 323,
+      "status": "completed",
+      "providerInstanceId": "codex",
+      "model": "gpt-6.1-sol",
+      "executedModel": null,
+      "requestedAt": "2026-11-13T17:19:44.937Z",
+      "startedAt": "2026-11-14T12:05:50.160Z",
+      "completedAt": "2026-11-14T12:06:04.348Z"
+    },
+    {
+      "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:203",
+      "ordinal": 322,
+      "status": "completed",
+      "providerInstanceId": "codex",
+      "model": "gpt-6.1-sol",
+      "executedModel": null,
+      "requestedAt": "2026-11-13T17:19:44.520Z",
+      "startedAt": "2026-11-14T12:05:36.150Z",
+      "completedAt": "2026-11-14T12:05:49.190Z"
+    },
+    {
+      "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:202",
+      "ordinal": 321,
+      "status": "completed",
+      "providerInstanceId": "codex",
+      "model": "gpt-6.1-sol",
+      "executedModel": null,
+      "requestedAt": "2026-11-13T17:07:34.481Z",
+      "startedAt": "2026-11-14T12:05:18.689Z",
+      "completedAt": "2026-11-14T12:05:35.184Z"
+    },
+    {
+      "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:201",
+      "ordinal": 320,
+      "status": "completed",
+      "providerInstanceId": "codex",
+      "model": "gpt-6.1-sol",
+      "executedModel": null,
+      "requestedAt": "2026-11-13T15:28:58.194Z",
+      "startedAt": "2026-11-14T12:05:05.501Z",
+      "completedAt": "2026-11-14T12:05:17.734Z"
+    },
+    {
+      "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:200",
+      "ordinal": 319,
+      "status": "completed",
+      "providerInstanceId": "codex",
+      "model": "gpt-6.1-sol",
+      "executedModel": null,
+      "requestedAt": "2026-11-13T13:09:28.324Z",
+      "startedAt": "2026-11-14T12:04:38.206Z",
+      "completedAt": "2026-11-14T12:05:04.559Z"
+    },
+    {
+      "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:199",
+      "ordinal": 318,
+      "status": "completed",
+      "providerInstanceId": "codex",
+      "model": "gpt-6.1-sol",
+      "executedModel": null,
+      "requestedAt": "2026-11-13T12:49:06.119Z",
+      "startedAt": "2026-11-14T12:04:23.481Z",
+      "completedAt": "2026-11-14T12:04:37.249Z"
+    }
+  ]
+}

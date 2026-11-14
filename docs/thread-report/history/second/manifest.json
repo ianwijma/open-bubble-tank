@@ -1,0 +1,1102 @@
+{
+  "source": "read-only local T3 SQLite projection",
+  "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+  "exportedAt": "2026-11-14T14:52:24.552475+00:00",
+  "first": 17667,
+  "last": 35333,
+  "itemCount": 17667,
+  "pages": [
+    {
+      "file": "page-17667-17766.json",
+      "first": 17667,
+      "last": 17766,
+      "count": 100
+    },
+    {
+      "file": "page-17767-17866.json",
+      "first": 17767,
+      "last": 17866,
+      "count": 100
+    },
+    {
+      "file": "page-17867-17966.json",
+      "first": 17867,
+      "last": 17966,
+      "count": 100
+    },
+    {
+      "file": "page-17967-18066.json",
+      "first": 17967,
+      "last": 18066,
+      "count": 100
+    },
+    {
+      "file": "page-18067-18166.json",
+      "first": 18067,
+      "last": 18166,
+      "count": 100
+    },
+    {
+      "file": "page-18167-18266.json",
+      "first": 18167,
+      "last": 18266,
+      "count": 100
+    },
+    {
+      "file": "page-18267-18366.json",
+      "first": 18267,
+      "last": 18366,
+      "count": 100
+    },
+    {
+      "file": "page-18367-18466.json",
+      "first": 18367,
+      "last": 18466,
+      "count": 100
+    },
+    {
+      "file": "page-18467-18566.json",
+      "first": 18467,
+      "last": 18566,
+      "count": 100
+    },
+    {
+      "file": "page-18567-18666.json",
+      "first": 18567,
+      "last": 18666,
+      "count": 100
+    },
+    {
+      "file": "page-18667-18766.json",
+      "first": 18667,
+      "last": 18766,
+      "count": 100
+    },
+    {
+      "file": "page-18767-18866.json",
+      "first": 18767,
+      "last": 18866,
+      "count": 100
+    },
+    {
+      "file": "page-18867-18966.json",
+      "first": 18867,
+      "last": 18966,
+      "count": 100
+    },
+    {
+      "file": "page-18967-19066.json",
+      "first": 18967,
+      "last": 19066,
+      "count": 100
+    },
+    {
+      "file": "page-19067-19166.json",
+      "first": 19067,
+      "last": 19166,
+      "count": 100
+    },
+    {
+      "file": "page-19167-19266.json",
+      "first": 19167,
+      "last": 19266,
+      "count": 100
+    },
+    {
+      "file": "page-19267-19366.json",
+      "first": 19267,
+      "last": 19366,
+      "count": 100
+    },
+    {
+      "file": "page-19367-19466.json",
+      "first": 19367,
+      "last": 19466,
+      "count": 100
+    },
+    {
+      "file": "page-19467-19566.json",
+      "first": 19467,
+      "last": 19566,
+      "count": 100
+    },
+    {
+      "file": "page-19567-19666.json",
+      "first": 19567,
+      "last": 19666,
+      "count": 100
+    },
+    {
+      "file": "page-19667-19766.json",
+      "first": 19667,
+      "last": 19766,
+      "count": 100
+    },
+    {
+      "file": "page-19767-19866.json",
+      "first": 19767,
+      "last": 19866,
+      "count": 100
+    },
+    {
+      "file": "page-19867-19966.json",
+      "first": 19867,
+      "last": 19966,
+      "count": 100
+    },
+    {
+      "file": "page-19967-20066.json",
+      "first": 19967,
+      "last": 20066,
+      "count": 100
+    },
+    {
+      "file": "page-20067-20166.json",
+      "first": 20067,
+      "last": 20166,
+      "count": 100
+    },
+    {
+      "file": "page-20167-20266.json",
+      "first": 20167,
+      "last": 20266,
+      "count": 100
+    },
+    {
+      "file": "page-20267-20366.json",
+      "first": 20267,
+      "last": 20366,
+      "count": 100
+    },
+    {
+      "file": "page-20367-20466.json",
+      "first": 20367,
+      "last": 20466,
+      "count": 100
+    },
+    {
+      "file": "page-20467-20566.json",
+      "first": 20467,
+      "last": 20566,
+      "count": 100
+    },
+    {
+      "file": "page-20567-20666.json",
+      "first": 20567,
+      "last": 20666,
+      "count": 100
+    },
+    {
+      "file": "page-20667-20766.json",
+      "first": 20667,
+      "last": 20766,
+      "count": 100
+    },
+    {
+      "file": "page-20767-20866.json",
+      "first": 20767,
+      "last": 20866,
+      "count": 100
+    },
+    {
+      "file": "page-20867-20966.json",
+      "first": 20867,
+      "last": 20966,
+      "count": 100
+    },
+    {
+      "file": "page-20967-21066.json",
+      "first": 20967,
+      "last": 21066,
+      "count": 100
+    },
+    {
+      "file": "page-21067-21166.json",
+      "first": 21067,
+      "last": 21166,
+      "count": 100
+    },
+    {
+      "file": "page-21167-21266.json",
+      "first": 21167,
+      "last": 21266,
+      "count": 100
+    },
+    {
+      "file": "page-21267-21366.json",
+      "first": 21267,
+      "last": 21366,
+      "count": 100
+    },
+    {
+      "file": "page-21367-21466.json",
+      "first": 21367,
+      "last": 21466,
+      "count": 100
+    },
+    {
+      "file": "page-21467-21566.json",
+      "first": 21467,
+      "last": 21566,
+      "count": 100
+    },
+    {
+      "file": "page-21567-21666.json",
+      "first": 21567,
+      "last": 21666,
+      "count": 100
+    },
+    {
+      "file": "page-21667-21766.json",
+      "first": 21667,
+      "last": 21766,
+      "count": 100
+    },
+    {
+      "file": "page-21767-21866.json",
+      "first": 21767,
+      "last": 21866,
+      "count": 100
+    },
+    {
+      "file": "page-21867-21966.json",
+      "first": 21867,
+      "last": 21966,
+      "count": 100
+    },
+    {
+      "file": "page-21967-22066.json",
+      "first": 21967,
+      "last": 22066,
+      "count": 100
+    },
+    {
+      "file": "page-22067-22166.json",
+      "first": 22067,
+      "last": 22166,
+      "count": 100
+    },
+    {
+      "file": "page-22167-22266.json",
+      "first": 22167,
+      "last": 22266,
+      "count": 100
+    },
+    {
+      "file": "page-22267-22366.json",
+      "first": 22267,
+      "last": 22366,
+      "count": 100
+    },
+    {
+      "file": "page-22367-22466.json",
+      "first": 22367,
+      "last": 22466,
+      "count": 100
+    },
+    {
+      "file": "page-22467-22566.json",
+      "first": 22467,
+      "last": 22566,
+      "count": 100
+    },
+    {
+      "file": "page-22567-22666.json",
+      "first": 22567,
+      "last": 22666,
+      "count": 100
+    },
+    {
+      "file": "page-22667-22766.json",
+      "first": 22667,
+      "last": 22766,
+      "count": 100
+    },
+    {
+      "file": "page-22767-22866.json",
+      "first": 22767,
+      "last": 22866,
+      "count": 100
+    },
+    {
+      "file": "page-22867-22966.json",
+      "first": 22867,
+      "last": 22966,
+      "count": 100
+    },
+    {
+      "file": "page-22967-23066.json",
+      "first": 22967,
+      "last": 23066,
+      "count": 100
+    },
+    {
+      "file": "page-23067-23166.json",
+      "first": 23067,
+      "last": 23166,
+      "count": 100
+    },
+    {
+      "file": "page-23167-23266.json",
+      "first": 23167,
+      "last": 23266,
+      "count": 100
+    },
+    {
+      "file": "page-23267-23366.json",
+      "first": 23267,
+      "last": 23366,
+      "count": 100
+    },
+    {
+      "file": "page-23367-23466.json",
+      "first": 23367,
+      "last": 23466,
+      "count": 100
+    },
+    {
+      "file": "page-23467-23566.json",
+      "first": 23467,
+      "last": 23566,
+      "count": 100
+    },
+    {
+      "file": "page-23567-23666.json",
+      "first": 23567,
+      "last": 23666,
+      "count": 100
+    },
+    {
+      "file": "page-23667-23766.json",
+      "first": 23667,
+      "last": 23766,
+      "count": 100
+    },
+    {
+      "file": "page-23767-23866.json",
+      "first": 23767,
+      "last": 23866,
+      "count": 100
+    },
+    {
+      "file": "page-23867-23966.json",
+      "first": 23867,
+      "last": 23966,
+      "count": 100
+    },
+    {
+      "file": "page-23967-24066.json",
+      "first": 23967,
+      "last": 24066,
+      "count": 100
+    },
+    {
+      "file": "page-24067-24166.json",
+      "first": 24067,
+      "last": 24166,
+      "count": 100
+    },
+    {
+      "file": "page-24167-24266.json",
+      "first": 24167,
+      "last": 24266,
+      "count": 100
+    },
+    {
+      "file": "page-24267-24366.json",
+      "first": 24267,
+      "last": 24366,
+      "count": 100
+    },
+    {
+      "file": "page-24367-24466.json",
+      "first": 24367,
+      "last": 24466,
+      "count": 100
+    },
+    {
+      "file": "page-24467-24566.json",
+      "first": 24467,
+      "last": 24566,
+      "count": 100
+    },
+    {
+      "file": "page-24567-24666.json",
+      "first": 24567,
+      "last": 24666,
+      "count": 100
+    },
+    {
+      "file": "page-24667-24766.json",
+      "first": 24667,
+      "last": 24766,
+      "count": 100
+    },
+    {
+      "file": "page-24767-24866.json",
+      "first": 24767,
+      "last": 24866,
+      "count": 100
+    },
+    {
+      "file": "page-24867-24966.json",
+      "first": 24867,
+      "last": 24966,
+      "count": 100
+    },
+    {
+      "file": "page-24967-25066.json",
+      "first": 24967,
+      "last": 25066,
+      "count": 100
+    },
+    {
+      "file": "page-25067-25166.json",
+      "first": 25067,
+      "last": 25166,
+      "count": 100
+    },
+    {
+      "file": "page-25167-25266.json",
+      "first": 25167,
+      "last": 25266,
+      "count": 100
+    },
+    {
+      "file": "page-25267-25366.json",
+      "first": 25267,
+      "last": 25366,
+      "count": 100
+    },
+    {
+      "file": "page-25367-25466.json",
+      "first": 25367,
+      "last": 25466,
+      "count": 100
+    },
+    {
+      "file": "page-25467-25566.json",
+      "first": 25467,
+      "last": 25566,
+      "count": 100
+    },
+    {
+      "file": "page-25567-25666.json",
+      "first": 25567,
+      "last": 25666,
+      "count": 100
+    },
+    {
+      "file": "page-25667-25766.json",
+      "first": 25667,
+      "last": 25766,
+      "count": 100
+    },
+    {
+      "file": "page-25767-25866.json",
+      "first": 25767,
+      "last": 25866,
+      "count": 100
+    },
+    {
+      "file": "page-25867-25966.json",
+      "first": 25867,
+      "last": 25966,
+      "count": 100
+    },
+    {
+      "file": "page-25967-26066.json",
+      "first": 25967,
+      "last": 26066,
+      "count": 100
+    },
+    {
+      "file": "page-26067-26166.json",
+      "first": 26067,
+      "last": 26166,
+      "count": 100
+    },
+    {
+      "file": "page-26167-26266.json",
+      "first": 26167,
+      "last": 26266,
+      "count": 100
+    },
+    {
+      "file": "page-26267-26366.json",
+      "first": 26267,
+      "last": 26366,
+      "count": 100
+    },
+    {
+      "file": "page-26367-26466.json",
+      "first": 26367,
+      "last": 26466,
+      "count": 100
+    },
+    {
+      "file": "page-26467-26566.json",
+      "first": 26467,
+      "last": 26566,
+      "count": 100
+    },
+    {
+      "file": "page-26567-26666.json",
+      "first": 26567,
+      "last": 26666,
+      "count": 100
+    },
+    {
+      "file": "page-26667-26766.json",
+      "first": 26667,
+      "last": 26766,
+      "count": 100
+    },
+    {
+      "file": "page-26767-26866.json",
+      "first": 26767,
+      "last": 26866,
+      "count": 100
+    },
+    {
+      "file": "page-26867-26966.json",
+      "first": 26867,
+      "last": 26966,
+      "count": 100
+    },
+    {
+      "file": "page-26967-27066.json",
+      "first": 26967,
+      "last": 27066,
+      "count": 100
+    },
+    {
+      "file": "page-27067-27166.json",
+      "first": 27067,
+      "last": 27166,
+      "count": 100
+    },
+    {
+      "file": "page-27167-27266.json",
+      "first": 27167,
+      "last": 27266,
+      "count": 100
+    },
+    {
+      "file": "page-27267-27366.json",
+      "first": 27267,
+      "last": 27366,
+      "count": 100
+    },
+    {
+      "file": "page-27367-27466.json",
+      "first": 27367,
+      "last": 27466,
+      "count": 100
+    },
+    {
+      "file": "page-27467-27566.json",
+      "first": 27467,
+      "last": 27566,
+      "count": 100
+    },
+    {
+      "file": "page-27567-27666.json",
+      "first": 27567,
+      "last": 27666,
+      "count": 100
+    },
+    {
+      "file": "page-27667-27766.json",
+      "first": 27667,
+      "last": 27766,
+      "count": 100
+    },
+    {
+      "file": "page-27767-27866.json",
+      "first": 27767,
+      "last": 27866,
+      "count": 100
+    },
+    {
+      "file": "page-27867-27966.json",
+      "first": 27867,
+      "last": 27966,
+      "count": 100
+    },
+    {
+      "file": "page-27967-28066.json",
+      "first": 27967,
+      "last": 28066,
+      "count": 100
+    },
+    {
+      "file": "page-28067-28166.json",
+      "first": 28067,
+      "last": 28166,
+      "count": 100
+    },
+    {
+      "file": "page-28167-28266.json",
+      "first": 28167,
+      "last": 28266,
+      "count": 100
+    },
+    {
+      "file": "page-28267-28366.json",
+      "first": 28267,
+      "last": 28366,
+      "count": 100
+    },
+    {
+      "file": "page-28367-28466.json",
+      "first": 28367,
+      "last": 28466,
+      "count": 100
+    },
+    {
+      "file": "page-28467-28566.json",
+      "first": 28467,
+      "last": 28566,
+      "count": 100
+    },
+    {
+      "file": "page-28567-28666.json",
+      "first": 28567,
+      "last": 28666,
+      "count": 100
+    },
+    {
+      "file": "page-28667-28766.json",
+      "first": 28667,
+      "last": 28766,
+      "count": 100
+    },
+    {
+      "file": "page-28767-28866.json",
+      "first": 28767,
+      "last": 28866,
+      "count": 100
+    },
+    {
+      "file": "page-28867-28966.json",
+      "first": 28867,
+      "last": 28966,
+      "count": 100
+    },
+    {
+      "file": "page-28967-29066.json",
+      "first": 28967,
+      "last": 29066,
+      "count": 100
+    },
+    {
+      "file": "page-29067-29166.json",
+      "first": 29067,
+      "last": 29166,
+      "count": 100
+    },
+    {
+      "file": "page-29167-29266.json",
+      "first": 29167,
+      "last": 29266,
+      "count": 100
+    },
+    {
+      "file": "page-29267-29366.json",
+      "first": 29267,
+      "last": 29366,
+      "count": 100
+    },
+    {
+      "file": "page-29367-29466.json",
+      "first": 29367,
+      "last": 29466,
+      "count": 100
+    },
+    {
+      "file": "page-29467-29566.json",
+      "first": 29467,
+      "last": 29566,
+      "count": 100
+    },
+    {
+      "file": "page-29567-29666.json",
+      "first": 29567,
+      "last": 29666,
+      "count": 100
+    },
+    {
+      "file": "page-29667-29766.json",
+      "first": 29667,
+      "last": 29766,
+      "count": 100
+    },
+    {
+      "file": "page-29767-29866.json",
+      "first": 29767,
+      "last": 29866,
+      "count": 100
+    },
+    {
+      "file": "page-29867-29966.json",
+      "first": 29867,
+      "last": 29966,
+      "count": 100
+    },
+    {
+      "file": "page-29967-30066.json",
+      "first": 29967,
+      "last": 30066,
+      "count": 100
+    },
+    {
+      "file": "page-30067-30166.json",
+      "first": 30067,
+      "last": 30166,
+      "count": 100
+    },
+    {
+      "file": "page-30167-30266.json",
+      "first": 30167,
+      "last": 30266,
+      "count": 100
+    },
+    {
+      "file": "page-30267-30366.json",
+      "first": 30267,
+      "last": 30366,
+      "count": 100
+    },
+    {
+      "file": "page-30367-30466.json",
+      "first": 30367,
+      "last": 30466,
+      "count": 100
+    },
+    {
+      "file": "page-30467-30566.json",
+      "first": 30467,
+      "last": 30566,
+      "count": 100
+    },
+    {
+      "file": "page-30567-30666.json",
+      "first": 30567,
+      "last": 30666,
+      "count": 100
+    },
+    {
+      "file": "page-30667-30766.json",
+      "first": 30667,
+      "last": 30766,
+      "count": 100
+    },
+    {
+      "file": "page-30767-30866.json",
+      "first": 30767,
+      "last": 30866,
+      "count": 100
+    },
+    {
+      "file": "page-30867-30966.json",
+      "first": 30867,
+      "last": 30966,
+      "count": 100
+    },
+    {
+      "file": "page-30967-31066.json",
+      "first": 30967,
+      "last": 31066,
+      "count": 100
+    },
+    {
+      "file": "page-31067-31166.json",
+      "first": 31067,
+      "last": 31166,
+      "count": 100
+    },
+    {
+      "file": "page-31167-31266.json",
+      "first": 31167,
+      "last": 31266,
+      "count": 100
+    },
+    {
+      "file": "page-31267-31366.json",
+      "first": 31267,
+      "last": 31366,
+      "count": 100
+    },
+    {
+      "file": "page-31367-31466.json",
+      "first": 31367,
+      "last": 31466,
+      "count": 100
+    },
+    {
+      "file": "page-31467-31566.json",
+      "first": 31467,
+      "last": 31566,
+      "count": 100
+    },
+    {
+      "file": "page-31567-31666.json",
+      "first": 31567,
+      "last": 31666,
+      "count": 100
+    },
+    {
+      "file": "page-31667-31766.json",
+      "first": 31667,
+      "last": 31766,
+      "count": 100
+    },
+    {
+      "file": "page-31767-31866.json",
+      "first": 31767,
+      "last": 31866,
+      "count": 100
+    },
+    {
+      "file": "page-31867-31966.json",
+      "first": 31867,
+      "last": 31966,
+      "count": 100
+    },
+    {
+      "file": "page-31967-32066.json",
+      "first": 31967,
+      "last": 32066,
+      "count": 100
+    },
+    {
+      "file": "page-32067-32166.json",
+      "first": 32067,
+      "last": 32166,
+      "count": 100
+    },
+    {
+      "file": "page-32167-32266.json",
+      "first": 32167,
+      "last": 32266,
+      "count": 100
+    },
+    {
+      "file": "page-32267-32366.json",
+      "first": 32267,
+      "last": 32366,
+      "count": 100
+    },
+    {
+      "file": "page-32367-32466.json",
+      "first": 32367,
+      "last": 32466,
+      "count": 100
+    },
+    {
+      "file": "page-32467-32566.json",
+      "first": 32467,
+      "last": 32566,
+      "count": 100
+    },
+    {
+      "file": "page-32567-32666.json",
+      "first": 32567,
+      "last": 32666,
+      "count": 100
+    },
+    {
+      "file": "page-32667-32766.json",
+      "first": 32667,
+      "last": 32766,
+      "count": 100
+    },
+    {
+      "file": "page-32767-32866.json",
+      "first": 32767,
+      "last": 32866,
+      "count": 100
+    },
+    {
+      "file": "page-32867-32966.json",
+      "first": 32867,
+      "last": 32966,
+      "count": 100
+    },
+    {
+      "file": "page-32967-33066.json",
+      "first": 32967,
+      "last": 33066,
+      "count": 100
+    },
+    {
+      "file": "page-33067-33166.json",
+      "first": 33067,
+      "last": 33166,
+      "count": 100
+    },
+    {
+      "file": "page-33167-33266.json",
+      "first": 33167,
+      "last": 33266,
+      "count": 100
+    },
+    {
+      "file": "page-33267-33366.json",
+      "first": 33267,
+      "last": 33366,
+      "count": 100
+    },
+    {
+      "file": "page-33367-33466.json",
+      "first": 33367,
+      "last": 33466,
+      "count": 100
+    },
+    {
+      "file": "page-33467-33566.json",
+      "first": 33467,
+      "last": 33566,
+      "count": 100
+    },
+    {
+      "file": "page-33567-33666.json",
+      "first": 33567,
+      "last": 33666,
+      "count": 100
+    },
+    {
+      "file": "page-33667-33766.json",
+      "first": 33667,
+      "last": 33766,
+      "count": 100
+    },
+    {
+      "file": "page-33767-33866.json",
+      "first": 33767,
+      "last": 33866,
+      "count": 100
+    },
+    {
+      "file": "page-33867-33966.json",
+      "first": 33867,
+      "last": 33966,
+      "count": 100
+    },
+    {
+      "file": "page-33967-34066.json",
+      "first": 33967,
+      "last": 34066,
+      "count": 100
+    },
+    {
+      "file": "page-34067-34166.json",
+      "first": 34067,
+      "last": 34166,
+      "count": 100
+    },
+    {
+      "file": "page-34167-34266.json",
+      "first": 34167,
+      "last": 34266,
+      "count": 100
+    },
+    {
+      "file": "page-34267-34366.json",
+      "first": 34267,
+      "last": 34366,
+      "count": 100
+    },
+    {
+      "file": "page-34367-34466.json",
+      "first": 34367,
+      "last": 34466,
+      "count": 100
+    },
+    {
+      "file": "page-34467-34566.json",
+      "first": 34467,
+      "last": 34566,
+      "count": 100
+    },
+    {
+      "file": "page-34567-34666.json",
+      "first": 34567,
+      "last": 34666,
+      "count": 100
+    },
+    {
+      "file": "page-34667-34766.json",
+      "first": 34667,
+      "last": 34766,
+      "count": 100
+    },
+    {
+      "file": "page-34767-34866.json",
+      "first": 34767,
+      "last": 34866,
+      "count": 100
+    },
+    {
+      "file": "page-34867-34966.json",
+      "first": 34867,
+      "last": 34966,
+      "count": 100
+    },
+    {
+      "file": "page-34967-35066.json",
+      "first": 34967,
+      "last": 35066,
+      "count": 100
+    },
+    {
+      "file": "page-35067-35166.json",
+      "first": 35067,
+      "last": 35166,
+      "count": 100
+    },
+    {
+      "file": "page-35167-35266.json",
+      "first": 35167,
+      "last": 35266,
+      "count": 100
+    },
+    {
+      "file": "page-35267-35333.json",
+      "first": 35267,
+      "last": 35333,
+      "count": 67
+    }
+  ],
+  "gaps": [],
+  "errors": [],
+  "truncatedItems": 0,
+  "limitations": [
+    "API itemCount35333 corresponds to highest zero-based API position35333;35334 joined payload items are archived across both halves. Four stored position references have no corresponding payload and are listed separately. SQL positions matched API-validation sample item IDs. Full raw payload retained; unavailable data and private reasoning are not reconstructed."
+  ],
+  "orphanPositions": [
+    {
+      "storageOrdinal": 156000184,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a1d069-531e-72a1-ae9a-37928fcb3508%22%2C%22rs_04d3ce3c29f96e49016af5de4f9cc48191a6feb396587c2a93%22%2C%22summary%22%2C0%5D",
+      "payloadAvailable": false
+    },
+    {
+      "storageOrdinal": 158000440,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a1d094-52b1-7513-8731-8f524672aa32%22%2C%22rs_04d3ce3c29f96e49016af5e94f3df08191be860856735477b9%22%2C%22summary%22%2C0%5D",
+      "payloadAvailable": false
+    },
+    {
+      "storageOrdinal": 207000318,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a1d742-ec92-7e22-8ba1-96fec46f6614%22%2C%22rs_007b92ef44ceb026016af79e90c76887d0959da0339591b28a%22%2C%22summary%22%2C0%5D",
+      "payloadAvailable": false
+    },
+    {
+      "storageOrdinal": 207000509,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a1d742-ec92-7e22-8ba1-96fec46f6614%22%2C%22rs_007b92ef44ceb026016af7a41d076487d0b7ba10737e8191f5%22%2C%22summary%22%2C0%5D",
+      "payloadAvailable": false
+    }
+  ],
+  "positionTableCount": 35338,
+  "joinedPayloadCount": 35334
+}
