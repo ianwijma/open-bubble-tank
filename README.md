@@ -4,6 +4,15 @@ A modular TypeScript reconstruction of **Bubble Tanks 3**, built with **Bun, Nex
 
 **The one-to-one recreation is still in progress.** This repository contains a playable offline implementation, not a claim of completed pixel or behavioral parity. The remaining differences are tracked in [the fidelity ledger](docs/fidelity.md). Continuation starts with [the handoff](docs/handoff.md) and [the goal objective](goals.markdown).
 
+This is the classic offline version. Its selected
+[faithful-release criteria](docs/classic-release.md) cover the complete progression
+route, concrete player-visible problems and documented remaining differences.
+[Validation and its limits](docs/classic-validation.md) distinguish the accelerated
+full progression test from ordinary public-input checks. Modernization and
+rebranding are separate work.
+Once the final master checks pass, the `classic-v1` tag preserves the accepted
+classic source independently of later modernization.
+
 ## Run
 
 Requires Bun 1.3.9+ and Node.js 20.9+ (Next.js tooling).
@@ -31,6 +40,10 @@ bun run fixtures      # Gameplay/art/screen fixtures on localhost:3102
 ```
 
 The browser tests use Chrome if installed, otherwise a Playwright Chromium installation. To install Chromium, run `bun x playwright install chromium`. SWF integration tests use `BT3_SWF_FILE` or the sibling research fixture, and skip when neither exists. No SWF is committed to this project.
+
+Playwright's disposable per-test output is isolated in `test-results/playwright`.
+Keep independent validation records in ignored `reference-captures/` directories;
+the runner must not use their parent as its output directory.
 
 PR CI runs formatting, TypeScript/rules, a production build and the quick mock
 startup/creator/settings/exploration/pause flow. Master pushes and manual CI runs
@@ -78,7 +91,7 @@ The helper also accepts `reload PATH`, `hold X Y MS`, `keyhold KEY MS`, `drag X 
 - Cross the circular boundary to travel to another field. Visited enemies retain their state and cleared fields remain reachable. Map paths appear only after you traverse them, once per pair of fields. As in the original, returning to an empty field counts as another completion.
 - **Top-left map button:** cycle compact, large, and hidden while the game continues. Only traveled connections appear. Equipped Radar shows off-screen arrows; Health Readout adds enemy bars, and summoned allies have health rings.
 - **Settings → Camera zoom:** choose 50–150%, independently of fullscreen or window size. 100% keeps the original camera scale.
-- Collect green bubbles to heal. **Health is progression**: a full health bar upgrades the tank. Death loses a tank level; the first tank escapes to a weak field instead of ending the game.
+- Collect dropped life bubbles to heal. **Health is progression**: a full health bar upgrades the tank. Death loses a tank level; the first tank escapes to a weak field instead of ending the game.
 
 The menu also provides the enemy tank creator and local tank library. Avatar designs can be edited during upgrades and after clearing a field. Designs can be saved, imported/exported as JSON, and shared using the **original encrypted tank-code format**. Settings, progression designs, and the secondary-weapon help flag are saved locally. The help appears on the first eligible tank replacement and pauses play until Close. As in the original, continuing restores the design progression, not a complete serialized world.
 

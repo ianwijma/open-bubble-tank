@@ -41,6 +41,18 @@ combined merge. If master changes during the batch, integrate it and validate th
 resulting tree before the final merge. Verify the fetched head and resulting tree;
 do not infer completion from a queued operation.
 
+## Final classic release closeout
+
+The five-layer artwork batch PRs161–165 is complete. Under the user's subsequent
+priority to finish the classic release promptly, its remaining tab-icon fix,
+validation-output isolation and release evidence form one coherent final
+closeout PR. This is acceptance work following the delivered batch, rather than
+a new fidelity implementation batch. Preserve the same isolated current-head
+inspection, quick PR gate, one master merge and full-master release gate. Future
+substantive fidelity batches retain the five-layer policy above. The final
+annotated `classic-v1` tag records the accepted exact master commit and successful
+full run without requiring another result-only documentation commit.
+
 ## Quick PR checks and full master validation
 
 `bun run test:e2e:smoke` is the quick browser selection for PRs;
