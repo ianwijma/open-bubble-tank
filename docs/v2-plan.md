@@ -30,7 +30,7 @@ Each entry is marked **decided** (Ian confirmed it), **proposed** (recommended, 
 | Where V2 lives | `soaptank.net`. What stays at the current address is decided later. | Decided |
 | Repository | `soaptank` on Ian's personal GitHub account, open source. | Decided |
 | License | AGPL-3.0 for the whole repository, game and backend alike. Chosen so that a hosted copy with changes must publish them. | Decided |
-| Contributor agreement | Whether outside contributors sign one. Without it the license cannot be changed later, and an App Store release becomes impossible once outside code is merged. | Open |
+| Contributor agreement | Outside contributors accept a contributor license agreement once, on their first pull request. They keep ownership of their code and may use it as they like. Ian receives a broad, permanent license to it, including the right to publish it under other terms. No copyright is transferred. The text comes from an established template, not written from scratch. | Decided |
 | itch.io | A project called Soap Tank under the identifier `soaptank`, for a later desktop or embedded web release. | Decided |
 | npm | No package name is reserved. It only matters if a library is published. | Decided |
 | Trademark | None is registered. A search of the trademark registers is still to be done (section 3). | Decided |
@@ -813,7 +813,7 @@ Delivery follows the five-PR stacks in `docs/delivery.md` unless that policy is 
 
 Open since the 2026-11-15 revision (section 3):
 
-- **Contributor agreement.** Whether outside contributors sign one (section 2). To settle before the first outside contribution is merged.
+- **Contributor agreement text and tooling.** Which template is used and which bot collects the acceptance (section 2). To settle before the first outside contribution is merged.
 
 Settled on 2026-11-15: the `v2` branch lives in the old repository, the code that reads original artwork is removed at the cut, and the built-in tanks are converted to the V2 format. The trademark register search is left undone by decision (section 10).
 
