@@ -31,6 +31,7 @@ Each entry is marked **decided** (Ian confirmed it), **proposed** (recommended, 
 | Repository | `soaptank` on Ian's personal GitHub account, open source. | Decided |
 | License | AGPL-3.0 for the whole repository, game and backend alike. Chosen so that a hosted copy with changes must publish them. | Decided |
 | Contributor agreement | Outside contributors accept a contributor license agreement once, on their first pull request. They keep ownership of their code and may use it as they like. Ian receives a broad, permanent license to it, including the right to publish it under other terms. No copyright is transferred. The text comes from an established template, not written from scratch. | Decided |
+| Contributor agreement bot | CLA Assistant (`cla-assistant.io`): free, open source and maintained as of 2026-11-16. It keeps the signatures on its own service, so the list is exported from time to time. Configuring it is part of carrying out the cut, not of this plan. | Decided |
 | itch.io | A project called Soap Tank under the identifier `soaptank`, for a later desktop or embedded web release. | Decided |
 | npm | No package name is reserved. It only matters if a library is published. | Decided |
 | Trademark | None is registered. A search of the trademark registers is still to be done (section 3). | Decided |
@@ -156,7 +157,7 @@ For itch.io and the Discord server. itch.io allows 120 characters for the short 
 1. **Classic is wrapped up.** Ian tags that commit (for example `classic-1.0`) and decides where classic is deployed. Classic stays in the old repository.
 2. **Baseline.** Every test is run once in the old repository, including the ones that need the original game file, and the results are recorded (section 5, phase 1). This happens before the cut because the old repository is where those tests belong.
 3. **Cleanup on a `v2` branch of the old repository.** The scope is the table below. `master` keeps everything as it is.
-4. **License and contributor agreement.** The `v2` branch gains the AGPL-3.0 license file, the contributor license agreement, and a short explanation in `README.md` of why the agreement exists. The check that collects each contributor's acceptance is set up on the new repository before it goes public.
+4. **License and contributor agreement.** The `v2` branch gains the AGPL-3.0 license file, the contributor license agreement, and a short explanation in `README.md` of why the agreement exists. CLA Assistant, which collects each contributor's acceptance, is set up on the new repository before it goes public.
 5. **One squashed commit.** Once the `v2` branch is clean, its tree is copied to the new repository as a single commit. No history from the old repository is carried over, because a history keeps every old reference readable however much a later commit removes.
 6. **Private until clean.** The new repository is made public only when the cleanup is finished and checked.
 
@@ -814,7 +815,7 @@ Delivery follows the five-PR stacks in `docs/delivery.md` unless that policy is 
 
 Open since the 2026-11-15 revision (section 3):
 
-- **Contributor agreement text and tooling.** Which template is used and which bot collects the acceptance (section 2). To settle before the first outside contribution is merged.
+- **Contributor agreement text.** Which template is used (section 2). To settle before the first outside contribution is merged.
 
 Settled on 2026-11-15: the `v2` branch lives in the old repository, the code that reads original artwork is removed at the cut, and the built-in tanks are converted to the V2 format. The trademark register search is left undone by decision (section 10).
 
