@@ -156,8 +156,9 @@ For itch.io and the Discord server. itch.io allows 120 characters for the short 
 1. **Classic is wrapped up.** Ian tags that commit (for example `classic-1.0`) and decides where classic is deployed. Classic stays in the old repository.
 2. **Baseline.** Every test is run once in the old repository, including the ones that need the original game file, and the results are recorded (section 5, phase 1). This happens before the cut because the old repository is where those tests belong.
 3. **Cleanup on a `v2` branch of the old repository.** The scope is the table below. `master` keeps everything as it is.
-4. **One squashed commit.** Once the `v2` branch is clean, its tree is copied to the new repository as a single commit. No history from the old repository is carried over, because a history keeps every old reference readable however much a later commit removes.
-5. **Private until clean.** The new repository is made public only when the cleanup is finished and checked.
+4. **License and contributor agreement.** The `v2` branch gains the AGPL-3.0 license file, the contributor license agreement, and a short explanation in `README.md` of why the agreement exists. The check that collects each contributor's acceptance is set up on the new repository before it goes public.
+5. **One squashed commit.** Once the `v2` branch is clean, its tree is copied to the new repository as a single commit. No history from the old repository is carried over, because a history keeps every old reference readable however much a later commit removes.
+6. **Private until clean.** The new repository is made public only when the cleanup is finished and checked.
 
 V2 work starts after these steps. Classic is not this plan's concern from then on.
 
