@@ -1,6 +1,6 @@
-# Open Bubble Tank V2: modernization plan
+# Soap Tank (Open Bubble Tank V2): modernization plan
 
-**Status: plan only. Nothing here is implemented.** Written 2026-11-13 from planning discussions with Ian and from reading the code at commit `12bf09d`. Revised 2026-11-14 after an independent review of the plan against the code. No tests or game code were run for this plan. Counts and comparisons come from reading the source and data files. Code references describe that commit and may drift.
+**Status: plan only. Nothing here is implemented.** Written 2026-11-13 from planning discussions with Ian and from reading the code at commit `12bf09d`. Revised 2026-11-14 after an independent review of the plan against the code. Revised 2026-11-15: V2 is named Soap Tank and moves to a new repository before any other V2 work (section 3). No tests or game code were run for this plan. Counts and comparisons come from reading the source and data files. Code references describe that commit and may drift.
 
 ## 1. What V2 is
 
@@ -13,7 +13,7 @@ Goals, in priority order:
 3. A community forms around it: people build tanks, share them, and fight each other's designs.
 4. Gameplay is improved where the original is awkward. V2 is not bound by the "faithful, not reinterpretation" rule.
 
-V2 is built on its own artwork, so it starts and plays without the original game file. It is also free to break with classic: saves and tank codes do not carry over. V2 will be released as its own website under a new name, detached from the Bubble Tanks branding (section 7).
+V2 is built on its own artwork, so it starts and plays without the original game file. It is also free to break with classic: saves and tank codes do not carry over. V2 is called **Soap Tank**. It lives in its own repository and at its own address, `soaptank.net`, detached from the Bubble Tanks branding (section 3).
 
 Out of scope: payments of any kind. The workshop is a free gallery. Original artwork belongs to Hero Interactive and is never bundled, uploaded or hosted (see `NOTICE.md`).
 
@@ -25,13 +25,21 @@ Each entry is marked **decided** (Ian confirmed it), **proposed** (recommended, 
 
 | Topic | Decision | State |
 | --- | --- | --- |
-| Relation to classic | Classic is tagged in git and kept as its own release. V2 continues on `master`. | Decided |
-| Where V2 lives | A separate website under the new name. Which address, and what stays at the current one, is decided later. | Decided |
+| Relation to classic | Classic stays in the current repository, which remains private and is renamed (for example "Classic Bubble Tank"). V2 moves to a new repository (section 3). This replaces "V2 continues on `master`". | Decided |
+| Name | **Soap Tank**, two words, wherever people read it. `soaptank`, one word, wherever a space is not allowed. | Decided |
+| Where V2 lives | `soaptank.net`. What stays at the current address is decided later. | Decided |
+| Repository | `soaptank` on Ian's personal GitHub account, open source. | Decided |
+| License | AGPL-3.0 for the whole repository, game and backend alike. Chosen so that a hosted copy with changes must publish them. | Decided |
+| Contributor agreement | Whether outside contributors sign one. Without it the license cannot be changed later, and an App Store release becomes impossible once outside code is merged. | Open |
+| itch.io | A project called Soap Tank under the identifier `soaptank`, for a later desktop or embedded web release. | Decided |
+| npm | No package name is reserved. It only matters if a library is published. | Decided |
+| Trademark | None is registered. A search of the trademark registers is still to be done (section 3). | Decided |
 | When V2 starts | After the classic implementation is wrapped up, on a date Ian chooses. Ian handles the classic release. Neither is part of this plan. | Decided |
 | Compatibility with classic | None required. Saves do not carry over, and V2 has its own tank code. | Decided |
 | Test safety net | Before V2 changes anything, tests pin what the game does today, both in the rules and in the browser. | Decided |
 | Code modernization phase | After the safety net, the code is restructured so it can take the V2 changes. Nothing the player can see changes in this phase, and the tests prove it. | Decided |
-| Rebrand | A complete one before V2 goes public: a new name, new artwork, and new part names and texts. The current name stays during development. | Decided |
+| Rebrand | The rename comes first, before any other V2 work, together with the move to the new repository. It covers the name, the documents and the screenshots only (section 3). This replaces "the current name stays during development". The artwork overhaul still comes before the public launch. | Decided |
+| What the rename leaves | The built-in tank designs, waves, part names, texts, and menu and editor layouts taken from the original stay, and so do the rules rebuilt from the original's code. Ian accepts the remaining risk. | Decided |
 | Frontend hosting | Vercel. | Decided |
 | Backend hosting | A small rented VPS, built so it can move to another host later. Not Vercel (cost). | Decided |
 | Phones | Must run well on a mid-range phone. Ian's high-end iPhone is the main test device. | Decided |
@@ -115,14 +123,78 @@ Each entry is marked **decided** (Ian confirmed it), **proposed** (recommended, 
 | Weekly pack schedule | Built automatically every Friday at 06:00 UTC. Past weeks stay playable, and the current week is advertised in the game. | Decided |
 | Packs and stat changes | Old packs play with the current stat formulas. | Decided |
 
-## 3. Split from classic
+## 3. Rebrand and new repository
 
-1. When the classic implementation is wrapped up, Ian tags that commit (for example `classic-1.0`) and creates a `classic` branch from it for later hotfixes.
-2. Ian decides where classic is deployed.
-3. `master` becomes V2. V2 goes public later as its own website under the new name (section 7).
-4. The first V2 commit rewrites `AGENTS.md`, `goals.markdown`, `README.md` and `docs/architecture.md`. They describe a faithful recreation, which would steer V2 work wrong. `docs/fidelity.md` stays as the record of classic.
+Decided 2026-11-15. V2 starts with a rename and a move to a new repository, so that it is disconnected from the old project from its first commit. This replaces the earlier plan, in which V2 continued on `master` and the rebrand came last.
 
-V2 work starts after steps 1 and 2. Classic is not this plan's concern from then on.
+### Name and places
+
+| Thing | Value | State |
+| --- | --- | --- |
+| Display name | Soap Tank | Decided |
+| Identifier | `soaptank` | Decided |
+| Website | `soaptank.net` | Decided. Not yet registered as far as this plan knows. |
+| Repository | `soaptank` on Ian's personal GitHub account | Decided. Not yet created. |
+| itch.io | Project "Soap Tank", identifier `soaptank` | Decided. Not yet claimed. |
+| Old repository | Stays private, renamed (for example "Classic Bubble Tank") | Decided |
+| License | AGPL-3.0, whole repository | Decided |
+
+The name is a nod to the original without using its name. "Open" was dropped because "Open X" reads as an open clone of X. Avoid the spelling "SoapTank" in prose.
+
+### Store text
+
+For itch.io and the Discord server. itch.io allows 120 characters for the short description.
+
+- **Tagline** (51 characters, liked by Ian): "Build a tank out of bubbles. Fight everyone else's."
+- **Short description** (105 characters, proposed): "Build a tank out of bubbles and fight everyone else's. A free, open-source arena shooter in your browser."
+- **Once phones are supported** (111 characters, proposed): "Build a tank out of bubbles and fight everyone else's. A free, open-source arena shooter for browser and phone."
+- **Longer description** (proposed): "Soap Tank is a free, open-source arena shooter where every tank is built from bubbles. Pop enemies, collect what they drop, and grow into something bigger. Design your own tanks in the editor, share them in the workshop, and fight the community's creations. Plays in the browser, on desktop and phone." This describes the finished V2. Until the workshop and phone support exist, cut those sentences or mark the game as in development.
+- **Genre.** A top-down arena shooter: a twin-stick shooter with a tank builder. On itch.io: Shooter. Proposed tags: `twin-stick-shooter`, `top-down-shooter`, `arena-shooter`, `tanks`, `level-editor`, `open-source`. Not called a roguelite, because runs are saved and resumed.
+
+### The cut
+
+1. **Classic is wrapped up.** Ian tags that commit (for example `classic-1.0`) and decides where classic is deployed. Classic stays in the old repository.
+2. **Baseline.** Every test is run once in the old repository, including the ones that need the original game file, and the results are recorded (section 5, phase 1). This happens before the cut because the old repository is where those tests belong.
+3. **Cleanup on a `v2` branch of the old repository.** The scope is the table below. `master` keeps everything as it is.
+4. **One squashed commit.** Once the `v2` branch is clean, its tree is copied to the new repository as a single commit. No history from the old repository is carried over, because a history keeps every old reference readable however much a later commit removes.
+5. **Private until clean.** The new repository is made public only when the cleanup is finished and checked.
+
+V2 work starts after these steps. Classic is not this plan's concern from then on.
+
+### Cleanup scope
+
+Ian chose the lightest of three levels: the name and the documents. The content and the engine stay as they are.
+
+| Item | What happens | Size today |
+| --- | --- | --- |
+| The name "Open Bubble Tank" and mentions of the original game | Replaced or removed across code, tests, tools and texts. | About 250 files mention it (a text count): 120 in `e2e/`, 56 in `docs/`, 38 in `tools/`, 18 in `src/`, 10 in `tests/`. |
+| Reference documents about the old engine | Removed. They describe the original's code, which V2 does not follow. | 81 files in `docs/`, 55 of them named as references. |
+| Classic status documents | Removed on the `v2` branch: `docs/fidelity.md`, `docs/completion-checklist.md`, `docs/classic-release.md`, `docs/classic-validation.md`, `docs/handoff.md`. They stay on `master`. This replaces "`docs/fidelity.md` stays as the record of classic". | |
+| Guidance documents | `AGENTS.md`, `goals.markdown`, `README.md` and `docs/architecture.md` are rewritten. They describe a faithful recreation, which would steer V2 work wrong. | |
+| `NOTICE.md` | Rewritten for Soap Tank. It must still credit the original for what is kept (the row below). | |
+| Screenshots and branding images | Removed or replaced. Only the two icons in `assets/branding/` are committed today; no screenshot is. | 2 files |
+| Built-in tank designs, waves, part names and texts | **Kept.** | `src/game/data`, 2.4 MB |
+| Menu and editor layouts | **Kept for now.** They are replaced when those screens are modernized (workstreams A and E). | |
+| Rules rebuilt from the original's code | **Kept.** The code overhaul in section 5 restructures them but does not remove where they came from. | |
+| Code that reads original artwork | **Removed at the cut**, with the tests that need the original file. Only the part that reads the music stays, after a check of what it depends on. This is earlier than first planned (after phase 4). | |
+| Music from the original game file | **Kept**, as decided in section 2. | |
+| Built-in tanks | **Kept as built-in tanks.** They are stored as classic tank codes today and are converted to the V2 format, with their stats calculated from the build (workstreams D and K). | 75 tanks |
+
+**License scope.** AGPL-3.0 covers the code Ian and contributors wrote. It cannot grant rights to the kept content that comes from the original game, so the license text and `NOTICE.md` must name what is excluded. The license does not protect the name.
+
+**What this does not fix.** A new name and a clean history remove the branding. The kept rows are content and rules that come from the original game, and `NOTICE.md` credits the tank designs, texts and artwork to their original creators. Ian accepts this for now. No legal review has been done.
+
+**Tests after the cut.** The `v2` branch carries the tests that run on the stand-in artwork, which are the ones CI runs today. The tests that need the original file are removed together with the code that reads original artwork, and stay on `master` with the baseline. This removal happens before the recorded runs of phase 3 exist, so it is guarded by the stand-in tests and the bot playthrough only.
+
+### Name check
+
+Checked on 2026-11-15.
+
+- **Games and products.** Two web searches found no game, app or product called Soap Tank or SoapTank.
+- **GitHub.** The account names `soaptank` and `soap-tank` did not exist. One unrelated repository, a student project from 2023, mentions "SoapTank" in its description.
+- **npm and itch.io.** `soaptank` and `soap-tank` did not exist on either.
+- **Domains.** `soaptank.com` is registered (since June 2025) and offered for sale at about 2,388 US dollars. `soaptank.net`, `.org`, `.gg`, `.io`, `.dev`, `.app`, `.games`, `.fun`, `.xyz`, `.nl` and `.eu` had no DNS entry, which indicates they were unregistered. Registrar prices were not checked.
+- **Trademarks.** The official registers were not searched. Before the name is used in public, search [TMview](https://www.tmdn.org/tmview/) and the [USPTO search](https://tmsearch.uspto.gov/) for "soaptank" and "soap tank" in the classes for games and software. No trademark is registered for Soap Tank: it costs a few hundred euros per region and only pays off once there is something to defend.
 
 **Saves.** V2 does not read classic saves. It stores its data under its own name and will live at its own address, so the two never touch.
 
@@ -268,7 +340,7 @@ Counted from the files at commit `12bf09d`. Nothing was run, so pass rates and r
 
 ### Phase 1: safety net
 
-- **Baseline.** Run every test once, including the original-artwork ones on a machine that has the file. Record what passes, what is flaky and how long it takes. Flaky tests are fixed or set aside with a note, so that a red result later means something.
+- **Baseline.** Run every test once, including the original-artwork ones on a machine that has the file. This is done in the old repository before the cut (section 3). Record what passes, what is flaky and how long it takes. Flaky tests are fixed or set aside with a note, so that a red result later means something.
 - **Coverage map.** Measure which engine code the rule tests reach and add tests where V2 will cut deepest: movement and facing, input, the profile, wave and roster selection.
 - **Player journeys in the browser.** A small set of end-to-end tests written as what a player does, with V2's own artwork so they run in CI:
   - Start a game, play, pause, upgrade, clear a field, quit and continue. "Continue" restores progression only today; a true resume journey arrives with workstream C.
@@ -309,7 +381,7 @@ The code is restructured so each V2 workstream has a place to attach. Each item 
 | --- | --- |
 | **One source for the stage size.** The numbers 550, 450, 275 and 225 appear on about 70 lines across 28 source files (a text count, so a few may be unrelated). Replace them with two named things: the simulation box and the visible area. Both start at 550×450. | A |
 | **One place that decides sharpness.** Canvas resolution and the size artwork is drawn at come from one service, set to today's values. | A |
-| **Split the asset loader.** `src/game/assets/asset-pack.ts` (1,567 lines) is separated into reading the original file, the stand-in artwork, drawing and caching, so the stand-in artwork no longer depends on the file reader. | A, D, J |
+| **Split the asset loader.** `src/game/assets/asset-pack.ts` (1,567 lines) is separated into the music reader, the stand-in artwork, drawing and caching. The artwork reader is already gone by then (section 3), and removing it at the cut needs part of this split first. | A, D, J |
 | **Input as actions.** Devices produce the same per-step input record the simulation already takes. Keyboard and mouse become the first device, with identical output. | B |
 | **Handling and tier tables as data.** Speed, armor and size tables stop assuming six tiers. Values stay the same. | B, I, K |
 | **World state inventory.** List everything a run holds and separate plain data from the callbacks and timers attached to it. Saving and restoring is workstream C, not this phase. | C |
@@ -440,7 +512,7 @@ Classic's "Continue" restores design progression only. V2 must resume the run.
 - **Part order is kept.** It is the layer order, so it is part of the build.
 - **Plain and compact.** No encryption. A packed, URL-safe encoding with a format version at the front. Compression may be added on top; a build's identity is taken before compression.
 - **Identity.** A hash of the canonical data identifies a build. It tells whether a library entry is unchanged, and it is the key for drawn-picture caches.
-- **Classic codes.** V2 does not write them. Reading them is optional and low priority.
+- **Classic codes.** V2 does not write them. The 75 built-in tanks are converted once from their classic codes to the V2 format and stay built-in tanks; the stats stored in the classic codes are dropped and calculated from the build (workstream K). Reading a classic code that a player pastes is optional and low priority.
 
 **Links and codes.** A link names a published tank by its id and opens it with "subscribe", "copy to library", "open in editor" and "try it". A full code is never put in a link, because large tanks make it too long. It is copied as text and pasted into the game's "enter tank code" window, which needs no server. The addresses, the ways a link names a tank, the code window and the share button are set out in section 4.
 
@@ -637,7 +709,7 @@ V2 is built on its own artwork. The current stand-in artwork is kept until the r
 **The original game file.**
 
 - **Music.** A player can load the original file to get its music. Without it the game plays the placeholder tones.
-- **Nothing else.** V2 does not show the original artwork. The code that reads artwork from the file is removed from V2 after the code modernization phase, together with the tests that need it. Only the part that reads the music stays, after a check of what it depends on.
+- **Nothing else.** V2 does not show the original artwork. The code that reads artwork from the file is removed at the cut (section 3), together with the tests that need it. Only the part that reads the music stays, after a check of what it depends on.
 
 ### K. Stats from the build
 
@@ -711,12 +783,12 @@ So a small tank with late-game weapons is already possible, within its smaller b
 - **Phones.** The target is a mid-range phone. Ian's high-end iPhone is the main test device, so iPhone Safari and an installed copy are tested throughout. Frame-time, memory and download-size limits are set once the wide view runs on a phone, and large tanks and large enemy sources are part of that test. Browser emulation is not enough: sound, graphics-context loss and the editor's touch controls are checked on real devices.
 - **Accessibility.** Menus, the editor and the workshop are usable by keyboard with a visible focus. Text has enough contrast. A setting reduces flashes and screen shake.
 - **Works without the backend.** The game, the editor and installed packs keep working when the server is down or the device is offline.
-- **Rebrand and rights.** V2 goes public as its own website under a new name. The stand-in artwork still uses part names, texts, layouts and colors taken from the original game (`NOTICE.md`). The rebrand replaces the name, the artwork and those texts. It includes a review of what remains from the original, and the terms under which players publish tanks. The contact standing with Hero Interactive is not recorded in this plan.
+- **Rebrand and rights.** V2 is Soap Tank, at `soaptank.net` (section 3). The rename replaces the name and the documents. The stand-in artwork still uses part names, texts, layouts and colors taken from the original game (`NOTICE.md`), and those stay for now by decision. Before the public launch come the artwork overhaul and the terms under which players publish tanks. No review of what remains from the original has been done. The contact standing with Hero Interactive is not recorded in this plan.
 
 ## 8. Order and dependencies
 
-1. **Split** (section 3). Ian's step, after classic is wrapped up.
-2. **Safety net** (section 5, phase 1).
+1. **Rebrand and cut** (section 3), after classic is wrapped up: the baseline in the old repository, the cleanup on a `v2` branch, and the new repository started from one squashed commit.
+2. **Safety net** (section 5, phase 1), the rest of it. The baseline is already taken in step 1.
 3. **Self-contained rules** (phase 2). Small deliberate rule changes; includes the size calculation.
 4. **Recorded runs** (phase 3).
 5. **Code modernization** (phase 4). Nothing visible changes.
@@ -730,20 +802,24 @@ So a small tank with late-game weapons is already possible, within its smaller b
    4. H. Enemy sources and the new upgrade screen, with library tanks
    5. Backend, then G. Workshop and packs, which also brings Publish, subscriptions and workshop tanks into E, F and H
 10. **I. Further gameplay:** tiers 7 and 8, then the endgame.
-11. **Rebrand and public launch:** the new name and website, the artwork overhaul, new texts and the rights review. Where the site lives is decided then.
+11. **Public launch** at `soaptank.net`: the artwork overhaul, the publishing terms, and the new repository made public if it is not already. The rename itself is step 1.
 12. **Later:** link preview images, community-made bosses, difficulty levels.
 
-**J. Own artwork** runs alongside from step 6: the stand-in artwork becomes the default, the music loader is kept, and new parts get artwork as they are added. The original-artwork code is removed after step 5.
+**J. Own artwork** runs alongside from step 6: the stand-in artwork becomes the default, the music loader is kept, and new parts get artwork as they are added. The original-artwork code is already removed in step 1.
 
 Delivery follows the five-PR stacks in `docs/delivery.md` unless that policy is changed for V2.
 
 ## 9. Open questions
 
-No larger question is open.
+Open since the 2026-11-15 revision (section 3):
+
+- **Contributor agreement.** Whether outside contributors sign one (section 2). To settle before the first outside contribution is merged.
+
+Settled on 2026-11-15: the `v2` branch lives in the old repository, the code that reads original artwork is removed at the cut, and the built-in tanks are converted to the V2 format. The trademark register search is left undone by decision (section 10).
 
 The smaller proposals were all confirmed on 2026-11-14: the 30-day recent window, the aim-reach limit, names with a per-version change log, and weekly-pack ties going to the tank with the higher overall use.
 
-Left for the implementation phase, by decision: the balance between tiers, the size and weapons of tiers 7 and 8, the design of the bosses and special fields, how the report queue works, and where the V2 website lives.
+Left for the implementation phase, by decision: the balance between tiers, the size and weapons of tiers 7 and 8, the design of the bosses and special fields, and how the report queue works.
 
 ## 10. Not verified
 
@@ -757,3 +833,5 @@ Left for the implementation phase, by decision: the balance between tiers, the s
 - Performance of tier 8 tanks on a phone.
 - The length of a V2 full code for large tanks. It no longer limits links, but a very long code may still be awkward to paste into some chat apps.
 - Which browsers offer a share window. The copy panel is the fallback.
+- Whether "Soap Tank" is free in the trademark registers, what the domains cost at a registrar, and the file counts in the cleanup table, which are text counts.
+- itch.io's current tag list and Discord's length limit for a server description.
