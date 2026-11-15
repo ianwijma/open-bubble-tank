@@ -1,6 +1,6 @@
 # Soap Tank (Open Bubble Tank V2): modernization plan
 
-**Status: plan only. Nothing here is implemented.** Written 2026-11-13 from planning discussions with Ian and from reading the code at commit `12bf09d`. Revised 2026-11-14 after an independent review of the plan against the code. Revised 2026-11-15: V2 is named Soap Tank and moves to a new repository before any other V2 work (section 3). No tests or game code were run for this plan. Counts and comparisons come from reading the source and data files. Code references describe that commit and may drift.
+**Status: plan only. Nothing here is implemented.** Written 2026-11-13 from planning discussions with Ian and from reading the code at commit `12bf09d`. Revised 2026-11-14 after an independent review of the plan against the code. Revised 2026-11-15: V2 is named Soap Tank and moves to a new repository before any other V2 work (section 3). Revised 2026-11-16 after a second review: counts were taken again at the `classic-v1` tag (`5d2eb72`), and contradictions in the cut were resolved. No tests or game code were run for this plan. Counts and comparisons come from reading the source and data files. Code references describe `classic-v1` and may drift.
 
 ## 1. What V2 is
 
@@ -29,17 +29,17 @@ Each entry is marked **decided** (Ian confirmed it), **proposed** (recommended, 
 | Name | **Soap Tank**, two words, wherever people read it. `soaptank`, one word, wherever a space is not allowed. | Decided |
 | Where V2 lives | `soaptank.net`. What stays at the current address is decided later. | Decided |
 | Repository | `soaptank` on Ian's personal GitHub account, open source. | Decided |
-| License | AGPL-3.0 for the whole repository, game and backend alike. Chosen so that a hosted copy with changes must publish them. | Decided |
+| License | AGPL-3.0 for the repository's code, game and backend alike. Chosen so that a hosted copy with changes must publish them. The license cannot cover content kept from the original game, so that content is named in `NOTICE.md` as excluded (section 3). Whether it is `AGPL-3.0-only` or `AGPL-3.0-or-later` is open (section 9). | Decided |
 | Contributor agreement | Outside contributors accept a contributor license agreement once, on their first pull request. They keep ownership of their code and may use it as they like. Ian receives a broad, permanent license to it, including the right to publish it under other terms. No copyright is transferred. The text comes from an established template, not written from scratch. | Decided |
 | Contributor agreement bot | CLA Assistant (`cla-assistant.io`): free, open source and maintained as of 2026-11-16. It keeps the signatures on its own service, so the list is exported from time to time. Configuring it is part of carrying out the cut, not of this plan. | Decided |
 | itch.io | A project called Soap Tank under the identifier `soaptank`, for a later desktop or embedded web release. | Decided |
 | npm | No package name is reserved. It only matters if a library is published. | Decided |
-| Trademark | None is registered. A search of the trademark registers is still to be done (section 3). | Decided |
+| Trademark | None is registered, and the trademark registers are not searched. The rename to Soap Tank goes ahead without a search (decided 2026-11-16). | Decided |
 | When V2 starts | After the classic implementation is wrapped up, on a date Ian chooses. Ian handles the classic release. Neither is part of this plan. | Decided |
 | Compatibility with classic | None required. Saves do not carry over, and V2 has its own tank code. | Decided |
-| Test safety net | Before V2 changes anything, tests pin what the game does today, both in the rules and in the browser. | Decided |
+| Test safety net | Before V2 changes the game, tests pin what it does today, both in the rules and in the browser. One exception: the code that reads original artwork is removed at the cut, guarded only by the stand-in tests and the bot playthrough (section 3). | Decided |
 | Code modernization phase | After the safety net, the code is restructured so it can take the V2 changes. Nothing the player can see changes in this phase, and the tests prove it. | Decided |
-| Rebrand | The rename comes first, before any other V2 work, together with the move to the new repository. It covers the name, the documents and the screenshots only (section 3). This replaces "the current name stays during development". The artwork overhaul still comes before the public launch. | Decided |
+| Rebrand | The rename comes first, before any other V2 work, together with the move to the new repository. It covers the name, the documents, the screenshots, and the removal of the code and tests that read original artwork (section 3). This replaces "the current name stays during development". The artwork overhaul still comes before the public launch. | Decided |
 | What the rename leaves | The built-in tank designs, waves, part names, texts, and menu and editor layouts taken from the original stay, and so do the rules rebuilt from the original's code. Ian accepts the remaining risk. | Decided |
 | Frontend hosting | Vercel. | Decided |
 | Backend hosting | A small rented VPS, built so it can move to another host later. Not Vercel (cost). | Decided |
@@ -49,7 +49,7 @@ Each entry is marked **decided** (Ian confirmed it), **proposed** (recommended, 
 
 | Topic | Decision | State |
 | --- | --- | --- |
-| Artwork | V2 uses its own artwork everywhere and needs no original game file. The current stand-in artwork is kept for now. An overhaul comes with the rebrand. | Decided |
+| Artwork | V2 uses its own artwork everywhere and needs no original game file. The current stand-in artwork is kept through the rename and the cut. The artwork overhaul comes later, before the public launch. | Decided |
 | Original artwork | Not shown in V2. Classic remains the place for the original look. | Decided |
 | Music | Players can still load the original game file for its music. | Decided |
 | Artwork in tests | CI uses V2's own artwork only. | Decided |
@@ -80,10 +80,10 @@ Each entry is marked **decided** (Ian confirmed it), **proposed** (recommended, 
 | Built-in tanks | Recalculated with the same formulas as every other tank. | Decided |
 | Boss stats | Hand-set, for the game's own bosses only. | Decided |
 | Stats in the editor | The editor shows the calculated stats live while building. | Decided |
-| Unlocks in a run | The run's level decides what is available: each level-up unlocks the next tier and more weapons, up to tier 8 at level 8. A small tank may carry a weapon unlocked at a high level. | Decided |
+| Unlocks in a run | The run's level decides what is available: each level-up unlocks the next tier and more weapons. Tiers 1 to 6 open as in classic. Tiers 7 and 8 open only after the player has beaten the first boss; unlocking them by filling the tier 6 growth bar was considered instead. A small tank may carry a weapon unlocked at a high level. | Decided |
 | Run start | Every run starts as the basic tank and works up. Quick play is a one-click start of such a run. | Decided |
 | Upgrade choices | On an upgrade the player chooses from all tanks they can use at that level, including workshop tanks. The upgrade screen is rebuilt to show many tanks. | Decided |
-| Upgrade protection | A fresh upgrade cannot be lost to a single hit, because the new tank starts with full health. A separate temporary buffer was considered and dropped. | Decided |
+| Upgrade protection | The new tank starts with full health, which ends classic's near-empty bar after an upgrade. A separate temporary buffer was considered and dropped. The intent is that a fresh tank survives several hits. Whether it does depends on the health formulas and the enemies' weapons, which are tuned later; no guarantee is designed now (workstream K). | Decided |
 | More tiers | Two more, 7 and 8, for very large tanks with larger weapons. Balance is worked out during implementation. | Decided |
 | Endgame | Several bosses and several kinds of special field, such as a wave arena found far from the center. Details are designed later. | Decided |
 | Save and resume | Required. Quitting must not force a restart. | Decided |
@@ -119,7 +119,7 @@ Each entry is marked **decided** (Ian confirmed it), **proposed** (recommended, 
 | Copies | Copying someone's tank, changing it and publishing it as your own is allowed. Exact copies are not refused. | Decided |
 | Tanks during a run | A run keeps the versions it started with. Nothing changes mid-run. | Decided |
 | Tank code | Deterministic: the same build always produces the same code. Two kinds: a full code holding the whole tank, and a workshop reference pointing to a published tank. A full code is text to copy and paste, never part of a link. | Decided |
-| Weekly pack | The most used tanks of the past week, top 10 per tier, installable in one click. Other "top X" packs later. | Decided |
+| Weekly pack | The most used tanks of the past week, top 10 per tier, installable in one click. Other "top X" packs later. It ranks enemy-role tanks only (the role rule, workstream G). | Decided |
 | Weekly pack version | The pack takes each tank's latest version at the moment it is built and keeps that version. | Decided |
 | Weekly pack schedule | Built automatically every Friday at 06:00 UTC. Past weeks stay playable, and the current week is advertised in the game. | Decided |
 | Packs and stat changes | Old packs play with the current stat formulas. | Decided |
@@ -134,11 +134,12 @@ Decided 2026-11-15. V2 starts with a rename and a move to a new repository, so t
 | --- | --- | --- |
 | Display name | Soap Tank | Decided |
 | Identifier | `soaptank` | Decided |
-| Website | `soaptank.net` | Decided. Not yet registered as far as this plan knows. |
+| Website | `soaptank.net` | Decided. Registered by Ian. |
+| Discord server | Soap Tank | Decided. Claimed by Ian. |
 | Repository | `soaptank` on Ian's personal GitHub account | Decided. Not yet created. |
 | itch.io | Project "Soap Tank", identifier `soaptank` | Decided. Not yet claimed. |
 | Old repository | Stays private, renamed (for example "Classic Bubble Tank") | Decided |
-| License | AGPL-3.0, whole repository | Decided |
+| License | AGPL-3.0 for the code; kept original content is named as excluded | Decided |
 
 The name is a nod to the original without using its name. "Open" was dropped because "Open X" reads as an open clone of X. Avoid the spelling "SoapTank" in prose.
 
@@ -154,39 +155,55 @@ For itch.io and the Discord server. itch.io allows 120 characters for the short 
 
 ### The cut
 
-1. **Classic is wrapped up.** Ian tags that commit (for example `classic-1.0`) and decides where classic is deployed. Classic stays in the old repository.
-2. **Baseline.** Every test is run once in the old repository, including the ones that need the original game file, and the results are recorded (section 5, phase 1). This happens before the cut because the old repository is where those tests belong.
+0. **Secure the name.** `soaptank.net` is registered and the Discord server is claimed. Still to do before the cleanup writes the name into hundreds of files: create the private `soaptank` repository and claim the itch.io name. No trademark search is done (section 2).
+1. **Classic is wrapped up.** Done: classic is tagged `classic-v1` (`5d2eb72`, see `docs/classic-release.md`). Ian decides where classic is deployed. Classic stays in the old repository.
+2. **Baseline.** Every test is run once in the old repository, including the ones that need the original game file, and the results are recorded (section 5, phase 1). This happens before the cut because the old repository is where those tests belong. `docs/classic-validation.md` may already supply part of it.
 3. **Cleanup on a `v2` branch of the old repository.** The scope is the table below. `master` keeps everything as it is.
-4. **License and contributor agreement.** The `v2` branch gains the AGPL-3.0 license file, the contributor license agreement, and a short explanation in `README.md` of why the agreement exists. CLA Assistant, which collects each contributor's acceptance, is set up on the new repository before it goes public.
-5. **One squashed commit.** Once the `v2` branch is clean, its tree is copied to the new repository as a single commit. No history from the old repository is carried over, because a history keeps every old reference readable however much a later commit removes.
-6. **Private until clean.** The new repository is made public only when the cleanup is finished and checked.
+4. **Remove the original-artwork reader.** On the same branch, the code and tests that read artwork from the original file are removed (the table below, and "Tests after the cut"). This needs the part of the asset-loader split that separates the music reader (section 5, phase 4). It passes when format, `bun run check` and the full offline browser suite (`bun run test:e2e:offline`, which includes the bot playthrough) pass without the original file present, and the kept music tests pass once on a machine that has the file.
+5. **License and contributor agreement.** The `v2` branch gains the unmodified AGPL-3.0 license text as `LICENSE`, the contributor license agreement, and a short explanation in `README.md` of why the agreement exists. The agreement template is chosen before this step, because the text is part of the first commit. CLA Assistant, which collects each contributor's acceptance, is set up on the new repository before it goes public. CLA Assistant shows the agreement from a GitHub Gist, so the committed file and the Gist must hold the same text.
+6. **One squashed commit.** Once the `v2` branch is clean, its tree is copied to the new repository as a single commit. No history from the old repository is carried over, because a history keeps every old reference readable however much a later commit removes. The new repository's default branch must match the CI trigger (`branches: [master]` in `.github/workflows/ci.yml` today), and the full offline suite is run once on the squashed commit.
+7. **Private until clean.** The new repository is made public only when the cleanup is finished and checked. Checked means: a case-insensitive search for `bubble[-_ ]?tanks?`, `bt3`, `hero[-_ ]?interactive` and `armor[-_ ]?games` finds only what the table keeps (`NOTICE.md`, the kept texts and data such as tank authors and part flavor text, whatever the open rows end up keeping, the places that must name the original file: the music loader's prompt and the exclusion note in `README.md`, and the kept tests' locators for outside files until those are replaced or renamed, for example as an environment variable with no default path), format, `bun run check` and the full offline browser suite pass on the squashed commit, and CLA Assistant is active on the new repository.
 
 V2 work starts after these steps. Classic is not this plan's concern from then on.
 
 ### Cleanup scope
 
-Ian chose the lightest of three levels: the name and the documents. The content and the engine stay as they are.
+Ian chose the lightest of three levels: the name and the documents. The content and the engine stay as they are, apart from the original-artwork reader (step 4). Counts are text counts at `classic-v1`. Rows marked **open** are settled before step 3 finishes (section 9).
 
 | Item | What happens | Size today |
 | --- | --- | --- |
-| The name "Open Bubble Tank" and mentions of the original game | Replaced or removed across code, tests, tools and texts. | About 250 files mention it (a text count): 120 in `e2e/`, 56 in `docs/`, 38 in `tools/`, 18 in `src/`, 10 in `tests/`. |
-| Reference documents about the old engine | Removed. They describe the original's code, which V2 does not follow. | 81 files in `docs/`, 55 of them named as references. |
-| Classic status documents | Removed on the `v2` branch: `docs/fidelity.md`, `docs/completion-checklist.md`, `docs/classic-release.md`, `docs/classic-validation.md`, `docs/handoff.md`. They stay on `master`. This replaces "`docs/fidelity.md` stays as the record of classic". | |
-| Guidance documents | `AGENTS.md`, `goals.markdown`, `README.md` and `docs/architecture.md` are rewritten. They describe a faithful recreation, which would steer V2 work wrong. | |
-| `NOTICE.md` | Rewritten for Soap Tank. It must still credit the original for what is kept (the row below). | |
-| Screenshots and branding images | Removed or replaced. Only the two icons in `assets/branding/` are committed today; no screenshot is. | 2 files |
-| Built-in tank designs, waves, part names and texts | **Kept.** | `src/game/data`, 2.4 MB |
+| The name "Open Bubble Tank" and mentions of the original game | Replaced or removed across code, tests, tools and texts, except where a row below keeps them. | About 250 files match `bubble[-_ ]?tank` in any case (the phrase with a space matches about 68): 120 in `e2e/`, 55 in `docs/`, 38 in `tools/`, 18 in `src/`, 10 in `tests/`. Most `e2e/` matches are the research-repository path (`documented-bubble-tank-3`) and the profile storage key. Not included: `BT3` in identifiers such as `BT3_SWF_FILE` (about 280 files) and "Hero Interactive" (10 files). |
+| `BT3` identifiers | Renamed with the name (proposed). They label code, not credit. | About 280 files |
+| Provenance comments | **Open.** Comments that cite the original's decompiled code (such as `Main.as` or `_-KM._-Uo`) record where a rule came from. Either kept as provenance notes, or removed together with the reference documents. | About 106 code files in `src/`, plus about 26 in `tests/`, 41 in `tools/` and 3 in `e2e/` |
+| Reference documents about the old engine | Removed. They describe the original's code, which V2 does not follow. | 55 files in `docs/` named as references |
+| Other classic work notes | Removed, like the references (proposed). They record classic fidelity work: audits, batch validations and similar notes. | The remaining 18 files in `docs/` |
+| Classic status documents | Removed on the `v2` branch: `docs/fidelity.md`, `docs/completion-checklist.md`, `docs/classic-release.md`, `docs/classic-validation.md`, `docs/handoff.md`. They stay on `master`. This replaces "`docs/fidelity.md` stays as the record of classic". | 5 files |
+| Guidance documents | `AGENTS.md`, `goals.markdown`, `README.md`, `docs/architecture.md` and, proposed, `docs/delivery.md` are rewritten. They describe a faithful recreation and its release, which would steer V2 work wrong. | |
+| This plan | Proposed: carried over and rewritten as the Soap Tank plan, without the classic background. | `docs/v2-plan.md` |
+| `NOTICE.md` | Rewritten for Soap Tank. It must still credit the original for what is kept (the rows below) and name the excluded content. | |
+| Screenshots and branding images | Removed or replaced. Three image files are committed today (`src/app/icon.svg` added to the earlier count, proposed): two icons in `assets/branding/`, whose file names carry the old name, and `src/app/icon.svg`. No screenshot is. | 3 files |
+| Test fixtures in `tools/` | **Kept and ported in step 4**, except the fixtures that only serve retired artwork-reader tests ("Tests after the cut"), such as `creator-buttons.ts`, which builds an original-file asset pack (four kept creator specs switch to it only to check cleanup, and are pointed at another fixture), and fixtures that serve only original-file specs. Mixed fixtures such as `shape-contact.ts` are split: their original-file pack checks are retired, and their stand-in simulation and rendering checks are ported (proposed; the cut's test gates depend on the rest). `tools/fixtures/`, `tools/visual-fixtures.ts` and `tools/playthrough/` are test infrastructure, not import tools. `playwright.config.ts` serves the fixture page on port 3102; most browser specs and the bot playthrough load it, and 26 rule test files import fixtures. 73 of these files reference the artwork reader; those that stay are moved to the split loader. | 82 files today |
+| Import and reference tools | **Open.** The top-level import and capture scripts, `tools/reference/` and `tools/lib/` read outside research files on their own (`tools/import-credits.ts` reads the SWF from the sibling research repository), and some drive it through `@ruffle-rs/ruffle`. 62 of them reference the artwork reader; the TypeScript ones are type-checked by `tsconfig.json`, so `bun run check` fails once the reader is removed, and some import only `asset-pack` and just need new paths. Keeping them means keeping or moving the parser as development-only tooling. Removing them turns the generated data into hand-maintained source, and the plan must say how it is maintained; it also breaks the 11 rule test files that import `tools/reference/` or `tools/lib/`. Settled with the other open rows, before step 3 finishes. | About 160 of 241 files in `tools/` |
+| Built-in tank designs, waves, part names and texts | **Kept.** | `tanks.json` (374 KB) and `parts.json` (31 KB) |
+| Imported display data | **Kept**, as content the stand-in artwork and screens use: timelines, layouts and effect clips in `src/game/data`. **Open:** whether the decompiled class names and source file hashes inside them (for example `sourceSha256` and `"className":"_-4z"` in `effect-clips.json`) are stripped. | Most of the rest of `src/game/data`, 2.4 MB in total |
 | Menu and editor layouts | **Kept for now.** They are replaced when those screens are modernized (workstreams A and E). | |
-| Rules rebuilt from the original's code | **Kept.** The code overhaul in section 5 restructures them but does not remove where they came from. | |
-| Code that reads original artwork | **Removed at the cut**, with the tests that need the original file. Only the part that reads the music stays, after a check of what it depends on. This is earlier than first planned (after phase 4). | |
+| Credits screen and series menu | **Open.** `credits-art.json`, `menu-series.json` and the Hero Interactive and Armor Games addresses in `src/game/services/extensions.ts` are both layout (kept) and mentions of the original (removed). | |
+| Rules rebuilt from the original's code | **Kept.** The code overhaul in section 5 restructures them. | |
+| Code that reads original artwork | **Removed at the cut** (step 4), with the tests that cover it. Only the part that reads the music stays, after a check of what it depends on. This is earlier than first planned (after phase 4). | |
 | Music from the original game file | **Kept**, as decided in section 2. | |
-| Built-in tanks | **Kept as built-in tanks.** They are stored as classic tank codes today and are converted to the V2 format, with their stats calculated from the build (workstreams D and K). | 75 tanks |
+| Built-in tanks | **Kept as they are at the cut**, with their stored stats. Converting them to the V2 format (workstream D) and recalculating their stats (workstream K) happen later and are not part of the cut. The boss keeps hand-set stats. | 75 tanks: 31 player, 43 enemy, 1 boss |
 
-**License scope.** AGPL-3.0 covers the code Ian and contributors wrote. It cannot grant rights to the kept content that comes from the original game, so the license text and `NOTICE.md` must name what is excluded. The license does not protect the name.
+**License scope.** AGPL-3.0 covers the code Ian and contributors wrote. It cannot grant rights to the kept content that comes from the original game, or to third-party material. The `LICENSE` file is the unmodified AGPL-3.0 text, which may not be changed; `NOTICE.md` and `README.md` name the excluded paths and content, and the third-party licenses. The contributor agreement covers only what a contributor has the right to license. The license does not protect the name.
 
 **What this does not fix.** A new name and a clean history remove the branding. The kept rows are content and rules that come from the original game, and `NOTICE.md` credits the tank designs, texts and artwork to their original creators. Ian accepts this for now. No legal review has been done.
 
-**Tests after the cut.** The `v2` branch carries the tests that run on the stand-in artwork, which are the ones CI runs today. The tests that need the original file are removed together with the code that reads original artwork, and stay on `master` with the baseline. This removal happens before the recorded runs of phase 3 exist, so it is guarded by the stand-in tests and the bot playthrough only.
+**Tests after the cut.** Tests are sorted by what they cover, not by whether they need the original file.
+
+- **Most browser specs run twice.** About 106 of the 121 spec files declare each test inside a `for (const native of [false, true])` loop: once on the stand-in artwork and once on the original file. Removing the original-file variant means collapsing those loops to the stand-in case, not deleting the files.
+- **Rule tests.** Five rule test files each contain one check that skips without an outside research file (`test.skipIf`). Three read the original SWF. `swf.test.ts` and `native-text-geometry.test.ts` test the artwork reader and are retired with it, except what the music reader's parsing needs. `projectile-geometry.test.ts` loses only its original-file check and its one test that builds an original-file asset pack; its other seven tests cover the stand-in projectile shapes and numeric bounds that collisions use (`src/game/simulation/world.ts`), which stay. Two read recovered tank data, `builtin_tanks.json` (`tank-code.test.ts`, `roster-identity.test.ts`); they cover classic tank codes and the roster, which stay at the cut, so the whole files are kept. How those outside fixtures are replaced in the new repository is decided separately.
+- **Artwork-reader tests are retired** even when they need no original file, such as tests that parse artwork from synthetic bytes (`tests/button-display-list.test.ts`) and the synthetic fixtures that build an original-file asset pack (`tools/fixtures/creator-buttons.ts`).
+- **Music coverage is kept.** The original-file music test (`e2e/feedback.spec.ts`, "original SWF music resumes…") is kept, because the music reader stays.
+- **What guards it.** The removal happens before the recorded runs of phase 3 exist, so it is guarded by the stand-in tests and the bot playthrough only. The other original-file tests stay on `master` with the baseline.
 
 ### Name check
 
@@ -196,7 +213,7 @@ Checked on 2026-11-15.
 - **GitHub.** The account names `soaptank` and `soap-tank` did not exist. One unrelated repository, a student project from 2023, mentions "SoapTank" in its description.
 - **npm and itch.io.** `soaptank` and `soap-tank` did not exist on either.
 - **Domains.** `soaptank.com` is registered (since June 2025) and offered for sale at about 2,388 US dollars. `soaptank.net`, `.org`, `.gg`, `.io`, `.dev`, `.app`, `.games`, `.fun`, `.xyz`, `.nl` and `.eu` had no DNS entry, which indicates they were unregistered. Registrar prices were not checked.
-- **Trademarks.** The official registers were not searched. Before the name is used in public, search [TMview](https://www.tmdn.org/tmview/) and the [USPTO search](https://tmsearch.uspto.gov/) for "soaptank" and "soap tank" in the classes for games and software. No trademark is registered for Soap Tank: it costs a few hundred euros per region and only pays off once there is something to defend.
+- **Trademarks.** The official registers were not searched, and by decision they are not searched before the rename. A later search, if wanted, would use [TMview](https://www.tmdn.org/tmview/) and the [USPTO search](https://tmsearch.uspto.gov/) for "soaptank" and "soap tank" in the classes for games and software. No trademark is registered for Soap Tank: it costs a few hundred euros per region and only pays off once there is something to defend.
 
 **Saves.** V2 does not read classic saves. It stores its data under its own name and will live at its own address, so the two never touch.
 
@@ -233,7 +250,7 @@ The spellings are a first proposal and can change in implementation. What is dec
 
 | In the address | Meaning | Who can open it |
 | --- | --- | --- |
-| Nothing | Editor: a new tank. Arena: the tank used last. | Anyone |
+| Nothing | Editor: a new tank. Arena: the tank used last, or the basic tank if there is none. | Anyone |
 | `?tank=local:<id>` | A tank kept in the player's library: unpublished, or a copy | Only the player who has it |
 | `?tank=<id>` | A published tank, latest version | Anyone |
 | `?tank=<id>&v=<n>` | One version of a published tank | Anyone |
@@ -244,14 +261,14 @@ What the editor does with each:
 - **The player's own published tank** opens the working copy that becomes its next version. With a version number, the next version starts from that older version.
 - **Someone else's published tank** opens for viewing only, with "copy to my library" to edit it. This keeps the rule that only your own tanks can be edited.
 
-The arena drives the named tank. A second value, `enemy=`, names the opponent, which is how "fight it" on a tank page works.
+The arena drives the named tank. A second value, `enemy=`, names the opponent, which is how "fight it" on a tank page works. Under the role rule (workstream G), `tank=` names a player-role tank and `enemy=` an enemy-role tank.
 
 **No tank codes in addresses.** A link names a tank by its id and never carries the code itself. The code of a large tank is too long for an address: among today's built-in tanks the median classic code is about 1,400 characters and the largest about 32,000, and browsers, servers and chat apps cut off or reject addresses far shorter than that. A tank therefore needs an id before it can be linked, and it gets one by being published.
 
 **Enter tank code.** A code comes into the game through a window, not through an address.
 
 - **Where.** The menu, the library, the editor and the arena each have an "enter tank code" button.
-- **What it does.** The player pastes a code and sees the tank drawn with its stats. From there: copy to my library, open in editor, or try it in the arena.
+- **What it does.** The player pastes a code and sees the tank drawn with its stats. From there: copy to my library, open in editor, or try it in the arena (driven if it is a player-role tank, as the opponent if it is an enemy-role tank, under the role rule in workstream G).
 - **Both kinds of code.** A full code shows the tank it holds. A workshop reference opens that tank's workshop page.
 - **Kept across a reload.** A tank entered from a code is held on the device as a draft, so reloading the editor or the arena keeps it. It joins the library only when the player saves it.
 - **A bad code** says what is wrong with it and changes nothing.
@@ -321,22 +338,22 @@ Four phases come before any V2 feature. Tests first pin what the game does today
 
 ### What exists today
 
-Counted from the files at commit `12bf09d`. Nothing was run, so pass rates and run times are unknown.
+Counted from the files at `classic-v1` (`5d2eb72`). Nothing was run, so pass rates and run times are unknown.
 
-- **Rule tests.** 884 test declarations in 135 files under `tests/`, run by `bun run check`. This counts declarations in the source, not tests executed; some are repeated over several inputs. They exercise the engine without a browser, and none import a React component. A few need the original SWF and skip without it.
-- **Browser tests.** 290 test declarations in 114 files under `e2e/`, run by `bun run test:e2e` one at a time against a production build.
-- **CI.** Runs the format check, the TypeScript check, the rule tests, a production build and the browser tests with "mock" or "synthetic" in their title, which is about 132 of the 290 by a count of titles. The rest do not run in CI. Most of them need the original SWF, which is never committed.
+- **Rule tests.** About 1,120 test declarations in 172 files under `tests/`, run by `bun run check`. This counts declarations in the source, not tests executed; some are repeated over several inputs. They exercise the engine without a browser, and none import a React component. Five files have tests that need an outside research file, three of them the original SWF, and skip without it (`test.skipIf`).
+- **Browser tests.** 160 test declarations in 121 files under `e2e/`, run by `bun run test:e2e` one at a time against a production build. About 106 of the files declare their tests inside a loop that runs each one twice, on the stand-in artwork and on the original SWF; the SWF variant skips when the file is absent. 139 declarations have "mock" or "synthetic" in their title. How many cases the loops expand to was not counted.
+- **CI.** On pull requests: the format check, the TypeScript check, the rule tests, a production build and a quick stand-in smoke of `e2e/game.spec.ts` (`test:e2e:smoke`). On pushes to `master` and on manual runs, the smoke is replaced by the full offline suite: every browser test with "mock" or "synthetic" in its title, including the long bot playthrough (`test:e2e:offline`). The original-SWF variants never run in CI, because the file is never committed. 21 title templates contain neither word literally. Three of them (in `creator.spec.ts`, `palette.spec.ts` and `placement.spec.ts`) loop over `['mock', 'SWF']`, so their mock cases do run. The other 18 never run in CI; at least two of them use the stand-in artwork, so the offline suite is not every stand-in test.
 - **A full playthrough.** A bot plays a fresh game through to the boss and the win screen from a fixed random seed (`tools/playthrough/`, `e2e/playthrough.spec.ts`). It runs in a browser and checks broad outcomes such as "won" and "reached every level", not the exact course of the run.
-- **Not present.** Coverage measurement, a linter, and fixed versions for five development dependencies (`@playwright/test` and four type packages are set to `latest`).
+- **Not present.** Coverage measurement and a linter. Five development dependencies (`@playwright/test` and four type packages) are set to `latest` in `package.json`; the committed `bun.lock` and CI's `--frozen-lockfile` fix them until someone regenerates the lockfile.
 
 ### Gaps
 
-1. **Nothing pins a whole run exactly.** The tests check individual rules and layouts. A restructure of `World` (1,359 lines) could change the order of one random draw, alter every later encounter, and still pass them all.
+1. **Nothing pins a whole run exactly.** The tests check individual rules and layouts. A restructure of `World` (1,483 lines) could change the order of one random draw, alter every later encounter, and still pass them all.
 2. **A run cannot be replayed exactly today.** Three things stand in the way:
    - **Shared random numbers.** The background particles draw from the same random-number generator as the rules (`src/components/game-shell.tsx`), so a visual effect changes which enemies appear.
    - **Rules that read the artwork.** In the browser, hits, tank widths, shield sizes and shot outlines come from the loaded artwork through six hooks (`src/components/game-viewport.tsx`), and hit tests also take the zoom setting. Without a browser the engine falls back to rough approximations, so it plays a slightly different game.
    - **Real time and side commands.** Some timers advance on real elapsed time, and choices such as an upgrade pick are sent outside the per-step input record.
-3. **Many tests pin the classic presentation.** 39 of the 114 browser test files refer to the 550×450 stage or the original-size switch (a text count), and V2 replaces those screens on purpose. A failing test must say clearly whether something broke or something was meant to change.
+3. **Many tests pin the classic presentation.** About 30 of the 121 browser test files refer to the 550×450 stage or the original-size switch (a text count), and V2 replaces those screens on purpose. A failing test must say clearly whether something broke or something was meant to change.
 4. **Nothing covers what V2 adds:** other window shapes, touch, gamepad, save and restore, the new tank code, the backend.
 5. **Coverage is unknown.** Nobody has measured which engine code no test reaches.
 
@@ -349,8 +366,8 @@ Counted from the files at commit `12bf09d`. Nothing was run, so pass rates and r
   - Build a tank in the editor, save it and load it.
   - Change settings and key bindings, reload the page and find them kept.
   - Journeys reach the page through shared helpers. When V2 replaces a screen, the helpers change and the journey stays.
-- **Sort the tests.** Mark each test file as **engine** (rules that V2 keeps) or **classic presentation** (exact layouts, pixel comparisons, the 550×450 stage, the original artwork). The mark decides what a failure means later.
-- **CI.** Add the journeys. Fix the versions of the development dependencies, so a tool update cannot change results in the middle of a restructure.
+- **Sort the tests.** Mark each test file as **engine** (rules that V2 keeps) or **classic presentation** (exact layouts, pixel comparisons, the 550×450 stage). The mark decides what a failure means later.
+- **CI.** Add the journeys to the pull-request run. Pin the five `latest` development dependencies in `package.json`, so regenerating the lockfile cannot change results in the middle of a restructure.
 - **The bot playthrough stays** as the only whole-run check until recorded runs exist.
 
 ### Phase 2: self-contained rules
@@ -381,9 +398,9 @@ The code is restructured so each V2 workstream has a place to attach. Each item 
 
 | Change | Prepares |
 | --- | --- |
-| **One source for the stage size.** The numbers 550, 450, 275 and 225 appear on about 70 lines across 28 source files (a text count, so a few may be unrelated). Replace them with two named things: the simulation box and the visible area. Both start at 550×450. | A |
+| **One source for the stage size.** The numbers 550, 450, 275 and 225 appear on about 70 lines across 29 source files outside `src/game/data` (a text count, so a few may be unrelated). Replace them with two named things: the simulation box and the visible area. Both start at 550×450. | A |
 | **One place that decides sharpness.** Canvas resolution and the size artwork is drawn at come from one service, set to today's values. | A |
-| **Split the asset loader.** `src/game/assets/asset-pack.ts` (1,567 lines) is separated into the music reader, the stand-in artwork, drawing and caching. The artwork reader is already gone by then (section 3), and removing it at the cut needs part of this split first. | A, D, J |
+| **Split the asset loader.** `src/game/assets/asset-pack.ts` (1,640 lines) is separated into the music reader, the stand-in artwork, drawing and caching. The part that separates the music reader is done early, at the cut (section 3, step 4), because removing the artwork reader needs it. The rest happens here. | A, D, J |
 | **Input as actions.** Devices produce the same per-step input record the simulation already takes. Keyboard and mouse become the first device, with identical output. | B |
 | **Handling and tier tables as data.** Speed, armor and size tables stop assuming six tiers. Values stay the same. | B, I, K |
 | **World state inventory.** List everything a run holds and separate plain data from the callbacks and timers attached to it. Saving and restoring is workstream C, not this phase. | C |
@@ -403,7 +420,7 @@ The code is restructured so each V2 workstream has a place to attach. Each item 
 ### During the V2 workstreams
 
 - **Engine tests and recorded runs** must stay green unless the change is meant to alter the rules. Then the test or recording is updated in the same change, with the reason stated. Workstream K is the first such change.
-- **Classic presentation tests** are retired when their screen or the original-artwork code is removed. Each retirement is named in the change that causes it, and the replacement gets a journey or its own tests.
+- **Classic presentation tests** are retired when their screen is removed. Each retirement is named in the change that causes it, and the replacement gets a journey or its own tests.
 - **The wide view should not need a re-record.** The simulation keeps its 550×450 box, so the same inputs must give the same run. This shows the wide view did not leak into the rules. It does not show that players have the same reach as before (workstream A).
 
 **Tests each workstream adds.**
@@ -514,7 +531,7 @@ Classic's "Continue" restores design progression only. V2 must resume the run.
 - **Part order is kept.** It is the layer order, so it is part of the build.
 - **Plain and compact.** No encryption. A packed, URL-safe encoding with a format version at the front. Compression may be added on top; a build's identity is taken before compression.
 - **Identity.** A hash of the canonical data identifies a build. It tells whether a library entry is unchanged, and it is the key for drawn-picture caches.
-- **Classic codes.** V2 does not write them. The 75 built-in tanks are converted once from their classic codes to the V2 format and stay built-in tanks; the stats stored in the classic codes are dropped and calculated from the build (workstream K). Reading a classic code that a player pastes is optional and low priority.
+- **Classic codes.** V2 does not write them. The 75 built-in tanks are converted once from their classic codes to the V2 format and stay built-in tanks. The stats stored in the classic codes are dropped and calculated from the build (workstream K), except for the boss, whose hand-set stats are kept as trusted game data outside the tank code. Imported and published tanks cannot carry such overrides. Reading a classic code that a player pastes is optional and low priority.
 
 **Links and codes.** A link names a published tank by its id and opens it with "subscribe", "copy to library", "open in editor" and "try it". A full code is never put in a link, because large tanks make it too long. It is copied as text and pasted into the game's "enter tank code" window, which needs no server. The addresses, the ways a link names a tank, the code window and the share button are set out in section 4.
 
@@ -536,7 +553,7 @@ A new editor at `/editor`, built on the existing editor rule modules (`src/game/
 - Touch-friendly palette and controls. The classic creator's 20-pixel palette rows are too small for phones.
 - Drafts save automatically.
 - **Live stats.** A panel shows the calculated tier, size and distance to the next tier, health, speed, turn rate, weapon points used and allowed, the level from which the tank can be used, and difficulty, updating as parts are placed (workstream K). The classic sliders for an enemy's life, reward and speed are removed.
-- **Test** opens the arena as the current tank and returns to the editor exactly as it was, undo history included. An unfinished design says what is missing instead of failing.
+- **Test** opens the arena with the current tank and returns to the editor exactly as it was, undo history included. Under the role rule (workstream G), a player-role design is driven, and an enemy-role design becomes the opponent of the player's last-used tank (the basic tank if there is none). An unfinished design says what is missing instead of failing.
 - **Only your own tanks can be edited.** A subscribed workshop tank must first be copied to the library.
 - **Publish** sends the tank to the workshop. The button arrives with workstream G.
 
@@ -546,7 +563,7 @@ Possible later addition on wide screens: editor and live arena side by side.
 
 **Test arena.** One field with no waves, upgrades or game over.
 
-- **Opponents.** Spawn any tank on demand: built-in roster or library. Workshop tanks join when workstream G exists.
+- **Opponents.** Spawn any enemy-role tank on demand (role rule, workstream G): built-in roster or library. Workshop tanks join when workstream G exists.
 - **Damage.** A practice target that does not die and reports damage per hit, per second and in total.
 - **Speed.** A live movement-speed readout with the tank's stats.
 - **Controls.** Invulnerability, enemy fire on or off, restart, slow motion.
@@ -582,7 +599,7 @@ The engine already supports the core of this: a world can start with a chosen ta
 - **Use is the rating.** There are no star ratings. A tank's standing is how much it is played.
 - **Two figures.** Overall use since publication, and recent use. Recent means the past 30 days (decided).
 - **Versions share the figures.** A new version does not reset anything. If an update makes the tank worse or better, the recent figure shows it.
-- **Easy to inflate.** A counter like this can be pushed up by a script. That is accepted for now. Cheap protections only: one use per tank per device per day, limits per address, a unique id per run so a resend is not counted twice, and a time limit on late offline reports.
+- **Easy to inflate.** A counter like this can be pushed up by a script. That is accepted for now. Cheap protections only: request limits per device and per address, a unique id per run so a resend is not counted twice, and a time limit on late offline reports. There is no daily cap per device: each run counts once, as below.
 
 **Use count.**
 
@@ -617,6 +634,7 @@ The engine already supports the core of this: a world can start with a chosen ta
 **Packs.**
 
 - **Weekly top pack.** The most used tanks of the past seven days, 10 per tier with the number adjustable: up to 60 tanks across six tiers and 80 with tiers 7 and 8. One click installs it as an enemy source.
+- **Role rule (decided 2026-11-16).** The pack ranks enemy-role tanks only, because the role flag decides how weapons are registered and the enemy roster skips player tanks (`waves.ts`). The same restriction applies everywhere a role matters: enemy sources and arena opponents take enemy-role tanks; driving, "play now" and upgrade choices take player-role tanks. A tank page offers only the actions its role allows. Using a build in the other role would need its own design, because weapons are registered by side (`src/game/simulation/tank.ts`).
 - **Ranking.** By uses in that week where players chose the tank themselves. Uses that came from a pack are left out, or pack tanks would keep their place indefinitely. Ties go to the tank with the higher overall use since publication (decided). If that is also equal, the tank published first gets the place.
 - **Which version.** The latest version of each tank at the moment the pack is built. The pack keeps that version whatever is published later.
 - **Schedule.** A job builds the pack every Friday at 06:00 UTC, so it is ready for the weekend. Nobody curates it by hand.
@@ -661,7 +679,7 @@ The engine already supports the core of this: a world can start with a chosen ta
 
 - **Today** it offers at most three tanks: one default each for the tier below, the same tier and the tier above (`getOffers` in `src/game/simulation/world.ts`).
 - **V2** shows every tank the player can use at the new level: built-in tanks, their own tanks and subscribed workshop tanks. There can be many, so the screen needs grouping by tier, scrolling and a search or favorites.
-- **Usable** means the tank's tier is unlocked, its weapons are unlocked and its weapon points fit the level's budget.
+- **Usable** means the tank is a player-role tank (role rule, workstream G), its tier is unlocked, its weapons are unlocked and its weapon points fit the level's budget.
 
 ### I. Further gameplay
 
@@ -671,14 +689,14 @@ The direction is decided. The details are designed during implementation.
 
 - **Very large tanks.** The wide view gives room for tanks far bigger than classic's largest, with larger weapons to match.
 - **Tier follows size**, like tiers 1 to 6, with a balance between tiers.
-- **What it touches.** The size thresholds and the speed, armor and weapon-budget tables in `src/game/core/constants.ts` have six entries today. A run has levels 0 to 6 and must grow to level 8. The editor's workspace, the camera zoom and the enemy waves (written for tiers 1 to 6) all need to reach tier 8. Larger weapons are new parts and need new artwork.
+- **What it touches.** The size thresholds and the speed, armor and weapon-budget tables in `src/game/core/constants.ts` have six entries today. A run has levels 0 to 6 and must grow to level 8. Tiers 7 and 8 open only after the first boss is beaten (section 2), so the run continues past the boss instead of ending at the win screen. The editor's workspace, the camera zoom and the enemy waves (written for tiers 1 to 6) all need to reach tier 8. Larger weapons are new parts and need new artwork.
 - **Fields.** A field has one fixed size today (`FIELD_RADIUS`). Tier 8 tanks may need larger fields. A wider screen shows more but does not make the field bigger.
 - **Not checked.** How the game performs with tanks of that size on a phone.
 
 **Upgrade protection.**
 
 - **Today.** A full health bar upgrades the tank. The new tank starts with about 1% of its new bar: 2 of 100 at level 1 and 27 of 2,000 at level 6 (`rebuildPlayer` in `src/game/simulation/world.ts`). One hit usually kills it. Death drops the player a level with the bar one point short of full, so the next pickup upgrades again and the cycle repeats.
-- **Change.** In V2 an upgraded tank starts with a full health bar (workstream K). That ends the cycle.
+- **Change.** In V2 an upgraded tank starts with a full health bar (workstream K). That ends the cycle. The intent is that a fresh tank survives several hits; whether it does depends on the health formulas and the enemies' weapons, which are tuned through play rather than guaranteed now.
 - **No invulnerability.** The player can still be hit and can still lose the tank under heavy fire.
 - **Dropped.** A temporary buffer of extra health after an upgrade was considered. With full health on upgrade it is not needed.
 
@@ -697,7 +715,7 @@ The direction is decided. The details are designed during implementation.
 
 ### J. Own artwork
 
-V2 is built on its own artwork. The current stand-in artwork is kept until the rebrand.
+V2 is built on its own artwork. The current stand-in artwork is kept through the rename and the cut, until the artwork overhaul before the public launch.
 
 **What exists today.** A "mock" mode that plays without the original file: translucent bubble bodies, yellow and orange weapons, drawn projectiles and synthesized sound effects, with quiet looping tones in place of music. It covers all 20 body parts and has numeric layouts for the other 73 parts.
 
@@ -756,6 +774,7 @@ So the existing suggestion is a reasonable starting formula for life and reward,
 - **Growth bar.** It fills from collected bubbles. When it is full the tank upgrades. Hits never reduce it. Its length depends on the run's level; the starting values are today's bar lengths (50, 100, 170, 250, 400, 800 and 2,000).
 - **Upgrade.** The new tank starts with full health and an empty growth bar.
 - **Health reaches zero.** The tank is downgraded one level. The earlier tank starts with full health and an empty growth bar.
+- **Boss trigger.** Today the boss appears once the player's health reaches 1,000 at level 5 or above (`src/game/simulation/world.ts`). With health from the build, a small late-game tank might never reach it. K replaces every progression check that reads the old bar, including this one, with level and growth (proposed, section 9). The bot playthrough must still reach the boss and the win screen.
 - **At the lowest level** there is nothing to downgrade to. Classic moves the player to a neighboring field with one point of health. What V2 does there is settled during implementation.
 
 **How bubbles are shared.** Enemies drop bubbles worth their reward, and each bubble heals by its value today. With two bars there are several ways to use them:
@@ -789,7 +808,7 @@ So a small tank with late-game weapons is already possible, within its smaller b
 
 ## 8. Order and dependencies
 
-1. **Rebrand and cut** (section 3), after classic is wrapped up: the baseline in the old repository, the cleanup on a `v2` branch, and the new repository started from one squashed commit.
+1. **Rebrand and cut** (section 3), after classic is wrapped up: securing the name, the baseline in the old repository, the cleanup and the removal of the original-artwork reader on a `v2` branch, the license and contributor agreement, and the new repository started from one squashed commit.
 2. **Safety net** (section 5, phase 1), the rest of it. The baseline is already taken in step 1.
 3. **Self-contained rules** (phase 2). Small deliberate rule changes; includes the size calculation.
 4. **Recorded runs** (phase 3).
@@ -813,11 +832,33 @@ Delivery follows the five-PR stacks in `docs/delivery.md` unless that policy is 
 
 ## 9. Open questions
 
-Open since the 2026-11-15 revision (section 3):
+**To settle before or during the cut** (section 3):
 
-- **Contributor agreement text.** Which template is used (section 2). To settle before the first outside contribution is merged.
+- **Contributor agreement template.** Chosen before cut step 5, because the agreement text is part of the first commit.
+- **Open cleanup rows.** Provenance comments, the import and reference tools, the decompiled names and hashes in the imported display data, and the credits screen and series menu. Settled before cut step 3 finishes.
+- **License version form.** `AGPL-3.0-only` or `AGPL-3.0-or-later`. Needed for `README.md`, the `license` field in `package.json` (none today) and any file headers.
+- **Original sound effects.** Whether the original file's sound effects are still read along with the music. Sections 2 and J keep the music only; `e2e/feedback.spec.ts` tests both.
 
-Settled on 2026-11-15: the `v2` branch lives in the old repository, the code that reads original artwork is removed at the cut, and the built-in tanks are converted to the V2 format. The trademark register search is left undone by decision (section 10).
+**Undecided, needed later:**
+
+- What stays at the current address (section 2).
+- The monthly cost ceiling for the VPS and CDN (section 4).
+- How tiers 7 and 8 open after the first boss: together, or tier 8 at a later level (section 2, workstream I).
+- What happens when health reaches zero at the lowest level (workstream K).
+- How the test arena's mode without waves and progression is built (workstream F).
+- How link preview pages are routed on the same site address (workstream D).
+
+**Proposed, not yet confirmed:**
+
+- The store texts and tags (section 3).
+- The address spellings (section 4).
+- The V2 tank code format; its determinism is decided (workstream D).
+- The boss trigger moves from the old health bar to level and growth, with K.
+- The cleanup rows added in the 2026-11-16 review that are not marked open, each marked "proposed" in the table: renaming `BT3` identifiers, removing the 18 other classic work notes, rewriting `docs/delivery.md` and this plan, replacing `src/app/icon.svg`, and keeping the test fixtures in `tools/`.
+
+Decided on 2026-11-16: a use counts once per run, with no daily cap per device; the role rule (workstream G); the license is AGPL-3.0, with the kept original content named as excluded; full health after an upgrade, with survival of several hits tuned later rather than guaranteed now; tiers 7 and 8 open only after the first boss; no trademark search before the rename.
+
+Settled on 2026-11-15: the `v2` branch lives in the old repository, the code that reads original artwork is removed at the cut, and the built-in tanks are converted to the V2 format (after the cut, in workstreams D and K).
 
 The smaller proposals were all confirmed on 2026-11-14: the 30-day recent window, the aim-reach limit, names with a per-version change log, and weekly-pack ties going to the tank with the higher overall use.
 
@@ -826,7 +867,7 @@ Left for the implementation phase, by decision: the balance between tiers, the s
 ## 10. Not verified
 
 - Pass rates and run times of the existing tests.
-- The browser test counts as executed, and the text counts of stage-size references.
+- The browser test counts as executed (how many cases the loops expand to), and the text counts of stage-size references and of presentation tests.
 - Whether the bot and the engine run identically inside and outside a browser once phase 2 is done, and how fast.
 - Which built-in tanks change tier under a size calculation without artwork.
 - Whether any rule treats off-screen enemies as inactive.
@@ -835,5 +876,8 @@ Left for the implementation phase, by decision: the balance between tiers, the s
 - Performance of tier 8 tanks on a phone.
 - The length of a V2 full code for large tanks. It no longer limits links, but a very long code may still be awkward to paste into some chat apps.
 - Which browsers offer a share window. The copy panel is the fallback.
-- Whether "Soap Tank" is free in the trademark registers, what the domains cost at a registrar, and the file counts in the cleanup table, which are text counts.
+- Whether "Soap Tank" is free in the trademark registers (not searched, by decision), and the file counts in the cleanup table, which are text counts.
+- Whether CLA Assistant can be linked to a repository while it is private. If not, it is linked at the moment the repository is made public, before any outside pull request is accepted.
+- What the music reader depends on, and so how much of the asset loader must be split at the cut.
+- Whether the kept content may be published under these terms. No legal review has been done.
 - itch.io's current tag list and Discord's length limit for a server description.
