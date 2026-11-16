@@ -1,9 +1,7 @@
-import { Container, Graphics, Matrix, Sprite } from 'pixi.js';
-import type { AssetPack } from '../assets/asset-pack';
+import { Container, Graphics, Matrix } from 'pixi.js';
 import type { Field } from '../core/types';
 import type { FieldDisplayRead } from '../simulation/field-display';
 import type { FieldTransform } from './field-transform';
-import type { RasterTextures } from './swf-symbol-view';
 
 export interface LowerEffectMaskPaint {
   readonly field: Field;
@@ -21,36 +19,12 @@ export class FieldLowerEffectsView {
   readonly maskSlot = new Container();
   private readonly instances: number[];
   private readonly matrix = new Matrix();
-  constructor(read: FieldDisplayRead, assets: AssetPack, textures: RasterTextures) {
+  constructor(read: FieldDisplayRead) {
     this.instances = [read.root.id, read.slots.underMask.id, read.bottom.id];
     this.root.addChild(this.maskSlot, this.content);
-    if (assets.mode === 'mock') {
-      const mask = new Graphics().circle(0, 0, 423.75).fill(0xffffff);
-      this.maskSlot.addChild(mask);
-      this.content.mask = mask;
-      return;
-    }
-    const placements = assets.displayList(read.slots.underMask.symbol, 1);
-    const p = placements[0];
-    if (
-      placements.length !== 1 ||
-      p?.charId !== 1538 ||
-      p.matrix.a !== 1 ||
-      p.matrix.d !== 1 ||
-      p.matrix.b !== 0 ||
-      p.matrix.c !== 0 ||
-      p.matrix.tx !== 0 ||
-      p.matrix.ty !== 0
-    )
-      throw new Error('Unsupported native lower-effect mask placement');
-    const raster = assets.leaves.get(1538);
-    if (!raster) throw new Error('Missing runtime lower-effect mask artwork');
-    const mask = new Sprite(textures.get(raster));
-    mask.position.set(raster.x, raster.y);
-    mask.width = raster.width;
-    mask.height = raster.height;
+    const mask = new Graphics().circle(0, 0, 423.75).fill(0xffffff);
     this.maskSlot.addChild(mask);
-    this.content.setMask({ mask, channel: 'alpha' });
+    this.content.mask = mask;
   }
   update({ read, transform }: LowerEffectMaskPaint) {
     if (

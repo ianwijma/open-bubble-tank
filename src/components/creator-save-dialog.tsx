@@ -12,7 +12,7 @@ import {
 } from '@/game/core/creator-dialogs';
 import { community } from '@/game/services/extensions';
 import { encodeTankCode } from '@/game/services/tank-code';
-import { CreatorRasterArt, CreatorPrimitives } from './creator-controls';
+import { CreatorPrimitives } from './creator-controls';
 import { CreatorText } from './creator-text';
 function ScreenButton({
   pack,
@@ -29,8 +29,7 @@ function ScreenButton({
 }) {
   const [state, setState] = useState<'up' | 'over' | 'down'>('up');
   const b = piece.bounds,
-    m = piece.matrix,
-    raster = pack.creatorFrames.get(`dialog:${piece.symbol}:${state}`);
+    m = piece.matrix;
   return (
     <button
       className="creator-dialog-button"
@@ -57,18 +56,14 @@ function ScreenButton({
       onBlur={() => setState('up')}
       onClick={onClick}
     >
-      {raster ? (
-        <CreatorRasterArt raster={raster} offsetX={-b.x} offsetY={-b.y} />
-      ) : (
-        <svg
-          aria-hidden="true"
-          viewBox={`${b.x} ${b.y} ${b.width} ${b.height}`}
-          width={b.width}
-          height={b.height}
-        >
-          <CreatorPrimitives pieces={piece.variants[state]} />
-        </svg>
-      )}
+      <svg
+        aria-hidden="true"
+        viewBox={`${b.x} ${b.y} ${b.width} ${b.height}`}
+        width={b.width}
+        height={b.height}
+      >
+        <CreatorPrimitives pieces={piece.variants[state]} />
+      </svg>
       {piece.fields[state].map((field) => (
         <CreatorText
           key={field.name}
@@ -140,8 +135,7 @@ export function CreatorSaveDialog({
       cancelled = true;
     };
   }, [saved]);
-  const screen = creatorDialogFrame(frame),
-    raster = pack.creatorFrames.get(`dialog:${frame}`);
+  const screen = creatorDialogFrame(frame);
   const fieldValue = (key: string, initial = '') =>
     key === 'author_txt'
       ? author
@@ -243,13 +237,9 @@ export function CreatorSaveDialog({
         }
       }}
     >
-      {raster ? (
-        <CreatorRasterArt raster={raster} />
-      ) : (
-        <svg aria-hidden="true" width={550} height={450}>
-          <CreatorPrimitives pieces={screen.art} />
-        </svg>
-      )}
+      <svg aria-hidden="true" width={550} height={450}>
+        <CreatorPrimitives pieces={screen.art} />
+      </svg>
       {screen.fields.map((field) => {
         const text = fieldValue(field.name, field.initialText);
         if (field.name === 'data_txt')

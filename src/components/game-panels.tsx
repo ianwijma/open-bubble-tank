@@ -1,11 +1,8 @@
 'use client';
-import { useState } from 'react';
-import type { AssetPack } from '@/game/assets/asset-pack';
 import { Dialog } from './ui';
 import { HUD } from '@/game/core/hud';
 
-export function SecondaryHelpPanel({ pack, onClose }: { pack: AssetPack; onClose: () => void }) {
-  const [hovered, setHovered] = useState(false);
+export function SecondaryHelpPanel({ onClose }: { onClose: () => void }) {
   const copy = (
     <>
       You have a secondary weapon
@@ -21,38 +18,16 @@ export function SecondaryHelpPanel({ pack, onClose }: { pack: AssetPack; onClose
   return (
     <Dialog title="Secondary weapon help" className="stage-dialog secondary-help-screen">
       <p className="sr-only">{copy}</p>
-      {pack.mode === 'mock' ? (
-        <div className="secondary-help-copy" aria-hidden="true">
-          {copy}
-        </div>
-      ) : null}
-      {HUD.secondaryHelp.map((piece) => {
-        const button = piece.name === 'close_mc';
-        const raster = pack.uiFrames.get(piece.symbol)?.[button && hovered ? 1 : 0];
-        const art = raster ? (
-          <img
-            alt=""
-            src={raster.url}
-            style={{
-              position: 'absolute',
-              left: button ? raster.x - piece.bounds.x : piece.x + raster.x,
-              top: button ? raster.y - piece.bounds.y : piece.y + raster.y,
-              width: raster.width,
-              height: raster.height,
-              pointerEvents: 'none',
-            }}
-          />
-        ) : null;
-        return button ? (
+      <div className="secondary-help-copy" aria-hidden="true">
+        {copy}
+      </div>
+      {HUD.secondaryHelp.map((piece) =>
+        piece.name === 'close_mc' ? (
           <button
             key={piece.symbol}
             className="secondary-help-close"
             aria-label="Close secondary weapon help"
             onClick={onClose}
-            onPointerEnter={() => setHovered(true)}
-            onPointerLeave={() => setHovered(false)}
-            onFocus={() => setHovered(true)}
-            onBlur={() => setHovered(false)}
             style={{
               left: piece.x + piece.bounds.x,
               top: piece.y + piece.bounds.y,
@@ -60,28 +35,17 @@ export function SecondaryHelpPanel({ pack, onClose }: { pack: AssetPack; onClose
               height: piece.bounds.height,
             }}
           >
-            {art ?? 'Close'}
+            Close
           </button>
         ) : (
-          <span key={piece.symbol} aria-hidden="true">
-            {art}
-          </span>
-        );
-      })}
+          <span key={piece.symbol} aria-hidden="true" />
+        ),
+      )}
     </Dialog>
   );
 }
 
-export function EditConfirmPanel({
-  pack,
-  onYes,
-  onNo,
-}: {
-  pack: AssetPack;
-  onYes: () => void;
-  onNo: () => void;
-}) {
-  const [hovered, setHovered] = useState('');
+export function EditConfirmPanel({ onYes, onNo }: { onYes: () => void; onNo: () => void }) {
   return (
     <Dialog title="Edit your tank?" className="stage-dialog edit-confirm-screen" onClose={onNo}>
       <p className="sr-only">
@@ -90,63 +54,27 @@ export function EditConfirmPanel({
       </p>
       {HUD.editConfirm.map((piece) => {
         const label = piece.name === 'yes_btn' ? 'YES' : piece.name === 'no_btn' ? 'NO' : '';
-        const raster = pack.uiFrames.get(piece.symbol)?.[hovered === label && label ? 1 : 0];
-        if (label)
-          return (
-            <button
-              key={piece.symbol}
-              className="edit-confirm-button"
-              aria-label={label}
-              onClick={label === 'YES' ? onYes : onNo}
-              onPointerEnter={() => setHovered(label)}
-              onPointerLeave={() => setHovered('')}
-              onFocus={() => setHovered(label)}
-              onBlur={() => setHovered('')}
-              style={{
-                left: piece.x + piece.bounds.x,
-                top: piece.y + piece.bounds.y,
-                width: piece.bounds.width,
-                height: piece.bounds.height,
-              }}
-            >
-              {raster ? (
-                <img
-                  alt=""
-                  src={raster.url}
-                  style={{
-                    position: 'absolute',
-                    left: raster.x - piece.bounds.x,
-                    top: raster.y - piece.bounds.y,
-                    width: raster.width,
-                    height: raster.height,
-                  }}
-                />
-              ) : (
-                label
-              )}
-            </button>
-          );
-        return raster ? (
-          <img
+        return label ? (
+          <button
             key={piece.symbol}
-            alt=""
-            className="edit-confirm-art"
-            src={raster.url}
+            className="edit-confirm-button"
+            aria-label={label}
+            onClick={label === 'YES' ? onYes : onNo}
             style={{
-              left: piece.x + raster.x,
-              top: piece.y + raster.y,
-              width: raster.width,
-              height: raster.height,
+              left: piece.x + piece.bounds.x,
+              top: piece.y + piece.bounds.y,
+              width: piece.bounds.width,
+              height: piece.bounds.height,
             }}
-          />
+          >
+            {label}
+          </button>
         ) : null;
       })}
-      {pack.mode === 'mock' ? (
-        <div className="edit-confirm-copy" aria-hidden="true">
-          <p>Are you sure you want to edit your tank?</p>
-          <p>Your bubble total will restart at the last upgrade point.</p>
-        </div>
-      ) : null}
+      <div className="edit-confirm-copy" aria-hidden="true">
+        <p>Are you sure you want to edit your tank?</p>
+        <p>Your bubble total will restart at the last upgrade point.</p>
+      </div>
     </Dialog>
   );
 }

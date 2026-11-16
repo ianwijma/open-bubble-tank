@@ -816,10 +816,6 @@ kbd {
   border: 0;
   box-shadow: none;
 }
-.edit-confirm-art {
-  position: absolute;
-  pointer-events: none;
-}
 .edit-confirm-button {
   position: absolute;
   border: 0;
@@ -830,9 +826,6 @@ kbd {
   font:
     15px Arial,
     sans-serif;
-}
-.edit-confirm-button:has(img) {
-  background: transparent;
 }
 .edit-confirm-copy {
   position: absolute;
@@ -1055,9 +1048,6 @@ kbd {
 .secondary-help-close:focus-visible {
   background: #000b;
   color: #fff;
-}
-.secondary-help-close:has(img) {
-  background: transparent;
 }
 .pause-title {
   position: absolute;
@@ -1362,12 +1352,6 @@ kbd {
   position: absolute;
   inset: 0;
   z-index: 1;
-}
-.creator-workspace-rings {
-  position: absolute;
-  max-width: none;
-  pointer-events: none;
-  user-select: none;
 }
 .creator-workspace > canvas {
   position: absolute;

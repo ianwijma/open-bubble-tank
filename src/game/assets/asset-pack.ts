@@ -132,9 +132,6 @@ function matrixAttr(m: Matrix) {
 export class AssetPack {
   readonly mode: 'mock';
   frames = new Map<number, Raster[]>();
-  extras = new Map<number, Raster>();
-  uiFrames = new Map<number, Raster[]>();
-  creatorFrames = new Map<string, Raster>();
   leaves = new Map<number, Raster>();
   private sprites = new Map<number, SpriteInfo>();
   private shapes = new Map<number, ShapeInfo>();
@@ -695,9 +692,6 @@ export class AssetPack {
     this.partClips = new WeakMap();
     this.infections = new WeakMap();
     this.forcefieldClones = new WeakMap();
-    this.extras.clear();
-    this.uiFrames.clear();
-    this.creatorFrames.clear();
   }
 }
 export function alphaHit(r: Raster, x: number, y: number) {

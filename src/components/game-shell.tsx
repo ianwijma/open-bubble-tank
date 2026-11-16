@@ -197,7 +197,7 @@ export default function GameShell() {
     next.onUpgradeMenuOpen = () => openUpgradeMenu(next, true);
     next.onWinScreenOpen = () => {
       if (!pack || winRef.current) return;
-      const screen = new WinScreen(stage, winShade(pack), (action) => {
+      const screen = new WinScreen(stage, winShade(), (action) => {
         if (winRef.current !== screen) return;
         winRef.current = null;
         setWin(null);
@@ -496,7 +496,6 @@ export default function GameShell() {
                 ) : null}
                 {screen === 'game' && world.mode === 'secondary-help' ? (
                   <SecondaryHelpPanel
-                    pack={pack}
                     onClose={() => {
                       world.closeSecondaryHelp();
                       refresh();
@@ -505,7 +504,6 @@ export default function GameShell() {
                 ) : null}
                 {screen === 'game' && overlay === 'edit-confirm' ? (
                   <EditConfirmPanel
-                    pack={pack}
                     onYes={() => {
                       world.offers = world.getOffers();
                       upgradeRef.current?.menu.setupOffers(

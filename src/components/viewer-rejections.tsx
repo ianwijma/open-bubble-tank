@@ -4,7 +4,7 @@ import type { AssetPack } from '@/game/assets/asset-pack';
 import type { StageRuntime } from '@/game/services/stage-runtime';
 import { TANK_VIEWER } from '@/game/core/tank-viewer';
 import type { ViewerRejections } from '@/game/core/viewer-rejections';
-import { CreatorPrimitives, CreatorRasterArt } from './creator-controls';
+import { CreatorPrimitives } from './creator-controls';
 import { CreatorText } from './creator-text';
 import { ViewerGroup } from './tank-viewer-art';
 
@@ -72,7 +72,6 @@ export function ViewerRejectionEffects({
           <div aria-hidden="true">
             <ViewerGroup matrix={{ a: 1, b: 0, c: 0, d: 1, tx: art.x * 20, ty: art.y * 20 }}>
               {art.pieces.map((piece) => {
-                const raster = pack.creatorFrames.get(`viewer:rejection:${piece.symbol}`);
                 return (
                   <div
                     className="viewer-group"
@@ -81,13 +80,9 @@ export function ViewerRejectionEffects({
                     ref={(node) => layer(effect.id, piece.index, node)}
                   >
                     <ViewerGroup matrix={piece.matrix}>
-                      {raster ? (
-                        <CreatorRasterArt raster={raster} />
-                      ) : (
-                        <svg className="viewer-art" width={1} height={1}>
-                          <CreatorPrimitives pieces={piece.art} />
-                        </svg>
-                      )}
+                      <svg className="viewer-art" width={1} height={1}>
+                        <CreatorPrimitives pieces={piece.art} />
+                      </svg>
                     </ViewerGroup>
                   </div>
                 );

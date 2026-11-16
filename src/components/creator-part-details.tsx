@@ -4,7 +4,7 @@ import type { AssetPack } from '@/game/assets/asset-pack';
 import { CREATOR_PALETTE } from '@/game/core/creator-palette';
 import { creatorDetailText, type CreatorDetailFocus } from '@/game/core/creator-details';
 import { partById } from '@/game/data/catalog';
-import { CreatorPrimitives, CreatorRasterArt } from './creator-controls';
+import { CreatorPrimitives } from './creator-controls';
 import { CreatorText } from './creator-text';
 export function CreatorPartDetails({
   pack,
@@ -22,9 +22,7 @@ export function CreatorPartDetails({
     part = partById(focus.id);
   if (!part) return null;
   const fields = creatorDetailText(part),
-    base = pack.creatorFrames.get('details:static'),
     frame = focus.selected ? 2 : 1,
-    arrow = pack.creatorFrames.get(`details:arrow:${frame}`),
     b = p.arrow.bounds,
     mask = p.arrow.mask;
   const arrowY = focus.rowY - p.origin.ty / 20;
@@ -43,18 +41,14 @@ export function CreatorPartDetails({
         height: p.bounds.height,
       }}
     >
-      {base ? (
-        <CreatorRasterArt raster={base} />
-      ) : (
-        <svg
-          aria-hidden="true"
-          width={p.bounds.width}
-          height={p.bounds.height}
-          style={{ overflow: 'visible' }}
-        >
-          <CreatorPrimitives pieces={p.static} />
-        </svg>
-      )}
+      <svg
+        aria-hidden="true"
+        width={p.bounds.width}
+        height={p.bounds.height}
+        style={{ overflow: 'visible' }}
+      >
+        <CreatorPrimitives pieces={p.static} />
+      </svg>
       {p.fields.map((field) => (
         <CreatorText key={field.name} field={field} text={fields[field.name] ?? ''} />
       ))}
@@ -71,19 +65,15 @@ export function CreatorPartDetails({
             opacity: focus.alpha,
           }}
         >
-          {arrow ? (
-            <CreatorRasterArt raster={arrow} />
-          ) : (
-            <svg
-              aria-hidden="true"
-              width={b.width}
-              height={b.height}
-              viewBox={`${b.x} ${b.y} ${b.width} ${b.height}`}
-              style={{ position: 'absolute', left: b.x, top: b.y }}
-            >
-              <CreatorPrimitives pieces={p.arrow.art[frame - 1]} />
-            </svg>
-          )}
+          <svg
+            aria-hidden="true"
+            width={b.width}
+            height={b.height}
+            viewBox={`${b.x} ${b.y} ${b.width} ${b.height}`}
+            style={{ position: 'absolute', left: b.x, top: b.y }}
+          >
+            <CreatorPrimitives pieces={p.arrow.art[frame - 1]} />
+          </svg>
         </span>
       </span>
       <canvas

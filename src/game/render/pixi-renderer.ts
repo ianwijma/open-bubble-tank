@@ -1,5 +1,5 @@
 import { Application, Container, Graphics, Sprite, Texture } from 'pixi.js';
-import type { AssetPack, Raster } from '../assets/asset-pack';
+import type { AssetPack } from '../assets/asset-pack';
 import { STAGE } from '../core/constants';
 import { DEG } from '../core/math';
 import { MainBackgroundView } from './main-background-view';
@@ -91,10 +91,10 @@ export class GameRenderer {
     this.mapArt.addChild(this.hud.root);
     this.editSlider = new EditSliderView();
     this.mapArt.addChild(this.editSlider.root);
-    this.tacticalHud = new TacticalHudView(this.assets, this.rasterTextures);
+    this.tacticalHud = new TacticalHudView();
     this.mapArt.addChild(this.tacticalHud.root);
     this.captions = new FieldCaptions();
-    this.combatEffects = new CombatEffectsView(this.assets, this.rasterTextures);
+    this.combatEffects = new CombatEffectsView();
     this.screenEffects.addChild(this.combatEffects.screen);
     this.root.addChild(
       this.fields,
@@ -106,45 +106,31 @@ export class GameRenderer {
       this.projectiles,
       this.combatEffects.top,
     );
-    const field = this.assets.extras.get(1537);
-    if (field) this.fieldTexture = this.texture(field);
-    else {
-      const cv = document.createElement('canvas');
-      cv.width = cv.height = 860;
-      const c = cv.getContext('2d')!;
-      const g = c.createLinearGradient(0, 0, 0, 860);
-      g.addColorStop(0, '#0ba5b5');
-      g.addColorStop(1, '#084366');
-      c.beginPath();
-      c.arc(430, 430, 423.75, 0, Math.PI * 2);
-      c.fillStyle = g;
-      c.fill();
-      const rim = c.createRadialGradient(430, 430, 400, 430, 430, 424);
-      rim.addColorStop(0, 'rgba(180,245,255,0)');
-      rim.addColorStop(0.8, 'rgba(180,245,255,.07)');
-      rim.addColorStop(1, 'rgba(210,250,255,.45)');
-      c.fillStyle = rim;
-      c.fill();
-      this.fieldTexture = Texture.from(cv);
-      this.ownedTextures.push(this.fieldTexture);
-    }
-  }
-  private texture(r: Raster) {
-    return this.rasterTextures.get(r);
+    const cv = document.createElement('canvas');
+    cv.width = cv.height = 860;
+    const c = cv.getContext('2d')!;
+    const g = c.createLinearGradient(0, 0, 0, 860);
+    g.addColorStop(0, '#0ba5b5');
+    g.addColorStop(1, '#084366');
+    c.beginPath();
+    c.arc(430, 430, 423.75, 0, Math.PI * 2);
+    c.fillStyle = g;
+    c.fill();
+    const rim = c.createRadialGradient(430, 430, 400, 430, 430, 424);
+    rim.addColorStop(0, 'rgba(180,245,255,0)');
+    rim.addColorStop(0.8, 'rgba(180,245,255,.07)');
+    rim.addColorStop(1, 'rgba(210,250,255,.45)');
+    c.fillStyle = rim;
+    c.fill();
+    this.fieldTexture = Texture.from(cv);
+    this.ownedTextures.push(this.fieldTexture);
   }
   private fieldNode(field: Field) {
     let node = this.fieldNodes.get(field);
     if (!node) {
       node = new Sprite(this.fieldTexture!);
-      const raster = this.assets.extras.get(1537);
-      if (raster) {
-        node.position.set(raster.x * field.scale, raster.y * field.scale);
-        node.width = raster.width * field.scale;
-        node.height = raster.height * field.scale;
-      } else {
-        node.anchor.set(0.5);
-        node.scale.set(field.scale);
-      }
+      node.anchor.set(0.5);
+      node.scale.set(field.scale);
       this.fields.addChild(node);
       this.fieldNodes.set(field, node);
     }
@@ -196,7 +182,7 @@ export class GameRenderer {
       const read = world.fieldDisplays.read(field);
       let view = this.underAvatarNodes.get(field);
       if (!view) {
-        view = new FieldUnderAvatarView(read, this.assets, this.rasterTextures);
+        view = new FieldUnderAvatarView(read);
         this.underAvatarNodes.set(field, view);
         this.underAvatars.addChild(view.root);
       }
@@ -214,19 +200,12 @@ export class GameRenderer {
     }));
     for (const { field } of states) {
       const node = this.fieldNode(field),
-        raster = this.assets.extras.get(1537),
         transform = fieldTransform(world, field, 'background'),
         scale = transform.scale;
       node.visible = world.fieldDisplays.read(field).root.rooted;
       node.alpha = transform.alpha ?? 1;
-      if (raster) {
-        node.position.set(transform.x + raster.x * scale, transform.y + raster.y * scale);
-        node.width = raster.width * scale;
-        node.height = raster.height * scale;
-      } else {
-        node.position.set(transform.x, transform.y);
-        node.scale.set(scale);
-      }
+      node.position.set(transform.x, transform.y);
+      node.scale.set(scale);
     }
     // Setup places HUD last; AttachNewBubblefield raises the screen layer at first crossing.
     const screenInFront = world.transit !== null || world.connections.size > 0;

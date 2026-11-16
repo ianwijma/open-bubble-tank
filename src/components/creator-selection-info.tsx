@@ -5,7 +5,7 @@ import { CREATOR_CONTROLS } from '@/game/core/creator-controls';
 import { CREATOR_PALETTE } from '@/game/core/creator-palette';
 import { creatorWeaponInfoText, type CreatorWeaponIcon } from '@/game/core/creator-details';
 import { partById } from '@/game/data/catalog';
-import { CreatorPrimitives, CreatorRasterArt } from './creator-controls';
+import { CreatorPrimitives } from './creator-controls';
 import { CreatorText } from './creator-text';
 export function CreatorSelectionInfo({
   pack,
@@ -20,8 +20,6 @@ export function CreatorSelectionInfo({
   const active = focus?.icons === icons ? icons.find((i) => i.key === focus.key) : undefined;
   const part = active && partById(active.type),
     p = CREATOR_PALETTE.selectionInfo,
-    icon = pack.creatorFrames.get('selection-info:icon'),
-    popup = pack.creatorFrames.get('selection-info:popup'),
     b = p.icon.bounds;
   const close = () => setFocus(null);
   return (
@@ -49,28 +47,24 @@ export function CreatorSelectionInfo({
             }
           }}
         >
-          {icon ? (
-            <CreatorRasterArt raster={icon} offsetX={-b.x} offsetY={-b.y} />
-          ) : (
-            <svg aria-hidden="true" width={b.width} height={b.height} viewBox="0 0 14.05 15">
-              <rect width={14.05} height={15} fill="white" fillOpacity={0.6} />
-              <path
-                d="M7.5 7.05H2v5.5h5.5V7.05"
-                fill="none"
-                stroke="black"
-                strokeWidth={1}
-                strokeLinejoin="round"
-              />
-              <path
-                d="M4.25 10.3L12.3 2.25M7.45 2.25h4.85v4.3"
-                fill="none"
-                stroke="black"
-                strokeWidth={2}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          )}
+          <svg aria-hidden="true" width={b.width} height={b.height} viewBox="0 0 14.05 15">
+            <rect width={14.05} height={15} fill="white" fillOpacity={0.6} />
+            <path
+              d="M7.5 7.05H2v5.5h5.5V7.05"
+              fill="none"
+              stroke="black"
+              strokeWidth={1}
+              strokeLinejoin="round"
+            />
+            <path
+              d="M4.25 10.3L12.3 2.25M7.45 2.25h4.85v4.3"
+              fill="none"
+              stroke="black"
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
         </button>
       ))}
       {active && part ? (
@@ -89,13 +83,9 @@ export function CreatorSelectionInfo({
           onPointerLeave={close}
           onPointerDown={(e) => e.preventDefault()}
         >
-          {popup ? (
-            <CreatorRasterArt raster={popup} />
-          ) : (
-            <svg aria-hidden="true" width={p.popup.bounds.width} height={p.popup.bounds.height}>
-              <CreatorPrimitives pieces={p.popup.static} />
-            </svg>
-          )}
+          <svg aria-hidden="true" width={p.popup.bounds.width} height={p.popup.bounds.height}>
+            <CreatorPrimitives pieces={p.popup.static} />
+          </svg>
           {p.popup.fields.map((field) => (
             <CreatorText
               key={field.name}

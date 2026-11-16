@@ -9,13 +9,12 @@ import {
   affordabilityHint,
   type PaletteContext,
 } from '@/game/simulation/editor-palette';
-import { CreatorPrimitives, CreatorRasterArt } from './creator-controls';
+import { CreatorPrimitives } from './creator-controls';
 import { CreatorText } from './creator-text';
 
 export function CreatorPaletteFrame({ pack }: { pack: AssetPack }) {
   const p = CREATOR_PALETTE,
     lib = p.library,
-    raster = pack.creatorFrames.get('palette:base'),
     x = p.origin.tx / 20 + lib.matrix.tx / 20,
     y = p.origin.ty / 20 + lib.matrix.ty / 20;
   return (
@@ -25,30 +24,26 @@ export function CreatorPaletteFrame({ pack }: { pack: AssetPack }) {
         aria-hidden="true"
         style={{ left: x, top: y, width: lib.bounds.width, height: lib.bounds.height }}
       >
-        {raster ? (
-          <CreatorRasterArt raster={raster} />
-        ) : (
-          <>
-            <span
-              className="creator-mock-preview-border"
-              style={{
-                left: lib.preview.x + lib.preview.bounds.x - 3,
-                top: lib.preview.y + lib.preview.bounds.y - 3,
-                width: lib.preview.bounds.width + 6,
-                height: lib.preview.bounds.height + 6,
-              }}
-            />
-            <span
-              className="creator-mock-row-border"
-              style={{
-                left: lib.mask.x - 3,
-                top: lib.mask.y - 3,
-                width: lib.mask.width + 6,
-                height: lib.mask.height + 6,
-              }}
-            />
-          </>
-        )}
+        <>
+          <span
+            className="creator-mock-preview-border"
+            style={{
+              left: lib.preview.x + lib.preview.bounds.x - 3,
+              top: lib.preview.y + lib.preview.bounds.y - 3,
+              width: lib.preview.bounds.width + 6,
+              height: lib.preview.bounds.height + 6,
+            }}
+          />
+          <span
+            className="creator-mock-row-border"
+            style={{
+              left: lib.mask.x - 3,
+              top: lib.mask.y - 3,
+              width: lib.mask.width + 6,
+              height: lib.mask.height + 6,
+            }}
+          />
+        </>
       </div>
       <div className="creator-palette-caption" style={{ left: x, top: y }}>
         <CreatorText field={lib.caption} text="Click and Drag Object" />
@@ -84,8 +79,7 @@ export function CreatorPaletteTabs({
         .map((tab) => {
           const selected = category === tab.category,
             frame = selected || hover === tab.category ? 1 : 2,
-            b = tab.bounds,
-            raster = pack.creatorFrames.get(`palette:${tab.name}:${frame}`);
+            b = tab.bounds;
           return (
             <button
               key={tab.category}
@@ -105,19 +99,15 @@ export function CreatorPaletteTabs({
                 if (!selected) onCategory(tab.category);
               }}
             >
-              {raster ? (
-                <CreatorRasterArt raster={raster} offsetX={-b.x} offsetY={-b.y} />
-              ) : (
-                <svg
-                  aria-hidden="true"
-                  viewBox={`${b.x} ${b.y} ${b.width} ${b.height}`}
-                  width={b.width}
-                  height={b.height}
-                  style={{ overflow: 'visible' }}
-                >
-                  <CreatorPrimitives pieces={tab.art[frame - 1]} />
-                </svg>
-              )}
+              <svg
+                aria-hidden="true"
+                viewBox={`${b.x} ${b.y} ${b.width} ${b.height}`}
+                width={b.width}
+                height={b.height}
+                style={{ overflow: 'visible' }}
+              >
+                <CreatorPrimitives pieces={tab.art[frame - 1]} />
+              </svg>
             </button>
           );
         })}
@@ -217,7 +207,6 @@ export function CreatorPaletteRows({
               frame = state.locked ? 4 : selected ? 3 : hover === part.id ? 2 : 1,
               body = part.id < 2000,
               code = p.row.codes[part.id] ?? 1,
-              raster = pack.creatorFrames.get(`palette:row:${frame}:${Number(body)}:${code}`),
               hint = affordabilityHint(part, state.reason),
               color = p.row.states[frame - 1].color;
             return (
@@ -287,22 +276,18 @@ export function CreatorPaletteRows({
                   if (e.detail === 0 && !selected) onChoose(part.id);
                 }}
               >
-                {raster ? (
-                  <CreatorRasterArt raster={raster} />
-                ) : (
-                  <>
-                    <span
-                      className="creator-mock-row-paint"
-                      style={{ background: `rgb(${color.slice(0, 3).join(',')})` }}
-                    />
-                    {!body ? <span className="palette-cost" aria-hidden="true" /> : null}
-                    {code === 3 ? (
-                      <span className="creator-row-indicator" aria-hidden="true">
-                        •••
-                      </span>
-                    ) : null}
-                  </>
-                )}
+                <>
+                  <span
+                    className="creator-mock-row-paint"
+                    style={{ background: `rgb(${color.slice(0, 3).join(',')})` }}
+                  />
+                  {!body ? <span className="palette-cost" aria-hidden="true" /> : null}
+                  {code === 3 ? (
+                    <span className="creator-row-indicator" aria-hidden="true">
+                      •••
+                    </span>
+                  ) : null}
+                </>
                 <CreatorText
                   field={nameField}
                   text={state.locked ? '???' : part.name}
@@ -388,7 +373,6 @@ function PaletteScrollbar({
               ? 2
               : 1,
           b = piece.frameBounds?.[frame - 1] ?? piece.bounds,
-          raster = pack.creatorFrames.get(`palette:${piece.name}:${frame}`),
           m = piece.matrix;
         const style: CSSProperties = {
           left: m.tx / 20,
@@ -398,9 +382,7 @@ function PaletteScrollbar({
           transform: `matrix(${m.a},${m.b},${m.c},${m.d},0,0) translate(${b.x}px,${b.y}px)`,
           transformOrigin: '0 0',
         };
-        const art = raster ? (
-          <CreatorRasterArt raster={raster} offsetX={-b.x} offsetY={-b.y} />
-        ) : (
+        const art = (
           <svg
             aria-hidden="true"
             width={b.width}

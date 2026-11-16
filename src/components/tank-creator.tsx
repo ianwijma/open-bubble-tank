@@ -332,29 +332,26 @@ export function TankCreator({
     ctx.save();
     ctx.scale(2, 2);
     ctx.translate(175, 175);
-    const rings = pack.creatorFrames.get(`rings:${maxClass}`);
-    if (!rings) {
-      for (let i = maxClass; i >= 1; i--) {
-        ctx.strokeStyle = i === maxClass ? 'rgba(160,241,255,.32)' : 'rgba(137,228,249,.12)';
-        ctx.lineWidth = i === classId ? 1.2 : 0.6;
-        ctx.beginPath();
-        ctx.arc(0, 0, CLASS_RINGS[i - 1], 0, Math.PI * 2);
-        ctx.stroke();
-      }
-      ctx.strokeStyle = 'rgba(130,227,240,.14)';
+    for (let i = maxClass; i >= 1; i--) {
+      ctx.strokeStyle = i === maxClass ? 'rgba(160,241,255,.32)' : 'rgba(137,228,249,.12)';
+      ctx.lineWidth = i === classId ? 1.2 : 0.6;
       ctx.beginPath();
-      ctx.moveTo(-162, 0);
-      ctx.lineTo(160, 0);
-      ctx.stroke();
-      ctx.fillStyle = '#bceeffaa';
-      ctx.beginPath();
-      ctx.moveTo(162, 0);
-      ctx.lineTo(153, -7);
-      ctx.lineTo(153, 7);
-      ctx.fill();
-      ctx.beginPath();
+      ctx.arc(0, 0, CLASS_RINGS[i - 1], 0, Math.PI * 2);
       ctx.stroke();
     }
+    ctx.strokeStyle = 'rgba(130,227,240,.14)';
+    ctx.beginPath();
+    ctx.moveTo(-162, 0);
+    ctx.lineTo(160, 0);
+    ctx.stroke();
+    ctx.fillStyle = '#bceeffaa';
+    ctx.beginPath();
+    ctx.moveTo(162, 0);
+    ctx.lineTo(153, -7);
+    ctx.lineTo(153, 7);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.stroke();
     if (artwork.current)
       artwork.current.draw(
         ctx,
@@ -677,7 +674,6 @@ export function TankCreator({
     }
     draw();
   }
-  const workspace = pack.creatorFrames.get(`rings:${maxClass}`);
   const editor = (
     <div
       className={`creator stage-background ${overGame ? 'over-game' : ''}`}
@@ -776,20 +772,6 @@ export function TankCreator({
         </div>
       </div>
       <div className="creator-workspace">
-        {workspace && (
-          <img
-            className="creator-workspace-rings"
-            src={workspace.url}
-            alt=""
-            draggable={false}
-            style={{
-              left: CREATOR_CONTROLS.workspace.tx / 20 + workspace.x,
-              top: CREATOR_CONTROLS.workspace.ty / 20 + workspace.y,
-              width: workspace.width,
-              height: workspace.height,
-            }}
-          />
-        )}
         <canvas
           ref={canvas}
           width="700"

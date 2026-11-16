@@ -27,7 +27,7 @@ export async function showLowerEffectPaint(pack: AssetPack, host: HTMLElement) {
   const world = new World([], [], 113),
     textures = new SwfTextures();
   const read = world.fieldDisplays.read(world.field);
-  const view = new FieldLowerEffectsView(read, pack, textures);
+  const view = new FieldLowerEffectsView(read);
   view.update({
     field: world.field,
     read,

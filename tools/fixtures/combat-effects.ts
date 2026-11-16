@@ -20,7 +20,7 @@ export async function showCombatEffectsProof(pack: AssetPack, host: HTMLElement)
     preference: 'webgl',
     preserveDrawingBuffer: true,
   });
-  const view = new CombatEffectsView(pack, textures),
+  const view = new CombatEffectsView(),
     occluder = new Graphics();
   app.stage.addChild(view.bottom, occluder, view.top, view.screen);
   const canvas = document.createElement('canvas');

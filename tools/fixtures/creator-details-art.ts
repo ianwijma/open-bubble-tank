@@ -38,34 +38,6 @@ export async function showCreatorDetailsArt(pack: AssetPack, host: HTMLElement) 
   const ctx = canvas.getContext('2d')!;
   ctx.fillStyle = '#0b3c5a';
   ctx.fillRect(0, 0, 550, 450);
-  const rows = [...pack.creatorFrames]
-    .filter(([key]) => key.startsWith('details:') || key.startsWith('selection-info:'))
-    .map(([key, raster], i) => {
-      const x = i === 0 ? 15 : i === 4 ? 320 : 270 + (i - 1) * 65,
-        y = i === 4 ? 100 : 15;
-      ctx.drawImage(raster.canvas, x + raster.x, y + raster.y, raster.width, raster.height);
-      const sample = (x: number, y: number) => [
-        ...raster.canvas
-          .getContext('2d')!
-          .getImageData(
-            Math.floor((x - raster.x) * raster.resolution),
-            Math.floor((y - raster.y) * raster.resolution),
-            1,
-            1,
-          ).data,
-      ];
-      return {
-        key,
-        x: raster.x,
-        y: raster.y,
-        ...pixels(raster.canvas),
-        logicalWidth: raster.width,
-        logicalHeight: raster.height,
-        panel: sample(100, 100),
-        center: sample(10, 10),
-        thumbnail: sample(25, 30),
-      };
-    });
   const renderer = new CreatorArtwork(pack);
   const sample = document.createElement('canvas');
   sample.width = sample.height = 350;
@@ -121,7 +93,7 @@ export async function showCreatorDetailsArt(pack: AssetPack, host: HTMLElement) 
     renderer.destroy();
   }
   host.append(canvas);
-  host.dataset.creatorDetailsArt = JSON.stringify({ rows, thumbnails });
+  host.dataset.creatorDetailsArt = JSON.stringify({ thumbnails });
   return () => {
     canvas.remove();
     delete host.dataset.creatorDetailsArt;

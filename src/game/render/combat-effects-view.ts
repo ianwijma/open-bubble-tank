@@ -1,11 +1,9 @@
 import { Container, Graphics } from 'pixi.js';
-import type { AssetPack } from '../assets/asset-pack';
 import type { Effect, Field } from '../core/types';
 import { FieldLowerEffectsView, type LowerEffectMaskPaint } from './field-lower-effects-view';
 import { readEffectPlayback } from '../simulation/effect-playback';
 import { STAGE } from '../core/constants';
 import screenArt from '../data/screen-effect-art.json';
-import type { RasterTextures } from './swf-symbol-view';
 
 /** Paint projection retains the actual engine object independently of its transformed values. */
 export interface EffectPaint extends Effect {
@@ -21,10 +19,7 @@ export class CombatEffectsView {
   screen = new Container();
   private mockNodes = new Map<Effect, Graphics>();
   private lowerViews = new Map<Field, FieldLowerEffectsView>();
-  constructor(
-    private assets: AssetPack,
-    private textures: RasterTextures,
-  ) {
+  constructor() {
     this.screen.position.set(STAGE.cx, STAGE.cy);
   }
   lower(field: Field) {
@@ -35,7 +30,7 @@ export class CombatEffectsView {
     for (const mask of masks) {
       let view = this.lowerViews.get(mask.field);
       if (!view) {
-        view = new FieldLowerEffectsView(mask.read, this.assets, this.textures);
+        view = new FieldLowerEffectsView(mask.read);
         this.lowerViews.set(mask.field, view);
         this.bottom.addChild(view.root);
       }

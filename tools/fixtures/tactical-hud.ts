@@ -24,7 +24,7 @@ export async function showTacticalHudProof(pack: AssetPack, host: HTMLElement) {
     preference: 'webgl',
     preserveDrawingBuffer: true,
   });
-  const view = new TacticalHudView(pack, textures);
+  const view = new TacticalHudView();
   const hud = new HudView(),
     edit = new EditSliderView();
   app.stage.addChild(view.root);

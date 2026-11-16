@@ -3,7 +3,7 @@ import { useEffect, useId, useRef, useState } from 'react';
 import type { AssetPack } from '@/game/assets/asset-pack';
 import { CREATOR_DIALOGS } from '@/game/core/creator-dialogs';
 import { CreatorAlertClock } from '@/game/core/creator-alert';
-import { CreatorPrimitives, CreatorRasterArt } from './creator-controls';
+import { CreatorPrimitives } from './creator-controls';
 import { CreatorText } from './creator-text';
 
 export function CreatorAlert({
@@ -67,7 +67,6 @@ export function CreatorAlert({
     refresh((n) => n + 1);
   }
   const layout = CREATOR_DIALOGS.alert,
-    raster = pack.creatorFrames.get('alert'),
     m = layout.matrix;
   return (
     <section
@@ -94,13 +93,9 @@ export function CreatorAlert({
         }
       }}
     >
-      {raster ? (
-        <CreatorRasterArt raster={raster} />
-      ) : (
-        <svg viewBox="0 0 550 450" aria-hidden="true">
-          <CreatorPrimitives pieces={layout.art} />
-        </svg>
-      )}
+      <svg viewBox="0 0 550 450" aria-hidden="true">
+        <CreatorPrimitives pieces={layout.art} />
+      </svg>
       <div id={description}>
         {layout.fields.map((field) => (
           <CreatorText
