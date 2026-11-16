@@ -55,7 +55,7 @@ test(`mock creator statistics retain source category summaries and enemy offsets
   await expect(field('primary_txt')).toHaveCSS('top', '56px');
   await expect(content('speed_txt')).toHaveText('30%');
   await expectOrigin();
-  await page.getByLabel('Fixture').selectOption('creator-buttons');
+  await page.getByLabel('Fixture').selectOption('hotkey-input');
   await expect(panel).toHaveCount(0);
   await expect(page.locator('#creator-statistics-fixture-controls')).toHaveCount(0);
   expect(errors).toEqual([]);

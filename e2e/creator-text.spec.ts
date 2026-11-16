@@ -62,7 +62,7 @@ test(`mock creator text uses source fonts, alignment, line spacing and clipped a
   ).toBeCloseTo(advance('C'), 3);
   await page.locator('#stage').screenshot({ path: testInfo.outputPath(`mock-creator-text.png`) });
   // Changing fixture must remove the owned React root and its metadata.
-  await page.getByLabel('Fixture').selectOption('creator-buttons');
+  await page.getByLabel('Fixture').selectOption('hotkey-input');
   await expect(page.getByRole('status')).toContainText('Ready');
   await expect(page.locator('.creator-text-field')).toHaveCount(0);
   await expect(page.locator('#stage')).not.toHaveAttribute('data-creator-text');

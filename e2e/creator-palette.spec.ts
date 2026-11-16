@@ -131,7 +131,7 @@ test(`mock locked creator rows retain both alpha factors and clean up their whee
   await expect
     .poll(async () => Number(await scroll.getAttribute('aria-valuenow')))
     .toBeCloseTo(181.5 / 9, 6);
-  await page.getByLabel('Fixture').selectOption('creator-buttons');
+  await page.getByLabel('Fixture').selectOption('hotkey-input');
   await expect(port).toHaveCount(0);
   await expect(scroll).toHaveCount(0);
   expect(errors).toEqual([]);

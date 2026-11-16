@@ -119,6 +119,6 @@ test(`mock locked palette parts reveal no details and clean up keyboard descript
   await basic.blur();
   await expect(tooltip).toHaveCount(0);
   await expect(basic).not.toHaveAttribute('aria-describedby');
-  await page.getByLabel('Fixture').selectOption('creator-buttons');
+  await page.getByLabel('Fixture').selectOption('hotkey-input');
   await expect(tooltip).toHaveCount(0);
 });
