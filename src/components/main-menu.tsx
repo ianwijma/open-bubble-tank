@@ -171,7 +171,7 @@ export function MainMenu({
       </div>
       <span className="menu-version">OPEN · 0.1</span>
       <div ref={title} className="menu-title">
-        <BubbleText size={57}>bubble tanks 3</BubbleText>
+        <BubbleText size={57}>soap tank</BubbleText>
       </div>
       <div ref={buttons} className="main-menu-controls" inert>
         {controls.map((control, index) => {

@@ -66,7 +66,7 @@ test('SaveExitMouseUp checks avatar weapon before body using all non-body catalo
     expect(creatorSavePrerequisite({ ...design, parts: [attachment] })).toContain('bubble');
     expect(creatorSavePrerequisite({ ...design, parts: [body, attachment] })).toBeNull();
   }
-  expect(CREATOR_AUTHOR).toBe('BubbleTanks3');
+  expect(CREATOR_AUTHOR).toBe('Soap Tank');
   expect(CREATOR_DIALOGS.alert.symbol).toBe(937);
   expect(CREATOR_DIALOGS.alert.fields[0]).toMatchObject({
     name: 'description_txt',

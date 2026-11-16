@@ -55,8 +55,7 @@ test(`mock creator: authored exit/name/code dialogs, saved return and offline sh
   });
   await page.getByRole('button', { name: 'Edit', exact: true }).click();
   await expect(page.locator('.creator-meters > div').last()).toContainText('GP: 20');
-  const read = () =>
-    page.evaluate(() => JSON.parse(localStorage.getItem('soaptank.profile.v1')!));
+  const read = () => page.evaluate(() => JSON.parse(localStorage.getItem('soaptank.profile.v1')!));
   await page.getByRole('button', { name: 'Exit tank creator', exact: true }).click();
   const exit = page.getByRole('dialog', { name: 'Exit tank creator?', exact: true });
   await expect(exit).toContainText('Are you sure you want to exit without saving?');
@@ -72,7 +71,7 @@ test(`mock creator: authored exit/name/code dialogs, saved return and offline sh
   const form = page.getByRole('dialog', { name: 'Save your tank', exact: true });
   const author = form.getByRole('textbox', { name: 'Author name', exact: true }),
     name = form.getByRole('textbox', { name: 'Tank name', exact: true });
-  await expect(author).toHaveValue('BubbleTanks3');
+  await expect(author).toHaveValue('Soap Tank');
   await expect(name).toHaveValue('Save fixture');
   await expect(page.locator('.creator')).toHaveAttribute('inert', '');
   expect(await canvas!.evaluate((node) => node.isConnected)).toBe(true);
@@ -168,7 +167,7 @@ test(`mock fresh creator names stay in the form and failed submission IDs surviv
   await page.getByRole('button', { name: 'SAVE', exact: true }).click();
   await expect(form.getByRole('textbox', { name: 'Tank name', exact: true })).toHaveValue('');
   await expect(form.getByRole('textbox', { name: 'Author name', exact: true })).toHaveValue(
-    'BubbleTanks3',
+    'Soap Tank',
   );
   await form.getByRole('button', { name: 'Continue', exact: true }).click();
   await expect(

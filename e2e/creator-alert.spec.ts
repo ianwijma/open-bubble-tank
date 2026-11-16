@@ -51,7 +51,7 @@ test(`mock creator restores empty-save alert, retained fade and fresh name defau
     name = form.getByRole('textbox', { name: 'Tank name', exact: true }),
     author = form.getByRole('textbox', { name: 'Author name', exact: true });
   await expect(name).toHaveValue('');
-  await expect(author).toHaveValue('BubbleTanks3');
+  await expect(author).toHaveValue('Soap Tank');
   await page.locator('.creator').screenshot({ path: `test-results/mock-creator-fresh-name.png` });
   await name.fill('Fresh Bubble');
   await author.fill('Alternate Author');
@@ -62,7 +62,7 @@ test(`mock creator restores empty-save alert, retained fade and fresh name defau
     .click();
   await save.click();
   await expect(name).toHaveValue('');
-  await expect(author).toHaveValue('BubbleTanks3');
+  await expect(author).toHaveValue('Soap Tank');
   const tanks = await page.evaluate(
     () => JSON.parse(localStorage.getItem('soaptank.profile.v1')!).tanks,
   );

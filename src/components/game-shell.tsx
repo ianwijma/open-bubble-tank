@@ -341,13 +341,13 @@ export default function GameShell() {
       onKeyDownCapture={() => audio?.unlock()}
     >
       <header className="site-header">
-        <a className="project-name" href="/" aria-label="Open Bubble Tank home">
+        <a className="project-name" href="/" aria-label="Soap Tank home">
           <span className="brand-bubbles" aria-hidden="true">
             <i />
             <i />
             <i />
           </span>
-          OPEN BUBBLE TANK
+          SOAP TANK
         </a>
         <span className="header-caption">A FLASH CLASSIC, REBUILT</span>
         <div className="window-actions">
@@ -607,7 +607,7 @@ export default function GameShell() {
                     collection.
                   </p>
                   <label className="source-option">
-                    <input type="checkbox" checked readOnly /> Hero Interactive tanks{' '}
+                    <input type="checkbox" checked readOnly /> Built-in tanks{' '}
                     <span>43 built-in enemies</span>
                   </label>
                   <label className="source-option">
@@ -653,14 +653,10 @@ export default function GameShell() {
         <span>{storageError ? 'LOCAL SAVING UNAVAILABLE' : 'LOCAL SAVE'}</span>
       </footer>
       <details className="recreation-details">
-        <summary>About this recreation</summary>
+        <summary>About Soap Tank</summary>
         <p>
-          Original game and artwork: Hero Interactive. Music &amp; sound: Brian Hall, Polyphone
-          Music.
-        </p>
-        <p>
-          Open Bubble Tank is an independent TypeScript recreation, built from research into the
-          original Flash game.
+          Soap Tank grows out of a recreation of an older Flash game. The built-in tanks, part names
+          and texts come from that game and are credited in the project&apos;s notice file.
         </p>
         {pack ? <p className="asset-summary">Playing with procedural mock artwork.</p> : null}
       </details>

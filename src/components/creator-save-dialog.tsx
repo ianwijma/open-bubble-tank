@@ -83,7 +83,7 @@ export function CreatorSaveDialog({
   tank,
   initialName,
   opener,
-  authorName = 'BubbleTanks3',
+  authorName = 'Soap Tank',
   onSave,
   onClose,
   onExit,

@@ -27,7 +27,7 @@ export class FieldCaptions {
           layout = TUTORIAL.stages[source.stage];
         if (source.stage === 0) {
           const logo = new Text({
-            text: 'ARMOR GAMES',
+            text: 'SOAP TANK',
             style: {
               fontFamily: 'Arial, sans-serif',
               fontSize: 29,

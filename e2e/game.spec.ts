@@ -5,7 +5,7 @@ test('mock path: menu, local enemy creator, settings, exploration and pause', as
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto('/');
-  await expect(page.getByRole('heading', { name: 'Your game. Original artwork.' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Build a tank out of bubbles.' })).toBeVisible();
   await page.getByRole('button', { name: 'Play with mock assets' }).click();
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'Enemy tank creator' }).click();

@@ -6,7 +6,7 @@ export const tutorialForAttachment = (visited: number): TutorialStage =>
   visited >= 1 && visited <= 3 ? ((visited + 1) as TutorialStage) : 0;
 export const tutorialDescription = (stage: number) =>
   stage === 0
-    ? 'Armor Games'
+    ? 'Soap Tank'
     : stage === 1
       ? 'Use WASD keys to move. Use your mouse to aim; hold the left mouse button to shoot. Try moving outside this bubble.'
       : TUTORIAL.stages[stage].texts.map((line) => line.text).join(' ');

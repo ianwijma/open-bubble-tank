@@ -32,7 +32,7 @@ export async function decodeTankCode(code: string): Promise<TankDesign> {
     code.length < 38 ||
     !/^([a-f0-9]{3})(?:[a-f0-9]{32})+([a-f0-9]{3})$/i.test(code)
   )
-    throw new Error('Paste a complete Bubble Tanks 3 tank code.');
+    throw new Error('Paste a complete tank code.');
   const first = code.slice(0, 3),
     last = code.slice(-3),
     key = await codeKey(first, last),

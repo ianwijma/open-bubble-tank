@@ -291,13 +291,6 @@ kbd {
   margin-top: 20px;
   text-align: center;
 }
-.gate-wordmark > span:last-child {
-  display: block;
-  font-size: 8px;
-  letter-spacing: 4px;
-  color: #a5d7df;
-  margin-top: 8px;
-}
 .asset-panel {
   position: relative;
   z-index: 1;

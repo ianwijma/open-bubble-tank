@@ -154,7 +154,7 @@ export function GameViewport({
       className="game-canvas"
       tabIndex={0}
       role="application"
-      aria-label="Bubble Tanks 3. WASD to move, mouse to aim and fire, Space for secondary weapons, P or Escape to pause."
+      aria-label="Soap Tank. WASD to move, mouse to aim and fire, Space for secondary weapons, P or Escape to pause."
     >
       {error ? (
         <div role="alert" className="graphics-error">
