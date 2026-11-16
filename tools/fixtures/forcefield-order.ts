@@ -9,7 +9,7 @@ import { createTank } from '../../src/game/simulation/tank';
 import { applyProjectileStatus } from '../../src/game/simulation/status';
 import { World, emptyInput } from '../../src/game/simulation/world';
 
-/** Actual production painting before/after source direct-child mutations. */
+/** Actual production painting before/after direct-child mutations. */
 export async function showForcefieldOrder(pack: AssetPack, host: HTMLElement) {
   const app = new Application(),
     textures = new SwfTextures(),

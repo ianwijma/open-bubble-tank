@@ -1,86 +1,17 @@
-import { ColorMatrixFilter, Container, Graphics } from 'pixi.js';
-import type { AssetPack } from '../assets/asset-pack';
-import { MINIMAP, mapDotFrame, mapCenter, type MapMode } from '../core/minimap';
+import { Container, Graphics } from 'pixi.js';
+import { MINIMAP, mapCenter, mapDotFrame } from '../core/minimap';
 import type { World } from '../simulation/world';
-import { SwfSymbolView, type RasterTextures } from './swf-symbol-view';
 
-/** AvatarInterface's compact / large / hidden map, fixed in stage coordinates. */
+/** The compact / large / hidden map, fixed in stage coordinates. */
 export class MinimapView {
   root = new Container();
-  private widget?: SwfSymbolView;
-  private button?: SwfSymbolView;
-  private entries = new Container();
-  private dots = new Map<string, SwfSymbolView>();
-  private links = new Graphics();
   private mock = new Graphics();
-  private maskAlpha = new ColorMatrixFilter();
-  private lastMode?: MapMode;
-  constructor(
-    private assets: AssetPack,
-    private textures: RasterTextures,
-  ) {
+  constructor() {
     this.root.position.set(MINIMAP.origin.x, MINIMAP.origin.y);
-    this.entries.addChild(this.links);
-    if (assets.mode === 'swf') {
-      this.widget = new SwfSymbolView(MINIMAP.symbol, assets, textures);
-      this.button = new SwfSymbolView(MINIMAP.button, assets, textures);
-      this.root.addChild(this.widget.root, this.button.root);
-      // The authored vector mask has 128 alpha. Flash clips by its geometry, not that opacity.
-      this.maskAlpha.matrix = [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 255 / 128, 0];
-    } else this.root.addChild(this.mock);
+    this.root.addChild(this.mock);
   }
   update(world: World) {
-    const mode = world.mapMode,
-      layout = MINIMAP.modes[mode - 1];
-    const center = mapCenter(world);
-    if (!this.widget || !this.button) {
-      this.drawMock(world);
-      return;
-    }
-    // External entries must survive replacement of the authored map_mc at a frame change.
-    if (this.lastMode !== mode) this.entries.removeFromParent();
-    this.widget.update(1, mode);
-    this.lastMode = mode;
-    this.widget.root.visible = mode !== 3;
-    this.button.update(1, world.mapHovered ? 2 : 1);
-    this.button.namedChild('icon_mc')?.update(1, mode);
-    const map = this.widget.namedChild('map_mc');
-    if (!map) return;
-    map.root.position.set(
-      layout.center.x - center.col * 25 * layout.scale,
-      layout.center.y - center.row * 25 * layout.scale,
-    );
-    if (map.root.mask instanceof Container) map.root.mask.filters = [this.maskAlpha];
-    const origin = world.fields.get('0,0');
-    map.namedChild('homeBubble_mc')?.update(1, origin ? mapDotFrame(origin) : 1);
-    this.links.clear();
-    for (const { from, to } of world.connections.values()) {
-      const dx = to.col - from.col,
-        dy = to.row - from.row,
-        distance = Math.hypot(dx, dy);
-      if (!distance) continue;
-      this.links
-        .moveTo(from.col * 25 + (dx / distance) * 7.5, from.row * 25 + (dy / distance) * 7.5)
-        .lineTo(to.col * 25 - (dx / distance) * 7.5, to.row * 25 - (dy / distance) * 7.5)
-        .stroke({ color: 0xffffff, width: 2, cap: 'butt' });
-    }
-    for (const [key, dot] of this.dots)
-      if (!world.fields.has(key)) {
-        dot.destroy();
-        this.dots.delete(key);
-      }
-    for (const [key, field] of world.fields) {
-      if (field.col === 0 && field.row === 0) continue;
-      let dot = this.dots.get(key);
-      if (!dot) {
-        dot = new SwfSymbolView(MINIMAP.dot, this.assets, this.textures);
-        this.dots.set(key, dot);
-        this.entries.addChild(dot.root);
-      }
-      dot.root.position.set(field.col * 25, field.row * 25);
-      dot.update(1, mapDotFrame(field));
-    }
-    if (this.entries.parent !== map.root) map.root.addChild(this.entries);
+    this.drawMock(world);
   }
   private drawMock(world: World) {
     const g = this.mock,
@@ -137,12 +68,6 @@ export class MinimapView {
     }
   }
   destroy() {
-    this.entries.removeFromParent();
-    this.widget?.destroy();
-    this.button?.destroy();
-    for (const dot of this.dots.values()) dot.destroy();
-    this.entries.destroy({ children: true });
     this.root.destroy({ children: true });
-    this.maskAlpha.destroy();
   }
 }

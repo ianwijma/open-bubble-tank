@@ -35,7 +35,7 @@ function allyIndicator(ally: Tank, avatar: Vec, zoom: number): AllyHealthIndicat
   };
 }
 
-/** Fixed-stage snapshots: ally rings follow the interface clock, passive readouts follow Avatar.Run. */
+/** Fixed-stage snapshots: ally rings follow the interface clock, passive readouts follow the avatar run. */
 export class TacticalHudState {
   allies: AllyHealthIndicator[] = [];
   passives: (EnemyHealthIndicator | RadarIndicator)[] = [];
@@ -46,17 +46,17 @@ export class TacticalHudState {
       .map((ally) => allyIndicator(ally, avatar, zoom));
   }
   includeNewAllies(allies: readonly Tank[], avatar: Vec, zoom = 1) {
-    // Newly summoned allies exist before _-GW; retain older allies' pre-field-run snapshots.
+    // Newly summoned allies exist before the rings update; retain older allies' pre-field-run snapshots.
     const known = new Set(this.allies.map((ally) => ally.uid));
     for (const ally of allies)
       if (!ally.dead && !known.has(ally.uid)) this.allies.push(allyIndicator(ally, avatar, zoom));
   }
   updatePassives(avatar: Tank, enemies: readonly Tank[], zoom = 1, controlsPaused = false) {
-    // Stun skips _-Ta entirely. Jam instead calls FinalPartCall to remove both readouts.
+    // Stun skips the passive update entirely. Jam instead runs the final part call to remove both readouts.
     if (avatar.stunned) return;
     this.passives = [];
     if (avatar.status.jam > 0) return;
-    // RegisterPassivePart deduplicates blnInterface parts, preserving their first mounted order.
+    // Registration deduplicates interface parts, preserving their first mounted order.
     const registered = new Set<number>();
     for (const part of avatar.design.parts) {
       if (![5001, 5002].includes(part.type) || registered.has(part.type)) continue;
@@ -65,7 +65,7 @@ export class TacticalHudState {
         if (enemy.dead) continue;
         const point = stagePoint(enemy, avatar, zoom);
         if (part.type === 5002) {
-          if (controlsPaused) continue; // _-Yb.Run explicitly clears its bars in world state3.
+          if (controlsPaused) continue; // The bars are explicitly cleared in world state3.
           this.passives.push({
             kind: 'health',
             uid: enemy.uid,

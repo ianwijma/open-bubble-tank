@@ -3,7 +3,6 @@ import { setFieldFixtureLayout } from './field-layout';
 import { Application, Container, Rectangle } from 'pixi.js';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { STARTER } from '../../src/game/data/catalog';
-import { SwfProtectionView } from '../../src/game/render/swf-protection-view';
 import { TankView } from '../../src/game/render/tank-view';
 import { SwfTextures } from '../../src/game/render/swf-textures';
 import { createTank } from '../../src/game/simulation/tank';
@@ -47,20 +46,16 @@ export async function showForcefieldLifecycle(pack: AssetPack, host: HTMLElement
     20,
   );
   importAvatarFixture(world);
-  const tank = world.player,
-    body = tank.design.parts[1],
-    gunPart = tank.design.parts[2];
+  const tank = world.player;
   world.field.enemies = [];
   world.hitTest = () => false;
-  const native = pack.mode === 'swf' ? new SwfProtectionView(pack, textures) : undefined;
-  const mock = native ? undefined : new TankView(tank.design, pack, textures);
-  const root = native?.root ?? mock!.container;
-  app.stage.addChild(root);
+  const mock = new TankView(tank.design, pack, textures);
+  app.stage.addChild(mock.container);
   // A detached forcefield has no tank child; extract an empty target for that zero-paint control.
   const empty = new Container();
   const protection = () =>
-    native?.root ?? mock!.container.children.find((child) => child.label === 'forcefield') ?? empty;
-  const update = () => (native ? native.update(tank) : mock!.update(tank));
+    mock.container.children.find((child) => child.label === 'forcefield') ?? empty;
+  const update = () => mock.update(tank);
   const canvas = document.createElement('canvas');
   canvas.width = 550;
   canvas.height = 450;
@@ -97,14 +92,10 @@ export async function showForcefieldLifecycle(pack: AssetPack, host: HTMLElement
   };
   try {
     update();
-    const oldSplash = native?.root.children[0];
-    const oldClone = native ? pack.forcefieldPartClip(tank, body) : undefined;
-    const live = native ? pack.partClip(tank, gunPart) : undefined;
     world.pause();
     tank.forcefieldFrame = 2;
     tick(12);
     capture('Before exit · live mask and impact');
-    const oldCloneAge = oldClone?.age ?? null;
     world.resume();
     tank.status.jam = 4;
     world.jump({ x: 1, y: 0 });
@@ -121,16 +112,10 @@ export async function showForcefieldLifecycle(pack: AssetPack, host: HTMLElement
     capture('Arrival · passive Run still pending');
     tick(4);
     capture('Jam expires · fresh wrapper and mask');
-    const newClone = native ? pack.forcefieldPartClip(tank, body) : undefined;
     const fresh = {
       generation: tank.forcefieldGeneration,
       origin: tank.forcefieldStartedAt,
       artAge: tank.artAge,
-      cloneAge: newClone?.age ?? null,
-      replaced: oldClone ? newClone !== oldClone : true,
-      oldDestroyed: oldSplash?.destroyed ?? true,
-      children: native?.root.children.length ?? null,
-      liveRetained: live ? pack.partClip(tank, gunPart) === live : true,
     };
     world.damage(
       tank,
@@ -153,15 +138,12 @@ export async function showForcefieldLifecycle(pack: AssetPack, host: HTMLElement
     return {
       mode: pack.mode,
       panels,
-      oldCloneAge,
       fresh,
-      finalCloneAge: newClone?.age ?? null,
       ready: tank.forcefieldReady,
     };
   } finally {
     empty.destroy();
-    native?.destroy();
-    mock?.destroy();
+    mock.destroy();
     app.destroy({ removeView: true }, { children: true });
     textures.destroy();
     host.replaceChildren(canvas);

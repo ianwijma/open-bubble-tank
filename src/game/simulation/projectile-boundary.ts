@@ -2,10 +2,10 @@ import { BULLET_RADIUS } from '../core/constants';
 import type { Projectile } from '../core/types';
 import type { World } from './world';
 
-// BF_BG_mc1537 includes a 3px stroke: Script width850.5, unlike its fill847.5.
+// The field background clip includes a 3px stroke: Script width850.5, unlike its fill847.5.
 const APOCALYPSE_RADIUS = 425.25;
 
-/** _-BL.IsOutsideOfBubble reports each call; _-MB is not a reporting latch. */
+/** The outside-of-bubble test reports each call; the miss exemption is not a reporting latch. */
 export function reportProjectileMiss(world: World, bullet: Projectile) {
   if (!bullet.missExempt) {
     if (bullet.enemy) world.stats.enemyMissed++;
@@ -19,7 +19,7 @@ export function projectileOutside(world: World, bullet: Projectile) {
   const radius =
     (bullet.kind === 'apocalypse' ? APOCALYPSE_RADIUS : BULLET_RADIUS) * world.field.scale;
   if (!(bullet.x * bullet.x + bullet.y * bullet.y > radius * radius)) return false;
-  // _-bk's override is geometry only; its normal seventh exit reports separately.
+  // The ricochet override is geometry only; its normal seventh exit reports separately.
   if (bullet.kind !== 'ricochet') reportProjectileMiss(world, bullet);
   return true;
 }

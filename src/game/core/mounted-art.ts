@@ -1,6 +1,6 @@
 import type { GunState } from './types';
 
-/** _-YM.PartCallTrigger resumes720; frame1 stops again after its27-frame loop. */
+/** The trigger resumes720; frame1 stops again after its27-frame loop. */
 export function triggerMassiveCharge(gun: GunState, artAge: number, artworkFrame?: number) {
   const age = artAge + 1;
   // play() during playback does not restart it. Only720's leaf-only episode can

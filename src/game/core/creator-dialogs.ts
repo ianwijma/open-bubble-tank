@@ -31,7 +31,7 @@ export const CREATOR_DIALOGS = data as {
 };
 export const creatorDialogFrame = (frame: CreatorDialogFrame) =>
   CREATOR_DIALOGS.frames.find((f) => f.frame === frame)!;
-/** _-Cb rejects the entire incoming TextEvent when any character is invalid. */
+/** The entire incoming text event is rejected when any character is invalid. */
 export function acceptsCreatorNameInput(text: string) {
   return !/[^a-zA-Z0-9 _\-']/.test(text);
 }

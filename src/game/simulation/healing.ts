@@ -7,7 +7,7 @@ import type { World } from './world';
 import { createBehaviorTarget } from './behavior-targets';
 import { acquireHealerTarget, HealerTargetReadError, requireHealerData } from './healer-target';
 
-/** The ID is compatibility/fixture metadata; the stored source target object owns selection. */
+/** The ID is compatibility/fixture metadata; the stored target object owns selection. */
 export function healerPatient(world: World, owner: Tank, gun: GunState): Tank | undefined {
   const state = (gun.behaviorTarget ??= createBehaviorTarget());
   const patient = acquireHealerTarget(
@@ -26,7 +26,7 @@ export function healerPatient(world: World, owner: Tank, gun: GunState): Tank | 
 
 export function tickHealer(world: World, owner: Tank, gun: GunState) {
   let patient = healerPatient(world, owner, gun);
-  // Weapon.Run checks first, then EnemyAim repeats the acquisition before aiming.
+  // The weapon run checks first, then enemy aim repeats the acquisition before aiming.
   if (!patient || !world.actorParents.hasParent(patient))
     patient = healerPatient(world, owner, gun);
   const point = patient && world.actorParents.point(patient, world.field);
@@ -50,7 +50,7 @@ export function tickHealer(world: World, owner: Tank, gun: GunState) {
       : undefined
     : world.bullets.find((bullet) => bullet.uid === gun.beamId && !bullet.dead);
   const stop = () => {
-    // StopFiring asks CURRENT currentBFTarget, not the retained beam's old parent.
+    // Stop-firing asks the CURRENT wrapper, not the retained beam's old parent.
     if (oldBeam && world.removeBullet(oldBeam, world.currentWrapper)) {
       oldBeam.dead = true;
     }
@@ -67,7 +67,7 @@ export function tickHealer(world: World, owner: Tank, gun: GunState) {
     } catch (error) {
       if (!retryReadError || !(error instanceof HealerTargetReadError)) throw error;
       caught = true;
-      // Full/range acquisition is inside PartCallRun's try; its catch retries once.
+      // Full/range acquisition is inside the part-call run's try; its catch retries once.
       state.target = null;
       healerPatient(world, owner, gun);
     }
@@ -79,7 +79,7 @@ export function tickHealer(world: World, owner: Tank, gun: GunState) {
     fullHealth = patient.life === requireHealerData(patient).maxLife;
   } catch (error) {
     if (!(error instanceof HealerTargetReadError)) throw error;
-    // This first read is inside PartCallRun's try; its catch-side retry is not.
+    // This first read is inside the part-call run's try; its catch-side retry is not.
     reacquire(false);
     return;
   }
@@ -91,7 +91,7 @@ export function tickHealer(world: World, owner: Tank, gun: GunState) {
   if (!point) {
     reacquire(false);
     return;
-  } // Source parent.localToGlobal throws into PartCallRun's catch.
+  } // parent.localToGlobal throws into the part-call run's catch.
   const dx = origin.x - point.x,
     dy = origin.y - point.y;
   if (dx * dx + dy * dy > 160000) {
@@ -100,9 +100,9 @@ export function tickHealer(world: World, owner: Tank, gun: GunState) {
   }
   if (++gun.counter < 3) return;
   if (gun.beamId !== undefined && !oldBeam) {
-    // The source retains beam_mc until PartCallTrigger sees its missing parent.
-    // A trigger read is inside PartCallRun's try, and its exception bypasses
-    // RunStandardPartTimer's post-trigger counter reset even when catch recovers.
+    // beam_mc is retained until the part-call trigger sees its missing parent.
+    // A trigger read is inside the part-call run's try, and its exception bypasses
+    // the standard part timer's post-trigger counter reset even when catch recovers.
     if (!reacquire(true)) gun.counter = 0;
     return;
   }
@@ -147,7 +147,7 @@ export function tickHealer(world: World, owner: Tank, gun: GunState) {
   gun.counter = 0;
 }
 
-/** HealerBeam._-L2 ray-marches 3px, retaining its counter when contact is lost. */
+/** The healer beam ray-marches 3px, retaining its counter when contact is lost. */
 export function tickHealingBeam(world: World, beam: Projectile, owner?: Tank) {
   owner = beam.healingHome ?? owner;
   const patient = beam.healingTarget ?? world.allTanks().find((tank) => tank.uid === beam.targetId);
@@ -167,7 +167,7 @@ export function tickHealingBeam(world: World, beam: Projectile, owner?: Tank) {
       beam.beamLength = Math.max(0, n - 5);
       return;
     }
-    // Verified in HealerBeam.pcode: dy is added twice, not squared; convert_i maps NaN to 0.
+    // dy is added twice, not squared; the integer conversion maps NaN to 0.
     const dx = (point.x - x) | 0,
       dy = (point.y - y) | 0;
     const roughDistance = Math.sqrt(dx * dx + dy + dy) | 0;

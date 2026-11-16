@@ -21,7 +21,7 @@ test('background construction, previous visited count and counter produce the so
   expect(layer.particles).toHaveLength(5);
   expect(layer.painted).toHaveLength(0); // constructors create nodes, not bitmap pixels
   layer.advance();
-  expect(layer.particles).toHaveLength(20); // previous intLength is0, not current list length5
+  expect(layer.particles).toHaveLength(20); // previous length is0, not current list length5
   expect(layer.painted[0]).toMatchObject({ x: 275, y: 225, z: -0.7, alpha: 136 });
   for (let i = 0; i < 4; i++) layer.advance();
   expect(layer.particles).toHaveLength(20);

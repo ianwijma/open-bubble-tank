@@ -94,7 +94,7 @@ test('first wrapper retains every authored slot, root tutorial, mask range and l
   expect(read.bottom.symbol).toBe(117);
   expect(read.bottom.parent).toBe(read.slots.underEffects.id);
   expect(read.bottom.id).not.toBe(read.slots.underEffects.id);
-  expect(measuredMaskWidth(read.slots.exteriorMask.pose.matrix)).toBe(1381.4); // original control
+  expect(measuredMaskWidth(read.slots.exteriorMask.pose.matrix)).toBe(1381.4); // measured control
 });
 
 test('four child writes replace authored scale in qualified pcode order, leaving root and other slots alone', () => {
@@ -162,7 +162,7 @@ test('ordinary World movement performs separate truncating compound writes and t
   const world = new World([], [], 4),
     wrapper = world.currentWrapper;
   world.player.velocity = { x: 0.57, y: -0.57 };
-  world.step(emptyInput()); // friction produces0.48, then source velocity snap produces0.
+  world.step(emptyInput()); // friction produces0.48, then the velocity snap produces0.
   expect(world.fieldDisplays.read(wrapper).root.pose.x).toBe(0);
   const input = emptyInput();
   input.right = true;
@@ -246,7 +246,7 @@ test('under-avatar sizing captures source detail radius, width-before-height and
   world.editPlayer(tiny);
   const read = world.fieldDisplays.read(world.currentWrapper),
     writes = read.underAvatarSizing.writes.slice(-2);
-  expect(world.player.radius).toBe(10); // catalog minimum is deliberately NOT _-ZD.
+  expect(world.player.radius).toBe(10); // catalog minimum is deliberately NOT the computed radius.
   expect(writes.map((write) => [write.property, write.value, write.status])).toEqual([
     ['width', 49, 'unresolved'],
     ['height', 49, 'unresolved'],
@@ -426,14 +426,14 @@ test('read snapshots never change identity, pose, clocks, entropy or shared auth
   expect(JSON.stringify(authored)).toBe(metadata);
 });
 
-// Inputs/expectations below come from the independently retained AVM2 traces.
-// Matrix getters expose binary32 coefficients. Decode the original decimal
-// formatter back into that declared type (some17-digit prints differ by one
+// Inputs/expectations below come from independently retained traces.
+// Matrix getters expose binary32 coefficients. Decode the decimal
+// formatter output back into that declared type (some17-digit prints differ by one
 // Number ulp from the exact binary32-to-Number expansion). Cached Number
-// comparisons use parsed trace text; they are not original f64 word proofs.
+// comparisons use parsed trace text; they are not f64 word proofs.
 const sourceSetter = (row: number) => {
   const values = setterOriginal.rows
-    .find((trace) => trace.startsWith(`BT3_FIELD_POSE ${row} `))!
+    .find((trace) => trace.startsWith(`PROBE_FIELD_POSE ${row} `))!
     .split(' ')
     .slice(2)
     .map(Number);
@@ -486,7 +486,7 @@ test('World collapse retains original repeated getter arithmetic through119 upda
   const root = new RetainedTransform();
   for (let i = 0; i < 10; i++) root.x = root.x - 0.07;
   expect(root.read().x).toBe(sourceSetter(400).x);
-  // source Number getter is NOT the float32 matrix value or a count-derived scale.
+  // The Number getter is NOT the float32 matrix value or a count-derived scale.
   expect(world.fieldDisplays.read(field).root.pose.scaleX).toBe(0.4166666666666692);
   expect(world.fieldDisplays.read(field).root.pose.scaleX).not.toBe(1 - 119 / 204);
 });
@@ -502,7 +502,7 @@ test('promotion does not reset the current-mask latch or derive a new rotation j
   expect(displays.maskLatch).toBe(true);
   displays.create(next);
   displays.attach(next, { x: -10, y: 0 });
-  // Conditional immediate arrival before a transit movement/_-Xa call on next.
+  // Conditional immediate arrival before a transit movement/mask update call on next.
   displays.arrive(next);
   expect(displays.maskLatch).toBe(true);
   expect(displays.read(next).slots.exteriorMask.pose.rotation).toBe(180);

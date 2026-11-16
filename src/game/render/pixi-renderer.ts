@@ -1,5 +1,5 @@
 import { Application, Container, Graphics, Sprite, Texture } from 'pixi.js';
-import type { AssetPack, Raster } from '../assets/asset-pack';
+import type { AssetPack } from '../assets/asset-pack';
 import { STAGE } from '../core/constants';
 import { DEG } from '../core/math';
 import { MainBackgroundView } from './main-background-view';
@@ -7,9 +7,7 @@ import type { Field, Pickup, Settings, Tank } from '../core/types';
 import type { World } from '../simulation/world';
 import { whipSamples } from '../simulation/whip';
 import { drawMockProjectile } from './mock-projectile-view';
-import { SwfSymbolView } from './swf-symbol-view';
 import { SwfTextures } from './swf-textures';
-import { setBeamLength } from './swf-beam-view';
 import { MinimapView } from './minimap-view';
 import { HudView } from './hud-view';
 import { EditSliderView } from './edit-slider-view';
@@ -35,8 +33,6 @@ export class GameRenderer {
   underAvatars = new Container();
   private underAvatarNodes = new Map<Field, FieldUnderAvatarView>();
   projectiles = new Container();
-  nativeShots = new Container();
-  nativePickups = new Container();
   pickupArt = new Container();
   private mockShots = new Map<Field, Graphics>();
   private mockPickups = new Map<Pickup, Graphics>();
@@ -53,11 +49,7 @@ export class GameRenderer {
   private ownedTextures: Texture[] = [];
   private tankNodes = new Map<Tank, TankView>();
   private actorLayers = new Map<Field, Container>();
-  private bulletNodes = new Map<number, SwfSymbolView>();
-  private pickupNodes = new Map<Pickup, SwfSymbolView>();
   private fieldNodes = new Map<Field, Sprite>();
-  highlights = new Container();
-  private highlightNodes = new Map<Field, SwfSymbolView>();
   private fieldTexture: Texture | null = null;
   private background: Sprite | null = null;
   private destroyed = false;
@@ -93,16 +85,16 @@ export class GameRenderer {
       this.app.stage.addChild(this.background);
     }
     this.app.stage.addChild(this.root, this.screenEffects, this.mapArt, this.overlay);
-    this.minimap = new MinimapView(this.assets, this.rasterTextures);
+    this.minimap = new MinimapView();
     this.mapArt.addChild(this.minimap.root);
-    this.hud = new HudView(this.assets, this.rasterTextures);
+    this.hud = new HudView();
     this.mapArt.addChild(this.hud.root);
-    this.editSlider = new EditSliderView(this.assets, this.rasterTextures);
+    this.editSlider = new EditSliderView();
     this.mapArt.addChild(this.editSlider.root);
-    this.tacticalHud = new TacticalHudView(this.assets, this.rasterTextures);
+    this.tacticalHud = new TacticalHudView();
     this.mapArt.addChild(this.tacticalHud.root);
-    this.captions = new FieldCaptions(this.assets, this.rasterTextures);
-    this.combatEffects = new CombatEffectsView(this.assets, this.rasterTextures);
+    this.captions = new FieldCaptions();
+    this.combatEffects = new CombatEffectsView();
     this.screenEffects.addChild(this.combatEffects.screen);
     this.root.addChild(
       this.fields,
@@ -110,82 +102,39 @@ export class GameRenderer {
       this.combatEffects.bottom,
       this.underAvatars,
       this.pickupArt,
-      this.nativePickups,
       this.entities,
       this.projectiles,
-      this.nativeShots,
       this.combatEffects.top,
-      this.highlights,
     );
-    const field = this.assets.extras.get(1537);
-    if (field) this.fieldTexture = this.texture(field);
-    else {
-      const cv = document.createElement('canvas');
-      cv.width = cv.height = 860;
-      const c = cv.getContext('2d')!;
-      const g = c.createLinearGradient(0, 0, 0, 860);
-      g.addColorStop(0, '#0ba5b5');
-      g.addColorStop(1, '#084366');
-      c.beginPath();
-      c.arc(430, 430, 423.75, 0, Math.PI * 2);
-      c.fillStyle = g;
-      c.fill();
-      const rim = c.createRadialGradient(430, 430, 400, 430, 430, 424);
-      rim.addColorStop(0, 'rgba(180,245,255,0)');
-      rim.addColorStop(0.8, 'rgba(180,245,255,.07)');
-      rim.addColorStop(1, 'rgba(210,250,255,.45)');
-      c.fillStyle = rim;
-      c.fill();
-      this.fieldTexture = Texture.from(cv);
-      this.ownedTextures.push(this.fieldTexture);
-    }
-  }
-  private texture(r: Raster) {
-    return this.rasterTextures.get(r);
+    const cv = document.createElement('canvas');
+    cv.width = cv.height = 860;
+    const c = cv.getContext('2d')!;
+    const g = c.createLinearGradient(0, 0, 0, 860);
+    g.addColorStop(0, '#0ba5b5');
+    g.addColorStop(1, '#084366');
+    c.beginPath();
+    c.arc(430, 430, 423.75, 0, Math.PI * 2);
+    c.fillStyle = g;
+    c.fill();
+    const rim = c.createRadialGradient(430, 430, 400, 430, 430, 424);
+    rim.addColorStop(0, 'rgba(180,245,255,0)');
+    rim.addColorStop(0.8, 'rgba(180,245,255,.07)');
+    rim.addColorStop(1, 'rgba(210,250,255,.45)');
+    c.fillStyle = rim;
+    c.fill();
+    this.fieldTexture = Texture.from(cv);
+    this.ownedTextures.push(this.fieldTexture);
   }
   private fieldNode(field: Field) {
     let node = this.fieldNodes.get(field);
     if (!node) {
       node = new Sprite(this.fieldTexture!);
-      const raster = this.assets.extras.get(1537);
-      if (raster) {
-        node.position.set(raster.x * field.scale, raster.y * field.scale);
-        node.width = raster.width * field.scale;
-        node.height = raster.height * field.scale;
-      } else {
-        node.anchor.set(0.5);
-        node.scale.set(field.scale);
-      }
+      node.anchor.set(0.5);
+      node.scale.set(field.scale);
       this.fields.addChild(node);
       this.fieldNodes.set(field, node);
     }
     return node;
-  }
-  private nativeSymbol<Key>(
-    id: number,
-    uid: Key,
-    nodes: Map<Key, SwfSymbolView>,
-    layer: Container,
-  ) {
-    let view = nodes.get(uid);
-    if (view && view.id !== id) {
-      view.destroy();
-      nodes.delete(uid);
-      view = undefined;
-    }
-    if (!view) {
-      view = new SwfSymbolView(id, this.assets, this.rasterTextures);
-      nodes.set(uid, view);
-      layer.addChild(view.root);
-    }
-    return view;
-  }
-  private pruneSymbols<Key>(nodes: Map<Key, SwfSymbolView>, active: Set<Key>) {
-    for (const [uid, view] of nodes)
-      if (!active.has(uid)) {
-        view.destroy();
-        nodes.delete(uid);
-      }
   }
   private tank(t: Tank, transform: FieldTransform, parent: Container) {
     let node = this.tankNodes.get(t);
@@ -222,7 +171,7 @@ export class GameRenderer {
     const activeFields = world.attachedFields().map(({ field }) => field);
     this.captions?.update(world);
     // Project renderable owners only; obsolete wrapper projections must not retain
-    // historical worlds. The simulation retains source identities and poses.
+    // historical worlds. The simulation retains identities and poses.
     for (const [field, view] of this.underAvatarNodes)
       if (!activeFields.includes(field)) {
         view.destroy();
@@ -233,7 +182,7 @@ export class GameRenderer {
       const read = world.fieldDisplays.read(field);
       let view = this.underAvatarNodes.get(field);
       if (!view) {
-        view = new FieldUnderAvatarView(read, this.assets, this.rasterTextures);
+        view = new FieldUnderAvatarView(read);
         this.underAvatarNodes.set(field, view);
         this.underAvatars.addChild(view.root);
       }
@@ -245,48 +194,20 @@ export class GameRenderer {
         node.destroy();
         this.fieldNodes.delete(field);
       }
-    for (const [field, view] of this.highlightNodes)
-      if (!activeFields.includes(field)) {
-        view.destroy();
-        this.highlightNodes.delete(field);
-      }
     const states = world.attachedFields().map((state) => ({
       ...state,
       transform: fieldTransform(world, state.field, 'actors'),
     }));
     for (const { field } of states) {
       const node = this.fieldNode(field),
-        raster = this.assets.extras.get(1537),
         transform = fieldTransform(world, field, 'background'),
         scale = transform.scale;
       node.visible = world.fieldDisplays.read(field).root.rooted;
       node.alpha = transform.alpha ?? 1;
-      if (raster) {
-        node.position.set(transform.x + raster.x * scale, transform.y + raster.y * scale);
-        node.width = raster.width * scale;
-        node.height = raster.height * scale;
-      } else {
-        node.position.set(transform.x, transform.y);
-        node.scale.set(scale);
-      }
-      if (this.assets.mode === 'swf' && this.assets.hasSymbol(1780)) {
-        let highlight = this.highlightNodes.get(field);
-        if (!highlight) {
-          highlight = new SwfSymbolView(1780, this.assets, this.rasterTextures);
-          this.highlightNodes.set(field, highlight);
-          this.highlights.addChild(highlight.root);
-        }
-        const source = world.worldDisplays.read(field, 'highlight');
-        const pose = worldLayerTransform(world, field, 'highlight');
-        const point = fieldPoint({ x: 0, y: 0 }, pose);
-        highlight.root.position.set(point.x, point.y);
-        highlight.root.scale.set(pose.scale);
-        highlight.setAlpha(source.pose.alpha);
-        highlight.root.visible = source.rooted;
-        highlight.update(1);
-      }
+      node.position.set(transform.x, transform.y);
+      node.scale.set(scale);
     }
-    // Setup places HUD last; AttachNewBubblefield raises the screen layer at first crossing.
+    // Setup places HUD last; attaching a new field raises the screen layer at first crossing.
     const screenInFront = world.transit !== null || world.connections.size > 0;
     if (
       this.app.stage.getChildIndex(this.screenEffects) >
@@ -334,7 +255,6 @@ export class GameRenderer {
           nodes.delete(field);
         }
     for (const graphics of this.mockShots.values()) graphics.clear();
-    const nativeBulletIds = new Set<number>();
     for (const { runtime, field } of states) {
       const transform = worldLayerTransform(world, field, 'bullet');
       let drawing = this.mockShots.get(field);
@@ -347,26 +267,6 @@ export class GameRenderer {
       drawing.scale.set(transform.scale);
       for (const b of runtime.bullets) {
         if (b.dead) continue;
-        if (this.assets.mode === 'swf' && this.assets.hasSymbol(b.symbol)) {
-          const view = this.nativeSymbol(b.symbol, b.uid, this.bulletNodes, this.nativeShots);
-          const point = fieldPoint(b, transform);
-          view.root.position.set(point.x, point.y);
-          view.root.angle = b.kind === 'grow' ? b.heading : b.angle;
-          view.root.scale.set((b.artScale ?? 1) * transform.scale);
-          view.setAlpha(b.artAlpha ?? 1);
-          if (b.artPose) view.updatePose(b.artPose);
-          else view.update(b.artFrame ?? b.age + 1);
-          if (b.kind === 'beam' || b.kind === 'healBeam') setBeamLength(view, b.beamLength ?? 0);
-          if (b.kind === 'turret' && b.build === 4 && b.stopped) {
-            const record = tanks.find(({ tank }) => tank.uid === b.owner);
-            const owner = record && fieldPoint(record.tank, record.transform);
-            const turret = view.namedChild('inner_mc')?.namedChild('turret_mc');
-            if (owner && turret)
-              turret.root.angle = Math.atan2(owner.y - point.y, owner.x - point.x) / DEG - b.angle;
-          }
-          nativeBulletIds.add(b.uid);
-          continue;
-        }
         const owner =
           b.kind === 'turret' ? tanks.find(({ tank }) => tank.uid === b.owner) : undefined;
         if (drawMockProjectile(drawing, b, owner?.tank)) continue;
@@ -419,7 +319,6 @@ export class GameRenderer {
         }
       }
     }
-    this.pruneSymbols(this.bulletNodes, nativeBulletIds);
     const displayedPickups = new Set<Pickup>();
     let pickupIndex = 0;
     for (const { field } of states) {
@@ -427,17 +326,6 @@ export class GameRenderer {
       for (const b of world.pickupDisplays.owned(field)) {
         const clip = world.pickupDisplays.read(b)!.clip;
         displayedPickups.add(b);
-        if (this.assets.mode === 'swf') {
-          const view = this.nativeSymbol(clip.symbol, b, this.pickupNodes, this.nativePickups);
-          this.nativePickups.setChildIndex(view.root, pickupIndex++);
-          const point = fieldPoint(b, transform);
-          view.root.position.set(point.x, point.y);
-          view.root.angle = b.rotation;
-          view.root.scale.set(transform.scale);
-          view.setParentAlpha(transform.alpha ?? 1);
-          view.updatePose(clip.pose);
-          continue;
-        }
         let drawing = this.mockPickups.get(b);
         if (!drawing) {
           drawing = new Graphics();
@@ -462,7 +350,6 @@ export class GameRenderer {
         drawing.circle(-r * 0.35, -r * 0.35, Math.max(0.5, r * 0.18)).fill(0xeaffb9);
       }
     }
-    this.pruneSymbols(this.pickupNodes, displayedPickups);
     for (const [pickup, drawing] of this.mockPickups)
       if (!displayedPickups.has(pickup)) {
         drawing.destroy();
@@ -484,8 +371,6 @@ export class GameRenderer {
   destroy() {
     if (this.destroyed) return;
     this.destroyed = true;
-    this.pruneSymbols(this.bulletNodes, new Set());
-    this.pruneSymbols(this.pickupNodes, new Set());
     this.minimap?.destroy();
     this.hud?.destroy();
     this.editSlider?.destroy();
@@ -494,8 +379,6 @@ export class GameRenderer {
     this.underAvatarNodes.clear();
     this.tacticalHud?.destroy();
     this.combatEffects?.destroy();
-    for (const view of this.highlightNodes.values()) view.destroy();
-    this.highlightNodes.clear();
     for (const tank of this.tankNodes.values()) tank.destroy();
     this.app.destroy({ removeView: true }, { children: true });
     this.rasterTextures.destroy();

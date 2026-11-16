@@ -2,18 +2,18 @@ import type { BehaviorTargetState, Tank } from '../core/types';
 import type { Random } from '../core/math';
 import type { BehaviorPopulation } from './behavior-targets';
 
-/** Source null MovieClip read aborts the current Main.Run listener, not the stage clock. */
+/** A null clip read aborts the current Run listener, not the stage clock. */
 export class HealerTargetReadError extends Error {
   constructor(message = 'Healer AcquireTarget read a missing ally') {
     super(message);
   }
 }
-/** Immutable design/render metadata survives the source's objData=null assignment. */
+/** Immutable design/render metadata survives the data=null assignment. */
 export function requireHealerData(tank: Tank) {
   if (!tank.dataActive) throw new HealerTargetReadError('Healer read deactivated tank data');
   return tank;
 }
-/** EBehaviorHealer.AcquireTarget; a held reference returns before master/population checks. */
+/** Healer target acquisition; a held reference returns before master/population checks. */
 export function acquireHealerTarget(
   state: BehaviorTargetState,
   owner: Tank,

@@ -13,7 +13,7 @@ import type { AssetPack, SwfMatrix } from '@/game/assets/asset-pack';
 import type { StageRuntime } from '@/game/services/stage-runtime';
 import type { TankDesign } from '@/game/core/types';
 import { UPGRADE_SCREEN, upgradeWidget, upgradeWeaponSummary } from '@/game/core/upgrade-screen';
-import { CreatorPrimitives, CreatorRasterArt } from './creator-controls';
+import { CreatorPrimitives } from './creator-controls';
 import { CreatorText } from './creator-text';
 import { useUpgradeArtwork } from './upgrade-artwork';
 import { Dialog } from './ui';
@@ -27,11 +27,8 @@ function Group({ matrix, children }: { matrix: SwfMatrix; children: ReactNode })
   );
 }
 function Art({ pack, symbol, frame = 1 }: { pack: AssetPack; symbol: number; frame?: number }) {
-  const widget = upgradeWidget(symbol, frame),
-    raster = pack.creatorFrames.get(`upgrade:${symbol}:${frame}`);
-  return raster ? (
-    <CreatorRasterArt raster={raster} />
-  ) : (
+  const widget = upgradeWidget(symbol, frame);
+  return (
     <svg className="upgrade-art" width={1} height={1} aria-hidden="true">
       <CreatorPrimitives
         pieces={widget.art.map((piece) =>
@@ -258,7 +255,6 @@ export function UpgradePanel({
                     {cardArt.fields.map((field) => (
                       <Group key={field.name} matrix={field.matrix}>
                         <CreatorText
-                          pack={pack}
                           field={field}
                           text={
                             (

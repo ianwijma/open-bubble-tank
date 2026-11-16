@@ -116,7 +116,7 @@ test('forcefield overflow re-enters Damage and applies its weaken multiplier aga
   data.parts.push({ ...STARTER.parts[1], key: 'forcefield', type: 5005 });
   const tank = createTank(70, data, 'player');
   // Base Forcefield blocks the weaken projectile. This artificial combination tests the
-  // recovered Damage contract for extensions, not an obtainable shipped loadout/status.
+  // Damage contract for extensions, not an obtainable shipped loadout/status.
   tank.status.weaken = 80;
   world.damage(tank, 25);
   expect(tank.forcefieldReady).toBe(false);

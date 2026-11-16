@@ -1,8 +1,8 @@
 import { expect, test } from 'bun:test';
 import { writeFileSync } from 'node:fs';
 import original from './fixtures/effect-clock-original.json';
-import { decode, rows } from '../tools/reference/effect-clock-evidence.mjs';
-import { effectClockChildAtPath } from '../tools/reference/effect-clock-correspondence';
+import { decode, rows } from './support/effect-clock-rows.mjs';
+import { effectClockChildAtPath } from './support/effect-clock-child';
 import { RegisteredEffects } from '../src/game/simulation/registered-effects';
 import { combatEffect, type CombatEffect } from '../src/game/simulation/effects';
 import { readEffectPlayback, drawEffectLine } from '../src/game/simulation/effect-playback';
@@ -67,10 +67,10 @@ for (const root of original.sourceAudit.roots)
             expect(actual).toEqual(expected);
             totals.currentMatrixComparisons++;
           }
-          // Native Shape wrappers can change their symbol without changing AS identity.
+          // Native Shape wrappers can change their symbol without changing identity.
           // SwfClip leaf placeholders model geometry, not that unqualified wrapper reuse.
           if (row.total === 0) continue;
-          // Original transient AS wrapper holes are neither synthesized nor read here.
+          // Transient wrapper holes are neither synthesized nor read here.
           // All own-pose/descendant correspondence claims are EXIT only.
           if (phase !== 'exit' && row.path !== '0') continue;
           const current = effectClockChildAtPath(pose, row.path);
@@ -175,7 +175,7 @@ for (const root of original.sourceAudit.roots)
       expect(effect!.playback!.symbol).toBe(root.symbol);
       expect(effect!.playback!.totalFrames).toBe(root.frames);
       expect(effect!.playback!.sourceSha256).toBe(original.originalSha256);
-      if (differences.length && process.env.BT3_EFFECT_DIAGNOSTICS)
+      if (differences.length && process.env.SOAPTANK_EFFECT_DIAGNOSTICS)
         writeFileSync(
           `test-results/retained-effects/${cohort}-${root.key}.json`,
           JSON.stringify(differences, null, 2),
@@ -227,7 +227,7 @@ test('line graphics belong to the constructor named child and replacement/reads 
   effect.line = { x: -500, y: 20 }; // Request telemetry cannot mutate numeric drawing ownership.
   expect(readEffectPlayback(effect)).toBe(playback);
   expect(first.lines).toBe(lines);
-  // Explicit timeline retirement/replacement control; the original named property stays retained.
+  // Explicit timeline retirement/replacement control; the named property stays retained.
   playback.pose.children.delete(1);
   playback.pose.gotoAndPlay(2);
   const replacement = playback.pose.children.get(1)!.clip;

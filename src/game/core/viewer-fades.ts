@@ -4,7 +4,7 @@ export interface ViewerFadeState {
   alpha: number;
   mouseEnabled: boolean;
 }
-/** TankViewerScreen._-KT/_-Lv/Update, including forward-splice queue ordering. */
+/** Viewer fades, including forward-splice queue ordering. */
 export class ViewerFades {
   private states = new Map<string, ViewerFadeState>();
   private incoming: string[] = [];

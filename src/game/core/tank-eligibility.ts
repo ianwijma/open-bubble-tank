@@ -6,12 +6,12 @@ export interface TankLoadProfile {
   level: number;
   /** Creator cap and legacy readout fallback; avatar selection derives its cap from level. */
   maxClass: number;
-  /** Stored PlayerProfile.maxClass, distinct from the current-level validation limit. */
+  /** Stored maxClass, distinct from the current-level validation limit. */
   profileMaxClass?: number;
   /** When present, this is the profile's authoritative weapon/module unlock list. */
   unlockedParts?: readonly number[];
 }
-/** PlayerProfile._-0T/DoesProfileHaveAllThePartsForTank and the normal _-cL labels. */
+/** Whether the profile has all the parts for the tank, with the normal reason labels. */
 export function tankLoadEligibility(tank: TankDesign, profile: TankLoadProfile) {
   const baseBudget = gunBudget(tank.classId, tank.avatar ? profile.level : 6),
     budget = tank.avatar ? baseBudget : Math.floor(baseBudget * 1.5),

@@ -1,5 +1,3 @@
-import type { CombatEffectsView } from '../../src/game/render/combat-effects-view';
-import { fieldPoint, worldLayerTransform } from '../../src/game/render/field-transform';
 import { setFieldFixtureLayout } from './field-layout';
 import { importPickupFixtures } from './pickup-attachments';
 import { importActorFixtures } from './actor-attachments';
@@ -105,11 +103,6 @@ export async function showCollapseProof(pack: AssetPack, host: HTMLElement) {
         Math.floor(index / 2) * 225 + 14,
       );
       const avatar = renderer.entities.children.at(-1)!;
-      const effects = (renderer as unknown as { combatEffects: CombatEffectsView }).combatEffects;
-      const bottomLayer = effects.lower(world.field)!.content;
-      const topLayer = effects.top;
-      const b = bottomLayer.children.at(-1)!,
-        t = topLayer.children.at(-1)!;
       snapshots.push({
         age: world.collapse!.age,
         frame: effect.frame,
@@ -117,12 +110,8 @@ export async function showCollapseProof(pack: AssetPack, host: HTMLElement) {
         center: renderer.root.toGlobal(new Point(0, 0)),
         avatar: avatar.getGlobalPosition(),
         avatarScale: avatar.scale.x,
-        shot: renderer.nativeShots.children[0]?.getGlobalPosition() ?? null,
-        sourceShot: fieldPoint({ x: 60, y: 80 }, worldLayerTransform(world, world.field, 'bullet')),
         mockShotScale: renderer.projectiles.children[0]?.scale.x,
         fieldWidth: renderer.fields.children[0].width,
-        bottom: pack.mode === 'swf' ? { x: b.x, y: b.y, scale: b.scale.x } : null,
-        top: pack.mode === 'swf' ? { x: t.x, y: t.y, scale: t.scale.x } : null,
         retainedPosition: { x: effect.x, y: effect.y },
       });
     }

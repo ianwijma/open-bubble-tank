@@ -5,7 +5,7 @@ export interface Vec {
   x: number;
   y: number;
 }
-/** Direct _-Zx children; attached status marks form one contiguous group. */
+/** Direct tank children; attached status marks form one contiguous group. */
 export type TankChild =
   | `part:${string}`
   | `shield-hit:${string}`
@@ -39,7 +39,7 @@ export interface TankPart extends Vec {
   radius: number;
 }
 export interface TankDesign {
-  /** Original encoded identity, retained for source wave-roster lookups. */
+  /** Encoded identity, retained for wave-roster lookups. */
   sourceCode?: string;
   id: string;
   name: string;
@@ -87,26 +87,26 @@ export interface GunState {
   autoTargetId?: number | null;
   rotatingCycle?: { remaining: number; active: boolean };
   suppressionCycle?: { delay: number; spacing: number };
-  /** _-DO.movTarget can retain a turret, or the avatar assigned by cached attachment. */
+  /** The turret target can retain a turret, or the avatar assigned by cached attachment. */
   turretTarget?: Projectile | Tank | null;
   turretRefs?: Projectile[];
   spawnDesign?: TankDesign;
   patientId?: number;
   phasing?: { counter: number };
   behaviorTarget?: BehaviorTargetState;
-  /** Each offensive mount owns the source Weapon target reference and sampled master. */
+  /** Each offensive mount owns the weapon target reference and sampled master. */
   targeting?: BehaviorTargetState;
   wallFlower?: WallFlowerState;
   beamId?: number;
   /** EBehaviorHealer retains beam_mc directly, independently of a wrapper's array. */
   beamRef?: Projectile;
-  /** _-3C keeps its shot even when the parented projectile outlives a cached wrapper. */
+  /** The sapper keeps its shot even when the parented projectile outlives a cached wrapper. */
   sapperRef?: Projectile;
   shieldDiameter?: number;
   shieldFilm?: ShieldClip;
   shieldGeneration?: number;
   mineRefs?: MineReference[];
-  /** Latest non-overlapping mounted MovieClip.play episode, in stage-art ages. */
+  /** Latest non-overlapping mounted clip play episode, in stage-art ages. */
   mountedPlay?: { child: string; age: number; frames: number; artworkFrame?: number };
 }
 export interface BehaviorTargetState {
@@ -134,11 +134,11 @@ export interface ActorMovementState {
   stationary: boolean;
 }
 export interface Tank extends Vec {
-  /** The source caches strTankCode at birth, independently of mutable live data. */
+  /** The tank code is cached at birth, independently of mutable live data. */
   rosterIdentity: string;
   uid: number;
   design: TankDesign;
-  /** NPC Deactivate clears objData before the retained display clip detaches. */
+  /** NPC deactivation clears the data before the retained display clip detaches. */
   dataActive: boolean;
   side: 'player' | 'enemy' | 'ally';
   rotation: number;
@@ -160,7 +160,7 @@ export interface Tank extends Vec {
   shieldManaged?: boolean;
   shieldHitAge: number;
   shieldHitAngle: number;
-  /** AGunShield instances are independent; movShieldHit points to the newest hit. */
+  /** Gun shield instances are independent; the shield-hit pointer points to the newest hit. */
   shieldClips: ShieldClip[];
   shieldHitClip?: ShieldClip;
   teleportReady: boolean;
@@ -174,7 +174,7 @@ export interface Tank extends Vec {
   forcefieldAttached: boolean;
   forcefieldGeneration: number;
   forcefieldStartedAt: number;
-  /** Source direct-child order; browser objects remain renderer-owned. */
+  /** Direct-child order; browser objects remain renderer-owned. */
   displayChildren: TankChild[];
   age: number;
   /** Retained artwork lifetime ticks, independent of parentage and gameplay Run. */
@@ -213,9 +213,9 @@ export type ProjectileKind =
   | 'turret'
   | 'builder';
 export interface Projectile extends Vec {
-  /** HealerBeam retains objHomeTank even after its owner deactivates. */
+  /** The healer beam retains its home tank even after its owner deactivates. */
   healingHome?: Tank;
-  /** HealerBeam retains movTarget independently of a mutable live roster. */
+  /** The healer beam retains its target independently of a mutable live roster. */
   healingTarget?: Tank;
   uid: number;
   owner: number;
@@ -232,7 +232,7 @@ export interface Projectile extends Vec {
   explode: number;
   targetId: number | null;
   hit: Set<number>;
-  /** Source _-MB: wall-miss exemption, independent of remembered contact IDs. */
+  /** Wall-miss exemption, independent of remembered contact IDs. */
   missExempt?: boolean;
   dead: boolean;
   anchor?: GunState;
@@ -258,15 +258,15 @@ export interface Projectile extends Vec {
   contactFrames?: number;
   stopped?: boolean;
   motion?: Vec;
-  /** EnemyTurret retains objHomeTank independently of the current wrapper's arrays. */
+  /** An enemy turret retains its home tank independently of the current wrapper's arrays. */
   turretHome?: Tank;
-  /** Retained _-BL movTarget/objAvatar; target subclasses own their separate home/close rules. */
+  /** Retained target and avatar; target subclasses own their separate home/close rules. */
   homing?: { home?: Tank; target?: Tank; avatar: Tank; close: boolean };
   trailCounter?: number;
   trailPoint?: Vec;
   deflected?: Vec;
   removeAfterFrame?: boolean;
-  /** _-PJ movement gate is independent of the queued-removal vector. */
+  /** The movement gate is independent of the queued-removal vector. */
   movementEnabled?: boolean;
   infectionTries?: number;
   mineState?: { armed: boolean; movement: Vec };
@@ -348,7 +348,7 @@ export interface Settings {
   music: boolean;
   shake: boolean;
   fps: 35 | 50 | 65 | 90;
-  /** Main.mainFPS is saved separately from the live Stage.frameRate. */
+  /** mainFps is saved separately from the live stage frame rate. */
   mainFps: 35 | 50 | 65;
   quality: 'high' | 'medium' | 'low';
   efficient: boolean;

@@ -27,7 +27,7 @@ test('Flash key codes preserve punctuation, duplicate bindings and left/right mo
   expect(hotkeyLabel('ShiftRight')).toBe('SHIFT');
   expect(hotkeyLabel('Semicolon')).toBe(';');
   expect(hotkeyLabel('Numpad3')).toBe('NUMPAD 3');
-  expect(hotkeyLabel('F1')).toBe('p'); // _-Ay's unassigned toUpperCase return preserves this quirk.
+  expect(hotkeyLabel('F1')).toBe('p'); // The unassigned toUpperCase return preserves this quirk.
   const settings = validateSettings({
     ...DEFAULT_SETTINGS,
     h1: 'ShiftRight',

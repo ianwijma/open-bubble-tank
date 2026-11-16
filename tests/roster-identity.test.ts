@@ -19,8 +19,9 @@ function emptyRoster() {
   return roster;
 }
 
-const source = '../documented-bubble-tank-3/re/bt3/builtin_tanks.json';
-test.skipIf(!existsSync(source))(
+// Optional external catalog of the built-in tanks; the check is skipped when unset or missing.
+const source = process.env.SOAPTANK_BUILTIN_TANKS_FILE ?? '';
+test.skipIf(!source || !existsSync(source))(
   'all imported builtin designs retain their exact original encrypted DATA identity',
   () => {
     const recovered = JSON.parse(readFileSync(source, 'utf8')) as Record<

@@ -139,7 +139,7 @@ test('StopFiring preserves an old-layer beam when the current wrapper cannot rem
 
 test('removing the actual parent clears the cached beam only on its next ready trigger', () => {
   const { world, gun, beam, oldRuntime, original } = cachedHealer();
-  // Simulate old owning-layer RemoveBullet, distinct from current-wrapper StopFiring.
+  // Simulate old owning-layer bullet removal, distinct from current-wrapper stop-firing.
   expect(world.removeBullet(beam, original)).toBe(true);
   expect(oldRuntime.bullets).not.toContain(beam);
   expect(world.hasBulletParent(beam)).toBe(false);

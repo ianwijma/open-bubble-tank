@@ -1,7 +1,7 @@
 import symbols from './symbols.json';
 import type { DecoratedStatus, ShieldClip } from '../core/types';
 
-// _-Zx.EffectMeCrazy constructors; numeric IDs are recovered from SymbolClass.
+// Status effect constructors; numeric IDs come from the symbol table.
 export const STATUS_ART: Record<DecoratedStatus, number> = {
   sticky: symbols['_-6d'],
   stun: symbols['_-Y1'],
@@ -14,7 +14,7 @@ export const PROTECTION_ART = {
   shieldHit: symbols['_-Ne'],
   turretShield: symbols['_-bM'],
   turretShieldHit: symbols['_-KJ'],
-  forcefield: symbols['BubbleTanks3_fla.forcefieldanimation_551'],
+  forcefield: symbols['main_fla.forcefieldanimation_551'],
 };
 
 export function shieldClipSymbol(clip: ShieldClip) {

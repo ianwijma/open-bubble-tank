@@ -3,7 +3,7 @@ import type { WorldMode } from '../core/types';
 type RunMode = 'playing' | 'stopped' | 'transit' | 'collapse';
 type Dialog = 'paused' | 'upgrade' | 'secondary-help' | 'won';
 
-/** BTAGameWorld._-Up and intCurrentGameMode are independent of attached dialogs. */
+/** The state and saved mode are independent of attached dialogs. */
 export class WorldFlow {
   state: RunMode = 'playing';
   saved: RunMode = 'playing';
@@ -15,7 +15,7 @@ export class WorldFlow {
       if (this.dialogs.has(dialog)) return dialog;
     return this.state;
   }
-  /** Direct host/fixture assignment replaces the view; source callbacks use the methods below. */
+  /** Direct host/fixture assignment replaces the view; callbacks use the methods below. */
   set mode(value: WorldMode) {
     this.dialogs.clear();
     if (value === 'playing' || value === 'transit' || value === 'collapse' || value === 'stopped')
@@ -37,8 +37,8 @@ export class WorldFlow {
   resume() {
     if (!this.dialogs.delete('paused')) return false;
     this.state = this.saved;
-    // Flash does not open PauseMenu from state2. Its existing browser adapter
-    // must not overwrite the source crossing's eventual return mode.
+    // The pause menu is not opened from state2. The existing browser adapter
+    // must not overwrite the crossing's eventual return mode.
     if (this.crossingPauseSaved !== null) this.saved = this.crossingPauseSaved;
     this.crossingPauseSaved = null;
     return true;
@@ -53,7 +53,7 @@ export class WorldFlow {
     this.dialogs.delete('upgrade');
   }
   openSecondaryHelp() {
-    // PlaceAvatar assigns both fields to1; Close writes only _-Up=0.
+    // Placing the avatar assigns both fields to1; closing writes only the state to0.
     this.state = this.saved = 'stopped';
     this.dialogs.add('secondary-help');
   }
@@ -95,14 +95,14 @@ export class CrossingTargetReadError extends Error {
   }
 }
 
-/** A cached ordinary EnemyAI keeps state1 after Deactivate cleared its data/movement. */
+/** A cached ordinary enemy keeps state1 after deactivation cleared its data/movement. */
 export class DeactivatedActorRunError extends Error {
   constructor() {
     super('EnemyAI.Run read deactivated actor data or movement');
   }
 }
 
-/** RemoveEnemy reaches removeChild after medal polling but before array splicing. */
+/** Enemy removal reaches removeChild after medal polling but before array splicing. */
 export class FieldChildRemovalError extends Error {
   constructor() {
     super('Bubblefield removal callback no longer owns its actor child');

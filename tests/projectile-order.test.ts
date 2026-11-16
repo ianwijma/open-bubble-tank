@@ -143,7 +143,7 @@ test('Massive Cannon samples its authored width and advances after a hit, skippi
   };
   b.x = 0;
   tick(world, b);
-  expect(released).toBe(0); // _-dp checks its prior-hit list before carrier interception.
+  expect(released).toBe(0); // The projectile checks its prior-hit list before carrier interception.
 });
 
 test('splash callback runs before direct damage and excludes only the current contact, not previous piercing hits', () => {
@@ -297,7 +297,7 @@ test('the shipped infection acquisition bug expires at setup and first Run rathe
   expect(world.bullets).toEqual([]);
   expect(target.status.infect).toBe(0);
   // Emitter (8.5,0.5), starter scale71/76 and mount(-1,0), then the6px Run write.
-  // _-U4 still reaches both twip setters after the failed acquisition.
+  // The infection projectile still reaches both twip setters after the failed acquisition.
   expect([b.x, b.y]).toEqual([12.9, 0.45]);
   expect(world.effects.map((e) => [e.symbol, e.rotation])).toEqual([
     [1767, 0],

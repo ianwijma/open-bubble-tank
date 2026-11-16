@@ -39,7 +39,7 @@ test('mock creator previews animate Skittish and Phasing before and after placem
     expect((await readCreatorDesign(page)).parts).toHaveLength(1);
     const placed = await designHash();
     await expect.poll(designHash, { timeout: 5000 }).not.toBe(placed);
-    // Each accepted design contains one behavior type, as the original requires.
+    // Each accepted design contains one behavior type, as required.
     if (name === 'Skittish') await page.getByRole('button', { name: 'Undo', exact: true }).click();
   }
   await page.screenshot({ path: 'test-results/mock-creator-live-behaviors.png' });

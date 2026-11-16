@@ -8,7 +8,6 @@ import { applyProjectileStatus } from '../src/game/simulation/status';
 import { World, emptyInput } from '../src/game/simulation/world';
 import { cacheEmptyField } from './fixtures/empty-field';
 
-// Source _-Zx.Damage/IsOutside/Deactivate and _-6g.FinalPartCall.
 // Infection and custom allied pods are explicit state/API fixtures, not public-playthrough proof.
 const body = {
   ...STARTER,

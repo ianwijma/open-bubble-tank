@@ -63,7 +63,7 @@ export const projectileGeometrySource: ScriptBoundsSource & {
 };
 const known = (id: number) => !!sprites[id] || !!leaves[id];
 
-/** Exact source Script AABB; alpha/masks do not alter this geometric query. */
+/** Exact Script AABB; alpha/masks do not alter this geometric query. */
 export function authoredProjectileBounds(b: Projectile, owner?: Vec): Bounds | undefined {
   if (!known(b.symbol)) return undefined;
   return (
@@ -135,7 +135,7 @@ function mixBounds(start: TwipBounds, end: TwipBounds | undefined, t: number): B
 /**
  * Numeric ellipse silhouettes for both mock painting and contact. Fully transparent
  * helpers and mask artwork are excluded; active masks are exposed as rectangular
- * constraints (their original vector contours are intentionally not imported).
+ * constraints (their vector contours are intentionally not imported).
  */
 export function mockProjectileShapes(
   b: Projectile,
@@ -202,7 +202,7 @@ export function mockProjectileShapes(
       let childAge = childPose?.age ?? projectileGeometrySource.childAge(id, age, p),
         local = p.matrix;
       if (dynamicBeam) {
-        // _-CO/HealerBeam assign this mask dynamically, rather than via clipDepth.
+        // Beams assign this mask dynamically, rather than via clipDepth.
         if (p.name === 'mask_mc') continue;
         const length = Math.max(0, b.beamLength ?? 0);
         if (p.name === 'endCap_mc') local = { ...local, tx: length * 20 };

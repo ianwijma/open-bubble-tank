@@ -48,7 +48,7 @@ test('map cycling repositions a settled slider and preserves the previous trigge
   expect([state.x, state.y, state.layout.frame]).toEqual([24, 304, 3]);
   state.hide();
   state.advance();
-  expect(state.x).toBe(-16); // _-BV changes the variant, not the previous 40px trigger speed.
+  expect(state.x).toBe(-16); // Reflow changes the variant, not the previous 40px trigger speed.
 });
 test('clearing and reentering fields trigger the slider, crossings keep its clock, pause freezes it', () => {
   const world = new World([], [STARTER, STARTER], 50);

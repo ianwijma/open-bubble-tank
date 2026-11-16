@@ -9,7 +9,7 @@ import { removeTankChild } from '../src/game/simulation/tank-display';
 import { World, emptyInput } from '../src/game/simulation/world';
 import first from './fixtures/actor-clock-original-a.json';
 import second from './fixtures/actor-clock-original-b.json';
-import { rows } from '../tools/reference/actor-clock-evidence.mjs';
+import { rows } from './support/actor-clock-rows.mjs';
 
 const names = ['wiggle-negative', 'wiggle-positive', 'rotor'];
 const design: TankDesign = {
@@ -63,7 +63,7 @@ for (const [capture, original] of [
             .map((r) => r.frame),
         ),
       ];
-      expect(values).toHaveLength(1); // Reentrant original EXITs must agree; never select a fitted row.
+      expect(values).toHaveLength(1); // Reentrant EXITs must agree; never select a fitted row.
       return values[0];
     });
   test(`actor phases ${capture}: constructor reads precede initial scripts`, () => {

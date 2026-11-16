@@ -2,7 +2,7 @@ import { Random } from '../core/math';
 import type { PartDefinition } from '../core/types';
 import { SwfClip, type ClipSource } from './swf-clip';
 
-/** Fresh poster construction and the source's separate body-only class capture. */
+/** Fresh poster construction and the separate body-only class capture. */
 export function partSnapshot(
   part: Pick<PartDefinition, 'id' | 'symbol'>,
   source: ClipSource,

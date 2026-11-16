@@ -101,7 +101,7 @@ export class GameInput {
     if (activate) this.onLock();
     if (!this.keys.has('Space')) this.secondary = false;
     else if (s.h3 !== 'Space' && s.h4 !== 'Space') this.secondary = true;
-    // Main can move under a stationary pointer during shake; Flash mouseX/Y
+    // Main can move under a stationary pointer during shake; mouseX/Y
     // resolve against its current transform on every stage frame.
     if (this.pointer) {
       const r = this.host.getBoundingClientRect();

@@ -108,7 +108,7 @@ export function changeSetting(
   }
   return { ...settings, [key]: value };
 }
-/** _-Sm's selector belongs to a menu instance, not its transient Settings645 child. */
+/** The selector belongs to a menu instance, not its transient settings child. */
 export class MenuSettingsState {
   selectedFps: Settings['mainFps'];
   constructor(mainFps: Settings['mainFps']) {
@@ -132,7 +132,7 @@ export function settingSelection(
       : settings.mainFps
     : settings[key];
 }
-/** PauseMenu._-C7/_-B9/_-Lz/_-eE; gates see preceding setters in the same frame. */
+/** Gates see preceding setters in the same frame. */
 export class SettingsMotion {
   readonly settings = Object.fromEntries(
     SETTINGS_SCREEN.pause.settings.pieces.map((p) => [

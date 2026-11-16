@@ -5,11 +5,11 @@ export interface MainFlash {
   fillAlpha: number;
   alpha: number;
 }
-// DisplayObject stores coordinates as twips and alpha as an 8.8 color transform.
+// A display object stores coordinates as twips and alpha as an 8.8 color transform.
 const pixels = (value: number) => Math.trunc(value * 20) / 20 || 0;
 const alpha = (value: number) => Math.trunc(value * 256) / 256 || 0;
 
-/** _-1w: Main ENTER_FRAME effects, independent of the world and its camera. */
+/** Main ENTER_FRAME effects, independent of the world and its camera. */
 export class MainEffects {
   position: Vec = { x: 0, y: 0 };
   flashes: MainFlash[] = [];
@@ -37,7 +37,7 @@ export class MainEffects {
   private resetPosition() {
     if (this.position.x === this.baseline.x && this.position.y === this.baseline.y) return;
     this.remaining = 0;
-    // Pcode confirms the source passes baseline, not its computed reset delta, to _-bS.
+    // The baseline is passed on, not the computed reset delta.
     const x = this.baseline.x,
       y = this.baseline.y;
     this.baseline.x = Math.round(x);
@@ -58,7 +58,7 @@ export class MainEffects {
         const roll = () => Math.round(random() * (amplitude * 2 + 0.8) - amplitude - 0.4);
         const x = this.baseline.x + roll() * fraction,
           y = this.baseline.y + roll() * fraction;
-        // _-D9 assigns the candidate before _-bS adds the rounded delta a second time.
+        // The candidate is assigned before the rounded delta is added a second time.
         this.position = {
           x: pixels(pixels(x) + Math.round(x - this.position.x)),
           y: pixels(pixels(y) + Math.round(y - this.position.y)),

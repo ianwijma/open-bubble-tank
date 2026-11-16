@@ -66,7 +66,7 @@ function paintWeapon(ctx: CanvasRenderingContext2D, layout: MockPartLayout) {
     ctx.lineWidth = bubble.lineWidth;
     ctx.strokeStyle = color(facts.rim);
     if (bubble.lineWidth > 0) ctx.stroke();
-    // Source-derived area/covariance ellipses approximate each visible glint.
+    // Area/covariance ellipses approximate each visible glint.
     for (const glint of circle.glints) {
       ctx.beginPath();
       ctx.ellipse(glint.x, glint.y, glint.rx, glint.ry, glint.rotation, 0, Math.PI * 2);
@@ -77,7 +77,7 @@ function paintWeapon(ctx: CanvasRenderingContext2D, layout: MockPartLayout) {
   }
 }
 
-/** Procedural fallback only; original SWF artwork continues through AssetPack unchanged. */
+/** Procedural fallback only. */
 export function mockPart(id: number): Raster {
   const body = id < 2000;
   const layout = body ? undefined : (mockPartLayout(id) ?? mockPartLayout(2001));
@@ -94,7 +94,7 @@ export function mockPart(id: number): Raster {
   return proceduralRaster(bounds, (ctx) => {
     function bubble(x: number, y: number, r: number, armored = false) {
       const fill = ctx.createRadialGradient(x - r * 0.18, y - r * 0.22, 0, x, y, r);
-      // Native bodies have a blue film, not an empty center. Keep enough translucency
+      // Bodies have a blue film, not an empty center. Keep enough translucency
       // to pick up the field beneath, with filled collision coverage throughout.
       fill.addColorStop(0, armored ? 'rgba(15,114,157,.64)' : 'rgba(15,140,190,.65)');
       fill.addColorStop(0.72, armored ? 'rgba(12,104,147,.65)' : 'rgba(15,137,187,.64)');

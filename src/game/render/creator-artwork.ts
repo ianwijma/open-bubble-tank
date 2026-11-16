@@ -68,15 +68,15 @@ export class CreatorArtwork {
     if (!symbol) return;
     const view = new SwfSymbolView(symbol, this.pack, this.textures, { random: Math.random }),
       wrapper = new Container();
-    view.update(1, undefined, 0, part.y);
+    view.update(1, undefined, part.y);
     const raster = this.pack.part(part.type);
     const bounds =
       view.scriptBounds() ??
       (this.pack.hasPartTimeline(part.type)
         ? { width: 0, height: 0 }
         : {
-            width: raster.width - (this.pack.mode === 'swf' ? 4 : 6),
-            height: raster.height - (this.pack.mode === 'swf' ? 4 : 6),
+            width: raster.width - 6,
+            height: raster.height - 6,
           });
     wrapper.addChild(view.root);
     return {
@@ -88,7 +88,7 @@ export class CreatorArtwork {
       thumbnailScale: creatorThumbnailScale(bounds.width, bounds.height),
     };
   }
-  /** A new source detail focus constructs a fresh clip, even for the same part type. */
+  /** A new detail focus constructs a fresh clip, even for the same part type. */
   clearLayer(layer: Layer) {
     const group = this.groups.get(layer);
     if (!group) return;
@@ -157,7 +157,7 @@ export class CreatorArtwork {
       view.setParentAlpha(alpha);
       wrapper.filters = invalid ? [this.gray] : null;
       group.root.setChildIndex(wrapper, group.root.children.length - 1);
-      view.update(Math.max(1, frame - node.born + 1), undefined, 0, part.y);
+      view.update(Math.max(1, frame - node.born + 1), undefined, part.y);
     }
     this.app.stage.removeChildren();
     this.app.stage.addChild(group.root);

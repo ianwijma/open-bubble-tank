@@ -26,9 +26,9 @@ const sample = (label: string, phase: string, role: string) => {
   return found;
 };
 
-/** Control-local geometry only: independently verified original centres hit and
+/** Control-local geometry only: independently verified centres hit and
  * their1000px displacement misses. Reject every other Point rather than using a
- * rectangular/circular approximation of the original contours.
+ * rectangular/circular approximation of the contours.
  */
 function controlLeaf(symbol: number): DisplayGeometryNode {
   const radius = symbol === 1539 ? 8475 : symbol === 1544 ? 1010 : undefined;

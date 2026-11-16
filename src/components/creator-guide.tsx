@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { AssetPack } from '@/game/assets/asset-pack';
 import { CREATOR_GUIDE, advanceCreatorGuide } from '@/game/core/creator-guide';
-import { CreatorPrimitives, CreatorRasterArt } from './creator-controls';
+import { CreatorPrimitives } from './creator-controls';
 
 export function CreatorGuide({
   pack,
@@ -30,7 +30,6 @@ export function CreatorGuide({
   }, [onStart]);
   if (frame === 1) return null;
   const page = CREATOR_GUIDE.frames.find((f) => f.frame === frame)!,
-    raster = pack.creatorFrames.get(`guide:${frame}`),
     m = CREATOR_GUIDE.parent;
   return (
     <section
@@ -59,20 +58,15 @@ export function CreatorGuide({
       <p className="sr-only" aria-live="polite">
         {page.text}
       </p>
-      {raster ? (
-        <CreatorRasterArt raster={raster} />
-      ) : (
-        <svg viewBox="0 0 550 450" aria-hidden="true">
-          <CreatorPrimitives pieces={page.art} />
-        </svg>
-      )}
+      <svg viewBox="0 0 550 450" aria-hidden="true">
+        <CreatorPrimitives pieces={page.art} />
+      </svg>
       {page.buttons
         .filter((b) => frame !== 2 || b.name !== 'back_tut')
         .map((button) => {
           const b = button.bounds,
             matrix = button.matrix,
-            state = hover === button.name ? 2 : 1,
-            art = pack.creatorFrames.get(`guide-button:${button.symbol}:${state}`);
+            state = hover === button.name ? 2 : 1;
           return (
             <button
               key={button.name}
@@ -100,13 +94,9 @@ export function CreatorGuide({
                 if (next === 1) onClose();
               }}
             >
-              {art ? (
-                <CreatorRasterArt raster={art} offsetX={-b.x} offsetY={-b.y} />
-              ) : (
-                <svg viewBox={`${b.x} ${b.y} ${b.width} ${b.height}`} aria-hidden="true">
-                  <CreatorPrimitives pieces={button.art[state - 1]} />
-                </svg>
-              )}
+              <svg viewBox={`${b.x} ${b.y} ${b.width} ${b.height}`} aria-hidden="true">
+                <CreatorPrimitives pieces={button.art[state - 1]} />
+              </svg>
             </button>
           );
         })}

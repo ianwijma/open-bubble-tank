@@ -13,7 +13,7 @@ import { spawnPickups } from '../src/game/simulation/pickups';
 import { World, emptyInput } from '../src/game/simulation/world';
 import { cacheEmptyField } from './fixtures/empty-field';
 
-/** Synthetic fills qualify traversal/routing, never original field contours. */
+/** Synthetic fills qualify traversal/routing, never field contours. */
 const leaf = (
   xMin: number,
   yMin: number,
@@ -63,7 +63,7 @@ test('live first/new field Script widths retain original authored and four-child
     expect(width(world, geometry)).toBe(expected);
   }
   // Synthetic dynamic geometry stays within the mask extrema in these controls.
-  // This is not a measurement of the original tutorial or complete native field.
+  // This is not a measurement of the tutorial or complete field.
 });
 
 test('field widths reread physical actor geometry after movement, raw-array replacement and explicit detach', () => {
@@ -96,7 +96,7 @@ test('each dynamic slot must resolve and contribute independently, including cur
   world.pickupDisplays.remove(pickup, world.field);
   const effect = world.addCombatEffect({ x: 1200, y: 0 }, 'rocketTrail', {}, true);
   expect(width(world, geometry)).toBe(1895.75);
-  // A point outside the source under-mask cannot see this synthetic effect fill.
+  // A point outside the under-mask cannot see this synthetic effect fill.
   expect(fieldStageShapeHit(world, world.field, geometry, { x: 1475, y: 225 })).toBe(false);
   world.effectEngine.clear();
   expect(width(world, geometry)).toBe(1381.4);

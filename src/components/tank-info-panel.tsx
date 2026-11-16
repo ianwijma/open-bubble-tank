@@ -2,7 +2,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { AssetPack } from '@/game/assets/asset-pack';
 import type { Tank } from '@/game/core/types';
-import { TANK_INFO, TankInfoMotion, infoTextLines, tankInfoFields } from '@/game/core/tank-info';
+import { TANK_INFO, TankInfoMotion, tankInfoFields } from '@/game/core/tank-info';
 import { BubbleText, Dialog } from './ui';
 import { TankPortrait } from './tank-portrait';
 import type { StageRuntime } from '@/game/services/stage-runtime';
@@ -92,8 +92,7 @@ export function TankInfoPanel({
       {TANK_INFO.pieces.map((piece) => {
         const button = piece.name === 'btnBack_mc',
           image = piece.name === 'TankImage_mc';
-        const p = motion.positions[piece.name],
-          raster = pack.uiFrames.get(piece.symbol)?.[0];
+        const p = motion.positions[piece.name];
         return (
           <div
             key={piece.name}
@@ -105,28 +104,14 @@ export function TankInfoPanel({
             }}
             style={{ transform: `translate(${p.x}px,${p.y}px)` }}
           >
-            {raster && !image ? (
-              <img
-                alt=""
-                src={raster.url}
-                style={{
-                  left: raster.x,
-                  top: raster.y,
-                  width: raster.width,
-                  height: raster.height,
-                }}
-              />
-            ) : null}
-            {pack.mode === 'mock' && !image && !button ? (
-              <MockInfoPiece name={piece.name} pack={pack} />
-            ) : null}
+            {!image && !button ? <MockInfoPiece name={piece.name} /> : null}
             {piece.fields.map((field) => (
-              <InfoText key={field.name} pack={pack} field={field} text={fields[field.name]} />
+              <InfoText key={field.name} field={field} text={fields[field.name]} />
             ))}
             {image && !closing ? <TankPortrait tank={tank} pack={pack} stage={stage} /> : null}
             {button ? (
               <button
-                className={`tank-info-back ${pack.mode === 'swf' ? 'native' : ''}`}
+                className="tank-info-back"
                 disabled={closing}
                 aria-label="BACK"
                 onClick={exit}
@@ -137,7 +122,7 @@ export function TankInfoPanel({
                   height: piece.bounds.height,
                 }}
               >
-                {pack.mode === 'mock' ? 'BACK' : null}
+                BACK
               </button>
             ) : null}
           </div>
@@ -157,19 +142,12 @@ export function TankInfoPanel({
 }
 
 function InfoText({
-  pack,
   field,
   text,
 }: {
-  pack: AssetPack;
   field: (typeof TANK_INFO.pieces)[number]['fields'][number];
   text: string;
 }) {
-  const measure = (value: string) => {
-    const svg = pack.textSvg(value, field.size, '#fff', 'Arial');
-    return svg ? Number(svg.match(/width="([\d.]+)"/)?.[1]) : value.length * field.size * 0.52;
-  };
-  const lines = infoTextLines(text, field.width - 4, measure);
   return (
     <span
       className="tank-info-field"
@@ -182,33 +160,16 @@ function InfoText({
         fontSize: field.size,
       }}
     >
-      {pack.mode === 'swf'
-        ? lines.map((line, i) => (
-            <span
-              key={i}
-              style={{
-                position: 'absolute',
-                left: 2,
-                top: 2 + field.size * (field.ascent / 1024 - 1) + i * 16,
-              }}
-            >
-              <BubbleText pack={pack} font="Arial" size={field.size}>
-                {line}
-              </BubbleText>
-            </span>
-          ))
-        : text}
+      {text}
     </span>
   );
 }
 
-function MockInfoPiece({ name, pack }: { name: string; pack: AssetPack }) {
+function MockInfoPiece({ name }: { name: string }) {
   if (name === 'Title_mc')
     return (
       <span className="tank-info-title">
-        <BubbleText pack={pack} size={36}>
-          tank information
-        </BubbleText>
+        <BubbleText size={36}>tank information</BubbleText>
       </span>
     );
   if (name === 'ClassHealth_mc')

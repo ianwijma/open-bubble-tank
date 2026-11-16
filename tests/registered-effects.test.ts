@@ -181,7 +181,7 @@ function chargedWorld() {
   world.hitTest = () => false;
   const gun = world.player.guns[0];
   // An already-registered final-frame control preserves callback registration
-  // order independently of the field queue's newly recovered tail phase.
+  // order independently of the field queue's tail phase.
   const carrier = world.registerEffectCallback({ owner: world.player, gun, total: 26, frame: 26 });
   return { world, gun, carrier };
 }
@@ -244,7 +244,7 @@ test('queued damage-burst scale and actual clip edits survive independently of f
   const effect = world.addCombatEffect({ x: 13.049, y: -23.049 }, 'damageBurst', {
     randomRotation: false,
   });
-  effect.scale = 0.5; // Source EnemyFlakBullet.as20–23 writes the clip before enqueue.
+  effect.scale = 0.5; // The clip is written before enqueue.
   effect.rotation = 31;
   effect.x = 90;
   effect.y = 80;

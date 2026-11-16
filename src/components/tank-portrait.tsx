@@ -4,7 +4,7 @@ import type { AssetPack } from '@/game/assets/asset-pack';
 import type { Tank } from '@/game/core/types';
 import type { StageRuntime } from '@/game/services/stage-runtime';
 
-/** The current mounted tank above the blurred field; source child clips keep their stage clock. */
+/** The current mounted tank above the blurred field; child clips keep their stage clock. */
 export function TankPortrait({
   pack,
   tank,

@@ -76,7 +76,6 @@ export function SettingsPanel({
   const [motion] = useState(() => new SettingsMotion());
   const [ownMenuState] = useState(() => new MenuSettingsState(settings.mainFps));
   const menu = menuState ?? ownMenuState;
-  const [hovered, setHovered] = useState('');
   const [hoverFps, setHoverFps] = useState('');
   const nodes = useRef(new Map<string, HTMLElement>());
   const layer = useRef<HTMLDivElement>(null);
@@ -141,23 +140,6 @@ export function SettingsPanel({
     );
   };
   const layouts = overPause ? SETTINGS_SCREEN.pause : SETTINGS_SCREEN.menu;
-  const asset = (p: Leaf, frame = 0) => {
-    const raster = pack.uiFrames.get(p.symbol)?.[frame] ?? pack.uiFrames.get(p.symbol)?.[0];
-    return raster ? (
-      <img
-        alt=""
-        src={raster.url}
-        style={{
-          position: 'absolute',
-          left: raster.x,
-          top: raster.y,
-          width: raster.width,
-          height: raster.height,
-          pointerEvents: 'none',
-        }}
-      />
-    ) : null;
-  };
   const keyFor = (name: string) =>
     HOTKEYS.find(([, , , short]) => name === `${short}_mc` || name === `${short}_txt`);
   const renderLeaf = (
@@ -165,7 +147,6 @@ export function SettingsPanel({
     screen: 'settings' | 'hotkeys',
     row?: (typeof SETTING_ROWS)[number],
   ) => {
-    const leafId = `${screen}:${row?.name ?? 'root'}:${p.name}`;
     if (
       p.name === 'lock_mc' ||
       p.name === 'lock_txt' ||
@@ -188,21 +169,13 @@ export function SettingsPanel({
           className={`authored-option ${selected ? 'selected' : ''} ${pack.mode}`}
           style={{ transform: transform(p) }}
           onPointerEnter={() => {
-            setHovered(leafId);
             if (entry.key === 'fps') setHoverFps(String(value));
           }}
-          onPointerLeave={() => {
-            setHovered('');
-            setHoverFps('');
-          }}
+          onPointerLeave={() => setHoverFps('')}
         >
-          {pack.mode === 'swf' ? (
-            asset(p, selected || hovered === leafId ? 1 : 0)
-          ) : (
-            <span className="mock-option" style={boundsStyle(p)}>
-              {entry.labels[index]}
-            </span>
-          )}
+          <span className="mock-option" style={boundsStyle(p)}>
+            {entry.labels[index]}
+          </span>
           <input
             type="radio"
             name={`setting-${entry.key}`}
@@ -259,14 +232,10 @@ export function SettingsPanel({
           onClick={() => setBinding(key[0])}
         >
           <span style={artworkOffset(hit)}>
-            {pack.mode === 'swf' ? (
-              asset(p, binding === key[0] ? 1 : 0)
-            ) : (
-              <span
-                className={`mock-key ${binding === key[0] ? 'binding' : ''}`}
-                style={boundsStyle(p)}
-              />
-            )}
+            <span
+              className={`mock-key ${binding === key[0] ? 'binding' : ''}`}
+              style={boundsStyle(p)}
+            />
             <span className="settings-hit" style={boundsStyle(hit)} />
           </span>
         </button>
@@ -284,9 +253,7 @@ export function SettingsPanel({
             fontSize: p.field.size,
           }}
         >
-          <BubbleText pack={pack} font="Arial" size={p.field.size}>
-            {text}
-          </BubbleText>
+          <BubbleText size={p.field.size}>{text}</BubbleText>
         </span>
       );
     }
@@ -305,26 +272,14 @@ export function SettingsPanel({
             isHotkeys ? 'HotKey Options' : screen === 'hotkeys' ? 'Back to settings' : 'DONE'
           }
           onClick={isHotkeys ? openHotkeys : back}
-          onPointerEnter={() => setHovered(leafId)}
-          onPointerLeave={() => setHovered('')}
         >
           <span style={artworkOffset(p)}>
-            {pack.mode === 'swf' ? (
-              asset(p, hovered === leafId ? 1 : 0)
-            ) : (
-              <span className="mock-action" style={boundsStyle(p)}>
-                {p.label?.text ?? (isHotkeys ? 'HotKey Options' : 'BACK')}
-              </span>
-            )}
+            <span className="mock-action" style={boundsStyle(p)}>
+              {p.label?.text ?? (isHotkeys ? 'HotKey Options' : 'BACK')}
+            </span>
             <span className="settings-hit" style={boundsStyle(p)} />
           </span>
         </button>
-      );
-    if (pack.mode === 'swf')
-      return (
-        <span className="settings-static" style={{ transform: transform(p) }}>
-          {asset(p)}
-        </span>
       );
     const title = p.symbol === 619 || p.symbol === 608 || p.name === 'Title_mc';
     if (title)
@@ -333,7 +288,7 @@ export function SettingsPanel({
           className="settings-mock-title"
           style={{ transform: transform(p), ...boundsStyle(p) }}
         >
-          <BubbleText pack={pack} size={p.label?.size ?? 40}>
+          <BubbleText size={p.label?.size ?? 40}>
             {p.label?.text ?? (screen === 'hotkeys' ? 'Hotkeys' : 'settings')}
           </BubbleText>
         </span>

@@ -41,7 +41,7 @@ export const UPGRADE_SCREEN = geometry as {
 export const upgradeWidget = (symbol: number, frame = 1) =>
   UPGRADE_SCREEN.widgets.find((widget) => widget.symbol === symbol && widget.frame === frame)!;
 
-/** _-Bz/_-Wp: sort each category, abbreviate3+ distinct types, retain failed substr trims. */
+/** Sort each category, abbreviate3+ distinct types, retain failed substr trims. */
 export function upgradeWeaponSummary(tank: TankDesign, category: 2 | 3 | 5) {
   const counts = new Map<number, number>();
   for (const part of tank.parts)
@@ -58,7 +58,7 @@ export function upgradeWeaponSummary(tank: TankDesign, category: 2 | 3 | 5) {
     .join('');
 }
 
-/** _-aG recenters available adjacent-class slots after removing their unavailable siblings. */
+/** Available adjacent-class slots are recentered after removing their unavailable siblings. */
 export function upgradeCardMatrix(index: number, count: number): SwfMatrix {
   const card = UPGRADE_SCREEN.viewers.cards[index];
   const spacing =
@@ -86,7 +86,7 @@ export function upgradePartBounds(part: TankPart, bounds: Rect): Rect {
   };
 }
 
-/** Upgrade previews have no LoadingBox helpers, never enlarge, and center their actual bounds. */
+/** Upgrade previews have no loading box helpers, never enlarge, and center their actual bounds. */
 export function upgradePreviewPlacement(boxes: readonly Rect[]) {
   if (!boxes.length) return { scale: 1, x: 0, y: 0, width: 0, height: 0 };
   const x = Math.min(...boxes.map((box) => box.x)),

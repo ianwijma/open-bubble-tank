@@ -1,53 +1,43 @@
 import { waitForMainMenu } from './helpers/main-menu';
 import { expect, test } from '@playwright/test';
-import { existsSync, readFileSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { readCreatorDesign, dropPreview } from './helpers/creator';
 const layouts = JSON.parse(
   readFileSync(resolve('src/game/data/part-geometry.json'), 'utf8'),
 ) as Record<number, { bounds: { width: number } }>;
 
-const swf =
-  process.env.BT3_SWF_FILE ?? resolve('../documented-bubble-tank-3/re/bt3/uncompressed.swf');
-for (const native of [false, true])
-  test(`${native ? 'SWF comparison' : 'mock'} gun and behavior silhouettes preserve catalog layouts and visible contact`, async ({
-    page,
-  }) => {
-    test.skip(
-      native && !existsSync(swf),
-      'Supply the local research SWF for silhouette comparison.',
-    );
-    const errors: string[] = [];
-    page.on('pageerror', (error) => errors.push(error.message));
-    await page.goto('http://127.0.0.1:3102');
-    await page.getByLabel('Fixture').selectOption('mock-parts');
-    if (native) await page.getByLabel('Original SWF').setInputFiles(swf);
-    else await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
-    const status = page.getByRole('status');
-    await expect(status).toContainText('Ready', { timeout: 60000 });
-    const proof = JSON.parse((await status.getAttribute('data-mock-parts'))!);
-    await test.info().attach('catalog-silhouette-comparison', {
-      body: JSON.stringify(proof),
-      contentType: 'application/json',
-    });
-    expect(proof.samples).toHaveLength(73);
-    for (const sample of proof.samples) {
-      expect(sample.painted, String(sample.id)).toBeGreaterThan(40);
-      expect(sample.contactRatio, String(sample.id)).toBeGreaterThan(0.98);
-      expect(sample.mockWidth, String(sample.id)).toBeCloseTo(sample.nativeWidth, 4);
-      expect(sample.iou, `${sample.id}: source/mock silhouette overlap`).toBeGreaterThan(0.85);
-    }
-    const behaviors = proof.samples.filter((s: { id: number }) => s.id >= 6001 && s.id <= 6005);
-    expect(behaviors.map((s: { bubbles: number }) => s.bubbles)).toEqual([7, 5, 2, 5, 6]);
-    expect(new Set(behaviors.map((s: { hash: number }) => s.hash)).size).toBe(5);
-    expect(
-      proof.samples.reduce((sum: number, s: { iou: number }) => sum + s.iou, 0) / 73,
-    ).toBeGreaterThan(0.94);
-    await page
-      .locator('#stage canvas')
-      .screenshot({ path: `test-results/${native ? 'comparison' : 'mock'}-part-layouts.png` });
-    expect(errors).toEqual([]);
+test(`mock gun and behavior silhouettes preserve catalog layouts and visible contact`, async ({
+  page,
+}) => {
+  const errors: string[] = [];
+  page.on('pageerror', (error) => errors.push(error.message));
+  await page.goto('http://127.0.0.1:3102');
+  await page.getByLabel('Fixture').selectOption('mock-parts');
+  await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
+  const status = page.getByRole('status');
+  await expect(status).toContainText('Ready', { timeout: 60000 });
+  const proof = JSON.parse((await status.getAttribute('data-mock-parts'))!);
+  await test.info().attach('catalog-silhouette-comparison', {
+    body: JSON.stringify(proof),
+    contentType: 'application/json',
   });
+  expect(proof.samples).toHaveLength(73);
+  for (const sample of proof.samples) {
+    expect(sample.painted, String(sample.id)).toBeGreaterThan(40);
+    expect(sample.contactRatio, String(sample.id)).toBeGreaterThan(0.98);
+    expect(sample.mockWidth, String(sample.id)).toBeCloseTo(sample.nativeWidth, 4);
+    expect(sample.iou, `${sample.id}: source/mock silhouette overlap`).toBeGreaterThan(0.85);
+  }
+  const behaviors = proof.samples.filter((s: { id: number }) => s.id >= 6001 && s.id <= 6005);
+  expect(behaviors.map((s: { bubbles: number }) => s.bubbles)).toEqual([7, 5, 2, 5, 6]);
+  expect(new Set(behaviors.map((s: { hash: number }) => s.hash)).size).toBe(5);
+  expect(
+    proof.samples.reduce((sum: number, s: { iou: number }) => sum + s.iou, 0) / 73,
+  ).toBeGreaterThan(0.94);
+  await page.locator('#stage canvas').screenshot({ path: `test-results/mock-part-layouts.png` });
+  expect(errors).toEqual([]);
+});
 
 test('mock creator previews distinct guns and behaviors and places their authored extents', async ({
   page,

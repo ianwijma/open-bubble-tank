@@ -3,7 +3,7 @@ import { angleTo } from '../core/math';
 import type { World } from './world';
 import { degradeTank } from './degradation';
 
-/** _-Zx.Damage: int argument, weaken, shield, recursive forcefield overflow, then life. */
+/** Int argument, weaken, shield, recursive forcefield overflow, then life. */
 export function damageTank(world: World, tank: Tank, amount: number, bullet?: Projectile) {
   if (tank.dead) return;
   const damage = ((amount | 0) * (tank.status.weaken > 0 ? 2 : 1)) | 0;
@@ -26,7 +26,7 @@ export function damageTank(world: World, tank: Tank, amount: number, bullet?: Pr
       tank.forcefield = -15;
       tank.forcefieldFrame = 26;
     }
-    // The source calls Damage again, including a second weaken pass on overflow.
+    // Damage is called again, including a second weaken pass on overflow.
     if (overflow > 0) damageTank(world, tank, overflow, bullet);
     if (bullet) {
       tank.forcefieldAngle = angleTo(tank, bullet) - tank.rotation;
@@ -44,7 +44,7 @@ export function damageTank(world: World, tank: Tank, amount: number, bullet?: Pr
       world.emit('hurt');
       tank.hurtCounter = 7;
     }
-    // AvatarLifeCorrect is empty and this branch never calls DegradeTank.
+    // The life correction is empty and this branch never degrades the tank.
     return;
   }
   if (tank.life <= 0) {

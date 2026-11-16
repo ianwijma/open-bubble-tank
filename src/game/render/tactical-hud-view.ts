@@ -1,72 +1,17 @@
 import { Container, Graphics } from 'pixi.js';
-import type { AssetPack } from '../assets/asset-pack';
 import { STAGE } from '../core/constants';
-import { HUD } from '../core/hud';
 import { rotate } from '../core/math';
 import type { TacticalHudState } from '../core/tactical-hud';
-import { SwfSymbolView, type RasterTextures } from './swf-symbol-view';
 
-/** _-GW rings, AInterfaceRadar arrows and _-Yb readouts are siblings of the fixed-stage HUD. */
+/** Ally rings, radar arrows and readouts are siblings of the fixed-stage HUD. */
 export class TacticalHudView {
   root = new Container();
-  private allies = new Container();
-  private passives = new Container();
-  private nodes = new Map<string, SwfSymbolView>();
   private mock = new Graphics();
-  constructor(
-    private assets: AssetPack,
-    private textures: RasterTextures,
-  ) {
-    this.root.addChild(this.allies, this.passives, this.mock);
-  }
-  private node(key: string, symbol: number, layer: Container, active: Set<string>) {
-    active.add(key);
-    let view = this.nodes.get(key);
-    if (!view) {
-      view = new SwfSymbolView(symbol, this.assets, this.textures);
-      this.nodes.set(key, view);
-      layer.addChild(view.root);
-    }
-    layer.setChildIndex(view.root, layer.children.length - 1);
-    return view;
+  constructor() {
+    this.root.addChild(this.mock);
   }
   update(state: TacticalHudState) {
-    if (this.assets.mode === 'mock') {
-      this.drawMock(state);
-      return;
-    }
-    const active = new Set<string>();
-    for (const ally of state.allies) {
-      const view = this.node(`ally:${ally.uid}`, HUD.tactical.allyLife.symbol, this.allies, active);
-      view.update(1, ally.frame);
-      view.root.position.set(ally.x, ally.y);
-      view.root.scale.set(ally.width / HUD.tactical.allyLife.bounds.width);
-    }
-    for (const indicator of state.passives) {
-      const info = indicator.kind === 'health' ? HUD.tactical.enemyLife : HUD.tactical.radar;
-      const view = this.node(
-        `${indicator.kind}:${indicator.uid}`,
-        info.symbol,
-        this.passives,
-        active,
-      );
-      view.update(1, 1);
-      if (indicator.kind === 'health') {
-        view.root.position.set(indicator.x, indicator.y);
-        // Flash changes only width; the five-pixel native bar keeps its original height.
-        view.root.scale.x = indicator.width / info.bounds.width;
-        const fill = view.namedChild('bar_mc');
-        if (fill) fill.root.scale.x = indicator.fill;
-      } else {
-        view.root.position.set(STAGE.cx, STAGE.cy);
-        view.root.angle = indicator.angle;
-      }
-    }
-    for (const [key, view] of this.nodes)
-      if (!active.has(key)) {
-        view.destroy();
-        this.nodes.delete(key);
-      }
+    this.drawMock(state);
   }
   private drawMock(state: TacticalHudState) {
     const g = this.mock.clear();
@@ -104,8 +49,6 @@ export class TacticalHudView {
     }
   }
   destroy() {
-    for (const view of this.nodes.values()) view.destroy();
-    this.nodes.clear();
     this.root.destroy({ children: true });
   }
 }

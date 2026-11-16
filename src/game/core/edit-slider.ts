@@ -1,7 +1,7 @@
 import { HUD } from './hud';
 import type { MapMode } from './minimap';
 
-/** AvatarInterface's event-triggered edit slider. Layout changes only when the source repositions it. */
+/** The avatar interface's event-triggered edit slider. Layout changes only when it is repositioned. */
 export class EditSliderState {
   x = HUD.edit.x;
   y = HUD.edit.y;
@@ -36,7 +36,7 @@ export class EditSliderState {
     this.mapMode = mode;
     this.y = this.layout.y;
     this.x = 24;
-    // _-BV deliberately leaves the last TriggerEditButton speed unchanged.
+    // The last trigger speed is deliberately left unchanged.
   }
   hide() {
     this.enabled = false;
@@ -52,7 +52,7 @@ export class EditSliderState {
     if (speed < 0.2) {
       this.x = target;
       this.tween = -1;
-      // _-H5 still applies the preceding movement after SetMovement snaps/stops the tween.
+      // The preceding movement is still applied after the movement setting snaps/stops the tween.
     } else this.moveX = speed;
     this.x += incoming ? this.moveX : -this.moveX;
   }

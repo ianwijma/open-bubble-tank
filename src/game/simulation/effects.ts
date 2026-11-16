@@ -44,7 +44,7 @@ export function combatEffect(
   return effect;
 }
 
-/** BulletCallCollisionDetected chooses artwork independently of area damage. */
+/** Collision detection chooses artwork independently of area damage. */
 export function projectileImpact(world: World, bullet: Projectile) {
   if (['beam', 'healBeam', 'whip', 'flak', 'push', 'infect'].includes(bullet.kind)) return;
   if (['seeker', 'orbital'].includes(bullet.kind)) {

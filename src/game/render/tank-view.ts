@@ -3,8 +3,6 @@ import type { AssetPack } from '../assets/asset-pack';
 import type { Tank, TankChild, TankDesign } from '../core/types';
 import { partById } from '../data/catalog';
 import { SwfSymbolView, type RasterTextures } from './swf-symbol-view';
-import { SwfTankStatusView } from './swf-tank-status-view';
-import { SwfProtectionView } from './swf-protection-view';
 
 /** Shared live pose for the world and tank-information portrait. No simulation clocks advance here. */
 export class TankView {
@@ -13,8 +11,6 @@ export class TankView {
   private shield = new Graphics();
   private mockStatus = new Graphics();
   private mountedShields = new Map<TankChild, Graphics>();
-  private status?: SwfTankStatusView;
-  private protection?: SwfProtectionView;
   constructor(
     readonly design: TankDesign,
     private assets: AssetPack,
@@ -39,10 +35,6 @@ export class TankView {
       root.scale.set(p.scale);
       return { root, animation, sprite };
     });
-    if (assets.mode === 'swf') {
-      this.status = new SwfTankStatusView(assets, textures);
-      this.protection = new SwfProtectionView(assets, textures);
-    }
   }
   update(t: Tank) {
     this.container.angle = t.rotation;
@@ -66,44 +58,38 @@ export class TankView {
           view.sprite.width = raster.width;
           view.sprite.height = raster.height;
         }
-        // Editor leaves keep the shared source gold; hostile live mounts get a mild warm tint.
-        view.root.tint =
-          this.assets.mode === 'mock' && t.side === 'enemy' && part.type >= 2000
-            ? 0xffe6cc
-            : 0xffffff;
+        // Editor leaves keep the shared gold; hostile live mounts get a mild warm tint.
+        view.root.tint = t.side === 'enemy' && part.type >= 2000 ? 0xffe6cc : 0xffffff;
       }
     }
     this.shield.clear();
     const shieldFilm = t.displayChildren.includes('shield-film');
-    if (!this.protection) {
-      const films = t.shieldClips.filter((clip) => clip.kind === 'film');
-      const keys = new Set<TankChild>(films.map((clip) => clip.key));
-      for (const [key, view] of this.mountedShields)
-        if (!keys.has(key)) {
-          view.destroy();
-          this.mountedShields.delete(key);
-        }
-      for (const clip of films) {
-        let view = this.mountedShields.get(clip.key);
-        if (!view) {
-          view = new Graphics();
-          view
-            .circle(0, 0, Number.isNaN(clip.diameter) ? 65 : clip.diameter / 2)
-            .fill({ color: 0xaaddff, alpha: 0.07 })
-            .stroke({ color: 0xbbeeff, alpha: 0.65, width: 1.5 });
-          this.mountedShields.set(clip.key, view);
-        }
-        view.alpha = t.alpha;
-        view.visible = t.displayChildren.includes(clip.key);
+    const films = t.shieldClips.filter((clip) => clip.kind === 'film');
+    const keys = new Set<TankChild>(films.map((clip) => clip.key));
+    for (const [key, view] of this.mountedShields)
+      if (!keys.has(key)) {
+        view.destroy();
+        this.mountedShields.delete(key);
       }
+    for (const clip of films) {
+      let view = this.mountedShields.get(clip.key);
+      if (!view) {
+        view = new Graphics();
+        view
+          .circle(0, 0, Number.isNaN(clip.diameter) ? 65 : clip.diameter / 2)
+          .fill({ color: 0xaaddff, alpha: 0.07 })
+          .stroke({ color: 0xbbeeff, alpha: 0.65, width: 1.5 });
+        this.mountedShields.set(clip.key, view);
+      }
+      view.alpha = t.alpha;
+      view.visible = t.displayChildren.includes(clip.key);
     }
     if (
-      !this.protection &&
-      (shieldFilm ||
-        (t.design.parts.some((p) => p.type === 5005) &&
-          t.forcefieldReady &&
-          t.forcefieldAttached &&
-          t.displayChildren.includes('forcefield')))
+      shieldFilm ||
+      (t.design.parts.some((p) => p.type === 5005) &&
+        t.forcefieldReady &&
+        t.forcefieldAttached &&
+        t.displayChildren.includes('forcefield'))
     ) {
       const diameter = shieldFilm
         ? t.side === 'player'
@@ -115,15 +101,12 @@ export class TankView {
         .fill({ color: 0xaaddff, alpha: 0.07 })
         .stroke({ color: 0xbbeeff, alpha: 0.65, width: 1.5 });
     }
-    this.status?.update(t);
-    this.protection?.update(t);
     this.orderChildren(t);
-    this.container.filters = this.status?.infectionFilter ? [this.status.infectionFilter] : null;
+    this.container.filters = null;
     this.mockStatus.clear();
-    if (!this.status && t.displayChildren.includes('status') && t.status.stun > 0)
+    if (t.displayChildren.includes('status') && t.status.stun > 0)
       this.mockStatus.star(0, -t.radius - 6, 5, 5, 2).fill(0xffffff);
-    if (this.status) this.container.tint = 0xffffff;
-    else if (t.displayChildren.includes('infection') && t.status.infect > 0)
+    if (t.displayChildren.includes('infection') && t.status.infect > 0)
       this.container.tint = 0xb1ed80;
     else if (t.displayChildren.includes('status') && t.status.sticky > 0)
       this.container.tint = 0xbbb0ff;
@@ -134,14 +117,11 @@ export class TankView {
       `part:${tank.design.parts[i].key}`,
       view.root,
     ]);
-    entries.push(...(this.status?.displayEntries() ?? []));
-    entries.push(...(this.protection?.displayEntries() ?? []));
     entries.push(...this.mountedShields);
-    if (!this.protection)
-      entries.push(
-        [tank.displayChildren.includes('shield-film') ? 'shield-film' : 'forcefield', this.shield],
-        ['status', this.mockStatus],
-      );
+    entries.push(
+      [tank.displayChildren.includes('shield-film') ? 'shield-film' : 'forcefield', this.shield],
+      ['status', this.mockStatus],
+    );
     // Absence means removeChild, not an implicit last-place entry. Keep detached
     // part/clip views available for explicit reattachment of the same identity.
     const attached = new Set(tank.displayChildren);
@@ -160,8 +140,6 @@ export class TankView {
   }
   destroy() {
     this.container.filters = null;
-    this.status?.destroy();
-    this.protection?.destroy();
     for (const part of this.parts) {
       part.animation?.destroy();
       part.root.destroy({ children: true });

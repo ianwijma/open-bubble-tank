@@ -1,4 +1,4 @@
-/** BitmapData stores premultiplied8-bit channels; browser ImageData uses straight RGBA. */
+/** Bitmap data stores premultiplied8-bit channels; browser ImageData uses straight RGBA. */
 export function premultiplyBitmap(rgba: Uint8ClampedArray) {
   const pixels = new Uint8ClampedArray(rgba.length);
   for (let i = 0; i < rgba.length; i += 4) {
@@ -22,8 +22,8 @@ export function straightBitmap(
   return output;
 }
 
-/** _-US.SetBlur(): BlurFilter(2,2,2), fractional box H→V twice, floor after each axis.
- * Border samples clamp to the edge.127/255 is the pinned runtime's fractional weight.
+/** Pause bitmap blur: blur filter (2,2,2), fractional box H→V twice, floor after each axis.
+ * Border samples clamp to the edge.127/255 is the fractional weight.
  */
 export function blurPauseBitmap(
   pixels: Uint8ClampedArray,
@@ -54,7 +54,7 @@ export function blurPauseBitmap(
   return pixels;
 }
 
-/** Normal premultiplied source-over, as used when BitmapData.draw overlays a saved frame. */
+/** Normal premultiplied source-over, as used when a bitmap draw overlays a saved frame. */
 export function drawBitmapOver(destination: Uint8ClampedArray, source: Uint8ClampedArray) {
   for (let i = 0; i < destination.length; i += 4) {
     const inverse = 255 - source[i + 3];
@@ -63,7 +63,7 @@ export function drawBitmapOver(destination: Uint8ClampedArray, source: Uint8Clam
   }
 }
 
-/** Pause/UpgradeMenu capture-before-blur stack, including the unused first reversal slot. */
+/** Pause/upgrade menu capture-before-blur stack, including the unused first reversal slot. */
 export class PauseBitmapHistory {
   pixels: Uint8ClampedArray;
   private scratch: Uint8ClampedArray;

@@ -6,7 +6,7 @@ import type { World } from './world';
 import { actorAngle, actorDirection, actorHeading } from './actor-movement';
 import { createProjectile } from './create-projectile';
 
-/** ABeamCannon keeps beam_mc even when SpawnNewBullet declines or its parent is removed. */
+/** The beam cannon keeps beam_mc even when spawning declines or its parent is removed. */
 export function stopDamageBeam(world: World, gun: GunState) {
   const beam = gun.beamRef;
   if (beam && world.removeBullet(beam, world.currentWrapper)) beam.dead = true;
@@ -75,7 +75,7 @@ export function tickDamageBeam(world: World, beam: Projectile, targets: Tank[]) 
       dy = point.y - origin.y,
       distance = Math.sqrt(dx * dx + dy * dy),
       angle = actorAngle(actorHeading(origin, point) - beam.angle);
-    // _-CO._-GA uses a signed sine, so retain the asymmetric broad-phase filter.
+    // The beam test uses a signed sine, so retain the asymmetric broad-phase filter.
     if (
       Math.abs(angle) > 90
         ? distance > tank.radius
@@ -100,7 +100,7 @@ export function tickDamageBeam(world: World, beam: Projectile, targets: Tank[]) 
       const tank = candidates[index],
         point = world.actorParents.localToGlobal(tank, { x: 0, y: 0 });
       if (!world.hitTest(tank, global.x - point.x + tank.x, global.y - point.y + tank.y)) continue;
-      // Qualified pcode uses _-W.arrEnemies[index], NOT the filtered contact actor.
+      // The raw enemies[index] entry is used, NOT the filtered contact actor.
       const raw = targets[index],
         rawPoint = world.actorParents.localToGlobal(raw, { x: 0, y: 0 }),
         carrier = raw.guns.find(

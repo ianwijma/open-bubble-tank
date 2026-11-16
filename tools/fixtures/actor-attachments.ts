@@ -3,7 +3,7 @@ import type { World } from '../../src/game/simulation/world';
 
 const imported = new WeakSet<Tank>();
 
-/** Explicitly supply omitted construction/addChild/SetCallback steps of raw host fixtures.
+/** Explicitly supply omitted construction/addChild/callback steps of raw host fixtures.
  * Later removals/reparenting must use the actual operations, never array edits.
  * Production code must not discover display membership from its Run arrays.
  */

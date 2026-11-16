@@ -43,7 +43,7 @@ test('partial last page stays valid and direct last-tank detail refresh changes 
   expect([state.offset, state.next]).toEqual([8, false]);
   state = navigateViewer(state, 9, { type: 'cards' });
   expect([state.offset, state.page, state.next]).toEqual([8, 3, true]);
-  // _-8F restores all three controls on later pages, even when no later page exists.
+  // Showing cards restores all three controls on later pages, even when no later page exists.
   state = navigateViewer(state, 9, { type: 'page', direction: 1 });
   expect([state.offset, state.page, state.next]).toEqual([8, 3, false]);
 });

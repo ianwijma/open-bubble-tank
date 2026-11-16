@@ -100,7 +100,7 @@ export function GameViewport({
         world.protectionRadius = pack.protectionRadius;
         world.displayWidth = pack.tankDisplayWidth;
         world.hitPart = (t, p, x, y) => pack.hitPart(t, p, x, y, settingsRef.current.zoom);
-        world.hitProjectile = (b, x, y) => pack.hitProjectile(b, x, y, settingsRef.current.zoom);
+        world.hitProjectile = pack.hitProjectile;
         world.projectileBounds = (b) =>
           pack.projectileBounds(
             b,
@@ -121,7 +121,7 @@ export function GameViewport({
           mainStep: () => {
             world.viewZoom = settingsRef.current.zoom;
             world.screenShake = settingsRef.current.shake;
-            // Choose once at entry: a newly born menu does not interrupt this World.Run.
+            // Choose once at entry: a newly born menu does not interrupt this world's run.
             if (upgradeOpenRef.current?.()) world.advanceArtwork();
             else world.step(input!.frame(), 0, false);
             audio?.playEvents(world.drainEvents(), settingsRef.current);
@@ -154,7 +154,7 @@ export function GameViewport({
       className="game-canvas"
       tabIndex={0}
       role="application"
-      aria-label="Bubble Tanks 3. WASD to move, mouse to aim and fire, Space for secondary weapons, P or Escape to pause."
+      aria-label="Soap Tank. WASD to move, mouse to aim and fire, Space for secondary weapons, P or Escape to pause."
     >
       {error ? (
         <div role="alert" className="graphics-error">

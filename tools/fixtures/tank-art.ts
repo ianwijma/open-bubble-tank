@@ -3,10 +3,8 @@ import { captureCanvas } from './pixi-capture';
 import { Application, Container, Rectangle } from 'pixi.js';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { STARTER } from '../../src/game/data/catalog';
-import { PROTECTION_ART } from '../../src/game/data/status-art';
 import type { Tank } from '../../src/game/core/types';
 import { TankView } from '../../src/game/render/tank-view';
-import { SwfProtectionView } from '../../src/game/render/swf-protection-view';
 import { SwfTextures } from '../../src/game/render/swf-textures';
 import { createTank } from '../../src/game/simulation/tank';
 import { World, emptyInput } from '../../src/game/simulation/world';
@@ -38,7 +36,7 @@ export async function showTankArtProof(pack: AssetPack, host: HTMLElement) {
   ctx.fillRect(0, 0, 550, 450);
   const panels: { label: string; ink: number; painted: number; hash: number }[] = [];
   const dispose: (() => void)[] = [];
-  const make = (types: number[], centered = false) => {
+  const make = (types: number[]) => {
     const tank = createTank(
       world.nextId(),
       {
@@ -47,7 +45,7 @@ export async function showTankArtProof(pack: AssetPack, host: HTMLElement) {
           ...STARTER.parts[0],
           key: `part-${i}`,
           type,
-          x: centered ? 0 : i ? 20 : -12,
+          x: i ? 20 : -12,
           y: 0,
           scale: 1,
           rotation: 0,
@@ -70,17 +68,6 @@ export async function showTankArtProof(pack: AssetPack, host: HTMLElement) {
     return view;
   };
   const protectionView = (tank: Tank) => {
-    if (pack.mode === 'swf') {
-      const view = new SwfProtectionView(pack, textures);
-      app.stage.addChild(view.root);
-      dispose.push(() => view.destroy());
-      return {
-        root: view.root,
-        update: () => view.update(tank),
-        filmScale: () =>
-          view.displayEntries().find(([key]) => key.startsWith('shield-film:'))?.[1].scale.x,
-      };
-    }
     const view = tankView(tank);
     return {
       root: view.container,
@@ -89,7 +76,6 @@ export async function showTankArtProof(pack: AssetPack, host: HTMLElement) {
         for (const child of view.container.children)
           if (child.label?.startsWith('part:')) child.visible = false;
       },
-      filmScale: () => null,
     };
   };
   const capture = (label: string, root: Container) => {
@@ -120,20 +106,16 @@ export async function showTankArtProof(pack: AssetPack, host: HTMLElement) {
     return ink;
   };
   try {
-    const animated = make([1001, 2001]),
-      body = animated.design.parts[0];
+    const animated = make([1001, 2001]);
     const view = tankView(animated);
     view.update(animated);
     capture('Tank artwork · before pause', view.container);
-    const firstPose = pack.mode === 'swf' ? pack.partClip(animated, body) : undefined;
     pause(12);
     view.update(animated);
     capture('Tank artwork · 12 paused ticks', view.container);
     const live = {
       age: animated.age,
       artAge: animated.artAge,
-      poseAge: firstPose ? pack.partClip(animated, body).age : null,
-      retained: firstPose ? pack.partClip(animated, body) === firstPose : true,
     };
 
     const shield = make([1003, 3010]);
@@ -143,25 +125,18 @@ export async function showTankArtProof(pack: AssetPack, host: HTMLElement) {
     const shieldView = protectionView(shield);
     shieldView.update();
     capture('Shield · cached display-child size', shieldView.root);
-    const expectedScale =
-      pack.mode === 'swf'
-        ? shield.shieldDiameter! / pack.symbolScriptBounds(PROTECTION_ART.shield)!.width
-        : null;
-    const actualScale = shieldView.filmScale();
     killMountedShield(shield, shield.guns[0]);
     pause(3);
     shieldView.update();
     const remainingHitInk = capture('Immunity ended · hit clip remains', shieldView.root);
-    const hit = { remainingHitInk, hitAge: shield.shieldHitAge, expectedScale, actualScale };
+    const hit = { remainingHitInk, hitAge: shield.shieldHitAge };
 
-    const field = make([1001, 5005]),
-      fieldPart = field.design.parts[0];
+    const field = make([1001, 5005]);
     const fieldView = protectionView(field);
     field.forcefieldFrame = 2;
     fieldView.update();
     capture('Forcefield · fresh full-design mask', fieldView.root);
     const radius = pack.forcefieldRadius(field);
-    const clone = pack.mode === 'swf' ? pack.forcefieldPartClip(field, fieldPart) : undefined;
     pause(12);
     fieldView.update();
     capture('Forcefield · paused mask and impact', fieldView.root);
@@ -171,18 +146,8 @@ export async function showTankArtProof(pack: AssetPack, host: HTMLElement) {
       frame: field.forcefieldFrame,
       radius,
       cachedRadius: pack.forcefieldRadius(field),
-      cloneAge: clone?.age ?? null,
-      retained: clone ? pack.forcefieldPartClip(field, fieldPart) === clone : true,
     };
 
-    let centeredScale: number | null = null;
-    if (pack.mode === 'swf') {
-      const centered = make([1003, 3010], true);
-      world.fireGun(centered, centered.guns[0], emptyInput());
-      const centeredView = protectionView(centered);
-      centeredView.update();
-      centeredScale = centeredView.filmScale() ?? null;
-    }
     let galleryHash = 2166136261;
     for (const byte of ctx.getImageData(0, 0, 550, 450).data)
       galleryHash = Math.imul(galleryHash ^ byte, 16777619);
@@ -191,7 +156,6 @@ export async function showTankArtProof(pack: AssetPack, host: HTMLElement) {
       live,
       hit,
       forcefield,
-      centeredScale,
       panels,
       galleryHash: galleryHash >>> 0,
     };

@@ -87,7 +87,7 @@ export async function showOrbitalWidth(pack: AssetPack, host: HTMLElement) {
     const later = read();
     draw(2, 'Same root · live child age10');
     tank.shield = 100;
-    // The fixture supplies the omitted source addChild phase: the retained hit
+    // The fixture supplies the omitted addChild phase: the retained hit
     // is added before its film. A positive logical flag cannot attach geometry.
     addTankChild(tank, 'shield-hit');
     addTankChild(tank, 'shield-film');

@@ -21,7 +21,7 @@ interface Clock {
   advanceAt: number;
 }
 
-/** Retained numeric pose; source mechanics and host artwork entropy are distinct. */
+/** Retained numeric pose; mechanics and host artwork entropy are distinct. */
 export interface PickupClip {
   readonly symbol: number;
   readonly totalFrames: number;
@@ -46,7 +46,7 @@ export class PickupChildRemovalError extends Error {
   }
 }
 
-/** Actual lifeBubbleLayer children and clip lifetimes, independent of _-Ym/Run and gameplay UIDs.
+/** Actual lifeBubbleLayer children and clip lifetimes, independent of the pickup list, Run and gameplay UIDs.
  * No read discovers children, draws entropy, advances a clock or constructs artwork.
  */
 export class PickupDisplays {
@@ -63,7 +63,7 @@ export class PickupDisplays {
       else this.clocks.delete(reference);
     }
   }
-  /** Before Main.Run: surviving timelines enter their next authored frame. */
+  /** Before the Main run: surviving timelines enter their next authored frame. */
   enterFrame() {
     this.cohort++;
     for (const clock of this.liveClocks())
@@ -124,7 +124,7 @@ export class PickupDisplays {
     children.add(pickup);
     instance.parent = field;
   }
-  /** _-Pu.Setup: denomination, callback, then avatar. No parenting or timeline writes. */
+  /** Setup: denomination, callback, then avatar. No parenting or timeline writes. */
   setup(pickup: Pickup, value: number, callbackField: Field, avatar: Tank) {
     const instance = this.instance(pickup);
     pickup.value = value;
@@ -151,7 +151,7 @@ export class PickupDisplays {
   }
 }
 
-/** _-Yz removes the vector's actual references before replacing the vector.
+/** Clearing removes the vector's actual references before replacing the vector.
  * An array-only removed display child survives; an invalid removeChild interrupts cleanup.
  */
 export function clearPickups(world: World, field: Field) {

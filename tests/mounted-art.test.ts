@@ -17,7 +17,7 @@ const sprites: SpriteInfo[] = [
   { id: 720, frameCount: 27, placements: [{ charId: 718, depth: 1, matrix, frame: 2 }] },
 ];
 function setup(owned = false) {
-  const pack = new AssetPack('swf');
+  const pack = new AssetPack('mock');
   Object.assign(pack, { sprites: new Map(sprites.map((s) => [s.id, s])) });
   const world = new World([], [], 1);
   world.field.enemies = [];
@@ -120,7 +120,7 @@ test('overlapping play calls preserve phase, later episodes catch up and new tan
 
 test('pause and crossing keep mounted art advancing while forcefield copies stay idle', () => {
   const { pack, world, tank, fire, pose } = setup(true);
-  world.advanceArtwork(); // Explicitly initialize the stopped frame before the source play call.
+  world.advanceArtwork(); // Explicitly initialize the stopped frame before the play call.
   fire();
   world.pause();
   for (let i = 0; i < 8; i++) world.step(emptyInput());

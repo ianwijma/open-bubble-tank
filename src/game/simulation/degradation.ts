@@ -1,7 +1,7 @@
 import type { Tank, TankDesign } from '../core/types';
 import { distance, length } from '../core/math';
 
-/** _-Zx._-Il / _-0Y. All mounted parts contribute to the total's divisor. */
+/** All mounted parts contribute to the total's divisor. */
 export function bodyWeights(design: TankDesign) {
   const weapons = design.parts.filter((part) => part.type > 2000);
   return design.parts
@@ -32,7 +32,7 @@ export function createDegradation(design: TankDesign): Tank['degradation'] {
   };
 }
 
-/** Literal DegradeTank selection: prefer the outermost visible body when affordable,
+/** Literal degrade selection: prefer the outermost visible body when affordable,
  * otherwise scan in mount order toward cheaper bodies. Debt persists across hits/heals. */
 export function degradeTank(tank: Tank, damage: number) {
   const weights = bodyWeights(tank.design),

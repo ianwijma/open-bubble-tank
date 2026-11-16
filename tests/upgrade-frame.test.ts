@@ -94,7 +94,7 @@ test('upgrade destruction resumes backgrounds even when secondary help keeps wor
   world.closeSecondaryHelp();
   world.pause();
   expect(events).toEqual([false, true, false]);
-  stage.background.efficient = false; // Source efficiency Off forcibly resumes a stopped layer.
+  stage.background.efficient = false; // Efficiency Off forcibly resumes a stopped layer.
   world.step(emptyInput());
   expect(stage.background.running).toBe(true);
   expect(world.backgroundRunning).toBe(false); // Last World event does not overrule Settings.

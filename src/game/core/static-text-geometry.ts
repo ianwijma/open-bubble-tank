@@ -10,8 +10,8 @@ import type { Vec } from './types';
  * Ancestors run from immediate parent toward the stage, excluding the stage.
  * Compose matrices before transforming corners; do not transform an AABB at
  * every ancestor. No text/glyph matrix, raster padding or Script getter enters
- * this calculation. Qualified for the finite 2D, no-scroll-rect controls in
- * docs/text-engine-runtime-reference.md; not arbitrary/nonfinite geometry.
+ * this calculation. Qualified for the finite 2D, no-scroll-rect controls;
+ * not arbitrary/nonfinite geometry.
  */
 export function staticTextEngineBounds(
   declared: Readonly<DisplayRectangle>,
@@ -24,7 +24,7 @@ export function staticTextEngineBounds(
 }
 
 /** Internal advanced-text stage gate, with an already quantized twip Point.
- * Public argument mapping/quantization, attachment and HitTestOptions belong to
+ * Public argument mapping/quantization, attachment and hit-test options belong to
  * the caller. This is not normal-mode glyph contact or container traversal.
  * In particular, this gate needs no inverse, including collapsed line/point
  * bounds. Do not apply generic shape mask/inverse rules to this leaf by default.

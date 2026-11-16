@@ -10,7 +10,7 @@ export const ENEMY_STAT_LIMITS = {
 } as const;
 export const NEW_ENEMY_STATS: EnemyStats = { life: 20, reward: 20, speed: 2 };
 
-/** _-Rn rounds before class multiplication; UseSuggestedSettings rounds after; _-H9 does neither. */
+/** The save phase rounds before class multiplication; the panel rounds after; load does neither. */
 export function creatorSuggestedStats(
   design: Pick<TankDesign, 'parts' | 'classId'>,
   phase: 'panel' | 'save' | 'load' = 'panel',
@@ -28,7 +28,7 @@ export function creatorSuggestedStats(
   return { life, reward, speed };
 }
 
-/** ImportTank compares the preceding build's counters and never re-enables manual mode. */
+/** Importing a tank compares the preceding build's counters and never re-enables manual mode. */
 export function creatorImportedSuggested(
   tank: EnemyStats,
   previous: Pick<TankDesign, 'parts' | 'classId'>,
@@ -43,7 +43,7 @@ export function creatorImportedSuggested(
 export function enemyStatHandle(key: EnemyStat, value: number) {
   const { min, max } = ENEMY_STAT_LIMITS[key];
   const x = Math.max(-55, Math.min(55, Math.sqrt((value - min) / (max - min)) * 110 - 55));
-  // Ruffle's DisplayObject.x setter converts through Twips (NaN becomes0).
+  // The x assignment converts through twips (NaN becomes0).
   return Number.isNaN(x) ? 0 : Math.trunc(x * 20) / 20;
 }
 export function enemyStatFromHandle(key: EnemyStat, x: number) {

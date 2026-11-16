@@ -26,7 +26,7 @@ describe('UpgradeLoadingState source slot initialization (_-96 / SecondSetup)', 
     const menu = model();
     expect(menu.initialized).toBe(false);
     expect(menu.sentinel).toBeNull();
-    expect(menu.pending).toBe(0); // AS int default, before SecondSetup.
+    expect(menu.pending).toBe(0); // Int default, before the second setup.
     expect(menu.rootFrame).toBe(1);
     expect(menu.slots.map((slot) => slot.id)).toEqual([1, 2, 3]);
     expect(menu.slots.map((slot) => slot.card.authoredX)).toEqual([...AUTHORED_X]);
@@ -81,7 +81,7 @@ describe('UpgradeLoadingState source slot initialization (_-96 / SecondSetup)', 
     install(menu, 1);
     install(menu, 2);
     expect(menu.pending).toBe(0);
-    // _-aG tests the counter AFTER all entries, not inside each successful entry.
+    // The result callback tests the counter AFTER all entries, not inside each successful entry.
     expect(menu.rootFrame).toBe(1);
     install(menu, 3);
     expect(menu.pending).toBe(-1);
@@ -184,7 +184,7 @@ describe('data receipt versus successful source installation (_-aG AS489–539)'
     expect(menu.slot(2).tank).toBe(repeated.tank);
     expect(menu.pending).toBe(-1);
     expect(menu.finishResults()).toEqual([]);
-    // Adapter misuse is different from a second source result/receipt.
+    // Adapter misuse is different from a second result/receipt.
     expect(() => menu.completeAttachment(repeated)).toThrow('already completed');
     expect(menu.pending).toBe(-1);
   });

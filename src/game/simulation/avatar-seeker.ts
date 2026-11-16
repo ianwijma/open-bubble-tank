@@ -8,7 +8,7 @@ import type { World } from './world';
 import { HomingTargetReadError } from './homing-projectiles';
 import { collisionSound } from './collision-sound';
 
-/** _-XV's NaN distance scan leaves its initialized target index at zero. */
+/** A NaN distance never wins the scan, so the target index stays at its initial zero. */
 function steer(world: World, b: Projectile) {
   let target = b.homing!.target;
   if (!target || !world.actorParents.inField(target, world.field)) {
@@ -45,7 +45,7 @@ export function initializeAvatarSeeker(world: World, b: Projectile, target?: Tan
 }
 
 export function tickAvatarSeeker(world: World, b: Projectile) {
-  // SpawnNewBullet re-enables _-PJ after virtual Setup, without clearing its
+  // Spawning re-enables the movement gate after virtual Setup, without clearing its
   // removal queue. A failure inside this Run still completes the selected tail.
   if (b.movementEnabled === false) return;
   if (projectileOutside(world, b)) {

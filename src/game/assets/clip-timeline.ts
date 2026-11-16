@@ -9,7 +9,7 @@ export type FrameAction =
   | { type: 'random-branch'; random: RoundedRandom; targets: Record<string, number> }
   | { type: 'y-branch'; positive: number; nonPositive?: number };
 
-/** The recovered MovieClip actions, independent of rendering and wall-clock time. */
+/** The clip actions, independent of rendering and wall-clock time. */
 export class ClipTimeline {
   frame = 1;
   playing = true;
@@ -58,7 +58,7 @@ export class ClipTimeline {
     }
     return this.frame;
   }
-  /** MovieClip.play resumes without jumping or rerunning the current script. */
+  /** play resumes without jumping or rerunning the current script. */
   play() {
     this.playing = true;
   }

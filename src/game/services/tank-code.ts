@@ -20,7 +20,7 @@ function codeKey(first: string, last: string) {
   );
 }
 /**
- * Original AES-128-ECB / PKCS7 format, without bundling a crypto dependency.
+ * AES-128-ECB / PKCS7 format, without bundling a crypto dependency.
  * Web Crypto exposes CBC. Its first block with a zero IV is exactly ECB.
  * To decrypt an arbitrary block, append E(padding XOR C) so Web Crypto can
  * validate/remove a full PKCS7 padding block without removing any source bytes.
@@ -32,7 +32,7 @@ export async function decodeTankCode(code: string): Promise<TankDesign> {
     code.length < 38 ||
     !/^([a-f0-9]{3})(?:[a-f0-9]{32})+([a-f0-9]{3})$/i.test(code)
   )
-    throw new Error('Paste a complete Bubble Tanks 3 tank code.');
+    throw new Error('Paste a complete tank code.');
   const first = code.slice(0, 3),
     last = code.slice(-3),
     key = await codeKey(first, last),

@@ -44,7 +44,7 @@ test('click dismissal stops the Timer but preserves an existing hidden fade and 
   clock.step(46);
   expect(clock.visible).toBe(false);
   expect(clock.alpha).toBe(1);
-  // _-80 does not stop the newer Timer when its older fade ends.
+  // The older fade ending does not stop the newer Timer.
   expect(clock.timerRunning).toBe(true);
   clock.timerComplete();
   clock.step(100);
@@ -66,7 +66,7 @@ test('SaveExitMouseUp checks avatar weapon before body using all non-body catalo
     expect(creatorSavePrerequisite({ ...design, parts: [attachment] })).toContain('bubble');
     expect(creatorSavePrerequisite({ ...design, parts: [body, attachment] })).toBeNull();
   }
-  expect(CREATOR_AUTHOR).toBe('BubbleTanks3');
+  expect(CREATOR_AUTHOR).toBe('Soap Tank');
   expect(CREATOR_DIALOGS.alert.symbol).toBe(937);
   expect(CREATOR_DIALOGS.alert.fields[0]).toMatchObject({
     name: 'description_txt',

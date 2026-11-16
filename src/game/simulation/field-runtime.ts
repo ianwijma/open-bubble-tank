@@ -20,7 +20,7 @@ export class FieldRuntime {
   get effectQueue(): readonly Effect[] {
     return this.effectRequests.map(({ clip }) => clip).filter(isArtwork);
   }
-  /** Raw queue arguments remain separate from actual MovieClip display setters. */
+  /** Raw queue arguments remain separate from actual clip display setters. */
   get queuedEffectRequests(): readonly EffectRequest[] {
     return Object.freeze([...this.effectRequests]);
   }
@@ -28,7 +28,7 @@ export class FieldRuntime {
     this.effectRequests.push(request);
   }
   flushEffects(register: (request: EffectRequest) => void) {
-    // Source traverses the live queue and only replaces it after a successful tail.
+    // The live queue is traversed and only replaced after a successful tail.
     for (const request of this.effectRequests) register(request);
     this.clearEffectQueue();
   }

@@ -120,7 +120,7 @@ export async function showMockPartMotion(source: AssetPack, host: HTMLElement, b
       ctx.font = '12px Arial';
       ctx.fillText(definition.name, x + 5, y + 15);
       ctx.font = '10px Arial';
-      ctx.fillText(source.mode === 'swf' ? 'Original' : 'Mock', x + 48, y + 107);
+      ctx.fillText('Mock', x + 48, y + 107);
       ctx.fillText('Procedural', x + 180, y + 107);
       results.push({ id: definition.id, previewScale, frames });
     }

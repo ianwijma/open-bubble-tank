@@ -28,10 +28,7 @@ export async function showMockPartsProof(source: AssetPack, host: HTMLElement) {
   const samples = await Promise.all(
     parts.map(async (part, index) => {
       const layout = mockPartLayout(part.id)!;
-      const original =
-          source.mode === 'swf'
-            ? (await source.rasterSymbol(part.symbol, layout.frame))!
-            : source.part(part.id),
+      const original = source.part(part.id),
         procedural = mock.part(part.id);
       const x = (index % 4) * 275,
         y = Math.floor(index / 4) * 110;
@@ -39,7 +36,7 @@ export async function showMockPartsProof(source: AssetPack, host: HTMLElement) {
       ctx.font = '13px Arial';
       ctx.fillText(`${part.id} ${part.name}`, x + 5, y + 15);
       ctx.font = '10px Arial';
-      ctx.fillText(source.mode === 'swf' ? 'SWF' : 'Mock', x + 50, y + 103);
+      ctx.fillText('Mock', x + 50, y + 103);
       ctx.fillText('Mock', x + 185, y + 103);
       [original, procedural].forEach((r, side) => {
         ctx.save();
@@ -90,7 +87,7 @@ export async function showMockPartsProof(source: AssetPack, host: HTMLElement) {
         painted,
         contactRatio: contact / painted,
         hash: hash >>> 0,
-        nativeWidth: original.width - (source.mode === 'swf' ? 4 : 6),
+        nativeWidth: original.width - 6,
         mockWidth: procedural.width - 6,
       };
     }),

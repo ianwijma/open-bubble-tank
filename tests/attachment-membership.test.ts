@@ -1,12 +1,11 @@
 import { expect, test } from 'bun:test';
 import { AssetPack, type Raster } from '../src/game/assets/asset-pack';
 import { STARTER, partById } from '../src/game/data/catalog';
-import { INFECTED_ART, PROTECTION_ART, STATUS_ART } from '../src/game/data/status-art';
 import { createTank } from '../src/game/simulation/tank';
 import { addTankChild, removeTankChild } from '../src/game/simulation/tank-display';
 
 // Explicit synthetic contact leaves isolate physical membership through the
-// existing public provider. These are not original contours or new field geometry.
+// existing public provider. These are not new field geometry.
 function raster(opaque = true, size = 20): Raster {
   const pixels = new Uint8ClampedArray(size * size * 4);
   if (opaque) for (let i = 3; i < pixels.length; i += 4) pixels[i] = 255;
@@ -21,44 +20,11 @@ function raster(opaque = true, size = 20): Raster {
     url: '',
   };
 }
-function pack(leaves: [number, Raster][]) {
-  const result = new AssetPack('swf');
-  Object.assign(result, { leaves: new Map(leaves) });
+function pack(leaves: [number, Raster][], frames: [number, Raster[]][] = []) {
+  const result = new AssetPack('mock');
+  Object.assign(result, { leaves: new Map(leaves), frames: new Map(frames) });
   return result;
 }
-
-test('removed status marks cannot contact through a retained decoration record', () => {
-  const assets = pack([[STATUS_ART.jam, raster()]]),
-    tank = createTank(1, STARTER, 'enemy');
-  tank.statusDecoration = {
-    kind: 'jam',
-    age: 0,
-    artAge: 0,
-    duration: 80,
-    marks: [{ x: 100, y: 0, angle: 0, frame: 1 }],
-  };
-  addTankChild(tank, 'status');
-  expect(assets.hitTest(tank, 100, 0)).toBe(true);
-  removeTankChild(tank, 'status');
-  expect(tank.statusDecoration.marks).toHaveLength(1);
-  expect(tank.displayChildren.length).toBeGreaterThan(0);
-  expect(assets.hitTest(tank, 100, 0)).toBe(false);
-  addTankChild(tank, 'status');
-  expect(assets.hitTest(tank, 100, 0)).toBe(true);
-});
-
-test('removed infection artwork cannot contact through a positive timer', () => {
-  const assets = pack([[INFECTED_ART, raster()]]),
-    tank = createTank(2, STARTER, 'enemy');
-  tank.status.infect = 80;
-  addTankChild(tank, 'infection');
-  expect(assets.hitTest(tank, 0, 0)).toBe(true);
-  removeTankChild(tank, 'infection');
-  expect(tank.status.infect).toBe(80);
-  expect(assets.hitTest(tank, 0, 0)).toBe(false);
-  addTankChild(tank, 'infection');
-  expect(assets.hitTest(tank, 0, 0)).toBe(true);
-});
 
 test('removed forcefield wrapper cannot contact through stale readiness or a retained clone', () => {
   const design = {
@@ -69,10 +35,8 @@ test('removed forcefield wrapper cannot contact through stale readiness or a ret
       ],
     },
     tank = createTank(3, design, 'player'),
-    assets = pack([
-      [99000, raster()],
-      [PROTECTION_ART.forcefield, raster(true, 200)],
-    ]);
+    // The stand-in field part paints nothing of its own here.
+    assets = pack([[99000, raster()]], [[5005, [raster(false)]]]);
   const bodySymbol = partById(design.parts[0].type)!.symbol;
   Object.assign(assets, {
     sprites: new Map([
@@ -100,22 +64,17 @@ test('removed forcefield wrapper cannot contact through stale readiness or a ret
   expect(assets.hitTest(tank, 40, 0)).toBe(true);
 });
 
-test('legacy film and impact require their distinct physical children', () => {
-  const assets = pack([
-      [PROTECTION_ART.turretShield, raster(false)],
-      [PROTECTION_ART.turretShieldHit, raster()],
-    ]),
+test('stand-in shield film contacts only while its physical child is attached', () => {
+  const assets = pack([], [[1001, [raster(false)]]]),
     tank = createTank(4, STARTER, 'enemy');
+  for (const part of tank.design.parts) removeTankChild(tank, `part:${part.key}`);
   tank.shield = 100;
   expect(assets.hitTest(tank, 0, 0)).toBe(false);
   addTankChild(tank, 'shield-film');
-  // A transparent film cannot make an absent opaque impact child contact.
-  expect(assets.hitTest(tank, 0, 0)).toBe(false);
+  expect(assets.hitTest(tank, 0, 0)).toBe(true);
+  // The stand-in impact child has no contact geometry of its own.
   addTankChild(tank, 'shield-hit');
-  expect(assets.hitTest(tank, 0, 0)).toBe(true);
   removeTankChild(tank, 'shield-film');
-  expect(assets.hitTest(tank, 0, 0)).toBe(true);
-  removeTankChild(tank, 'shield-hit');
   expect(tank.shield).toBe(100);
   expect(assets.hitTest(tank, 0, 0)).toBe(false);
 });

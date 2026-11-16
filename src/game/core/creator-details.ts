@@ -9,7 +9,7 @@ export interface CreatorDetailAnchor {
 export interface CreatorDetailFocus extends CreatorDetailAnchor {
   instance: number;
 }
-/** _-Gn bytecode tests >=2 AND >=3, making the later >=4 High branch unreachable. */
+/** The label tests >=2 AND >=3, making the later >=4 High branch unreachable. */
 export function creatorComplexityLabel(bp: number) {
   return bp >= 3 ? 'Medium' : 'Low';
 }
@@ -47,7 +47,7 @@ export interface CreatorWeaponIcon {
   x: number;
   y: number;
 }
-/** _-Vs reads the already-painted1px outline's bounds, including half a stroke at either edge. */
+/** Weapon icons read the already-painted1px outline's bounds, including half a stroke at either edge. */
 export function creatorWeaponIcons(
   parts: readonly TankPart[],
   keys: readonly string[],
@@ -58,7 +58,7 @@ export function creatorWeaponIcons(
     const part = byKey.get(key),
       box = boxes.get(key);
     if (!part || !box || (part.type >= 1000 && part.type <= 1999)) return [];
-    // DisplayObject.x/y assign the corner through twentieth-pixel coordinates.
+    // The x/y assignment places the corner through twentieth-pixel coordinates.
     return [
       {
         key,

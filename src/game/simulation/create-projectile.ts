@@ -6,7 +6,7 @@ type Spawn = Pick<
 > &
   Partial<Projectile>;
 
-/** A new _-BL instance must not inherit its parent's transient state or callbacks. */
+/** A new projectile must not inherit its parent's transient state or callbacks. */
 export function createProjectile(uid: number, options: Spawn): Projectile {
   return {
     heading: options.angle,

@@ -13,7 +13,7 @@ export interface PaletteContext {
 export type AffordabilityReason =
   'complexity' | 'gun-points' | 'minimum-class' | 'maximum-class' | null;
 
-/** UpdateAffordableArray checks one object, independently of symmetry and locks. */
+/** The affordability update checks one object, independently of symmetry and locks. */
 export function paletteState(part: PartDefinition, context: PaletteContext) {
   let reason: AffordabilityReason = null;
   if (context.bp + part.bp > 100) reason = 'complexity';
@@ -31,7 +31,7 @@ export function paletteState(part: PartDefinition, context: PaletteContext) {
   };
 }
 
-/** _-ay orders unlocked rows first, then numeric cost and the four-digit object ID. */
+/** Orders unlocked rows first, then numeric cost and the four-digit object ID. */
 export function orderedPalette(parts: readonly PartDefinition[], context: PaletteContext) {
   return [...parts].sort(
     (a, b) =>
@@ -41,7 +41,7 @@ export function orderedPalette(parts: readonly PartDefinition[], context: Palett
   );
 }
 
-/** _-1X initially selects the first affordable unlocked row in the sorted library. */
+/** Initially selects the first affordable unlocked row in the sorted library. */
 export function firstAffordablePart(parts: readonly PartDefinition[], context: PaletteContext) {
   return (
     orderedPalette(parts, context).find((part) => {

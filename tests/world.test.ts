@@ -180,7 +180,7 @@ describe('original gameplay contracts', () => {
     step(w, 1);
     expect(start).toBe(425);
     expect(target).toBe(1070.9);
-    // DisplayObject root write precedes the receiver-local Point read.
+    // The display root write precedes the receiver-local Point read.
     expect(w.player.x).toBe(483.1);
     expect(w.transit?.age).toBe(1);
     w.pause();
@@ -255,7 +255,7 @@ describe('original gameplay contracts', () => {
     importAvatarFixture(w);
     step(w, 1, { secondary: true });
     expect(w.stats.shots).toBe(2);
-    // The targetless _-XV is removed in this empty field's bullet phase.
+    // The targetless avatar seeker is removed in this empty field's bullet phase.
     expect(w.bullets).toHaveLength(1);
     expect(w.secondaryCounter).toBe(140);
     step(w, 139, { secondary: true });
@@ -478,7 +478,7 @@ test('orbital seekers fill six slots without a target, orbit, and disappear with
   expect(first.symbol).toBe(2016);
   w.player.dead = true;
   step(w, 1);
-  expect(first.dead).toBe(false); // Dead does not itself detach the source home clip.
+  expect(first.dead).toBe(false); // Dead does not itself detach the home clip.
   w.player = createTank(w.nextId(), STARTER, 'player');
   importAvatarFixture(w);
   step(w, 1);

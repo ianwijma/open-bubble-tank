@@ -3,7 +3,6 @@ import { importActorFixtures } from './actor-attachments';
 import { Application } from 'pixi.js';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { STARTER } from '../../src/game/data/catalog';
-import { rotate } from '../../src/game/core/math';
 import { shieldClipFrame } from '../../src/game/core/shield-art';
 import { TankView } from '../../src/game/render/tank-view';
 import { SwfTextures } from '../../src/game/render/swf-textures';
@@ -12,7 +11,7 @@ import { createProjectile } from '../../src/game/simulation/create-projectile';
 import { World, emptyInput } from '../../src/game/simulation/world';
 import { FieldVisit } from '../../src/game/core/field-visit';
 
-/** _-DO's owner-Run latch, retired hit children, and independently stopped protection clips. */
+/** The turret's owner-Run latch, retired hit children, and independently stopped protection clips. */
 export async function showTurretProtection(pack: AssetPack, host: HTMLElement) {
   const app = new Application(),
     textures = new SwfTextures(),
@@ -115,34 +114,16 @@ export async function showTurretProtection(pack: AssetPack, host: HTMLElement) {
     capture('First turret · impact on current hit');
     const oldHit = tank.shieldHitClip!,
       firstFilm = gun.shieldFilm!;
-    const oldView = view.container.children.find((child) => child.label === oldHit.key);
     world.removeBullet(first);
     tank.status.jam = 3;
     tick(2);
     capture('Turret removed · jam holds protection');
     tick(1);
     capture('Owner resumes · film removed, hit retained');
-    let oldContact: { x: number; y: number } | undefined;
-    if (pack.mode === 'swf') {
-      for (let y = -90; y <= 90 && !oldContact; y += 2)
-        for (let x = -90; x <= 90; x += 2) {
-          const local = rotate({ x, y }, tank.rotation),
-            global = { x: tank.x + local.x, y: tank.y + local.y };
-          if (
-            pack.hitTest(tank, global.x, global.y) &&
-            !tank.design.parts.some((part) => pack.hitPart(tank, part, global.x, global.y))
-          ) {
-            oldContact = global;
-            break;
-          }
-        }
-      if (!oldContact) throw new Error('Retained turret impact did not contribute contact');
-    }
     spawn();
     tick(1);
     hit(0, 50);
     capture('Rebuild · new pair beside old impact');
-    const retainedHit = pack.mode !== 'swf' || view.container.children.includes(oldView!);
     const removedFilm = !view.container.children.some((child) => child.label === firstFilm.key);
     world.pause();
     tick(8);
@@ -187,8 +168,6 @@ export async function showTurretProtection(pack: AssetPack, host: HTMLElement) {
     capture('Cached return · source read abort, shield retained');
     return {
       panels,
-      oldContact,
-      retainedHit,
       removedFilm,
       oldKey: oldHit.key,
       currentKey: tank.shieldHitClip!.key,

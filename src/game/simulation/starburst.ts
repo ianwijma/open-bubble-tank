@@ -8,7 +8,7 @@ import { createProjectile } from './create-projectile';
 
 const fuses = new WeakMap<Projectile, number>();
 
-/** _-Hu tests wall/contact before its 45 movement frames and following-Run split. */
+/** The starburst tests wall/contact before its 45 movement frames and following-Run split. */
 export function tickStarburst(world: World, b: Projectile) {
   if (projectileOutside(world, b)) {
     world.addCombatEffect(b, 'impact');

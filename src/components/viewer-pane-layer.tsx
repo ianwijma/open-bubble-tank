@@ -1,7 +1,7 @@
 'use client';
 import { useLayoutEffect, useRef, type ReactNode } from 'react';
 import type { ViewerFades } from '@/game/core/viewer-fades';
-/** Paint alpha without replacing the retained MovieClip or rendering React each frame. */
+/** Paint alpha without replacing the retained clip or rendering React each frame. */
 export function ViewerPaneLayer({
   fades,
   name,

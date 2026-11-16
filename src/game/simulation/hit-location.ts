@@ -3,7 +3,7 @@ import type { Tank, TankDesign, Vec } from '../core/types';
 
 const points = new WeakMap<TankDesign, Vec>();
 
-/** TankData.GetClosestDetailToCenterPoint includes every detail and retains the first tie. */
+/** The closest detail to the center point includes every detail and retains the first tie. */
 export function tankHitDetail(tank: Tank): Readonly<Vec> {
   let point = points.get(tank.design);
   if (!point) {

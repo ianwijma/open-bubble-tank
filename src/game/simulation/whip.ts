@@ -4,7 +4,7 @@ import { displayPixel } from '../core/display-values';
 import type { Projectile, Vec } from '../core/types';
 import type { World } from './world';
 
-/** _-Rx samples only the named primary whip, not the duplicate translucent artwork. */
+/** Samples only the named primary whip, not the duplicate translucent artwork. */
 export function whipSamples(b: Projectile): Vec[] {
   const pose = b.artPose;
   const placement = pose?.placements.find((child) => child.name === 'whip_mc');
@@ -27,7 +27,7 @@ export function whipSamples(b: Projectile): Vec[] {
   });
 }
 
-/** _-Rx checks its old position before following the emitter, retaining launch rotation. */
+/** The whip checks its old position before following the emitter, retaining launch rotation. */
 export function tickWhip(world: World, b: Projectile) {
   const pose = world.projectileTimelines.initialize(b);
   if (pose) b.artPose = pose;
@@ -40,12 +40,12 @@ export function tickWhip(world: World, b: Projectile) {
     if (enemy.dead || b.hit.has(enemy.uid)) continue;
     const point = points.find((point) => world.hitTest(enemy, point.x, point.y));
     if (!point) continue;
-    // BulletCallCollisionDetected is empty. Damage precedes remembering the hit/effect.
+    // The collision-detected call is empty. Damage precedes remembering the hit/effect.
     world.damageDoneIncr(b.damage);
     world.damage(enemy, b.damage, b);
     b.hit.add(enemy.uid);
     b.missExempt = true;
-    // The original passes a global point directly into its field-local effect queue.
+    // A global point is passed directly into the field-local effect queue.
     world.addCombatEffect(
       {
         x: STAGE.cx + (point.x - world.player.x) * world.viewZoom,

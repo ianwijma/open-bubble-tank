@@ -14,12 +14,12 @@ export function recordLayerMine(
   refs.push(gun.part.type === 4021 ? shot : { mc: shot, x: pos.x, y: pos.y });
   if (refs.length !== 8) return;
   const oldest = refs.shift()!;
-  if (!oldest) return; // A blocked null spawn has no MovieClip to expire.
+  if (!oldest) return; // A blocked null spawn has no clip to expire.
   const bullet = wrapped(oldest) ? oldest.mc : oldest;
   world.addCombatEffect(oldest, 'mineExplosion', {}, false, world.currentWrapper);
   if (bullet) bullet.readyForDelete = true;
 }
-/** _-0D.RemoveBullet catches a raw-ref .mc lookup error and skips that owner's remaining guns. */
+/** Removal catches a raw-ref .mc lookup error and skips that owner's remaining guns. */
 export function forgetLayerMine(world: World, shot: Projectile) {
   outer: for (const tank of world.field.enemies) {
     for (const gun of tank.guns)

@@ -13,7 +13,7 @@ const sorts: Record<string, { label: string; sort: ViewerSort }> = {
   btnSortByGuns_mc: { label: 'gun points', sort: 'guns' },
   btnSortByBubbles_mc: { label: 'bubble points', sort: 'bubbles' },
 };
-/** SortTanks1225 replaces two independently playing children whenever its hover frame changes. */
+/** The sort control replaces two independently playing children whenever its hover frame changes. */
 export function TankViewerSort({
   pack,
   stage,

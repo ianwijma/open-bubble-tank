@@ -1,4 +1,4 @@
-/** Flash Timer callbacks use elapsed milliseconds independently of stage/part Run. */
+/** Timer callbacks use elapsed milliseconds independently of stage/part Run. */
 export class WallTimers {
   private now = 0;
   private timers: {

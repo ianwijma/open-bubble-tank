@@ -12,7 +12,7 @@ const length = (v: Vec) => Math.sqrt(v.x * v.x + v.y * v.y);
 export function setPursuitPoint(tank: MovingActor, point: Vec | null) {
   tank.movement.swarmPoint = point && { ...point };
 }
-/** Setup sets this flag before the first active BehaviorRun. */
+/** Setup sets this flag before the first active behavior run. */
 export function setupSkittish(tank: MovingActor) {
   tank.movement.skittish = true;
 }
@@ -23,7 +23,7 @@ export function tickSkittish(tank: MovingActor, point: Vec | null, rng: Random) 
   }
   const heading = actorHeading(tank, point);
   let facing = heading - tank.rotation;
-  // Source's positive wrap writes another local, leaving this facing value unchanged.
+  // The positive wrap writes another local, leaving this facing value unchanged.
   if (facing < -180) facing += 360;
   if (Math.abs(facing) > 90) return;
   const outward = actorAngle(actorHeading({ x: 0, y: 0 }, tank) - tank.rotation),

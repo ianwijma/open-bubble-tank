@@ -15,7 +15,6 @@ import { AssetGate } from './asset-gate';
 import { GameViewport } from './game-viewport';
 import { MainStage } from './main-stage';
 import { MainMenu } from './main-menu';
-import { CreditsPanel } from './credits-panel';
 import { MainMenuMotion } from '@/game/core/main-menu';
 import { GameHud } from './game-hud';
 import { SettingsPanel } from './settings-panel';
@@ -32,7 +31,7 @@ import { WinPanel } from './win-panel';
 import { Dialog, Icon } from './ui';
 
 type Screen = 'menu' | 'game' | 'creator' | 'library' | 'viewer';
-type Overlay = 'settings' | 'credits' | 'sources' | 'edit-confirm' | 'edit-choice' | null;
+type Overlay = 'settings' | 'sources' | 'edit-confirm' | 'edit-choice' | null;
 interface EditorContext {
   initial: TankDesign;
   saveName: string;
@@ -119,7 +118,7 @@ export default function GameShell() {
       setAudio(null);
       return;
     }
-    const manager = new AudioManager(pack, stage);
+    const manager = new AudioManager(stage);
     setAudio(manager);
     return () => {
       manager.dispose();
@@ -143,7 +142,7 @@ export default function GameShell() {
     [],
   );
   useEffect(() => {
-    // The source profile library stays live while creator/viewer children are open.
+    // The profile library stays live while creator/viewer children are open.
     if (world && profile) world.avatarLibrary = profile.tanks.filter((tank) => tank.avatar);
   }, [world, profile?.tanks]);
   function updateProfile(update: (p: Profile) => Profile, persist = true) {
@@ -165,11 +164,11 @@ export default function GameShell() {
   function settingsChange(settings: Settings, control?: 'shake' | 'efficiency') {
     if (control === 'efficiency') stage.background.efficient = settings.efficient;
     // Pause's standalone toggle only gates Massive Cannon. Menu and efficiency
-    // controls also call the source controller's enable/disable methods.
+    // controls also call the controller's enable/disable methods.
     if (control === 'efficiency' || (control === 'shake' && screen === 'menu'))
       stage.effects.setEnabled(settings.shake);
-    // Efficiency calls SaveGameData. Normal settings stay live until RemoveSettings
-    // (or another source save); requested camera zoom saves immediately.
+    // Efficiency saves the game data. Normal settings stay live until the settings close
+    // (or another save); requested camera zoom saves immediately.
     updateProfile(
       (p) => ({ ...p, settings }),
       control === 'efficiency' || settings.zoom !== profile?.settings.zoom,
@@ -197,7 +196,7 @@ export default function GameShell() {
     next.onUpgradeMenuOpen = () => openUpgradeMenu(next, true);
     next.onWinScreenOpen = () => {
       if (!pack || winRef.current) return;
-      const screen = new WinScreen(stage, winShade(pack), (action) => {
+      const screen = new WinScreen(stage, winShade(), (action) => {
         if (winRef.current !== screen) return;
         winRef.current = null;
         setWin(null);
@@ -289,7 +288,7 @@ export default function GameShell() {
         if (context.world.progression.history[context.world.progression.level]) {
           context.menu.complete();
         } else {
-          // _-Zo(false) calls SecondSetup on the same menu after an unsaved return.
+          // The same menu returns to its offers after an unsaved return.
           context.menu.returnToOffers(context.world.player.design.classId);
           showScreen('game');
           setEditor(null);
@@ -342,13 +341,13 @@ export default function GameShell() {
       onKeyDownCapture={() => audio?.unlock()}
     >
       <header className="site-header">
-        <a className="project-name" href="/" aria-label="Open Bubble Tank home">
+        <a className="project-name" href="/" aria-label="Soap Tank home">
           <span className="brand-bubbles" aria-hidden="true">
             <i />
             <i />
             <i />
           </span>
-          OPEN BUBBLE TANK
+          SOAP TANK
         </a>
         <span className="header-caption">A FLASH CLASSIC, REBUILT</span>
         <div className="window-actions">
@@ -397,9 +396,9 @@ export default function GameShell() {
                     if (!menuMotion.open()) return;
                     setContinueRun(false);
                     setOverlay('sources');
-                  } else if (name === 'settings_btn' || name === 'credits_btn') {
+                  } else if (name === 'settings_btn') {
                     if (!menuMotion.open()) return;
-                    setOverlay(name === 'settings_btn' ? 'settings' : 'credits');
+                    setOverlay('settings');
                   } else if (name === 'enemyCreator_btn') {
                     edit({
                       ...STARTER,
@@ -496,7 +495,6 @@ export default function GameShell() {
                 ) : null}
                 {screen === 'game' && world.mode === 'secondary-help' ? (
                   <SecondaryHelpPanel
-                    pack={pack}
                     onClose={() => {
                       world.closeSecondaryHelp();
                       refresh();
@@ -505,7 +503,6 @@ export default function GameShell() {
                 ) : null}
                 {screen === 'game' && overlay === 'edit-confirm' ? (
                   <EditConfirmPanel
-                    pack={pack}
                     onYes={() => {
                       world.offers = world.getOffers();
                       upgradeRef.current?.menu.setupOffers(
@@ -603,9 +600,6 @@ export default function GameShell() {
                   onClose={closeOverlay}
                 />
               ) : null}
-              {pack && overlay === 'credits' ? (
-                <CreditsPanel pack={pack} stage={stage} onClose={closeOverlay} />
-              ) : null}
               {pack && profile && overlay === 'sources' ? (
                 <Dialog title="Choose your tanks" onClose={closeOverlay}>
                   <p className="source-intro">
@@ -613,7 +607,7 @@ export default function GameShell() {
                     collection.
                   </p>
                   <label className="source-option">
-                    <input type="checkbox" checked readOnly /> Hero Interactive tanks{' '}
+                    <input type="checkbox" checked readOnly /> Built-in tanks{' '}
                     <span>43 built-in enemies</span>
                   </label>
                   <label className="source-option">
@@ -648,13 +642,7 @@ export default function GameShell() {
         </div>
       </div>
       <footer className="site-footer">
-        <span>
-          {pack
-            ? pack.mode === 'swf'
-              ? 'ORIGINAL SWF ASSETS'
-              : 'PROCEDURAL MOCK ASSETS'
-            : 'YOUR SWF · YOUR DEVICE'}
-        </span>
+        <span>{pack ? 'PROCEDURAL MOCK ASSETS' : 'YOUR DEVICE'}</span>
         <p>
           <kbd>W</kbd>
           <kbd>A</kbd>
@@ -665,29 +653,12 @@ export default function GameShell() {
         <span>{storageError ? 'LOCAL SAVING UNAVAILABLE' : 'LOCAL SAVE'}</span>
       </footer>
       <details className="recreation-details">
-        <summary>About this recreation</summary>
+        <summary>About Soap Tank</summary>
         <p>
-          Original game and artwork: Hero Interactive. Music &amp; sound: Brian Hall, Polyphone
-          Music.
+          Soap Tank grows out of a recreation of an older Flash game. The built-in tanks, part names
+          and texts come from that game and are credited in the project&apos;s notice file.
         </p>
-        <p>
-          Open Bubble Tank is an independent TypeScript recreation, built from research into the
-          original Flash game.
-        </p>
-        <p>
-          Game assets are supplied by you and extracted locally. The Flash file is never uploaded or
-          executed.
-        </p>
-        {pack?.report ? (
-          <p className="asset-summary">
-            {pack.report.filename}
-            <br />
-            {pack.report.vectors.toLocaleString()} vectors · {pack.report.sprites.toLocaleString()}{' '}
-            sprites · {pack.report.sounds} sounds
-          </p>
-        ) : pack ? (
-          <p className="asset-summary">Playing with procedural mock artwork.</p>
-        ) : null}
+        {pack ? <p className="asset-summary">Playing with procedural mock artwork.</p> : null}
       </details>
     </main>
   );

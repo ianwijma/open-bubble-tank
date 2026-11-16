@@ -133,7 +133,7 @@ test('factory interleaves registered behavior Setup draws and duplicate construc
   expect(tank.guns[0].phasing!.counter).toBe(0);
   expect(tank.guns[1].wallFlower).toMatchObject({ age: 0, frequency: 0.05, amplitude: 16 });
   expect(tank.guns.every((g) => g.behaviorTarget!.target === world.player)).toBe(true);
-  expect(tank.movement.lastAngle).toBe(0); // Source movement Setup precedes external x/y placement.
+  expect(tank.movement.lastAngle).toBe(0); // Movement Setup precedes external x/y placement.
   expect(tank.design.parts).toHaveLength(4);
 });
 

@@ -4,7 +4,7 @@ import type { ViewerLimits } from './tank-viewer';
 import { tankLoadEligibility } from './tank-eligibility';
 import { displayAlpha } from './display-values';
 
-/** HighlightTanks: new GlowFilter(0xffffff, 0.1, 28, 28, 3, 3). */
+/** Tank highlights: glow filter (0xffffff, 0.1, 28, 28, 3, 3). */
 export const VIEWER_HOVER_GLOW: SwfGlowFilter = {
   kind: 'glow',
   color: [255, 255, 255, 25.5],
@@ -16,7 +16,7 @@ export const VIEWER_HOVER_GLOW: SwfGlowFilter = {
   knockout: false,
   compositeSource: true,
 };
-/** TankLoadingBox.Setup: capacity and unlocked non-body parts, including enemy warning checks. */
+/** Loading box setup: capacity and unlocked non-body parts, including enemy warning checks. */
 export function viewerCardWarning(tank: TankDesign, limits: ViewerLimits) {
   const { overGunPoints, overClass, missingParts } = tankLoadEligibility(tank, limits);
   return overGunPoints || overClass || missingParts;
@@ -28,7 +28,7 @@ export interface ViewerHighlight {
   caution: number;
   warning: boolean;
 }
-/** Persistent TankLoadingBox slots; previews are replaced independently of their line clips. */
+/** Persistent loading box slots; previews are replaced independently of their line clips. */
 export class ViewerHighlights {
   readonly rows: ViewerHighlight[] = Array.from({ length: 4 }, () => ({
     instance: null,
@@ -55,7 +55,7 @@ export class ViewerHighlights {
       if (!row.instance) return;
       if (hits[index]) {
         if (!row.lines) row.lines = row.glow = true;
-        // Preserve the source comparisons and DisplayObject signed8.8 assignments.
+        // Preserve the comparisons and display signed8.8 assignments.
         if (row.warning && row.caution < 0.9) row.caution = displayAlpha(row.caution + 0.05);
       } else {
         if (row.lines) row.lines = row.glow = false;

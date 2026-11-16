@@ -56,7 +56,7 @@ test('creator X steps retain links while slider initialization averages normaliz
 
 test('creator centering keeps the source index walk when a faded twin precedes its owner', () => {
   const centered = centerSelection(parts, { keys: ['b', 'a', 'c'], ghosts: ['b'] });
-  // Removing current index0 shifts the opaque owner left, then the source increments to index1.
+  // Removing current index0 shifts the opaque owner left, then the index increments to1.
   expect(centered.parts.map((p) => [p.key, p.y, p.twin])).toEqual([
     ['a', -30, ''],
     ['c', 0, ''],
@@ -188,7 +188,7 @@ test('creator deletes only selected parts and keeps the relative layering of a g
   expect(orderSelection(parts, selection, false).map((p) => p.key)).toEqual(['a', 'c', 'b', 'd']);
 });
 
-// AVM Number additions occur in each MoveRight frame, before metadata export.
+// Number additions occur in each move-right frame, before metadata export.
 test('held nudge preserves per-frame floating arithmetic in raw metadata', () => {
   const selected = { keys: ['a'], ghosts: [] };
   const moved = nudgeSelection([part('a', -0.462, 10), part('b', 9, 10)], selected, 1, 3);

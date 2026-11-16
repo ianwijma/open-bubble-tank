@@ -6,7 +6,7 @@ import { displayPixel } from './display-values';
 
 export const TANK_INFO = HUD.tankInfo;
 
-/** PauseMenu._-Bz: sort IDs, then abbreviate each category independently. */
+/** Sort IDs, then abbreviate each category independently. */
 export function infoWeapons(tank: TankDesign, category: 2 | 3 | 4 | 5 | 6) {
   const counts = new Map<number, number>();
   for (const part of tank.parts)
@@ -38,7 +38,7 @@ export function tankInfoFields(tank: TankDesign): Record<string, string> {
   };
 }
 
-/** Authored 50fps-frame easing, with the original sequential entrance gates. */
+/** Authored 50fps-frame easing, with the sequential entrance gates. */
 export class TankInfoMotion {
   positions = Object.fromEntries(TANK_INFO.pieces.map((p) => [p.name, { x: p.x, y: p.y }]));
   exiting = false;
@@ -102,19 +102,4 @@ export class TankInfoMotion {
       })
     );
   }
-}
-
-/** Flash wraps at spaces; an unbroken name may also exceed a line's width. */
-export function infoTextLines(text: string, width: number, measure: (text: string) => number) {
-  const lines: string[] = [];
-  let line = '';
-  for (const word of text.split(' ')) {
-    const next = line ? `${line} ${word}` : word;
-    if (line && measure(next) > width) {
-      lines.push(line);
-      line = word;
-    } else line = next;
-  }
-  if (line) lines.push(line);
-  return lines;
 }

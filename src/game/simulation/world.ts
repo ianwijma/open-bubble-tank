@@ -254,11 +254,11 @@ export class World {
       this.projectAvatar(previous ?? this.currentField);
     }
   }
-  /** _-0D.SpawnNewBullet declines new shots while _-5d is set. Timers still run. */
+  /** Spawning declines new shots while in transit. Timers still run. */
   addBullet(bullet: Projectile, home?: Tank, target?: Tank, prepare?: () => void) {
     if (this.transit) return false;
     prepare?.();
-    // SpawnNewBullet assigns display coordinates before virtual Setup reads them.
+    // Spawning assigns display coordinates before virtual Setup reads them.
     bullet.x = displayPixel(bullet.x);
     bullet.y = displayPixel(bullet.y);
     if (bullet.kind === 'healBeam')
@@ -273,7 +273,7 @@ export class World {
     initializeAvatarSeeker(this, bullet, target);
     initializeHomingProjectile(this, bullet, home, target);
     if (bullet.kind === 'infect' && bullet.targetId === null) expireInfectionTarget(this, bullet);
-    // Source SpawnNewBullet writes this AFTER virtual Setup, even if Setup queued removal.
+    // Spawning writes this AFTER virtual Setup, even if Setup queued removal.
     bullet.movementEnabled = true;
     this.bullets.push(bullet);
     this.projectileParents.set(bullet, this.runtime);
@@ -296,18 +296,18 @@ export class World {
     if (this.projectileParents.get(bullet) === runtime) this.projectileParents.delete(bullet);
     return true;
   }
-  /** currentBFTarget.SpawnNewEnemy has no crossing birth gate. */
+  /** Spawning an enemy on the current wrapper has no crossing birth gate. */
   spawnEnemy(design: TankDesign, point: Vec) {
     const field = this.currentWrapper;
     const enemy = createTank(this.nextId(), design, 'enemy', 0, 0, undefined, undefined, this);
-    // TankData._-Tr completes Setup before SpawnNewEnemy assigns its display pose.
+    // Tank setup completes before the spawn assigns its display pose.
     enemy.x = point.x;
     enemy.y = point.y;
     this.attachActor(enemy, field);
     field.enemies.push(enemy);
     return enemy;
   }
-  /** SpawnNewAlly attaches before recording its callback and live-array entry. */
+  /** Spawning an ally attaches before recording its callback and live-array entry. */
   spawnAlly(design: TankDesign, point: Vec) {
     const field = this.currentWrapper;
     const ally = createTank(this.nextId(), design, 'ally', 0, 0, 15, undefined, this);
@@ -317,7 +317,7 @@ export class World {
     this.runtimeFor(field).allies.push(ally);
     return ally;
   }
-  /** Source addChild followed by SetCallback; Run-array insertion is separate. */
+  /** addChild followed by setting the callback; Run-array insertion is separate. */
   attachActor(tank: Tank, field: Field) {
     this.actorParents.attach(tank, field);
     this.callbackFields.set(tank, field);
@@ -416,7 +416,7 @@ export class World {
   secondaryHelpSeen = false;
   onSecondaryHelp: () => void = () => {};
   onUpgradeMenuOpen: () => void = () => {};
-  /** CompletedABubblefield notification, before the calling field completes its tail. */
+  /** Field completion notification, before the calling field completes its tail. */
   onWinScreenOpen: () => void = () => {};
   onBackgroundChange: (running: boolean) => void = () => {};
   private backgroundActive = true;
@@ -519,11 +519,11 @@ export class World {
     if (advanceMainEffects) this.mainEffects.tick(() => this.rng.next());
     try {
       this.stepFrame(input);
-      // BTAGameWorld._-9E follows its mode switch, including state1 pause.
+      // The tail follows the mode switch, including state1 pause.
       // An uncaught listener error skips this tail; the finally artwork pass is separate.
       if (this.hitSoundTimer >= 0) this.hitSoundTimer--;
     } catch (error) {
-      // AVM2 dispatch ends this Main.Run listener on an uncaught target read; the next frame runs.
+      // An uncaught target read ends this Run listener; the next frame runs.
       if (
         !(error instanceof HealerTargetReadError) &&
         !(error instanceof TurretTargetReadError) &&
@@ -542,7 +542,7 @@ export class World {
       this.advanceArtwork(false);
     }
   }
-  /** Retained artwork continues when Main4 skips the World.Run listener. */
+  /** Retained artwork continues when Main in mode4 skips the world run listener. */
   advanceArtwork(enterCarrierFrame = true) {
     if (enterCarrierFrame) {
       this.actorArtwork.enterFrame();
@@ -561,7 +561,7 @@ export class World {
   }
   private stepFrame(input: InputFrame) {
     if (this.flow.state === 'collapse') {
-      // PausePlayerControl selects source state3: effects/ENTER_FRAME shrink continue, HUD Run stops.
+      // Pausing player control selects state3: effects/ENTER_FRAME shrink continue, HUD Run stops.
       this.pollEffects();
       if (this.collapse) this.tickCollapse();
       return;
@@ -578,12 +578,12 @@ export class World {
     this.projectAvatar(this.currentField);
     this.stats.frames++;
     // State0 detects an exit before interface/field/avatar work. Its initiation frame
-    // still reaches Avatar.Run; subsequent state2 frames skip it.
+    // still reaches the avatar run; subsequent state2 frames skip it.
     if (!this.transit && length(this.player) > FIELD_RADIUS * this.field.scale)
       this.jump(nearestExit(this.player));
     this.interfaceFrame(input);
     this.tickActiveFields(input);
-    // Avatar.Run follows Bubblefield.Run; infection cannot promote/demote a tank until
+    // The avatar run follows the field run; infection cannot promote/demote a tank until
     // the following interface frame. Passive weapons also observe the completed field step.
     this.tickAvatar(input);
     this.pollEffects();
@@ -678,10 +678,10 @@ export class World {
       }
     }
     runtime.allyRemovals = [];
-    // Separate live arrays match _-0D.Run: a spawner's newly appended enemies run now.
+    // Separate live arrays: a spawner's newly appended enemies run now.
     for (const enemy of this.field.enemies) this.tickActor(enemy, input);
     for (const ally of this.allies) this.tickActor(ally, input);
-    // The source loops the live array: spawned fragments run in this same field frame.
+    // The live array is looped: spawned fragments run in this same field frame.
     for (const bullet of this.bullets) {
       this.tickBullet(bullet, input);
     }
@@ -692,14 +692,14 @@ export class World {
     }
     tickPickups(this);
     this.completeField(this.field, visit);
-    // _-0D flushes queued effects after its combat/pickup/completion work. The engine
+    // Queued effects are flushed after the combat/pickup/completion work. The engine
     // still targets the outgoing layer while both wrappers run during a crossing.
     runtime.flushEffects((request) => this.registerEffectRequest(request));
     if (this.runtime.collectTimer >= 0) this.runtime.collectTimer--;
     if (this.runtime.shootTimer >= 0) this.runtime.shootTimer--;
   }
   private tickActor(tank: Tank, input: InputFrame) {
-    if (tank.dead && tank.dataActive) return; // Host fixtures can mark death without source teardown.
+    if (tank.dead && tank.dataActive) return; // Host fixtures can mark death without teardown.
     this.tickTank(tank, false);
     tank.stunned = tank.status.stun > 0;
     if (tank.stunned) {
@@ -713,7 +713,7 @@ export class World {
     if (!boss && tank.status.sticky > 0) tank.status.sticky--;
     tank.teleportReady = true;
     if (!tank.dataActive) {
-      // Normal Deactivate leaves intState untouched. A retained stunned branch
+      // Normal deactivation leaves the state untouched. A retained stunned branch
       // above can finish; active movement then reads its cleared data/vectors.
       if (boss && tank.design.id.startsWith('B1')) tank.x = tank.y = 0;
       throw new DeactivatedActorRunError();
@@ -734,7 +734,7 @@ export class World {
       this.stats.sumo++;
       this.damage(tank, tank.life);
     } else {
-      // Base IsOutside deactivates allies directly, bypassing shield/forcefield damage.
+      // The base outside check deactivates allies directly, bypassing shield/forcefield damage.
       tank.life = 0;
       this.dropBubbles(tank, tank.design.reward);
       this.emit('pop');
@@ -794,7 +794,7 @@ export class World {
       enemy.design = { ...enemy.design, reward: Math.floor(enemy.design.reward / 3) };
       this.damage(enemy, enemy.life);
     }
-    // Destroy replaces arrEnemies without flushing its deletion queue or medal checks.
+    // Destroy replaces the enemy list without flushing its deletion queue or medal checks.
     this.runtime.enemyRemovals = [];
     this.field.enemies = [];
     this.field.destroyed = true;
@@ -806,7 +806,7 @@ export class World {
     this.projectAvatar(this.currentField);
     this.collapse = null;
     this.flow.restoreControl();
-    // Destroy calls _-1E directly; only ordinary boundary exits run FinalPartCall.
+    // Destroy attaches the field directly; only ordinary boundary exits run the final part call.
     this.jump({ x: -1, y: 0 }, false, { finalizeParts: false });
     this.addCombatEffect({ x: 0, y: 0 }, 'collapseFlash', {}, true);
   }
@@ -853,7 +853,7 @@ export class World {
     }
     this.adjustBubblefieldObjects(p.velocity);
   }
-  /** Original shared camera operation, including teleport's destination-origin displacement. */
+  /** Shared camera operation, including teleport's destination-origin displacement. */
   adjustBubblefieldObjects(delta: Vec) {
     this.fieldDisplays.moveCurrent(this.currentField, delta);
     this.projectAvatar(this.currentField);
@@ -936,7 +936,7 @@ export class World {
     };
   }
   private queueEffectCallback(carrier: PendingEffect) {
-    // Both source weapons explicitly call objWorld.currentBFTarget, even while
+    // Both weapons explicitly use the world's current wrapper, even while
     // a next-field actor is running after the outgoing field's tail.
     this.runtimeFor(this.currentField).queueEffect(this.carrierRequest(carrier));
     return carrier;
@@ -946,7 +946,7 @@ export class World {
     this.registerEffectRequest(this.carrierRequest(carrier));
     return carrier;
   }
-  /** Source counters record nominal contact damage before Damage applies protection. */
+  /** Counters record nominal contact damage before damage applies protection. */
   damageDoneIncr(amount: number) {
     this.stats.damageDone += amount;
   }
@@ -983,7 +983,7 @@ export class World {
         });
     this.deactivateNpc(t);
   }
-  /** _-Zx.Deactivate: primary finals precede data clearing, dead flag and field callback. */
+  /** Deactivation: primary finals precede data clearing, dead flag and field callback. */
   private deactivateNpc(t: Tank) {
     for (const gun of t.guns)
       if (gun.part.type === 4022) {
@@ -1022,7 +1022,7 @@ export class World {
       this.runtimeFor(this.callbackFields.get(t) ?? this.field).enemyRemovals.push(t);
     } else this.runtimeFor(this.callbackFields.get(t) ?? this.field).allyRemovals.push(t);
   }
-  /** _-0D.RemoveEnemy classifies the birth code only when the queued object detaches. */
+  /** Enemy removal classifies the birth code only when the queued object detaches. */
   flushEnemyRemovals() {
     const runtime = this.runtime;
     for (const tank of runtime.enemyRemovals) {
@@ -1032,7 +1032,7 @@ export class World {
       if (key.includes('DeadHead')) this.stats.deadheads++;
       if (key.includes('Fighter')) this.stats.fighters++;
       if (key === 'HeavyMiniBoss' && this.progression.level <= 3) this.award('David and Goliath');
-      // Source equality is intentional: two protected pushes can skip exactly50.
+      // Equality is intentional: two protected pushes can skip exactly50.
       if (this.stats.deadheads === 200) this.award('Headhunter');
       if (this.stats.fighters === 100) this.award('Dogfighter');
       if (this.stats.sumo === 50) this.award('Pro Sumo');
@@ -1055,10 +1055,10 @@ export class World {
   }
   private completeField(field: Field, visit: FieldVisit) {
     if (!visit.canComplete(field)) return;
-    // _-0D calls World.CompletedABubblefield before _-K2, _-FR, map and wipe writes.
+    // The field is marked completed before the reward, unlock, map and wipe writes.
     this.stats.completed++;
     this.revision++;
-    // CompletedABubblefield checks the current wrapper, even if the next one called it.
+    // The completion check uses the current wrapper, even if the next one called it.
     if (this.currentField.boss && !this.bossDefeated) {
       this.bossDefeated = true;
       if (this.flow.state === 'playing') {
@@ -1124,8 +1124,8 @@ export class World {
     const offers: TankDesign[] = [];
     const library = [...AVATARS, ...this.avatarLibrary];
     for (const classId of upgradeClasses(current)) {
-      // The fresh source profile rolls its default-vs-server preference even
-      // though both routes reach GetDefaultTank when retired search is unavailable.
+      // The fresh profile rolls its default-vs-server preference even
+      // though both routes reach the default tank when retired search is unavailable.
       this.rng.int(1, 2);
       const tank = defaultUpgradeTank(library, classId, level);
       if (tank) offers.push(tank);
@@ -1137,7 +1137,7 @@ export class World {
     if (!this.placeUpgrade(design)) return;
     this.finishUpgrade();
   }
-  /** ViewerUp places the avatar before starting its retained presentation reversal. */
+  /** Places the avatar before starting its retained presentation reversal. */
   placeUpgrade(design: TankDesign) {
     if (this.mode !== 'upgrade') return false;
     this.progression.history[this.progression.level] = design;
@@ -1213,7 +1213,7 @@ export class World {
   closeSecondaryHelp() {
     if (this.flow.closeSecondaryHelp()) this.revision++;
   }
-  /** _-Zx.Damage handles a level-zero lethal hit synchronously, before pickups run. */
+  /** Damage handles a level-zero lethal hit synchronously, before pickups run. */
   escapeAtLevelZero() {
     this.player.life = 1;
     this.jump(nearestExit(this.avatarPosition()), true);
@@ -1231,8 +1231,8 @@ export class World {
       row += dir.y;
       stored = this.cache.get(col, row);
     }
-    // AttachNewBubblefield constructs1551 and its actor-layer tutorial before
-    // either _-WZ population or _-G0 cached reparenting, and before all setters.
+    // Attaching a new field constructs1551 and its actor-layer tutorial before
+    // either population or cached reparenting, and before all setters.
     const next: Field = {
       col,
       row,
@@ -1254,7 +1254,7 @@ export class World {
       next.boss = boss;
       for (const design of wave.designs) {
         const t = createTank(this.nextId(), design, 'enemy', 0, 0, undefined, undefined, this);
-        // _-Ar finishes Setup, then samples with authored BF_BG scale1.
+        // Setup finishes, then samples with authored BF_BG scale1.
         t.x = this.rng.int(-200, 200);
         t.y = this.rng.int(-200, 200);
         t.rotation = this.rng.int(-180, 180);
@@ -1268,7 +1268,7 @@ export class World {
       next.cleared = this.fields.get(`${col},${row}`)?.cleared ?? false;
       next.enemies = this.cache.restore(stored);
       for (const tank of next.enemies) this.attachActor(tank, next);
-      // _-0D._-G0 resets only offensive primary movTarget on cached attachment.
+      // Cached attachment resets only the offensive primary target.
       for (const enemy of next.enemies)
         if (enemy.dataActive)
           for (const gun of enemy.guns)
@@ -1321,8 +1321,8 @@ export class World {
     if (!next.enemies.length) this.editSlider.trigger(this.progression.level, this.mapMode);
     else if (this.editSlider.atRest) this.editSlider.hide();
     this.flow.cross();
-    // _-ZY performs these caller-owned writes/finals only after _-1E attached
-    // the field and enabled the birth gate. Death and Destroy call _-1E directly.
+    // The caller-owned writes and finals run only after the field is attached
+    // and the birth gate enabled. Death and Destroy attach the field directly.
     if (!deadhead && finalizeParts) {
       this.transit.stopShoot = true;
       this.wallTimers.cancel(this.player.uid);
@@ -1338,7 +1338,7 @@ export class World {
     if (!tr) throw new CrossingTargetReadError();
     tr.age++;
     // The marker belongs to next.BF_over_detail_mc; the avatar belongs to World.
-    // Both original Point calls truncate separately, including fractional Main motion.
+    // Both Point calls truncate separately, including fractional Main motion.
     const stage = displayMatrixPoint(
       this.worldDisplays.fieldMatrix(tr.next, this.mainEffects.position, 'detail'),
       { x: displayTwips(-317 * tr.direction.x), y: displayTwips(-317 * tr.direction.y) },
@@ -1353,12 +1353,12 @@ export class World {
     if (dx * dx + dy * dy < 25) {
       const outgoingField = this.currentField;
       this.actorParents.sync(this);
-      // _-4j clears the engine before Deactivate/cache writes and layer promotion.
+      // The engine is cleared before deactivation/cache writes and layer promotion.
       this.effectEngine.clear();
       this.effectEngine.unregister('top');
       this.effectEngine.unregister('bottom');
       this.player.velocity = { x: 0, y: 0 };
-      // Deactivate clears only a completed wrapper. An uncleared detached
+      // Deactivation clears only a completed wrapper. An uncleared detached
       // wrapper retains its collections; neither wrapper itself enters the cache.
       if (this.fieldVisit.completed) {
         const outgoing = this.runtimeFor(this.currentField);
@@ -1367,7 +1367,7 @@ export class World {
         clearPickups(this, this.currentField);
         outgoing.enemyRemovals = [];
         outgoing.allyRemovals = [];
-        // _-0D.Deactivate clears _-I4 only for a completed wrapper. Engine
+        // Deactivation clears the effect queue only for a completed wrapper. Engine
         // clearing above is separate and must not erase an uncleared queue.
         outgoing.clearEffectQueue();
         this.currentField.enemies = [];
@@ -1389,8 +1389,8 @@ export class World {
       this.fieldVisit = tr.visit;
       this.player.shield = 0;
       this.player.shieldManaged = false;
-      // CleanUpShield clears immunity only; clearing the effects engine skips
-      // KillShield, so the old film remains attached until another trigger.
+      // Shield cleanup clears immunity only; clearing the effects engine skips
+      // killing the shield, so the old film remains attached until another trigger.
       for (const g of this.player.guns) g.counter = 0;
       this.transit = null;
       this.fieldDisplays.arrive(this.currentField);
@@ -1468,7 +1468,7 @@ export class World {
   }
 }
 export function nearestExit(pos: Vec): Vec {
-  // _-Ud starts with left, then replaces only on a strictly shorter right/top/bottom distance.
+  // Starts with left, then replaces only on a strictly shorter right/top/bottom distance.
   if (Math.abs(pos.x) >= Math.abs(pos.y)) return { x: Math.sign(pos.x) || -1, y: 0 };
   return { x: 0, y: Math.sign(pos.y) || 1 };
 }

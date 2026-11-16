@@ -1,6 +1,6 @@
 import { expect, test } from 'bun:test';
 import original from './fixtures/effect-clock-original.json';
-import { decode, rows, unpack } from '../tools/reference/effect-clock-evidence.mjs';
+import { decode, rows, unpack } from './support/effect-clock-rows.mjs';
 import { RegisteredEffects } from '../src/game/simulation/registered-effects';
 import { combatEffect } from '../src/game/simulation/effects';
 import type { Field } from '../src/game/core/types';
@@ -54,8 +54,8 @@ test('stopped collapse child retains identity and frame103 across parent wrap wh
 
 test('original transient child lookup holes and unavailable playing getters stay explicit', () => {
   const lines = unpack(original.contract);
-  expect(lines.filter((s) => s.startsWith('BT3_EFFECT_NULL ')).length).toBe(399);
-  expect(lines).toContain('BT3_EFFECT_NULL 3 enter before:explosion 0/1 tree');
+  expect(lines.filter((s) => s.startsWith('PROBE_EFFECT_NULL ')).length).toBe(399);
+  expect(lines).toContain('PROBE_EFFECT_NULL 3 enter before:explosion 0/1 tree');
   const lookup = measured.filter(
     (r) => r.label === 'before:explosion' && r.tick === 3 && r.path === '0/1',
   );

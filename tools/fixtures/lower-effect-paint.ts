@@ -1,4 +1,4 @@
-import { Application, Container, Graphics, Sprite } from 'pixi.js';
+import { Application, Graphics } from 'pixi.js';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { DEFAULT_SETTINGS } from '../../src/game/core/constants';
 import { FieldLowerEffectsView } from '../../src/game/render/field-lower-effects-view';
@@ -11,7 +11,7 @@ import { World } from '../../src/game/simulation/world';
 import { setEffectFixturePose } from './effect-pose';
 import original from '../../tests/fixtures/lower-effect-paint-original.json';
 
-/** Same GLUE disc/positions as the frozen original; no candidate generates expectations. */
+/** Same GLUE disc/positions as the frozen fixture; no candidate generates expectations. */
 export async function showLowerEffectPaint(pack: AssetPack, host: HTMLElement) {
   const app = new Application();
   await app.init({
@@ -27,25 +27,14 @@ export async function showLowerEffectPaint(pack: AssetPack, host: HTMLElement) {
   const world = new World([], [], 113),
     textures = new SwfTextures();
   const read = world.fieldDisplays.read(world.field);
-  const view = new FieldLowerEffectsView(read, pack, textures);
+  const view = new FieldLowerEffectsView(read);
   view.update({
     field: world.field,
     read,
     transform: fieldTransform(world, world.field, 'underMask'),
   });
   app.stage.addChild(view.root);
-  let disc: Container;
-  if (pack.mode === 'swf') {
-    const raster = await pack.rasterSymbol(1543);
-    if (!raster) throw new Error('Missing controlled original disc');
-    const sprite = new Sprite(textures.get(raster));
-    sprite.position.set(raster.x, raster.y);
-    sprite.width = raster.width;
-    sprite.height = raster.height;
-    disc = new Container();
-    disc.addChild(sprite);
-  } else
-    disc = new Graphics().circle(0, 0, 50).fill(0xbbd9f2).stroke({ color: 0xffffff, width: 1 });
+  const disc = new Graphics().circle(0, 0, 50).fill(0xbbd9f2).stroke({ color: 0xffffff, width: 1 });
   view.content.addChild(disc);
   const results = [];
   const before = JSON.stringify([world.fieldDisplays.read(world.field), world.rng.state]);
@@ -58,7 +47,7 @@ export async function showLowerEffectPaint(pack: AssetPack, host: HTMLElement) {
       view.maskSlot.angle = sample.rotation;
       if (sample.mode === 'bare') {
         view.content.mask = null;
-        // Original draw(target) excludes the mask's separate parent branch.
+        // draw(target) excludes the mask's separate parent branch.
         view.maskSlot.visible = false;
       }
       app.render();

@@ -20,7 +20,7 @@ test('Next and Back follow source frame stepping and final Next selects off', ()
 });
 
 test('guide declared text bounds retain their seven authored parent placements', () => {
-  // Independently checked against raw tutorial968 PlaceObject matrices.
+  // Independently checked against raw tutorial placement matrices.
   expect(
     CREATOR_GUIDE.frames.flatMap((page) =>
       page.art

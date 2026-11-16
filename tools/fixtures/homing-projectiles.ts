@@ -12,7 +12,7 @@ import { createTank } from '../../src/game/simulation/tank';
 import { World, emptyInput } from '../../src/game/simulation/world';
 import { captureCanvas } from './pixi-capture';
 
-/** Real collision providers and production painting around the recovered homing clock. */
+/** Real collision providers and production painting around the homing clock. */
 export async function showHomingProjectiles(pack: AssetPack, host: HTMLElement) {
   const world = new World([], [], 31),
     renderer = new GameRenderer(pack);
@@ -54,7 +54,7 @@ export async function showHomingProjectiles(pack: AssetPack, host: HTMLElement) 
       frames.push({ step, angle: b.angle, x: b.x, y: b.y, motion: { ...b.motion! } });
       renderer.draw(world, DEFAULT_SETTINGS);
       const painted = captureCanvas(renderer.app.renderer, {
-        target: pack.mode === 'swf' ? renderer.nativeShots : renderer.projectiles,
+        target: renderer.projectiles,
         frame: new Rectangle(-60, -60, 120, 120),
         resolution: 2,
       });

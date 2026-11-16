@@ -18,7 +18,7 @@ test('main-menu controls fade while parked and restore on countdown frame96', ()
   expect(menu.age).toBe(96);
   expect(menu.titleAlpha).toBe(1);
 });
-test('Settings/Credits begin fading immediately but lock actions for31 Run calls', () => {
+test('Settings begins fading immediately but lock actions for31 Run calls', () => {
   const menu = new MainMenuMotion();
   advance(menu, 96);
   const alpha = menu.controlAlpha;
@@ -62,7 +62,7 @@ test('numeric registrations preserve authored placement/scale and stable symbol 
   expect(MAIN_MENU.background).toBe(487);
   expect(MAIN_MENU.title.symbol).toBe(545);
   expect(MAIN_MENU.title.matrix.tx / 20).toBe(55.3);
-  expect(MAIN_MENU.controls.map((p) => p.symbol)).toEqual([492, 494, 496, 498, 500, 502]);
+  expect(MAIN_MENU.controls.map((p) => p.symbol)).toEqual([492, 494, 496, 500, 502]);
   expect(MAIN_MENU.controls[0].matrix.a).toBe(3.399993896484375);
   expect(MAIN_MENU.controls[0].matrix.tx / 20).toBe(207.85);
 });

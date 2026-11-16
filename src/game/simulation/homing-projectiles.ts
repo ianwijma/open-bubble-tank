@@ -10,7 +10,7 @@ export class HomingTargetReadError extends Error {}
 const homing = (b: Projectile) => b.kind === 'orbital' || (b.kind === 'seeker' && b.enemy);
 const size = (v: Vec) => Math.sqrt(v.x * v.x + v.y * v.y);
 
-/** Source RotateTowardTarget does not require movTarget.parent to exist. */
+/** Rotating toward the target does not require the target's parent to exist. */
 function steer(world: World, b: Projectile) {
   const state = b.homing!,
     origin = world.actorParents.fieldGlobal(b, world.field);
@@ -26,7 +26,7 @@ function steer(world: World, b: Projectile) {
   b.motion = actorDirection(angle, b.speed);
 }
 
-/** SpawnNewBullet attaches/sets display properties before virtual Setup steering. */
+/** Spawning attaches/sets display properties before virtual Setup steering. */
 export function initializeHomingProjectile(
   world: World,
   b: Projectile,
@@ -47,7 +47,7 @@ export function initializeHomingProjectile(
   steer(world, b);
 }
 
-/** Inherited _-BL.Run refreshes objAvatar before MoveBullet, leaving movTarget alone. */
+/** Inherited Run refreshes the avatar before the bullet movement, leaving the target alone. */
 export function refreshHomingAvatar(world: World, b: Projectile) {
   initializeHomingProjectile(world, b);
   if (b.homing && !world.actorParents.hasParent(b.homing.avatar)) b.homing.avatar = world.player;
@@ -97,7 +97,7 @@ function contact(world: World, b: Projectile) {
   const state = b.homing!,
     motion = b.motion!;
   // This subclass retry follows steering. Usually base Run already refreshed
-  // objAvatar, so it does not replace the separately retained movTarget.
+  // avatar, so it does not replace the separately retained target.
   if (b.kind === 'seeker' && !world.actorParents.hasParent(state.avatar)) {
     state.avatar = state.target = world.player;
     b.targetId = world.player.uid;
@@ -139,7 +139,7 @@ function contact(world: World, b: Projectile) {
   return false;
 }
 
-/** _-QM/_-JX MoveBullet: home/wipe, wall, steering/orbit+acquire, contact, separate writes. */
+/** Bullet movement: home/wipe, wall, steering/orbit+acquire, contact, separate writes. */
 export function tickHomingProjectile(world: World, b: Projectile) {
   initializeHomingProjectile(world, b);
   const state = b.homing!;

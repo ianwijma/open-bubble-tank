@@ -22,7 +22,7 @@ export class FieldCache {
     this.cells.set(`${col},${row}`, {
       scale: field.scale,
       destroyed: field.destroyed === true,
-      // Pending removals still belong to the raw source array at this point.
+      // Pending removals still belong to the raw array at this point.
       enemies: field.enemies.map((tank) => ({
         tank,
         x: tank.x,

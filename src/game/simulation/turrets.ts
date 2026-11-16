@@ -9,14 +9,14 @@ import { projectileCallback } from './projectile-contact';
 import { collisionSound } from './collision-sound';
 import { attachTurretShield, removeTurretShield } from './shields';
 
-/** Observed original EnemyAim raises #1069 for the cached avatar's missing inner_mc. */
+/** Enemy aim raises #1069 for the cached avatar's missing inner_mc. */
 export class TurretTargetReadError extends Error {
   constructor() {
     super('Shield Turrets target has no inner_mc (#1069)');
   }
 }
 
-/** _-DO.Run polls physical parents, then aims, before PartCallRun. */
+/** Run polls physical parents, then aims, before the part-call run. */
 export function tickTurretBehavior(world: World, owner: Tank, gun: GunState) {
   const wasShielded = owner.shield > 0;
   owner.shield = 0;
@@ -90,7 +90,7 @@ export function tickTurret(world: World, turret: Projectile) {
     if (shot.dead || shot.enemy === turret.enemy || !touches(world, turret, shot)) continue;
     turret.health = (turret.health ?? 10) - shot.damage;
     projectileCallback(world, shot, turret, turret.enemy);
-    // _-BL.blnBeam starts true for every shipped class; this contact leaves the shot alive.
+    // The beam flag starts true for every shipped class; this contact leaves the shot alive.
     if (turret.health <= 0) {
       turret.dead = true;
       projectileImpact(world, turret);
@@ -107,7 +107,7 @@ export function tickTurret(world: World, turret: Projectile) {
   const speed = 10 * (1 - distance(turret, turret.origin ?? turret) / 200);
   if (speed >= 0.4) turret.motion = direction(turret.angle, speed);
   else turret.stopped = true;
-  // SetMovement keeps the preceding velocity on the frame it switches off.
+  // Setting the movement keeps the preceding velocity on the frame it switches off.
   turret.x = displayPixel(turret.x + (turret.motion?.x ?? 0));
   turret.y = displayPixel(turret.y + (turret.motion?.y ?? 0));
 }

@@ -40,8 +40,8 @@ export function TankCodeDialog({
     <Dialog title={tank ? 'Share tank code' : 'Import tank code'} onClose={onClose}>
       <p>
         {tank
-          ? 'This code uses the original Bubble Tanks 3 format.'
-          : 'Paste an original Bubble Tanks 3 tank code to add it to your local library.'}
+          ? 'This code uses the classic tank code format.'
+          : 'Paste a classic tank code to add it to your local library.'}
       </p>
       <textarea
         className="tank-code"

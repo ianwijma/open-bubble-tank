@@ -6,13 +6,13 @@ export interface BehaviorPopulation {
   enemies: readonly Tank[];
   allies: readonly Tank[];
 }
-/** Weapon owns a MovieClip reference and a separate initial zero ally count. */
+/** Weapon owns a clip reference and a separate initial zero ally count. */
 export const createBehaviorTarget = (): BehaviorTargetState => ({
   master: null,
   target: null,
   allies: 0,
 });
-/** Weapon.AcquireTarget: candidates always belong to currentBFTarget, including during travel. */
+/** Target acquisition: candidates always belong to the current wrapper, including during travel. */
 export function acquireBehaviorTarget(
   state: BehaviorTargetState,
   side: Tank['side'],
@@ -22,7 +22,7 @@ export function acquireBehaviorTarget(
   state.master = side;
   if (side === 'enemy') {
     state.target = population.avatar;
-    // The coin is drawn even when there are no allies. The source index can equal length.
+    // The coin is drawn even when there are no allies. The index can equal length.
     if (rng.int(1, 2) === 1 && population.allies.length)
       state.target = population.allies[rng.int(0, population.allies.length)] ?? null;
   } else if (side === 'ally') {
@@ -42,7 +42,7 @@ export function refreshBehaviorTarget(
 ) {
   if (!state.target || !hasParent(state.target))
     acquireBehaviorTarget(state, side, population, rng);
-  // EnemyAim repeats the check before blnRotate=false can return.
+  // Enemy aim repeats the check before rotate=false can return.
   if (state.master === 'enemy' || state.master === 'ally') {
     if (!state.target || !hasParent(state.target))
       acquireBehaviorTarget(state, side, population, rng);

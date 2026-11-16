@@ -4,7 +4,7 @@ import type { StageRuntime } from '@/game/services/stage-runtime';
 import type { PauseMotion } from '@/game/core/pause-motion';
 import { PauseBitmapHistory, straightBitmap } from '@/game/core/bitmap-blur';
 
-/** _-US captures once; only its own saved bitmap history changes thereafter. */
+/** The backdrop captures once; only its own saved bitmap history changes thereafter. */
 export function PauseBackdrop({ stage, motion }: { stage: StageRuntime; motion: PauseMotion }) {
   const canvas = useRef<HTMLCanvasElement>(null);
   useLayoutEffect(() => {

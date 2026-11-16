@@ -1,6 +1,6 @@
 import type { CombatEffectsView } from '../../src/game/render/combat-effects-view';
 import { setEffectFixturePose } from './effect-pose';
-import { Container, Graphics } from 'pixi.js';
+import { Container } from 'pixi.js';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { DEFAULT_SETTINGS } from '../../src/game/core/constants';
 import { GameRenderer } from '../../src/game/render/pixi-renderer';
@@ -38,9 +38,7 @@ export async function showEffectOwnershipProof(pack: AssetPack, host: HTMLElemen
   const bottom = effects.bottom,
     top = effects.top;
   const nodes = (layer: Container) =>
-    (layer === bottom ? effects.lower(world.field)!.content : layer).children.filter(
-      (c) => pack.mode !== 'swf' || !(c instanceof Graphics),
-    );
+    (layer === bottom ? effects.lower(world.field)!.content : layer).children;
   try {
     const before = draw();
     const first = combatEffect(

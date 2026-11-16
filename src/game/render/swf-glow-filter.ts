@@ -86,9 +86,7 @@ function boxPass(axis: [number, number]) {
 }
 
 /**
- * Authored Flash GlowFilter composition, using the pinned Ruffle v0.7.1 WGPU algorithm.
- * https://github.com/ruffle-rs/ruffle/blob/v0.7.1/render/wgpu/src/filters/blur.rs#L183-L270
- * https://github.com/ruffle-rs/ruffle/blob/v0.7.1/render/wgpu/shaders/filter/glow.wgsl#L39-L75
+ * Authored glow filter composition.
  *
  * H→V repeats once per authored pass, with an 8-bit floor after each axis. The final
  * premultiplied composition supports inner/outer, knockout, hidden source, strength
@@ -98,7 +96,7 @@ function boxPass(axis: [number, number]) {
  * this.blendMode applies only when the final filtered quad is composited.
  *
  * Logical stage resolution is1: parent/field transforms do not scale the kernel.
- * Exact Stage/DPR scaling and Adobe antialiasing equivalence remain unverified.
+ * Exact Stage/DPR scaling remains unverified.
  */
 export class SwfGlowFilter extends Filter {
   private readonly horizontal = boxPass([1, 0]);

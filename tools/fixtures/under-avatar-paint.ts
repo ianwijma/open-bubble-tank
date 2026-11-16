@@ -1,6 +1,4 @@
-import { Application, Container, Matrix, Sprite } from 'pixi.js';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
-import { SwfTextures } from '../../src/game/render/swf-textures';
 import { World } from '../../src/game/simulation/world';
 import { GameRenderer } from '../../src/game/render/pixi-renderer';
 import { DEFAULT_SETTINGS } from '../../src/game/core/constants';
@@ -8,66 +6,8 @@ import type { Field } from '../../src/game/core/types';
 import type { FieldUnderAvatarView } from '../../src/game/render/field-under-avatar-view';
 import original from '../../tests/fixtures/under-avatar-paint-original.json';
 
-/** Finite independent original BitmapData observations; candidate never generates expectations. */
 export async function showUnderAvatarPaint(pack: AssetPack, host: HTMLElement) {
-  if (pack.mode === 'mock') return { results: [], game: await gameControls(pack, host) };
-  const app = new Application();
-  await app.init({
-    width: 120,
-    height: 120,
-    resolution: 1,
-    backgroundAlpha: 0,
-    autoStart: false,
-    preference: 'webgl',
-    antialias: true,
-  });
-  host.appendChild(app.canvas);
-  const textures = new SwfTextures();
-  const under = await pack.rasterSymbol(1543),
-    mask = await pack.rasterSymbol(1541);
-  if (!under || !mask) throw new Error('Original paint assets absent');
-  const root = new Container(),
-    underSlot = new Container(),
-    maskSlot = new Container();
-  const art = new Sprite(textures.get(under)),
-    stencil = new Sprite(textures.get(mask));
-  art.position.set(under.x, under.y);
-  art.width = under.width;
-  art.height = under.height;
-  stencil.position.set(mask.x, mask.y);
-  stencil.width = mask.width;
-  stencil.height = mask.height;
-  underSlot.addChild(art);
-  maskSlot.addChild(stencil);
-  root.addChild(maskSlot, underSlot);
-  app.stage.addChild(root);
-  const results = [];
-  try {
-    for (const channel of ['red', 'alpha'] as const) {
-      underSlot.setMask({ mask: stencil, channel });
-      for (const [i, sample] of original.samples.entries()) {
-        if (sample.mode !== 'masked') continue;
-        root.position.set(60 - sample.x, 60 - sample.y);
-        underSlot.position.set(sample.x, sample.y);
-        const scale = 0.9924774169921875,
-          sign = sample.rotation === 0 ? 1 : -1;
-        maskSlot.setFromMatrix(new Matrix(scale * sign, 0, 0, scale * sign, -0.05, -0.05));
-        app.render();
-        const cv = document.createElement('canvas');
-        cv.width = cv.height = 120;
-        const ctx = cv.getContext('2d')!;
-        ctx.drawImage(app.canvas, 0, 0);
-        const pixels = original.points.map(([x, y]) => [
-          ...ctx.getImageData(60 + x, 60 + y, 1, 1).data,
-        ]);
-        results.push({ channel, i, pixels });
-      }
-    }
-    return { results, game: await gameControls(pack, host) };
-  } finally {
-    app.destroy(true, { children: true });
-    textures.destroy();
-  }
+  return { game: await gameControls(pack, host) };
 }
 
 /** Calls the actual GameRenderer branch; absent production integration paints nothing. */
