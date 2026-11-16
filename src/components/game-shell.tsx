@@ -15,7 +15,6 @@ import { AssetGate } from './asset-gate';
 import { GameViewport } from './game-viewport';
 import { MainStage } from './main-stage';
 import { MainMenu } from './main-menu';
-import { CreditsPanel } from './credits-panel';
 import { MainMenuMotion } from '@/game/core/main-menu';
 import { GameHud } from './game-hud';
 import { SettingsPanel } from './settings-panel';
@@ -32,7 +31,7 @@ import { WinPanel } from './win-panel';
 import { Dialog, Icon } from './ui';
 
 type Screen = 'menu' | 'game' | 'creator' | 'library' | 'viewer';
-type Overlay = 'settings' | 'credits' | 'sources' | 'edit-confirm' | 'edit-choice' | null;
+type Overlay = 'settings' | 'sources' | 'edit-confirm' | 'edit-choice' | null;
 interface EditorContext {
   initial: TankDesign;
   saveName: string;
@@ -397,9 +396,9 @@ export default function GameShell() {
                     if (!menuMotion.open()) return;
                     setContinueRun(false);
                     setOverlay('sources');
-                  } else if (name === 'settings_btn' || name === 'credits_btn') {
+                  } else if (name === 'settings_btn') {
                     if (!menuMotion.open()) return;
-                    setOverlay(name === 'settings_btn' ? 'settings' : 'credits');
+                    setOverlay('settings');
                   } else if (name === 'enemyCreator_btn') {
                     edit({
                       ...STARTER,
@@ -600,9 +599,6 @@ export default function GameShell() {
                   onChange={settingsChange}
                   onClose={closeOverlay}
                 />
-              ) : null}
-              {pack && overlay === 'credits' ? (
-                <CreditsPanel pack={pack} stage={stage} onClose={closeOverlay} />
               ) : null}
               {pack && profile && overlay === 'sources' ? (
                 <Dialog title="Choose your tanks" onClose={closeOverlay}>

@@ -29,7 +29,6 @@ export function Icon({
     | 'library'
     | 'back'
     | 'info'
-    | 'file'
     | 'fullscreen'
     | 'pause'
     | 'close'
@@ -67,12 +66,6 @@ export function Icon({
       <>
         <circle cx="12" cy="12" r="9" />
         <path d="M12 10v7m0-11v1" />
-      </>
-    ),
-    file: (
-      <>
-        <path d="M6 3h9l4 4v14H6Z" />
-        <path d="M9 10h7M9 13h7M9 16h7" />
       </>
     ),
     fullscreen: <path d="M9 3H3v6m12-6h6v6M3 15v6h6m12-6v6h-6" />,
