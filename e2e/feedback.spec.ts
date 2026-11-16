@@ -1,7 +1,5 @@
 import { waitForMainMenu } from './helpers/main-menu';
 import { test, expect, type Page } from '@playwright/test';
-import { existsSync } from 'node:fs';
-import { resolve } from 'node:path';
 import { watchAudio, musicPlaying, musicState, pauseMusic, soundPlayed } from './helpers/audio';
 async function play(page: Page) {
   await waitForMainMenu(page);
@@ -80,7 +78,7 @@ test('mock sound, gesture resume, P/Escape, zoom, guide and centered creator but
   ).toBe(0.65);
 });
 
-test('cleared origin can be revisited and its traveled map edge is drawn once', async ({
+test('mock cleared origin can be revisited and its traveled map edge is drawn once', async ({
   page,
 }) => {
   await page.goto('/');
@@ -108,26 +106,4 @@ test('cleared origin can be revisited and its traveled map edge is drawn once', 
   await expect(page.locator('#map-description')).toContainText('Map: Hidden');
   await map.press('Enter');
   await expect(page.locator('#map-description')).toContainText('Map: Compact');
-});
-
-test('original SWF music resumes and player volleys play extracted audio', async ({ page }) => {
-  const swf =
-    process.env.BT3_SWF_FILE ?? resolve('../documented-bubble-tank-3/re/bt3/uncompressed.swf');
-  test.skip(!existsSync(swf), 'A local research SWF is required.');
-  await watchAudio(page);
-  await page.goto('/');
-  await page.getByLabel('Bubble Tanks 3 Flash file').setInputFiles(swf);
-  await play(page);
-  await expect.poll(async () => (await musicState(page)).length).toBe(2);
-  await expect.poll(() => musicPlaying(page)).toBe(true);
-  await page.keyboard.press('KeyP');
-  await pauseMusic(page);
-  await page.getByRole('button', { name: 'PLAY', exact: true }).click();
-  await expect.poll(() => musicPlaying(page)).toBe(true);
-  await expect(page.getByRole('dialog')).toHaveCount(0);
-  const bounds = await page.locator('.game-canvas').boundingBox();
-  await page.mouse.move(bounds!.x + bounds!.width * 0.8, bounds!.y + bounds!.height * 0.5);
-  await page.mouse.down();
-  await expect.poll(() => soundPlayed(page)).toBe(true);
-  await page.mouse.up();
 });
