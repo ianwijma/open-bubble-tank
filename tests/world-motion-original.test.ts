@@ -5,7 +5,7 @@ import {
   measured,
   pointComparison,
   publicSequence,
-} from '../tools/reference/world-motion-compare';
+} from './support/world-motion-compare';
 
 for (const phase of directions)
   test(`public World ${phase} movement and receiver bridge match actual original camera calls`, () => {

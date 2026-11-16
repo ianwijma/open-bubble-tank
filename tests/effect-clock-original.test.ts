@@ -1,6 +1,6 @@
 import { expect, test } from 'bun:test';
 import original from './fixtures/effect-clock-original.json';
-import { decode, rows, unpack } from '../tools/reference/effect-clock-evidence.mjs';
+import { decode, rows, unpack } from './support/effect-clock-rows.mjs';
 import { RegisteredEffects } from '../src/game/simulation/registered-effects';
 import { combatEffect } from '../src/game/simulation/effects';
 import type { Field } from '../src/game/core/types';

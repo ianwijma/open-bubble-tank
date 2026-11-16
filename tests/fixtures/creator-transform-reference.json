@@ -1,5 +1,5 @@
 {
-  "generatedBy": "bun tools/import-creator-transform-reference.ts <manifest-directory>...",
+  "generatedBy": "former creator transform reference import (removed with the import tooling; maintained by hand)",
   "swfSha256": "f5827841c682f988f23dcf470ab4ab59c1ffc497acb4ca0f21077d03f942c153",
   "scope": "Original public click selection, slider input and Save/Copy exports in observed Ruffle/Chrome. Numerical data only; no AVM/clock/state injection, Adobe or full-creator parity claim.",
   "provenance": [
