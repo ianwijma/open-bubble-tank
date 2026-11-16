@@ -1,0 +1,658 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>A game recreation, in numbers</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --background: light-dark(#f7f8fc, #11151d);
+        --foreground: light-dark(#172337, #e9eff9);
+        --muted-foreground: light-dark(#536178, #a9b7ce);
+        --card: light-dark(#fff, #1b2331);
+        --border: light-dark(#d8e0ed, #354359);
+        --primary: light-dark(#176578, #73d8e8);
+        --chart-1: light-dark(#087e95, #72d9e5);
+        --chart-2: light-dark(#7250bb, #bc9efa);
+        --chart-3: light-dark(#b46705, #f4c079);
+        --radius: 14px;
+        --font-sans: system-ui, sans-serif;
+        --font-mono: ui-monospace, monospace;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        color: var(--foreground);
+        font-family: var(--font-sans);
+        line-height: 1.5;
+      }
+      main {
+        max-width: 1120px;
+        margin: auto;
+      }
+      h1 {
+        font-size: clamp(27px, 5vw, 44px);
+        letter-spacing: -0.04em;
+        line-height: 1.1;
+        margin: 10px 0;
+      }
+      h2 {
+        font-size: 19px;
+        margin: 0 0 8px;
+      }
+      p {
+        margin: 8px 0 14px;
+      }
+      .eyebrow {
+        color: var(--primary);
+        font: 700 11px var(--font-mono);
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+      }
+      small,
+      .note {
+        color: var(--muted-foreground);
+        font-size: 12px;
+      }
+      .intro {
+        max-width: 760px;
+      }
+      .controls {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: center;
+        margin: 20px 0;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+      }
+      .pair {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .card,
+      section.panel {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px;
+      }
+      .card strong {
+        display: block;
+        font-size: 29px;
+        letter-spacing: -0.04em;
+      }
+      .card span {
+        font-size: 12px;
+        color: var(--muted-foreground);
+      }
+      section.panel {
+        margin: 14px 0;
+      }
+      .pair section.panel {
+        margin: 0;
+      }
+      .pair {
+        margin: 14px 0;
+      }
+      label {
+        font-size: 13px;
+      }
+      select,
+      input {
+        color: var(--foreground);
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 7px;
+        padding: 8px;
+        font: inherit;
+      }
+      select:focus,
+      input:focus {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+      }
+      a {
+        color: var(--primary);
+      }
+      #daily {
+        height: 185px;
+        display: flex;
+        align-items: flex-end;
+        gap: 5px;
+        padding-top: 12px;
+        overflow-x: auto;
+      }
+      .day {
+        flex: 1;
+        min-width: 22px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        align-items: center;
+      }
+      .day .bar {
+        width: 100%;
+        min-height: 1px;
+        background: var(--chart-1);
+        border-radius: 4px 4px 0 0;
+      }
+      .day span {
+        font: 9px var(--font-mono);
+        color: var(--muted-foreground);
+        writing-mode: vertical-rl;
+        margin-top: 6px;
+        height: 43px;
+      }
+      .bars {
+        display: grid;
+        gap: 8px;
+      }
+      .row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 70px;
+        gap: 8px;
+        align-items: center;
+        font-size: 12px;
+      }
+      .row .label {
+        overflow-wrap: anywhere;
+      }
+      .track {
+        height: 5px;
+        background: var(--border);
+        border-radius: 3px;
+        margin-top: 3px;
+      }
+      .fill {
+        height: 5px;
+        background: var(--chart-2);
+        border-radius: 3px;
+      }
+      .count {
+        text-align: right;
+        font-family: var(--font-mono);
+      }
+      .stack {
+        display: flex;
+        height: 22px;
+        overflow: hidden;
+        border-radius: 6px;
+        margin: 12px 0;
+      }
+      .stack span:first-child {
+        background: var(--chart-1);
+      }
+      .stack span:last-child {
+        background: var(--chart-3);
+      }
+      .legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        font-size: 12px;
+      }
+      .dot {
+        width: 8px;
+        height: 8px;
+        display: inline-block;
+        border-radius: 50%;
+        background: var(--chart-1);
+        margin-right: 5px;
+      }
+      .dot.orange {
+        background: var(--chart-3);
+      }
+      .rates {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .rates label {
+        display: grid;
+        gap: 4px;
+      }
+      .rates input {
+        width: 120px;
+      }
+      .money {
+        font-size: 32px;
+        font-weight: 700;
+        margin-top: 12px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
+      }
+      td,
+      th {
+        text-align: left;
+        border-bottom: 1px solid var(--border);
+        padding: 7px 4px;
+        overflow-wrap: anywhere;
+      }
+      td:last-child,
+      th:last-child {
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+      }
+      #explorer {
+        max-height: 340px;
+        overflow: auto;
+      }
+      .explorer-controls {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin: 12px 0;
+      }
+      #search {
+        flex: 1;
+        min-width: 120px;
+      }
+      .pill {
+        font: 11px var(--font-mono);
+        border: 1px solid var(--border);
+        padding: 4px 8px;
+        border-radius: 30px;
+        display: inline-block;
+      }
+      details summary {
+        cursor: pointer;
+        font-weight: 600;
+      }
+      footer {
+        margin: 20px 0;
+        font-size: 12px;
+        color: var(--muted-foreground);
+      }
+      @media (max-width: 540px) {
+        .grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .pair {
+          grid-template-columns: 1fr;
+        }
+        .card strong {
+          font-size: 24px;
+        }
+        .rates input {
+          width: 90px;
+        }
+        .day span {
+          font-size: 8px;
+        }
+      }
+      @media print {
+        details {
+          display: block;
+        }
+        .controls,
+        .explorer-controls {
+          display: none;
+        }
+        section,
+        .card {
+          break-inside: avoid;
+        }
+      }
+      td:last-child,
+      th:last-child {
+        white-space: nowrap;
+        min-width: 70px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="eyebrow">Open Bubble Tank · conversation archaeology</div>
+      <h1>A game recreation,<br />in numbers.</h1>
+      <p class="intro note">
+        A frozen record of messages, commands, tools and agent activity. Explore the main
+        conversation or include its child agents. All data lives in this file; no network or server
+        is needed.
+      </p>
+      <div class="controls">
+        <label for="scope">Scope </label
+        ><select id="scope">
+          <option value="all">Main thread + all child agents</option>
+          <option value="root">Main thread only</option></select
+        ><span id="dates" class="pill"></span>
+      </div>
+      <div class="grid" id="cards"></div>
+      <section class="panel">
+        <h2>The rhythm of the work</h2>
+        <p class="note">
+          Tool activity records by UTC date. Hover a bar for its count. Stored start time, falling
+          back to update time.
+        </p>
+        <div id="daily" role="img" aria-label="Daily tool activity bar chart"></div>
+      </section>
+      <div class="pair">
+        <section class="panel">
+          <h2>The most-used tools</h2>
+          <p class="note">Shell and search records sit alongside named dynamic tools.</p>
+          <div id="tools" class="bars"></div>
+        </section>
+        <section class="panel">
+          <h2>What commands aimed to do</h2>
+          <p class="note">
+            Heuristic categories from command/tool input; validation takes precedence.
+          </p>
+          <div id="goals" class="bars"></div>
+          <p class="note" id="repeat"></p>
+        </section>
+      </div>
+      <section class="panel">
+        <h2>The token story</h2>
+        <div class="stack" id="token-stack" role="img"></div>
+        <div class="legend">
+          <span><i class="dot"></i><span id="cached-label"></span></span
+          ><span><i class="dot orange"></i><span id="uncached-label"></span></span>
+        </div>
+        <p id="tokens" class="note"></p>
+        <p id="coverage" class="note"></p>
+      </section>
+      <section class="panel">
+        <h2>What would API pricing look like?</h2>
+        <p class="note">
+          USD per million tokens, initialized to current short-context Standard list prices for
+          GPT-6.1 Sol. Edit these rates to explore a scenario. This does not establish what was
+          billed.
+        </p>
+        <div class="rates">
+          <label
+            >Uncached input<input
+              id="input-rate"
+              type="number"
+              min="0"
+              step="0.01"
+              value="2" /></label
+          ><label
+            >Cached input<input
+              id="cache-rate"
+              type="number"
+              min="0"
+              step="0.01"
+              value="0.10" /></label
+          ><label
+            >Output<input id="output-rate" type="number" min="0" step="0.01" value="10" /></label
+          ><label
+            >Cache writes<input id="write-rate" type="number" min="0" step="0.01" value="2.5"
+          /></label>
+        </div>
+        <div class="money" id="cost" aria-live="polite"></div>
+        <p id="cost-detail" class="note"></p>
+        <p class="note">
+          Current <a href="https://developers.openai.com/api/docs/pricing">pricing</a> and
+          <a href="https://developers.openai.com/api/docs/models/gpt-6.1-sol">model conditions</a>,
+          checked November 15, 2026. Requests over 272K input tokens have 2× input/cache and 1.5×
+          output rates; aggregated provider turns do not reveal the request mix. Missing usage,
+          service tiers, historical rates, subscription charges and tool fees are not reconstructed.
+          Neither scenario is a bound on the whole bill.
+        </p>
+      </section>
+      <div class="pair">
+        <section class="panel">
+          <h2>Words that kept coming back</h2>
+          <p class="note">
+            Selected words in user/assistant messages only. Case-insensitive. Quoted history can
+            repeat words.
+          </p>
+          <div id="words" class="bars"></div>
+        </section>
+        <section class="panel">
+          <h2>Named read/search candidates</h2>
+          <p class="note">
+            Named paths in read/search inputs, once per record. Mixed commands may also write them;
+            these are inferred candidates rather than filesystem tracing.
+          </p>
+          <div id="files" class="bars"></div>
+        </section>
+      </div>
+      <section class="panel">
+        <h2>Dig into the counts</h2>
+        <div class="explorer-controls">
+          <label for="metric">Dataset</label
+          ><select id="metric">
+            <option value="tools">Tools</option>
+            <option value="file_read_candidates">File read/search candidates</option>
+            <option value="file_input_mentions">Paths mentioned in inputs</option>
+            <option value="file_changes">Files in change records</option>
+            <option value="words">Message vocabulary</option>
+            <option value="selected_words">Selected words</option>
+            <option value="programs">Leading command programs</option>
+            <option value="kinds">Record kinds</option>
+            <option value="activity_status">Timeline outcomes</option>
+            <option value="run_status">Run outcomes</option></select
+          ><input id="search" placeholder="Filter names…" aria-label="Filter dataset" />
+        </div>
+        <p id="matches" class="note"></p>
+        <div id="explorer">
+          <table>
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Count</th>
+              </tr>
+            </thead>
+            <tbody id="results"></tbody>
+          </table>
+        </div>
+      </section>
+      <section class="panel">
+        <details>
+          <summary>How to read these numbers</summary>
+          <p class="note">
+            One record is one stored projection row, not one model request or shell subprocess. Run,
+            plan and provider-usage metadata are included in the archive total. Main-agent scoped
+            final usage is summed separately across root and children; the rolling context-window
+            meter is excluded. Cached input is part of input, and reasoning counts are already part
+            of output.
+          </p>
+          <p class="note" id="limits"></p>
+          <p class="note">
+            Archive hashes and row counts are validated before this report is generated. Referenced
+            child discovery does not recover unrelated threads, deleted records, native assets,
+            missing attachments, or intermediate streaming revisions. Private reasoning/internal
+            prompt bodies and secret-request payloads are omitted; binary and credential-like
+            content is scrubbed. This report makes no new claim about game fidelity or completion.
+          </p>
+          <p class="note">
+            Included files: <a href="report.md">Markdown report</a> ·
+            <a href="stats.json">all statistics</a> ·
+            <a href="history/manifest.json">archive manifest</a> ·
+            <a href="history/README.md">archive guide</a> ·
+            <a href="README.md">reproduction instructions</a>.
+          </p>
+        </details>
+      </section>
+      <footer id="provenance"></footer>
+    </main>
+    <script id="report-data" type="application/json">
+      __REPORT_DATA__
+    </script>
+    <script>
+      'use strict';
+      const DATA = JSON.parse(document.getElementById('report-data').textContent);
+      const $ = (id) => document.getElementById(id),
+        fmt = (n) => Number(n).toLocaleString('en-US'),
+        short = (n) =>
+          n >= 1e9 ? (n / 1e9).toFixed(2) + 'B' : n >= 1e6 ? (n / 1e6).toFixed(2) + 'M' : fmt(n);
+      let current;
+      function el(tag, text, cls) {
+        const e = document.createElement(tag);
+        if (text !== undefined) e.textContent = text;
+        if (cls) e.className = cls;
+        return e;
+      }
+      function bars(id, values, limit) {
+        const node = $(id);
+        node.replaceChildren();
+        const list = Object.entries(values).slice(0, limit),
+          max = Math.max(...list.map((x) => x[1]), 1);
+        for (const [name, n] of list) {
+          const row = el('div', undefined, 'row'),
+            label = el('div', name, 'label'),
+            track = el('div', undefined, 'track'),
+            fill = el('div', undefined, 'fill');
+          fill.style.width = (n / max) * 100 + '%';
+          track.append(fill);
+          label.append(track);
+          row.append(label, el('div', fmt(n), 'count'));
+          node.append(row);
+        }
+      }
+      function updateExplorer() {
+        const entries = Object.entries(current[$('metric').value]),
+          term = $('search').value.toLowerCase(),
+          list = entries.filter(([key]) => key.toLowerCase().includes(term));
+        $('matches').textContent = fmt(list.length) + ' matching names · showing first 250';
+        $('results').replaceChildren();
+        for (const [key, n] of list.slice(0, 250)) {
+          const tr = el('tr');
+          tr.append(el('td', key), el('td', fmt(n)));
+          $('results').append(tr);
+        }
+      }
+      function updateCost() {
+        const t = current.usage.totals,
+          rates = ['input-rate', 'cache-rate', 'output-rate', 'write-rate'].map((id) =>
+            Math.max(0, Number($(id).value) || 0),
+          );
+        const amount =
+          (t.uncachedInputTokens * rates[0] +
+            t.cachedInputTokens * rates[1] +
+            t.outputTokens * rates[2] +
+            t.cacheCreationTokens * rates[3]) /
+          1e6;
+        $('cost').textContent =
+          amount.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) + ' USD';
+        const long =
+          (t.uncachedInputTokens * 4 +
+            t.cachedInputTokens * 0.2 +
+            t.outputTokens * 15 +
+            t.cacheCreationTokens * 5) /
+          1e6;
+        $('cost-detail').textContent =
+          'For recorded usage in this scope. All-long-context Standard scenario at published rates: ' +
+          long.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) +
+          '. Actual bill: unknown.';
+      }
+      function render() {
+        current = DATA.scopes[$('scope').value];
+        const a = current,
+          t = a.usage.totals,
+          c = a.usage.coverage;
+        const timeline =
+          Object.values(a.kinds).reduce((x, n) => x + n, 0) -
+          (a.kinds.run || 0) -
+          (a.kinds.plan || 0) -
+          (a.kinds.provider_usage || 0);
+        const child = $('scope').value === 'all' ? DATA.child_threads : 0;
+        $('cards').replaceChildren();
+        for (const [n, label] of [
+          [timeline, 'timeline records'],
+          [child, 'child threads included'],
+          [a.kinds.command_execution || 0, 'shell command records'],
+          [Object.values(a.messages).reduce((x, n) => x + n, 0), 'user / assistant messages'],
+          [short(t.inputTokens), 'input tokens'],
+          [short(t.outputTokens), 'output tokens'],
+        ]) {
+          const card = el('div', undefined, 'card');
+          card.append(el('strong', typeof n === 'number' ? fmt(n) : n), el('span', label));
+          $('cards').append(card);
+        }
+        $('dates').textContent =
+          a.first_activity_utc.slice(0, 10) + ' → ' + a.last_activity_utc.slice(0, 10) + ' UTC';
+        $('daily').replaceChildren();
+        const days = Object.entries(a.daily),
+          max = Math.max(...days.map(([, v]) => v.tools || 0), 1);
+        for (const [date, v] of days) {
+          const day = el('div', undefined, 'day'),
+            bar = el('div', undefined, 'bar');
+          bar.style.height = ((v.tools || 0) / max) * 125 + 'px';
+          day.title = date + ': ' + fmt(v.tools || 0) + ' tool records';
+          day.append(bar, el('span', date.slice(5)));
+          $('daily').append(day);
+        }
+        bars('tools', a.tools, 8);
+        bars('goals', a.goals, 6);
+        bars('words', a.selected_words, 10);
+        bars('files', a.file_read_candidates, 8);
+        $('repeat').textContent =
+          fmt(a.repeated_command_executions) +
+          ' repeats beyond the first occurrence of identical command inputs.';
+        const pct = (t.cachedInputTokens / t.inputTokens) * 100;
+        $('token-stack').replaceChildren();
+        for (const width of [pct, 100 - pct]) {
+          const part = el('span');
+          part.style.width = width + '%';
+          $('token-stack').append(part);
+        }
+        $('token-stack').setAttribute(
+          'aria-label',
+          pct.toFixed(2) + ' percent of input tokens cached',
+        );
+        $('cached-label').textContent = pct.toFixed(2) + '% cached input';
+        $('uncached-label').textContent = (100 - pct).toFixed(2) + '% other input';
+        $('tokens').textContent =
+          fmt(t.inputTokens) +
+          ' input tokens, including ' +
+          fmt(t.cachedInputTokens) +
+          ' cache hits; ' +
+          fmt(t.outputTokens) +
+          ' output tokens, including ' +
+          fmt(t.reasoningTokens) +
+          ' reported reasoning tokens (counts only).';
+        $('coverage').textContent =
+          'Usage coverage: ' +
+          fmt(c.complete || 0) +
+          ' complete, ' +
+          fmt(c.partial || 0) +
+          ' partial, ' +
+          fmt(c.missing || 0) +
+          ' missing of ' +
+          fmt(c.provider_turns) +
+          ' provider turns. Missing/partial totals are not imputed.';
+        $('limits').textContent =
+          'Summed tool durations: ' +
+          (a.tool_duration_seconds / 3600).toFixed(1) +
+          ' hours. Summed run intervals: ' +
+          (a.run_duration_seconds / 3600).toFixed(1) +
+          ' hours. Intervals overlap and include waiting; they do not measure human work. ' +
+          a.mentioned_pull_requests.length +
+          ' distinct project PR URLs appear in messages; this does not prove merges.';
+        updateExplorer();
+        updateCost();
+      }
+      $('scope').addEventListener('change', render);
+      $('metric').addEventListener('change', updateExplorer);
+      $('search').addEventListener('input', updateExplorer);
+      for (const id of ['input-rate', 'cache-rate', 'output-rate', 'write-rate'])
+        $(id).addEventListener('input', updateCost);
+      $('provenance').textContent =
+        fmt(DATA.records) +
+        ' archived records across ' +
+        fmt(DATA.threads) +
+        ' discovered threads · ' +
+        (DATA.archive_bytes / 1e6).toFixed(1) +
+        ' MB in ' +
+        fmt(DATA.archive_files) +
+        ' manifest-listed files · SHA-256 ' +
+        DATA.archive_sha256.slice(0, 16) +
+        '…';
+      render();
+    </script>
+  </body>
+</html>
