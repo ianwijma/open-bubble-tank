@@ -15,7 +15,7 @@ test(`mock creator guide follows six original pages and latches on entry`, async
   await expect(guide.getByRole('button', { name: 'Previous creator guide page' })).toHaveCount(0);
   expect(
     await page.evaluate(
-      () => JSON.parse(localStorage.getItem('open-bubble-tank.profile.v1')!).creatorHelpSeen,
+      () => JSON.parse(localStorage.getItem('soaptank.profile.v1')!).creatorHelpSeen,
     ),
   ).toBe(true);
   await page

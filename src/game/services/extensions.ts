@@ -1,5 +1,5 @@
 import type { TankDesign } from '../core/types';
-// Retired Flash endpoints stay behind explicit interfaces. No hidden network requests,
+// Retired online endpoints of the original game stay behind explicit interfaces. No hidden network requests,
 // fake sign-in, or indefinitely pending server searches are used by the offline game.
 export interface CommunityTanks {
   search(query: { avatar: boolean; classId?: number; gunPoints?: number }): Promise<TankDesign[]>;

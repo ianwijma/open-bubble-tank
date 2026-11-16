@@ -29,7 +29,7 @@ test(`mock exact upgrade defaults use newest saved avatars independently of enem
   const newest = { ...first, id: 'L10000002', name: 'Latest saved avatar' };
   // Explicit restored-history setup, not evidence of earning six ordinary upgrades.
   await page.addInitScript(
-    (profile) => localStorage.setItem('open-bubble-tank.profile.v1', JSON.stringify(profile)),
+    (profile) => localStorage.setItem('soaptank.profile.v1', JSON.stringify(profile)),
     {
       version: 1,
       creatorHelpSeen: true,

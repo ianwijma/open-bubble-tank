@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 import { writeFileSync } from 'node:fs';
 // The full post-merge suite has a larger hosted wall-clock budget. The pilot's
 // inputs, simulated frames, frame cap and all earned-progression assertions stay fixed.
-const playthroughTimeout = process.env.BT3_PLAYTHROUGH_LONG_RUN === '1' ? 600000 : 300000;
+const playthroughTimeout = process.env.SOAPTANK_PLAYTHROUGH_LONG_RUN === '1' ? 600000 : 300000;
 test(`mock fresh game reaches the boss and win through ordinary controls`, async ({
   page,
 }, testInfo) => {

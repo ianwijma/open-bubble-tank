@@ -8,4 +8,4 @@ export function creatorSavePrerequisite(design: TankDesign) {
   return null;
 }
 /** Guest profile name; saved tank authors do not replace the profile name. */
-export const CREATOR_AUTHOR = 'BubbleTanks3';
+export const CREATOR_AUTHOR = 'Soap Tank';

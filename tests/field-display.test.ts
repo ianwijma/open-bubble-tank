@@ -433,7 +433,7 @@ test('read snapshots never change identity, pose, clocks, entropy or shared auth
 // comparisons use parsed trace text; they are not f64 word proofs.
 const sourceSetter = (row: number) => {
   const values = setterOriginal.rows
-    .find((trace) => trace.startsWith(`BT3_FIELD_POSE ${row} `))!
+    .find((trace) => trace.startsWith(`PROBE_FIELD_POSE ${row} `))!
     .split(' ')
     .slice(2)
     .map(Number);

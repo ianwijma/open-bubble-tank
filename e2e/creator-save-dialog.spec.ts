@@ -30,7 +30,7 @@ test(`mock authored save dialog preserves names, exports source code and isolate
   await expect(dialog).toHaveAttribute('data-dialog-frame', '2');
   const author = dialog.getByRole('textbox', { name: 'Author name', exact: true }),
     name = dialog.getByRole('textbox', { name: 'Tank name', exact: true });
-  await expect(author).toHaveValue('BubbleTanks3');
+  await expect(author).toHaveValue('Soap Tank');
   await expect(name).toHaveValue('Legacy: Tank');
   await author.fill("Alice O'Brien");
   await name.focus();

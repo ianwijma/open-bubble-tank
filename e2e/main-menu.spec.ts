@@ -56,7 +56,7 @@ test(`mock menu retains intro countdown, parent fades and 31-frame action guard`
   const scrim = overlay.locator('.modal-scrim');
   await expect(scrim).toHaveCSS('backdrop-filter', 'none');
   await expect(scrim).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
-  // Source settUp ignores the click while _-EV is true.
+  // A forced click on DONE is ignored while the overlay is disabled.
   await page.locator('.settings-screen [aria-label="DONE"]').click({ force: true });
   await expect(overlay.locator('.settings-screen')).toBeVisible();
   await advance(20);

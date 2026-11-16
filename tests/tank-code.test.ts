@@ -3,7 +3,8 @@ import { decodeTankCode, encodeTankCode } from '../src/game/services/tank-code';
 import { STARTER, difficulty } from '../src/game/data/catalog';
 import { existsSync, readFileSync } from 'node:fs';
 import { createDecipheriv } from 'node:crypto';
-const source = '../documented-bubble-tank-3/re/bt3/builtin_tanks.json';
+// Optional external catalog of the built-in tanks; the check is skipped when unset or missing.
+const source = process.env.SOAPTANK_BUILTIN_TANKS_FILE ?? '';
 test('original tank code encrypt/decrypt round-trip preserves all part geometry', async () => {
   const code = await encodeTankCode(STARTER);
   expect(code.length % 32).toBe(6);
@@ -16,7 +17,7 @@ test('invalid and truncated original codes fail with an actionable error', async
   await expect(decodeTankCode('bad')).rejects.toThrow('complete');
   await expect(decodeTankCode('abc' + '00'.repeat(16) + 'def')).rejects.toThrow();
 });
-test.skipIf(!existsSync(source))(
+test.skipIf(!source || !existsSync(source))(
   'all 75 original encrypted tank codes decode to the recovered geometry',
   async () => {
     const catalog = JSON.parse(readFileSync(source, 'utf8')) as Record<

@@ -74,7 +74,7 @@ export function MainMenu({
     callbacks.current = { onAction };
   }, [onAction]);
   const activate = (target: MenuTarget) => {
-    // Source mmBtnUp clears registered targets before its busy guard.
+    // A press on any registered target clears the message before the busy guard runs.
     if (target.kind !== 'blocked') setMessage('');
     if (motion.busy || motion.parked || isCovered.current) return;
     if (target.kind === 'control') {
@@ -161,7 +161,7 @@ export function MainMenu({
       release();
     };
   }, [pack, stage, motion, overlayRoot]);
-  // Plain TextField.text uses default tracking and opaque color.
+  // The caption is plain text: default tracking and an opaque color.
   const caption = MAIN_MENU.rollover,
     captionFont = caption.font;
   return (
@@ -171,7 +171,7 @@ export function MainMenu({
       </div>
       <span className="menu-version">OPEN · 0.1</span>
       <div ref={title} className="menu-title">
-        <BubbleText size={57}>bubble tanks 3</BubbleText>
+        <BubbleText size={57}>soap tank</BubbleText>
       </div>
       <div ref={buttons} className="main-menu-controls" inert>
         {controls.map((control, index) => {

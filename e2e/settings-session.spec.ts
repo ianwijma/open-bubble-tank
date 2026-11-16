@@ -25,11 +25,9 @@ test(`mock live FPS, saved preference and menu-instance selection retain their s
   await page.goto('/');
   await load(page);
   await page.getByRole('button', { name: 'Settings', exact: true }).click();
-  const beforeRateChange = await page.evaluate(() =>
-    localStorage.getItem('open-bubble-tank.profile.v1'),
-  );
+  const beforeRateChange = await page.evaluate(() => localStorage.getItem('soaptank.profile.v1'));
   await page.getByRole('radio', { name: '35 FPS' }).check();
-  expect(await page.evaluate(() => localStorage.getItem('open-bubble-tank.profile.v1'))).toBe(
+  expect(await page.evaluate(() => localStorage.getItem('soaptank.profile.v1'))).toBe(
     beforeRateChange,
   );
   await efficiency(page, true).check();
@@ -41,7 +39,7 @@ test(`mock live FPS, saved preference and menu-instance selection retain their s
   const efficientBackground = await backgroundBitmap();
   await expect(page.getByRole('radio', { name: '65 FPS' })).toBeChecked();
   const saved = () =>
-    page.evaluate(() => JSON.parse(localStorage.getItem('open-bubble-tank.profile.v1')!).settings);
+    page.evaluate(() => JSON.parse(localStorage.getItem('soaptank.profile.v1')!).settings);
   expect((await saved()).fps).toBe(35);
   expect((await saved()).efficient).toBe(false);
   await page.getByRole('button', { name: 'DONE' }).click();

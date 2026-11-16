@@ -497,7 +497,7 @@
       "phase": "baseline",
       "role": "wrapper",
       "className": "FieldMask60000",
-      "parentClass": "BT3FieldMaskProbe",
+      "parentClass": "FieldMaskProbe",
       "pointClass": "flash.geom::Point",
       "wordIndices": [0, 1, 2, 3, 1, 1, 1, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 4, 5]
     },
@@ -535,7 +535,7 @@
       "phase": "baseline",
       "role": "wrapper",
       "className": "FieldMask60001",
-      "parentClass": "BT3FieldMaskProbe",
+      "parentClass": "FieldMaskProbe",
       "pointClass": "flash.geom::Point",
       "wordIndices": [0, 1, 2, 3, 2, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 4, 5]
     },
@@ -573,7 +573,7 @@
       "phase": "baseline",
       "role": "wrapper",
       "className": "FieldMask60002",
-      "parentClass": "BT3FieldMaskProbe",
+      "parentClass": "FieldMaskProbe",
       "pointClass": "flash.geom::Point",
       "wordIndices": [0, 1, 2, 3, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
     },
@@ -609,7 +609,7 @@
       "phase": "baseline",
       "role": "wrapper",
       "className": "FieldMask60003",
-      "parentClass": "BT3FieldMaskProbe",
+      "parentClass": "FieldMaskProbe",
       "pointClass": "flash.geom::Point",
       "wordIndices": [
         0, 1, 2, 3, 2, 2, 2, 2, 2, 15, 5, 15, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 6, 15, 5
@@ -651,7 +651,7 @@
       "phase": "baseline",
       "role": "wrapper",
       "className": "FieldMask60004",
-      "parentClass": "BT3FieldMaskProbe",
+      "parentClass": "FieldMaskProbe",
       "pointClass": "flash.geom::Point",
       "wordIndices": [
         0, 1, 2, 3, 2, 2, 2, 2, 2, 15, 5, 15, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 6, 15, 5
@@ -682,7 +682,7 @@
       "phase": "baseline",
       "role": "wrapper",
       "className": "FieldMask60005",
-      "parentClass": "BT3FieldMaskProbe",
+      "parentClass": "FieldMaskProbe",
       "pointClass": "flash.geom::Point",
       "wordIndices": [
         0, 1, 2, 3, 1, 1, 1, 2, 2, 15, 5, 15, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 6, 15, 5
@@ -713,7 +713,7 @@
       "phase": "baseline",
       "role": "wrapper",
       "className": "FieldMask60006",
-      "parentClass": "BT3FieldMaskProbe",
+      "parentClass": "FieldMaskProbe",
       "pointClass": "flash.geom::Point",
       "wordIndices": [
         0, 1, 2, 3, 1, 1, 1, 2, 2, 15, 5, 15, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 6, 15, 5
@@ -744,7 +744,7 @@
       "phase": "baseline",
       "role": "wrapper",
       "className": "FieldMask60007",
-      "parentClass": "BT3FieldMaskProbe",
+      "parentClass": "FieldMaskProbe",
       "pointClass": "flash.geom::Point",
       "wordIndices": [0, 1, 2, 3, 1, 1, 1, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 4, 5]
     },
@@ -782,7 +782,7 @@
       "phase": "baseline",
       "role": "wrapper",
       "className": "FieldMask60008",
-      "parentClass": "BT3FieldMaskProbe",
+      "parentClass": "FieldMaskProbe",
       "pointClass": "flash.geom::Point",
       "wordIndices": [0, 1, 2, 3, 2, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 4, 5]
     },
@@ -820,7 +820,7 @@
       "phase": "baseline",
       "role": "wrapper",
       "className": "FieldMask60009",
-      "parentClass": "BT3FieldMaskProbe",
+      "parentClass": "FieldMaskProbe",
       "pointClass": "flash.geom::Point",
       "wordIndices": [0, 1, 2, 3, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
     },
@@ -856,7 +856,7 @@
       "phase": "baseline",
       "role": "wrapper",
       "className": "FieldMask60010",
-      "parentClass": "BT3FieldMaskProbe",
+      "parentClass": "FieldMaskProbe",
       "pointClass": "flash.geom::Point",
       "wordIndices": [0, 1, 2, 3, 1, 1, 1, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 4, 5]
     },
@@ -883,7 +883,7 @@
       "phase": "baseline",
       "role": "wrapper",
       "className": "FieldMask60011",
-      "parentClass": "BT3FieldMaskProbe",
+      "parentClass": "FieldMaskProbe",
       "pointClass": "flash.geom::Point",
       "wordIndices": [0, 1, 2, 3, 2, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 4, 5]
     },
@@ -912,7 +912,7 @@
       "phase": "baseline",
       "role": "wrapper",
       "className": "FieldMask60012",
-      "parentClass": "BT3FieldMaskProbe",
+      "parentClass": "FieldMaskProbe",
       "pointClass": "flash.geom::Point",
       "wordIndices": [0, 1, 2, 3, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
     },
@@ -939,7 +939,7 @@
       "phase": "assigned",
       "role": "wrapper",
       "className": "FieldMask60012",
-      "parentClass": "BT3FieldMaskProbe",
+      "parentClass": "FieldMaskProbe",
       "pointClass": "flash.geom::Point",
       "wordIndices": [0, 1, 2, 3, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
     },
@@ -966,7 +966,7 @@
       "phase": "mask-miss",
       "role": "wrapper",
       "className": "FieldMask60012",
-      "parentClass": "BT3FieldMaskProbe",
+      "parentClass": "FieldMaskProbe",
       "pointClass": "flash.geom::Point",
       "wordIndices": [
         0, 1, 2, 3, 2, 2, 2, 2, 2, 15, 5, 15, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 6, 15, 5
@@ -997,7 +997,7 @@
       "phase": "mask-hidden",
       "role": "wrapper",
       "className": "FieldMask60012",
-      "parentClass": "BT3FieldMaskProbe",
+      "parentClass": "FieldMaskProbe",
       "pointClass": "flash.geom::Point",
       "wordIndices": [0, 1, 2, 3, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
     },
@@ -1024,7 +1024,7 @@
       "phase": "mask-alpha0",
       "role": "wrapper",
       "className": "FieldMask60012",
-      "parentClass": "BT3FieldMaskProbe",
+      "parentClass": "FieldMaskProbe",
       "pointClass": "flash.geom::Point",
       "wordIndices": [0, 1, 2, 3, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
     },
@@ -1051,7 +1051,7 @@
       "phase": "different-parent",
       "role": "wrapper",
       "className": "FieldMask60012",
-      "parentClass": "BT3FieldMaskProbe",
+      "parentClass": "FieldMaskProbe",
       "pointClass": "flash.geom::Point",
       "wordIndices": [0, 1, 2, 3, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
     },
@@ -1080,7 +1080,7 @@
       "phase": "different-parent",
       "role": "holder",
       "className": "flash.display::MovieClip",
-      "parentClass": "BT3FieldMaskProbe",
+      "parentClass": "FieldMaskProbe",
       "pointClass": "flash.geom::Point",
       "wordIndices": [
         16, 1, 2, 17, 2, 2, 2, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5
@@ -1091,7 +1091,7 @@
       "phase": "mask-removed",
       "role": "wrapper",
       "className": "FieldMask60012",
-      "parentClass": "BT3FieldMaskProbe",
+      "parentClass": "FieldMaskProbe",
       "pointClass": "flash.geom::Point",
       "wordIndices": [0, 1, 2, 3, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
     },
@@ -1120,7 +1120,7 @@
       "phase": "mask-removed-miss",
       "role": "wrapper",
       "className": "FieldMask60012",
-      "parentClass": "BT3FieldMaskProbe",
+      "parentClass": "FieldMaskProbe",
       "pointClass": "flash.geom::Point",
       "wordIndices": [0, 1, 2, 3, 2, 2, 2, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
     },
@@ -1149,7 +1149,7 @@
       "phase": "target-removed",
       "role": "wrapper",
       "className": "FieldMask60012",
-      "parentClass": "BT3FieldMaskProbe",
+      "parentClass": "FieldMaskProbe",
       "pointClass": "flash.geom::Point",
       "wordIndices": [0, 1, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2]
     },
@@ -1180,7 +1180,7 @@
       "phase": "detached-unmasked",
       "role": "wrapper",
       "className": "FieldMask60012",
-      "parentClass": "BT3FieldMaskProbe",
+      "parentClass": "FieldMaskProbe",
       "pointClass": "flash.geom::Point",
       "wordIndices": [0, 1, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2]
     },
@@ -1209,7 +1209,7 @@
       "phase": "cleared",
       "role": "wrapper",
       "className": "FieldMask60012",
-      "parentClass": "BT3FieldMaskProbe",
+      "parentClass": "FieldMaskProbe",
       "pointClass": "flash.geom::Point",
       "wordIndices": [0, 1, 2, 3, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
     },
@@ -1238,7 +1238,7 @@
       "phase": "baseline",
       "role": "wrapper",
       "className": "FieldMask60013",
-      "parentClass": "BT3FieldMaskProbe",
+      "parentClass": "FieldMaskProbe",
       "pointClass": "flash.geom::Point",
       "wordIndices": [0, 1, 2, 3, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
     },
@@ -1265,7 +1265,7 @@
       "phase": "mask-hidden",
       "role": "wrapper",
       "className": "FieldMask60013",
-      "parentClass": "BT3FieldMaskProbe",
+      "parentClass": "FieldMaskProbe",
       "pointClass": "flash.geom::Point",
       "wordIndices": [0, 1, 2, 3, 2, 2, 2, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
     },
@@ -1292,7 +1292,7 @@
       "phase": "mask-alpha0",
       "role": "wrapper",
       "className": "FieldMask60013",
-      "parentClass": "BT3FieldMaskProbe",
+      "parentClass": "FieldMaskProbe",
       "pointClass": "flash.geom::Point",
       "wordIndices": [0, 1, 2, 3, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
     },
@@ -1319,7 +1319,7 @@
       "phase": "target-hidden",
       "role": "wrapper",
       "className": "FieldMask60013",
-      "parentClass": "BT3FieldMaskProbe",
+      "parentClass": "FieldMaskProbe",
       "pointClass": "flash.geom::Point",
       "wordIndices": [0, 1, 2, 3, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
     },
@@ -1346,7 +1346,7 @@
       "phase": "target-alpha0",
       "role": "wrapper",
       "className": "FieldMask60013",
-      "parentClass": "BT3FieldMaskProbe",
+      "parentClass": "FieldMaskProbe",
       "pointClass": "flash.geom::Point",
       "wordIndices": [0, 1, 2, 3, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
     },
@@ -1373,7 +1373,7 @@
       "phase": "baseline",
       "role": "wrapper",
       "className": "Bubblefield",
-      "parentClass": "BT3FieldMaskProbe",
+      "parentClass": "FieldMaskProbe",
       "pointClass": "flash.geom::Point",
       "wordIndices": [
         0, 1, 2, 3, 1, 1, 1, 2, 2, 19, 19, 19, 19, 2, 2, 1, 1, 2, 2, 2, 2, 2, 20, 20, 19, 19

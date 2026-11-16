@@ -27,7 +27,7 @@ test(`mock menu settings use authored frames and commit unrestricted duplicate h
   await dialog.getByRole('button', { name: 'HotKey Options' }).click();
   await expect(dialog.getByRole('button', { name: 'Change target lock key' })).toHaveCount(0);
   const saved = () =>
-    page.evaluate(() => JSON.parse(localStorage.getItem('open-bubble-tank.profile.v1')!).settings);
+    page.evaluate(() => JSON.parse(localStorage.getItem('soaptank.profile.v1')!).settings);
   const up = dialog.getByRole('button', { name: 'Change move up key' });
   await up.click();
   await page.keyboard.press('ShiftRight');

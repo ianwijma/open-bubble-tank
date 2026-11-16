@@ -26,7 +26,7 @@ test(`mock enemy defaults, panel suggestions and automatic versus manual saves r
   await saveCreator(page);
   const saved = () =>
     page.evaluate(
-      () => JSON.parse(localStorage.getItem('open-bubble-tank.profile.v1') ?? '{"tanks":[]}').tanks,
+      () => JSON.parse(localStorage.getItem('soaptank.profile.v1') ?? '{"tanks":[]}').tanks,
     );
   await expect.poll(async () => (await saved()).length).toBe(1);
   expect((await saved())[0]).toMatchObject({ life: 1, reward: 1, speed: 3 });

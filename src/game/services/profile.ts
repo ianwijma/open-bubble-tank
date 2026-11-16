@@ -2,7 +2,7 @@ import { DEFAULT_SETTINGS } from '../core/constants';
 import { validHotkey, canonicalHotkey } from '../core/hotkeys';
 import type { Profile, Settings, TankDesign, TankPart } from '../core/types';
 import { PART_BY_ID, AVATARS, ENEMIES, BOSSES, difficulty } from '../data/catalog';
-const KEY = 'open-bubble-tank.profile.v1';
+const KEY = 'soaptank.profile.v1';
 const builtinIds = new Set([...AVATARS, ...ENEMIES, ...BOSSES].map((tank) => tank.id));
 export function defaultProfile(): Profile {
   return {

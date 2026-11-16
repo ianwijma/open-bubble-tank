@@ -70,7 +70,7 @@ test(`mock menu picks shape contours, dispatches release actions once and retain
   await advance(1);
   await page.getByRole('button', { name: 'DONE', exact: true }).click();
   await advance(20);
-  // Match Flash MOUSE_UP even when the press began outside the control; scale the stage too.
+  // Releasing completes the click even when the press began outside the control; scale the stage too.
   await stage.evaluate((node) => {
     node.style.transform = 'scale(.75)';
     node.style.transformOrigin = 'top left';

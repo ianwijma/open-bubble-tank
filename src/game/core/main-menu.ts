@@ -3,7 +3,7 @@ import geometry from '../data/main-menu-geometry.json';
 
 export const MAIN_MENU = geometry;
 
-/** _-Sm: Setup, TitleCountdown, _-CL, _-Ze/_-2z and PlayButtonEffect. */
+/** Main menu motion: the title countdown, the control fade in and out, and the play-button glow. */
 export class MainMenuMotion {
   age = 0;
   parked = true;

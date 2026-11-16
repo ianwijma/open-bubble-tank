@@ -70,7 +70,7 @@ test('mock sound, gesture resume, P/Escape, zoom, guide and centered creator but
   );
   expect(
     await page.evaluate(
-      () => JSON.parse(localStorage.getItem('open-bubble-tank.profile.v1')!).settings.zoom,
+      () => JSON.parse(localStorage.getItem('soaptank.profile.v1')!).settings.zoom,
     ),
   ).toBe(0.65);
 });
@@ -89,7 +89,7 @@ test('mock cleared origin can be revisited and its traveled map edge is drawn on
   await map.click();
   await expect(page.locator('#map-description')).toContainText('Map: Large. Position (1, 0)');
   await expect(page.locator('#map-description')).toContainText('1 traveled paths');
-  await expect(page.getByLabel('Field guide')).toHaveText('Armor Games');
+  await expect(page.getByLabel('Field guide')).toHaveText('Soap Tank');
   await expect(page.getByRole('dialog')).toHaveCount(0);
   await page.keyboard.down('KeyA');
   await page.waitForTimeout(2500);

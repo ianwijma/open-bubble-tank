@@ -31,12 +31,11 @@ export function AssetGate({ onReady }: { onReady: (pack: AssetPack) => void }) {
         <i />
       </div>
       <div className="gate-wordmark">
-        <BubbleText size={40}>bubble tanks 3</BubbleText>
-        <span>OPEN BUBBLE TANK</span>
+        <BubbleText size={40}>soap tank</BubbleText>
       </div>
       <div className="asset-panel">
         <div className="eyebrow">BRING YOUR BUBBLES</div>
-        <h1>Your game. Original artwork.</h1>
+        <h1>Build a tank out of bubbles.</h1>
         {progress === null ? (
           <button className="mock-button" disabled={!ready} onClick={() => void load()}>
             Play with mock assets <span aria-hidden="true">→</span>

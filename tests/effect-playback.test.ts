@@ -175,7 +175,7 @@ for (const root of original.sourceAudit.roots)
       expect(effect!.playback!.symbol).toBe(root.symbol);
       expect(effect!.playback!.totalFrames).toBe(root.frames);
       expect(effect!.playback!.sourceSha256).toBe(original.originalSha256);
-      if (differences.length && process.env.BT3_EFFECT_DIAGNOSTICS)
+      if (differences.length && process.env.SOAPTANK_EFFECT_DIAGNOSTICS)
         writeFileSync(
           `test-results/retained-effects/${cohort}-${root.key}.json`,
           JSON.stringify(differences, null, 2),
