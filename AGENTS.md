@@ -8,12 +8,11 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 <!-- END:nextjs-agent-rules -->
 
-## Open Bubble Tank project rules
+## Soap Tank project rules
 
-- For project status, remaining-work estimates, or completion updates, read and update `docs/completion-checklist.md`. Return its fixed seven-row overview with the same IDs and fields; use its evidence and checkpoint rules.
-- The goal is faithful recreation, not reinterpretation. Treat the sibling research repository as evidence and prefer decompiled code when summaries conflict.
-- Read `docs/fidelity.md` before claiming a feature or the complete game has parity. Keep remaining differences explicit.
-- Keep rendering, browser services, and simulation separate. Preserve original per-frame units and stable part IDs.
-- Never commit SWFs, extracted images/audio, or dependency/build output. The browser asset gate supplies artwork at runtime.
-- Change generated data through the repeatable import tools, or document a source-backed manual correction.
+- Soap Tank is a successor built on the classic engine, not a recreation. Changing rules, screens and content is allowed. `docs/v2-plan.md` records what is decided, proposed and open; follow it and do not invent decisions.
+- Keep rendering, browser services and simulation separate. Simulation units are per-frame (pixels per frame, frame counters); do not scale rules by wall-clock time. Keep part IDs stable, because tank codes refer to them.
+- Never commit SWFs, extracted images or audio, or dependency and build output.
+- The JSON files in `src/game/data` are hand-maintained source. Edit them directly and cover rule-relevant changes with tests.
 - Run `bun run check` for rule changes and `bun run test:e2e` for affected browser flows. Run `bun run format` before handing over changes.
+- Deliver work as described in `docs/delivery.md`.

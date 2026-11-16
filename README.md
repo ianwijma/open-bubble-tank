@@ -1,137 +1,78 @@
-# Open Bubble Tank
+# Soap Tank
 
-A modular TypeScript reconstruction of **Bubble Tanks 3**, built with **Bun, Next.js, Tailwind CSS, and PixiJS**. The implementation uses the recovered game rules and data in the sibling [`documented-bubble-tank-3`](../documented-bubble-tank-3) repository.
+Build a tank out of bubbles. Fight everyone else's.
 
-**The one-to-one recreation is still in progress.** This repository contains a playable offline implementation, not a claim of completed pixel or behavioral parity. The remaining differences are tracked in [the fidelity ledger](docs/fidelity.md). Continuation starts with [the handoff](docs/handoff.md) and [the goal objective](goals.markdown).
+Soap Tank is a free, open-source arena shooter that runs in the browser. Every tank is built from bubbles: pop enemies, collect what they drop, and grow into something bigger. It is written in TypeScript with Bun, Next.js, Tailwind CSS and PixiJS.
 
-This is the classic offline version. Its selected
-[faithful-release criteria](docs/classic-release.md) cover the complete progression
-route, concrete player-visible problems and documented remaining differences.
-[Validation and its limits](docs/classic-validation.md) distinguish the accelerated
-full progression test from ordinary public-input checks. Modernization and
-rebranding are separate work.
-Once the final master checks pass, the `classic-v1` tag preserves the accepted
-classic source independently of later modernization.
+Soap Tank grows out of a faithful recreation of an older Flash game. It keeps that engine and is free to change it. **It is in development.** Today it plays like the classic game on a fixed 550×450 stage with keyboard and mouse. Filling the screen, phone controls, save and resume, a new editor and a community workshop are planned in [the Soap Tank plan](docs/v2-plan.md).
+
+The game uses its own stand-in artwork, synthesized sound effects and placeholder music tones. It bundles no original artwork or audio and does not read the original game file. Own music is still to be made.
 
 ## Run
 
-Requires Bun 1.3.9+ and Node.js 20.9+ (Next.js tooling).
+Requires Bun 1.3.9 or newer and Node.js 20.9 or newer (for the Next.js tooling).
 
 ```sh
 bun install
 bun run dev
 ```
 
-Open [localhost:3000](http://localhost:3000). Choose your Bubble Tanks 3 `.swf` at the asset screen, or choose **Play with mock assets**. The original game file and artwork are not bundled. Everything is extracted on the device: there is no upload endpoint, Flash player, or execution of ActionScript.
+Open [localhost:3000](http://localhost:3000).
 
-To obtain the game file yourself, open [Bubble Tanks 3 on Internet Archive](https://archive.org/details/bubble-tanks-3). Under **Download Options**, choose **SHOCKWAVE FLASH**, then select the downloaded `.swf` in the game. The asset screen includes the same guide. Mock mode supplies synthesized sound effects and quiet looping tones, translucent bubble bodies, yellow/orange weapons, and procedural projectiles with authored sizes and source-derived colors.
-
-Normal compressed CWS and uncompressed FWS containers are supported. The research repository's already-expanded SWF with a retained CWS header is also recognized after checking its stage dimensions and frame rate. ZWS/LZMA is unsupported.
+## Test and build
 
 ```sh
-bun run check         # TypeScript and deterministic simulation/data tests
-bun run format:check  # Formatting
-bun run test:e2e      # Production build + Chrome/Playwright browser flows
-bun run test:e2e:smoke # Quick PR browser flow, including the production build
-bun run test:e2e:offline # Full mock/synthetic suite used on master
-bun run build
-bun run start
-bun run fixtures      # Gameplay/art/screen fixtures on localhost:3102
+bun run check            # TypeScript and the rule tests in tests/
+bun run format:check     # Formatting
+bun run test:e2e         # Production build, then the Playwright browser tests in e2e/
+bun run test:e2e:smoke   # Production build and the quick browser check run on pull requests
+bun run test:e2e:offline # Production build and the full browser suite run on master
+bun run build            # Production build
+bun run start            # Serve the production build
+bun run fixtures         # Gameplay, artwork and screen fixtures on localhost:3102
 ```
 
-The browser tests use Chrome if installed, otherwise a Playwright Chromium installation. To install Chromium, run `bun x playwright install chromium`. SWF integration tests use `BT3_SWF_FILE` or the sibling research fixture, and skip when neither exists. No SWF is committed to this project.
+The browser tests use Chrome if it is installed, otherwise Playwright's Chromium (`bun x playwright install chromium`). Playwright writes its per-test output to `test-results/playwright`. Keep your own validation records elsewhere, for example in an ignored `reference-captures/` directory.
 
-Playwright's disposable per-test output is isolated in `test-results/playwright`.
-Keep independent validation records in ignored `reference-captures/` directories;
-the runner must not use their parent as its output directory.
+The full suite includes a bot that plays a fresh game through to the boss and the win screen from a fixed random seed. Locally it has a 5-minute budget. `SOAPTANK_PLAYTHROUGH_LONG_RUN=1` raises it to 10 minutes, as CI does on master.
 
-PR CI runs formatting, TypeScript/rules, a production build and the quick mock
-startup/creator/settings/exploration/pause flow. Master pushes and manual CI runs
-retain the full mock/synthetic browser suite, including the progression pilot.
-The long post-merge pilot has a larger hosted wall-clock budget; its inputs,
-simulation cap and earned upgrade/boss/win assertions stay the same. See
-[delivery](docs/delivery.md) and the [classic release gates](docs/classic-release.md).
-
-Ordinary navigation tests use `e2e/helpers/main-menu.ts` to wait for the native title intro before selecting a menu control. The title's hit geometry can cover an otherwise visible button. Controlled menu fixtures test input during the intro and on animated hover edges separately.
-
-The repeatable metadata importers read the sibling research checkout without copying artwork:
-
-```sh
-python3 tools/import-reference-data.py --parts-only # Catalog strings, costs and stable IDs
-bun tools/import-creator-controls.ts               # Creator controls and transforms
-bun tools/import-creator-palette.ts                # Palette, stats and rollover layouts
-bun tools/import-creator-dialogs.ts                # Save/exit/code screen layouts
-bun tools/import-tank-viewer.ts                    # Local viewer, sorting and detail layouts
-```
-
-Part strings are decoded directly from the recovered ActionScript table, including quoted flavor text. Generated JSON is committed; the research checkout is needed only when regenerating it.
-
-## Original runtime reference
-
-The development reference viewer runs the supplied SWF with pinned Ruffle 0.7.1. It is separate from the game application and is excluded from the production bundle. It normalizes the research file's expanded CWS header to FWS and blocks retired external requests. Ruffle is an emulator, so observed differences still need to be checked against the recovered code.
-
-Run `bun run reference` in one terminal and `bun run reference:browser` in another. The latter starts an owned headless Chrome with a larger WASM stack; default Chrome's stack overflows on this SWF. It exposes CDP on port 9223 and closes on Ctrl+C. The native input helper uses Node.js 26+ and writes 550 × 450 stage captures to `test-results/reference-current.png`:
-
-```sh
-bun run reference:input load /absolute/path/to/game.swf
-bun run reference:input wait 3000
-bun run reference:input click 275 282 # original Continue button
-bun run reference:input click 363 380 # first storage tutorial NEXT
-bun run reference:input click 363 372 # second storage tutorial NEXT
-```
-
-The helper also accepts `reload PATH`, `hold X Y MS`, `keyhold KEY MS`, `drag X Y X Y`, `move X Y`, `press KEY`, `status`, `pause`, and `resume`. Hold commands capture while the input is down and release it afterward. Drags send twenty native pointer moves with a 25 ms gap so Flash can advance between them. Set `BT3_REFERENCE_CAPTURE` to choose a capture path. `BT3_SWF_FILE` on the reference server enables a button to load that explicit research file. The viewer selects Ruffle's `wgpu-webgl` backend: legacy `webgl` cannot run this movie's `BitmapData.draw` calls and can show menus while gameplay fails. Run `BT3_REFERENCE=1 bun run test:e2e` to include the optional original-SWF boot/input smoke test. Its Continue-artwork and tutorial-panel pixel checks verify startup; native firing and movement were checked separately.
+Pull requests run formatting, the rule tests, a production build and the quick browser check. Pushes to `master` and manual runs replace the quick check with the full browser suite. See [delivery](docs/delivery.md).
 
 ## Play
 
-- **WASD:** move. The avatar stays centered while the field slides.
-- **Mouse:** aim; hold the left button to fire primaries.
-- **Space:** fire secondaries together on their shared cooldown.
-- **P / Escape:** pause/resume, including during field travel. The original Q binding is retained for future lock-on parts; the supplied base game has no part that activates it.
-- Cross the circular boundary to travel to another field. Visited enemies retain their state and cleared fields remain reachable. Map paths appear only after you traverse them, once per pair of fields. As in the original, returning to an empty field counts as another completion.
-- **Top-left map button:** cycle compact, large, and hidden while the game continues. Only traveled connections appear. Equipped Radar shows off-screen arrows; Health Readout adds enemy bars, and summoned allies have health rings.
-- **Settings → Camera zoom:** choose 50–150%, independently of fullscreen or window size. 100% keeps the original camera scale.
-- Collect dropped life bubbles to heal. **Health is progression**: a full health bar upgrades the tank. Death loses a tank level; the first tank escapes to a weak field instead of ending the game.
+- **W A S D:** move. The tank stays centered while the field slides.
+- **Mouse:** aim. Hold the left button to fire primary weapons.
+- **Space:** fire secondary weapons together, on their shared cooldown.
+- **P or Escape:** pause and resume.
+- Cross the edge of a field to travel to the next one. Enemies you leave behind keep their state, and cleared fields stay reachable. The map shows only the paths you have traveled.
+- **Map button (top left):** cycle between a compact map, a large map and none.
+- **Settings → Camera zoom:** 50 to 150 percent.
+- Collect dropped bubbles to heal. A full health bar upgrades the tank. Dying loses a tank level.
 
-The menu also provides the enemy tank creator and local tank library. Avatar designs can be edited during upgrades and after clearing a field. Designs can be saved, imported/exported as JSON, and shared using the **original encrypted tank-code format**. Settings, progression designs, and the secondary-weapon help flag are saved locally. The help appears on the first eligible tank replacement and pauses play until Close. As in the original, continuing restores the design progression, not a complete serialized world.
+The menu also opens the tank creator and the local tank library. Designs can be saved, imported and exported as JSON, and shared as tank codes. Settings and progress are saved in the browser. Continuing restores your tank progression, not the run in progress.
 
-In the creator, select a palette row, then drag its preview into the design area. The selected row stays available for repeated drops. With a supplied SWF, previews, dragged objects, and placed parts animate using the native display lists. Dimmed rows exceed the current budget or class limits but remain selectable, as in the original. Accepted edits validate the design and revert rejected changes; Save separately checks the body and avatar attachment prerequisites. New enemy designs start empty. For keyboard placement, focus and activate the preview, position it with the arrow keys (Shift moves five pixels), then press Enter to place or Escape to cancel.
+## Repository layout
 
-**Load a Tank...** opens the local Tank Viewer with built-in and saved designs, animated details, sorting and tank-code entry. Copy, save and delete work locally; online search reports that the retired service is unavailable. Completing both guide pages saves its completion locally. Returning without selecting a tank rebuilds an empty enemy creator or restores the current avatar, following the original routes.
-
-Click placed parts to toggle selection, drag empty space to select a group, and drag selected parts to move them. Symmetric Mode selects a faded linked twin and mirrors group movement; parts meeting on the center line can merge and respawn a twin when moved away. Scale, rotation, layering, delete, and undo apply to the selection. Turning Symmetric Mode on or off clears the selection.
-
-## Structure
-
-| Directory | Responsibility |
+| Directory | What it holds |
 | --- | --- |
-| `src/app` | Next.js entry points, stage sizing, Tailwind/global styles |
-| `src/components` | Asset gate, menu/HUD/dialogs, settings, editor, tank library |
-| `src/game/core` | Types, input, frame-based constants, deterministic math/random |
-| `src/game/data` | Recovered parts, designs, waves, rules, roster batches, emitter and whip coordinates |
-| `src/game/simulation` | World state, combat, projectiles, AI, pickups, progression, editor validation |
-| `src/game/assets` | Browser SWF parsing, vectors/fonts, sprite display lists, pixel masks, mock assets |
-| `src/game/render` | Pixi rendering and native SWF timeline animation; no game-rule ownership |
-| `src/game/services` | Local profiles, original tank-code codec, audio, retired-service extension interfaces |
-| `tools` | Repeatable research-data importers and development visual fixtures |
-| `tests`, `e2e` | Rule/format regression tests and real browser flows |
+| `src/app` | Next.js entry points, stage sizing and global styles |
+| `src/components` | React screens: menu, HUD, dialogs, settings, tank creator and tank library |
+| `src/game/core` | Types, input, per-frame constants, math and seeded random numbers, screen models |
+| `src/game/data` | Parts, built-in tanks, waves, rules and display layouts, as hand-maintained JSON |
+| `src/game/simulation` | World state, combat, projectiles, enemy behavior, pickups, progression, editor rules |
+| `src/game/assets` | Stand-in artwork, part shapes and bounds, hit testing |
+| `src/game/render` | Pixi drawing; owns no game rules |
+| `src/game/services` | Profile storage, tank codes, audio, the stage clock and stubs for online services |
+| `tests` | Rule and data tests, run by `bun run check` |
+| `e2e` | Browser tests, run by Playwright |
+| `tools` | Test fixtures, the fixture server and the playthrough bot |
+| `assets/branding` | Icon files |
+| `docs` | [Architecture](docs/architecture.md), [delivery](docs/delivery.md) and [the plan](docs/v2-plan.md) |
 
-PixiJS is the rendering engine; the simulation owns its rules and advances at the original **50 simulation frames per second**, with the original 35/65 FPS settings and 90 FPS efficiency mode available. React is kept out of the frame loop. See [architecture](docs/architecture.md) for extension points and [fidelity](docs/fidelity.md) for source references and current limits.
+The simulation advances in fixed steps, 50 a second by default, and React stays out of the frame loop. See [the architecture](docs/architecture.md).
 
-## Updating recovered data
+## License
 
-```sh
-python3 tools/import-reference-data.py ../documented-bubble-tank-3
-bun tools/import-swf-geometry.ts ../documented-bubble-tank-3
-bun tools/import-hud-geometry.ts ../documented-bubble-tank-3
-bun tools/import-tutorial-art.ts ../documented-bubble-tank-3
-bun tools/import-mine-art.ts ../documented-bubble-tank-3
-bun tools/import-projectile-clips.ts ../documented-bubble-tank-3
-bun tools/import-projectile-geometry.ts ../documented-bubble-tank-3
-bun tools/import-part-geometry.ts ../documented-bubble-tank-3
-bun tools/import-timeline-scripts.ts ../documented-bubble-tank-3
-```
+The code is licensed under `AGPL-3.0-only`. Anyone who runs a changed copy as a service must publish their changes.
 
-These import numerical definitions, layouts, original encoded tank identities, behavior tables, and recognized MovieClip frame actions. The projectile-clip importer retains numeric display lists for source-polled roots and their children. The timeline importer replays inherited frame registrations and checks that every scripted part and managed projectile clip is covered; unsupported application/effect callbacks are reported. Artwork and audio still come from the player's supplied file. The wave importer reconstructs all 20 / 34 / 44 regular options and the deadhead option from `_-3y.as`, preserving distance branches instead of using the earlier flattened wave JSON.
-
-Original Bubble Tanks 3 game and assets: **Hero Interactive**. See [NOTICE](NOTICE.md).
+The license does not cover the content kept from the original game, Bubble Tanks 3 by Hero Interactive: the built-in tank designs, waves, part names and texts, menu and editor layouts, display data and the rules rebuilt from its code. [NOTICE.md](NOTICE.md) lists that content and the third-party licenses.

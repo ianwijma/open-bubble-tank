@@ -1,32 +1,16 @@
-# Goal: faithfully recreate Bubble Tanks 3
+# Goal: build Soap Tank
 
-## Current classic release finish line
+Soap Tank is a browser arena shooter in which every tank is built from bubbles. It grows out of a faithful recreation of an older Flash game ("classic"). It keeps that engine and changes whatever makes the game better to play today.
 
-The user's 2026-11-14 closeout decision is to finish a faithful classic release:
-fix visible/gameplay bugs, verify a full playthrough, and document remaining rare
-differences. Follow [the classic release gates](docs/classic-release.md).
-Modernization/rebranding and additional platform features are separate work.
-The original strict parity research below remains the specification and evidence
-ledger; do not claim its open comparison checkpoints are complete merely because
-the classic release ships. Further rare-edge research is deferred when it does
-not resolve a concrete release blocker.
+Goals, in priority order:
 
-The user also changed CI policy: quick checks on PRs, with the complete longer
-suite on master after merging. Follow [delivery](docs/delivery.md) and require the
-resulting master full-suite result before declaring the classic release ready.
+1. The game fills the screen and stays sharp at any size.
+2. It plays well on a phone.
+3. A community forms around it: people build tanks, share them, and fight each other's designs.
+4. Gameplay is improved where the original is awkward. Soap Tank is not bound to reproduce classic.
 
-## Original fidelity specification
+Soap Tank uses its own artwork and sound, and never reads the original game file. It is free to break with classic: classic saves and tank codes do not carry over. It lives at `soaptank.net`.
 
-Continue building a faithful, one-to-one recreation of the original Bubble Tanks 3 Flash game in `/home/ian/Projects/ianwijma/open-bubble-tank`. The intended result is an offline game whose appearance, animation, controls, sound and gameplay are indistinguishable from the original, except for explicitly documented removals and usability additions.
+Out of scope: payments of any kind. The workshop is a free gallery.
 
-The reverse-engineering documentation and original implementation evidence are in `/home/ian/Projects/ianwijma/documented-bubble-tank-3`. Initial research, asset extraction and a demonstration of loading assets directly from the Flash file already exist. Consult that repository whenever functionality is uncertain. Prefer decompiled code, and inspect exported bytecode when the decompiler is ambiguous, rather than inventing behavior.
-
-Use Bun, TypeScript, Next.js, Tailwind CSS and the project's selected JavaScript game engine, PixiJS. Keep the implementation lightweight and modular so it can be tinkered with and extended without reworking whole systems. Preserve the separation between simulation, rendering and browser services. Avoid spending time on disposable prototypes when the original provides the specification.
-
-Before entering the game, let the player supply their own Flash file. Extract the required artwork and audio locally in the browser using the existing asset-loading approach. Do not bundle or commit the SWF or extracted original media. If no Flash file is supplied, support playable mock assets. Their layouts, sizes, colors and movement should follow the recovered original designs as closely as practical.
-
-Strip out currently broken or unavailable functionality, including retired online services, while retaining isolated stubs so those features can be added or restored later. Keep deliberate differences explicit; do not silently reinterpret the original.
-
-Continue from the existing implementation rather than restarting. Read `AGENTS.md`, [the continuation handoff](docs/handoff.md), [the architecture](docs/architecture.md) and [the fidelity ledger](docs/fidelity.md). The ledger records implemented contracts, evidence limits and remaining work. The recreation goal is not yet complete: passing selected tests does not establish full-game parity.
-
-Verify changes with the appropriate rule tests, browser flows and original-runtime comparisons. Keep documentation current, and occasionally commit and push verified changes using the configured signing setup. Continue until the remaining fidelity work is completed and the full offline experience has been checked against the original.
+The plan, with every decision marked decided, proposed or open, is [the Soap Tank plan](docs/v2-plan.md). Read it, [the architecture](docs/architecture.md) and `AGENTS.md` before starting work. Use Bun, TypeScript, Next.js, Tailwind CSS and PixiJS. Keep the code modular, and keep simulation, rendering and browser services separate. Before the game changes, tests pin what it does today (plan, section 5).
