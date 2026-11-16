@@ -104,7 +104,7 @@ export const CREATOR_PALETTE = data as {
   scroll: { matrix: SwfMatrix; pieces: Piece[] };
 };
 
-/** _-Wp ignores the return values of both substr calls: preserve its trailing comma and short plurals. */
+/** The summary ignores the return values of both substr calls: preserve its trailing comma and short plurals. */
 export function creatorWeaponSummary(design: TankDesign, category: number) {
   const counts = new Map<number, number>();
   for (const p of design.parts)
@@ -122,7 +122,7 @@ export function creatorWeaponSummary(design: TankDesign, category: number) {
     : 'N/A';
 }
 
-/** Source divides by121 but clamps the handle to18..138; arrow steps use120px. */
+/** The scroll divides by121 but clamps the handle to18..138; arrow steps use120px. */
 export class CreatorPaletteScroll {
   barY = 18;
   offset = 0;
@@ -173,7 +173,7 @@ export function creatorTextLines(
   });
 }
 
-/** Numeric source advances keep mock wrapping and glyph placement aligned with native text. */
+/** Numeric advances keep mock wrapping and glyph placement aligned with native text. */
 export function creatorGlyphLayout(text: string, field: CreatorField) {
   let width = 0;
   const glyphs = Array.from(text, (char) => {

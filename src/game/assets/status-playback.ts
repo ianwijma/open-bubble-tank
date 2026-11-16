@@ -3,7 +3,7 @@ import { Random } from '../core/math';
 import { STATUS_ART } from '../data/status-art';
 import { SwfClip, type ClipSource } from './swf-clip';
 
-/** EffectMeCrazy holds only the root frame; descendants retain their own clocks. */
+/** The status effect holds only the root frame; descendants retain their own clocks. */
 export class StatusPlayback {
   private states = new WeakMap<StatusDecoration, SwfClip[]>();
   constructor(private source: ClipSource) {}

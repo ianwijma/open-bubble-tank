@@ -146,10 +146,10 @@ export function tickBullet(world: World, b: Projectile, _input: InputFrame) {
   if (b.kind === 'rocket' && !b.dead) rocketTrail(world, b);
 }
 export function releaseCarrier(world: World, t: Tank, gun: GunState) {
-  // _-BL/_-CO splice arrPrimaryWeapons before PartCallTrigger; the child and
-  // arrSeekerCarrierRefs survive through all six births until Deactivate/removeChild.
+  // Guns are spliced from the tank's list before the part-call trigger; the child and
+  // the seeker carrier refs survive through all six births until deactivation/removeChild.
   t.guns = t.guns.filter((g) => g !== gun);
-  // _-Ng converts its emitter first; its six offsets are on the outgoing field axes.
+  // The emitter is converted first; its six offsets are on the outgoing field axes.
   const global = world.actorParents.localToGlobal(t, gun.part),
     point = world.actorParents.fieldLocal(global, world.currentWrapper);
   if (!point) throw new Error('Carrier trigger has no current field transform');

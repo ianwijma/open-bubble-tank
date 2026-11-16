@@ -47,7 +47,7 @@ test('the singleton builtin boss consumes its source 1-based selection draw befo
   world.jump({ x: 1, y: 0 });
   expect(world.transit!.next.boss).toBe(true);
   expect(world.transit!.next.enemies[0].design).toBe(BOSSES[0]);
-  // PlayerProfile keeps a sentinel at0; _-De samples1..length-1 even for one boss.
+  // The boss table keeps a sentinel at0; the roll samples1..length-1 even for one boss.
   expect(ranges[0]).toEqual([1, BOSSES.length]);
   expect(entropy).toBe(ranges.length);
 });

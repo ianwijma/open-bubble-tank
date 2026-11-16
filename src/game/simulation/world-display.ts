@@ -57,7 +57,7 @@ export class WorldDisplays {
     if (!layers) throw new Error('World layers require explicit construction');
     return layers;
   }
-  /** _-Ii/_-XS copy CURRENT root; next highlight copies NEXT root and wave scale. */
+  /** Construction copies CURRENT root; next highlight copies NEXT root and wave scale. */
   construct(field: Field, current = field, first = false) {
     if (this.layers.has(field)) throw new Error('World layers constructed twice');
     const top = this.effects.layer(field, 'top');
@@ -82,7 +82,7 @@ export class WorldDisplays {
     }
     this.layers.set(field, layers);
   }
-  /** Source ordinary/transit movement rewrites only current and latest-next siblings. */
+  /** Ordinary/transit movement rewrites only current and latest-next siblings. */
   follow(current: Field, next?: Field) {
     for (const field of [current, next]) {
       if (!field) continue;
@@ -105,7 +105,7 @@ export class WorldDisplays {
   setHighlightAlpha(field: Field, value: number) {
     this.field(field).highlight.pose.alpha = value;
   }
-  /** _-4j removes the outgoing bullet/top before cache reads; bottom belongs to FieldDisplays. */
+  /** Detaching removes the outgoing bullet/top before cache reads; bottom belongs to FieldDisplays. */
   detachLayers(field: Field) {
     this.field(field).bullet.attached = false;
     // Effect ownership is independent; World calls engine.detachLayer at this same phase.

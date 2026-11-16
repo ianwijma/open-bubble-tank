@@ -87,7 +87,7 @@ test('collapse binds original repeated setters to siblings while screen remains 
   const screen = world.worldDisplays.read(undefined, 'screen');
   world.beginCollapse(0);
   for (let i = 0; i < 119; i++) world.step(emptyInput());
-  // Original setter fixture219/119 pins this Number getter and binary32 coefficient.
+  // Setter fixture219/119 pins this Number getter and binary32 coefficient.
   for (const kind of ['bullet', 'top', 'highlight'] as const) {
     const pose = world.worldDisplays.read(field, kind).pose;
     expect(pose.scaleX).toBe(0.4166666666666692);

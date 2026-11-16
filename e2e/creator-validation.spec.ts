@@ -108,7 +108,7 @@ test(`mock resize rejection restores pre-click snapshot and accepted no-op/impor
   const screenshot = await page.locator('.creator').screenshot({
     path: `test-results/mock-editor-resize-reverted.png`,
   });
-  // The source heading must actually paint in DOM, not just exist in a decoded asset.
+  // The heading must actually paint in DOM, not just exist in a decoded asset.
   const redHeading = await page.evaluate(
     async (bytes) => {
       const image = await createImageBitmap(

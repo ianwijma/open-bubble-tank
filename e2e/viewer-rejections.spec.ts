@@ -37,7 +37,7 @@ test(`mock viewer rejection uses authored fades, pointer shielding and independe
   await expect(page.locator('.viewer-content')).not.toHaveAttribute('inert', '');
   const box = (await openCode.boundingBox())!;
   await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
-  await expect(code).toHaveCount(0); // Source backdrop is a pointer shield, with no dismiss handler.
+  await expect(code).toHaveCount(0); // The backdrop is a pointer shield, with no dismiss handler.
   for (let i = 0; i < 3; i++) await advance(20);
   await expect(effect).toHaveAttribute('data-rejection-frame', '61');
   await expect(effect.locator('[data-rejection-layer="933"]')).toHaveAttribute(

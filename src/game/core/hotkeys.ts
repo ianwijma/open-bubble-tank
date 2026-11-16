@@ -1,4 +1,4 @@
-/** _-Ay stores Flash keyCode values; canonical codes merge browser left/right modifiers. */
+/** Hotkeys store keyCode values; canonical codes merge browser left/right modifiers. */
 import type { Settings } from './types';
 const codes: Record<string, number> = {
   Backspace: 8,
@@ -101,12 +101,12 @@ const labels: Record<number, string> = {
   111: 'DIVIDE',
 };
 for (let i = 0; i < 10; i++) labels[96 + i] = `NUMPAD ${i}`;
-/** Preserve the source's String.fromCharCode fallback, including function-key labels. */
+/** Preserve the String.fromCharCode fallback, including function-key labels. */
 export function hotkeyLabel(code: string) {
   const value = codes[canonicalHotkey(code)];
   return value === undefined ? '' : (labels[value] ?? String.fromCharCode(value));
 }
-/** AvatarInterface:675–708 gives Up/Left priority over same-axis duplicate bindings. */
+/** Up/Left have priority over same-axis duplicate bindings. */
 export function hotkeyDirections(keys: ReadonlySet<string>, settings: Settings) {
   return {
     up: keys.has(settings.h1),

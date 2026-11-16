@@ -47,7 +47,7 @@ test('shield film keeps its own26-frame stage clock independently of the25-frame
   w.pause();
   frames(w, 60);
   expect([w.player.artAge, w.player.shieldAge, w.player.shield]).toEqual([60, 60, 25]);
-  // Constructor before ENTER1: EXIT1=1, EXIT60=10 (original measured cohort).
+  // Constructor before ENTER1: EXIT1=1, EXIT60=10 (measured cohort).
   expect(w.runtimeFor(w.field).pending[0].frame).toBe(10);
   expect((w.player.shieldAge % 26) + 1).toBe(9);
 });

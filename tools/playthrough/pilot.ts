@@ -108,7 +108,7 @@ export class PlaythroughPilot {
     } else if (world.pickups.length && world.field.cleared) {
       // Let forced rewards arrive before departure. Releasing the keys alone
       // coasts through the wall and can open first-secondary help mid-crossing.
-      // Its source Close selects ordinary mode while movement remains disabled.
+      // Its Close selects ordinary mode while movement remains disabled.
       const gap = Math.hypot(player.x, player.y) || 1;
       movement = { x: -player.x / gap, y: -player.y / gap };
     } else if (!world.pickups.length && world.field.cleared) {
@@ -142,7 +142,7 @@ export class PlaythroughPilot {
       }
     }
     // Hold the battle inside the field even when a dense volley overwhelms avoidance.
-    // Source deliberately suppresses the win screen when completion happens during transit.
+    // The win screen is deliberately suppressed when completion happens during transit.
     const radial = Math.hypot(player.x, player.y);
     if ((target || !world.field.cleared) && radial > radius - 50)
       movement = { x: -player.x / radial, y: -player.y / radial };

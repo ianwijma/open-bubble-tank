@@ -11,7 +11,7 @@ export type ViewerNavigationAction =
   | { type: 'detail'; index: number }
   | { type: 'page'; direction: -1 | 0 | 1 };
 
-/** TankViewerScreen._-0l updates buttons as well as the small-view caption. */
+/** The small-view caption update also updates buttons. */
 function smallCaption(state: ViewerNavigation, length: number) {
   const pages = Math.ceil(length / 4);
   if (pages === 1) state.first = state.previous = state.next = false;
@@ -27,7 +27,7 @@ export function initialViewerNavigation(length: number): ViewerNavigation {
     { type: 'local' },
   );
 }
-/** Source handlers write persistent button state; it cannot be derived from queue bounds alone. */
+/** Handlers write persistent button state; it cannot be derived from queue bounds alone. */
 export function navigateViewer(
   previous: ViewerNavigation,
   length: number,
@@ -37,11 +37,11 @@ export function navigateViewer(
   if (action.type === 'detail') {
     state.offset = action.index;
     state.detail = true;
-    // DetailTheTank / _-dr: even the last (or only) tank initially has Next enabled.
+    // Opening the detail view: even the last (or only) tank initially has Next enabled.
     allButtons(state, true);
     state.first = state.previous = state.offset !== 0;
   } else if (action.type === 'cards') {
-    // _-8F calls _-0l before its final first-page/_-dr writes.
+    // The caption update runs before the final first-page and button writes.
     state.detail = false;
     state.offset = Math.floor(state.offset / 4) * 4;
     state.page = 1 + state.offset / 4;
@@ -53,17 +53,17 @@ export function navigateViewer(
     state.page = 1;
     state.detail = false;
     allButtons(state, true);
-    if (length === 0) allButtons(state, false); // _-QN / _-Pf
+    if (length === 0) allButtons(state, false);
     smallCaption(state, length);
     if (action.type !== 'sort') state.first = state.previous = false;
-    // ReturnToViewTanksFromSearch writes Next again after _-0l.
+    // Returning from a search writes Next again after the caption update.
     if (action.type === 'code' && length > 1) state.next = true;
   } else if (state.detail) {
     const direction = action.direction;
     if (direction === 0) state.offset = 0;
     else if (direction === -1) state.offset = Math.max(0, state.offset - 1);
     else if (state.offset < length - 1) state.offset++;
-    allButtons(state, true); // Each handler calls DetailTheTank again, even without moving.
+    allButtons(state, true); // Each handler shows the detail view again, even without moving.
     state.first = state.previous = state.offset !== 0;
     if (direction === 0) state.next = length > 1;
     else if (direction === 1 && state.offset === length - 1) state.next = false;
@@ -85,7 +85,7 @@ export function navigateViewer(
       state.next = length > 4;
       if (state.offset <= 0) state.first = state.previous = false;
     } else {
-      // _-QK keeps the authored partial-page branch rather than clamping to a last index.
+      // The authored partial-page branch is kept rather than clamping to a last index.
       if (state.offset + 4 <= length - 4) {
         state.offset += 4;
         state.page++;
@@ -96,7 +96,7 @@ export function navigateViewer(
       if (state.offset + 3 >= length - 1) state.next = false;
       state.first = state.previous = true;
     }
-    if (state.offset >= length) allButtons(state, false); // _-QN's empty page notification.
+    if (state.offset >= length) allButtons(state, false); // Empty page notification.
     smallCaption(state, length);
   }
   return state;

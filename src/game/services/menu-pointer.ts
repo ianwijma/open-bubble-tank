@@ -9,7 +9,7 @@ interface MenuPointerOptions {
   paint: () => void;
 }
 
-/** Flash MOUSE_UP dispatch and stage-wide geometry picking, independent of DOM button rectangles. */
+/** MOUSE_UP dispatch and stage-wide geometry picking, independent of DOM button rectangles. */
 export class MenuPointer {
   target?: MenuTarget;
   private client?: Vec;

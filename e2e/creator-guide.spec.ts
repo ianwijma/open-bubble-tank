@@ -21,7 +21,7 @@ test(`mock creator guide follows six original pages and latches on entry`, async
   await page
     .locator('.creator')
     .screenshot({ path: `test-results/mock-creator-guide-welcome.png` });
-  // Shape595 covers the original stage and intercepts the underlying controls.
+  // A shape covers the stage and intercepts the underlying controls.
   await expect(page.locator('.creator')).toHaveAttribute('inert', '');
   const tab = await page
     .getByRole('button', { name: 'Weapons', exact: true, includeHidden: true })

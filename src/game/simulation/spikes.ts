@@ -6,14 +6,14 @@ import { displayPixel } from '../core/display-values';
 import { createBehaviorTarget } from './behavior-targets';
 import type { World } from './world';
 
-/** An unparented or deactivated clip read escapes Spike.BehaviorRun's listener. */
+/** An unparented or deactivated clip read escapes the spike's behavior run listener. */
 export class SpikeTargetReadError extends Error {}
 
-/** Seven authored emitters; one hit per Run and fifteen active calls of MC-reference memory. */
+/** Seven authored emitters; one hit per Run and fifteen active calls of clip-reference memory. */
 export function tickSpike(world: World, owner: Tank, gun: GunState) {
   const state = (gun.targeting ??= createBehaviorTarget()),
     allies = world.runtimeFor(world.currentWrapper).allies;
-  // Inherited Run calls Spike.PartCallAcquireTarget (master only), empty Aim,
+  // Inherited Run calls the spike's target acquisition (master only), empty aim,
   // then the enemy ally-count refresh. No ordinary target selection occurs.
   if (!state.target || !world.actorParents.hasParent(state.target)) state.master = owner.side;
   if (state.master === 'enemy' && state.allies !== allies.length) {
@@ -35,7 +35,7 @@ export function tickSpike(world: World, owner: Tank, gun: GunState) {
   const vectorLength = (v: Vec) => Math.sqrt(v.x * v.x + v.y * v.y);
   const candidates = [...allies, world.player];
   for (const target of candidates) {
-    // A remembered earlier candidate returns from the whole source BehaviorRun.
+    // A remembered earlier candidate returns from the whole behavior run.
     if (gun.spikeContacts.some((contact) => contact.target === target)) return;
     const center = world.actorParents.point(target, world.field);
     if (!center) throw new SpikeTargetReadError('Spike read an unparented target');
@@ -52,7 +52,7 @@ export function tickSpike(world: World, owner: Tank, gun: GunState) {
       )
         continue;
       world.damage(target, 3);
-      // Source Damage deactivates NPC clips before BehaviorRun reads objData.numClass.
+      // Damage deactivates NPC clips before the behavior run reads the class.
       if (target.dead && target.side !== 'player')
         throw new SpikeTargetReadError('Spike read deactivated target data after damage');
       const force = actorDirection(owner.rotation + gun.angle, 1),

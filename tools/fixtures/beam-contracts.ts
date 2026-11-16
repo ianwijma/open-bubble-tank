@@ -120,7 +120,7 @@ export async function showBeamContracts(pack: AssetPack, host: HTMLElement) {
   } finally {
     renderer.destroy();
   }
-  // A carrier-only enemy is a supported source design. The excluded first raw
+  // A carrier-only enemy is a supported design. The excluded first raw
   // actor has no carrier refs, so filtered[0]'s real carrier pixels take damage.
   world.stopPrimaryFire();
   const excluded = createTank(world.nextId(), design, 'enemy', -100, 0),

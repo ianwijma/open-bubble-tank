@@ -33,7 +33,7 @@ export function matchesRule(tank: TankDesign, rule: string): boolean {
 }
 export function availableWaves(distance: number, includeLocal = false): WaveOption[] {
   const band = distance < 0 ? '_-Iy' : distance < 10 ? '_-Pb' : distance < 20 ? '_-ad' : '_-9k';
-  const d = Math.floor(distance); // AS3 band functions accept uint.
+  const d = Math.floor(distance); // The band functions accept uint.
   return (data[band] as WaveOption[]).filter((w) =>
     w.conditions.every((cond) => {
       if (cond.includes('_loc4_')) return includeLocal;
@@ -58,7 +58,7 @@ export function rollWave(
   localTanks: readonly TankDesign[] = [],
   roster?: UnitRoster,
 ): { scale: number; designs: TankDesign[] } {
-  // WaveOption.AddInstruction draws NUM while constructing every available option.
+  // Adding an instruction draws NUM while constructing every available option.
   const options = availableWaves(distance, localTanks.length > 0).map((option) => ({
     ...option,
     instructions: option.instructions.map((instruction) => ({
@@ -88,7 +88,7 @@ export function rollWave(
     const pool =
       roster?.units.get(instruction.key) ??
       (roster ? [] : [...ENEMIES, ...localTanks].filter((t) => !t.avatar && matchesRule(t, rule)));
-    // The offline adapter retains a resolved prefix; source missing-key failure is separate.
+    // The offline adapter retains a resolved prefix; the missing-key failure is separate.
     if (!pool.length) break;
     if (instruction.key !== previousKey) previousIndex = -1;
     let index = 0;
@@ -102,7 +102,7 @@ export function rollWave(
   }
   return { scale: option.scale, designs };
 }
-/** PlayerProfile's boss table has a sentinel at0; _-De still draws for a singleton. */
+/** The boss table has a sentinel at0; the roll still draws for a singleton. */
 export function rollBossWave(rng: Random): { scale: number; designs: TankDesign[] } {
   return { scale: 1, designs: [BOSSES[rng.int(1, BOSSES.length) - 1]] };
 }
@@ -117,7 +117,7 @@ export class UnitRoster {
   ) {
     this.load(batches.initial);
   }
-  /** _-3y._-0 walks the KEY-sorted unit table and returns its first exact DATA match. */
+  /** Walks the key-sorted unit table and returns its first exact identity match. */
   lookupKey(identity: string): string {
     for (const key of [...this.units.keys()].sort())
       if (this.units.get(key)!.some((tank) => tankRosterIdentity(tank) === identity)) return key;

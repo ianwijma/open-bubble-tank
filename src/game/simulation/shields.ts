@@ -1,7 +1,7 @@
 import type { GunState, ShieldClip, Tank } from '../core/types';
 import { addTankChild, removeTankChild } from './tank-display';
 
-/** AGunShield.KillShield addresses the mount's current film, even for an older callback. */
+/** Killing the shield addresses the mount's current film, even for an older callback. */
 export function killMountedShield(tank: Tank, gun: GunState) {
   const film = gun.shieldFilm;
   if (film) {
@@ -9,7 +9,7 @@ export function killMountedShield(tank: Tank, gun: GunState) {
     tank.shieldClips = tank.shieldClips.filter((clip) => clip !== film);
     gun.shieldFilm = undefined;
   }
-  // Source immunity is shared: another mount's attached film does not keep it enabled.
+  // Immunity is shared: another mount's attached film does not keep it enabled.
   tank.shield = 0;
   tank.shieldManaged = false;
 }
@@ -49,7 +49,7 @@ export function attachMountedShield(tank: Tank, gun: GunState, diameter: () => n
   addTankChild(tank, film.key);
 }
 
-/** _-DO creates a pair only when the tank's shared movShieldHit pointer is null. */
+/** A pair is created only when the tank's shared shield-hit pointer is null. */
 export function attachTurretShield(tank: Tank, gun: GunState) {
   const generation = (gun.shieldGeneration = (gun.shieldGeneration ?? 0) + 1);
   const hit: ShieldClip = {

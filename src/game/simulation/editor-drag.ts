@@ -2,7 +2,7 @@ import type { TankPart, Vec } from '../core/types';
 import { displayPixel, displayRotation } from '../core/display-values';
 import { type PartSelection, removeParts, unlinkSelection } from './editor-selection';
 
-/** Transient state corresponding to TankCreatorScreen.StartDrag/_-5M. */
+/** Transient selection drag state. */
 export interface SelectionDrag {
   parts: TankPart[];
   selection: PartSelection;
@@ -42,7 +42,7 @@ export function beginSelectionDrag(
   };
 }
 
-/** Advance one mouse-move event, preserving the source's pre-move snap test. */
+/** Advance one mouse-move event, preserving the pre-move snap test. */
 export function advanceSelectionDrag(before: SelectionDrag, cursor: Vec): SelectionDrag {
   let parts = before.parts,
     selection = before.selection;
@@ -63,7 +63,7 @@ export function advanceSelectionDrag(before: SelectionDrag, cursor: Vec): Select
     }
     if (nearest) {
       if (!locked) {
-        // This assignment is positive in the shipped AVM2 bytecode too.
+        // This assignment is positive too.
         dy = nearest.y;
         locked = true;
         changed = true;
@@ -82,7 +82,7 @@ export function advanceSelectionDrag(before: SelectionDrag, cursor: Vec): Select
   });
   let nextTwin = before.nextTwin;
   if (changed && locked) {
-    // DeleteNonDominantTwinObject: only merge selected pairs exactly on Y=0.
+    // Twin merge: only merge selected pairs exactly on Y=0.
     for (const key of selection.keys) {
       const p = parts.find((p) => p.key === key);
       if (!p || p.y !== 0 || !p.twin || !selection.keys.includes(p.twin)) continue;

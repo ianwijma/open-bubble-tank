@@ -14,7 +14,7 @@ async function confirmationPixel(page: Page) {
       canvas.height = image.height;
       const context = canvas.getContext('2d')!;
       context.drawImage(image, 0, 0);
-      // Inside the No button's source cutout, clear of its text and border.
+      // Inside the No button's cutout, clear of its text and border.
       const scale = image.width / 550;
       return [...context.getImageData(Math.floor(333 * scale), Math.floor(149 * scale), 1, 1).data];
     },

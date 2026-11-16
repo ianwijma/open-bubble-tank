@@ -59,7 +59,7 @@ export async function showNpcDeactivation(pack: AssetPack, host: HTMLElement) {
     world.allies = scenario.side === 'ally' ? [victim] : [];
     importActorFixtures(world);
     importActorFixtures(world);
-    // This source branch precondition does not claim ordinary infection reachability.
+    // This branch precondition does not claim ordinary infection reachability.
     applyProjectileStatus(world, victim, 'infect');
     const births: {
       kind: string;

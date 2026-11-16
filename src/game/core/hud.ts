@@ -14,7 +14,7 @@ export function weaponRows(tank: Pick<Tank, 'guns'>) {
   }
   for (const row of rows.values()) {
     const short = partById(row.gun.part.type)?.shortName ?? '';
-    // AS3's substr(0, -2) removes the final two characters; native BC firing capture confirms it.
+    // substr(0, -2) removes the final two characters.
     row.label = row.count === 1 ? short.slice(0, -2) : short;
     const rate = WEAPONS[row.gun.part.type]?.rate ?? 1;
     row.fill = Math.max(0, Math.min(1, (rate - row.gun.counter) / rate));
@@ -48,7 +48,7 @@ export function hudReadout(tank: Tank, counter: number) {
 }
 export type HudReadout = ReturnType<typeof hudReadout>;
 
-/** AvatarInterface.InterfaceMotion, measured in original game frames, including crossings. */
+/** Interface motion, measured in game frames, including crossings. */
 export class HudState {
   lifeIdle = 75;
   fireIdle = 75;
@@ -72,7 +72,7 @@ export class HudState {
       0.8 * this.fireY + 0.2 * (HUD.fire.y - (this.fireIdle < 75 ? 0 : 100 + fireHeight));
     if (this.lifeIdle < 75) this.lifeIdle++;
     if (this.fireIdle < 75) this.fireIdle++;
-    // _-MO follows InterfaceMotion: a changed life value reveals the following frame.
+    // A changed life value reveals the following frame.
     if (this.lastLife !== life) this.lifeIdle = 0;
     this.lastLife = life;
   }

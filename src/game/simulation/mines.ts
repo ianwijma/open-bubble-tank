@@ -16,7 +16,7 @@ export function overlaps(a: Rect, b: Rect) {
   );
 }
 
-/** _-XK: contact, scatter, then arming OR homing; the arming frame does not home. */
+/** Contact, scatter, then arming OR homing; the arming frame does not home. */
 export function tickSeekerMine(world: World, b: Projectile) {
   world.mineTimelines.initialize(b);
   const state = b.mineState!;
@@ -74,7 +74,7 @@ export function tickSeekerMine(world: World, b: Projectile) {
   }
 }
 
-/** _-U9/_-M1 are stationary; speed only supplies their inherited half-step vector. */
+/** Static mines are stationary; speed only supplies their inherited half-step vector. */
 export function tickStaticMine(world: World, b: Projectile) {
   world.mineTimelines.initialize(b);
   if (b.wipe) {

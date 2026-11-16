@@ -4,7 +4,7 @@ export interface ViewerRejection {
   id: string;
   message: string;
 }
-/** _-2c.CreateEffect/Run: independent MovieClip lifetimes, removed at their final frame. */
+/** Independent clip lifetimes, removed at their final frame. */
 export class ViewerRejections {
   private serial = 0;
   private snapshot: readonly ViewerRejection[] = [];

@@ -67,10 +67,10 @@ for (const root of original.sourceAudit.roots)
             expect(actual).toEqual(expected);
             totals.currentMatrixComparisons++;
           }
-          // Native Shape wrappers can change their symbol without changing AS identity.
+          // Native Shape wrappers can change their symbol without changing identity.
           // SwfClip leaf placeholders model geometry, not that unqualified wrapper reuse.
           if (row.total === 0) continue;
-          // Original transient AS wrapper holes are neither synthesized nor read here.
+          // Transient wrapper holes are neither synthesized nor read here.
           // All own-pose/descendant correspondence claims are EXIT only.
           if (phase !== 'exit' && row.path !== '0') continue;
           const current = effectClockChildAtPath(pose, row.path);
@@ -227,7 +227,7 @@ test('line graphics belong to the constructor named child and replacement/reads 
   effect.line = { x: -500, y: 20 }; // Request telemetry cannot mutate numeric drawing ownership.
   expect(readEffectPlayback(effect)).toBe(playback);
   expect(first.lines).toBe(lines);
-  // Explicit timeline retirement/replacement control; the original named property stays retained.
+  // Explicit timeline retirement/replacement control; the named property stays retained.
   playback.pose.children.delete(1);
   playback.pose.gotoAndPlay(2);
   const replacement = playback.pose.children.get(1)!.clip;

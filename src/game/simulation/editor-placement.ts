@@ -3,7 +3,7 @@ import { displayPixel } from '../core/display-values';
 import { canPlacePart } from './designer';
 import { removeParts } from './editor-selection';
 
-/** TankCreatorScreen._-8a snaps every new object, even in asymmetric mode. */
+/** Every new object is snapped, even in asymmetric mode. */
 export function placementParts(
   type: number,
   radius: number,
@@ -25,7 +25,7 @@ export function placementParts(
   };
   return twin ? [part, { ...part, key: twin, twin: key, y: -y }] : [part];
 }
-/** _-ZW checks each new member separately, breaking a rejected twin's link. */
+/** Each new member is checked separately, breaking a rejected twin's link. */
 export function acceptedPlacement(parts: TankPart[], currentClass: number, maxClass: number) {
   return removeParts(
     parts,

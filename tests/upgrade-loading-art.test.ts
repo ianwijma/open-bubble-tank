@@ -1,7 +1,7 @@
 import { expect, test } from 'bun:test';
 import { UPGRADE_SCREEN, upgradeWidget } from '../src/game/core/upgrade-screen';
 
-// Independently inspected Root1935 PlaceObject records in the supplied source.
+// Independently inspected root placement records.
 test('loading, ready and child frames retain named viewers and the offstage loader', () => {
   const frames = UPGRADE_SCREEN.rootFrames.map(({ frame, pieces }) => ({
     frame,

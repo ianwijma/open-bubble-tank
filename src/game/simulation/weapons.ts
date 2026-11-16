@@ -60,7 +60,7 @@ export function tickGuns(world: World, t: Tank, input: InputFrame, categories?: 
       continue;
     }
     if (t.side !== 'player' && id === 4010) {
-      // _-Vc.Run calls PartCallRun directly, without target acquisition or Aim.
+      // Run calls the part call directly, without target acquisition or aim.
       if (++g.counter >= spec.rate) {
         world.fireGun(t, g, input);
         g.counter = 0;
@@ -215,7 +215,7 @@ export function fireGun(world: World, t: Tank, gun: GunState, input: InputFrame)
     if (!t.teleportReady) return;
     t.teleportReady = false;
     const mount = rotate(gun.part, t.rotation);
-    // The shipped code calls this.localToGlobal(Point(this.x,this.y)), so the
+    // The point is passed through this.localToGlobal(Point(this.x,this.y)), so the
     // registration offset is transformed twice. Preserve that authored quirk.
     const local = rotate(
       { x: gun.part.x * gun.part.scale, y: gun.part.y * gun.part.scale },
@@ -281,7 +281,7 @@ export function fireGun(world: World, t: Tank, gun: GunState, input: InputFrame)
     runtime.apocalypse = false;
     const offset = world.activeFields().find(({ field }) => field === world.field)!.offset;
     const mount = rotate(gun.part, t.rotation);
-    // RemoveBullet splices the live array, then the source increments its index.
+    // Removing the bullet splices the live array, then the index is incremented.
     for (let i = 0; i < runtime.bullets.length; i++)
       if (runtime.bullets[i].kind === 'apocalypse') {
         runtime.bullets[i].dead = true;
@@ -317,9 +317,9 @@ export function fireGun(world: World, t: Tank, gun: GunState, input: InputFrame)
     }
     return;
   }
-  if (id === 4026) return; // Its trigger is empty; contact belongs to BehaviorRun.
+  if (id === 4026) return; // Its trigger is empty; contact belongs to the behavior run.
   if (id === 4032) {
-    // PartCallTrigger neither aims nor polls the target's frame/parent.
+    // The part-call trigger neither aims nor polls the target's frame/parent.
     const builder = gun.turretTarget != null;
     const mount = world.actorParents.localToGlobal(t, gun.part);
     const pos = world.actorParents.fieldLocal(mount, world.currentWrapper);
@@ -353,7 +353,7 @@ export function fireGun(world: World, t: Tank, gun: GunState, input: InputFrame)
       motion: { x: 0, y: 0 },
     };
     world.addBullet(bullet, t, undefined, () => {
-      // SpawnNewBullet writes pose and runs Setup only inside its birth gate.
+      // Spawning writes pose and runs Setup only inside its birth gate.
       Object.assign(bullet, {
         owner: t.uid,
         enemy: true,
@@ -393,7 +393,7 @@ export function fireGun(world: World, t: Tank, gun: GunState, input: InputFrame)
   if (id === 4009 || id === 4021)
     recordLayerMine(world, gun, spawned[0] ?? null, world.muzzle(t, gun));
 }
-/** CheckForTeleports swaps slots while traversing, rather than sorting by ID. */
+/** The teleport check swaps slots while traversing, rather than sorting by ID. */
 export function orderSecondaries(guns: GunState[]) {
   const ordered = [...guns];
   for (let i = 0; i < ordered.length; i++) {
@@ -474,7 +474,7 @@ export function spawnVolley(
         const radians = (world.rng.int(0, 360) * Math.PI) / 180;
         b.x = t.x + Math.cos(radians) * radius;
         b.y = t.y + Math.sin(radians) * radius;
-        // _-9U/_-Vc pass radians + 90 into the degree-based SpawnNewBullet API.
+        // Radians + 90 are passed into the degree-based spawn API.
         b.angle = radians + 90;
         b.targetId = null;
         b.anchor = gun;

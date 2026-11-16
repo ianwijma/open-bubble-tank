@@ -6,7 +6,7 @@ const signed16 = (value: number) => (value << 16) >> 16;
 const raw = (value: number) => signed16(Math.trunc(value * 256));
 export const fixedColorMultiplier = displayAlpha;
 
-/** Parent color acts on the child's result; offsets are expressed in Flash's byte units. */
+/** Parent color acts on the child's result; offsets are expressed in byte units. */
 export function composeColor(
   parent: SwfColorTransform,
   child: SwfColorTransform,

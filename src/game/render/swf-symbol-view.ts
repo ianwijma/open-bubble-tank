@@ -25,7 +25,7 @@ export interface ClipPlayback {
   random: () => number;
 }
 
-/** Native display list: original matrices advance once per game frame; leaf textures are shared. */
+/** Native display list: matrices advance once per game frame; leaf textures are shared. */
 export class SwfSymbolView {
   root = new Container();
   private children = new Map<
@@ -171,7 +171,7 @@ export class SwfSymbolView {
     const placement = this.assets.displayList(this.id, this.lastFrame).find((p) => p.name === name);
     return placement ? this.children.get(placement.depth)?.view : undefined;
   }
-  /** DisplayObject.alpha overwrites this object's alpha multiplier, retaining RGB/add terms. */
+  /** Assigning alpha overwrites this object's alpha multiplier, retaining RGB/add terms. */
   setAlpha(alpha: number) {
     alpha = fixedColorMultiplier(alpha);
     if (alpha === this.runtimeAlpha) return;
@@ -238,7 +238,7 @@ export class SwfSymbolView {
     }
     this.applyFilters();
   }
-  /** Flash LAYER is an isolated surface: child ERASE must not punch through the game. */
+  /** LAYER is an isolated surface: child ERASE must not punch through the game. */
   setBlendMode(mode: number, inherited: BLEND_MODES = 'normal') {
     const isolate = mode === 2;
     if (isolate !== !!this.isolation) {

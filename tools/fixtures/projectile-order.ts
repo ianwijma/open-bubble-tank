@@ -94,7 +94,7 @@ export async function showProjectileOrderProof(pack: AssetPack, host: HTMLElemen
       damage: 1,
       targetId: world.player.uid,
     });
-    // SpawnNewBullet -> _-BL.Setup invokes _-QM.RotateTowardTarget before Run/state2.
+    // Spawning runs setup, which rotates toward the target before Run/state2.
     importActorFixtures(world);
     world.addBullet(buster);
     world.addBullet(deflected, target, world.player);

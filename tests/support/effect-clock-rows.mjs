@@ -1,5 +1,4 @@
-/** Pure decoders for the frozen effect clock contract in tests/fixtures. Moved from the removed
- * capture tooling; reads no original file. */
+/** Pure decoders for the frozen effect clock contract in tests/fixtures. */
 export function decode(words) {
   const b = Buffer.alloc(8);
   const result = [];

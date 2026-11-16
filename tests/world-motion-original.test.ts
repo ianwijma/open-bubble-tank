@@ -53,8 +53,8 @@ test('actual next copies and mask results retain the declared constructor-only s
         expect(measured(row.phase, row.age, role)[axis]).toBe(next[axis]);
     expect(measured(row.phase, row.age, 'nextMask').rotation).toBe(180);
   }
-  // Source _-Xa retains _-WU=false without writing the current mask at nonpositive X.
-  // Original fresh constructors start0; World.attach explicitly starts180 instead.
+  // The mask update retains the latch false without writing the current mask at nonpositive X.
+  // Fresh constructors start0; World.attach explicitly starts180 instead.
   // This test records that setup distinction; it does not reinterpret it as a method failure.
   for (const phase of ['down', 'negative'] as const) {
     expect(measured(phase, 40, 'currentMask').rotation).toBe(0);

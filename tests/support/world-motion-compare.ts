@@ -1,4 +1,4 @@
-/** Candidate only: consumes already frozen original words. Never produces an oracle. */
+/** Candidate only: consumes already frozen words. Never produces an oracle. */
 import original from '../fixtures/world-motion-original.json';
 import { World, emptyInput } from '../../src/game/simulation/world';
 import {

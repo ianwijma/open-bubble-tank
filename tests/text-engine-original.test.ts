@@ -70,8 +70,8 @@ test('declared bounds plus measured own ancestry match genuine Engine hits and m
   expect(report.skippedDetachedMatrixChecks).toBe(6);
   expect(report.matrixMismatches).toBe(0);
   expect(report.contactMismatches).toBe(0);
-  // These are discriminating original controls, not synthetic tests that merely
-  // repeat an implementation: wrong policies disagree with actual builtin hits.
+  // These are discriminating controls, not synthetic tests that merely
+  // repeat an implementation: wrong policies disagree with actual hits.
   expect(report.rejectedAlternatives).toEqual({
     idealNumberBounds: 48,
     perAncestorAabb: 76,

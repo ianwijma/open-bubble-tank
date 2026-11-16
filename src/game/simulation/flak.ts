@@ -4,7 +4,7 @@ import { displayPixel } from '../core/display-values';
 import type { Projectile } from '../core/types';
 import type { World } from './world';
 
-/** _-cW polls the independent authored clip; paused frame15 can be missed entirely. */
+/** The flak polls the independent authored clip; paused frame15 can be missed entirely. */
 export function tickFlak(world: World, bullet: Projectile) {
   if (projectileOutside(world, bullet)) {
     world.addCombatEffect(bullet, 'impact');

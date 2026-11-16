@@ -1,7 +1,7 @@
 import type { Tank } from '../core/types';
 import { addTankChild, removeTankChild } from './tank-display';
 
-/** AvatarInterface._-1J -> APassiveForcefield.FinalPartCall on ordinary exits. */
+/** Runs the forcefield's final part call on ordinary exits. */
 export function detachForcefield(tank: Tank) {
   if (!tank.design.parts.some((part) => part.type === 5005)) return;
   tank.forcefieldAttached = false;

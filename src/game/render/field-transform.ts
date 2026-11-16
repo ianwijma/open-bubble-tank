@@ -17,7 +17,7 @@ export interface FieldTransform extends Vec {
   matrix?: Readonly<DisplayMatrix>;
   inputOrigin?: Readonly<Vec>;
 }
-/** Remove the fixed World origin from source stage matrices; Main/zoom stay view ancestors. */
+/** Remove the fixed World origin from stage matrices; Main/zoom stay view ancestors. */
 export function matrixTransform(stage: Readonly<DisplayMatrix>, alpha = 1): FieldTransform {
   const matrix = { ...stage, tx: stage.tx - STAGE.cx * 20, ty: stage.ty - STAGE.cy * 20 };
   return {

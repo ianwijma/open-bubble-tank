@@ -4,7 +4,7 @@ import { displayPixel } from '../core/display-values';
 import type { Projectile } from '../core/types';
 import type { World } from './world';
 
-/** _-OE fades only during MoveBullet; its enemy-layer pixel gate precedes the range scan. */
+/** The repulsor fades only during bullet movement; its enemy-layer pixel gate precedes the range scan. */
 export function tickRepulsor(world: World, b: Projectile) {
   b.artAlpha = (b.artAlpha ?? 1) - 0.04;
   if (b.artAlpha <= 0 || projectileOutside(world, b)) {

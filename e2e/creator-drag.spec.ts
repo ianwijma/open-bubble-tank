@@ -6,7 +6,7 @@ import { waitForMainMenu } from './helpers/main-menu';
 
 const starter: TankDesign = JSON.parse(readFileSync('src/game/data/tanks.json', 'utf8'))
   .avatar_defaults[0];
-// Public Save/Copy exports from the original drag reference scenario.
+// Public Save/Copy exports from the drag reference scenario.
 const pair: TankPart[] = [-10, 10].map((y, i) => ({
   key: `${i + 1}_mc`,
   type: 1001,
@@ -42,7 +42,7 @@ test(`mock creator follows original merge/respawn and accepts quarter-pixel and 
   });
   await page.getByRole('button', { name: 'Edit', exact: true }).click();
   await page.getByRole('button', { name: 'SAVE', exact: true }).hover();
-  // Match the measured source's4× embedding so every quarter-pixel step is explicit.
+  // Match the measured4× embedding so every quarter-pixel step is explicit.
   await page.setViewportSize({ width: 2600, height: 2200 });
   await page.addStyleTag({
     content:
@@ -87,13 +87,13 @@ test(`mock creator follows original merge/respawn and accepts quarter-pixel and 
   expect(respawned[0].key).toBe('1_mc');
   expect(respawned[1]).toMatchObject({ key: respawned[0].twin, twin: '1_mc' });
   for (const [i, p] of respawned.entries()) {
-    // Released metadata now contains the source display getter coordinates.
+    // Released metadata now contains the display getter coordinates.
     expect(p.x).toBeCloseTo(-17, 4);
     expect(p.y).toBeCloseTo(i === 0 ? 6 : -6, 4);
   }
   await move(-17, 6);
   await page.mouse.down();
-  // The original4× positive eighth leaves this pose unchanged; the following
+  // The 4× positive eighth leaves this pose unchanged; the following
   // quarter reaches the next device pixel. Saved metadata waits for release.
   await move(-16.875, 6);
   for (const p of await displayed()) expect(p.x).toBe(-17);
@@ -103,7 +103,7 @@ test(`mock creator follows original merge/respawn and accepts quarter-pixel and 
   for (const p of quarter) expect(p.x).toBeCloseTo(-16.75, 4);
   expect(quarter.map((p) => p.y)).toEqual(respawned.map((p) => p.y));
   await expect(page.getByRole('status')).toContainText('Selected parts (2)');
-  // A delivered move event with unchanged coordinates still runs _-5M,
+  // A delivered move event with unchanged coordinates still starts the drag,
   // suppresses CLICK selection toggling and records an accepted no-op snapshot.
   await canvas.evaluate((element) => {
     element.addEventListener(

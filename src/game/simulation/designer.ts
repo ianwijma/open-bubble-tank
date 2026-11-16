@@ -3,8 +3,8 @@ import { CLASS_PIXELS, CLASS_RINGS } from '../core/constants';
 import { costs, gunBudget, partById } from '../data/catalog';
 import { partUnlocked } from '../core/part-unlocks';
 import type { TankDesign, TankPart } from '../core/types';
-// _-7q checks the rectangular selection area for classes 5/6; save validation
-// separately checks the max-class ring for classes 1..5 (_-AA).
+// Placement checks the rectangular selection area for classes 5/6; save validation
+// separately checks the max-class ring for classes 1..5.
 export function canPlacePart(part: TankPart, currentClass: number, maxClass: number) {
   if (currentClass >= 5) return Math.abs(part.x) <= 175 && Math.abs(part.y) <= 175;
   return partExtent(part) <= CLASS_RINGS[maxClass - 1];

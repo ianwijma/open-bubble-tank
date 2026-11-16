@@ -25,7 +25,7 @@ function pixel(rgba: Uint8ClampedArray, x: number, y: number, argb: number) {
   rgba.set(argbToStraight([argb]), (y * 9 + x) * 4);
 }
 function matches(pixels: Uint8ClampedArray, name: keyof typeof reference.cases) {
-  // getPixel32 exposes Flash's straight-color lookup; compare its reversible PMA bytes.
+  // getPixel32 exposes a straight-color lookup; compare its reversible PMA bytes.
   expect([...pixels]).toEqual([...premultiplyBitmap(argbToStraight(reference.cases[name].flat()))]);
 }
 
@@ -55,7 +55,7 @@ test('the scalar fractional box matches the reference grids with two recorded mi
       : [{ pixel: Math.floor(i / 4), channel: i % 4, scalar: value, measured: measured[i] }],
   );
   // All alpha bytes and every other RGB byte match. Preserve the actual GPU observation;
-  // a uniform sampler-weight change worsens it, and Adobe comparison remains unproven.
+  // a uniform sampler-weight change worsens it.
   expect(differences).toEqual([
     { pixel: 40, channel: 0, scalar: 16, measured: 15 },
     { pixel: 41, channel: 2, scalar: 7, measured: 6 },

@@ -53,7 +53,7 @@ test('stun freezes other status clocks while attached effect animation still exp
     sticky = tank.status.sticky,
     weaken = tank.status.weaken;
   applyProjectileStatus(world, tank, 'stun', 3);
-  frames(world, 4); // Three counter frames plus the source's state-reset frame.
+  frames(world, 4); // Three counter frames plus the state-reset frame.
   expect(tank.stunned).toBe(true);
   expect(tank.status.jam).toBe(jam);
   expect(tank.status.sticky).toBe(sticky);
@@ -134,7 +134,7 @@ for (const partCount of [5, 7])
         y: -i * 10,
       })),
     };
-    // Each original mark draws a part index, rotation, then variant; repeats are retained.
+    // Each mark draws a part index, rotation, then variant; repeats are retained.
     const edge = partCount === 5 ? 0.19 : 0.14;
     const opposite = partCount === 5 ? 0.81 : 0.86;
     const draws = [edge, 0, 0, edge, 0.5, 0.99, opposite, 0.25, 0.6, 0, 0.9, 0.3, 0.99, 0.1, 0.8];
@@ -219,7 +219,7 @@ test('forcefield impact returns to idle and broken/rearm clips follow the author
   expect(tank.forcefieldAngle).toBe(0);
   frames(world, 23);
   expect(tank.forcefieldFrame).toBe(1);
-  // Reset the source's partial recharge counter to isolate one full 320-frame break.
+  // Reset the partial recharge counter to isolate one full 320-frame break.
   tank.forcefieldCounter = 0;
   world.damage(tank, tank.forcefield, shot);
   expect(tank.forcefieldFrame).toBe(26);

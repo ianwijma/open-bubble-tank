@@ -17,8 +17,8 @@ const radians = Math.PI / 180;
 
 /**
  * Finite field lifecycle setters: cached Number scale/rotation, float32 matrix
- * columns and truncating position writes. Pinned Ruffle v0.7.1 display_object.rs
- * 490–627 / types.rs: Percent stores unit*100, then exposes percent/100.
+ * columns and truncating position writes. Percent stores unit*100, then exposes
+ * percent/100.
  * This is not a width/height setter or a geometric bounds approximation.
  */
 export class RetainedTransform {

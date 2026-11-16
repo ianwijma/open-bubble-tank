@@ -4,7 +4,7 @@ import { acquireBehaviorTarget, createBehaviorTarget } from './behavior-targets'
 import { tankHitLocation } from './hit-location';
 import { actorDirection } from './actor-movement';
 
-/** Run and EnemyAim acquire separately; an Aim retry never aims until the next Run. */
+/** Run and enemy aim acquire separately; an aim retry never aims until the next Run. */
 export function weaponAimPoint(world: World, owner: Tank, gun: GunState): Vec | null {
   const state = (gun.targeting ??= createBehaviorTarget());
   const acquire = () => acquireWeaponTarget(world, owner, gun);
@@ -16,8 +16,8 @@ export function weaponAimPoint(world: World, owner: Tank, gun: GunState): Vec | 
   const target = state.target;
   if (gun.part.type !== 7001) return world.actorParents.point(target, world.field);
 
-  // AllyGunAutoCannon projects both points through currentBFTarget, then adds
-  // movTarget.x/y again for the flight-time estimate. Keep that source quirk.
+  // The ally auto cannon projects both points through the current wrapper, then adds
+  // the target's x/y again for the flight-time estimate. Keep that quirk.
   const origin = world.muzzle(owner, gun, 0),
     from = world.actorParents.pointAt(owner, origin, world.currentWrapper),
     detail = world.actorParents.pointAt(target, tankHitLocation(target), world.currentWrapper);
@@ -25,8 +25,8 @@ export function weaponAimPoint(world: World, owner: Tank, gun: GunState): Vec | 
   const dx = target.x + detail.x - from.x,
     dy = target.y + detail.y - from.y,
     frames = Math.round(Math.sqrt(dx * dx + dy * dy) / 10) | 0;
-  // PredictTargetLocation returns null for a deactivated clip, and zero motion
-  // while stunned. Its two Scale calls use the base design speed, without sticky.
+  // Target prediction returns null for a deactivated clip, and zero motion
+  // while stunned. Its two scale calls use the base design speed, without sticky.
   if (target.dead) {
     state.target = null;
     return null;
@@ -61,7 +61,7 @@ export function acquireWeaponTarget(world: World, owner: Tank, gun: GunState) {
   );
 }
 
-/** Enemy ally-count retargeting is after Aim, before PartCallRun and its timer. */
+/** Enemy ally-count retargeting is after Aim, before the part-call run and its timer. */
 export function finishWeaponAim(world: World, owner: Tank, gun: GunState) {
   const state = gun.targeting!;
   if (state.master === 'enemy') {

@@ -1,7 +1,7 @@
 import paint from '../data/main-background.json';
 import type { MainBackground } from '../core/main-background';
 
-/** Shape356 gradient, followed by two _-US BitmapData layers at parent alpha0.5. */
+/** A gradient, followed by two bitmap layers at parent alpha0.5. */
 export class MainBackgroundView {
   readonly canvas = document.createElement('canvas');
   private context: CanvasRenderingContext2D;

@@ -77,7 +77,7 @@ test(`mock viewer guide persists only after both pages and keeps offline local h
           URL.revokeObjectURL(url);
         }
       }
-      // Source1410: the tip reaches saved tanks; its upper corner retains only backdrop595.
+      // The tip reaches saved tanks; its upper corner retains only backdrop595.
       const alpha = (x: number, y: number) => ctx.getImageData(x, y, 1, 1).data[3];
       return {
         upper: alpha(450, 225),

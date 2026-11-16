@@ -16,7 +16,7 @@ const loadedPose = (part: TankPart): ClipPose => ({
 });
 
 /**
- * TankCreatorScreen keeps raw arrTankDetails apart from retained display clips.
+ * The creator keeps raw tank details apart from retained display clips.
  * This transient book owns display getters; it never enters a tank code/history.
  */
 export class EditorDisplayState {
@@ -67,7 +67,7 @@ export class EditorDisplayState {
     this.cached = null;
   }
 
-  /** Source frame handlers write a clip and its independent metadata separately. */
+  /** Frame handlers write a clip and its independent metadata separately. */
   nudge(keys: readonly string[], direction: number, frames = 1) {
     for (let frame = 0; frame < frames; frame++)
       for (const key of keys) {
@@ -85,7 +85,7 @@ export class EditorDisplayState {
     this.cached = null;
   }
 
-  /** StopDrag synchronizes only selected surviving clips into arrTankDetails. */
+  /** Stopping a drag synchronizes only selected surviving clips into the tank details. */
   saveSelected(parts: TankPart[], keys: readonly string[]): TankPart[] {
     return parts.map((part) => {
       const p = this.clips.get(part.key);
@@ -93,7 +93,7 @@ export class EditorDisplayState {
     });
   }
 
-  /** _-1N/_-Xf copy only the released handle's getter; a no-move release also copies. */
+  /** Only the released handle's getter is copied; a no-move release also copies. */
   saveTransform(parts: TankPart[], keys: readonly string[], field: 'scale' | 'rotation') {
     return parts.map((part) => {
       const p = this.clips.get(part.key);

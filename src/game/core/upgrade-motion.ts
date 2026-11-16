@@ -10,32 +10,32 @@ export type UpgradeMenuCommand =
   | { type: 'write-foreground-alpha'; value: number; alpha: number }
   | { type: 'finish' };
 
-/** UpgradeMenu.Run owns a retained menu clock, independently of its child screen.
+/** The upgrade menu run owns a retained menu clock, independently of its child screen.
  * Setup's initial capture and actual offer/listener readiness belong to its caller.
  */
 export class UpgradeMenuMotion {
-  /** Source _-Mc and _-LT: the latter points at the next unwritten history slot. */
+  /** Counter and history index: the latter points at the next unwritten history slot. */
   counter = 0;
   historyIndex = 0;
   savedFrames = 0;
-  /** Signed DisplayObject.alpha getter, not CSS-clamped paint opacity. */
+  /** Signed alpha getter, not CSS-clamped paint opacity. */
   foregroundAlpha = 1;
   bottomHandlersAttached = false;
   closing = false;
   finished = false;
   child: UpgradeChild | null = null;
 
-  /** Loaded offers are clickable before _-EW enables the separate bottom buttons. */
+  /** Loaded offers are clickable before the separate bottom buttons are enabled. */
   get cardInputEnabled() {
     return !this.finished && !this.closing && this.child === null;
   }
 
-  /** ViewerUp removes card listeners, but never removes the bottom listeners. */
+  /** Closing the viewer removes card listeners, but never removes the bottom listeners. */
   get bottomInputEnabled() {
     return !this.finished && this.bottomHandlersAttached && this.child === null;
   }
 
-  /** Call only after the synchronous source selection/avatar work succeeds. */
+  /** Call only after the synchronous selection/avatar work succeeds. */
   beginClosing() {
     if (!this.cardInputEnabled) return false;
     this.closing = true;

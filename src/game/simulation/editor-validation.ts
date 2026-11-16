@@ -13,7 +13,7 @@ export const CREATOR_EDIT_ERRORS = {
   7: 'You may only place one type of Behavior Part.',
 } as const;
 
-/** TankCreatorScreen._-6k; caller supplies the retained UpdateClass/budget values. */
+/** The caller supplies the retained class and budget values. */
 export function creatorEditError(
   parts: readonly TankPart[],
   classId: number,
@@ -34,13 +34,13 @@ export function creatorEditError(
       if (def.lower && classId > def.classCost) return 3;
       if (!def.lower && classId < def.classCost) return 4;
     }
-    // Pcode ofs00e9..ofs012c: duplicate instances are allowed; distinct types fail.
+    // Duplicate instances are allowed; distinct types fail.
     if (part.type > 6000 && part.type < 7000) {
       if (behavior !== undefined && behavior !== part.type) return 7;
       behavior = part.type;
     }
   }
-  // _-6k builds only five radii. Index5 is undefined/NaN, so class6 has no final radial gate.
+  // Only five radii are built. Index5 is undefined/NaN, so class6 has no final radial gate.
   const radius = maxClass < 6 ? CLASS_RINGS[maxClass - 1] : undefined;
   if (radius !== undefined)
     for (const part of parts) {

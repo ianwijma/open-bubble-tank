@@ -72,7 +72,7 @@ const twipBounds: BoundsArithmetic = {
   transform: (bounds, matrix) => {
     const rectangle = displayMatrixRectangle(matrix, {
       // Recover the declared integer twips from the legacy pixel-source API.
-      // This is metadata decoding, not a truncating DisplayObject setter.
+      // This is metadata decoding, not a truncating display setter.
       xMin: Math.round(bounds.x * 20),
       yMin: Math.round(bounds.y * 20),
       xMax: Math.round((bounds.x + bounds.width) * 20),
@@ -87,7 +87,7 @@ const twipBounds: BoundsArithmetic = {
   },
 };
 
-/** Existing continuous approximation; retained callers need individual source qualification. */
+/** Existing continuous approximation; retained callers need individual qualification. */
 export function scriptBounds(
   source: ScriptBoundsSource,
   id: number,
@@ -102,10 +102,10 @@ export function scriptBounds(
 }
 
 /**
- * DisplayObject width/height arithmetic: compose float32 matrices, transform
+ * Width/height arithmetic: compose float32 matrices, transform
  * declared leaf twips with ties-even BEFORE integer translation, then union.
  * Mask/alpha children participate; this is neither paint nor getBounds(target).
- * Keep integer extents until the final pixel conversion. See docs/script-bounds-arithmetic.md.
+ * Keep integer extents until the final pixel conversion.
  */
 export function scriptTwipBounds(
   source: ScriptBoundsSource,

@@ -11,7 +11,7 @@ test('new-world baseline matches the source reset and tier updates append withou
   expect(run.parts).toContain(2001);
   expect(run.parts).toContain(4001);
   expect(run.parts).toContain(6005);
-  expect(run.parts).not.toContain(7001); // _-cq omits the constructor's hidden-part append.
+  expect(run.parts).not.toContain(7001); // Unlocking omits the constructor's hidden-part append.
   expect(run.parts).not.toContain(2002);
   run.unlockThrough(3);
   expect(run.parts).toContain(5001);
@@ -117,7 +117,7 @@ test('retained Radar stays unlocked but its cached tier excludes it from lower-t
 test('real world upgrades unlock before offers and retain Radar through two damaging downgrades', () => {
   const world = new World([], [STARTER, STARTER, STARTER, STARTER], 1);
   expect(world.unlockedParts).not.toContain(5001);
-  world.getOffers(); // UpgradeMenu.SecondSetup / UpdateUnlocked before choosing or editing.
+  world.getOffers(); // The upgrade menu's second setup and unlock update run before choosing or editing.
   const unlocked = world.unlockedParts;
   expect(unlocked).toContain(5001);
   for (let death = 0; death < 2; death++) {

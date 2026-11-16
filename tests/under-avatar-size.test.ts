@@ -48,7 +48,7 @@ test('all 29 original setter phases match exact binary getters and effective mat
         pose.scaleX = result!.scaleX;
         pose.scaleY = result!.scaleY;
       }
-      // Frozen words come from original ByteArray snapshots, not this implementation.
+      // Frozen words come from ByteArray snapshots, not this implementation.
       expect(sample(pose, requested), `${index}/${phase.phase}`).toEqual(phase.words);
       count++;
     }

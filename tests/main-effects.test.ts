@@ -59,7 +59,7 @@ test('active shakes reject replacements; disable retains an active duration at t
   effects.shake(12);
   effects.shake(60);
   expect(effects.remaining).toBe(12);
-  effects.setEnabled(false); // Source _-Zj does nothing when Main is already at baseline.
+  effects.setEnabled(false); // Disabling does nothing when Main is already at baseline.
   expect(effects.remaining).toBe(12);
   ticks(effects, 3);
   expect(effects.position).toEqual({ x: 3.5, y: 3.5 });

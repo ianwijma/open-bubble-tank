@@ -80,7 +80,7 @@ function MainEffectsFixture({
         <button onClick={stackFlashes}>Stack flashes</button>
         <button
           onClick={() => {
-            // Explicit source-boundary fixture: full health and a new, not-yet-painted flash.
+            // Explicit boundary fixture: full health and a new, not-yet-painted flash.
             world.onUpgradeMenuOpen = () => {
               upgrade.current = new UpgradeMenu(runtime, () => world.finishUpgrade());
               const pixels = straightBitmap(upgrade.current.history!.pixels);

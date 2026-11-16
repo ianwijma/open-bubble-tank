@@ -121,7 +121,7 @@ test('Setup reactivates a depleted field without erasing damage debt or replenis
   expect([tank.forcefieldReady, tank.forcefield, tank.forcefieldCounter]).toEqual([true, -15, 13]);
   expect([tank.forcefieldFrame, tank.forcefieldAngle]).toEqual([1, 0]);
   world.damage(tank, 1);
-  // Original intDamageCount55 overflows to16; Setup does not forgive that debt.
+  // The damage count of55 overflows to16; Setup does not forgive that debt.
   expect(tank.life).toBe(4);
 });
 
@@ -189,7 +189,7 @@ test('a trailing mounted part triggers the initial wrapper reorder, preserving d
     [0, 0, 27],
   );
   world.damage(avatar, 1);
-  // Reordering does not erase the source debt: the recursive overflow is16.
+  // Reordering does not erase the debt: the recursive overflow is16.
   expect(avatar.life).toBe(84);
 });
 

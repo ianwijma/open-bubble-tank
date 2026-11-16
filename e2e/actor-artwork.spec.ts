@@ -32,7 +32,7 @@ test(`mock retained actor mounts keep clock, paint, contact and identity through
     1, 2, 3, 7, 47, 48,
   ]);
   expect(proof.rotorFrames).toEqual([1, 1, 1, 1, 1, 1]);
-  expect(new Set(proof.childFrames).size).toBeGreaterThan(2); // Finite advancement, not equality to independent original RNG.
+  expect(new Set(proof.childFrames).size).toBeGreaterThan(2); // Finite advancement, not equality to an independent RNG.
   expect(proof.panels.every((panel: { ink: number }) => panel.ink > 50)).toBe(true);
   expect(proof.panels[2].hash).not.toBe(proof.panels[0].hash);
   expect(proof.panels[2].changedContact).toBeGreaterThan(0);

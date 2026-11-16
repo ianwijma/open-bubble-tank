@@ -41,7 +41,7 @@ test('fifth-update volley combines travel/radial velocity and retains the radian
       a = 51 + i * 90,
       vx = 10 * Math.cos((a * Math.PI) / 180),
       vy = 5 + 10 * Math.sin((a * Math.PI) / 180);
-    // Keep the source's degree-as-radians quirk, then apply each birth display setter.
+    // Keep the degree-as-radians quirk, then apply each birth display setter.
     expect([shot.x, shot.y]).toEqual(
       [
         [7.4, 26.7],
@@ -57,7 +57,7 @@ test('fifth-update volley combines travel/radial velocity and retains the radian
   expect(b.angle).toBe(90);
   advance(world, b, 5);
   expect(world.bullets[4].x).toBe(8.95);
-  expect(b.age).toBe(0); // The source's private counter is independent of generic age.
+  expect(b.age).toBe(0); // The private counter is independent of generic age.
 });
 
 test('helpers start with fresh base state and no parent weapon/callback fields', () => {

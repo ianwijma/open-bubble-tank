@@ -118,7 +118,7 @@ test('forcefield measurement includes both its uncut clip and retained original 
   tank.forcefieldAttached = true;
   tank.displayChildren.push('forcefield');
   tank.removedParts.add('body');
-  // Field is84px across, but the original unremoved mask body still extends to x50.
+  // Field is84px across, but the unremoved mask body still extends to x50.
   expect(tankScriptBounds(tank, source, clips)!.width).toBeCloseTo(92);
 });
 

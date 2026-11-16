@@ -8,7 +8,7 @@ import {
 import { displayTwips } from '@/game/core/display-values';
 
 /**
- * Browser geometry supplies the view; source matrices supply the event/reference spaces.
+ * Browser geometry supplies the view; the matrices supply the event/reference spaces.
  * Preserve the authored CSS scale before computed-style/painted-bounds serialization.
  */
 export function stageDisplayPoint(

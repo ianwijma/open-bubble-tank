@@ -53,7 +53,7 @@ test(`mock whole-card frame hover paints preview glow and locked-design warning`
   await page.getByRole('button', { name: 'First page', exact: true }).click();
   const before = await inkBounds();
   expect(before.right).toBeGreaterThan(before.left);
-  await hoverHeader(0); // Outside the central Load button, inside the full source card.
+  await hoverHeader(0); // Outside the central Load button, inside the full card.
   await expect(cards.first().locator('[data-viewer-lines]')).toHaveAttribute(
     'data-viewer-lines',
     'false',

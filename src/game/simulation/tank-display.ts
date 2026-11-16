@@ -1,6 +1,6 @@
 import type { Tank, TankChild, TankDesign } from '../core/types';
 
-/** TankData._-Tr registers each part immediately after adding it. */
+/** Each part is registered immediately after adding it. */
 export function initialTankChildren(design: TankDesign, side: Tank['side']): TankChild[] {
   const children: TankChild[] = [];
   for (const part of design.parts) {
@@ -11,7 +11,7 @@ export function initialTankChildren(design: TankDesign, side: Tank['side']): Tan
   return children;
 }
 
-/** Flash addChild also moves an already attached object to the top. */
+/** Adding a child also moves an already attached object to the top. */
 export function addTankChild(tank: Tank, key: TankChild) {
   removeTankChild(tank, key);
   tank.displayChildren.push(key);

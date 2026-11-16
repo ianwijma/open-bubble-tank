@@ -11,7 +11,7 @@ import { World, emptyInput } from '../../src/game/simulation/world';
 import { setFieldFixtureLayout } from './field-layout';
 import { captureFrame } from './pixi-capture';
 
-/** Controlled display operations; source clock windows, not an ordinary encounter oracle. */
+/** Controlled display operations; clock windows, not an ordinary encounter oracle. */
 export async function showActorArtwork(pack: AssetPack, host: HTMLElement) {
   const world = new World([], [], 47),
     renderer = new GameRenderer(pack),

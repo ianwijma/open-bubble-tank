@@ -68,9 +68,9 @@ export interface FieldInstanceRead {
 export interface AvatarSizeInput {
   readonly avatar: Tank;
   readonly details: readonly Readonly<{ x: number; y: number; radius: number }>[];
-  /** TankData._-ZD(), with initial0 and ordinary sqrt (no catalog minimum10). */
+  /** Radius, with initial0 and ordinary sqrt (no catalog minimum10). */
   readonly radius: number;
-  /** World _-G9 = _-ZD()*2, then AvatarInterface._-Q0 adds45. */
+  /** Diameter = radius*2; the requested size then adds45. */
   readonly diameter: number;
   readonly requested: number;
 }
@@ -85,7 +85,7 @@ export interface UnderAvatarSizeOperation {
   readonly before: NumericPose;
   readonly previousUnresolved: boolean;
 }
-/** Called synchronously at the source setter; it must qualify geometry/setter arithmetic. */
+/** Called synchronously at the setter; it must qualify geometry/setter arithmetic. */
 export type UnderAvatarSizeResolver = (
   operation: UnderAvatarSizeOperation,
 ) =>
@@ -133,21 +133,21 @@ export class IncompleteFieldGeometryError extends Error {
   }
 }
 
-/** Per-Field identities and source writes only; no geometric query or inferred populations. */
+/** Per-Field identities and writes only; no geometric query or inferred populations. */
 export class FieldDisplays {
   private wrappers = new WeakMap<Field, Wrapper>();
   private attached = new Set<Wrapper>();
   private serial = 0;
   private revision = 0;
   private operation = 0;
-  private positiveMaskLatch = false; // BTAGameWorld._-WU, survives promotion.
+  private positiveMaskLatch = false; // Survives promotion.
   private capturedUnder?: Wrapper;
   private sizeInput?: AvatarSizeInput;
   private avatar: Instance;
   private currentAvatar?: Tank;
   private avatarInstances = new WeakMap<Tank, Instance>();
   onWrite?: (write: { instance: number; property: PoseProperty; value: number }) => void;
-  /** Parent's sibling owners can apply these source-ordered collapse writes. */
+  /** Parent's sibling owners can apply these ordered collapse writes. */
   onCollapseSiblingScale?: (
     field: Field,
     sibling: 'top' | 'bullet' | 'highlight',
@@ -229,7 +229,7 @@ export class FieldDisplays {
     state.tutorialFrame = TUTORIAL.stages[stage].frame;
     this.revision++;
   }
-  /** AttachNewBubblefield ofs0591: four child scaleY-then-X assignments. */
+  /** Attaching a new field: four child scaleY-then-X assignments. */
   setupChildren(field: Field, scale: number) {
     const state = this.wrapper(field);
     for (const slot of ['underMask', 'exteriorMask', 'detail', 'background'] as const) {
@@ -252,11 +252,11 @@ export class FieldDisplays {
     this.revision++;
     state.slots.exteriorMask.pose.rotation = 180;
   }
-  /** _-L9 creates117 under the actual wrapper's authored1540 slot. */
+  /** Creates117 under the actual wrapper's authored1540 slot. */
   attachBottom(field: Field) {
     const state = this.wrapper(field);
     if (state.bottom.parent) throw new Error('Bottom layer already attached');
-    // _-L9's first-field branch copies root X/Y; its next branch copies1540 X/Y.
+    // The first-field branch copies root X/Y; the next branch copies1540 X/Y.
     const origin = state.first ? state.root.pose : state.slots.underEffects.pose;
     state.bottom.pose.x = origin.x;
     state.bottom.pose.y = origin.y;
@@ -268,7 +268,7 @@ export class FieldDisplays {
     this.wrapper(field).phase = 'orphaned';
     this.revision++;
   }
-  /** _-4j removes117, then the wrapper. Authored slots retain their parents/poses. */
+  /** Removes117, then the wrapper. Authored slots retain their parents/poses. */
   detach(field: Field) {
     const state = this.wrapper(field);
     state.slots.underEffects.children = state.slots.underEffects.children.filter(
@@ -304,10 +304,10 @@ export class FieldDisplays {
     }
     const diameter = radius * 2;
     this.sizeInput = Object.freeze({ avatar, details, radius, diameter, requested: diameter + 45 });
-    this.capturedUnder = this.wrapper(current); // UpdateAvatar._-0B; NOT promotion.
+    this.capturedUnder = this.wrapper(current); // Set by the avatar update; NOT promotion.
     this.sizeUnderAvatar(next, frame);
   }
-  /** AvatarInterface._-DF: captured reference width,height; next width,height. */
+  /** Captured reference width,height; next width,height. */
   sizeUnderAvatar(next: Field | undefined, frame: number) {
     if (!this.sizeInput) return;
     const targets = [this.capturedUnder, next ? this.wrapper(next) : undefined];
@@ -357,7 +357,7 @@ export class FieldDisplays {
     to.slots.avatarUnder.pose.y = this.avatar.pose.y - to.root.pose.y;
     this.sizeUnderAvatar(next, frame);
   }
-  /** SnapBackAllObject uses the actual promoted root transform; does not rebind _-0B. */
+  /** Snap back uses the actual promoted root transform; does not rebind the captured reference. */
   arrive(field: Field) {
     const state = this.wrapper(field);
     const inverse = inverseDisplayMatrix(state.root.pose.read().matrix);
@@ -370,7 +370,7 @@ export class FieldDisplays {
     state.slots.avatarUnder.pose.y = point.y / 20;
     this.updateMasks(field);
   }
-  /** _-Xa: next is unconditional; current writes only on the retained _-WU edge. */
+  /** Next is unconditional; current writes only on the retained latch edge. */
   updateMasks(current: Field, next?: Field) {
     const from = this.wrapper(current);
     if (next) {
@@ -401,7 +401,7 @@ export class FieldDisplays {
     };
     this.revision++;
   }
-  /** _-0D.ShrinkBubblefield: X chain, then read-back root X for the Y chain. */
+  /** X chain, then read-back root X for the Y chain. */
   shrink(field: Field, current = field) {
     const state = this.wrapper(field),
       collapse = state.collapse;

@@ -20,7 +20,7 @@ export const CREATOR_GUIDE = data as {
     }[];
   }[];
 };
-/** Tutorial968 uses off1, six stopped pages2..7 and entry-time profile latch _-Xq. */
+/** The tutorial uses off1, six stopped pages2..7 and an entry-time profile latch. */
 export function advanceCreatorGuide(frame: number, back = false) {
   if (frame < 2) return 1;
   if (back) return Math.max(1, frame - 1);

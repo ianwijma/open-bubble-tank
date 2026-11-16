@@ -127,7 +127,7 @@ test('retained artwork advances a display-only actor through direct removal with
   expect(world.field.enemies).not.toContain(actor);
   world.actorParents.detach(actor);
   world.step(emptyInput());
-  // Original actor-clock qualification contradicts the former detached-art freeze.
+  // Actor-clock qualification contradicts the former detached-art freeze.
   expect(actor.artAge).toBe(2);
 });
 

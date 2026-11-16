@@ -77,7 +77,7 @@ test(`mock browser cancellation and keyboard range adapters preserve marquee sel
   expect((await readCreatorDesign(page)).parts).toEqual(saved.parts);
   expect((await readDisplayedCreatorDesign(page)).parts).toEqual(displayed.parts);
   await expect(page.getByText('Selected parts (2)', { exact: true })).toBeVisible();
-  // Cancel did not consume the source flag; a later actual release still does.
+  // Cancel did not consume the flag; a later actual release still does.
   await move(52, 432.25);
   await page.mouse.down();
   await move(91.5, 432.25);
@@ -110,7 +110,7 @@ test(`mock accepted center no-op after marquee retains its original Undo entry`,
   await page.getByRole('button', { name: 'Align to Center', exact: true }).click();
   await expect(page.getByText('Selected parts (2)', { exact: true })).toBeHidden();
   expect((await readCreatorDesign(page)).parts).toEqual(rotated);
-  // Original public Save/Copy after this Undo still contains the rotated pair:
+  // Public Save/Copy after this Undo still contains the rotated pair:
   // the accepted center CLICK adds a snapshot even though stage release emptied selection.
   await page.getByRole('button', { name: 'Undo', exact: true }).click();
   expect((await readCreatorDesign(page)).parts).toEqual(rotated);

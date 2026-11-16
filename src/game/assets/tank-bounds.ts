@@ -112,7 +112,7 @@ export function tankScriptBounds(tank: Tank, source: ScriptBoundsSource, clips: 
       clips.forcefieldRadius(tank) * 2.1,
       true,
     );
-    // Flash includes the retained silhouette mask as well as the uncut field clip.
+    // The bounds include the retained silhouette mask as well as the uncut field clip.
     for (const part of tank.design.parts) addPart(part, clips.forcefieldPart(tank, part), false);
   }
   if (!boxes.length) return undefined;

@@ -113,7 +113,7 @@ export async function showScreenEffectsProof(pack: AssetPack, host: HTMLElement)
     world.jump({ x: 1, y: 0 });
     draw(1.5);
     const crossing = { inFront: inFront(), samePixels: sample().hash === firstHash };
-    // Record arrival cleanup while keeping the six-panel final gallery focused on original clips.
+    // Record arrival cleanup while keeping the six-panel final gallery focused on the clips.
     world.player.x = world.transit!.target.x;
     world.player.y = world.transit!.target.y;
     setFieldFixtureLayout(world);

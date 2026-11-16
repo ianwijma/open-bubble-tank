@@ -109,7 +109,7 @@ test(`mock viewer artwork components retain stage jobs, field transforms and but
   expect((await pixels(animation)).ink).toBeGreaterThan(0);
   expect((await pixels(animation)).alphaHash).toBe(first.alphaHash);
 
-  // A fresh job born at the held stage age must retain the source's empty
+  // A fresh job born at the held stage age must retain the empty
   // random-zero pose, rather than inheriting the removed job's twenty frames.
   await page.evaluate(() => {
     Math.random = () => 0;

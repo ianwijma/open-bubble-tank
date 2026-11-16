@@ -18,8 +18,8 @@ test(`mock creator uses preview placement, repeated drops, axis snap and cancell
   await expect(row).toHaveAttribute('aria-pressed', 'true');
   await page.locator('.creator-workspace canvas').click({ position: { x: 175, y: 175 } });
   expect((await snapshot(page)).parts).toEqual([]); // Palette selection does not arm canvas clicks.
-  // Replay a measured original gesture: canvas-relative integers at the fitted
-  // 1.6× scale do not survive the source Point/display conversions unchanged.
+  // Replay a measured gesture: canvas-relative integers at the fitted
+  // 1.6× scale do not survive the Point/display conversions unchanged.
   const placement = reference.placement.find((row) => row.name === 'placement-eighth-scale1')!;
   await page.addStyleTag({
     content:

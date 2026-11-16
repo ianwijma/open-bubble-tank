@@ -95,9 +95,9 @@ test('removed and discarded carriers keep their construction clocks while refere
   expect(parentAtCallback).toBe(w.effectEngine.layer(w.field, 'top'));
   expect(w.effectEngine.parent(clip)).toBeUndefined();
   frames(w, 45);
-  expect(clip.frame).toBe(20); // original ENTER70 after completion at25
+  expect(clip.frame).toBe(20); // ENTER70 after completion at25
   w.effectEngine.discard(clip);
-  w.advanceArtwork(); // Main4 skips World.Run; stage still advances.
+  w.advanceArtwork(); // Main in mode4 skips the world run; stage still advances.
   expect(clip.frame).toBe(21);
 });
 
@@ -242,7 +242,7 @@ test('failed name resolution leaves queued identities intact while the independe
     clip = w.scheduleShot(w.player, w.player.guns[0], 26);
   const layer = w.effectEngine.layer(w.field, 'bottom')!;
   w.effectEngine.unregister('bottom');
-  frames(w, 2); // scoped source read ends Main.Run before replacing the field queue
+  frames(w, 2); // a scoped read ends the Main run before replacing the field queue
   expect(w.runtimeFor(w.field).pending).toEqual([clip]);
   expect(w.effectEngine.parent(clip)).toBeUndefined();
   expect(clip.frame).toBe(2);

@@ -5,11 +5,11 @@ import type { Projectile } from '../core/types';
 import { projectileTankContact } from './projectile-contact';
 import type { World } from './world';
 
-/** _-dO removes an already transparent shot before wall checks or this Run's fade. */
+/** An already transparent grow shot is removed before wall checks or this Run's fade. */
 export function tickGrow(world: World, bullet: Projectile) {
   if ((bullet.artAlpha ?? 1) <= 0) {
     bullet.dead = true;
-    // RemoveBullet splices now: the live bullet iterator skips the shifted next entry.
+    // Removing the bullet splices now: the live bullet iterator skips the shifted next entry.
     world.removeBullet(bullet);
     return;
   }
@@ -22,7 +22,7 @@ export function tickGrow(world: World, bullet: Projectile) {
   bullet.artScale = scale + 0.05;
   bullet.radius *= bullet.artScale / scale;
   bullet.artAlpha = Math.max(0, Math.min(1, (bullet.artAlpha ?? 1) - 0.05));
-  // Rotation remains the authored heading; only SetMovement receives the jitter.
+  // Rotation remains the authored heading; only the movement setting receives the jitter.
   bullet.angle = bullet.heading + world.rng.int(-5, 5);
   projectileTankContact(world, bullet);
   const movement = direction(bullet.angle, bullet.speed);

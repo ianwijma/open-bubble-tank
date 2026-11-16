@@ -6,7 +6,7 @@ export async function readCreatorDesign(page: Page): Promise<TankDesign> {
   if (!value) throw new Error('The tank creator is not mounted.');
   return JSON.parse(value);
 }
-/** Display getters can move while the source's saved coordinates remain unchanged. */
+/** Display getters can move while the saved coordinates remain unchanged. */
 export async function readDisplayedCreatorDesign(page: Page): Promise<TankDesign> {
   const value = await page.locator('.creator').getAttribute('data-displayed-design');
   if (!value) throw new Error('The tank creator display is not mounted.');

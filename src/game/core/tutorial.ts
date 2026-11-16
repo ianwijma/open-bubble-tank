@@ -1,7 +1,7 @@
 import art from '../data/tutorial-art.json';
 export const TUTORIAL = art;
 export type TutorialStage = 0 | 1 | 2 | 3 | 4;
-/** BTAGameWorld.AttachNewBubblefield chooses before incrementing its unique-field counter. */
+/** Attaching a new field chooses before incrementing its unique-field counter. */
 export const tutorialForAttachment = (visited: number): TutorialStage =>
   visited >= 1 && visited <= 3 ? ((visited + 1) as TutorialStage) : 0;
 export const tutorialDescription = (stage: number) =>

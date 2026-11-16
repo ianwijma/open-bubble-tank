@@ -4,7 +4,7 @@ import type { Field, Pickup, Vec } from '../core/types';
 import { healTank } from './tank';
 import type { World } from './world';
 
-/** _-0D.SpawnLifeBubbles, including its shipped denomination quirks. */
+/** Life bubble spawning, including its shipped denomination quirks. */
 export function pickupValues(amount: number) {
   amount |= 0;
   const values: number[] = [];
@@ -16,7 +16,7 @@ export function pickupValues(amount: number) {
     const fives = Math.floor(amount / 5),
       remainder = amount % 5;
     // A nonzero remainder replaces the last five with five singles, in addition
-    // to the remainder. The obfuscated decompiler's loop obscures this early exit.
+    // to the remainder.
     add(fives - (fives > 1 && remainder > 0 ? 1 : 0), 5);
     if (fives > 1 && remainder > 0) add(5, 1);
     add(remainder, 1);
@@ -42,8 +42,8 @@ export function spawnPickups(
     const speed = world.rng.int(4, 22),
       rotation = world.rng.int(-180, 180);
     const velocity = direction(rotation, speed);
-    // _-Pu's constructor draws speed; Spawn then writes pose, adds the child,
-    // calls Setup and appends _-Ym. Frame1 registration timing is unresolved.
+    // The pickup's constructor draws speed; Spawn then writes pose, adds the child,
+    // calls Setup and appends the pickup to the list. Frame1 registration timing is unresolved.
     const pickup: Pickup = {
       uid: world.nextId(),
       x: 0,
@@ -90,7 +90,7 @@ export function collectPickups(world: World) {
   }
 }
 
-/** _-8A / _-PL scan by reference; stale callback vectors cannot remove a different parent's child. */
+/** Removal scans by reference; stale callback vectors cannot remove a different parent's child. */
 function removePickup(world: World, pickup: Pickup, field: Field) {
   const vector = world.runtimeFor(field).pickups;
   const index = vector.indexOf(pickup);
@@ -100,7 +100,7 @@ function removePickup(world: World, pickup: Pickup, field: Field) {
 }
 
 export function movePickup(world: World, pickup: Pickup) {
-  // _-Pu consults currentBFTarget, which remains outgoing until promotion.
+  // The pickup consults the current wrapper, which remains outgoing until promotion.
   if (length(pickup) > BULLET_RADIUS * world.currentWrapper.scale) {
     pickup.dead = true;
     const callbackField = world.pickupDisplays.read(pickup)?.callbackField;
@@ -132,7 +132,7 @@ export function movePickup(world: World, pickup: Pickup) {
 
 export function tickPickups(world: World) {
   collectPickups(world);
-  // Original removals splice the live vector: the following pickup waits one frame.
+  // Removals splice the live vector: the following pickup waits one frame.
   for (let index = 0; index < world.pickups.length; index++) {
     const pickup = world.pickups[index];
     movePickup(world, pickup);

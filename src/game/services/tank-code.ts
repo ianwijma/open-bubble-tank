@@ -20,7 +20,7 @@ function codeKey(first: string, last: string) {
   );
 }
 /**
- * Original AES-128-ECB / PKCS7 format, without bundling a crypto dependency.
+ * AES-128-ECB / PKCS7 format, without bundling a crypto dependency.
  * Web Crypto exposes CBC. Its first block with a zero IV is exactly ECB.
  * To decrypt an arbitrary block, append E(padding XOR C) so Web Crypto can
  * validate/remove a full PKCS7 padding block without removing any source bytes.

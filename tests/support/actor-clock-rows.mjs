@@ -1,5 +1,4 @@
-/** Pure decoders for the frozen actor clock contract in tests/fixtures. Moved from the removed
- * capture tooling; reads no original file. */
+/** Pure decoders for the frozen actor clock contract in tests/fixtures. */
 /** @returns {string[]} */
 export function unpack(contract) {
   return contract.records.map((record) => {

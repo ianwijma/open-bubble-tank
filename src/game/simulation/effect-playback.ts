@@ -22,7 +22,7 @@ export interface RetainedEffectPlayback {
   readonly sourceSha256: string;
   readonly pcodeSha256: string;
   readonly pose: SwfClip;
-  /** The original constructor's named child reference, independent of later depths/names. */
+  /** The constructor's named child reference, independent of later depths/names. */
   readonly lineTarget?: SwfClip;
   readonly currentFrame: number;
   readonly entropy: 'none-in-audited-graph';
@@ -96,7 +96,7 @@ export class EffectPlayback {
     this.clocks.add(new WeakRef(clock));
     return playback;
   }
-  /** Stage entry precedes Main/World.Run, including current-frame completion reads. */
+  /** Stage entry precedes Main and the world run, including current-frame completion reads. */
   enterFrame() {
     this.cohort++;
     for (const clock of this.live()) {
@@ -121,7 +121,7 @@ export class EffectPlayback {
   }
 }
 
-/** Source graphics call targets the constructor's named child once; reads never redraw. */
+/** The graphics call targets the constructor's named child once; reads never redraw. */
 export function drawEffectLine(effect: Effect, end: Vec) {
   const target = effect.playback?.lineTarget;
   if (!target) throw new Error('Effect has no retained line_mc');

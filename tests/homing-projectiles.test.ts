@@ -117,7 +117,7 @@ test('orbital close latch hits the first candidate even when its aimed target is
     first = enemy(world, -200),
     aimed = enemy(world, 4),
     b = shot(world, { targetId: aimed.uid });
-  expect(b.homing!.close).toBe(true); // Setup already executes RotateTowardTarget.
+  expect(b.homing!.close).toBe(true); // Setup already rotates toward the target.
   aimed.x = 40;
   tick(world, b);
   expect(b.dead).toBe(true);
@@ -151,7 +151,7 @@ test('orbital interception samples retained movement before tank contact and lea
   const world = setup(),
     b = shot(world),
     opposite = shot(world, { kind: 'shell', symbol: 1717, enemy: true });
-  opposite.dead = true; // Still in arrBullets until the field flushes its removal queue.
+  opposite.dead = true; // Still in the bullet list until the field flushes its removal queue.
   const point = { x: 32.35, y: 2.8 },
     calls: number[][] = [];
   world.hitProjectile = (target, x, y) => {

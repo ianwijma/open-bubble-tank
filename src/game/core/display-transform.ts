@@ -24,7 +24,7 @@ const subtract = (a: number, b: number) => f(f(a) - f(b));
 const multiply = (a: number, b: number) => f(f(a) * f(b));
 const divide = (a: number, b: number) => f(f(a) / f(b));
 
-/** Matrix products use nearest/ties-even, unlike DisplayObject position setters. */
+/** Matrix products use nearest/ties-even, unlike display position setters. */
 function roundedTwip(value: number) {
   if (!Number.isFinite(value)) return 0;
   if (value >= 2147483648 || value <= -2147483648) return -2147483648;
@@ -104,8 +104,8 @@ const scaleMatrix = (scale: number): DisplayMatrix => ({
 
 /**
  * Physical player pixels → event target local → stageX/Y → reference local.
- * Ruffle local_mouse_position rounds in device pixels before returning twips;
- * the two ActionScript Point conversions retain their own truncating writes.
+ * Local mouse position rounds in device pixels before returning twips;
+ * the two Point conversions retain their own truncating writes.
  * No DOM reads, saved-design mutation or rounding at serialization time.
  */
 export function displayMousePoint(

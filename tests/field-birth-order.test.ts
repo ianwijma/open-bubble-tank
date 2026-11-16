@@ -13,7 +13,7 @@ test('fresh boss field completes weapon Setup before drawing its display pose', 
     fighter = 0;
   world.rng.int = (minimum, maximum) => {
     draws.push([minimum, maximum]);
-    if (minimum === 1 && maximum === 1) return 1; // _-De's singleton boss selection.
+    if (minimum === 1 && maximum === 1) return 1; // Singleton boss selection.
     if (minimum === -200 && maximum === 200) return [50, -30][position++];
     if (minimum === -180 && maximum === 180) return 90;
     if (minimum === 0 && maximum === fighters.length - 1) return [0, 2][fighter++];
@@ -31,7 +31,7 @@ test('fresh boss field completes weapon Setup before drawing its display pose', 
     fighters[2],
   ]);
   expect([boss.x, boss.y, boss.rotation]).toEqual([50, -30, 90]);
-  // _-0D._-Ar calls TankData._-Tr first, then X, Y and rotation in this order.
+  // Tank setup comes first, then X, Y and rotation in this order.
   // No acquisition or cached-spawner selection can consume entropy after the X draw.
   expect(draws.slice(-3)).toEqual([
     [-200, 200],
@@ -53,7 +53,7 @@ test('a normal scaled field samples fresh poses before the background scale sett
   expect(world.mapPosition).toEqual({ col: 2, row: 0 });
   // Isolate construction from corrected crossing duration and Main's entropy draws.
   // Captured before the third jump on PR152 1f28a46, after 119 travel frames.
-  // The exact 33 construction draws and eight source spawn poses remain below.
+  // The exact 33 construction draws and eight spawn poses remain below.
   world.rng.state = 612916067;
   const draws: number[][] = [];
   const int = world.rng.int.bind(world.rng);
@@ -78,8 +78,8 @@ test('a normal scaled field samples fresh poses before the background scale sett
     'E10000018',
     'E10000018',
   ]);
-  // _-3y._-Pb(distance3): prepare both options' seven counts, then ticket15.
-  // Singleton roster lookups draw nothing. Sticky Again's Weapon.Setup coin
+  // Wave selection at distance3: prepare both options' seven counts, then ticket15.
+  // Singleton roster lookups draw nothing. Sticky Again's weapon setup coin
   // occurs immediately before that tank's X/Y/rotation, not before all births.
   expect(draws).toEqual([
     [0, 2, 2],
@@ -117,8 +117,8 @@ test('a normal scaled field samples fresh poses before the background scale sett
     [-180, 180, -7],
   ]);
   expect(field.enemies[2].guns[0].targeting!.target).toBe(world.player);
-  // Independent source expectation: each integer X/Y draw times authored
-  // BF_BG_mc.scaleX=1, before BTAGameWorld writes 1.2. Rotation is unscaled.
+  // Independent expectation: each integer X/Y draw times authored
+  // BF_BG_mc.scaleX=1, before the world writes 1.2. Rotation is unscaled.
   expect(field.enemies.map((tank) => [tank.x, tank.y, tank.rotation])).toEqual([
     [147, -10, 46],
     [104, 169, -102],

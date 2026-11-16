@@ -17,7 +17,7 @@ test('the selected crossing frame still moves after its interface opens an upgra
   world.step(emptyInput());
   expect(world.mode).toBe('upgrade');
   expect(crossing.age).toBe(1);
-  // Current root's compound DisplayObject setter truncates before the field Point read.
+  // Current root's compound display setter truncates before the field Point read.
   expect(before).toBe(0);
   expect(world.player.x).toBe(96.35);
   const position = world.player.x;
@@ -41,8 +41,8 @@ test('arrival in the upgrade-opening frame retains the menu and shared crossing 
   expect(world.offers.length).toBeGreaterThan(0);
   world.selectUpgrade(STARTER);
   expect(world.mode).toBe('transit');
-  // Source mode2 still runs its interface/fields before the missing destination
-  // ends Main.Run. That error skips the hit-timer tail, rather than the whole stage.
+  // Mode2 still runs its interface/fields before the missing destination
+  // ends the Main run. That error skips the hit-timer tail, rather than the whole stage.
   world.hitSoundTimer = 4;
   const artwork = world.player.artAge;
   expect(() => world.step(emptyInput())).not.toThrow();
@@ -69,7 +69,7 @@ test('secondary help closes to ordinary mode without completing its retained cro
   const position = { x: world.player.x, y: world.player.y };
   world.step({ ...emptyInput(), up: true, right: true });
   expect(crossing.age).toBe(1);
-  // Close does not clear the source crossing/movement gate or resume travel.
+  // Close does not clear the crossing/movement gate or resume travel.
   expect({ x: world.player.x, y: world.player.y }).toEqual(position);
   expect(world.player.age).toBe(avatarAge + 1);
 });
