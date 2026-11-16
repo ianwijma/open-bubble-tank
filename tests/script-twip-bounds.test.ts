@@ -67,7 +67,7 @@ test('all eight independently measured field scale widths retain leaf-before-uni
 
 test('AssetPack retained clip boundary uses exact twips without mutating shared placements', () => {
   const placement = { ...child(1541, { ...I, a: 0.5, d: 0.5, tx: 1, ty: -1 }), clipDepth: 2 };
-  const pack = new AssetPack('swf');
+  const pack = new AssetPack('mock');
   Object.assign(pack, {
     shapes: new Map([[1541, { bounds: original.originalLeafTwips }]]),
     sprites: new Map([[1542, { id: 1542, frameCount: 1, placements: [placement] }]]),
