@@ -27,8 +27,3 @@ export function descendContact(parent: ContactMatrix, child: ContactMatrix): Con
     d: (-b * parent.c + a * parent.d) / det,
   };
 }
-
-/** Ruffle geometric contact: a one-logical-stage-pixel minimum, in leaf units. */
-export function contactStrokeWidth(authored: number, inverse: ContactMatrix) {
-  return Math.max(authored, Math.hypot(inverse.a, inverse.b), Math.hypot(inverse.c, inverse.d));
-}

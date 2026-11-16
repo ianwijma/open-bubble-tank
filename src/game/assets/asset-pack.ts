@@ -375,12 +375,6 @@ export class AssetPack {
     const symbol = partById(id)?.symbol;
     return symbol !== undefined && this.sprites.has(symbol);
   }
-  symbolBounds(id: number, frame = 1) {
-    return this.compile(id, frame)?.bounds;
-  }
-  symbolScriptBounds(id: number, frame = 1) {
-    return scriptBounds(this.scriptGeometry, id, frame);
-  }
   displayList(id: number, age: number): DisplayPlacement[] {
     const sp = this.sprites.get(id);
     if (!sp) return [];
@@ -694,7 +688,7 @@ export class AssetPack {
     this.forcefieldClones = new WeakMap();
   }
 }
-export function alphaHit(r: Raster, x: number, y: number) {
+function alphaHit(r: Raster, x: number, y: number) {
   const px = Math.floor((x - r.x) * r.resolution),
     py = Math.floor((y - r.y) * r.resolution);
   return (

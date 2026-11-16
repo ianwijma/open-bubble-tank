@@ -429,22 +429,6 @@ kbd {
   letter-spacing: 1px;
   color: #9de9f4;
 }
-.main-menu-art,
-.main-menu-art canvas {
-  position: absolute;
-  inset: 0;
-  width: 550px !important;
-  height: 450px !important;
-  pointer-events: none;
-}
-.main-menu[data-assets='swf']:after {
-  display: none;
-}
-.main-menu[data-assets='swf'] .menu-orb {
-  cursor: inherit;
-  background: transparent;
-  box-shadow: none;
-}
 .main-menu-overlay {
   display: contents;
 }
@@ -1363,9 +1347,6 @@ kbd {
   cursor: crosshair;
   outline: 1px solid #a1d9ee2b;
 }
-.creator[data-assets='swf'] .creator-workspace > canvas {
-  outline: none;
-}
 .creator-meters {
   position: absolute;
   top: 65px;
@@ -1761,7 +1742,6 @@ kbd {
   height: 0;
 }
 .authored-settings .settings-piece,
-.authored-settings .settings-static,
 .authored-settings .authored-option,
 .authored-settings .authored-key,
 .authored-settings .authored-action {

@@ -21,6 +21,4 @@ export async function waitForMainMenu(
   }
   const menu = page.locator('.main-menu');
   await expect(menu).toHaveAttribute('data-menu-parked', 'false', { timeout: 60000 });
-  if ((await menu.getAttribute('data-assets')) === 'swf')
-    await expect(menu).toHaveAttribute('data-title-frame', '179', { timeout: 60000 });
 }
