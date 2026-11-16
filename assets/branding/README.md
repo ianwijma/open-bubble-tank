@@ -1,11 +1,11 @@
 # Icon
 
-The icon files in this folder are the project's own branding artwork, made with an image generator. They are not taken from the original game. Their file names still carry the project's earlier name.
+The icon files in this folder are the project's own branding artwork, made with an image generator. They are not taken from the original game.
 
 - The file without a suffix is the full-resolution square design: a translucent cyan bubble body with three bubble lobes and a golden cannon, on a dark blue background.
 - The file ending in `-transparent` is the same design with the background removed.
 
-Neither file is used by the application. The plan is to replace them (and `src/app/icon.svg`) with Soap Tank artwork.
+Neither file is used by the application. The browser tab icon is `src/app/icon.svg`. All three are kept as Soap Tank artwork until the artwork overhaul.
 
 ## Generation prompt
 

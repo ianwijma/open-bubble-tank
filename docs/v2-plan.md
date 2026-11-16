@@ -139,7 +139,7 @@ Decided 2026-11-15. Soap Tank starts with a rename and a move to a new repositor
 | Profile storage key | `soaptank.profile.v1` | Decided |
 | Website | `soaptank.net` | Decided. Registered by Ian. |
 | Discord server | Soap Tank | Decided. Claimed by Ian. |
-| Repository | `soaptank` on Ian's personal GitHub account | Decided. Not yet created. |
+| Repository | `soaptank` on Ian's personal GitHub account | Decided. Created, still empty. |
 | itch.io | Project "Soap Tank", identifier `soaptank` | Decided. Not yet claimed. |
 | Old repository | Stays private and is renamed | Decided |
 | License | `AGPL-3.0-only` for the code; kept original content is named as excluded | Decided |
@@ -168,7 +168,7 @@ Ian chose the lightest of three levels: the name and the documents. The content 
 | Old identifiers | Renamed with the name: the environment variable prefix, the profile storage key and the package name (table above). |
 | Provenance comments | Citations of the original's decompiled code are removed from code comments. The plain explanation of each rule stays. |
 | Classic documents | The reference documents, the classic work notes and the classic status documents are removed. `AGENTS.md`, `goals.markdown`, `README.md`, `NOTICE.md`, `docs/architecture.md`, `docs/delivery.md` and this plan are rewritten for Soap Tank. |
-| Branding images | The two icon files in `assets/branding/` and `src/app/icon.svg` are replaced. |
+| Branding images | The two icon files in `assets/branding/` are renamed and kept, and `src/app/icon.svg` is kept: all three are the project's own artwork and none shows the old name. New artwork comes with the artwork overhaul. |
 | The original-file reader | Removed entirely, music included, together with the tests that cover it (below). Soap Tank never reads the original game file (decided 2026-11-16). |
 | Import and reference tools | Removed: everything under `tools/` that imports, captures or probes the original game, and the `@ruffle-rs/ruffle` development dependency. The data in `src/game/data` becomes hand-maintained source, edited directly and guarded by the tests. |
 | Test infrastructure in `tools/` | Kept: `tools/fixtures/`, `tools/visual-fixtures.ts` and `tools/playthrough/`. Fixtures that serve only the removed reader go with it; mixed fixtures keep their stand-in checks. |
