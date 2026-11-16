@@ -26,7 +26,6 @@ test(`mock combat effects preserve fading lines, layer order and paused cleanup`
     frame: 1,
     stopped: 103,
     nested: 9,
-    exactPose: null,
     pureRead: true,
   });
   expect(proof.gallery).toHaveLength(12);

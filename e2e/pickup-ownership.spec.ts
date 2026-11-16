@@ -18,8 +18,6 @@ test(`mock pickups render physical child order and retain identity through Run m
     'lifetimeRetention',
     'reattachedView',
     'pureReads',
-    'sharedPose',
-    'sharedQuery',
   ])
     expect(proof[key], key).toBe(true);
   expect(proof.snapshots.map((s: { order: string[] }) => s.order)).toEqual([

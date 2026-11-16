@@ -258,7 +258,6 @@ export function UpgradePanel({
                     {cardArt.fields.map((field) => (
                       <Group key={field.name} matrix={field.matrix}>
                         <CreatorText
-                          pack={pack}
                           field={field}
                           text={
                             (

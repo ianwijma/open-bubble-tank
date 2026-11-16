@@ -56,7 +56,7 @@ export function CreatorPartDetails({
         </svg>
       )}
       {p.fields.map((field) => (
-        <CreatorText key={field.name} pack={pack} field={field} text={fields[field.name] ?? ''} />
+        <CreatorText key={field.name} field={field} text={fields[field.name] ?? ''} />
       ))}
       <span
         className="creator-details-arrow-mask"

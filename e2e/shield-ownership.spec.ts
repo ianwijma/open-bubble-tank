@@ -10,7 +10,6 @@ test(`mock shield mounts retain independent artwork and callback ownership`, asy
   const proof = JSON.parse((await status.getAttribute('data-shield-ownership'))!);
   expect(proof.retainedB).toBe(true);
   expect(proof.removedA).toBe(true);
-  expect(proof.retainedHit).toBe(true);
   expect(proof.measurements).toBe(2);
   expect(proof.latestHit).toBe('shield-hit:b');
   expect(proof.pending).toBe(0);

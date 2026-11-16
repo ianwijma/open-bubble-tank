@@ -37,11 +37,7 @@ export async function showMockAssetsProof(native: AssetPack, host: HTMLElement) 
       world = worlds[column];
     renderer.draw(world, DEFAULT_SETTINGS);
     const frame = captureCanvas(renderer.app.renderer, {
-      target: entities
-        ? renderer.entities
-        : packs[column].mode === 'swf'
-          ? renderer.nativeShots
-          : renderer.projectiles,
+      target: entities ? renderer.entities : renderer.projectiles,
       // The retained source avatar stays at World-local0. Place the isolated
       // live-mount comparison in separate crop halves without moving that avatar.
       frame: new Rectangle(entities ? -60 : -120, -40, 240, 80),
@@ -127,14 +123,7 @@ export async function showMockAssetsProof(native: AssetPack, host: HTMLElement) 
         ),
       ];
       importActorFixtures(world);
-      capture(
-        column,
-        0,
-        column === 0 && native.mode === 'swf'
-          ? 'Original · player / enemy'
-          : 'Mock · yellow / orange',
-        true,
-      );
+      capture(column, 0, 'Mock · yellow / orange', true);
       world.field.enemies = [];
       const rows = [
         [

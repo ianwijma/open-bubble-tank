@@ -1,12 +1,7 @@
 import { expect, test } from 'bun:test';
 import { STARTER } from '../src/game/data/catalog';
 import { displayPixel } from '../src/game/core/display-values';
-import {
-  infoTextLines,
-  infoWeapons,
-  tankInfoFields,
-  TankInfoMotion,
-} from '../src/game/core/tank-info';
+import { infoWeapons, tankInfoFields, TankInfoMotion } from '../src/game/core/tank-info';
 
 const tank = (...ids: number[]) => ({
   ...STARTER,
@@ -53,13 +48,6 @@ test('tank information entrance gates each authored panel and its return moves a
   for (let i = 0; i < 100; i++) state.advance();
   expect(state.finished).toBe(true);
 });
-test('weapon text wraps between words without losing punctuation or splitting abbreviations', () => {
-  expect(infoTextLines("2 BC's, 1 HC, 1 MG", 11, (s) => s.length)).toEqual([
-    "2 BC's, 1",
-    'HC, 1 MG',
-  ]);
-});
-
 test('Info retraction preserves the source literal coefficient before twip assignment', () => {
   const state = new TankInfoMotion();
   for (let i = 0; i < 26; i++) state.advance();

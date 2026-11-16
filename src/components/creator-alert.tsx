@@ -105,7 +105,6 @@ export function CreatorAlert({
         {layout.fields.map((field) => (
           <CreatorText
             key={field.name}
-            pack={pack}
             field={field}
             text={field.name === 'description_txt' ? clock.message : (field.initialText ?? '')}
           />

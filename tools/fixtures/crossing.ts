@@ -140,7 +140,6 @@ export async function showCrossingProof(pack: AssetPack, host: HTMLElement) {
           })),
         ),
         renderedTanks: renderedTanks(renderer).map((child) => ({ x: child.x, y: child.y })),
-        renderedShots: renderer.nativeShots.children.map((child) => ({ x: child.x, y: child.y })),
       });
     }
     return {

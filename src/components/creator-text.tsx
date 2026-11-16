@@ -1,34 +1,22 @@
 'use client';
-import type { AssetPack } from '@/game/assets/asset-pack';
 import {
   creatorTextLines,
   creatorGlyphLayout,
   type CreatorField,
 } from '@/game/core/creator-palette';
 export function CreatorText({
-  pack,
   field,
   text,
   x = field.x,
   y = field.y,
   opacity = 1,
 }: {
-  pack: AssetPack;
   field: CreatorField;
   text: string;
   x?: number;
   y?: number;
   opacity?: number;
 }) {
-  const svg = (value: string) =>
-    pack.textSvg(
-      value,
-      field.size,
-      `rgb(${field.color.slice(0, 3).join(',')})`,
-      field.font,
-      field.spacing,
-      field.fontId,
-    );
   const measure = (value: string) => creatorGlyphLayout(value, field).width;
   const lines = creatorTextLines(text, field.width - 4, measure, field.wordWrap);
   return (
@@ -66,8 +54,7 @@ export function CreatorText({
         </span>
       ) : (
         lines.map((line, i) => {
-          const image = svg(line),
-            width = measure(line);
+          const width = measure(line);
           return (
             <span
               key={i}
@@ -88,20 +75,11 @@ export function CreatorText({
                 letterSpacing: field.spacing,
               }}
             >
-              {image ? (
-                <img
-                  alt=""
-                  draggable={false}
-                  src={`data:image/svg+xml;charset=utf-8,${encodeURIComponent(image)}`}
-                  style={{ maxWidth: 'none', height: field.size * 1.4, display: 'block' }}
-                />
-              ) : (
-                creatorGlyphLayout(line, field).glyphs.map((g, index) => (
-                  <span key={index} style={{ position: 'absolute', left: g.x, top: 0 }}>
-                    {g.char}
-                  </span>
-                ))
-              )}
+              {creatorGlyphLayout(line, field).glyphs.map((g, index) => (
+                <span key={index} style={{ position: 'absolute', left: g.x, top: 0 }}>
+                  {g.char}
+                </span>
+              ))}
             </span>
           );
         })

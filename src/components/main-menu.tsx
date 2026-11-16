@@ -3,7 +3,6 @@ import { useLayoutEffect, useRef, useState, type RefObject } from 'react';
 import type { AssetPack } from '@/game/assets/asset-pack';
 import { MAIN_MENU, type MainMenuMotion } from '@/game/core/main-menu';
 import type { StageRuntime } from '@/game/services/stage-runtime';
-import type { MainMenuView } from '@/game/render/main-menu-view';
 import { BubbleText, Icon } from './ui';
 import { MENU_SERIES, SERIES_CONTROLS, type SeriesControl } from '@/game/core/menu-series';
 import { MockMenuSeriesView } from '@/game/render/mock-menu-series-view';
@@ -73,10 +72,8 @@ export function MainMenu({
   websites?: LegacyWebsites;
 }) {
   const root = useRef<HTMLDivElement>(null),
-    canvasHost = useRef<HTMLDivElement>(null),
     buttons = useRef<HTMLDivElement>(null),
     title = useRef<HTMLDivElement>(null),
-    native = useRef<MainMenuView | null>(null),
     isCovered = useRef(covered);
   const seriesRoot = useRef<HTMLDivElement>(null),
     seriesHost = useRef<HTMLDivElement>(null),
@@ -120,12 +117,9 @@ export function MainMenu({
     };
     const input = new MenuPointer(root.current!, {
       enabled: () => !motion.parked && !isCovered.current,
-      pick: (point) =>
-        pack.mode === 'mock' ? mockMenuTarget(point, motion) : native.current?.hit(point, motion),
+      pick: (point) => mockMenuTarget(point, motion),
       hover: (target, previous) => {
-        if (previous?.kind === 'control') native.current?.hover(previous.name, false);
         if (previous?.kind === 'series') motion.series.hover(false);
-        if (target?.kind === 'control') native.current?.hover(target.name, true);
         if (target?.kind === 'series') motion.series.hover(true);
         const label =
           target?.kind === 'control'
@@ -186,75 +180,22 @@ export function MainMenu({
       }
     };
     async function start() {
-      if (pack.mode === 'mock') {
-        const view = new MockMenuSeriesView();
-        mockSeries.current = view;
-        seriesHost.current!.appendChild(view.canvas);
-        const draw = () => {
-          input.refresh();
-          present();
-        };
-        redraw.current = draw;
-        draw();
-        const unsubscribe = stage.subscribe({ beforeStep: () => motion.advance(), draw });
-        dispose = () => {
-          unsubscribe();
-          redraw.current = () => {};
-          mockSeries.current = null;
-          view.canvas.remove();
-        };
-        return;
-      }
-      const [{ Application }, { MainMenuView }, { SwfTextures }] = await Promise.all([
-        import('pixi.js'),
-        import('@/game/render/main-menu-view'),
-        import('@/game/render/swf-textures'),
-      ]);
-      if (cancelled) return;
-      const app = new Application(),
-        textures = new SwfTextures();
-      await app.init({
-        width: 550,
-        height: 450,
-        resolution: 2,
-        backgroundAlpha: 0,
-        antialias: true,
-        autoStart: false,
-        preference: 'webgl',
-        powerPreference: 'low-power',
-      });
-      if (cancelled) {
-        app.destroy({ removeView: true }, { children: true });
-        textures.destroy();
-        return;
-      }
-      dispose = () => {
-        app.destroy({ removeView: true }, { children: true });
-        textures.destroy();
-      };
-      const view = new MainMenuView(pack, textures);
-      native.current = view;
-      app.stage.addChild(view.root);
-      app.canvas.setAttribute('aria-hidden', 'true');
-      canvasHost.current?.appendChild(app.canvas);
+      const view = new MockMenuSeriesView();
+      mockSeries.current = view;
+      seriesHost.current!.appendChild(view.canvas);
       const draw = () => {
-        view.update(motion);
-        if (input.refresh()) view.update(motion);
-        root.current!.dataset.titleFrame = String(view.titleFrame);
-        app.render();
+        input.refresh();
         present();
       };
-      const unsubscribe = stage.subscribe({ beforeStep: () => motion.advance(), draw });
       redraw.current = draw;
+      draw();
+      const unsubscribe = stage.subscribe({ beforeStep: () => motion.advance(), draw });
       dispose = () => {
         unsubscribe();
-        native.current = null;
         redraw.current = () => {};
-        view.destroy();
-        app.destroy({ removeView: true }, { children: true });
-        textures.destroy();
+        mockSeries.current = null;
+        view.canvas.remove();
       };
-      draw();
     }
     void start().catch(() => {
       release();
@@ -272,25 +213,15 @@ export function MainMenu({
   // Plain TextField.text uses default tracking and opaque color.
   const caption = MAIN_MENU.rollover,
     captionFont = caption.font;
-  const captionSvg =
-    seriesMessage && pack.textSvg(seriesMessage, captionFont.size, '#fff', captionFont.name);
   return (
     <div ref={root} className="main-menu stage-background" data-assets={pack.mode}>
       <div className="menu-guest">
         <span aria-hidden="true">×</span> Playing as Guest
       </div>
       <span className="menu-version">OPEN · 0.1</span>
-      {pack.mode === 'mock' ? (
-        <>
-          <div ref={title} className="menu-title">
-            <BubbleText pack={pack} size={57}>
-              bubble tanks 3
-            </BubbleText>
-          </div>
-        </>
-      ) : (
-        <div ref={canvasHost} className="main-menu-art" role="img" aria-label="Bubble Tanks 3" />
-      )}
+      <div ref={title} className="menu-title">
+        <BubbleText size={57}>bubble tanks 3</BubbleText>
+      </div>
       <div ref={buttons} className="main-menu-controls" inert>
         {controls.map((control, index) => {
           const piece = MAIN_MENU.controls[index];
@@ -316,7 +247,7 @@ export function MainMenu({
                 if (event.detail === 0) activate({ kind: 'control', name: control.name });
               }}
             >
-              {pack.mode === 'mock' ? <Icon name={control.icon} size={control.size} /> : null}
+              <Icon name={control.icon} size={control.size} />
             </button>
           );
         })}
@@ -385,17 +316,7 @@ export function MainMenu({
         }}
       >
         <span className="sr-only">{seriesMessage}</span>
-        {captionSvg ? (
-          <img
-            alt=""
-            aria-hidden="true"
-            draggable={false}
-            style={{ height: captionFont.size * 1.4 }}
-            src={`data:image/svg+xml;charset=utf-8,${encodeURIComponent(captionSvg)}`}
-          />
-        ) : (
-          <span aria-hidden="true">{seriesMessage}</span>
-        )}
+        <span aria-hidden="true">{seriesMessage}</span>
       </p>
       {error ? <span role="alert">Menu artwork could not start.</span> : null}
     </div>

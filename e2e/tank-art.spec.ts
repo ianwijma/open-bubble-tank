@@ -8,14 +8,12 @@ test(`mock tank art uses independent paused clocks and protection geometry`, asy
   const status = page.getByRole('status');
   await expect(status).toContainText('Ready', { timeout: 60000 });
   const proof = JSON.parse((await status.getAttribute('data-tank-art'))!);
-  expect(proof.live).toEqual({ age: 0, artAge: 12, poseAge: null, retained: true });
+  expect(proof.live).toEqual({ age: 0, artAge: 12 });
   expect(proof.hit.hitAge).toBe(3);
   expect(proof.forcefield).toMatchObject({
     age: 0,
     artAge: 12,
     frame: 14,
-    cloneAge: null,
-    retained: true,
   });
   expect(proof.forcefield.radius).toBe(proof.forcefield.cachedRadius);
   expect(proof.panels).toHaveLength(6);

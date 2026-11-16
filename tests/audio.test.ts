@@ -1,6 +1,5 @@
 import { expect, test } from 'bun:test';
 import { AudioManager } from '../src/game/services/audio';
-import type { AssetPack } from '../src/game/assets/asset-pack';
 import { DEFAULT_SETTINGS } from '../src/game/core/constants';
 import { mockAudio } from '../src/game/services/mock-audio';
 import { StageRuntime } from '../src/game/services/stage-runtime';
@@ -29,12 +28,7 @@ test('sound slots recover after muting; music fades between tracks and restarts 
   }
   Object.defineProperty(globalThis, 'Audio', { configurable: true, value: FakeAudio });
   const stage = new StageRuntime();
-  const manager = new AudioManager(
-    {
-      sounds: new Map([566, 567, 568].map((id) => [id, new Blob([String(id)])])),
-    } as AssetPack,
-    stage,
-  );
+  const manager = new AudioManager(stage);
   function frames(count: number) {
     for (let i = 0; i < count; i++) stage.advance(20, 50);
   }
@@ -108,10 +102,7 @@ test('music accepts steady-state route calls, remembers mute state, and uses the
   }
   Object.defineProperty(globalThis, 'Audio', { configurable: true, value: FakeAudio });
   const stage = new StageRuntime();
-  const pack = {
-    sounds: new Map([567, 568].map((id) => [id, new Blob([String(id)])])),
-  } as AssetPack;
-  let manager = new AudioManager(pack, stage);
+  let manager = new AudioManager(stage);
   const frames = (n: number) => {
     for (let i = 0; i < n; i++) stage.advance(1000 / 30, 30);
   };
@@ -125,7 +116,7 @@ test('music accepts steady-state route calls, remembers mute state, and uses the
     expect(channels).toHaveLength(1);
     expect(firstMenu.volume).toBe(0.8);
     manager.dispose();
-    manager = new AudioManager(pack, stage);
+    manager = new AudioManager(stage);
     manager.requestMusic('menu');
     frames(40);
     const menu = channels.at(-1)!;
@@ -181,10 +172,7 @@ test('new same-track scenes transition, while settings changes do not request mu
   }
   Object.defineProperty(globalThis, 'Audio', { configurable: true, value: FakeAudio });
   const stage = new StageRuntime();
-  const manager = new AudioManager(
-    { sounds: new Map([[568, new Blob(['menu'])]]) } as AssetPack,
-    stage,
-  );
+  const manager = new AudioManager(stage);
   const frames = (n: number) => {
     for (let i = 0; i < n; i++) stage.advance(20, 50);
   };
@@ -242,10 +230,7 @@ test('music completion restores full volume without resetting a fade or reviving
   }
   Object.defineProperty(globalThis, 'Audio', { configurable: true, value: FakeAudio });
   const stage = new StageRuntime();
-  const manager = new AudioManager(
-    { sounds: new Map([567, 568].map((id) => [id, new Blob([String(id)])])) } as AssetPack,
-    stage,
-  );
+  const manager = new AudioManager(stage);
   const frames = (n: number) => {
     for (let i = 0; i < n; i++) stage.advance(20, 50);
   };

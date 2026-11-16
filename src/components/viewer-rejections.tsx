@@ -99,7 +99,7 @@ export function ViewerRejectionEffects({
               >
                 {art.fields.map((field) => (
                   <ViewerGroup key={field.name} matrix={field.matrix}>
-                    <CreatorText pack={pack} field={field} text={effect.message} />
+                    <CreatorText field={field} text={effect.message} />
                   </ViewerGroup>
                 ))}
               </div>

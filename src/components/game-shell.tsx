@@ -119,7 +119,7 @@ export default function GameShell() {
       setAudio(null);
       return;
     }
-    const manager = new AudioManager(pack, stage);
+    const manager = new AudioManager(stage);
     setAudio(manager);
     return () => {
       manager.dispose();

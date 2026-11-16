@@ -185,7 +185,7 @@ export function CreatorEnemyStats({
         </svg>
       )}
       {p.fields.map((field) => (
-        <CreatorText key={field.name} pack={pack} field={field} text={textFor(field)} />
+        <CreatorText key={field.name} field={field} text={textFor(field)} />
       ))}
       <label
         className="creator-suggested"
@@ -390,12 +390,7 @@ export function CreatorEnemyStats({
                 })
             : null}
           {confirmFrame.fields.map((field) => (
-            <CreatorText
-              key={field.symbol}
-              pack={pack}
-              field={field}
-              text={field.initialText ?? ''}
-            />
+            <CreatorText key={field.symbol} field={field} text={field.initialText ?? ''} />
           ))}
           {p.confirm.buttons.map((button) => {
             const b = button.bounds;

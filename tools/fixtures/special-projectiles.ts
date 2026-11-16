@@ -65,11 +65,11 @@ export async function showSpecialProjectilesProof(pack: AssetPack, host: HTMLEle
   const ctx = canvas.getContext('2d', { willReadFrequently: true })!;
   ctx.fillStyle = '#0b3c5a';
   ctx.fillRect(0, 0, 550, 450);
-  const panels: { label: string; ink: number; painted: number; nativeCount: number }[] = [];
+  const panels: { label: string; ink: number; painted: number }[] = [];
   const capture = (label: string, center: { x: number; y: number }) => {
     renderer.draw(world, DEFAULT_SETTINGS);
     const frame = captureCanvas(renderer.app.renderer, {
-      target: pack.mode === 'swf' ? renderer.nativeShots : renderer.projectiles,
+      target: renderer.projectiles,
       frame: new Rectangle(center.x - 60, center.y - 32.7, 120, 65.4),
       resolution: 2,
     }) as HTMLCanvasElement;
@@ -97,7 +97,7 @@ export async function showSpecialProjectilesProof(pack: AssetPack, host: HTMLEle
     ctx.fillStyle = '#e7f7ff';
     ctx.font = '12px Arial';
     ctx.fillText(label, x + 8, y + 17);
-    panels.push({ label, ink, painted, nativeCount: renderer.nativeShots.children.length });
+    panels.push({ label, ink, painted });
     return maxAlpha / 255;
   };
   try {
@@ -139,27 +139,10 @@ export async function showSpecialProjectilesProof(pack: AssetPack, host: HTMLEle
     world.addBullet(repulsor);
     for (let i = 0; i < 10; i++) tick(repulsor);
     const paintedAlpha = capture('Repulsor · ten fade updates', repulsor);
-    let referenceAlpha = 1;
-    if (pack.mode === 'swf') {
-      const alpha = repulsor.artAlpha;
-      repulsor.artAlpha = 1;
-      renderer.draw(world, DEFAULT_SETTINGS);
-      const { pixels } = renderer.app.renderer.extract.pixels({
-        target: renderer.nativeShots,
-        frame: new Rectangle(repulsor.x - 60, repulsor.y - 32.7, 120, 65.4),
-        resolution: 2,
-      });
-      let max = 0;
-      for (let i = 3; i < pixels.length; i += 4) max = Math.max(max, pixels[i]);
-      referenceAlpha = max / 255;
-      repulsor.artAlpha = alpha;
-    }
     const fade = {
       alpha: repulsor.artAlpha,
       alive: !repulsor.dead,
-      nativeAlpha: pack.mode === 'swf' ? paintedAlpha / referenceAlpha : undefined,
       paintedAlpha,
-      referenceAlpha,
     };
     clear();
     const sapper = make({

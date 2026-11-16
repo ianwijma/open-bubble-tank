@@ -493,9 +493,8 @@ export function TankCreator({
       };
       if (artwork.current) artwork.current.draw(dc, 'details', [{ part }], artworkFrame.current);
       else {
-        const raster = pack.part(part.type),
-          padding = pack.mode === 'swf' ? 4 : 6;
-        part.scale = creatorThumbnailScale(raster.width - padding, raster.height - padding);
+        const raster = pack.part(part.type);
+        part.scale = creatorThumbnailScale(raster.width - 6, raster.height - 6);
         pack.drawPart(dc, part);
       }
       dc.restore();
@@ -603,11 +602,7 @@ export function TankCreator({
   function pendingPlacement(id: number, pos: { x: number; y: number }, key = 'preview') {
     let radius = radii.current.get(id);
     if (radius === undefined) {
-      const symbol = partById(id)?.symbol;
-      radius =
-        symbol && pack.mode === 'swf'
-          ? (pack.symbolBounds(symbol)?.width ?? pack.part(id).width - 4) / 2
-          : (pack.part(id).width - 6) / 2;
+      radius = (pack.part(id).width - 6) / 2;
       radii.current.set(id, radius);
     }
     return placementParts(id, radius, pos, symmetric, key);

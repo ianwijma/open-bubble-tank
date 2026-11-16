@@ -72,7 +72,6 @@ function ScreenButton({
       {piece.fields[state].map((field) => (
         <CreatorText
           key={field.name}
-          pack={pack}
           field={field}
           text={field.initialText ?? ''}
           x={field.x - b.x}
@@ -276,7 +275,7 @@ export function CreatorSaveDialog({
         if (field.name === 'author_txt' || field.name === 'tank_txt')
           return (
             <div key={field.name}>
-              <CreatorText pack={pack} field={field} text={text} />
+              <CreatorText field={field} text={text} />
               <input
                 className="creator-dialog-input"
                 aria-label={field.name === 'author_txt' ? 'Author name' : 'Tank name'}
@@ -309,7 +308,7 @@ export function CreatorSaveDialog({
               />
             </div>
           );
-        return <CreatorText key={field.name} pack={pack} field={field} text={text} />;
+        return <CreatorText key={field.name} field={field} text={text} />;
       })}
       {screen.buttons.map((piece) => (
         <ScreenButton

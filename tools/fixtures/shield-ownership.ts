@@ -105,7 +105,6 @@ export async function showShieldOwnership(pack: AssetPack, host: HTMLElement) {
     world.fireGun(tank, a, emptyInput());
     hit(-50, 0);
     capture('Mount A · own hit and film');
-    const olderHit = view.container.children.find((child) => child.label === 'shield-hit:a');
     tick(10);
     world.fireGun(tank, b, emptyInput());
     hit(0, 50);
@@ -136,7 +135,6 @@ export async function showShieldOwnership(pack: AssetPack, host: HTMLElement) {
     const removedA = !view.container.children.some((child) => child.label === 'shield-film:a:1');
     tick(10);
     capture('B expires · both hit instances stay');
-    const retainedHit = pack.mode !== 'swf' || view.container.children.includes(olderHit!);
     world.fireGun(tank, a, emptyInput());
     hit(50, 0);
     capture('A retriggers · cached size, latest hit still B');
@@ -152,7 +150,6 @@ export async function showShieldOwnership(pack: AssetPack, host: HTMLElement) {
       contact,
       retainedB,
       removedA,
-      retainedHit,
       measurements,
       latestHit: tank.shieldHitClip!.key,
       pending: world.runtimeFor(world.field).pending.length,

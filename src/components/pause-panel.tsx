@@ -259,9 +259,7 @@ export function PausePanel({
                 }}
               />
             ) : (
-              <BubbleText pack={pack} size={40}>
-                paused
-              </BubbleText>
+              <BubbleText size={40}>paused</BubbleText>
             )}
           </div>
           {buttons.map((button) => {
@@ -334,14 +332,7 @@ export function PausePanel({
                 top: 2 + PAUSE.caption.size * (PAUSE.caption.ascent / 1024 - 1),
               }}
             >
-              <BubbleText
-                pack={pack}
-                font={PAUSE.caption.font}
-                fontId={PAUSE.caption.fontId}
-                size={PAUSE.caption.size}
-              >
-                {caption || ' '}
-              </BubbleText>
+              <BubbleText size={PAUSE.caption.size}>{caption || ' '}</BubbleText>
             </span>
           </div>
         </div>

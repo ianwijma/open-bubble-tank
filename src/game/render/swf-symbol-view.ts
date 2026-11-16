@@ -20,7 +20,6 @@ import { SwfGlowFilter } from './swf-glow-filter';
 import { SwfColorFilter } from './swf-color-filter';
 export interface RasterTextures {
   get(raster: Raster): Texture;
-  release(raster: Raster): void;
 }
 export interface ClipPlayback {
   random: () => number;
@@ -55,9 +54,6 @@ export class SwfSymbolView {
   private terminal: boolean;
   private effectiveBlend: BLEND_MODES = 'normal';
   private localBlend: BLEND_MODES = 'inherit';
-  private morphSprite: Sprite | null = null;
-  private morphRaster: Raster | null = null;
-  private morphRatio = -1;
   private ownedPose?: SwfClip;
   private renderedPose?: SwfClip;
   private drawnLines?: readonly ClipLine[];
@@ -70,11 +66,6 @@ export class SwfSymbolView {
   ) {
     this.terminal = !assets.spriteInfo(id)?.placements.some((p) => p.charId !== undefined);
     if (playback) this.ownedPose = new SwfClip(id, assets, playback.random);
-    if (assets.isMorph(id)) {
-      this.morphSprite = new Sprite();
-      this.root.addChild(this.morphSprite);
-      return;
-    }
     const r = assets.leaves.get(id);
     if (r) {
       const s = new Sprite(textures.get(r));
@@ -84,28 +75,16 @@ export class SwfSymbolView {
       this.root.addChild(s);
     }
   }
-  update(age: number, heldFrame?: number, ratio = 0, y = this.root.y) {
-    if (this.morphSprite) {
-      if (this.morphRatio === ratio) return;
-      const raster = this.assets.morphRaster(this.id, ratio)!;
-      this.morphSprite.texture = this.textures.get(raster);
-      if (this.morphRaster) this.textures.release(this.morphRaster);
-      this.morphRaster = raster;
-      this.morphRatio = ratio;
-      this.morphSprite.position.set(raster.x, raster.y);
-      this.morphSprite.width = raster.width;
-      this.morphSprite.height = raster.height;
-      return;
-    }
+  update(age: number, heldFrame?: number, y = this.root.y) {
     if (this.ownedPose && heldFrame === undefined) {
       this.ownedPose.advance(age, y);
-      this.updatePose(this.ownedPose, ratio);
+      this.updatePose(this.ownedPose);
       return;
     }
     const frame = heldFrame ?? age;
     this.paint(age, frame, undefined, heldFrame !== undefined);
   }
-  updatePose(pose: SwfClip, ratio = 0) {
+  updatePose(pose: SwfClip) {
     if (this.drawnLines !== pose.lines) {
       this.drawnLines = pose.lines;
       if (pose.lines.length || this.drawing) {
@@ -119,11 +98,6 @@ export class SwfSymbolView {
     }
     if (this.assets.leaves.has(this.id)) {
       this.renderedPose = pose;
-      return;
-    }
-    if (this.morphSprite) {
-      this.renderedPose = pose;
-      this.update(pose.age, undefined, ratio);
       return;
     }
     this.paint(pose.age, pose.frame, pose);
@@ -171,13 +145,9 @@ export class SwfSymbolView {
         this.root.filters?.length ? 'normal' : this.effectiveBlend,
       );
       this.root.setChildIndex(node.view.root, this.root.children.length - 1);
-      if (childPose) node.view.updatePose(childPose, p.ratio ?? 0);
+      if (childPose) node.view.updatePose(childPose);
       else if (node.view.root.visible)
-        node.view.update(
-          held ? Math.max(1, age) : this.assets.childAge(this.id, age, p),
-          undefined,
-          p.ratio ?? 0,
-        );
+        node.view.update(held ? Math.max(1, age) : this.assets.childAge(this.id, age, p));
       node.view.root.mask =
         masks.findLast((mask) => p.depth > mask.depth && p.depth <= mask.end)?.view.root ?? null;
       if (p.clipDepth !== undefined)
@@ -191,7 +161,7 @@ export class SwfSymbolView {
     this.updatePose(this.ownedPose);
   }
   hitTest(x: number, y: number, inverse: ContactMatrix = CONTACT_IDENTITY): boolean {
-    return this.renderedPose ? this.assets.hitClip(this.renderedPose, x, y, 0, inverse) : false;
+    return this.renderedPose ? this.assets.hitClip(this.renderedPose, x, y, inverse) : false;
   }
   scriptBounds() {
     const pose = this.renderedPose ?? this.ownedPose;
@@ -324,10 +294,6 @@ export class SwfSymbolView {
     if (captured !== !!filters.length) this.lastFrame = -1;
   }
   destroy() {
-    if (this.morphRaster) {
-      this.textures.release(this.morphRaster);
-      this.morphRaster = null;
-    }
     for (const child of this.children.values()) child.view.destroy();
     this.children.clear();
     this.colorFilter?.destroy();

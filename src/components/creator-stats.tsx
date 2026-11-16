@@ -43,7 +43,6 @@ export function CreatorStats({
       {p.stats.fields.map((field) => (
         <CreatorText
           key={field.name}
-          pack={pack}
           field={field}
           y={field.y + (!design.avatar && !field.name.toLowerCase().includes('speed') ? -18 : 0)}
           text={values[field.name] ?? ''}

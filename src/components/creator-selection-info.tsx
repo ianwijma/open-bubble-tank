@@ -99,7 +99,6 @@ export function CreatorSelectionInfo({
           {p.popup.fields.map((field) => (
             <CreatorText
               key={field.name}
-              pack={pack}
               field={field}
               text={creatorWeaponInfoText(part)[field.name] ?? ''}
             />

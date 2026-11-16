@@ -144,27 +144,17 @@ export async function showSeekerMineProof(pack: AssetPack, host: HTMLElement) {
     // The ally mine deliberately disappears on frames 7–15, then loops to frame 2.
     advanceAllyTo(7);
     renderer.draw(world, DEFAULT_SETTINGS);
-    const ink = (node: (typeof renderer.nativeShots.children)[number]) => {
-      const pixels = renderer.app.renderer.extract.pixels({ target: node }).pixels;
-      let count = 0;
-      for (let index = 3; index < pixels.length; index += 4) if (pixels[index]) count++;
-      return count;
-    };
     const blink = {
       frame: ally.artFrame,
-      ink: renderer.nativeShots.children.length ? ink(renderer.nativeShots.children[2]) : 0,
       emptyBounds: !!world.projectileBounds(ally).empty,
     };
     advanceAllyTo(2);
     capture(2);
-    const artwork = renderer.nativeShots.children.map(ink);
     return {
       contact,
       animation,
-      artwork,
       galleryInk,
       blink,
-      nativeCount: renderer.nativeShots.children.length,
       mode: pack.mode,
       mineBounds: mb,
     };

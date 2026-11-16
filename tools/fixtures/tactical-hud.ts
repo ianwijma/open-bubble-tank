@@ -25,8 +25,8 @@ export async function showTacticalHudProof(pack: AssetPack, host: HTMLElement) {
     preserveDrawingBuffer: true,
   });
   const view = new TacticalHudView(pack, textures);
-  const hud = new HudView(pack, textures),
-    edit = new EditSliderView(pack, textures);
+  const hud = new HudView(),
+    edit = new EditSliderView();
   app.stage.addChild(view.root);
   const canvas = document.createElement('canvas');
   canvas.width = 550;

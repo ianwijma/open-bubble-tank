@@ -1,35 +1,17 @@
 'use client';
 import { useLayoutEffect, useRef } from 'react';
-import type { AssetPack } from '@/game/assets/asset-pack';
 import { canonicalHotkey } from '@/game/core/hotkeys';
 export function BubbleText({
   children,
-  pack,
   size = 24,
   color = '#fff',
   className = '',
-  font = 'Billo',
-  fontId,
 }: {
   children: string;
-  pack?: AssetPack | null;
   size?: number;
   color?: string;
   className?: string;
-  font?: string;
-  fontId?: number;
 }) {
-  const svg = pack?.textSvg(children, size, color, font, 0, fontId);
-  if (svg)
-    return (
-      <img
-        className={`bubble-text ${className}`}
-        src={`data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`}
-        alt={children}
-        draggable={false}
-        style={{ height: size * 1.4 }}
-      />
-    );
   return (
     <span className={`bubble-text mock-lettering ${className}`} style={{ fontSize: size, color }}>
       {children}

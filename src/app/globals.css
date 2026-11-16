@@ -941,9 +941,6 @@ kbd {
     sans-serif;
   cursor: pointer;
 }
-.tank-info-back.native {
-  background: transparent;
-}
 .tank-info-back:hover {
   background: #ffffff19;
 }

@@ -59,7 +59,7 @@ export async function showProjectileClocksProof(pack: AssetPack, host: HTMLEleme
       y: (Math.min(...ys) + Math.max(...ys)) / 2,
     };
     const frame = captureCanvas(renderer.app.renderer, {
-      target: pack.mode === 'swf' ? renderer.nativeShots : renderer.projectiles,
+      target: renderer.projectiles,
       frame: new Rectangle(center.x - 100, center.y - 54.5, 200, 109),
       resolution: 2,
     }) as HTMLCanvasElement;

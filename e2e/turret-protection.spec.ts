@@ -8,7 +8,6 @@ test(`mock turret shields follow owner polling and retain old hit instances`, as
   const status = page.getByRole('status');
   await expect(status).toContainText('Ready', { timeout: 60000 });
   const proof = JSON.parse((await status.getAttribute('data-turret-protection'))!);
-  expect(proof.retainedHit).toBe(true);
   expect(proof.removedFilm).toBe(true);
   expect(proof.films).toBe(1);
   expect(proof.oldKey).toBe('shield-hit:turret:launcher:1');

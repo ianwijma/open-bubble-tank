@@ -59,7 +59,6 @@ export function ViewerFields({
   return viewerWidget(symbol, frame).fields.map((f) => (
     <ViewerGroup key={f.name} matrix={f.matrix}>
       <CreatorText
-        pack={pack}
         field={f}
         text={values[f.name] ?? f.initialText ?? ''}
         opacity={opacities[f.name] ?? 1}

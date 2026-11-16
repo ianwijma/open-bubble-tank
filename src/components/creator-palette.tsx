@@ -51,7 +51,7 @@ export function CreatorPaletteFrame({ pack }: { pack: AssetPack }) {
         )}
       </div>
       <div className="creator-palette-caption" style={{ left: x, top: y }}>
-        <CreatorText pack={pack} field={lib.caption} text="Click and Drag Object" />
+        <CreatorText field={lib.caption} text="Click and Drag Object" />
       </div>
     </>
   );
@@ -304,14 +304,12 @@ export function CreatorPaletteRows({
                   </>
                 )}
                 <CreatorText
-                  pack={pack}
                   field={nameField}
                   text={state.locked ? '???' : part.name}
                   opacity={state.locked ? 0.5 : 1}
                 />
                 {!body ? (
                   <CreatorText
-                    pack={pack}
                     field={costField}
                     text={state.locked ? '?' : String(part.gp)}
                     x={costField.x - (part.gp > 9 ? 0.5 : 0)}

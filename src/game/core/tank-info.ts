@@ -103,18 +103,3 @@ export class TankInfoMotion {
     );
   }
 }
-
-/** Flash wraps at spaces; an unbroken name may also exceed a line's width. */
-export function infoTextLines(text: string, width: number, measure: (text: string) => number) {
-  const lines: string[] = [];
-  let line = '';
-  for (const word of text.split(' ')) {
-    const next = line ? `${line} ${word}` : word;
-    if (line && measure(next) > width) {
-      lines.push(line);
-      line = word;
-    } else line = next;
-  }
-  if (line) lines.push(line);
-  return lines;
-}
