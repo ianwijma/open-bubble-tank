@@ -648,13 +648,7 @@ export default function GameShell() {
         </div>
       </div>
       <footer className="site-footer">
-        <span>
-          {pack
-            ? pack.mode === 'swf'
-              ? 'ORIGINAL SWF ASSETS'
-              : 'PROCEDURAL MOCK ASSETS'
-            : 'YOUR SWF · YOUR DEVICE'}
-        </span>
+        <span>{pack ? 'PROCEDURAL MOCK ASSETS' : 'YOUR DEVICE'}</span>
         <p>
           <kbd>W</kbd>
           <kbd>A</kbd>
@@ -674,20 +668,7 @@ export default function GameShell() {
           Open Bubble Tank is an independent TypeScript recreation, built from research into the
           original Flash game.
         </p>
-        <p>
-          Game assets are supplied by you and extracted locally. The Flash file is never uploaded or
-          executed.
-        </p>
-        {pack?.report ? (
-          <p className="asset-summary">
-            {pack.report.filename}
-            <br />
-            {pack.report.vectors.toLocaleString()} vectors · {pack.report.sprites.toLocaleString()}{' '}
-            sprites · {pack.report.sounds} sounds
-          </p>
-        ) : pack ? (
-          <p className="asset-summary">Playing with procedural mock artwork.</p>
-        ) : null}
+        {pack ? <p className="asset-summary">Playing with procedural mock artwork.</p> : null}
       </details>
     </main>
   );

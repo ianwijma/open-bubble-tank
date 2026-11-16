@@ -328,32 +328,6 @@ kbd {
   line-height: 1.6;
   margin-bottom: 14px;
 }
-.upload-button {
-  width: 100%;
-  border: 1px dashed #d7f7ff77;
-  border-radius: 9px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 13px;
-  padding: 16px;
-  color: #e3faff;
-  background: #afedff0a;
-}
-.upload-button:hover {
-  background: #a8edff1f;
-  border-color: #dbfaff;
-}
-.upload-button span {
-  font-size: 13px;
-  text-align: left;
-}
-.upload-button small {
-  display: block;
-  font-size: 9px;
-  color: #a2cad6;
-  margin-top: 5px;
-}
 .mock-button {
   margin-top: 12px;
   font-size: 10px;
@@ -365,24 +339,6 @@ kbd {
 }
 .mock-button span {
   padding-left: 9px;
-}
-.gate-note {
-  position: relative;
-  z-index: 1;
-  font-size: 8px;
-  color: #89bac8;
-  text-align: center;
-  line-height: 1.8;
-  margin-top: 12px;
-}
-.asset-gate.dragging:before {
-  content: '';
-  position: absolute;
-  inset: 8px;
-  border: 2px dashed #d3faff;
-  border-radius: 12px;
-  z-index: 4;
-  pointer-events: none;
 }
 .gate-bubbles i {
   position: absolute;
@@ -595,16 +551,6 @@ kbd {
 }
 .menu-create svg {
   display: block;
-}
-.swf-download-guide {
-  font-size: 10px !important;
-  line-height: 1.45 !important;
-  margin: 10px 0 0 !important;
-  color: #a3d3de;
-}
-.swf-download-guide a {
-  color: #e7fbff;
-  text-decoration: underline;
 }
 .menu-library {
   left: 146px;
