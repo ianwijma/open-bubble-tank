@@ -68,7 +68,7 @@ test('invalid SWF is rejected and mock fallback remains available', async ({ pag
   await page.getByRole('button', { name: 'Play with mock assets' }).click();
   await expect(page.getByRole('button', { name: 'Play', exact: true })).toBeVisible();
 });
-test('small viewport keeps the complete stage inside the page', async ({ page }) => {
+test('mock small viewport keeps the complete stage inside the page', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 812 });
   await page.goto('/');
   await page.screenshot({ path: 'test-results/mobile-gate.png' });

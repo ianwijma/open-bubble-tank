@@ -78,7 +78,7 @@ test('mock sound, gesture resume, P/Escape, zoom, guide and centered creator but
   ).toBe(0.65);
 });
 
-test('cleared origin can be revisited and its traveled map edge is drawn once', async ({
+test('mock cleared origin can be revisited and its traveled map edge is drawn once', async ({
   page,
 }) => {
   await page.goto('/');
