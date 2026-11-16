@@ -20,7 +20,7 @@ test(`mock edit slider: native map variants, confirmation, same-level choice and
     parts: [...STARTER.parts, { ...STARTER.parts[1], key: 'forcefield', type: 5005, x: 0, y: 0 }],
   };
   await page.addInitScript(
-    (profile) => localStorage.setItem('open-bubble-tank.profile.v1', JSON.stringify(profile)),
+    (profile) => localStorage.setItem('soaptank.profile.v1', JSON.stringify(profile)),
     {
       version: 1,
       tankViewerHelpSeen: true,

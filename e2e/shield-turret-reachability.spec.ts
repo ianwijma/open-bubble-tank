@@ -29,7 +29,7 @@ test(`mock valid Shield Turrets creator save enables the optional local-enemy ca
     .screenshot({ path: `test-results/mock-shield-caller-creator.png` });
   await saveCreator(page, { name: 'Saved Shield Caller' });
   const saved = await page.evaluate(() =>
-    JSON.parse(localStorage.getItem('open-bubble-tank.profile.v1')!).tanks.find(
+    JSON.parse(localStorage.getItem('soaptank.profile.v1')!).tanks.find(
       (tank: { id: string }) => tank.id === 'L10000001',
     ),
   );

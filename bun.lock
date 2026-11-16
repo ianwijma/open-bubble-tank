@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "open-bubble-tank",
+      "name": "soaptank",
       "dependencies": {
         "next": "16.4.3",
         "pixi.js": "8.22.0",

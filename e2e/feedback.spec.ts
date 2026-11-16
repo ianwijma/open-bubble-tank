@@ -70,7 +70,7 @@ test('mock sound, gesture resume, P/Escape, zoom, guide and centered creator but
   );
   expect(
     await page.evaluate(
-      () => JSON.parse(localStorage.getItem('open-bubble-tank.profile.v1')!).settings.zoom,
+      () => JSON.parse(localStorage.getItem('soaptank.profile.v1')!).settings.zoom,
     ),
   ).toBe(0.65);
 });

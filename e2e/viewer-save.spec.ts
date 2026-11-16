@@ -7,7 +7,7 @@ import { waitForMainMenu } from './helpers/main-menu';
 const enemy: TankDesign = JSON.parse(readFileSync('src/game/data/tanks.json', 'utf8'))
   .enemy_tanks[0];
 const savedTanks = (page: Page): Promise<TankDesign[]> =>
-  page.evaluate(() => JSON.parse(localStorage.getItem('open-bubble-tank.profile.v1')!).tanks);
+  page.evaluate(() => JSON.parse(localStorage.getItem('soaptank.profile.v1')!).tanks);
 test(`mock viewer save keeps source button states, suppresses geometry duplicates and preserves shared-ID designs`, async ({
   page,
 }) => {
@@ -16,7 +16,7 @@ test(`mock viewer save keeps source button states, suppresses geometry duplicate
   page.on('pageerror', (e) => errors.push(e.message));
   await page.context().grantPermissions(['clipboard-read', 'clipboard-write']);
   await page.addInitScript(() => {
-    const key = 'open-bubble-tank.profile.v1';
+    const key = 'soaptank.profile.v1';
     if (!localStorage.getItem(key))
       localStorage.setItem(
         key,

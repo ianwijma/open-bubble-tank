@@ -62,7 +62,7 @@ test('mock modifier pause binding resumes through the production dialog with eit
 }) => {
   await page.addInitScript(() =>
     localStorage.setItem(
-      'open-bubble-tank.profile.v1',
+      'soaptank.profile.v1',
       JSON.stringify({ version: 1, settings: { h5: 'ShiftRight' } }),
     ),
   );

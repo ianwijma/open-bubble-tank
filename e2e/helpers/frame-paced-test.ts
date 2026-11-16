@@ -4,7 +4,7 @@ export { expect } from '@playwright/test';
 /** Optional slow-render stress: preserve real clocks/input while delaying game RAF callbacks. */
 export const test = base.extend({
   page: async ({ page }, use) => {
-    const delay = Number(process.env.BT3_E2E_FRAME_DELAY_MS ?? 0);
+    const delay = Number(process.env.SOAPTANK_E2E_FRAME_DELAY_MS ?? 0);
     if (!Number.isFinite(delay) || delay < 0) throw new Error('Invalid frame delay.');
     if (delay > 0)
       await page.addInitScript((delay) => {

@@ -125,7 +125,7 @@ test(`mock enemy info retains source defaults, quadratic sliders, confirmation a
   await saveCreator(page);
   const read = () =>
     page.evaluate(
-      () => JSON.parse(localStorage.getItem('open-bubble-tank.profile.v1') ?? '{"tanks":[]}').tanks,
+      () => JSON.parse(localStorage.getItem('soaptank.profile.v1') ?? '{"tanks":[]}').tanks,
     );
   await expect.poll(async () => (await read()).length).toBe(1);
   expect((await read())[0]).toMatchObject({ life: 333, reward: 77, speed: 2.75 });

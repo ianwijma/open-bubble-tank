@@ -56,7 +56,7 @@ test(`mock creator: authored exit/name/code dialogs, saved return and offline sh
   await page.getByRole('button', { name: 'Edit', exact: true }).click();
   await expect(page.locator('.creator-meters > div').last()).toContainText('GP: 20');
   const read = () =>
-    page.evaluate(() => JSON.parse(localStorage.getItem('open-bubble-tank.profile.v1')!));
+    page.evaluate(() => JSON.parse(localStorage.getItem('soaptank.profile.v1')!));
   await page.getByRole('button', { name: 'Exit tank creator', exact: true }).click();
   const exit = page.getByRole('dialog', { name: 'Exit tank creator?', exact: true });
   await expect(exit).toContainText('Are you sure you want to exit without saving?');
@@ -146,7 +146,7 @@ test(`mock fresh creator names stay in the form and failed submission IDs surviv
   const read = () =>
     page.evaluate(() =>
       JSON.parse(
-        localStorage.getItem('open-bubble-tank.profile.v1') ?? '{"tanks":[],"nextTankId":10000001}',
+        localStorage.getItem('soaptank.profile.v1') ?? '{"tanks":[],"nextTankId":10000001}',
       ),
     );
   const canvas = await page.locator('.creator-workspace canvas').elementHandle();

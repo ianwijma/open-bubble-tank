@@ -64,7 +64,7 @@ test(`mock creator restores empty-save alert, retained fade and fresh name defau
   await expect(name).toHaveValue('');
   await expect(author).toHaveValue('BubbleTanks3');
   const tanks = await page.evaluate(
-    () => JSON.parse(localStorage.getItem('open-bubble-tank.profile.v1')!).tanks,
+    () => JSON.parse(localStorage.getItem('soaptank.profile.v1')!).tanks,
   );
   expect(tanks).toHaveLength(1);
   expect(tanks[0]).toMatchObject({ name: 'Fresh Bubble', author: 'Alternate Author' });

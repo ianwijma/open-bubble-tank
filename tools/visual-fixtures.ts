@@ -24,7 +24,7 @@ const html = `<!doctype html><html lang="en"><meta charset="utf-8"><title>Bubble
 <div id="stage"></div><output id="status" aria-live="polite">Choose assets</output></main><script type="module" src="/fixture.js"></script></html>`;
 Bun.serve({
   hostname: '127.0.0.1',
-  port: Number(process.env.BT3_FIXTURE_PORT ?? 3102),
+  port: Number(process.env.SOAPTANK_FIXTURE_PORT ?? 3102),
   fetch(request) {
     const path = new URL(request.url).pathname;
     if (path === '/') return new Response(html, { headers: { 'content-type': 'text/html' } });

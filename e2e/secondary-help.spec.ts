@@ -20,8 +20,8 @@ test(`mock secondary help pauses on avatar replacement and persists before closi
   };
   await page.addInitScript(
     (profile) => {
-      if (!localStorage.getItem('open-bubble-tank.profile.v1'))
-        localStorage.setItem('open-bubble-tank.profile.v1', JSON.stringify(profile));
+      if (!localStorage.getItem('soaptank.profile.v1'))
+        localStorage.setItem('soaptank.profile.v1', JSON.stringify(profile));
     },
     {
       version: 1,
@@ -62,7 +62,7 @@ test(`mock secondary help pauses on avatar replacement and persists before closi
   await expect(help).toContainText('You have a secondary weapon');
   expect(
     await page.evaluate(
-      () => JSON.parse(localStorage.getItem('open-bubble-tank.profile.v1')!).secondaryHelpSeen,
+      () => JSON.parse(localStorage.getItem('soaptank.profile.v1')!).secondaryHelpSeen,
     ),
   ).toBe(true);
   await page.keyboard.press('Escape');

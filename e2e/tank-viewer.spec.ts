@@ -21,7 +21,7 @@ test(`mock creator load uses original local viewer, animated cards, code view an
   await page.addInitScript(
     (tank) =>
       localStorage.setItem(
-        'open-bubble-tank.profile.v1',
+        'soaptank.profile.v1',
         JSON.stringify({
           version: 1,
           tankViewerHelpSeen: true,
@@ -123,9 +123,7 @@ test(`mock creator load uses original local viewer, animated cards, code view an
   await page.getByRole('button', { name: 'Delete AAA Local Tank', exact: true }).click();
   await remove.getByRole('button', { name: 'Yes', exact: true }).click();
   expect(
-    await page.evaluate(
-      () => JSON.parse(localStorage.getItem('open-bubble-tank.profile.v1')!).tanks,
-    ),
+    await page.evaluate(() => JSON.parse(localStorage.getItem('soaptank.profile.v1')!).tanks),
   ).toHaveLength(0);
   await page.getByRole('button', { name: 'View tank from code', exact: true }).click();
   const code = page.getByRole('dialog', { name: 'Enter tank code', exact: true });
@@ -179,9 +177,7 @@ test(`mock creator load uses original local viewer, animated cards, code view an
   await page.getByRole('button', { name: `Save locally ${custom.name}`, exact: true }).click();
   await expect
     .poll(() =>
-      page.evaluate(
-        () => JSON.parse(localStorage.getItem('open-bubble-tank.profile.v1')!).tanks.length,
-      ),
+      page.evaluate(() => JSON.parse(localStorage.getItem('soaptank.profile.v1')!).tanks.length),
     )
     .toBe(1);
   await page.getByRole('button', { name: `Details for ${custom.name}`, exact: true }).click();

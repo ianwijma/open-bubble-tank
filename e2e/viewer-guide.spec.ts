@@ -17,8 +17,7 @@ test(`mock viewer guide persists only after both pages and keeps offline local h
   const seen = () =>
     page.evaluate(
       () =>
-        JSON.parse(localStorage.getItem('open-bubble-tank.profile.v1') ?? '{}')
-          .tankViewerHelpSeen === true,
+        JSON.parse(localStorage.getItem('soaptank.profile.v1') ?? '{}').tankViewerHelpSeen === true,
     );
   await boot();
   const guide = page.getByRole('dialog', { name: 'Tank viewer guide' });

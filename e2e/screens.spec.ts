@@ -94,7 +94,7 @@ test(`mock win screen fades in its authored controls and omits retired promotion
   // The fixture mounts the production component; no test hooks enter the game.
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
-  await page.goto(`http://127.0.0.1:${process.env.BT3_FIXTURE_PORT ?? 3102}`);
+  await page.goto(`http://127.0.0.1:${process.env.SOAPTANK_FIXTURE_PORT ?? 3102}`);
   await page.getByLabel('Fixture').selectOption('win-screen');
   await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
   await expect(page.getByRole('status')).toContainText('Ready', { timeout: 60000 });

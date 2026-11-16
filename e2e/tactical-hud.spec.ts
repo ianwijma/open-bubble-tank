@@ -24,7 +24,7 @@ test(`mock field readouts follow summoning, arrival, pause and zoom`, async ({ p
     ],
   };
   await page.addInitScript(
-    (profile) => localStorage.setItem('open-bubble-tank.profile.v1', JSON.stringify(profile)),
+    (profile) => localStorage.setItem('soaptank.profile.v1', JSON.stringify(profile)),
     {
       version: 1,
       secondaryHelpSeen: true,

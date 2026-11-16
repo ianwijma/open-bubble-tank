@@ -31,9 +31,7 @@ test(`mock creator saves fresh edited copies and persists the third-tank medal`,
     });
   const read = () =>
     page.evaluate(() =>
-      JSON.parse(
-        localStorage.getItem('open-bubble-tank.profile.v1') ?? '{"tanks":[],"achievements":[]}',
-      ),
+      JSON.parse(localStorage.getItem('soaptank.profile.v1') ?? '{"tanks":[],"achievements":[]}'),
     );
   await expect.poll(async () => (await read()).tanks.length).toBe(2);
   expect((await read()).achievements).not.toContain('Tank Creator');

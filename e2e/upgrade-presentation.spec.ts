@@ -25,7 +25,7 @@ test(`mock upgrade screen preserves authored three-card geometry, summaries and 
     ],
   };
   await page.addInitScript(
-    (profile) => localStorage.setItem('open-bubble-tank.profile.v1', JSON.stringify(profile)),
+    (profile) => localStorage.setItem('soaptank.profile.v1', JSON.stringify(profile)),
     {
       version: 1,
       creatorHelpSeen: true,
