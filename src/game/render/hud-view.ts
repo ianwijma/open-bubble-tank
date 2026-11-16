@@ -1,92 +1,23 @@
 import { Container, Graphics, Text } from 'pixi.js';
-import type { AssetPack } from '../assets/asset-pack';
 import { HUD, fireLayout, type HudReadout } from '../core/hud';
 import type { World } from '../simulation/world';
-import { SwfSymbolView, type RasterTextures } from './swf-symbol-view';
 
 /** The native life/fire widgets remain in stage coordinates, independently of camera zoom. */
 export class HudView {
   root = new Container();
-  private life?: SwfSymbolView;
-  private fire?: SwfSymbolView;
-  private labels = new WeakMap<SwfSymbolView, Text>();
   private mockLife = new Container();
   private mockFire = new Container();
   private mockLifeArt = new Graphics();
   private mockFireArt = new Graphics();
   private mockLabels = new Map<string, Text>();
-  constructor(assets: AssetPack, textures: RasterTextures) {
-    if (assets.mode === 'swf') {
-      this.life = new SwfSymbolView(HUD.life.symbol, assets, textures);
-      this.fire = new SwfSymbolView(HUD.fire.symbol, assets, textures);
-      this.life.root.scale.x = HUD.life.scaleX;
-      this.life.setAlpha(HUD.life.alpha);
-      this.fire.root.scale.x = HUD.fire.scaleX;
-      this.fire.setAlpha(HUD.fire.alpha);
-      this.root.addChild(this.life.root, this.fire.root);
-    } else {
-      this.mockLife.addChild(this.mockLifeArt);
-      this.mockFire.addChild(this.mockFireArt);
-      this.mockLife.alpha = HUD.life.alpha;
-      this.root.addChild(this.mockLife, this.mockFire);
-    }
-  }
-  private label(parent: SwfSymbolView, name: string, value: string) {
-    const field = parent.namedChild(name);
-    if (!field) return;
-    const info = HUD.texts[String(field.id) as keyof typeof HUD.texts];
-    if (!info) return;
-    let text = this.labels.get(field);
-    if (!text) {
-      text = new Text({
-        text: '',
-        style: {
-          fontFamily: 'Arial, sans-serif',
-          fontSize: info.size,
-          letterSpacing: info.spacing,
-          fill: 0xffffff,
-        },
-      });
-      text.anchor.x = info.right ? 1 : 0;
-      // Flash device TextFields include a two-pixel gutter inside the authored bounds.
-      text.position.set(info.right ? info.bounds.xMax / 20 - 2 : info.bounds.xMin / 20 + 2, 0);
-      field.root.addChild(text);
-      this.labels.set(field, text);
-    }
-    text.text = value;
+  constructor() {
+    this.mockLife.addChild(this.mockLifeArt);
+    this.mockFire.addChild(this.mockFireArt);
+    this.mockLife.alpha = HUD.life.alpha;
+    this.root.addChild(this.mockLife, this.mockFire);
   }
   update(world: World) {
-    const readout = world.hud.readout(world.player, world.secondaryCounter);
-    const { rows, rate, secondaryFill } = readout;
-    if (!this.life || !this.fire) {
-      this.drawMock(world, readout);
-      return;
-    }
-    this.life.update(1, 1);
-    this.life.root.position.set(HUD.life.x, world.hud.lifeY);
-    const inside = this.life.namedChild('inside');
-    if (inside) inside.root.scale.x = readout.life / readout.maxLife;
-    this.label(this.life, 'state_txt', readout.name);
-    this.label(this.life, 'left_txt', `${readout.maxLife - readout.life} Bubbles left`);
-    this.fire.update(1, Math.max(1, Math.min(9, rows.length)));
-    this.fire.root.position.set(HUD.fire.x, world.hud.fireY);
-    this.fire.root.visible = rows.length > 0 || rate > 0;
-    for (let i = 0; i < Math.max(1, Math.min(9, rows.length)); i++) {
-      const fill = this.fire.namedChild(`insidePrimary${i + 1}_mc`);
-      if (fill) fill.root.scale.x = rows[i]?.fill ?? secondaryFill;
-      const charge = this.fire.namedChild(`insideCharge${i + 1}_mc`);
-      // No shipped weapon sets intMaxCharge; Massive Cannon uses a separate secondary timer.
-      if (charge) charge.root.visible = false;
-      this.label(this.fire, `txtPrimary${i + 1}_txt`, rows[i]?.label ?? '2nd');
-    }
-    const secondary = this.fire.namedChild('Secondary_mc');
-    if (secondary) {
-      secondary.root.alpha = rows.length && rate ? 1 : 0;
-      if (rows.length && rate) secondary.root.y = 42.45 + 15.4 * (rows.length - 1);
-      const fill = secondary.namedChild('insidePrimary1_mc');
-      if (fill) fill.root.scale.x = secondaryFill;
-      this.label(secondary, 'txtPrimary1_txt', '2nd');
-    }
+    this.drawMock(world, world.hud.readout(world.player, world.secondaryCounter));
   }
   private mockLabel(
     parent: Container,
@@ -166,8 +97,6 @@ export class HudView {
     }
   }
   destroy() {
-    this.life?.destroy();
-    this.fire?.destroy();
     this.root.destroy({ children: true });
   }
 }

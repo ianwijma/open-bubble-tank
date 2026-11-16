@@ -25,13 +25,7 @@ test(`mock forcefield detaches on crossing and reconstructs after passive Run`, 
     generation: 1,
     origin: 21,
     artAge: 22,
-    cloneAge: null,
-    replaced: true,
-    oldDestroyed: true,
-    liveRetained: true,
   });
-  expect(proof.oldCloneAge).toBe(null);
-  expect(proof.finalCloneAge).toBe(null);
   expect(proof.ready).toBe(true);
   await page.locator('#stage').screenshot({ path: `test-results/mock-forcefield-lifecycle.png` });
   expect(errors).toEqual([]);

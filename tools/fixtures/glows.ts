@@ -8,7 +8,6 @@ import {
 } from '../../src/game/assets/asset-pack';
 import { buildDisplayList } from '../../src/game/assets/display-list';
 import { IDENTITY_COLOR, type SwfColorTransform } from '../../src/game/assets/swf-color-transform';
-import { HUD } from '../../src/game/core/hud';
 import { SwfSymbolView } from '../../src/game/render/swf-symbol-view';
 import { SwfTextures } from '../../src/game/render/swf-textures';
 import { oracleColor, oracleGlow, premultiply } from './glow-oracle';
@@ -142,10 +141,6 @@ export async function showGlowProof(pack: AssetPack, host: HTMLElement) {
       for (const f of p.filters ?? []) unique.set(JSON.stringify(f), f);
   for (const [i, f] of [...unique.values()].entries())
     cases.push({ name: `Authored variant ${i + 1}`, filters: [f] });
-  if (pack.mode === 'swf') {
-    const stack = pack.spriteInfo(1506)!.placements.find((p) => p.filters?.length === 2)!.filters!;
-    cases.push({ name: 'Fire HUD ordered stack', filters: stack, alpha: HUD.fire.alpha });
-  }
   const gallery = document.createElement('canvas');
   gallery.width = 550;
   gallery.height = 450;
@@ -191,7 +186,7 @@ export async function showGlowProof(pack: AssetPack, host: HTMLElement) {
         if (i % 4 === 3 && actual[i]) ink++;
       }
       results.push({ name: item.name, maxDelta, meanDelta: sumDelta / actual.length, ink });
-      if (pack.mode !== 'swf' && index < 9) snapshot(image, index, item.name);
+      if (index < 9) snapshot(image, index, item.name);
     }
     const cache: { cached: boolean; layer: boolean; alpha: number }[] = [];
     for (const cached of [false, true])
@@ -208,41 +203,6 @@ export async function showGlowProof(pack: AssetPack, host: HTMLElement) {
         const { pixels } = extract(scene);
         cache.push({ cached, layer, alpha: pixels[(64 * 128 + 70) * 4 + 3] });
       }
-    if (pack.mode === 'swf') {
-      const examples = [
-        [1820, 1, 'Life bubble · frame1'],
-        [1820, 15, 'Life bubble · frame15'],
-        [1820, 26, 'Life bubble · frame26'],
-        [2178, 1, 'Seeker mine · unarmed'],
-        [2178, 41, 'Seeker mine · armed'],
-        [2058, 40, 'Apocalypse · frame40'],
-        [1506, 1, 'Fire HUD · inner/outer'],
-        [1520, 1, 'Minimap · halo'],
-        [2173, 51, 'Collapse · isolated ERASE'],
-      ] as const;
-      for (const [index, [id, frame, name]] of examples.entries()) {
-        const art = new SwfSymbolView(id, pack, textures),
-          native = new Container();
-        native.addChild(art.root);
-        art.root.position.set(
-          id === 1506 || id === 1520 ? 20 : 64,
-          id === 1506 || id === 1520 ? 20 : 64,
-        );
-        if (id === 1506) {
-          art.root.scale.set(0.5);
-          art.setAlpha(HUD.fire.alpha);
-        }
-        if (id === 2173) {
-          art.root.scale.set(0.1);
-          art.setBlendMode(2);
-        }
-        art.update(frame);
-        const { image } = extract(native);
-        snapshot(image, index, name);
-        art.destroy();
-        native.destroy({ children: true });
-      }
-    }
     let hash = 2166136261;
     for (const byte of g.getImageData(0, 0, 550, 450).data) hash = Math.imul(hash ^ byte, 16777619);
     return { mode: pack.mode, variants: unique.size, results, cache, galleryHash: hash >>> 0 };

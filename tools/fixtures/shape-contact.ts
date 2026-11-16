@@ -1,277 +1,22 @@
+import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { importAvatarFixture } from './avatar-attachments';
 import { setFieldFixtureLayout } from './field-layout';
 import { importActorFixtures } from './actor-attachments';
 import { Application, Graphics } from 'pixi.js';
-import { AssetPack, type SpriteInfo } from '../../src/game/assets/asset-pack';
-import { SwfClip } from '../../src/game/assets/swf-clip';
-import { rasterMorphSVG } from '../../src/game/assets/morph-raster';
-import { shapeToSVG } from '../../src/game/assets/swf-symbols.mjs';
 import { STARTER } from '../../src/game/data/catalog';
-import type { DecoratedStatus, Tank, TankChild } from '../../src/game/core/types';
+import type { Tank, TankChild } from '../../src/game/core/types';
 import { rotate } from '../../src/game/core/math';
 import { TankView } from '../../src/game/render/tank-view';
 import { SwfTextures } from '../../src/game/render/swf-textures';
 import { createTank } from '../../src/game/simulation/tank';
 import { World, emptyInput } from '../../src/game/simulation/world';
-import { decorateStatus, applyProjectileStatus } from '../../src/game/simulation/status';
 import { detachForcefield } from '../../src/game/simulation/forcefield';
 import { createProjectile } from '../../src/game/simulation/create-projectile';
 import { projectileTankContact } from '../../src/game/simulation/projectile-contact';
-import { nativeMaskGeometryProof } from './native-mask-geometry';
-import { nativeRootGeometryProof } from './native-root-geometry';
-import { nativeTextGeometryProof } from './native-text-geometry';
 import { addTankChild, removeTankChild } from '../../src/game/simulation/tank-display';
-import { displayGeometryHit } from '../../src/game/core/display-geometry';
-
-/** Same geometric cases as the project-authored AVM2 reference probe. */
-function primitiveProof() {
-  const pack = new AssetPack('swf');
-  const shape = (id: number, transparent = false, stroke = false) => ({
-    id,
-    bounds: {
-      xMin: stroke ? 300 : 400,
-      yMin: stroke ? 300 : 400,
-      xMax: stroke ? 1300 : 1200,
-      yMax: stroke ? 1300 : 1200,
-    },
-    fills: [{ kind: 'solid', color: [0, 0, 0, transparent ? 0 : 255] }],
-    lines: stroke ? [{ width: 200, color: [0, 0, 0, 0] }] : [],
-    runs: [
-      {
-        start: [400, 400],
-        ops: [
-          ['L', 1200, 400],
-          ['L', 1200, 1200],
-          ['L', 400, 1200],
-          ['L', 400, 400],
-        ],
-        f0: 0,
-        f1: stroke ? 0 : 1,
-        line: stroke ? 1 : 0,
-      },
-    ],
-  });
-  const shapes = new Map(
-    [
-      shape(90000),
-      shape(90001, true),
-      shape(90002, true, true),
-      {
-        ...shape(90004, true, true),
-        bounds: { xMin: 398, yMin: 398, xMax: 1202, yMax: 1202 },
-        lines: [{ width: 5, color: [0, 0, 0, 0] }],
-      },
-      {
-        ...shape(90005, true, true),
-        bounds: { xMin: 160, yMin: 360, xMax: 1240, yMax: 1240 },
-        lines: [{ width: 80, color: [0, 0, 0, 0], startCap: 1, endCap: 1, join: 2 }],
-        runs: [
-          { start: [400, 400], ops: [['L', 1200, 400]], f0: 0, f1: 0, line: 1 },
-          { start: [200, 800], ops: [['L', 200, 1200]], f0: 0, f1: 0, line: 1 },
-        ],
-      },
-      {
-        ...shape(90003),
-        bounds: { xMin: 400, yMin: 400, xMax: 600, yMax: 1200 },
-        runs: [
-          {
-            start: [400, 400],
-            ops: [
-              ['L', 600, 400],
-              ['L', 600, 1200],
-              ['L', 400, 1200],
-              ['L', 400, 400],
-            ],
-            f0: 0,
-            f1: 1,
-            line: 0,
-          },
-        ],
-      },
-    ].map((s) => [s.id, s]),
-  );
-  const matrix = { a: 1, b: 0, c: 0, d: 1, tx: 0, ty: 0 };
-  const sprites: SpriteInfo[] = [
-    { id: 680, frameCount: 1, placements: [{ charId: 90000, depth: 1, frame: 1, matrix }] },
-    {
-      id: 91000,
-      frameCount: 1,
-      placements: [
-        {
-          charId: 90000,
-          depth: 1,
-          frame: 1,
-          matrix,
-          color: { mult: [1, 1, 1, 0], add: [0, 0, 0, 0] },
-        },
-      ],
-    },
-    {
-      id: 91001,
-      frameCount: 1,
-      placements: [
-        { charId: 90003, depth: 1, frame: 1, matrix, clipDepth: 2 },
-        { charId: 90000, depth: 2, frame: 1, matrix },
-      ],
-    },
-    {
-      id: 91002,
-      frameCount: 1,
-      placements: [{ charId: 90003, depth: 1, frame: 1, matrix, clipDepth: 2 }],
-    },
-  ];
-  const placement = (charId: number, a: number, b = 0, c = 0, d = a) => ({
-    charId,
-    depth: 1,
-    frame: 1,
-    matrix: { ...matrix, a, b, c, d },
-  });
-  const r = Math.SQRT1_2;
-  sprites.push(
-    { id: 91003, frameCount: 1, placements: [placement(90004, 0.5)] },
-    { id: 91004, frameCount: 1, placements: [placement(90004, 4)] },
-    { id: 91005, frameCount: 1, placements: [placement(90004, 2 * r, 2 * r, -0.5 * r, 0.5 * r)] },
-    { id: 91006, frameCount: 1, placements: [placement(91005, 0.5, 0, 0, 2)] },
-    { id: 91007, frameCount: 1, placements: [placement(90004, -0.5, 0, 0, 0.5)] },
-    { id: 91008, frameCount: 1, placements: [placement(90004, 0)] },
-  );
-  Object.assign(pack, { shapes, sprites: new Map(sprites.map((s) => [s.id, s])) });
-  const clip = (id: number) => {
-    const c = new SwfClip(id, pack);
-    c.advance(1);
-    return c;
-  };
-  const body = { ...STARTER.parts[0], type: 1001, x: 0, y: 0, scale: 1 },
-    tank = createTank(1, { ...STARTER, parts: [body] }, 'enemy');
-  const results: Record<string, boolean> = { opaque: pack.hitTest(tank, 40, 40) };
-  tank.hiddenParts.add(body.key);
-  results.hidden = pack.hitTest(tank, 40, 40);
-  tank.alpha = 0;
-  results.alphaZero = pack.hitTest(tank, 40, 40);
-  results.placementAlphaZero = pack.hitClip(clip(91000), 40, 40);
-  results.transparentFill = pack.hitClip(clip(90001), 40, 40);
-  results.transparentStroke = pack.hitClip(clip(90002), 16, 40);
-  results.maskInside = pack.hitClip(clip(91001), 25, 40);
-  results.maskOutside = pack.hitClip(clip(91001), 45, 40);
-  results.maskOnly = pack.hitClip(clip(91002), 25, 40);
-  tank.removedParts.add(body.key);
-  results.removed = pack.hitTest(tank, 40, 40);
-  // Match the controlled AVM2 probe, then exercise nested transforms and reflection.
-  const nested = (x: number) => pack.hitClip(clip(91006), r * x - 10 * r, 4 * r * x + 40 * r);
-  const strokes = {
-    fullHit: pack.hitClip(clip(90004), 20.25, 40),
-    fullMiss: pack.hitClip(clip(90004), 20.75, 40),
-    halfHit: pack.hitClip(clip(91003), 10.375, 20),
-    halfBounds: pack.hitClip(clip(91003), 9.875, 20),
-    halfMiss: pack.hitClip(clip(91003), 10.625, 20),
-    enlargedHit: pack.hitClip(clip(91004), 80.4, 160),
-    enlargedMiss: pack.hitClip(clip(91004), 80.8, 160),
-    nestedHit: nested(21.3),
-    nestedMiss: nested(21.7),
-    reflectedHit: pack.hitClip(clip(91007), -10.375, 20),
-    singular: pack.hitClip(clip(91008), 0, 0),
-    roundCap: pack.hitClip(clip(90005), 19, 20),
-    outsideRoundCap: pack.hitClip(clip(90005), 18.5, 18.5),
-  };
-  const retainedHit = (id: number, x: number, y: number) =>
-    displayGeometryHit(pack.nativeClipGeometry(clip(id)), { x, y });
-  const retainedStrokes = {
-    fullHit: retainedHit(90004, 20.25, 40),
-    fullMiss: retainedHit(90004, 20.75, 40),
-    halfHit: retainedHit(91003, 10.375, 20),
-    halfBounds: retainedHit(91003, 9.875, 20),
-    halfMiss: retainedHit(91003, 10.625, 20),
-    enlargedHit: retainedHit(91004, 80.4, 160),
-    enlargedMiss: retainedHit(91004, 80.8, 160),
-    nestedHit: retainedHit(91006, r * 21.3 - 10 * r, 4 * r * 21.3 + 40 * r),
-    nestedMiss: retainedHit(91006, r * 21.7 - 10 * r, 4 * r * 21.7 + 40 * r),
-    reflectedHit: retainedHit(91007, -10.375, 20),
-    singular: retainedHit(91008, 0, 0),
-    roundCap: retainedHit(90005, 19, 20),
-    outsideRoundCap: retainedHit(90005, 18.5, 18.5),
-  };
-  const retainedTransparentFill = retainedHit(90001, 40, 40);
-  sprites[0] = { ...sprites[0], placements: [placement(90004, 1)] };
-  // Use a fresh pack: the earlier opaque proof has already cached root680's display list.
-  const provider = new AssetPack('swf');
-  Object.assign(provider, { shapes, sprites: new Map(sprites.map((s) => [s.id, s])) });
-  const thinPart = { ...body, scale: 0.5, rotation: 45, x: 8, y: -6 };
-  const thinTank = createTank(2, { ...STARTER, parts: [thinPart] }, 'enemy');
-  thinTank.rotation = 30;
-  thinTank.x = 80;
-  thinTank.y = 90;
-  const point = (x: number) => {
-    const p = rotate({ x: x * thinPart.scale, y: 40 * thinPart.scale }, thinPart.rotation);
-    const t = rotate({ x: p.x + thinPart.x, y: p.y + thinPart.y }, thinTank.rotation);
-    return { x: t.x + thinTank.x, y: t.y + thinTank.y };
-  };
-  const sample = (x: number, zoom = 1) => {
-    const p = point(x);
-    return provider.hitTest(thinTank, p.x, p.y, zoom);
-  };
-  const local = rotate({ x: 10.375, y: 20 }, thinPart.rotation);
-  const shot = createProjectile(3, {
-    owner: 1,
-    enemy: false,
-    kind: 'shell',
-    symbol: 91003,
-    x: 0,
-    y: 0,
-    angle: 0,
-    speed: 0,
-    damage: 1,
-    artScale: 0.5,
-  });
-  const providers = {
-    partHit: sample(20.75),
-    partMiss: sample(21.25),
-    zoomHit: sample(21.5, 0.5),
-    zoomMiss: sample(21.5),
-    designHit: provider.hitDesignPart(thinPart, local.x + thinPart.x, local.y + thinPart.y, 1),
-    projectileHit: provider.hitProjectile(shot, 5.375, 10),
-    projectileMiss: provider.hitProjectile(shot, 5.625, 10),
-  };
-  shot.artPose = clip(shot.symbol);
-  Object.assign(providers, {
-    retainedProjectileHit: provider.hitProjectile(shot, 5.375, 10),
-    retainedProjectileMiss: provider.hitProjectile(shot, 5.625, 10),
-  });
-  provider.dispose();
-  const emptyPaint = rasterMorphSVG(shapeToSVG(shapes.get(90001), undefined), {
-    x: 20,
-    y: 20,
-    width: 40,
-    height: 40,
-  });
-  const transparentInk = emptyPaint.pixels.reduce(
-    (sum, value, index) => sum + (index % 4 === 3 ? value : 0),
-    0,
-  );
-  for (let i = 0; i < 270; i++) {
-    const id = 92000 + i;
-    shapes.set(id, shape(id));
-    pack.hitClip(clip(id), 40, 40);
-  }
-  const cacheSize = pack.shapeContactCount;
-  pack.dispose();
-  return {
-    results,
-    strokes,
-    retainedStrokes,
-    retainedTransparentFill,
-    providers,
-    transparentInk,
-    cacheSize,
-    releasedCache: pack.shapeContactCount,
-  };
-}
 
 export async function showShapeContact(pack: AssetPack, host: HTMLElement) {
-  const primitives = primitiveProof(),
-    nativeGeometry = nativeMaskGeometryProof(pack),
-    rootGeometry = nativeRootGeometryProof(pack),
-    textGeometry = nativeTextGeometryProof(pack),
-    app = new Application(),
+  const app = new Application(),
     textures = new SwfTextures();
   await app.init({
     width: 250,
@@ -385,35 +130,6 @@ export async function showShapeContact(pack: AssetPack, host: HTMLElement) {
     parts: [{ ...STARTER.parts[0], type: 1001, x: 30, y: 0, scale: 1 }],
   };
   try {
-    if (pack.mode === 'swf') {
-      const world = new World([], [], 44);
-      for (const kind of ['sticky', 'stun', 'jam', 'weaken'] as DecoratedStatus[]) {
-        // Source effect marks outlive removal of their selected carrier mount.
-        const t = createTank(
-          world.nextId(),
-          {
-            ...design,
-            parts: [
-              { ...design.parts[0], x: -30 },
-              { ...STARTER.parts[1], key: 'carrier', type: 4013, x: 30, y: 0 },
-            ],
-          },
-          'enemy',
-        );
-        decorateStatus(world, t, kind);
-        world.releaseCarrier(t, t.guns[0]);
-        const point = pointOutsideParts(t, kind);
-        capture(kind + ' · retained mark contact', t, point);
-        checkMembership(t, 'status', point.global);
-      }
-      const infected = createTank(world.nextId(), design, 'enemy');
-      applyProjectileStatus(world, infected, 'infect');
-      // Each child has an authored blank delay before its pop on frames10–17.
-      infected.artAge = 12;
-      const point = pointOutsideParts(infected, 'infection');
-      capture('Infection · overlay contact', infected, point);
-      checkMembership(infected, 'infection', point.global);
-    }
     const world = new World([], [], 44);
     world.player = createTank(
       world.nextId(),
@@ -481,15 +197,7 @@ export async function showShapeContact(pack: AssetPack, host: HTMLElement) {
     checkMembership(field, 'forcefield', fieldPoint.global);
     detachForcefield(field);
     panels.at(-1)!.detached = pack.hitTest(field, fieldPoint.global.x, fieldPoint.global.y);
-    return {
-      mode: pack.mode,
-      primitives,
-      panels,
-      nativeGeometry,
-      rootGeometry,
-      textGeometry,
-      membership,
-    };
+    return { mode: pack.mode, panels, membership };
   } finally {
     app.destroy({ removeView: true }, { children: true });
     textures.destroy();

@@ -65,7 +65,7 @@ export function showWinScreen(
         forced: target.runtimeFor(target.field).pickups.some((p) => p.forced),
         playerAge: target.player.age,
       });
-      const service = new WinScreen(stage, winShade(pack), (action) => {
+      const service = new WinScreen(stage, winShade(), (action) => {
         host.dataset.disposedBytes = String(service.history?.retainedBytes ?? 0);
         host.dataset.disposedAge = String(service.motion.age);
         win = null;
@@ -124,7 +124,7 @@ export function showWinScreen(
       const source = host.querySelector<HTMLCanvasElement>(selector)!;
       context.drawImage(source, 0, 0, 550, 450);
     }
-    winShade(pack)(context);
+    winShade()(context);
     const flashes = host.querySelector<HTMLCanvasElement>('.main-flashes')!;
     context.drawImage(flashes, -40, -40, 630, 530);
     const post = premultiplyBitmap(context.getImageData(0, 0, 550, 450).data);

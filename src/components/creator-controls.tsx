@@ -1,6 +1,6 @@
 'use client';
 import { useLayoutEffect, useRef, useState, type CSSProperties } from 'react';
-import type { AssetPack, Raster } from '@/game/assets/asset-pack';
+import type { AssetPack } from '@/game/assets/asset-pack';
 import type { Vec } from '@/game/core/types';
 import { displayPixel } from '@/game/core/display-values';
 import {
@@ -139,33 +139,6 @@ export function CreatorPrimitives({ pieces }: { pieces: CreatorPrimitive[] }) {
     );
   });
 }
-export function CreatorRasterArt({
-  raster,
-  offsetX = 0,
-  offsetY = 0,
-}: {
-  raster: Raster;
-  offsetX?: number;
-  offsetY?: number;
-}) {
-  return (
-    <img
-      alt=""
-      aria-hidden="true"
-      draggable={false}
-      src={raster.url}
-      style={{
-        position: 'absolute',
-        pointerEvents: 'none',
-        maxWidth: 'none',
-        left: raster.x + offsetX,
-        top: raster.y + offsetY,
-        width: raster.width,
-        height: raster.height,
-      }}
-    />
-  );
-}
 export function CreatorButton({
   pack,
   name,
@@ -195,7 +168,6 @@ export function CreatorButton({
   const held = useRef(false),
     pressed = useRef(false);
   const frame = name === 'Undo_mc' ? (disabled ? 1 : 2) : checked === false ? 2 : 1;
-  const raster = pack.creatorFrames.get(`${name}:${frame}:${state}`);
   const style: CSSProperties = {
     left: p.matrix.tx / 20,
     top: p.matrix.ty / 20,
@@ -204,9 +176,7 @@ export function CreatorButton({
     width: b.width,
     height: b.height,
   };
-  const art = raster ? (
-    <CreatorRasterArt raster={raster} offsetX={-b.x} offsetY={-b.y} />
-  ) : (
+  const art = (
     <svg
       aria-hidden="true"
       viewBox={`${b.x} ${b.y} ${b.width} ${b.height}`}
@@ -338,8 +308,6 @@ export function CreatorSlider({
   const hitRadius = Math.max(
     ...layout.handle.variants[hover ? 1 : 0].map((p) => (p.bounds.xMax - p.bounds.xMin) / 40),
   );
-  const track = pack.creatorFrames.get(`${layout.name}:track`),
-    handle = pack.creatorFrames.get(`handle:${hover ? 2 : 1}`);
   const change = (value: number) => {
     setCurrent(value);
     onChange(value);
@@ -372,27 +340,19 @@ export function CreatorSlider({
         transformOrigin: '0 0',
       }}
     >
-      {track ? (
-        <CreatorRasterArt raster={track} />
-      ) : (
-        <svg
-          aria-hidden="true"
-          viewBox="-65 -18 130 36"
-          width="130"
-          height="36"
-          style={{ position: 'absolute', left: -65, top: -18, overflow: 'visible' }}
-        >
-          <CreatorPrimitives pieces={layout.track} />
-        </svg>
-      )}
-      {handle ? (
-        <CreatorRasterArt raster={handle} offsetX={x} offsetY={y} />
-      ) : (
-        <span
-          className="creator-mock-handle"
-          style={{ left: x - 5, top: y - 5, transform: hover ? 'scale(1.25)' : undefined }}
-        />
-      )}
+      <svg
+        aria-hidden="true"
+        viewBox="-65 -18 130 36"
+        width="130"
+        height="36"
+        style={{ position: 'absolute', left: -65, top: -18, overflow: 'visible' }}
+      >
+        <CreatorPrimitives pieces={layout.track} />
+      </svg>
+      <span
+        className="creator-mock-handle"
+        style={{ left: x - 5, top: y - 5, transform: hover ? 'scale(1.25)' : undefined }}
+      />
       <input
         aria-label={label}
         type="range"

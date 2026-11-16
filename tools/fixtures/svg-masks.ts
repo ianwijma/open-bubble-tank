@@ -1,9 +1,27 @@
 import { svgMaskDefinition } from '../../src/game/assets/svg-mask';
-import { AssetPack } from '../../src/game/assets/asset-pack';
+import { AssetPack, type Raster } from '../../src/game/assets/asset-pack';
+
+/** Stand-in leaf paint, as the mock pack prepares it: a canvas with its image URL. */
+function leaf(paint: (context: CanvasRenderingContext2D) => void): Raster {
+  const canvas = document.createElement('canvas');
+  canvas.width = canvas.height = 100;
+  const context = canvas.getContext('2d')!;
+  paint(context);
+  return {
+    canvas,
+    x: 0,
+    y: 0,
+    width: 100,
+    height: 100,
+    resolution: 1,
+    pixels: context.getImageData(0, 0, 100, 100).data,
+    url: canvas.toDataURL(),
+  };
+}
 
 /** The real compiler must retain nested group transforms, holes and alpha-zero mask fills. */
 async function composedMask() {
-  const pack = new AssetPack('swf');
+  const pack = new AssetPack('mock');
   const matrix = (x = 0, y = 0) => ({ a: 1, b: 0, c: 0, d: 1, tx: x * 20, ty: y * 20 });
   Object.assign(pack, {
     shapes: new Map(
@@ -15,15 +33,25 @@ async function composedMask() {
         },
       ]),
     ),
-    symbols: {
-      svgByCid: new Map([
-        [96001, '<svg><rect width="100" height="100" fill="red"/></svg>'],
-        [
-          96002,
-          '<svg><path fill="blue" fill-opacity="0" fill-rule="evenodd" d="M0 0H40V40H0Z M10 10H30V30H10Z"/></svg>',
-        ],
-      ]),
-    },
+    leaves: new Map([
+      [
+        96001,
+        leaf((context) => {
+          context.fillStyle = 'red';
+          context.fillRect(0, 0, 100, 100);
+        }),
+      ],
+      [
+        96002,
+        leaf((context) => {
+          context.fillStyle = 'blue';
+          context.beginPath();
+          context.rect(0, 0, 40, 40);
+          context.rect(10, 10, 20, 20);
+          context.fill('evenodd');
+        }),
+      ],
+    ]),
     sprites: new Map([
       [
         96003,
@@ -128,49 +156,5 @@ export async function showSvgMasks(pack: AssetPack, host: HTMLElement) {
       outside: Array.from(context.getImageData(x + ox, oy, 1, 1).data),
     };
   }
-  let native: null | {
-    cacheCount: number;
-    detailBackground: number[];
-    closedHeader: number[];
-    closedBody: number[];
-    openBody: number[];
-    guideRemote: number[];
-    guideLocal: number[];
-    guideNote: number[];
-  } = null;
-  if (pack.mode === 'swf') {
-    const detail = pack.creatorFrames.get('viewer:1169:1');
-    const closed = pack.creatorFrames.get('viewer:1137:1');
-    const open = pack.creatorFrames.get('viewer:statistics:10');
-    const guide = pack.creatorFrames.get('viewer:1412:2');
-    const pixel = (raster: typeof detail, x: number, y: number) => {
-      if (!raster) throw new Error('Missing viewer raster');
-      const px = Math.floor((x - raster.x) * raster.resolution),
-        py = Math.floor((y - raster.y) * raster.resolution);
-      return Array.from(raster.canvas.getContext('2d')!.getImageData(px, py, 1, 1).data);
-    };
-    native = {
-      cacheCount: [...pack.creatorFrames.keys()].filter((key) => key.startsWith('viewer:')).length,
-      detailBackground: pixel(detail, 0, 0),
-      closedHeader: pixel(closed, 50, -80),
-      closedBody: pixel(closed, 50, -40),
-      openBody: pixel(open, 50, -40),
-      guideRemote: pixel(guide, 300, 80),
-      guideLocal: pixel(guide, 200, 190),
-      guideNote: pixel(guide, 100, 300),
-    };
-  }
-  if (native) {
-    for (const [i, key] of [
-      'viewer:1169:1',
-      'viewer:1137:1',
-      'viewer:statistics:10',
-      'viewer:1412:2',
-    ].entries()) {
-      const raster = pack.creatorFrames.get(key)!;
-      const scale = Math.min(1, 130 / raster.width, 250 / raster.height);
-      context.drawImage(raster.canvas, i * 135, 140, raster.width * scale, raster.height * scale);
-    }
-  }
-  return { cases: proof, composed: await composedMask(), native };
+  return { cases: proof, composed: await composedMask() };
 }

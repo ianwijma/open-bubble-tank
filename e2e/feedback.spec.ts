@@ -15,9 +15,6 @@ test('mock sound, gesture resume, P/Escape, zoom, guide and centered creator but
 }) => {
   await watchAudio(page);
   await page.goto('/');
-  await expect(
-    page.getByRole('link', { name: 'Bubble Tanks 3 on Internet Archive' }),
-  ).toHaveAttribute('href', 'https://archive.org/details/bubble-tanks-3');
   await page.getByRole('button', { name: 'Play with mock assets' }).click();
   await expect(page.locator('.main-menu')).toHaveAttribute('data-menu-parked', 'false');
   const create = page.getByRole('button', { name: 'Enemy tank creator' });

@@ -20,7 +20,7 @@ export async function showCombatEffectsProof(pack: AssetPack, host: HTMLElement)
     preference: 'webgl',
     preserveDrawingBuffer: true,
   });
-  const view = new CombatEffectsView(pack, textures),
+  const view = new CombatEffectsView(),
     occluder = new Graphics();
   app.stage.addChild(view.bottom, occluder, view.top, view.screen);
   const canvas = document.createElement('canvas');
@@ -84,12 +84,10 @@ export async function showCombatEffectsProof(pack: AssetPack, host: HTMLElement)
     const nested = [...stopped.children.values()].find((child) => child.clip.id === 2068)!.clip;
     const before = [pose.age, pose.frame, stopped.frame, nested.frame];
     view.update([late]);
-    const nativeView = view['nodes'].get(late);
     const retainedProof = {
       frame: late.frame,
       stopped: stopped.frame,
       nested: nested.frame,
-      exactPose: pack.mode === 'swf' ? nativeView?.['renderedPose'] === pose : null,
       pureRead: false,
     };
     view.update([late]);

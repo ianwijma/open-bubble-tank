@@ -17,7 +17,7 @@ const sprites: SpriteInfo[] = [
   { id: 720, frameCount: 27, placements: [{ charId: 718, depth: 1, matrix, frame: 2 }] },
 ];
 function setup(owned = false) {
-  const pack = new AssetPack('swf');
+  const pack = new AssetPack('mock');
   Object.assign(pack, { sprites: new Map(sprites.map((s) => [s.id, s])) });
   const world = new World([], [], 1);
   world.field.enemies = [];

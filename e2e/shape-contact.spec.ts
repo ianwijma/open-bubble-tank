@@ -11,54 +11,7 @@ test(`mock contact follows geometric shapes and attached protection rather than 
   const status = page.getByRole('status');
   await expect(status).toContainText('Ready', { timeout: 60000 });
   const proof = JSON.parse((await status.getAttribute('data-shape-contact'))!);
-  writeFileSync(
-    testInfo.outputPath('native-shape-geometry.json'),
-    JSON.stringify(proof, null, 2) + '\n',
-  );
-  expect(proof.nativeGeometry).toBeNull();
-  expect(proof.rootGeometry).toBeNull();
-  expect(proof.textGeometry).toBeNull();
-  expect(proof.primitives.results).toEqual({
-    opaque: true,
-    hidden: true,
-    alphaZero: true,
-    placementAlphaZero: true,
-    transparentFill: true,
-    transparentStroke: true,
-    maskInside: true,
-    maskOutside: false,
-    maskOnly: false,
-    removed: false,
-  });
-  expect(proof.primitives.strokes).toEqual({
-    fullHit: true,
-    fullMiss: false,
-    halfHit: true,
-    halfBounds: false,
-    halfMiss: false,
-    enlargedHit: true,
-    enlargedMiss: false,
-    nestedHit: true,
-    nestedMiss: false,
-    reflectedHit: true,
-    singular: false,
-    roundCap: true,
-    outsideRoundCap: false,
-  });
-  expect(proof.primitives.retainedStrokes).toEqual(proof.primitives.strokes);
-  expect(proof.primitives.retainedTransparentFill).toBe(true);
-  expect(proof.primitives.providers).toEqual({
-    partHit: true,
-    partMiss: false,
-    zoomHit: true,
-    zoomMiss: false,
-    designHit: true,
-    projectileHit: true,
-    projectileMiss: false,
-    retainedProjectileHit: true,
-    retainedProjectileMiss: false,
-  });
-  expect(proof.primitives.transparentInk).toBe(0);
+  writeFileSync(testInfo.outputPath('shape-contact.json'), JSON.stringify(proof, null, 2) + '\n');
   expect(proof.membership).toHaveLength(1);
   for (const control of proof.membership) {
     expect(control.beforeViews).toBeGreaterThan(0);
@@ -67,8 +20,6 @@ test(`mock contact follows geometric shapes and attached protection rather than 
       [true, false, true, true],
     );
   }
-  expect(proof.primitives.cacheSize).toBe(256);
-  expect(proof.primitives.releasedCache).toBe(0);
   expect(proof.panels).toHaveLength(3);
   const shield = proof.panels.find((p: { label: string }) => p.label.startsWith('Shield'));
   const retained = proof.panels.find((p: { label: string }) => p.label.startsWith('Arrival'));

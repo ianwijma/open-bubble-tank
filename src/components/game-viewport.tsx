@@ -100,7 +100,7 @@ export function GameViewport({
         world.protectionRadius = pack.protectionRadius;
         world.displayWidth = pack.tankDisplayWidth;
         world.hitPart = (t, p, x, y) => pack.hitPart(t, p, x, y, settingsRef.current.zoom);
-        world.hitProjectile = (b, x, y) => pack.hitProjectile(b, x, y, settingsRef.current.zoom);
+        world.hitProjectile = pack.hitProjectile;
         world.projectileBounds = (b) =>
           pack.projectileBounds(
             b,

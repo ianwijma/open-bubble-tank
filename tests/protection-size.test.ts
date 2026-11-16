@@ -22,9 +22,21 @@ test('protection uses successive axis records and the last record child dimensio
 });
 
 function geometry() {
-  const pack = new AssetPack('swf'),
+  const pack = new AssetPack('mock'),
     id = partById(2001)!.symbol;
+  // Stand-in parts without a timeline are sized from their poster, here an empty one.
+  const poster = {
+    x: 0,
+    y: 0,
+    width: 0,
+    height: 0,
+    resolution: 1,
+    canvas: { width: 1, height: 1 } as HTMLCanvasElement,
+    pixels: new Uint8ClampedArray(4),
+    url: '',
+  };
   Object.assign(pack, {
+    frames: new Map([[5005, [poster]]]),
     shapes: new Map([[70001, { id: 70001, bounds: { xMin: 0, yMin: 0, xMax: 400, yMax: 800 } }]]),
     sprites: new Map([
       [
@@ -45,7 +57,7 @@ function geometry() {
   return { pack, tank, part };
 }
 
-test('native live sizing uses current gun angle, scale and retained Script bounds, not stored radius', () => {
+test('live sizing uses current gun angle, scale and retained Script bounds, not stored radius', () => {
   const { pack, tank } = geometry();
   tank.rotation = 85;
   tank.guns[0].angle = 45;

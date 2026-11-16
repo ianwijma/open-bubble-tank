@@ -69,8 +69,6 @@ export async function showPickupProof(pack: AssetPack, host: HTMLElement) {
         count: world.pickups.length,
         x: pickup.x,
         contact: pack.hitTest(world.player, pickup.x, pickup.y),
-        nativeCount: renderer.nativePickups.children.length,
-        nativeAngle: renderer.nativePickups.children[0]?.angle ?? null,
       });
     }
     return { edge, snapshots };

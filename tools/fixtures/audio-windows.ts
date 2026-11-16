@@ -4,10 +4,7 @@ import { mockAudio } from '../../src/game/services/mock-audio';
 /** Inspect the actual ready-to-play blobs, independently decoding their WAV headers/data. */
 export async function showAudioWindows(pack: AssetPack, host: HTMLElement) {
   host.replaceChildren();
-  const sounds =
-    pack.mode === 'mock'
-      ? new Map([561, 562, 563, 564, 565, 566, 567, 568].map((id) => [id, mockAudio(id)]))
-      : pack.sounds;
+  const sounds = new Map([561, 562, 563, 564, 565, 566, 567, 568].map((id) => [id, mockAudio(id)]));
   const proof = [];
   for (const [id, blob] of sounds) {
     const bytes = await blob.arrayBuffer(),

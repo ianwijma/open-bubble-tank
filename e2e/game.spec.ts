@@ -54,20 +54,6 @@ test('mock path: menu, local enemy creator, settings, exploration and pause', as
   await expect(page.locator('.stage-frame').getByRole('alert')).toHaveCount(0);
   expect(errors).toEqual([]);
 });
-test('invalid SWF is rejected and mock fallback remains available', async ({ page }) => {
-  await page.goto('/');
-  await expect(page.getByLabel('Bubble Tanks 3 Flash file')).toBeEnabled();
-  await page.getByLabel('Bubble Tanks 3 Flash file').setInputFiles({
-    name: 'broken.swf',
-    mimeType: 'application/x-shockwave-flash',
-    buffer: Buffer.from('invalid file'),
-  });
-  await expect(page.locator('.stage-frame').getByRole('alert')).toContainText(
-    'Choose a Bubble Tanks 3 SWF',
-  );
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
-  await expect(page.getByRole('button', { name: 'Play', exact: true })).toBeVisible();
-});
 test('mock small viewport keeps the complete stage inside the page', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 812 });
   await page.goto('/');

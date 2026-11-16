@@ -730,7 +730,6 @@ export function TankViewer({
             {guide === 2 ? (
               <ViewerGroup matrix={TANK_VIEWER.guideNote.matrix}>
                 <CreatorText
-                  pack={pack}
                   field={TANK_VIEWER.guideNote}
                   text={'View built-in and saved tanks.\nOnline sharing is offline.'}
                 />

@@ -30,7 +30,6 @@ test(`mock creator detail thumbnails shrink once and retain independent preview 
   expect(
     Math.abs(animated.animated.width - animated.previewAnimated.width * initialRatio),
   ).toBeLessThan(3);
-  expect(proof.rows).toEqual([]);
   const data = await stage
     .locator('canvas')
     .evaluate((node) => (node as HTMLCanvasElement).toDataURL());

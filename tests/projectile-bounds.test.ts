@@ -54,14 +54,8 @@ const source = (
   childAge: (_id, age) => age,
 });
 
-test('an empty native frame retains zero width and cannot intercept even at its registration point', () => {
-  const pack = new AssetPack('swf');
-  Object.assign(pack, {
-    sprites: new Map([[10, { id: 10, frameCount: 16, placements: [] }]]),
-  });
-  const bounds = pack.projectileBounds(bullet({ x: 30, y: 40, artFrame: 7 }));
-  expect(bounds).toEqual({ x: 30, y: 40, width: 0, height: 0, empty: true });
-  expect(pack.projectileWidth(bullet())).toBe(0);
+test('empty bounds cannot intercept even at their registration point', () => {
+  const bounds = { x: 30, y: 40, width: 0, height: 0, empty: true };
   expect(overlaps(bounds, { x: 25, y: 35, width: 10, height: 10 })).toBe(false);
   expect(overlaps(bounds, bounds)).toBe(false);
   expect(
@@ -201,23 +195,7 @@ test('turret construction selects inner frame and owner-facing barrel rotation',
   expect(barrel.matrix).toEqual({ a: 1, b: 0, c: 0, d: 1, tx: 3, ty: 0 });
 });
 
-test('AssetPack uses morph start bounds and derives width from field bounds without a canvas', () => {
-  const pack = new AssetPack('swf');
-  // Parsed symbol metadata is the only fixture: no browser, raster, or pixel hit data.
-  Object.assign(pack, {
-    shapes: new Map([
-      [
-        10,
-        {
-          startBounds: { xMin: -60, yMin: 20, xMax: 100, yMax: 60 },
-          bounds: { xMin: -1000, yMin: -1000, xMax: 1000, yMax: 1000 },
-        },
-      ],
-    ]),
-  });
-  const b = bullet({ x: 10, y: 20, angle: 90, artScale: 2 });
-  close(pack.projectileBounds(b), { x: 4, y: 14, width: 4, height: 16 });
-  expect(pack.projectileWidth(b)).toBeCloseTo(4);
+test('stand-in shell bounds derive from the authored projectile geometry', () => {
   close(new AssetPack('mock').projectileBounds(bullet({ kind: 'shell', x: 10, y: 20 })), {
     x: 8,
     y: 18,
@@ -248,7 +226,7 @@ test('unknown-symbol fallback bounds cover procedural mine/turret strokes and ro
   });
 });
 
-test('retained child poses drive the same transformed native pixel contact and Script bounds', () => {
+test('retained child poses drive transformed Script bounds', () => {
   const clips: ClipSource = {
     spriteInfo: (id) => (id === 10000 || id === 10001 ? { frameCount: 30 } : undefined),
     displayList: (id, frame) =>
@@ -270,24 +248,4 @@ test('retained child poses drive the same transformed native pixel contact and S
   });
   const geometry = source({ 1: { x: 0, y: 0, width: 1, height: 1 } }, clips.displayList);
   close(projectileScriptBounds(geometry, b), { x: 3, y: 27, width: 2, height: 2 });
-  const pack = new AssetPack('swf');
-  Object.assign(pack, {
-    sprites: new Map([[10000, { id: 10000, frameCount: 30, placements: [] }]]),
-    leaves: new Map([
-      [
-        1,
-        {
-          x: 0,
-          y: 0,
-          width: 1,
-          height: 1,
-          resolution: 1,
-          pixels: new Uint8ClampedArray([255, 255, 255, 255]),
-          canvas: { width: 1, height: 1 },
-        },
-      ],
-    ]),
-  });
-  expect(pack.hitProjectile(b, 4, 28)).toBe(true);
-  expect(pack.hitProjectile(b, 4, 408)).toBe(false);
 });

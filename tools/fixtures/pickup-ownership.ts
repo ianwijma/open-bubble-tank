@@ -2,7 +2,6 @@ import { Container } from 'pixi.js';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { DEFAULT_SETTINGS } from '../../src/game/core/constants';
 import type { Pickup } from '../../src/game/core/types';
-import type { SwfClip } from '../../src/game/assets/swf-clip';
 import { GameRenderer } from '../../src/game/render/pixi-renderer';
 import { spawnPickups } from '../../src/game/simulation/pickups';
 import { World } from '../../src/game/simulation/world';
@@ -33,14 +32,9 @@ export async function showPickupOwnership(pack: AssetPack, host: HTMLElement) {
   ctx.fillRect(0, 0, 550, 600);
   const nodes = () =>
     renderer as unknown as {
-      pickupNodes: Map<
-        Pickup,
-        { root: Container; renderedPose?: SwfClip; scriptBounds(): unknown }
-      >;
       mockPickups: Map<Pickup, Container>;
     };
-  const view = (p: Pickup) =>
-    pack.mode === 'swf' ? nodes().pickupNodes.get(p)?.root : nodes().mockPickups.get(p);
+  const view = (p: Pickup) => nodes().mockPickups.get(p);
   const snapshots: { label: string; order: string[]; count: number }[] = [];
   const draw = () => renderer.draw(world, DEFAULT_SETTINGS);
   const panel = (label: string) => {
@@ -52,7 +46,7 @@ export async function showPickupOwnership(pack: AssetPack, host: HTMLElement) {
     ctx.fillStyle = '#e7f7ff';
     ctx.font = '12px Arial';
     ctx.fillText(label, x + 6, y + 145);
-    const layer = pack.mode === 'swf' ? renderer.nativePickups : renderer.pickupArt;
+    const layer = renderer.pickupArt;
     snapshots.push({
       label,
       count: layer.children.length,
@@ -98,16 +92,6 @@ export async function showPickupOwnership(pack: AssetPack, host: HTMLElement) {
     for (let i = 0; i < 15; i++) world.advanceArtwork();
     animationFrames.push(clips.map((c) => c.pose.frame));
     panel('Retained animation at stage30');
-    const sharedPose =
-      pack.mode !== 'swf' ||
-      [a, b, c].every((p, i) => nodes().pickupNodes.get(p)?.renderedPose === clips[i].pose);
-    const sharedQuery =
-      pack.mode !== 'swf' ||
-      [a, b, c].every(
-        (p, i) =>
-          JSON.stringify(nodes().pickupNodes.get(p)?.scriptBounds()) ===
-          JSON.stringify(pack.clipScriptBounds(clips[i].pose)),
-      );
     const state = JSON.stringify(clips);
     for (let i = 0; i < 5; i++) {
       draw();
@@ -124,8 +108,6 @@ export async function showPickupOwnership(pack: AssetPack, host: HTMLElement) {
     return {
       snapshots,
       animationFrames,
-      sharedPose,
-      sharedQuery,
       arrayRetention,
       uidIndependent,
       explicitRemoval,

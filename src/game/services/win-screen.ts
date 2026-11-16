@@ -1,6 +1,5 @@
-import type { AssetPack } from '../assets/asset-pack';
 import { PauseBitmapHistory, straightBitmap } from '../core/bitmap-blur';
-import { WIN_SCREEN, WinScreenState } from '../core/win-screen';
+import { WinScreenState } from '../core/win-screen';
 import type { StageRuntime } from './stage-runtime';
 
 export type WinAction = 'continue' | 'menu';
@@ -97,22 +96,10 @@ export class WinScreen {
   }
 }
 
-/** AssetGate has already rasterized1096; Setup must not wait for an image load. */
-export function winShade(pack: AssetPack) {
-  const shade = WIN_SCREEN.backdrop;
-  const raster = pack.uiFrames.get(shade.symbol)?.[0];
+/** Stand-in shade behind the win screen, painted synchronously during Setup. */
+export function winShade() {
   return (context: CanvasRenderingContext2D) => {
-    if (raster)
-      context.drawImage(
-        raster.canvas,
-        shade.x + raster.x,
-        shade.y + raster.y,
-        raster.width,
-        raster.height,
-      );
-    else {
-      context.fillStyle = '#00000040';
-      context.fillRect(0, 0, 550, 450);
-    }
+    context.fillStyle = '#00000040';
+    context.fillRect(0, 0, 550, 450);
   };
 }

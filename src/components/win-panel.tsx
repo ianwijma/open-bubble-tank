@@ -38,24 +38,6 @@ export function WinPanel({ pack, screen }: { pack: AssetPack; screen: WinScreen 
           {WIN_SCREEN.pieces.map((piece) => {
             const button = piece.name === 'ws_continue_mc' || piece.name === 'ws_main_menu';
             const label = piece.name === 'ws_continue_mc' ? 'Continue Your Game' : 'Main Menu';
-            const raster = pack.uiFrames.get(piece.symbol)?.[
-              button && hovered === piece.name ? 1 : 0
-            ];
-            const image = raster ? (
-              <img
-                alt=""
-                aria-hidden="true"
-                src={raster.url}
-                style={{
-                  position: 'absolute',
-                  left: button ? raster.x - piece.bounds.x : piece.x + raster.x,
-                  top: button ? raster.y - piece.bounds.y : piece.y + raster.y,
-                  width: raster.width,
-                  height: raster.height,
-                  pointerEvents: 'none',
-                }}
-              />
-            ) : null;
             if (button)
               return (
                 <button
@@ -83,32 +65,31 @@ export function WinPanel({ pack, screen }: { pack: AssetPack; screen: WinScreen 
                     cursor: 'pointer',
                   }}
                 >
-                  {image ?? label}
+                  {label}
                 </button>
               );
             return (
               <span key={piece.symbol}>
                 {'text' in piece ? <span className="sr-only">{piece.text}</span> : null}
-                {image ??
-                  ('text' in piece ? (
-                    <span
-                      aria-hidden="true"
-                      style={{
-                        position: 'absolute',
-                        left: piece.x + piece.bounds.x,
-                        top: piece.y + piece.bounds.y,
-                        width: piece.bounds.width,
-                        whiteSpace: 'pre',
-                        textAlign: 'center',
-                        fontFamily: piece.font,
-                        fontSize: piece.size,
-                        lineHeight: `${piece.lineHeight}px`,
-                        color: piece.color,
-                      }}
-                    >
-                      {piece.text}
-                    </span>
-                  ) : null)}
+                {'text' in piece ? (
+                  <span
+                    aria-hidden="true"
+                    style={{
+                      position: 'absolute',
+                      left: piece.x + piece.bounds.x,
+                      top: piece.y + piece.bounds.y,
+                      width: piece.bounds.width,
+                      whiteSpace: 'pre',
+                      textAlign: 'center',
+                      fontFamily: piece.font,
+                      fontSize: piece.size,
+                      lineHeight: `${piece.lineHeight}px`,
+                      color: piece.color,
+                    }}
+                  >
+                    {piece.text}
+                  </span>
+                ) : null}
               </span>
             );
           })}

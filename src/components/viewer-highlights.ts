@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { alphaHit, type AssetPack } from '@/game/assets/asset-pack';
+import type { AssetPack } from '@/game/assets/asset-pack';
 import { ViewerHighlights, viewerCardWarning } from '@/game/core/viewer-highlights';
 import { TANK_VIEWER, viewerRoot, type ViewerLimits } from '@/game/core/tank-viewer';
 import type { ViewerPane } from '@/game/core/viewer-panes';
@@ -50,8 +50,7 @@ export function useViewerHighlights(
     return stage.subscribe({
       step: () => {
         const rect = host.current?.getBoundingClientRect(),
-          point = pointer.current,
-          raster = pack.creatorFrames.get('viewer:1176:1');
+          point = pointer.current;
         const hits = model.rows.map((_, index) => {
           if (focused.current === index) return true; // Keyboard focus is an accessibility addition.
           if (!rect?.width || !point) return false;
@@ -63,7 +62,6 @@ export function useViewerHighlights(
             dy = sy - m.ty / 20,
             x = (m.d * dx - m.c * dy) / det,
             y = (-m.b * dx + m.a * dy) / det;
-          if (raster) return alphaHit(raster, x, y);
           const b = TANK_VIEWER.mask;
           return x >= b.x && y >= b.y && x <= b.x + b.width && y <= b.y + b.height;
         });

@@ -1,4 +1,3 @@
-import type { AssetPack } from '../assets/asset-pack';
 import type { Settings, WorldEvent } from '../core/types';
 import { mockAudio } from './mock-audio';
 import type { StageRuntime } from './stage-runtime';
@@ -20,11 +19,9 @@ export class AudioManager {
   private fade: { direction: 'in' | 'out'; frame: number; total: number; from: number } | null =
     null;
   private unsubscribe: () => void;
-  constructor(pack: AssetPack, stage: StageRuntime) {
-    for (const [id, blob] of pack.sounds) this.urls.set(id, URL.createObjectURL(blob));
-    if (pack.mode === 'mock')
-      for (const id of [561, 562, 563, 564, 565, 566, 567, 568])
-        this.urls.set(id, URL.createObjectURL(mockAudio(id)));
+  constructor(stage: StageRuntime) {
+    for (const id of [561, 562, 563, 564, 565, 566, 567, 568])
+      this.urls.set(id, URL.createObjectURL(mockAudio(id)));
     // MusicPlayer registers on the stage before the World/Main listener.
     this.unsubscribe = stage.subscribe({ beforeStep: () => this.tickMusic() });
   }

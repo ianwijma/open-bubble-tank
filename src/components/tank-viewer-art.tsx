@@ -5,7 +5,7 @@ import type { SwfMatrix } from '@/game/assets/asset-pack';
 import type { TankDesign, Rect } from '@/game/core/types';
 import { viewerWidget, viewerFit, type ViewerPiece } from '@/game/core/tank-viewer';
 import type { StageRuntime } from '@/game/services/stage-runtime';
-import { CreatorPrimitives, CreatorRasterArt } from './creator-controls';
+import { CreatorPrimitives } from './creator-controls';
 import { CreatorText } from './creator-text';
 export const viewerTransform = (m: SwfMatrix) =>
   `matrix(${m.a},${m.b},${m.c},${m.d},${m.tx / 20},${m.ty / 20})`;
@@ -33,11 +33,8 @@ export function ViewerArt({
   symbol: number;
   frame?: number;
 }) {
-  const w = viewerWidget(symbol, frame),
-    r = pack.creatorFrames.get(`viewer:${symbol}:${frame}`);
-  return r ? (
-    <CreatorRasterArt raster={r} />
-  ) : (
+  const w = viewerWidget(symbol, frame);
+  return (
     <svg className="viewer-art" width={1} height={1} aria-hidden="true">
       <CreatorPrimitives pieces={w.art} />
     </svg>
@@ -59,7 +56,6 @@ export function ViewerFields({
   return viewerWidget(symbol, frame).fields.map((f) => (
     <ViewerGroup key={f.name} matrix={f.matrix}>
       <CreatorText
-        pack={pack}
         field={f}
         text={values[f.name] ?? f.initialText ?? ''}
         opacity={opacities[f.name] ?? 1}

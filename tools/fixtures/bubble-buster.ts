@@ -47,7 +47,7 @@ export async function showBubbleBusterProof(pack: AssetPack, host: HTMLElement) 
     world.bullets = [bullet];
     renderer.draw(world, DEFAULT_SETTINGS);
     const frame = captureCanvas(renderer.app.renderer, {
-      target: pack.mode === 'swf' ? renderer.nativeShots : renderer.projectiles,
+      target: renderer.projectiles,
       frame: new Rectangle(bullet.x - 100, bullet.y - 50, 200, 100),
       resolution: 2,
     }) as HTMLCanvasElement;

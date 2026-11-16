@@ -1,11 +1,9 @@
 import { Container, Graphics } from 'pixi.js';
-import type { AssetPack } from '../assets/asset-pack';
 import type { Effect, Field } from '../core/types';
 import { FieldLowerEffectsView, type LowerEffectMaskPaint } from './field-lower-effects-view';
 import { readEffectPlayback } from '../simulation/effect-playback';
 import { STAGE } from '../core/constants';
 import screenArt from '../data/screen-effect-art.json';
-import { SwfSymbolView, type RasterTextures } from './swf-symbol-view';
 
 /** Paint projection retains the actual engine object independently of its transformed values. */
 export interface EffectPaint extends Effect {
@@ -20,12 +18,8 @@ export class CombatEffectsView {
   top = new Container();
   screen = new Container();
   private mockNodes = new Map<Effect, Graphics>();
-  private nodes = new Map<Effect, SwfSymbolView>();
   private lowerViews = new Map<Field, FieldLowerEffectsView>();
-  constructor(
-    private assets: AssetPack,
-    private textures: RasterTextures,
-  ) {
+  constructor() {
     this.screen.position.set(STAGE.cx, STAGE.cy);
   }
   lower(field: Field) {
@@ -36,13 +30,12 @@ export class CombatEffectsView {
     for (const mask of masks) {
       let view = this.lowerViews.get(mask.field);
       if (!view) {
-        view = new FieldLowerEffectsView(mask.read, this.assets, this.textures);
+        view = new FieldLowerEffectsView(mask.read);
         this.lowerViews.set(mask.field, view);
         this.bottom.addChild(view.root);
       }
       view.update(mask);
     }
-    const active = new Set<Effect>();
     const mockActive = new Set<Effect>();
     const order = new Map<Container, number>();
     for (const effect of effects) {
@@ -60,27 +53,6 @@ export class CombatEffectsView {
       if (!layer) throw new Error('Lower effect has no actual field mask projection');
       const index = order.get(layer) ?? 0;
       order.set(layer, index + 1);
-      if (
-        playback.status === 'retained' &&
-        this.assets.mode === 'swf' &&
-        this.assets.hasSymbol(playback.symbol)
-      ) {
-        active.add(identity);
-        let view = this.nodes.get(identity);
-        if (!view) {
-          view = new SwfSymbolView(playback.symbol, this.assets, this.textures);
-          this.nodes.set(identity, view);
-        }
-        if (view.root.parent !== layer) layer.addChild(view.root);
-        layer.setChildIndex(view.root, index);
-        view.root.position.set(effect.x, effect.y);
-        view.root.angle = effect.rotation ?? 0;
-        view.root.scale.set(effect.scale ?? 1);
-        view.setBlendMode(effect.blendMode === 'layer' ? 2 : 1);
-        view.setParentAlpha(alpha);
-        view.updatePose(playback.pose);
-        continue;
-      }
       mockActive.add(identity);
       let graphics = this.mockNodes.get(identity);
       if (!graphics) this.mockNodes.set(identity, (graphics = new Graphics()));
@@ -137,11 +109,6 @@ export class CombatEffectsView {
         });
       }
     }
-    for (const [uid, view] of this.nodes)
-      if (!active.has(uid)) {
-        view.destroy();
-        this.nodes.delete(uid);
-      }
     for (const [clip, graphics] of this.mockNodes)
       if (!mockActive.has(clip)) {
         graphics.destroy();

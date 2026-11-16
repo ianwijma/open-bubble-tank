@@ -73,7 +73,6 @@ export function PausePanel({
   const [closing, setClosing] = useState(false);
   const [caption, setCaption] = useState('');
   const captionPiece = PAUSE.pieces.find((piece) => piece.name === 'rollover_txt')!;
-  const [hovered, setHovered] = useState('');
   const nodes = useRef(new Map<string, HTMLElement>());
   const layer = useRef<HTMLDivElement>(null);
   const shade = useRef<SVGSVGElement>(null);
@@ -147,11 +146,9 @@ export function PausePanel({
   };
   const hover = (name = '', text = '') => {
     motion.hovered = name;
-    setHovered(name);
     setCaption(text);
   };
   const title = PAUSE.pieces.find((piece) => piece.name === 'Paused_mc')!;
-  const titleRaster = pack.uiFrames.get(title.symbol)?.[0];
   const pieceStyle = (piece: typeof title) => {
     const p = motion.positions[piece.name];
     return {
@@ -174,33 +171,22 @@ export function PausePanel({
     >
       <svg className="pause-root" viewBox="0 0 550 450" aria-hidden="true">
         {PAUSE.root.map((piece) => {
-          const raster = pack.uiFrames.get(piece.symbol)?.[0];
           return (
             <g key={piece.depth} transform={pauseMatrix(piece.matrix)}>
-              {raster ? (
-                <image
-                  href={raster.url}
-                  x={raster.x}
-                  y={raster.y}
-                  width={raster.width}
-                  height={raster.height}
-                />
-              ) : (
-                <g transform={pauseMatrix(piece.textMatrix)}>
-                  {piece.glyphs.map((glyph, i) => (
-                    <text
-                      key={i}
-                      x={glyph.x}
-                      y={glyph.y}
-                      fontSize={glyph.size}
-                      fontFamily={glyph.font}
-                      fill={`rgb(${glyph.color.join(',')})`}
-                    >
-                      {glyph.text}
-                    </text>
-                  ))}
-                </g>
-              )}
+              <g transform={pauseMatrix(piece.textMatrix)}>
+                {piece.glyphs.map((glyph, i) => (
+                  <text
+                    key={i}
+                    x={glyph.x}
+                    y={glyph.y}
+                    fontSize={glyph.size}
+                    fontFamily={glyph.font}
+                    fill={`rgb(${glyph.color.join(',')})`}
+                  >
+                    {glyph.text}
+                  </text>
+                ))}
+              </g>
             </g>
           );
         })}
@@ -245,28 +231,10 @@ export function PausePanel({
             }}
             style={pieceStyle(title)}
           >
-            {titleRaster ? (
-              <img
-                alt="paused"
-                src={titleRaster.url}
-                style={{
-                  position: 'absolute',
-                  left: titleRaster.x - title.bounds.x,
-                  top: titleRaster.y - title.bounds.y,
-                  width: titleRaster.width,
-                  height: titleRaster.height,
-                  maxWidth: 'none',
-                }}
-              />
-            ) : (
-              <BubbleText pack={pack} size={40}>
-                paused
-              </BubbleText>
-            )}
+            <BubbleText size={40}>paused</BubbleText>
           </div>
           {buttons.map((button) => {
             const piece = PAUSE.pieces.find((piece) => piece.name === button.name)!;
-            const raster = pack.uiFrames.get(piece.symbol)?.[hovered === button.name ? 1 : 0];
             return (
               <button
                 key={button.name}
@@ -298,22 +266,7 @@ export function PausePanel({
                   } else onMenu();
                 }}
               >
-                {raster ? (
-                  <img
-                    src={raster.url}
-                    alt=""
-                    style={{
-                      position: 'absolute',
-                      left: raster.x - piece.bounds.x,
-                      top: raster.y - piece.bounds.y,
-                      width: raster.width,
-                      height: raster.height,
-                      maxWidth: 'none',
-                    }}
-                  />
-                ) : (
-                  <Icon name={button.icon} size={20} />
-                )}
+                <Icon name={button.icon} size={20} />
               </button>
             );
           })}
@@ -334,14 +287,7 @@ export function PausePanel({
                 top: 2 + PAUSE.caption.size * (PAUSE.caption.ascent / 1024 - 1),
               }}
             >
-              <BubbleText
-                pack={pack}
-                font={PAUSE.caption.font}
-                fontId={PAUSE.caption.fontId}
-                size={PAUSE.caption.size}
-              >
-                {caption || ' '}
-              </BubbleText>
+              <BubbleText size={PAUSE.caption.size}>{caption || ' '}</BubbleText>
             </span>
           </div>
         </div>
