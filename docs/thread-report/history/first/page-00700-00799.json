@@ -1,0 +1,3175 @@
+{
+  "source": "read-only local T3 SQLite projection",
+  "items": [
+    {
+      "position": 700,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae60244b0ec81919b82795751491e97%22%2C%22summary%22%2C1%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000701,
+      "text": "**Checking React guidance**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae60244b0ec81919b82795751491e97%22%2C%22summary%22%2C1%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae60244b0ec81919b82795751491e97%22%2C%22summary%22%2C1%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae60244b0ec81919b82795751491e97",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000701,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T14:59:28.882Z",
+        "completedAt": "2026-10-31T14:59:28.883Z",
+        "updatedAt": "2026-10-31T14:59:28.883Z",
+        "type": "reasoning",
+        "text": "**Checking React guidance**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 701,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae60250dbe08191bc7bca91f4c66397%22%2C%22summary%22%2C0%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000702,
+      "text": "**Preparing pause-dialog repro**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae60250dbe08191bc7bca91f4c66397%22%2C%22summary%22%2C0%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae60250dbe08191bc7bca91f4c66397%22%2C%22summary%22%2C0%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae60250dbe08191bc7bca91f4c66397",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000702,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T14:59:38.029Z",
+        "completedAt": "2026-10-31T14:59:44.428Z",
+        "updatedAt": "2026-10-31T14:59:44.428Z",
+        "type": "reasoning",
+        "text": "**Preparing pause-dialog repro**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 702,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae60250dbe08191bc7bca91f4c66397%22%2C%22summary%22%2C1%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000703,
+      "text": "**Preparing pause-dialog test**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae60250dbe08191bc7bca91f4c66397%22%2C%22summary%22%2C1%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae60250dbe08191bc7bca91f4c66397%22%2C%22summary%22%2C1%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae60250dbe08191bc7bca91f4c66397",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000703,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T14:59:44.399Z",
+        "completedAt": "2026-10-31T14:59:44.428Z",
+        "updatedAt": "2026-10-31T14:59:44.428Z",
+        "type": "reasoning",
+        "text": "**Preparing pause-dialog test**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 703,
+      "itemId": "turn-item:provider:codex:native-item:exec-af0fb604-baff-4e6e-ba91-a6f2edbe5f86",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000704,
+      "text": null,
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:exec-af0fb604-baff-4e6e-ba91-a6f2edbe5f86",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:exec-af0fb604-baff-4e6e-ba91-a6f2edbe5f86",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "exec-af0fb604-baff-4e6e-ba91-a6f2edbe5f86",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000704,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T14:59:44.811Z",
+        "completedAt": "2026-10-31T14:59:45.307Z",
+        "updatedAt": "2026-10-31T14:59:45.307Z",
+        "type": "command_execution",
+        "input": "/bin/bash -lc \"skill-library query 'Debug a flaky React dialog focus transition in Playwright/GitHub Actions. Reproduce a pause hotkey lost immediately after Info closes, then fix the focus lifecycle and verify the actual browser path.' && gh auth status\"",
+        "output": "{\"matches\":[{\"id\":\"1rc0s693\",\"name\":\"context7-mcp\",\"description\":\"This skill should be used when the user asks about libraries, frameworks, API references, or needs code examples. Activates for setup questions, code generation involving libraries, or mentions of specific frameworks like React, Vue, Next.js, Prisma, Supabase, etc.\",\"path\":\"/home/ian/.local/share/skill-library/skills/1rc0s693/SKILL.md\",\"dir\":\"/home/ian/.local/share/skill-library/skills/1rc0s693\",\"probability\":0.79}]}\ngithub.com\n  ✓ Logged in to github.com account ianwijma (keyring)\n  - Active account: true\n  - Git operations protocol: ssh\n  - Token: gho_************************************\n  - Token scopes: 'gist', 'read:org', 'repo'\n",
+        "exitCode": 0
+      }
+    },
+    {
+      "position": 704,
+      "itemId": "turn-item:provider:codex:native-item:exec-8295736c-6fdd-4bfd-aab4-badd362124ef",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000705,
+      "text": null,
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:exec-8295736c-6fdd-4bfd-aab4-badd362124ef",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:exec-8295736c-6fdd-4bfd-aab4-badd362124ef",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "exec-8295736c-6fdd-4bfd-aab4-badd362124ef",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000705,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T14:59:45.295Z",
+        "completedAt": "2026-10-31T14:59:47.088Z",
+        "updatedAt": "2026-10-31T14:59:47.088Z",
+        "type": "web_search",
+        "patterns": [
+          "https://react.dev/reference/react/useLayoutEffect",
+          "https://react.dev/reference/react/useLayoutEffect"
+        ]
+      }
+    },
+    {
+      "position": 705,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae60267b2388191ac0aaf9ac429f422%22%2C%22summary%22%2C0%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000706,
+      "text": "**Checking documentation access**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae60267b2388191ac0aaf9ac429f422%22%2C%22summary%22%2C0%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae60267b2388191ac0aaf9ac429f422%22%2C%22summary%22%2C0%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae60267b2388191ac0aaf9ac429f422",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000706,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T14:59:57.924Z",
+        "completedAt": "2026-10-31T14:59:57.927Z",
+        "updatedAt": "2026-10-31T14:59:57.927Z",
+        "type": "reasoning",
+        "text": "**Checking documentation access**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 706,
+      "itemId": "turn-item:provider:codex:native-item:exec-9f144ec2-9af0-4991-8f42-55be352016a3",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000707,
+      "text": null,
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:exec-9f144ec2-9af0-4991-8f42-55be352016a3",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:exec-9f144ec2-9af0-4991-8f42-55be352016a3",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "exec-9f144ec2-9af0-4991-8f42-55be352016a3",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000707,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:00:00.427Z",
+        "completedAt": "2026-10-31T15:00:00.435Z",
+        "updatedAt": "2026-10-31T15:00:00.435Z",
+        "type": "file_change",
+        "fileName": "/home/ian/.t3/worktrees/open-bubble-tank/t3-d84e5ece/e2e/screens.spec.ts",
+        "diffStr": "@@ -6,2 +6,33 @@\n \n+test('mock Info exit keeps the immediate pause key on the returned dialog', async ({ page }) => {\n+  await page.goto('/');\n+  await page.getByRole('button', { name: 'Play with mock assets' }).click();\n+  await page.getByRole('button', { name: 'Play', exact: true }).click();\n+  await page.getByRole('dialog', { name: 'Choose your tanks' }).getByRole('button', { name: 'PLAY', exact: true }).click();\n+  const game = page.locator('.game-canvas');\n+  await expect(game.locator('canvas')).toBeVisible();\n+  await game.focus();\n+  await page.keyboard.press('KeyP');\n+  await page.getByRole('button', { name: 'Tank info', exact: true }).click();\n+  const info = page.getByRole('dialog', { name: 'Tank information', exact: true });\n+  await expect(info.locator('.tank-portrait canvas')).toBeVisible();\n+  await info.evaluate((element) => {\n+    // Deliver the next key in the first microtask after Info is removed. This\n+    // exposes the commit-to-passive-effect focus gap without clock sleeps.\n+    const observer = new MutationObserver(() => {\n+      if (element.isConnected) return;\n+      observer.disconnect();\n+      const target = document.activeElement!;\n+      document.body.dataset.infoReturnFocus = target.getAttribute('aria-label') ?? target.tagName;\n+      for (const type of ['keydown', 'keyup'])\n+        target.dispatchEvent(new KeyboardEvent(type, { key: 'p', code: 'KeyP', bubbles: true }));\n+    });\n+    observer.observe(document.body, { childList: true, subtree: true });\n+  });\n+  await page.keyboard.press('Escape');\n+  await expect(info).toHaveCount(0);\n+  await expect(page.locator('body')).toHaveAttribute('data-info-return-focus', 'Paused');\n+  await expect(page.getByRole('dialog')).toHaveCount(0);\n+});\n+\n for (const native of [false, true]) {\n",
+        "changes": [
+          {
+            "operation": "update",
+            "path": "/home/ian/.t3/worktrees/open-bubble-tank/t3-d84e5ece/e2e/screens.spec.ts"
+          }
+        ]
+      }
+    },
+    {
+      "position": 707,
+      "itemId": "turn-item:provider:codex:native-item:exec-7c04c058-336c-4cdd-a30e-713a2ce4fa8d",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000708,
+      "text": null,
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:exec-7c04c058-336c-4cdd-a30e-713a2ce4fa8d",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:exec-7c04c058-336c-4cdd-a30e-713a2ce4fa8d",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "exec-7c04c058-336c-4cdd-a30e-713a2ce4fa8d",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000708,
+        "status": "failed",
+        "title": null,
+        "startedAt": "2026-10-31T15:00:00.589Z",
+        "completedAt": "2026-10-31T15:00:10.126Z",
+        "updatedAt": "2026-10-31T15:00:10.126Z",
+        "type": "command_execution",
+        "input": "/bin/bash -lc \"bunx playwright test e2e/screens.spec.ts --grep 'immediate pause key' --output test-results/ci-focus-gap > /tmp/bt3-ci-focus-gap-red.log 2>&1\"",
+        "exitCode": 1
+      }
+    },
+    {
+      "position": 708,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae60274516c8191aeb0d60c05cf0de3%22%2C%22summary%22%2C0%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000709,
+      "text": "**Preparing regression test**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae60274516c8191aeb0d60c05cf0de3%22%2C%22summary%22%2C0%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae60274516c8191aeb0d60c05cf0de3%22%2C%22summary%22%2C0%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae60274516c8191aeb0d60c05cf0de3",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000709,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:00:14.067Z",
+        "completedAt": "2026-10-31T15:00:22.031Z",
+        "updatedAt": "2026-10-31T15:00:22.031Z",
+        "type": "reasoning",
+        "text": "**Preparing regression test**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 709,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae60274516c8191aeb0d60c05cf0de3%22%2C%22summary%22%2C1%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000710,
+      "text": "**Checking observer timing**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae60274516c8191aeb0d60c05cf0de3%22%2C%22summary%22%2C1%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae60274516c8191aeb0d60c05cf0de3%22%2C%22summary%22%2C1%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae60274516c8191aeb0d60c05cf0de3",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000710,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:00:22.004Z",
+        "completedAt": "2026-10-31T15:00:22.031Z",
+        "updatedAt": "2026-10-31T15:00:22.031Z",
+        "type": "reasoning",
+        "text": "**Checking observer timing**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 710,
+      "itemId": "turn-item:provider:codex:native-item:exec-d950834d-d58e-4f16-a851-ad47f3919159",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000711,
+      "text": null,
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:exec-d950834d-d58e-4f16-a851-ad47f3919159",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:exec-d950834d-d58e-4f16-a851-ad47f3919159",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "exec-d950834d-d58e-4f16-a851-ad47f3919159",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000711,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:00:22.241Z",
+        "completedAt": "2026-10-31T15:00:22.244Z",
+        "updatedAt": "2026-10-31T15:00:22.244Z",
+        "type": "command_execution",
+        "input": "/bin/bash -lc 'tail -26 /tmp/bt3-ci-focus-gap-red.log && git status --short --branch && git diff -- src/components/ui.tsx'",
+        "output": "      - waiting for locator('body')\n        14 × locator resolved to <body data-info-return-focus=\"BODY\">…</body>\n           - unexpected value \"BODY\"\n\n\n      32 |   await page.keyboard.press('Escape');\n      33 |   await expect(info).toHaveCount(0);\n    > 34 |   await expect(page.locator('body')).toHaveAttribute('data-info-return-focus', 'Paused');\n         |                                      ^\n      35 |   await expect(page.getByRole('dialog')).toHaveCount(0);\n      36 | });\n      37 |\n        at /home/ian/.t3/worktrees/open-bubble-tank/t3-d84e5ece/e2e/screens.spec.ts:34:38\n\n    Error Context: test-results/ci-focus-gap/screens-mock-Info-exit-kee-3198a--key-on-the-returned-dialog/error-context.md\n\n    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────\n    test-results/ci-focus-gap/screens-mock-Info-exit-kee-3198a--key-on-the-returned-dialog/trace.zip\n    Usage:\n\n        npx playwright show-trace test-results/ci-focus-gap/screens-mock-Info-exit-kee-3198a--key-on-the-returned-dialog/trace.zip\n\n    ────────────────────────────────────────────────────────────────────────────────────────────────\n\n  1 failed\n    e2e/screens.spec.ts:7:1 › mock Info exit keeps the immediate pause key on the returned dialog ──\n## fix/mounted-massive-charge...origin/fix/mounted-massive-charge\n M e2e/screens.spec.ts\n?? reference-captures/\n",
+        "exitCode": 0
+      }
+    },
+    {
+      "position": 711,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6028922008191b02ec2cc31d3e8ca%22%2C%22summary%22%2C0%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000712,
+      "text": "**Applying dialog focus fix**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6028922008191b02ec2cc31d3e8ca%22%2C%22summary%22%2C0%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6028922008191b02ec2cc31d3e8ca%22%2C%22summary%22%2C0%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae6028922008191b02ec2cc31d3e8ca",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000712,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:00:35.636Z",
+        "completedAt": "2026-10-31T15:00:40.588Z",
+        "updatedAt": "2026-10-31T15:00:40.588Z",
+        "type": "reasoning",
+        "text": "**Applying dialog focus fix**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 712,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6028922008191b02ec2cc31d3e8ca%22%2C%22summary%22%2C1%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000713,
+      "text": "**Applying layout focus fix**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6028922008191b02ec2cc31d3e8ca%22%2C%22summary%22%2C1%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6028922008191b02ec2cc31d3e8ca%22%2C%22summary%22%2C1%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae6028922008191b02ec2cc31d3e8ca",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000713,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:00:40.584Z",
+        "completedAt": "2026-10-31T15:00:40.588Z",
+        "updatedAt": "2026-10-31T15:00:40.588Z",
+        "type": "reasoning",
+        "text": "**Applying layout focus fix**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 713,
+      "itemId": "turn-item:provider:codex:native-item:msg_037191ee5675e17f016ae602973624819192da97ae2f36ac67",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000714,
+      "text": "The new regression reproduces the failure deterministically: immediately after Info is removed, focus is on `BODY`, so P never reaches the returned pause dialog. I’ll move the dialog’s focus setup and cleanup into the layout phase to close that gap. The original keyboard assertion stays in place.",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:msg_037191ee5675e17f016ae602973624819192da97ae2f36ac67",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:msg_037191ee5675e17f016ae602973624819192da97ae2f36ac67",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "msg_037191ee5675e17f016ae602973624819192da97ae2f36ac67",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000714,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:00:40.588Z",
+        "completedAt": "2026-10-31T15:00:40.611Z",
+        "updatedAt": "2026-10-31T15:00:40.611Z",
+        "type": "assistant_message",
+        "messageId": "message:provider:codex:native-item:msg_037191ee5675e17f016ae602973624819192da97ae2f36ac67",
+        "text": "The new regression reproduces the failure deterministically: immediately after Info is removed, focus is on `BODY`, so P never reaches the returned pause dialog. I’ll move the dialog’s focus setup and cleanup into the layout phase to close that gap. The original keyboard assertion stays in place.",
+        "streaming": false
+      }
+    },
+    {
+      "position": 714,
+      "itemId": "turn-item:provider:codex:native-item:exec-c62682a2-6e35-442b-9d61-05b3d28448b3",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000715,
+      "text": null,
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:exec-c62682a2-6e35-442b-9d61-05b3d28448b3",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:exec-c62682a2-6e35-442b-9d61-05b3d28448b3",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "exec-c62682a2-6e35-442b-9d61-05b3d28448b3",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000715,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:00:42.887Z",
+        "completedAt": "2026-10-31T15:00:42.888Z",
+        "updatedAt": "2026-10-31T15:00:42.888Z",
+        "type": "file_change",
+        "fileName": "/home/ian/.t3/worktrees/open-bubble-tank/t3-d84e5ece/src/components/ui.tsx",
+        "diffStr": "@@ -1,3 +1,3 @@\n 'use client';\n-import { useEffect, useRef } from 'react';\n+import { useLayoutEffect, useRef } from 'react';\n import type { AssetPack } from '@/game/assets/asset-pack';\n@@ -132,3 +132,5 @@\n   const ref = useRef<HTMLDivElement>(null);\n-  useEffect(() => {\n+  // Swapping dialogs must transfer keyboard focus in the same DOM commit.\n+  // A passive effect leaves a gap where the next key is delivered to BODY.\n+  useLayoutEffect(() => {\n     const previous = document.activeElement as HTMLElement | null;\n",
+        "changes": [
+          {
+            "operation": "update",
+            "path": "/home/ian/.t3/worktrees/open-bubble-tank/t3-d84e5ece/src/components/ui.tsx"
+          }
+        ]
+      }
+    },
+    {
+      "position": 715,
+      "itemId": "turn-item:provider:codex:native-item:exec-cb923a4d-85cc-4f0d-a7e5-24d618917572",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000716,
+      "text": null,
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:exec-cb923a4d-85cc-4f0d-a7e5-24d618917572",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:exec-cb923a4d-85cc-4f0d-a7e5-24d618917572",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "exec-cb923a4d-85cc-4f0d-a7e5-24d618917572",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000716,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:00:43.049Z",
+        "completedAt": "2026-10-31T15:01:10.828Z",
+        "updatedAt": "2026-10-31T15:01:10.828Z",
+        "type": "command_execution",
+        "input": "/bin/bash -lc \"bun run format > /tmp/bt3-ci-focus-format.log && bun run check > /tmp/bt3-ci-focus-check.log 2>&1 && bun run test:e2e e2e/screens.spec.ts --grep 'immediate pause key' > /tmp/bt3-ci-focus-gap-green.log 2>&1\"",
+        "output": "$ prettier --write --ignore-unknown src tests e2e tools *.ts *.json *.mjs\n",
+        "exitCode": 0
+      }
+    },
+    {
+      "position": 716,
+      "itemId": "turn-item:provider:codex:native-item:exec-177b8645-ff2e-451f-988a-5c73daaf0d6d",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000717,
+      "text": null,
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:exec-177b8645-ff2e-451f-988a-5c73daaf0d6d",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:exec-177b8645-ff2e-451f-988a-5c73daaf0d6d",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "exec-177b8645-ff2e-451f-988a-5c73daaf0d6d",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000717,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:00:44.111Z",
+        "completedAt": "2026-10-31T15:00:44.116Z",
+        "updatedAt": "2026-10-31T15:00:44.116Z",
+        "type": "command_execution",
+        "input": "/bin/bash -lc 'mkdir -p reference-captures/ci-pause-repro && cp /tmp/bt3-ci-focus-gap-red.log reference-captures/ci-pause-repro/red.log && git diff --stat && git diff -- src/components/ui.tsx'",
+        "output": " e2e/screens.spec.ts   | 31 +++++++++++++++++++++++++++++++\n src/components/ui.tsx |  6 ++++--\n 2 files changed, 35 insertions(+), 2 deletions(-)\ndiff --git a/src/components/ui.tsx b/src/components/ui.tsx\nindex 8e55d72..52f2a4b 100644\n--- a/src/components/ui.tsx\n+++ b/src/components/ui.tsx\n@@ -1,5 +1,5 @@\n 'use client';\n-import { useEffect, useRef } from 'react';\n+import { useLayoutEffect, useRef } from 'react';\n import type { AssetPack } from '@/game/assets/asset-pack';\n export function BubbleText({\n   children,\n@@ -130,7 +130,9 @@ export function Dialog({\n   closeKey?: string;\n }) {\n   const ref = useRef<HTMLDivElement>(null);\n-  useEffect(() => {\n+  // Swapping dialogs must transfer keyboard focus in the same DOM commit.\n+  // A passive effect leaves a gap where the next key is delivered to BODY.\n+  useLayoutEffect(() => {\n     const previous = document.activeElement as HTMLElement | null;\n     ref.current?.focus();\n     return () => previous?.focus({ preventScroll: true });\n",
+        "exitCode": 0
+      }
+    },
+    {
+      "position": 717,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6029f5d7c8191a6f97680f16d8cae%22%2C%22summary%22%2C0%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000718,
+      "text": "**Verifying source unchanged**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6029f5d7c8191a6f97680f16d8cae%22%2C%22summary%22%2C0%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6029f5d7c8191a6f97680f16d8cae%22%2C%22summary%22%2C0%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae6029f5d7c8191a6f97680f16d8cae",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000718,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:00:58.646Z",
+        "completedAt": "2026-10-31T15:01:03.389Z",
+        "updatedAt": "2026-10-31T15:01:03.389Z",
+        "type": "reasoning",
+        "text": "**Verifying source unchanged**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 718,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6029f5d7c8191a6f97680f16d8cae%22%2C%22summary%22%2C1%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000719,
+      "text": "**Confirming UI source parity**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6029f5d7c8191a6f97680f16d8cae%22%2C%22summary%22%2C1%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6029f5d7c8191a6f97680f16d8cae%22%2C%22summary%22%2C1%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae6029f5d7c8191a6f97680f16d8cae",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000719,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:01:03.374Z",
+        "completedAt": "2026-10-31T15:01:03.389Z",
+        "updatedAt": "2026-10-31T15:01:03.389Z",
+        "type": "reasoning",
+        "text": "**Confirming UI source parity**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 719,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae602af5e408191858becb218afca4f%22%2C%22summary%22%2C0%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000720,
+      "text": "**Awaiting test result**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae602af5e408191858becb218afca4f%22%2C%22summary%22%2C0%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae602af5e408191858becb218afca4f%22%2C%22summary%22%2C0%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae602af5e408191858becb218afca4f",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000720,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:01:13.077Z",
+        "completedAt": "2026-10-31T15:01:15.903Z",
+        "updatedAt": "2026-10-31T15:01:15.903Z",
+        "type": "reasoning",
+        "text": "**Awaiting test result**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 720,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae602bbdeb48191b1a0286dbc025787%22%2C%22summary%22%2C0%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000721,
+      "text": "**Checking dialog event focus**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae602bbdeb48191b1a0286dbc025787%22%2C%22summary%22%2C0%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae602bbdeb48191b1a0286dbc025787%22%2C%22summary%22%2C0%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae602bbdeb48191b1a0286dbc025787",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000721,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:01:28.047Z",
+        "completedAt": "2026-10-31T15:01:34.373Z",
+        "updatedAt": "2026-10-31T15:01:34.373Z",
+        "type": "reasoning",
+        "text": "**Checking dialog event focus**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 721,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae602bbdeb48191b1a0286dbc025787%22%2C%22summary%22%2C1%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000722,
+      "text": "**Testing focus restoration**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae602bbdeb48191b1a0286dbc025787%22%2C%22summary%22%2C1%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae602bbdeb48191b1a0286dbc025787%22%2C%22summary%22%2C1%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae602bbdeb48191b1a0286dbc025787",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000722,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:01:34.340Z",
+        "completedAt": "2026-10-31T15:01:34.373Z",
+        "updatedAt": "2026-10-31T15:01:34.373Z",
+        "type": "reasoning",
+        "text": "**Testing focus restoration**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 722,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae602cccfa48191a6e139f58a2fb547%22%2C%22summary%22%2C0%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000723,
+      "text": "**Preparing separate focus-fix PR**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae602cccfa48191a6e139f58a2fb547%22%2C%22summary%22%2C0%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae602cccfa48191a6e139f58a2fb547%22%2C%22summary%22%2C0%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae602cccfa48191a6e139f58a2fb547",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000723,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:01:45.792Z",
+        "completedAt": "2026-10-31T15:01:49.504Z",
+        "updatedAt": "2026-10-31T15:01:49.504Z",
+        "type": "reasoning",
+        "text": "**Preparing separate focus-fix PR**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 723,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae602cccfa48191a6e139f58a2fb547%22%2C%22summary%22%2C1%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000724,
+      "text": "**Creating focus-fix branch**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae602cccfa48191a6e139f58a2fb547%22%2C%22summary%22%2C1%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae602cccfa48191a6e139f58a2fb547%22%2C%22summary%22%2C1%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae602cccfa48191a6e139f58a2fb547",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000724,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:01:49.492Z",
+        "completedAt": "2026-10-31T15:01:49.504Z",
+        "updatedAt": "2026-10-31T15:01:49.504Z",
+        "type": "reasoning",
+        "text": "**Creating focus-fix branch**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 724,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae602dbf9208191acccc37a279c4e3d%22%2C%22summary%22%2C0%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000725,
+      "text": "**Preparing PR9 from master**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae602dbf9208191acccc37a279c4e3d%22%2C%22summary%22%2C0%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae602dbf9208191acccc37a279c4e3d%22%2C%22summary%22%2C0%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae602dbf9208191acccc37a279c4e3d",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000725,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:02:01.280Z",
+        "completedAt": "2026-10-31T15:02:05.430Z",
+        "updatedAt": "2026-10-31T15:02:05.430Z",
+        "type": "reasoning",
+        "text": "**Preparing PR9 from master**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 725,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae602dbf9208191acccc37a279c4e3d%22%2C%22summary%22%2C1%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000726,
+      "text": "**Running focused PR9 CI**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae602dbf9208191acccc37a279c4e3d%22%2C%22summary%22%2C1%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae602dbf9208191acccc37a279c4e3d%22%2C%22summary%22%2C1%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae602dbf9208191acccc37a279c4e3d",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000726,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:02:05.414Z",
+        "completedAt": "2026-10-31T15:02:05.430Z",
+        "updatedAt": "2026-10-31T15:02:05.430Z",
+        "type": "reasoning",
+        "text": "**Running focused PR9 CI**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 726,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae602eb91fc8191a23017fe3ae76560%22%2C%22summary%22%2C0%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000727,
+      "text": "**Checking branch ancestry**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae602eb91fc8191a23017fe3ae76560%22%2C%22summary%22%2C0%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae602eb91fc8191a23017fe3ae76560%22%2C%22summary%22%2C0%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae602eb91fc8191a23017fe3ae76560",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000727,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:02:16.949Z",
+        "completedAt": "2026-10-31T15:02:18.879Z",
+        "updatedAt": "2026-10-31T15:02:18.879Z",
+        "type": "reasoning",
+        "text": "**Checking branch ancestry**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 727,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae602eb91fc8191a23017fe3ae76560%22%2C%22summary%22%2C1%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000728,
+      "text": "**Checking CI status**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae602eb91fc8191a23017fe3ae76560%22%2C%22summary%22%2C1%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae602eb91fc8191a23017fe3ae76560%22%2C%22summary%22%2C1%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae602eb91fc8191a23017fe3ae76560",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000728,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:02:18.856Z",
+        "completedAt": "2026-10-31T15:02:18.879Z",
+        "updatedAt": "2026-10-31T15:02:18.879Z",
+        "type": "reasoning",
+        "text": "**Checking CI status**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 728,
+      "itemId": "turn-item:provider:codex:native-item:exec-5d74e94d-e96f-4a8c-830f-095aa5d4fe05",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000729,
+      "text": null,
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:exec-5d74e94d-e96f-4a8c-830f-095aa5d4fe05",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:exec-5d74e94d-e96f-4a8c-830f-095aa5d4fe05",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "exec-5d74e94d-e96f-4a8c-830f-095aa5d4fe05",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000729,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:02:19.253Z",
+        "completedAt": "2026-10-31T15:02:19.257Z",
+        "updatedAt": "2026-10-31T15:02:19.257Z",
+        "type": "command_execution",
+        "input": "/bin/bash -lc 'tail -8 /tmp/bt3-ci-focus-gap-green.log && tail -7 /tmp/bt3-ci-focus-check.log && git diff --check && git diff -- e2e/screens.spec.ts | head -55'",
+        "output": "\nRunning 1 test using 1 worker\n\n(node:3096565) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n  ✓  1 e2e/screens.spec.ts:7:1 › mock Info exit keeps the immediate pause key on the returned dialog (3.2s)\n\n  1 passed (4.4s)\n(pass) poster Y branches stay separate from the stopped class measurement pose\n(pass) class bounds transform separate leaves before union for rotated fractional placements\n\n 395 pass\n 0 fail\n 5344 expect() calls\nRan 395 tests across 55 files. [1.89s]\ndiff --git a/e2e/screens.spec.ts b/e2e/screens.spec.ts\nindex f609564..cf07322 100644\n--- a/e2e/screens.spec.ts\n+++ b/e2e/screens.spec.ts\n@@ -4,6 +4,40 @@ import { resolve } from 'node:path';\n const swf =\n   process.env.BT3_SWF_FILE ?? resolve('../documented-bubble-tank-3/re/bt3/uncompressed.swf');\n \n+test('mock Info exit keeps the immediate pause key on the returned dialog', async ({ page }) => {\n+  await page.goto('/');\n+  await page.getByRole('button', { name: 'Play with mock assets' }).click();\n+  await page.getByRole('button', { name: 'Play', exact: true }).click();\n+  await page\n+    .getByRole('dialog', { name: 'Choose your tanks' })\n+    .getByRole('button', { name: 'PLAY', exact: true })\n+    .click();\n+  const game = page.locator('.game-canvas');\n+  await expect(game.locator('canvas')).toBeVisible();\n+  await game.focus();\n+  await page.keyboard.press('KeyP');\n+  await page.getByRole('button', { name: 'Tank info', exact: true }).click();\n+  const info = page.getByRole('dialog', { name: 'Tank information', exact: true });\n+  await expect(info.locator('.tank-portrait canvas')).toBeVisible();\n+  await info.evaluate((element) => {\n+    // Deliver the next key in the first microtask after Info is removed. This\n+    // exposes the commit-to-passive-effect focus gap without clock sleeps.\n+    const observer = new MutationObserver(() => {\n+      if (element.isConnected) return;\n+      observer.disconnect();\n+      const target = document.activeElement!;\n+      document.body.dataset.infoReturnFocus = target.getAttribute('aria-label') ?? target.tagName;\n+      for (const type of ['keydown', 'keyup'])\n+        target.dispatchEvent(new KeyboardEvent(type, { key: 'p', code: 'KeyP', bubbles: true }));\n+    });\n+    observer.observe(document.body, { childList: true, subtree: true });\n+  });\n+  await page.keyboard.press('Escape');\n+  await expect(info).toHaveCount(0);\n+  await expect(page.locator('body')).toHaveAttribute('data-info-return-focus', 'Paused');\n+  await expect(page.getByRole('dialog')).toHaveCount(0);\n+});\n+\n for (const native of [false, true]) {\n   test(`${native ? 'SWF' : 'mock'} tank information shows native class attributes and returns to a frozen pause`, async ({\n     page,\n",
+        "exitCode": 0
+      }
+    },
+    {
+      "position": 729,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae602fe53388191a4e725f5146c76a8%22%2C%22summary%22%2C0%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000730,
+      "text": "**Applying the focus patch**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae602fe53388191a4e725f5146c76a8%22%2C%22summary%22%2C0%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae602fe53388191a4e725f5146c76a8%22%2C%22summary%22%2C0%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae602fe53388191a4e725f5146c76a8",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000730,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:02:36.491Z",
+        "completedAt": "2026-10-31T15:02:36.501Z",
+        "updatedAt": "2026-10-31T15:02:36.501Z",
+        "type": "reasoning",
+        "text": "**Applying the focus patch**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 730,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6030c4dcc8191b020f5737453aa46%22%2C%22summary%22%2C0%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000731,
+      "text": "**Reviewing dialog focus coverage**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6030c4dcc8191b020f5737453aa46%22%2C%22summary%22%2C0%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6030c4dcc8191b020f5737453aa46%22%2C%22summary%22%2C0%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae6030c4dcc8191b020f5737453aa46",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000731,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:02:51.935Z",
+        "completedAt": "2026-10-31T15:02:54.634Z",
+        "updatedAt": "2026-10-31T15:02:54.634Z",
+        "type": "reasoning",
+        "text": "**Reviewing dialog focus coverage**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 731,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6030c4dcc8191b020f5737453aa46%22%2C%22summary%22%2C1%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000732,
+      "text": "**Adding focus regression test**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6030c4dcc8191b020f5737453aa46%22%2C%22summary%22%2C1%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6030c4dcc8191b020f5737453aa46%22%2C%22summary%22%2C1%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae6030c4dcc8191b020f5737453aa46",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000732,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:02:54.614Z",
+        "completedAt": "2026-10-31T15:02:54.634Z",
+        "updatedAt": "2026-10-31T15:02:54.634Z",
+        "type": "reasoning",
+        "text": "**Adding focus regression test**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 732,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6031d26bc8191af278e17afb98b07%22%2C%22summary%22%2C0%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000733,
+      "text": "**Re-running red baseline**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6031d26bc8191af278e17afb98b07%22%2C%22summary%22%2C0%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6031d26bc8191af278e17afb98b07%22%2C%22summary%22%2C0%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae6031d26bc8191af278e17afb98b07",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000733,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:03:08.715Z",
+        "completedAt": "2026-10-31T15:03:11.125Z",
+        "updatedAt": "2026-10-31T15:03:11.125Z",
+        "type": "reasoning",
+        "text": "**Re-running red baseline**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 733,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6031d26bc8191af278e17afb98b07%22%2C%22summary%22%2C1%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000734,
+      "text": "**Checking stored baseline**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6031d26bc8191af278e17afb98b07%22%2C%22summary%22%2C1%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6031d26bc8191af278e17afb98b07%22%2C%22summary%22%2C1%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae6031d26bc8191af278e17afb98b07",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000734,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:03:11.121Z",
+        "completedAt": "2026-10-31T15:03:11.126Z",
+        "updatedAt": "2026-10-31T15:03:11.126Z",
+        "type": "reasoning",
+        "text": "**Checking stored baseline**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 734,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6032f1b64819196a96d35a5b94617%22%2C%22summary%22%2C0%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000735,
+      "text": "**Saving focus test patch**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6032f1b64819196a96d35a5b94617%22%2C%22summary%22%2C0%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6032f1b64819196a96d35a5b94617%22%2C%22summary%22%2C0%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae6032f1b64819196a96d35a5b94617",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000735,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:03:20.623Z",
+        "completedAt": "2026-10-31T15:03:21.813Z",
+        "updatedAt": "2026-10-31T15:03:21.813Z",
+        "type": "reasoning",
+        "text": "**Saving focus test patch**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 735,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6032f1b64819196a96d35a5b94617%22%2C%22summary%22%2C1%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000736,
+      "text": "**Isolating focus repair**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6032f1b64819196a96d35a5b94617%22%2C%22summary%22%2C1%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6032f1b64819196a96d35a5b94617%22%2C%22summary%22%2C1%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae6032f1b64819196a96d35a5b94617",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000736,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:03:21.806Z",
+        "completedAt": "2026-10-31T15:03:21.813Z",
+        "updatedAt": "2026-10-31T15:03:21.813Z",
+        "type": "reasoning",
+        "text": "**Isolating focus repair**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 736,
+      "itemId": "turn-item:provider:codex:native-item:msg_037191ee5675e17f016ae6033756e48191b8d47d15da9a0f4e",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000737,
+      "text": "The focus fix passes the new regression. I’ll isolate it in its own small PR, then update the charging PR with that fix and rerun CI. The original Info/P test will remain unchanged.",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:msg_037191ee5675e17f016ae6033756e48191b8d47d15da9a0f4e",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:msg_037191ee5675e17f016ae6033756e48191b8d47d15da9a0f4e",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "msg_037191ee5675e17f016ae6033756e48191b8d47d15da9a0f4e",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000737,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:03:21.814Z",
+        "completedAt": "2026-10-31T15:03:21.873Z",
+        "updatedAt": "2026-10-31T15:03:21.873Z",
+        "type": "assistant_message",
+        "messageId": "message:provider:codex:native-item:msg_037191ee5675e17f016ae6033756e48191b8d47d15da9a0f4e",
+        "text": "The focus fix passes the new regression. I’ll isolate it in its own small PR, then update the charging PR with that fix and rerun CI. The original Info/P test will remain unchanged.",
+        "streaming": false
+      }
+    },
+    {
+      "position": 737,
+      "itemId": "turn-item:provider:codex:native-item:exec-452e85b0-f35d-4adc-bcb6-4b2d9f9badba",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000738,
+      "text": null,
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:exec-452e85b0-f35d-4adc-bcb6-4b2d9f9badba",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:exec-452e85b0-f35d-4adc-bcb6-4b2d9f9badba",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "exec-452e85b0-f35d-4adc-bcb6-4b2d9f9badba",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000738,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:03:22.989Z",
+        "completedAt": "2026-10-31T15:03:22.995Z",
+        "updatedAt": "2026-10-31T15:03:22.995Z",
+        "type": "command_execution",
+        "input": "/bin/bash -lc 'git diff -- e2e/screens.spec.ts > reference-captures/ci-pause-repro/screens-test.patch && git diff -- src/components/ui.tsx > reference-captures/ci-pause-repro/dialog-focus.patch && git restore -- e2e/screens.spec.ts src/components/ui.tsx && git switch -c fix/dialog-keyboard-focus origin/master && git apply reference-captures/ci-pause-repro/screens-test.patch'",
+        "output": "Switched to a new branch 'fix/dialog-keyboard-focus'\nBranch 'fix/dialog-keyboard-focus' set up to track remote branch 'master' from 'origin'.\n",
+        "exitCode": 0
+      }
+    },
+    {
+      "position": 738,
+      "itemId": "turn-item:provider:codex:native-item:exec-4fac3529-72e0-4d4d-add7-963e602ba2ea",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000739,
+      "text": null,
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:exec-4fac3529-72e0-4d4d-add7-963e602ba2ea",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:exec-4fac3529-72e0-4d4d-add7-963e602ba2ea",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "exec-4fac3529-72e0-4d4d-add7-963e602ba2ea",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000739,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:03:22.996Z",
+        "completedAt": "2026-10-31T15:03:23.005Z",
+        "updatedAt": "2026-10-31T15:03:23.005Z",
+        "type": "file_change",
+        "fileName": "/home/ian/.t3/worktrees/open-bubble-tank/t3-d84e5ece/e2e/screens.spec.ts",
+        "diffStr": "@@ -36,4 +36,4 @@\n   await expect(info).toHaveCount(0);\n+  await expect(page.getByRole('dialog')).toHaveCount(0);\n   await expect(page.locator('body')).toHaveAttribute('data-info-return-focus', 'Paused');\n-  await expect(page.getByRole('dialog')).toHaveCount(0);\n });\n",
+        "changes": [
+          {
+            "operation": "update",
+            "path": "/home/ian/.t3/worktrees/open-bubble-tank/t3-d84e5ece/e2e/screens.spec.ts"
+          }
+        ]
+      }
+    },
+    {
+      "position": 739,
+      "itemId": "turn-item:provider:codex:native-item:exec-dc3d1fc9-d876-4308-bb61-ad4ad81ea146",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000740,
+      "text": null,
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:exec-dc3d1fc9-d876-4308-bb61-ad4ad81ea146",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:exec-dc3d1fc9-d876-4308-bb61-ad4ad81ea146",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "exec-dc3d1fc9-d876-4308-bb61-ad4ad81ea146",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000740,
+        "status": "failed",
+        "title": null,
+        "startedAt": "2026-10-31T15:03:23.160Z",
+        "completedAt": "2026-10-31T15:03:48.528Z",
+        "updatedAt": "2026-10-31T15:03:48.528Z",
+        "type": "command_execution",
+        "input": "/bin/bash -lc \"bun run test:e2e e2e/screens.spec.ts --grep 'immediate pause key' > /tmp/bt3-dialog-focus-baseline-red.log 2>&1\"",
+        "exitCode": 1
+      }
+    },
+    {
+      "position": 740,
+      "itemId": "turn-item:provider:codex:native-item:exec-55a0028e-558c-4f18-8152-4f395830809c",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000741,
+      "text": null,
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:exec-55a0028e-558c-4f18-8152-4f395830809c",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:exec-55a0028e-558c-4f18-8152-4f395830809c",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "exec-55a0028e-558c-4f18-8152-4f395830809c",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000741,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:03:24.165Z",
+        "completedAt": "2026-10-31T15:03:24.210Z",
+        "updatedAt": "2026-10-31T15:03:24.210Z",
+        "type": "dynamic_tool",
+        "toolName": "t3-code.unwatch_pull_request",
+        "input": {
+          "url": "https://github.com/ianwijma/open-bubble-tank/pull/8"
+        },
+        "output": {
+          "host": "github.com",
+          "repository": "ianwijma/open-bubble-tank",
+          "number": 8,
+          "url": "https://github.com/ianwijma/open-bubble-tank/pull/8",
+          "watching": false,
+          "wasWatching": true
+        }
+      }
+    },
+    {
+      "position": 741,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6033ec11081918c5cba54e8af6fcc%22%2C%22summary%22%2C0%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000742,
+      "text": "**Checking CI baseline**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6033ec11081918c5cba54e8af6fcc%22%2C%22summary%22%2C0%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6033ec11081918c5cba54e8af6fcc%22%2C%22summary%22%2C0%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae6033ec11081918c5cba54e8af6fcc",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000742,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:03:39.999Z",
+        "completedAt": "2026-10-31T15:03:43.372Z",
+        "updatedAt": "2026-10-31T15:03:43.372Z",
+        "type": "reasoning",
+        "text": "**Checking CI baseline**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 742,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6033ec11081918c5cba54e8af6fcc%22%2C%22summary%22%2C1%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000743,
+      "text": "**Adding fidelity chapter**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6033ec11081918c5cba54e8af6fcc%22%2C%22summary%22%2C1%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6033ec11081918c5cba54e8af6fcc%22%2C%22summary%22%2C1%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae6033ec11081918c5cba54e8af6fcc",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000743,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:03:43.368Z",
+        "completedAt": "2026-10-31T15:03:43.372Z",
+        "updatedAt": "2026-10-31T15:03:43.372Z",
+        "type": "reasoning",
+        "text": "**Adding fidelity chapter**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 743,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6034f5a7c8191a0f7165154da477f%22%2C%22summary%22%2C0%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000744,
+      "text": "**Running pre-paint cleanup**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6034f5a7c8191a0f7165154da477f%22%2C%22summary%22%2C0%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6034f5a7c8191a0f7165154da477f%22%2C%22summary%22%2C0%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae6034f5a7c8191a0f7165154da477f",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000744,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:03:56.140Z",
+        "completedAt": "2026-10-31T15:04:00.157Z",
+        "updatedAt": "2026-10-31T15:04:00.157Z",
+        "type": "reasoning",
+        "text": "**Running pre-paint cleanup**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 744,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6034f5a7c8191a0f7165154da477f%22%2C%22summary%22%2C1%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000745,
+      "text": "**Checking focus patch compatibility**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6034f5a7c8191a0f7165154da477f%22%2C%22summary%22%2C1%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6034f5a7c8191a0f7165154da477f%22%2C%22summary%22%2C1%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae6034f5a7c8191a0f7165154da477f",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000745,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:04:00.150Z",
+        "completedAt": "2026-10-31T15:04:00.157Z",
+        "updatedAt": "2026-10-31T15:04:00.157Z",
+        "type": "reasoning",
+        "text": "**Checking focus patch compatibility**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 745,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6036023c48191aa46d3f70912e701%22%2C%22summary%22%2C0%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000746,
+      "text": "**Checking patch context**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6036023c48191aa46d3f70912e701%22%2C%22summary%22%2C0%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6036023c48191aa46d3f70912e701%22%2C%22summary%22%2C0%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae6036023c48191aa46d3f70912e701",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000746,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:04:07.969Z",
+        "completedAt": "2026-10-31T15:04:15.594Z",
+        "updatedAt": "2026-10-31T15:04:15.594Z",
+        "type": "reasoning",
+        "text": "**Checking patch context**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 746,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6036023c48191aa46d3f70912e701%22%2C%22summary%22%2C1%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000747,
+      "text": "**Checking Info unmount test**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6036023c48191aa46d3f70912e701%22%2C%22summary%22%2C1%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6036023c48191aa46d3f70912e701%22%2C%22summary%22%2C1%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae6036023c48191aa46d3f70912e701",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000747,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:04:15.582Z",
+        "completedAt": "2026-10-31T15:04:15.595Z",
+        "updatedAt": "2026-10-31T15:04:15.595Z",
+        "type": "reasoning",
+        "text": "**Checking Info unmount test**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 747,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6036f91b08191980b42bedc399a7f%22%2C%22summary%22%2C0%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000748,
+      "text": "**Updating the dialog observer**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6036f91b08191980b42bedc399a7f%22%2C%22summary%22%2C0%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6036f91b08191980b42bedc399a7f%22%2C%22summary%22%2C0%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae6036f91b08191980b42bedc399a7f",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000748,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:04:24.094Z",
+        "completedAt": "2026-10-31T15:04:29.255Z",
+        "updatedAt": "2026-10-31T15:04:29.255Z",
+        "type": "reasoning",
+        "text": "**Updating the dialog observer**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 748,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6036f91b08191980b42bedc399a7f%22%2C%22summary%22%2C1%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000749,
+      "text": "**Refining dialog state predicate**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6036f91b08191980b42bedc399a7f%22%2C%22summary%22%2C1%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6036f91b08191980b42bedc399a7f%22%2C%22summary%22%2C1%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae6036f91b08191980b42bedc399a7f",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000749,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:04:29.243Z",
+        "completedAt": "2026-10-31T15:04:29.255Z",
+        "updatedAt": "2026-10-31T15:04:29.255Z",
+        "type": "reasoning",
+        "text": "**Refining dialog state predicate**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 749,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6037b908081919fdda3268df5ba03%22%2C%22summary%22%2C0%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000750,
+      "text": "**Checking Dialog focus behavior**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6037b908081919fdda3268df5ba03%22%2C%22summary%22%2C0%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6037b908081919fdda3268df5ba03%22%2C%22summary%22%2C0%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae6037b908081919fdda3268df5ba03",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000750,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:04:41.729Z",
+        "completedAt": "2026-10-31T15:04:42.706Z",
+        "updatedAt": "2026-10-31T15:04:42.706Z",
+        "type": "reasoning",
+        "text": "**Checking Dialog focus behavior**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 750,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6037b908081919fdda3268df5ba03%22%2C%22summary%22%2C1%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000751,
+      "text": "**Querying red baseline log**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6037b908081919fdda3268df5ba03%22%2C%22summary%22%2C1%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6037b908081919fdda3268df5ba03%22%2C%22summary%22%2C1%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae6037b908081919fdda3268df5ba03",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000751,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:04:42.693Z",
+        "completedAt": "2026-10-31T15:04:42.706Z",
+        "updatedAt": "2026-10-31T15:04:42.706Z",
+        "type": "reasoning",
+        "text": "**Querying red baseline log**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 751,
+      "itemId": "turn-item:provider:codex:native-item:exec-778beada-1052-44bc-b4fb-f011b6978ef1",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000752,
+      "text": null,
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:exec-778beada-1052-44bc-b4fb-f011b6978ef1",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:exec-778beada-1052-44bc-b4fb-f011b6978ef1",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "exec-778beada-1052-44bc-b4fb-f011b6978ef1",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000752,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:04:43.185Z",
+        "completedAt": "2026-10-31T15:06:42.884Z",
+        "updatedAt": "2026-10-31T15:06:42.884Z",
+        "type": "command_execution",
+        "input": "/bin/bash -lc \"tail -24 /tmp/bt3-dialog-focus-baseline-red.log && git diff --stat && git apply reference-captures/ci-pause-repro/dialog-focus.patch && bun run format > /tmp/bt3-focus-only-format.log && bun run check > /tmp/bt3-focus-only-check.log 2>&1 && bun run test:e2e --grep 'mock|synthetic|SWF tank information' --output test-results/focus-fix > /tmp/bt3-focus-only-e2e.log 2>&1\"",
+        "output": "\n\n      35 |   await page.keyboard.press('Escape');\n      36 |   await expect(info).toHaveCount(0);\n    > 37 |   await expect(page.getByRole('dialog')).toHaveCount(0);\n         |                                          ^\n      38 |   await expect(page.locator('body')).toHaveAttribute('data-info-return-focus', 'Paused');\n      39 | });\n      40 |\n        at /home/ian/.t3/worktrees/open-bubble-tank/t3-d84e5ece/e2e/screens.spec.ts:37:42\n\n    Error Context: test-results/screens-mock-Info-exit-kee-3198a--key-on-the-returned-dialog/error-context.md\n\n    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────\n    test-results/screens-mock-Info-exit-kee-3198a--key-on-the-returned-dialog/trace.zip\n    Usage:\n\n        npx playwright show-trace test-results/screens-mock-Info-exit-kee-3198a--key-on-the-returned-dialog/trace.zip\n\n    ────────────────────────────────────────────────────────────────────────────────────────────────\n\n  1 failed\n    e2e/screens.spec.ts:7:1 › mock Info exit keeps the immediate pause key on the returned dialog ──\nerror: script \"test:e2e\" exited with code 1\n e2e/screens.spec.ts | 34 ++++++++++++++++++++++++++++++++++\n 1 file changed, 34 insertions(+)\n$ prettier --write --ignore-unknown src tests e2e tools *.ts *.json *.mjs\n",
+        "exitCode": 0
+      }
+    },
+    {
+      "position": 752,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6038ebc508191ad09fdf2e2fe068e%22%2C%22summary%22%2C0%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000753,
+      "text": "**Copying baseline red log**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6038ebc508191ad09fdf2e2fe068e%22%2C%22summary%22%2C0%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6038ebc508191ad09fdf2e2fe068e%22%2C%22summary%22%2C0%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae6038ebc508191ad09fdf2e2fe068e",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000753,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:04:56.200Z",
+        "completedAt": "2026-10-31T15:05:02.036Z",
+        "updatedAt": "2026-10-31T15:05:02.036Z",
+        "type": "reasoning",
+        "text": "**Copying baseline red log**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 753,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6038ebc508191ad09fdf2e2fe068e%22%2C%22summary%22%2C1%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000754,
+      "text": "**Resolving chapter conflict**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6038ebc508191ad09fdf2e2fe068e%22%2C%22summary%22%2C1%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6038ebc508191ad09fdf2e2fe068e%22%2C%22summary%22%2C1%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae6038ebc508191ad09fdf2e2fe068e",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000754,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:05:02.020Z",
+        "completedAt": "2026-10-31T15:05:02.036Z",
+        "updatedAt": "2026-10-31T15:05:02.036Z",
+        "type": "reasoning",
+        "text": "**Resolving chapter conflict**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 754,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6039c39688191b55900dddee7ef3c%22%2C%22summary%22%2C0%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000755,
+      "text": "**Preparing forcefield restoration**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6039c39688191b55900dddee7ef3c%22%2C%22summary%22%2C0%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6039c39688191b55900dddee7ef3c%22%2C%22summary%22%2C0%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae6039c39688191b55900dddee7ef3c",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000755,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:05:14.975Z",
+        "completedAt": "2026-10-31T15:05:16.978Z",
+        "updatedAt": "2026-10-31T15:05:16.978Z",
+        "type": "reasoning",
+        "text": "**Preparing forcefield restoration**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 755,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6039c39688191b55900dddee7ef3c%22%2C%22summary%22%2C1%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000756,
+      "text": "**Running CI verification**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6039c39688191b55900dddee7ef3c%22%2C%22summary%22%2C1%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6039c39688191b55900dddee7ef3c%22%2C%22summary%22%2C1%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae6039c39688191b55900dddee7ef3c",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000756,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:05:16.948Z",
+        "completedAt": "2026-10-31T15:05:16.978Z",
+        "updatedAt": "2026-10-31T15:05:16.978Z",
+        "type": "reasoning",
+        "text": "**Running CI verification**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 756,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae603acf0d08191b5f69c5de2f21e92%22%2C%22summary%22%2C0%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000757,
+      "text": "**Preparing dialog-focus fix**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae603acf0d08191b5f69c5de2f21e92%22%2C%22summary%22%2C0%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae603acf0d08191b5f69c5de2f21e92%22%2C%22summary%22%2C0%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae603acf0d08191b5f69c5de2f21e92",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000757,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:05:27.472Z",
+        "completedAt": "2026-10-31T15:05:32.227Z",
+        "updatedAt": "2026-10-31T15:05:32.227Z",
+        "type": "reasoning",
+        "text": "**Preparing dialog-focus fix**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 757,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae603acf0d08191b5f69c5de2f21e92%22%2C%22summary%22%2C1%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000758,
+      "text": "**Checking focus-test results**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae603acf0d08191b5f69c5de2f21e92%22%2C%22summary%22%2C1%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae603acf0d08191b5f69c5de2f21e92%22%2C%22summary%22%2C1%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae603acf0d08191b5f69c5de2f21e92",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000758,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:05:32.221Z",
+        "completedAt": "2026-10-31T15:05:32.227Z",
+        "updatedAt": "2026-10-31T15:05:32.227Z",
+        "type": "reasoning",
+        "text": "**Checking focus-test results**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 758,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae603bc350881919409a116f99e3c1e%22%2C%22summary%22%2C0%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000759,
+      "text": "**Checking canvas input race**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae603bc350881919409a116f99e3c1e%22%2C%22summary%22%2C0%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae603bc350881919409a116f99e3c1e%22%2C%22summary%22%2C0%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae603bc350881919409a116f99e3c1e",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000759,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:05:44.035Z",
+        "completedAt": "2026-10-31T15:05:48.305Z",
+        "updatedAt": "2026-10-31T15:05:48.305Z",
+        "type": "reasoning",
+        "text": "**Checking canvas input race**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 759,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae603bc350881919409a116f99e3c1e%22%2C%22summary%22%2C1%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000760,
+      "text": "**Checking pause input readiness**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae603bc350881919409a116f99e3c1e%22%2C%22summary%22%2C1%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae603bc350881919409a116f99e3c1e%22%2C%22summary%22%2C1%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae603bc350881919409a116f99e3c1e",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000760,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:05:48.302Z",
+        "completedAt": "2026-10-31T15:05:48.305Z",
+        "updatedAt": "2026-10-31T15:05:48.305Z",
+        "type": "reasoning",
+        "text": "**Checking pause input readiness**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 760,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae603cc484881919c1cfadffd8fd5da%22%2C%22summary%22%2C0%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000761,
+      "text": "**Preparing Pause game test**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae603cc484881919c1cfadffd8fd5da%22%2C%22summary%22%2C0%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae603cc484881919c1cfadffd8fd5da%22%2C%22summary%22%2C0%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae603cc484881919c1cfadffd8fd5da",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000761,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:05:59.598Z",
+        "completedAt": "2026-10-31T15:06:03.079Z",
+        "updatedAt": "2026-10-31T15:06:03.079Z",
+        "type": "reasoning",
+        "text": "**Preparing Pause game test**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 761,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae603cc484881919c1cfadffd8fd5da%22%2C%22summary%22%2C1%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000762,
+      "text": "**Keeping initial pause test**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae603cc484881919c1cfadffd8fd5da%22%2C%22summary%22%2C1%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae603cc484881919c1cfadffd8fd5da%22%2C%22summary%22%2C1%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae603cc484881919c1cfadffd8fd5da",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000762,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:06:03.077Z",
+        "completedAt": "2026-10-31T15:06:03.079Z",
+        "updatedAt": "2026-10-31T15:06:03.079Z",
+        "type": "reasoning",
+        "text": "**Keeping initial pause test**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 762,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae603db0d588191885d3ce0f98ebf4d%22%2C%22summary%22%2C0%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000763,
+      "text": "**Checking current metrics**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae603db0d588191885d3ce0f98ebf4d%22%2C%22summary%22%2C0%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae603db0d588191885d3ce0f98ebf4d%22%2C%22summary%22%2C0%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae603db0d588191885d3ce0f98ebf4d",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000763,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:06:10.047Z",
+        "completedAt": "2026-10-31T15:06:20.026Z",
+        "updatedAt": "2026-10-31T15:06:20.026Z",
+        "type": "reasoning",
+        "text": "**Checking current metrics**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 763,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae603db0d588191885d3ce0f98ebf4d%22%2C%22summary%22%2C1%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000764,
+      "text": "**Checking pending test references**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae603db0d588191885d3ce0f98ebf4d%22%2C%22summary%22%2C1%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae603db0d588191885d3ce0f98ebf4d%22%2C%22summary%22%2C1%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae603db0d588191885d3ce0f98ebf4d",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000764,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:06:20.020Z",
+        "completedAt": "2026-10-31T15:06:20.026Z",
+        "updatedAt": "2026-10-31T15:06:20.026Z",
+        "type": "reasoning",
+        "text": "**Checking pending test references**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 764,
+      "itemId": "turn-item:provider:codex:native-item:exec-d0face2a-9600-4eed-9a44-1015af0c592a",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000765,
+      "text": null,
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:exec-d0face2a-9600-4eed-9a44-1015af0c592a",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:exec-d0face2a-9600-4eed-9a44-1015af0c592a",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "exec-d0face2a-9600-4eed-9a44-1015af0c592a",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000765,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:06:28.242Z",
+        "completedAt": "2026-10-31T15:06:28.257Z",
+        "updatedAt": "2026-10-31T15:06:28.257Z",
+        "type": "command_execution",
+        "input": "/bin/bash -lc \"tail -7 /tmp/bt3-focus-only-check.log && tail -10 /tmp/bt3-focus-only-e2e.log && git diff --check && git status --short --branch && git stash list --format='%gd %H %s'\"",
+        "output": "(pass) poster Y branches stay separate from the stopped class measurement pose\n(pass) class bounds transform separate leaves before union for rotated fractional placements\n\n 390 pass\n 0 fail\n 5217 expect() calls\nRan 390 tests across 54 files. [1.84s]\n  ✓  22 e2e/pickups.spec.ts:8:3 › mock pickups move into visible tank artwork before the following collection phase (710ms)\n  ✓  23 e2e/placement.spec.ts:29:3 › mock creator uses preview placement, repeated drops, axis snap and cancellation (2.7s)\n  ✓  24 e2e/player-clocks.spec.ts:8:3 › mock production viewport releases a paused beam and continues the launcher's wall timer (2.8s)\n  ✓  25 e2e/projectile-clocks.spec.ts:7:3 › mock Whip Grow and Flak retain stage clocks through pause (935ms)\n  ✓  26 e2e/projectile-order.spec.ts:7:3 › mock projectile contact uses the current alpha point before movement and preserves deflection (700ms)\n  ✓  27 e2e/screen-effects.spec.ts:7:3 › mock ink loops independently, centers on stage and clears through the effects engine (1.2s)\n  ✓  28 e2e/screens.spec.ts:7:1 › mock Info exit keeps the immediate pause key on the returned dialog (1.2s)\n  ✓  29 e2e/screens.spec.ts:42:3 › mock tank information shows native class attributes and returns to a frozen pause (7.4s)\n  ✓  30 e2e/screens.spec.ts:89:3 › mock win screen fades in its authored controls and omits retired promotion (1.9s)\n  ✓  31 e2e/screens.spec.ts:42:3 › SWF tank information shows native class attributes and returns to a frozen pause (10.7s)\n## fix/dialog-keyboard-focus...origin/master\n M e2e/screens.spec.ts\n M src/components/ui.tsx\n?? reference-captures/\nstash@{0} 8cc80d036afc50f87ea433fca0a67f843f41ccca On forcefield-crossing-lifecycle: verified forcefield reconstruction checkpoint pending PR8 CI fix\nstash@{1} 12796c6d7fb9c5080f23213ad3c8abd230fd51e0 On recreate-bubble-tanks-3: verified creator drag checkpoint before incremental PR workflow\n",
+        "exitCode": 0
+      }
+    },
+    {
+      "position": 765,
+      "itemId": "turn-item:provider:codex:native-item:exec-64be559b-69e0-46c5-94a7-9e67d704c1fa",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000766,
+      "text": null,
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:exec-64be559b-69e0-46c5-94a7-9e67d704c1fa",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:exec-64be559b-69e0-46c5-94a7-9e67d704c1fa",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "exec-64be559b-69e0-46c5-94a7-9e67d704c1fa",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000766,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:06:28.325Z",
+        "completedAt": "2026-10-31T15:06:28.330Z",
+        "updatedAt": "2026-10-31T15:06:28.330Z",
+        "type": "command_execution",
+        "input": "/bin/bash -lc \"cp /tmp/bt3-dialog-focus-baseline-red.log reference-captures/ci-pause-repro/baseline-red.log && python - <<'PY'\nimport json\nfrom pathlib import Path\np=Path('reference-captures/pr-progress.json');d=json.loads(p.read_text());d['currentBranch']='fix/dialog-keyboard-focus';d['currentPR']=None;d['currentHead']=None;d['next']='Finish focused dialog repair verification on master baseline, commit/open/link its own PR9 (not yet created), watch CI and merge after success. Then rebase mounted-charge PR8 onto updated master, resolving fidelity append conflicts by keeping both focus and mounted sections, rerun affected checks, push and link PR8 as next call, watch and merge green. Then restore forcefield stash by SHA8cc80d036afc50f87ea433fca0a67f843f41ccca on its branch and resume its PR.';d['inProgress']='PR8 CI failed only existing mock Info/P resume flow at screens.spec.ts finalassert (run41211912328). Uploaded artifacts in reference-captures/ci-pr8. Ten ordinary local repeats passed, but new deterministic real-game regression sends P in the first MutationObserver microtask after Info DOM removal and reproduces exact failed dialogCount0 on master: BODY focused, Paused remains. Baseline red log reference-captures/ci-pause-repro/baseline-red.log. Product fix uses useLayoutEffect for shared Dialog focus setup/cleanup; original existing test unchanged. Fixed regression passed on PR8 code; now master-based branch running full mock/synthetic plus native Info (exec59851, log /tmp/bt3-focus-only-e2e.log), 390unit tests/5217 assertions pass. Only ui.tsx and screens.spec.ts currently modified; need docs, final verification and focused PR.';d['forcefieldStash']={'sha':'8cc80d036afc50f87ea433fca0a67f843f41ccca','branch':'fix/forcefield-crossing-lifecycle','state':'Fully verified402tests/5403assertions,10focusedbrowser and37mock/synthetic+native-collapse pass. Source54f4f0e applied plus docs except verification paragraph not yetadded. Allstagedsource/docs stored with tracked-only gitstash; referencecaptures were NOT stashed. No new PR created yet. RestoreafterPR8merge/rebase.'};d['creatorDrag']=d['creatorDrag'].replace('stash@{0}', 'stash commit12796c6d7fb9c5080f23213ad3c8abd230fd51e0 (now stash@{1})');d['pendingPR8']={'url':'https://github.com/ianwijma/open-bubble-tank/pull/8','head':'e2fb0f36fe4861d8ffba88c3bc579f8145d40703','state':'CI failed; unwatch done while independent prerequisite focus fix is prepared. Must update push/link/watch again after fix merges.'};p.write_text(json.dumps(d,indent=2)+'\\\\n')\nPY\"",
+        "exitCode": 0
+      }
+    },
+    {
+      "position": 766,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae603f71e648191b9c00cc7e4810535%22%2C%22summary%22%2C0%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000767,
+      "text": "**Preparing focus restoration test**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae603f71e648191b9c00cc7e4810535%22%2C%22summary%22%2C0%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae603f71e648191b9c00cc7e4810535%22%2C%22summary%22%2C0%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae603f71e648191b9c00cc7e4810535",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000767,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:06:44.603Z",
+        "completedAt": "2026-10-31T15:06:48.742Z",
+        "updatedAt": "2026-10-31T15:06:48.742Z",
+        "type": "reasoning",
+        "text": "**Preparing focus restoration test**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 767,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae603f71e648191b9c00cc7e4810535%22%2C%22summary%22%2C1%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000768,
+      "text": "**Checking pause focus cleanup**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae603f71e648191b9c00cc7e4810535%22%2C%22summary%22%2C1%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae603f71e648191b9c00cc7e4810535%22%2C%22summary%22%2C1%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae603f71e648191b9c00cc7e4810535",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000768,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:06:48.739Z",
+        "completedAt": "2026-10-31T15:06:48.742Z",
+        "updatedAt": "2026-10-31T15:06:48.742Z",
+        "type": "reasoning",
+        "text": "**Checking pause focus cleanup**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 768,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae60406d3c48191867d8f528b7099f1%22%2C%22summary%22%2C0%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000769,
+      "text": "**Preparing PR9 documentation**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae60406d3c48191867d8f528b7099f1%22%2C%22summary%22%2C0%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae60406d3c48191867d8f528b7099f1%22%2C%22summary%22%2C0%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae60406d3c48191867d8f528b7099f1",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000769,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:07:01.448Z",
+        "completedAt": "2026-10-31T15:07:04.430Z",
+        "updatedAt": "2026-10-31T15:07:04.430Z",
+        "type": "reasoning",
+        "text": "**Preparing PR9 documentation**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 769,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae60406d3c48191867d8f528b7099f1%22%2C%22summary%22%2C1%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000770,
+      "text": "**Running full test**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae60406d3c48191867d8f528b7099f1%22%2C%22summary%22%2C1%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae60406d3c48191867d8f528b7099f1%22%2C%22summary%22%2C1%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae60406d3c48191867d8f528b7099f1",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000770,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:07:04.419Z",
+        "completedAt": "2026-10-31T15:07:04.430Z",
+        "updatedAt": "2026-10-31T15:07:04.430Z",
+        "type": "reasoning",
+        "text": "**Running full test**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 770,
+      "itemId": "turn-item:provider:codex:native-item:exec-887637ca-4c19-4fee-b1a8-779b57cf1da5",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000771,
+      "text": null,
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:exec-887637ca-4c19-4fee-b1a8-779b57cf1da5",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:exec-887637ca-4c19-4fee-b1a8-779b57cf1da5",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "exec-887637ca-4c19-4fee-b1a8-779b57cf1da5",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000771,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:07:10.429Z",
+        "completedAt": "2026-10-31T15:07:10.433Z",
+        "updatedAt": "2026-10-31T15:07:10.433Z",
+        "type": "command_execution",
+        "input": "/bin/bash -lc 'tail -9 /tmp/bt3-focus-only-e2e.log && git diff -- src/components/ui.tsx && git diff --check'",
+        "output": "  ✓  30 e2e/screens.spec.ts:89:3 › mock win screen fades in its authored controls and omits retired promotion (1.9s)\n  ✓  31 e2e/screens.spec.ts:42:3 › SWF tank information shows native class attributes and returns to a frozen pause (10.7s)\n  ✓  32 e2e/secondary-help.spec.ts:12:3 › mock secondary help pauses on avatar replacement and persists before closing (13.9s)\n  ✓  33 e2e/seeker-mines.spec.ts:7:3 › mock seeker mines use rectangle contact and animate through paused simulation (970ms)\n  ✓  34 e2e/special-projectiles.spec.ts:7:3 › mock special projectiles use fresh shots, source phases and stopped state artwork (937ms)\n  ✓  35 e2e/tactical-hud.spec.ts:12:3 › mock field readouts follow summoning, arrival, pause and zoom (4.9s)\n  ✓  36 e2e/tank-art.spec.ts:7:3 › mock tank art uses independent paused clocks and protection geometry (681ms)\n\n  36 passed (1.6m)\ndiff --git a/src/components/ui.tsx b/src/components/ui.tsx\nindex 8e55d72..52f2a4b 100644\n--- a/src/components/ui.tsx\n+++ b/src/components/ui.tsx\n@@ -1,5 +1,5 @@\n 'use client';\n-import { useEffect, useRef } from 'react';\n+import { useLayoutEffect, useRef } from 'react';\n import type { AssetPack } from '@/game/assets/asset-pack';\n export function BubbleText({\n   children,\n@@ -130,7 +130,9 @@ export function Dialog({\n   closeKey?: string;\n }) {\n   const ref = useRef<HTMLDivElement>(null);\n-  useEffect(() => {\n+  // Swapping dialogs must transfer keyboard focus in the same DOM commit.\n+  // A passive effect leaves a gap where the next key is delivered to BODY.\n+  useLayoutEffect(() => {\n     const previous = document.activeElement as HTMLElement | null;\n     ref.current?.focus();\n     return () => previous?.focus({ preventScroll: true });\n",
+        "exitCode": 0
+      }
+    },
+    {
+      "position": 771,
+      "itemId": "turn-item:provider:codex:native-item:exec-e98753b6-eb53-411e-8fb9-1c56d82f93fa",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000772,
+      "text": null,
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:exec-e98753b6-eb53-411e-8fb9-1c56d82f93fa",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:exec-e98753b6-eb53-411e-8fb9-1c56d82f93fa",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "exec-e98753b6-eb53-411e-8fb9-1c56d82f93fa",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000772,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:07:10.434Z",
+        "completedAt": "2026-10-31T15:07:10.438Z",
+        "updatedAt": "2026-10-31T15:07:10.438Z",
+        "type": "file_change",
+        "fileName": "/home/ian/.t3/worktrees/open-bubble-tank/t3-d84e5ece/docs/fidelity.md",
+        "diffStr": "@@ -354 +354,6 @@\n - Incremental landing verification: a fresh numeric import reproduces SHA256 `630aefc22ded7e7348f9b0b9429b4adda5314b8bf79257855291f103efc3515f`. TypeScript, formatting, production build and all 390 rule/parser tests with 5217 assertions pass. All 15 focused mock/native browser cases pass, followed by all 34 mock/synthetic-selected cases. Native snapshot and imported class-3 editor captures were inspected and retained, ignored, under `reference-captures/part-snapshots/`. Source `UpdateClass` and `TankData._-7e/_-Tr` were rechecked for body filtering, root frame2, RGB counting and padded capture geometry. Per-mount firing commands, original global constructor randomness and exact Adobe rasterization remain separate work; this checkpoint does not establish full-game parity.\n+\n+### Dialog focus during keyboard return\n+\n+- Hosted CI exposed a P key lost immediately after Info returned to pause. A deterministic production-browser regression delivers that next key in the first mutation microtask after Info removal: the old dialog lifecycle leaves `BODY` focused and pause remains open. The existing Info/P browser assertion is retained.\n+- Shared `Dialog` focus setup and restoration now use the [React layout-effect phase](https://react.dev/reference/react/useLayoutEffect), transferring focus before the next browser paint. The regression observes focus on the returned pause dialog and resumes the game with the same key. This repairs the browser focus adaptation; original artwork, animation clocks and simulation rules retain their separate fidelity boundaries.\n",
+        "changes": [
+          {
+            "operation": "update",
+            "path": "/home/ian/.t3/worktrees/open-bubble-tank/t3-d84e5ece/docs/fidelity.md"
+          }
+        ]
+      }
+    },
+    {
+      "position": 772,
+      "itemId": "turn-item:provider:codex:native-item:exec-ca77e057-3521-4922-aa33-cb1e52766e5b",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000773,
+      "text": null,
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:exec-ca77e057-3521-4922-aa33-cb1e52766e5b",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:exec-ca77e057-3521-4922-aa33-cb1e52766e5b",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "exec-ca77e057-3521-4922-aa33-cb1e52766e5b",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000773,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:07:10.438Z",
+        "completedAt": "2026-10-31T15:07:10.439Z",
+        "updatedAt": "2026-10-31T15:07:10.439Z",
+        "type": "file_change",
+        "fileName": "/home/ian/.t3/worktrees/open-bubble-tank/t3-d84e5ece/docs/architecture.md",
+        "diffStr": "@@ -153,2 +153,4 @@\n \n+Shared `Dialog` focus setup/restoration runs in React's layout phase. Info-to-pause replacement therefore transfers keyboard ownership in the same DOM commit, including an immediately following P key. The production browser regression exercises that commit boundary without timing sleeps. Game input and simulation clocks stay outside the dialog's focus lifecycle.\n+\n \n",
+        "changes": [
+          {
+            "operation": "update",
+            "path": "/home/ian/.t3/worktrees/open-bubble-tank/t3-d84e5ece/docs/architecture.md"
+          }
+        ]
+      }
+    },
+    {
+      "position": 773,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae60420d6788191ae2fba3d608c15b5%22%2C%22summary%22%2C0%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000774,
+      "text": "**Verifying repeated regression tests**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae60420d6788191ae2fba3d608c15b5%22%2C%22summary%22%2C0%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae60420d6788191ae2fba3d608c15b5%22%2C%22summary%22%2C0%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae60420d6788191ae2fba3d608c15b5",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000774,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:07:26.746Z",
+        "completedAt": "2026-10-31T15:07:33.349Z",
+        "updatedAt": "2026-10-31T15:07:33.349Z",
+        "type": "reasoning",
+        "text": "**Verifying repeated regression tests**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 774,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae60420d6788191ae2fba3d608c15b5%22%2C%22summary%22%2C1%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000775,
+      "text": "**Running repeated regression tests**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae60420d6788191ae2fba3d608c15b5%22%2C%22summary%22%2C1%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae60420d6788191ae2fba3d608c15b5%22%2C%22summary%22%2C1%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae60420d6788191ae2fba3d608c15b5",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000775,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:07:33.345Z",
+        "completedAt": "2026-10-31T15:07:33.349Z",
+        "updatedAt": "2026-10-31T15:07:33.349Z",
+        "type": "reasoning",
+        "text": "**Running repeated regression tests**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 775,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6043554a481919684b8338171d3fc%22%2C%22summary%22%2C0%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000776,
+      "text": "**Checking async repeat tests**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6043554a481919684b8338171d3fc%22%2C%22summary%22%2C0%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6043554a481919684b8338171d3fc%22%2C%22summary%22%2C0%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae6043554a481919684b8338171d3fc",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000776,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:07:42.464Z",
+        "completedAt": "2026-10-31T15:07:51.035Z",
+        "updatedAt": "2026-10-31T15:07:51.035Z",
+        "type": "reasoning",
+        "text": "**Checking async repeat tests**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 776,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6043554a481919684b8338171d3fc%22%2C%22summary%22%2C1%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000777,
+      "text": "**Verifying test cleanup**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6043554a481919684b8338171d3fc%22%2C%22summary%22%2C1%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6043554a481919684b8338171d3fc%22%2C%22summary%22%2C1%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae6043554a481919684b8338171d3fc",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000777,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:07:51.035Z",
+        "completedAt": "2026-10-31T15:07:51.035Z",
+        "updatedAt": "2026-10-31T15:07:51.035Z",
+        "type": "reasoning",
+        "text": "**Verifying test cleanup**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 777,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae60443bc288191b891d160c939b98b%22%2C%22summary%22%2C0%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000778,
+      "text": "**Checking focus-test results**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae60443bc288191b891d160c939b98b%22%2C%22summary%22%2C0%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae60443bc288191b891d160c939b98b%22%2C%22summary%22%2C0%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae60443bc288191b891d160c939b98b",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000778,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:07:59.752Z",
+        "completedAt": "2026-10-31T15:08:05.411Z",
+        "updatedAt": "2026-10-31T15:08:05.411Z",
+        "type": "reasoning",
+        "text": "**Checking focus-test results**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 778,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae60443bc288191b891d160c939b98b%22%2C%22summary%22%2C1%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000779,
+      "text": "**Checking local test repeat**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae60443bc288191b891d160c939b98b%22%2C%22summary%22%2C1%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae60443bc288191b891d160c939b98b%22%2C%22summary%22%2C1%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae60443bc288191b891d160c939b98b",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000779,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:08:05.405Z",
+        "completedAt": "2026-10-31T15:08:05.411Z",
+        "updatedAt": "2026-10-31T15:08:05.411Z",
+        "type": "reasoning",
+        "text": "**Checking local test repeat**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 779,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae604556440819180642da0a9292924%22%2C%22summary%22%2C0%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000780,
+      "text": "**Revalidating PR8 checks**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae604556440819180642da0a9292924%22%2C%22summary%22%2C0%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae604556440819180642da0a9292924%22%2C%22summary%22%2C0%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae604556440819180642da0a9292924",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000780,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:08:15.506Z",
+        "completedAt": "2026-10-31T15:08:17.418Z",
+        "updatedAt": "2026-10-31T15:08:17.418Z",
+        "type": "reasoning",
+        "text": "**Revalidating PR8 checks**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 780,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae604556440819180642da0a9292924%22%2C%22summary%22%2C1%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000781,
+      "text": "**Verifying PR8 changes**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae604556440819180642da0a9292924%22%2C%22summary%22%2C1%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae604556440819180642da0a9292924%22%2C%22summary%22%2C1%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae604556440819180642da0a9292924",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000781,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:08:17.416Z",
+        "completedAt": "2026-10-31T15:08:17.418Z",
+        "updatedAt": "2026-10-31T15:08:17.418Z",
+        "type": "reasoning",
+        "text": "**Verifying PR8 changes**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 781,
+      "itemId": "turn-item:provider:codex:native-item:exec-d811fde1-8c4e-40ca-a70f-4b0c8255cad0",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000782,
+      "text": null,
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:exec-d811fde1-8c4e-40ca-a70f-4b0c8255cad0",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:exec-d811fde1-8c4e-40ca-a70f-4b0c8255cad0",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "exec-d811fde1-8c4e-40ca-a70f-4b0c8255cad0",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000782,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:08:24.237Z",
+        "completedAt": "2026-10-31T15:09:20.595Z",
+        "updatedAt": "2026-10-31T15:09:20.595Z",
+        "type": "command_execution",
+        "input": "/bin/bash -lc \"bunx playwright test e2e/screens.spec.ts --grep 'immediate pause key|mock tank information' --repeat-each=5 --output test-results/focus-repeat > /tmp/bt3-focus-repeat.log 2>&1\"",
+        "exitCode": 0
+      }
+    },
+    {
+      "position": 782,
+      "itemId": "turn-item:provider:codex:native-item:exec-2eeed94d-8cb1-41bc-9b56-7ef5466e9e86",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000783,
+      "text": null,
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:exec-2eeed94d-8cb1-41bc-9b56-7ef5466e9e86",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:exec-2eeed94d-8cb1-41bc-9b56-7ef5466e9e86",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "exec-2eeed94d-8cb1-41bc-9b56-7ef5466e9e86",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000783,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:08:25.242Z",
+        "completedAt": "2026-10-31T15:08:25.246Z",
+        "updatedAt": "2026-10-31T15:08:25.246Z",
+        "type": "file_change",
+        "fileName": "/home/ian/.t3/worktrees/open-bubble-tank/t3-d84e5ece/docs/fidelity.md",
+        "diffStr": "@@ -359 +359,2 @@\n - Shared `Dialog` focus setup and restoration now use the [React layout-effect phase](https://react.dev/reference/react/useLayoutEffect), transferring focus before the next browser paint. The regression observes focus on the returned pause dialog and resumes the game with the same key. This repairs the browser focus adaptation; original artwork, animation clocks and simulation rules retain their separate fidelity boundaries.\n+- Verification: the new production-browser test fails on the unchanged master dialog with the same remaining-pause symptom as hosted CI, then passes with the focus change. TypeScript, formatting, all 390 rule/parser tests (5217 assertions), the production build and all 36 selected mock/synthetic/native-Info browser cases pass. The original Info/P assertion is unchanged. Reproduction logs stay ignored under `reference-captures/ci-pause-repro/`; this focus fix is landed independently of mounted-charge artwork.\n",
+        "changes": [
+          {
+            "operation": "update",
+            "path": "/home/ian/.t3/worktrees/open-bubble-tank/t3-d84e5ece/docs/fidelity.md"
+          }
+        ]
+      }
+    },
+    {
+      "position": 783,
+      "itemId": "turn-item:provider:codex:native-item:exec-ef8ea1c1-839d-43e4-9d5a-47b33cb6e7d7",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000784,
+      "text": null,
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:exec-ef8ea1c1-839d-43e4-9d5a-47b33cb6e7d7",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:exec-ef8ea1c1-839d-43e4-9d5a-47b33cb6e7d7",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "exec-ef8ea1c1-839d-43e4-9d5a-47b33cb6e7d7",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000784,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:08:25.407Z",
+        "completedAt": "2026-10-31T15:08:34.901Z",
+        "updatedAt": "2026-10-31T15:08:34.901Z",
+        "type": "command_execution",
+        "input": "/bin/bash -lc \"cat > /tmp/bt3-dialog-focus-pr.md <<'EOF'\n## Summary\n\nTransfer focus synchronously when Info returns to the pause dialog, so an immediately following P key resumes the game.\n\n\"'```text\nInfo leaves DOM → focus returned pause dialog in layout phase → next P resumes\n```\n\nMove the existing shared Dialog focus setup/cleanup to `useLayoutEffect`. Keep the original keyboard test and add a deterministic commit-boundary regression.\n\n## Evidence\n\n- **Before:** Hosted CI failed the final P assertion. The new production-browser test reproduces the same remaining-pause symptom on master: the next key targets BODY before passive focus effects run.\n  **After:** The returned dialog receives focus and the immediate P key closes it.\n- TypeScript, formatting, 390 rule/parser tests with 5,217 assertions, production build and all 36 selected mock/synthetic/native-Info browser cases pass. This repair is independent of mounted-charge PR #8.\n\n## Merge Danger\n\n**Door:** two-way\n\n**Blast Radius:** Dialogs\n\nFocus timing changes for the shared dialog helper; existing close keys, focus restoration and trap behavior remain covered by browser flows.\nEOF\nbun run format > /tmp/bt3-focus-only-format.log && bun run format:check > /tmp/bt3-focus-only-format-check.log 2>&1 && git diff --check && git add src/components/ui.tsx e2e/screens.spec.ts docs/architecture.md docs/fidelity.md && git commit -m '\"'fix: transfer dialog focus before the next keyboard event' && git push --set-upstream origin fix/dialog-keyboard-focus && gh pr create --base master --head fix/dialog-keyboard-focus --title 'fix: transfer dialog focus before the next keyboard event' --body-file /tmp/bt3-dialog-focus-pr.md\"",
+        "output": "$ prettier --write --ignore-unknown src tests e2e tools *.ts *.json *.mjs\n[fix/dialog-keyboard-focus 38fcca6] fix: transfer dialog focus before the next keyboard event\n 4 files changed, 46 insertions(+), 2 deletions(-)\nremote: \nremote: Create a pull request for 'fix/dialog-keyboard-focus' on GitHub by visiting:        \nremote:      https://github.com/ianwijma/open-bubble-tank/pull/new/fix/dialog-keyboard-focus        \nremote: \nTo https://github.com/ianwijma/open-bubble-tank.git\n * [new branch]      fix/dialog-keyboard-focus -> fix/dialog-keyboard-focus\nBranch 'fix/dialog-keyboard-focus' set up to track remote branch 'fix/dialog-keyboard-focus' from 'origin'.\nhttps://github.com/ianwijma/open-bubble-tank/pull/9\n",
+        "exitCode": 0
+      }
+    },
+    {
+      "position": 784,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6046c7ed88191ba2d5581864960e1%22%2C%22summary%22%2C0%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000785,
+      "text": "**Waiting for browser tests**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6046c7ed88191ba2d5581864960e1%22%2C%22summary%22%2C0%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6046c7ed88191ba2d5581864960e1%22%2C%22summary%22%2C0%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae6046c7ed88191ba2d5581864960e1",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000785,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:08:41.599Z",
+        "completedAt": "2026-10-31T15:08:49.057Z",
+        "updatedAt": "2026-10-31T15:08:49.057Z",
+        "type": "reasoning",
+        "text": "**Waiting for browser tests**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 785,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6046c7ed88191ba2d5581864960e1%22%2C%22summary%22%2C1%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000786,
+      "text": "**Checking dialog focus refs**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6046c7ed88191ba2d5581864960e1%22%2C%22summary%22%2C1%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae6046c7ed88191ba2d5581864960e1%22%2C%22summary%22%2C1%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae6046c7ed88191ba2d5581864960e1",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000786,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:08:49.024Z",
+        "completedAt": "2026-10-31T15:08:49.057Z",
+        "updatedAt": "2026-10-31T15:08:49.057Z",
+        "type": "reasoning",
+        "text": "**Checking dialog focus refs**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 786,
+      "itemId": "turn-item:provider:codex:native-item:exec-1d342fa9-1be0-4f05-b7a7-0916c5573a14",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000787,
+      "text": null,
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:exec-1d342fa9-1be0-4f05-b7a7-0916c5573a14",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:exec-1d342fa9-1be0-4f05-b7a7-0916c5573a14",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "exec-1d342fa9-1be0-4f05-b7a7-0916c5573a14",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000787,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:09:02.150Z",
+        "completedAt": "2026-10-31T15:09:02.167Z",
+        "updatedAt": "2026-10-31T15:09:02.167Z",
+        "type": "dynamic_tool",
+        "toolName": "t3-code.link_pull_request",
+        "input": {
+          "url": "https://github.com/ianwijma/open-bubble-tank/pull/9"
+        },
+        "output": {
+          "host": "github.com",
+          "repository": "ianwijma/open-bubble-tank",
+          "number": 9,
+          "url": "https://github.com/ianwijma/open-bubble-tank/pull/9",
+          "alreadyLinked": true
+        }
+      }
+    },
+    {
+      "position": 787,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae60490f3008191938ee21039347db3%22%2C%22summary%22%2C0%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000788,
+      "text": "**Preparing PR10 forcefield docs**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae60490f3008191938ee21039347db3%22%2C%22summary%22%2C0%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae60490f3008191938ee21039347db3%22%2C%22summary%22%2C0%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae60490f3008191938ee21039347db3",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000788,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:09:17.186Z",
+        "completedAt": "2026-10-31T15:09:21.237Z",
+        "updatedAt": "2026-10-31T15:09:21.237Z",
+        "type": "reasoning",
+        "text": "**Preparing PR10 forcefield docs**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 788,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae60490f3008191938ee21039347db3%22%2C%22summary%22%2C1%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000789,
+      "text": "**Running 10-case test session**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae60490f3008191938ee21039347db3%22%2C%22summary%22%2C1%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae60490f3008191938ee21039347db3%22%2C%22summary%22%2C1%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae60490f3008191938ee21039347db3",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000789,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:09:21.233Z",
+        "completedAt": "2026-10-31T15:09:21.237Z",
+        "updatedAt": "2026-10-31T15:09:21.237Z",
+        "type": "reasoning",
+        "text": "**Running 10-case test session**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 789,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae604a138388191a816bb8bb712d49e%22%2C%22summary%22%2C0%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000790,
+      "text": "**Validating source metadata**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae604a138388191a816bb8bb712d49e%22%2C%22summary%22%2C0%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae604a138388191a816bb8bb712d49e%22%2C%22summary%22%2C0%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae604a138388191a816bb8bb712d49e",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000790,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:09:34.188Z",
+        "completedAt": "2026-10-31T15:09:36.724Z",
+        "updatedAt": "2026-10-31T15:09:36.724Z",
+        "type": "reasoning",
+        "text": "**Validating source metadata**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 790,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae604a138388191a816bb8bb712d49e%22%2C%22summary%22%2C1%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000791,
+      "text": "**Checking PR9 completion**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae604a138388191a816bb8bb712d49e%22%2C%22summary%22%2C1%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae604a138388191a816bb8bb712d49e%22%2C%22summary%22%2C1%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae604a138388191a816bb8bb712d49e",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000791,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:09:36.719Z",
+        "completedAt": "2026-10-31T15:09:36.724Z",
+        "updatedAt": "2026-10-31T15:09:36.724Z",
+        "type": "reasoning",
+        "text": "**Checking PR9 completion**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 791,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae604aea0b8819193fcbb1057e0c093%22%2C%22summary%22%2C0%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000792,
+      "text": "**Monitoring pending CI**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae604aea0b8819193fcbb1057e0c093%22%2C%22summary%22%2C0%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae604aea0b8819193fcbb1057e0c093%22%2C%22summary%22%2C0%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae604aea0b8819193fcbb1057e0c093",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000792,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:09:48.730Z",
+        "completedAt": "2026-10-31T15:09:49.885Z",
+        "updatedAt": "2026-10-31T15:09:49.885Z",
+        "type": "reasoning",
+        "text": "**Monitoring pending CI**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 792,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae604aea0b8819193fcbb1057e0c093%22%2C%22summary%22%2C1%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000793,
+      "text": "**Monitoring active CI**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae604aea0b8819193fcbb1057e0c093%22%2C%22summary%22%2C1%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae604aea0b8819193fcbb1057e0c093%22%2C%22summary%22%2C1%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae604aea0b8819193fcbb1057e0c093",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000793,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:09:49.878Z",
+        "completedAt": "2026-10-31T15:09:49.885Z",
+        "updatedAt": "2026-10-31T15:09:49.885Z",
+        "type": "reasoning",
+        "text": "**Monitoring active CI**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 793,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae604bddd0881919af4994449a580ea%22%2C%22summary%22%2C0%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000794,
+      "text": "**Rebasing PR8 onto PR9**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae604bddd0881919af4994449a580ea%22%2C%22summary%22%2C0%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae604bddd0881919af4994449a580ea%22%2C%22summary%22%2C0%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae604bddd0881919af4994449a580ea",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000794,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:10:02.838Z",
+        "completedAt": "2026-10-31T15:10:02.843Z",
+        "updatedAt": "2026-10-31T15:10:02.843Z",
+        "type": "reasoning",
+        "text": "**Rebasing PR8 onto PR9**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 794,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae604c949888191b6cffe228b7e19bc%22%2C%22summary%22%2C0%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000795,
+      "text": "**Running full local checks**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae604c949888191b6cffe228b7e19bc%22%2C%22summary%22%2C0%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae604c949888191b6cffe228b7e19bc%22%2C%22summary%22%2C0%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae604c949888191b6cffe228b7e19bc",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000795,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:10:13.184Z",
+        "completedAt": "2026-10-31T15:10:15.656Z",
+        "updatedAt": "2026-10-31T15:10:15.656Z",
+        "type": "reasoning",
+        "text": "**Running full local checks**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 795,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae604c949888191b6cffe228b7e19bc%22%2C%22summary%22%2C1%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000796,
+      "text": "**Waiting for CI results**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae604c949888191b6cffe228b7e19bc%22%2C%22summary%22%2C1%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae604c949888191b6cffe228b7e19bc%22%2C%22summary%22%2C1%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae604c949888191b6cffe228b7e19bc",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000796,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:10:15.640Z",
+        "completedAt": "2026-10-31T15:10:15.656Z",
+        "updatedAt": "2026-10-31T15:10:15.656Z",
+        "type": "reasoning",
+        "text": "**Waiting for CI results**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 796,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae604d7a1ac8191b2e8a53ee93619c6%22%2C%22summary%22%2C0%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000797,
+      "text": "**Checking repeat-test completion**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae604d7a1ac8191b2e8a53ee93619c6%22%2C%22summary%22%2C0%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae604d7a1ac8191b2e8a53ee93619c6%22%2C%22summary%22%2C0%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae604d7a1ac8191b2e8a53ee93619c6",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000797,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:10:28.972Z",
+        "completedAt": "2026-10-31T15:10:28.977Z",
+        "updatedAt": "2026-10-31T15:10:28.977Z",
+        "type": "reasoning",
+        "text": "**Checking repeat-test completion**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 797,
+      "itemId": "turn-item:provider:codex:native-item:exec-100578f9-961d-4220-9c87-e430ca19be77",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000798,
+      "text": null,
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:exec-100578f9-961d-4220-9c87-e430ca19be77",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:exec-100578f9-961d-4220-9c87-e430ca19be77",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "exec-100578f9-961d-4220-9c87-e430ca19be77",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000798,
+        "status": "failed",
+        "title": null,
+        "startedAt": "2026-10-31T15:10:29.276Z",
+        "completedAt": "2026-10-31T15:10:29.280Z",
+        "updatedAt": "2026-10-31T15:10:29.280Z",
+        "type": "command_execution",
+        "input": "/bin/bash -lc 'tail -6 /tmp/bt3-focus-repeat.log && git status --short --branch && git switch fix/mounted-massive-charge && git rebase --onto fix/dialog-keyboard-focus dce8b103c046727f8eee538b69177c89fdea674a'",
+        "output": "(node:3133703) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n  ✓   9 e2e/screens.spec.ts:7:1 › mock Info exit keeps the immediate pause key on the returned dialog (3.2s)\n  ✓  10 e2e/screens.spec.ts:42:3 › mock tank information shows native class attributes and returns to a frozen pause (6.9s)\n\n  10 passed (56.1s)\n## fix/dialog-keyboard-focus...origin/fix/dialog-keyboard-focus\n?? reference-captures/\nSwitched to branch 'fix/mounted-massive-charge'\nYour branch is up to date with 'origin/fix/mounted-massive-charge'.\nRebasing (1/1)\rAuto-merging docs/architecture.md\nCONFLICT (content): Merge conflict in docs/architecture.md\nAuto-merging docs/fidelity.md\nCONFLICT (content): Merge conflict in docs/fidelity.md\nerror: could not apply e2fb0f3... fix: animate mounted Massive Cannon charges in both asset modes\nhint: Resolve all conflicts manually, mark them as resolved with\nhint: \"git add/rm <conflicted_files>\", then run \"git rebase --continue\".\nhint: You can instead skip this commit: run \"git rebase --skip\".\nhint: To abort and get back to the state before \"git rebase\", run \"git rebase --abort\".\nCould not apply e2fb0f3... fix: animate mounted Massive Cannon charges in both asset modes\n",
+        "exitCode": 1
+      }
+    },
+    {
+      "position": 798,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae604e78be4819188900f9770c9a9b3%22%2C%22summary%22%2C0%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000799,
+      "text": "**Resolving documentation conflicts**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae604e78be4819188900f9770c9a9b3%22%2C%22summary%22%2C0%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae604e78be4819188900f9770c9a9b3%22%2C%22summary%22%2C0%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae604e78be4819188900f9770c9a9b3",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000799,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:10:42.574Z",
+        "completedAt": "2026-10-31T15:10:47.063Z",
+        "updatedAt": "2026-10-31T15:10:47.063Z",
+        "type": "reasoning",
+        "text": "**Resolving documentation conflicts**",
+        "streaming": false
+      }
+    },
+    {
+      "position": 799,
+      "itemId": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae604e78be4819188900f9770c9a9b3%22%2C%22summary%22%2C1%5D",
+      "sourceThreadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+      "storageOrdinal": 1000800,
+      "text": "**Linking React source citation**",
+      "textTruncated": false,
+      "payload": {
+        "id": "turn-item:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae604e78be4819188900f9770c9a9b3%22%2C%22summary%22%2C1%5D",
+        "threadId": "93d9eb80-8a0a-44ac-8262-07b1ceb7992a",
+        "runId": "run:thread:93d9eb80-8a0a-44ac-8262-07b1ceb7992a:ordinal:1",
+        "nodeId": "node:provider:codex:native-item:%5B%2201a19270-8f98-7271-93f0-54eea829c7ac%22%2C%22rs_037191ee5675e17f016ae604e78be4819188900f9770c9a9b3%22%2C%22summary%22%2C1%5D",
+        "providerThreadId": "provider-thread:provider:codex:native-thread:pending%3Arun%3Athread%3A93d9eb80-8a0a-44ac-8262-07b1ceb7992a%3Aordinal%3A1",
+        "providerTurnId": "provider-turn:provider:codex:native-turn:01a19270-8f98-7271-93f0-54eea829c7ac",
+        "nativeItemRef": {
+          "driver": "codex",
+          "nativeId": "rs_037191ee5675e17f016ae604e78be4819188900f9770c9a9b3",
+          "strength": "strong"
+        },
+        "parentItemId": null,
+        "ordinal": 1000800,
+        "status": "completed",
+        "title": null,
+        "startedAt": "2026-10-31T15:10:47.054Z",
+        "completedAt": "2026-10-31T15:10:47.063Z",
+        "updatedAt": "2026-10-31T15:10:47.063Z",
+        "type": "reasoning",
+        "text": "**Linking React source citation**",
+        "streaming": false
+      }
+    }
+  ]
+}
