@@ -29,7 +29,6 @@ import { showCreatorSaveDialog } from './creator-save-dialog';
 import { showCreatorDetailsArt } from './creator-details-art';
 import { showCreatorSelectionInfo } from './creator-selection-info';
 import { showCreatorControls } from './creator-controls';
-import { showCreatorButtons } from './creator-buttons';
 import { showMainMenuFlow } from './main-menu';
 import { showHotkeyInput } from './hotkey-input';
 import { FieldVisit } from '../../src/game/core/field-visit';
@@ -249,11 +248,6 @@ async function reset() {
   if (fixture.value === 'creator-controls') {
     unmountScreen = showCreatorControls(pack, stage);
     status.textContent = 'Ready · isolated creator control components';
-    return;
-  }
-  if (fixture.value === 'creator-buttons') {
-    unmountScreen = await showCreatorButtons(pack, stage, 'controls');
-    status.textContent = 'Ready · creator button raster states';
     return;
   }
   if (
