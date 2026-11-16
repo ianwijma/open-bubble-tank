@@ -9,7 +9,7 @@ import { removeTankChild } from '../src/game/simulation/tank-display';
 import { World, emptyInput } from '../src/game/simulation/world';
 import first from './fixtures/actor-clock-original-a.json';
 import second from './fixtures/actor-clock-original-b.json';
-import { rows } from '../tools/reference/actor-clock-evidence.mjs';
+import { rows } from './support/actor-clock-rows.mjs';
 
 const names = ['wiggle-negative', 'wiggle-positive', 'rotor'];
 const design: TankDesign = {

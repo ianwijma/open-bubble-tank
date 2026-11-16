@@ -1,8 +1,5 @@
-/** Candidate only: consumes already frozen original words. Never produces an oracle.
- * bun tools/reference/world-motion-compare.ts OUTPUT
- */
-import { writeFile } from 'node:fs/promises';
-import original from '../../tests/fixtures/world-motion-original.json';
+/** Candidate only: consumes already frozen original words. Never produces an oracle. */
+import original from '../fixtures/world-motion-original.json';
 import { World, emptyInput } from '../../src/game/simulation/world';
 import {
   displayMatrixPoint,
@@ -131,81 +128,4 @@ export function publicSequence(phase: (typeof directions)[number]) {
     snapshot('teleport', 41);
   }
   return snapshots;
-}
-export function comparison() {
-  const points = original.samples.map(pointComparison);
-  const pointMismatches = points.filter(
-    (p) => JSON.stringify(p.actual) !== JSON.stringify(p.candidate),
-  );
-  const snapshots = directions.flatMap(publicSequence);
-  const cameraChecks: {
-    phase: string;
-    age: number;
-    key: string;
-    actual: number;
-    candidate: number;
-  }[] = [];
-  const maskSetupDifferences = [];
-  for (const s of snapshots) {
-    const expected = measured(s.phase, s.age, 'root');
-    for (const role of ['root', 'avatarUnder', 'avatar', 'top', 'bullet', 'highlight'] as const)
-      for (const axis of ['x', 'y'] as const)
-        cameraChecks.push({
-          phase: s.phase,
-          age: s.age,
-          key: `${role}.${axis}`,
-          actual: measured(s.phase, s.age, role)[axis],
-          candidate: s[role][axis],
-        });
-    for (const axis of ['x', 'y'] as const) {
-      for (const role of ['bridge', 'point'] as const)
-        cameraChecks.push({
-          phase: s.phase,
-          age: s.age,
-          key: `${role}.${axis}`,
-          actual: expected[`local.${axis}`],
-          candidate: s[role][axis],
-        });
-      cameraChecks.push({
-        phase: s.phase,
-        age: s.age,
-        key: `rootGlobal.${axis}`,
-        actual: expected[`point100x40.${axis}`],
-        candidate: s.rootGlobal[axis],
-      });
-      if (s.phase !== 'teleport')
-        cameraChecks.push({
-          phase: s.phase,
-          age: s.age,
-          key: `velocity.${axis}`,
-          actual: expected[`delta.${axis}`],
-          candidate: s.velocity[axis],
-        });
-    }
-    const mask = measured(s.phase, s.age, 'currentMask').rotation;
-    if (s.mask !== mask)
-      maskSetupDifferences.push({ phase: s.phase, age: s.age, original: mask, candidate: s.mask });
-  }
-  return {
-    scope:
-      'Candidate public World.step40 calls per fresh world, explicit fractional Main, one public adjustBubblefieldObjects teleport. Core Point arithmetic separately replayed from measured own matrices/declared attached ancestry. Original frozen fixture is read-only. No native-art browser or ordinary encounter test.',
-    pointRows: points.length,
-    pointChecks: points.length * 8,
-    pointMismatches,
-    cameraChecks: cameraChecks.length,
-    cameraMismatches: cameraChecks.filter((c) => !Object.is(c.actual, c.candidate)),
-    maskSetupDifferences,
-    maskSourceAnalysis:
-      'Original probe uses fresh constructor authored mask0 and never AttachNewBubblefield. Candidate World construction calls FieldDisplays.attach, which writes180 (source current initialization BTAGameWorld.as413 / pcode1599-1603; next attachment AS1837 / pcode8529-8532); _-Xa only writes current on _-WU edge. At down/negative, latch remains false and no write occurs. These12 setup differences do not contradict the camera method. Original next mask always executes its branch and is retained in frozen rows.',
-    points,
-    cameraComparisons: cameraChecks,
-  };
-}
-if (import.meta.main) {
-  const output = process.argv[2];
-  if (!output || process.argv.length !== 3) throw new Error('Supply OUTPUT');
-  const report = comparison();
-  await writeFile(output, JSON.stringify(report, null, 2) + '\n');
-  console.log(JSON.stringify({ ...report, points: undefined, cameraComparisons: undefined }));
-  if (report.pointMismatches.length || report.cameraMismatches.length) process.exitCode = 1;
 }

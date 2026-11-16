@@ -1,8 +1,8 @@
 import { expect, test } from 'bun:test';
 import { writeFileSync } from 'node:fs';
 import original from './fixtures/effect-clock-original.json';
-import { decode, rows } from '../tools/reference/effect-clock-evidence.mjs';
-import { effectClockChildAtPath } from '../tools/reference/effect-clock-correspondence';
+import { decode, rows } from './support/effect-clock-rows.mjs';
+import { effectClockChildAtPath } from './support/effect-clock-child';
 import { RegisteredEffects } from '../src/game/simulation/registered-effects';
 import { combatEffect, type CombatEffect } from '../src/game/simulation/effects';
 import { readEffectPlayback, drawEffectLine } from '../src/game/simulation/effect-playback';

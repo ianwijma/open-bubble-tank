@@ -14,9 +14,6 @@
     "test:e2e:smoke": "bun run test:e2e e2e/game.spec.ts --grep 'mock path:'",
     "test:e2e:offline": "bun run test:e2e --grep 'mock|synthetic'",
     "fixtures": "bun tools/visual-fixtures.ts",
-    "reference": "bun tools/reference-player.ts",
-    "reference:browser": "bun tools/reference-browser.ts",
-    "reference:input": "node tools/reference-input.ts",
     "format": "prettier --write --ignore-unknown src tests e2e tools *.ts *.json *.mjs",
     "format:check": "prettier --check --ignore-unknown src tests e2e tools *.ts *.json *.mjs"
   },
@@ -27,13 +24,12 @@
     "pixi.js": "8.22.0"
   },
   "devDependencies": {
-    "@playwright/test": "latest",
-    "@ruffle-rs/ruffle": "0.7.1",
+    "@playwright/test": "1.64.1",
     "@tailwindcss/postcss": "^4.1.0",
-    "@types/bun": "latest",
-    "@types/node": "latest",
-    "@types/react": "latest",
-    "@types/react-dom": "latest",
+    "@types/bun": "1.4.4",
+    "@types/node": "26.6.5",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
     "prettier": "^3.9.10",
     "tailwindcss": "^4.1.0",
     "typescript": "^5.9.0"

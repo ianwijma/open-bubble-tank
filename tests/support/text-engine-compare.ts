@@ -1,10 +1,6 @@
 /** Candidate-only comparison AFTER builtin binary words were frozen.
  * No original/capture/fixture writes; Script bounds never supply candidate bounds.
- * bun tools/reference/text-engine-compare.ts FIXTURE OUTPUT
  */
-import assert from 'node:assert/strict';
-import { readFile, writeFile } from 'node:fs/promises';
-import { resolve } from 'node:path';
 import {
   DISPLAY_IDENTITY,
   displayMatrixProduct,
@@ -157,14 +153,4 @@ export function compareTextEngine(fixture: TextEngineFixture) {
       'Finite original1659–1666 and project advanced copy, Main0, 2D transforms without scrollRect. Normal glyphs/mask options/authored text masks, arbitrary singular/nonfinite/overflow, loaded-root, compiled revision and Adobe remain unqualified.',
     results: rows,
   };
-}
-if (import.meta.main) {
-  const [input, output] = process.argv.slice(2);
-  if (!output || process.argv.length !== 4) throw new Error('Supply FIXTURE OUTPUT');
-  assert.notEqual(resolve(input!), resolve(output), 'Never overwrite frozen oracle');
-  const report = compareTextEngine(JSON.parse(await readFile(input!, 'utf8')));
-  await writeFile(output, JSON.stringify(report, null, 2) + '\n');
-  console.log(JSON.stringify({ ...report, results: undefined }));
-  assert.equal(report.matrixMismatches, 0, 'Matrix candidate contradicts genuine getters');
-  assert.equal(report.contactMismatches, 0, 'Engine candidate contradicts genuine builtin hit');
 }
