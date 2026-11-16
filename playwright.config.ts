@@ -17,16 +17,6 @@ export default defineConfig({
     trace: 'retain-on-failure',
   },
   webServer: [
-    ...(process.env.BT3_REFERENCE
-      ? [
-          {
-            command: 'bun run reference',
-            url: 'http://127.0.0.1:3103',
-            reuseExistingServer: true,
-            timeout: 120000,
-          },
-        ]
-      : []),
     {
       command: 'bun run start --port 3101',
       url: 'http://localhost:3101',
