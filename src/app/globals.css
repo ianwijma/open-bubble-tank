@@ -436,39 +436,9 @@ kbd {
   opacity: 1;
   cursor: pointer;
 }
-.main-menu-overlay .modal-scrim:has(.settings-screen),
-.main-menu-overlay .modal-scrim:has(.credits-screen) {
+.main-menu-overlay .modal-scrim:has(.settings-screen) {
   background: transparent;
   backdrop-filter: none;
-}
-.credits-content,
-.credits-art,
-.credits-art canvas {
-  position: absolute;
-  inset: 0;
-  width: 550px !important;
-  height: 450px !important;
-}
-.credits-art {
-  pointer-events: none;
-}
-.credits-control {
-  position: absolute;
-  padding: 0;
-  background: transparent !important;
-  border: 0;
-}
-.credits-link-status {
-  position: absolute;
-  left: 95px;
-  right: 95px;
-  bottom: 9px;
-  margin: 0;
-  text-align: center;
-  font:
-    9px/1.3 Arial,
-    sans-serif;
-  color: white;
 }
 .recreation-details {
   width: min(880px, 96vw);
@@ -544,12 +514,6 @@ kbd {
 }
 .menu-settings {
   left: 184px;
-  top: 284px;
-  width: 40px;
-  height: 31px;
-}
-.menu-credits {
-  left: 327px;
   top: 284px;
   width: 40px;
   height: 31px;
@@ -1927,25 +1891,7 @@ kbd {
 .main-menu.stage-background:after {
   display: none;
 }
-.main-menu-series {
-  position: absolute;
-  height: 22px;
-  overflow: hidden;
-  z-index: 2;
-  cursor: inherit;
-}
-.menu-series-art {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-.main-menu-series button {
-  cursor: inherit;
-  position: absolute;
-  padding: 0;
-  background: transparent;
-}
-.menu-series-caption {
+.menu-rollover-caption {
   position: absolute;
   margin: 0;
   text-align: center;
@@ -1959,7 +1905,7 @@ kbd {
   z-index: 2;
   pointer-events: none;
 }
-.menu-series-caption img {
+.menu-rollover-caption img {
   display: inline;
   max-width: none;
   vertical-align: top;

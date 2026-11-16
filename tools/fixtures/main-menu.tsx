@@ -2,7 +2,6 @@ import { StrictMode, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { MainMenu } from '../../src/components/main-menu';
 import { SettingsPanel } from '../../src/components/settings-panel';
-import { CreditsPanel } from '../../src/components/credits-panel';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { MainMenuMotion } from '../../src/game/core/main-menu';
 import { DEFAULT_SETTINGS } from '../../src/game/core/constants';
@@ -59,7 +58,7 @@ function MenuFixture({
   reportAction: (name: string) => void;
 }) {
   const overlayRoot = useRef<HTMLFieldSetElement>(null);
-  const [overlay, setOverlay] = useState<'settings' | 'credits' | null>(null);
+  const [overlay, setOverlay] = useState<'settings' | null>(null);
   const [settings, setSettings] = useState<Settings>({ ...DEFAULT_SETTINGS });
   const close = () => {
     if (motion.back()) setOverlay(null);
@@ -75,8 +74,7 @@ function MenuFixture({
         overlayRoot={overlayRoot}
         onAction={(name) => {
           reportAction(name);
-          if ((name === 'settings_btn' || name === 'credits_btn') && motion.open())
-            setOverlay(name === 'settings_btn' ? 'settings' : 'credits');
+          if (name === 'settings_btn' && motion.open()) setOverlay('settings');
         }}
       />
       <fieldset
@@ -96,7 +94,6 @@ function MenuFixture({
             onClose={close}
           />
         ) : null}
-        {overlay === 'credits' ? <CreditsPanel pack={pack} stage={stage} onClose={close} /> : null}
       </fieldset>
     </>
   );

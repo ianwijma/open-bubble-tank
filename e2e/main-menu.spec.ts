@@ -78,16 +78,6 @@ test(`mock menu retains intro countdown, parent fades and 31-frame action guard`
   expect(Number(await menu.getAttribute('data-title-alpha'))).toBeGreaterThanOrEqual(1);
   await page.locator('#stage').screenshot({ path: `test-results/mock-menu-return.png` });
   await advance(100);
-  await page.getByRole('button', { name: 'Credits', exact: true }).click();
-  await advance(20);
-  await advance(5);
-  await advance(5);
-  await advance(1);
-  await expect(menu).toHaveAttribute('data-menu-parked', 'true');
-  await page.getByRole('button', { name: 'Back', exact: true }).click();
-  await advance(1);
-  await expect(menu).toHaveAttribute('data-menu-parked', 'false');
-  await advance(20);
   await page.getByRole('button', { name: 'Settings', exact: true }).click();
   await advance(20);
   await advance(5);

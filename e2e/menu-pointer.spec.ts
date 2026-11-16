@@ -49,17 +49,12 @@ test(`mock menu picks shape contours, dispatches release actions once and retain
   await settings.press('Tab');
   await move(345.8, 299.4);
   await page.evaluate(() => (document.activeElement as HTMLElement)?.blur());
-  await expect(page.locator('[data-menu-control="credits_btn"]')).toHaveAttribute(
-    'data-menu-hovered',
-    'true',
-  );
-  await expect(page.locator('.menu-series-caption')).toContainText('Credits');
   await move(203.9, 299.4);
   await page.mouse.down({ button: 'right' });
   await page.mouse.up({ button: 'right' });
   await expect(stage).toHaveAttribute('data-menu-action-count', '0');
   await expect(settings).toHaveAttribute('data-menu-hovered', 'true');
-  await expect(page.locator('.menu-series-caption')).toContainText('Settings');
+  await expect(page.locator('.menu-rollover-caption')).toContainText('Settings');
   await advance(5);
   await stage.screenshot({
     path: `test-results/mock-menu-pointer-hover.png`,

@@ -1,7 +1,5 @@
 import { PARTS, partById } from '../data/catalog';
-import { CREDITS } from '../core/credits-screen';
 import { svgMaskDefinition } from './svg-mask';
-import { mockCreditsLeaf } from './mock-credits';
 import type { Projectile, Rect, Tank, TankDesign, TankPart } from '../core/types';
 import { Random, rotate } from '../core/math';
 import { SwfClip } from './swf-clip';
@@ -177,21 +175,6 @@ export class AssetPack {
     for (const sprite of attachmentGeometry.sprites)
       pack.sprites.set(sprite.id, sprite as SpriteInfo);
     for (const shape of attachmentGeometry.shapes) pack.shapes.set(shape.id, shape);
-    for (const sprite of CREDITS.sprites) pack.sprites.set(sprite.id, sprite as SpriteInfo);
-    for (const shape of CREDITS.shapes) pack.shapes.set(shape.id, shape);
-    for (const leaf of [...CREDITS.shapes, ...CREDITS.texts]) {
-      const b = leaf.bounds;
-      const bounds =
-        'xMin' in b
-          ? {
-              x: b.xMin / 20,
-              y: b.yMin / 20,
-              width: (b.xMax - b.xMin) / 20,
-              height: (b.yMax - b.yMin) / 20,
-            }
-          : b;
-      pack.leaves.set(leaf.id, mockCreditsLeaf(leaf.id, bounds));
-    }
     for (const { id, bounds: b } of mockPartTimelines.shapes) {
       const raster = mockPartLeaf(id, {
         x: b.xMin / 20,
