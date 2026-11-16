@@ -74,7 +74,7 @@ test('cached turret owner keeps old-layer shielding but its avatar target aborts
 
 test('direct retained turret aiming converts its actual detached layer separately from the mount', () => {
   const { world, owner, gun, turret, detachedPoint } = cachedOwner();
-  // Controlled public movTarget assignment, distinct from the cached avatar reset above.
+  // Controlled public target assignment, distinct from the cached avatar reset above.
   turret.build = 1;
   gun.turretTarget = turret;
   const mount = world.actorParents.localToGlobal(owner, gun.part);
@@ -89,7 +89,7 @@ test('turret home parentage survives collection changes and ends on actual remov
   const { world, owner, turret } = cachedOwner();
   expect(turret.turretHome === owner).toBe(true);
   expect(world.field.enemies.includes(owner)).toBe(false);
-  // Controlled MoveBullet callback: this does not imply a detached wrapper receives Run.
+  // Controlled bullet-movement callback: this does not imply a detached wrapper receives Run.
   tickBullet(world, turret, emptyInput());
   expect(turret.dead).toBe(false);
   world.actorParents.detach(owner);

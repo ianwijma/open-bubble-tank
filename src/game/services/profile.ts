@@ -39,7 +39,7 @@ export function saveCreatedTank(profile: Profile, design: TankDesign) {
     },
   };
 }
-/** _-VM reserves an ID before checking empty fields, including failed submissions. */
+/** An ID is reserved before checking empty fields, including failed submissions. */
 export function submitCreatedTank(profile: Profile, design: TankDesign) {
   if (!design.parts.length || design.author === '' || design.name === '')
     return { tank: null, profile: { ...profile, nextTankId: profile.nextTankId + 1 } };
@@ -130,7 +130,7 @@ export function loadProfile(): Profile {
 }
 export function saveProfile(profile: Profile): boolean {
   try {
-    // Main.SaveGameData writes mainFPS, not Stage.frameRate; intCurrE is session-only.
+    // Saving writes mainFPS, not Stage.frameRate; the efficiency flag is session-only.
     const { mainFps, ...settings } = profile.settings;
     localStorage.setItem(
       KEY,

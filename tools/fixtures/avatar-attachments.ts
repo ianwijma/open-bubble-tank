@@ -1,6 +1,6 @@
 import type { World } from '../../src/game/simulation/world';
 
-/** Explicitly supply PlaceAvatar/UpdateAvatar after a raw fixture replacement.
+/** Explicitly place and update the avatar after a raw fixture replacement.
  * Production uses World.rebuildPlayer; drawing must never discover or attach a new avatar.
  */
 export function importAvatarFixture(world: World) {

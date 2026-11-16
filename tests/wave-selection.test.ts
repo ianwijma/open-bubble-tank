@@ -24,7 +24,7 @@ test('all available count draws precede the rounded wave ticket and singleton lo
     return 0.499;
   };
   const wave = rollWave(1, rng, [], roster);
-  // Source prepares five instructions, then ticket50 chooses the second50-chance option.
+  // Wave selection prepares five instructions, then ticket50 chooses the second50-chance option.
   expect(wave.designs.map((tank) => tank.name)).toEqual([
     tiny.name,
     small.name,

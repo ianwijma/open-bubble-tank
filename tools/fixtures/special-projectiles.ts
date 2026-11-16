@@ -12,7 +12,7 @@ import { tickBullet } from '../../src/game/simulation/projectiles';
 import { createTank } from '../../src/game/simulation/tank';
 import { World, emptyInput } from '../../src/game/simulation/world';
 
-/** The actual renderer paints each source-specific state, without a fixture route in the game. */
+/** The actual renderer paints each state, without a fixture route in the game. */
 export async function showSpecialProjectilesProof(pack: AssetPack, host: HTMLElement) {
   const world = new World([], [], 23),
     renderer = new GameRenderer(pack);

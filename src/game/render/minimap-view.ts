@@ -2,7 +2,7 @@ import { Container, Graphics } from 'pixi.js';
 import { MINIMAP, mapCenter, mapDotFrame } from '../core/minimap';
 import type { World } from '../simulation/world';
 
-/** AvatarInterface's compact / large / hidden map, fixed in stage coordinates. */
+/** The compact / large / hidden map, fixed in stage coordinates. */
 export class MinimapView {
   root = new Container();
   private mock = new Graphics();

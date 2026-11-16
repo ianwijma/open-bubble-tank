@@ -25,7 +25,7 @@ test(`mock creator category tabs retain source geometry, rollover paint and mode
     const stage = (await creator.boundingBox())!,
       bounds = (await tab(name).boundingBox())!,
       scale = stage.width / 550;
-    // Chromium quantizes each nested CSS position to 1/64px; allow one source twip.
+    // Chromium quantizes each nested CSS position to 1/64px; allow one twip.
     expect((bounds.x - stage.x) / scale).toBeCloseTo(374, 1);
     expect((bounds.y - stage.y) / scale).toBeCloseTo(y, 1);
     expect(bounds.width / scale).toBeCloseTo(18, 1);

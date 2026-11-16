@@ -97,7 +97,7 @@ test(`mock viewer save keeps source button states, suppresses geometry duplicate
   );
   await saveButton(first.name, true).click();
   await expect(saveButton(first.name, true)).toHaveAttribute('data-viewer-button-frame', '4');
-  // Different ID/statistics still match the source's author/name/part comparison.
+  // Different ID/statistics still match the author/name/part comparison.
   await load({ ...first, id: 'L10000100', life: first.life + 1 });
   await saveButton(first.name).click();
   expect(await savedTanks(page)).toHaveLength(1);
@@ -126,7 +126,7 @@ test(`mock viewer save keeps source button states, suppresses geometry duplicate
   await page.getByRole('button', { name: 'Sort tanks', exact: true }).click();
   await page.getByRole('button', { name: 'Sort by name', exact: true }).click();
   await expect(page.getByRole('button', { name: `Load ${first.name}`, exact: true })).toBeVisible();
-  // The bound View local callback uses the source's ID-filtered incremental pull.
+  // The bound View local callback uses the ID-filtered incremental pull.
   await expect(page.getByRole('button', { name: `Load ${second.name}`, exact: true })).toHaveCount(
     0,
   );

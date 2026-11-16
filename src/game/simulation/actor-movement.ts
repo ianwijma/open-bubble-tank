@@ -3,7 +3,7 @@ import type { Random } from '../core/math';
 import { displayPixel } from '../core/display-values';
 import { FIELD_RADIUS } from '../core/constants';
 
-/** Source _-KM vector arithmetic order, before DisplayObject coordinate assignment. */
+/** Vector arithmetic order, before display coordinate assignment. */
 export function actorHeading(from: Vec, to: Vec) {
   return (360 * Math.atan2(to.y - from.y, to.x - from.x)) / (2 * Math.PI);
 }
@@ -29,7 +29,7 @@ export const createActorMovement = (point: Vec = { x: 0, y: 0 }): ActorMovementS
   stationary: false,
 });
 
-/** MovieClip.rotation and _-EP's single-wrap, signed opposite-direction ties. */
+/** Rotation and the single-wrap, signed opposite-direction ties. */
 export function actorAngle(value: number) {
   value %= 360;
   if (value > 180) value -= 360;
@@ -48,7 +48,7 @@ function dampForce(t: MovingActor) {
   t.velocity.y *= 0.9;
   if (vectorLength(t.velocity) < 0.1) t.velocity.x = t.velocity.y = 0;
 }
-/** _-dL plans a wall turn without applying it until a later Move. */
+/** A wall turn is planned without being applied until a later move. */
 function advanceTurn(t: MovingActor, scale: number, speed: number, rng: Random) {
   const m = t.movement,
     look = actorDirection(t.rotation, 30 * speed + t.radius),
@@ -76,7 +76,7 @@ function advanceTurn(t: MovingActor, scale: number, speed: number, rng: Random) 
     m.lastAngle = actorHeading({ x: 0, y: 0 }, t);
   }
 }
-/** EnemyAI.Move / _-Px.Move and _-2T/_-Ab/_-QH. BehaviorRun sets next-frame swarmPoint. */
+/** The behavior run sets next-frame swarmPoint. */
 export function moveActor(t: MovingActor, fieldScale: number, rng: Random, avatar?: Vec) {
   const m = t.movement,
     speed = t.design.speed * (t.status.sticky > 0 ? 0.3 : 1);
@@ -109,7 +109,7 @@ export function moveActor(t: MovingActor, fieldScale: number, rng: Random, avata
       dy = t.y - m.swarmPoint.y;
     if (m.wallFlower || dx * dx + dy * dy > 40000) planTurn(t, m.swarmPoint, speed);
   } else if (m.frames === 0 && rng.int(0, 1000) < 20) {
-    // _-OJ reads the GetLength function rather than calling it; its NaN test is always false.
+    // The length function is read rather than called; its NaN test is always false.
     const turn = rng.int(-100, 100);
     m.frames = Math.round(Math.abs(turn) / (speed * 1.5));
     m.rate = speed * 1.5 * (turn / Math.abs(turn));

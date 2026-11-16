@@ -6,7 +6,7 @@ import { applyProjectileStatus } from './status';
 import { spawnPickups } from './pickups';
 import { collisionSound } from './collision-sound';
 
-/** Source callbacks precede direct damage; splash excludes only this contact. */
+/** Callbacks precede direct damage; splash excludes only this contact. */
 export function projectileCallback(
   world: World,
   bullet: Projectile,
@@ -24,17 +24,17 @@ export function projectileTankCallback(world: World, bullet: Projectile, tank: T
   projectileCallback(world, bullet, tank);
   if (bullet.status) applyProjectileStatus(world, tank, bullet.status);
   if (bullet.symbol === 1802) collisionSound(world, bullet);
-  // _-BL's friendly branch and _-Un/_-dp count nominal contact damage, before shields.
-  // The orbital _-JX override deliberately has no DamageDoneIncr call.
+  // The friendly branch counts nominal contact damage, before shields.
+  // The orbital override deliberately has no DamageDoneIncr call.
   if (!bullet.enemy && bullet.kind !== 'orbital') world.damageDoneIncr(bullet.damage);
   world.damage(tank, bullet.damage, bullet);
   bullet.hit.add(tank.uid);
-  // _-Un/_-dp set _-MB only after their explicit enemy-removal flush below.
+  // The miss exemption is set only after the explicit enemy-removal flush below.
   if (!bullet.enemy && bullet.kind !== 'orbital' && bullet.kind !== 'pierce')
     bullet.missExempt = true;
 }
 
-/** _-BL/_-Un and _-dp sample before movement. The layer gate uses no half-step. */
+/** Sampling happens before movement. The layer gate uses no half-step. */
 export function projectileTankContact(world: World, bullet: Projectile) {
   const special = bullet.kind === 'orbital' || (bullet.kind === 'seeker' && bullet.enemy);
   if (!special && world.field.enemies.length === 0) return false;

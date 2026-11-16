@@ -8,7 +8,7 @@ export interface PartSelection {
 }
 export const emptySelection = (): PartSelection => ({ keys: [], ghosts: [] });
 
-// TankCreatorScreen.SelectObject: selecting a mirrored part also selects its
+// Selecting a mirrored part also selects its
 // twin, moves that twin to the end of the selection, and fades it to 25%.
 export function addSelection(
   parts: TankPart[],
@@ -39,7 +39,7 @@ export function toggleSelection(
   };
 }
 
-// _-bp samples center, cardinal radius and half-radius points, in addition to
+// The marquee samples center, cardinal radius and half-radius points, in addition to
 // the release pointer's alpha hit. Retain its duplicated positive half-Y test.
 export function marqueeSelection(
   parts: TankPart[],
@@ -63,7 +63,7 @@ export function marqueeSelection(
   let result = selection,
     found = false;
   for (const p of parts) {
-    // _-bp takes position from the clip, but sample distances from metadata.
+    // Position comes from the clip, but sample distances from metadata.
     const data = saved.find((part) => part.key === p.key) ?? p,
       r = data.radius * data.scale;
     if (
@@ -92,7 +92,7 @@ export function unlinkSelection(parts: TankPart[], selection: PartSelection) {
   );
   return parts.map((p) => (affected.has(p.key) ? { ...p, twin: '' } : p));
 }
-/** _-6z breaks a pair when only one member remains selected after editing. */
+/** A pair is broken when only one member remains selected after editing. */
 export function unlinkPartialSelection(parts: TankPart[], selection: PartSelection) {
   const partial = parts.filter(
     (p) => selection.keys.includes(p.key) && p.twin && !selection.keys.includes(p.twin),
@@ -143,11 +143,11 @@ export function nudgeSelection(
   });
 }
 
-/** _-F1 / DeleteNonDominantTwinObject: center selected objects and retain the opaque twin. */
+/** Center selected objects and retain the opaque twin. */
 export function centerSelection(parts: TankPart[], selection: PartSelection) {
   let result = parts.map((p) => ({ ...p })),
     keys = [...selection.keys];
-  // The source splices its selected array during this index walk without rewinding.
+  // The selected array is spliced during this index walk without rewinding.
   for (let i = 0; i < keys.length; i++) {
     const part = result.find((p) => p.key === keys[i]);
     if (!part) continue;
@@ -167,7 +167,7 @@ export function centerSelection(parts: TankPart[], selection: PartSelection) {
   };
 }
 
-/** Source slider initialization averages every selected clip, including faded twins. */
+/** Slider initialization averages every selected clip, including faded twins. */
 export function selectedTransform(parts: TankPart[], selection: PartSelection) {
   const selected = parts.filter((p) => selection.keys.includes(p.key));
   return selected.length

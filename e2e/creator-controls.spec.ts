@@ -36,11 +36,11 @@ test(`mock creator shows original controls, merges centered twins and commits on
       return { x: r.x, y: r.y };
     });
   const factor = box.width / 350;
-  // Source scale1 maps to -19 on the -57..57 track; track clicks outside the handle do nothing.
+  // Scale1 maps to -19 on the -57..57 track; track clicks outside the handle do nothing.
   await page.mouse.click(r.x + 40 * factor, r.y + 2.25 * factor);
   expect((await snapshot()).parts.map((p) => p.scale)).toEqual(before.parts.map((p) => p.scale));
   await page.mouse.move(r.x - 19 * factor, r.y + 2.25 * factor);
-  // Hover grows the original handle's transparent hit circle from radius9 to11.9.
+  // Hover grows the handle's transparent hit circle from radius9 to11.9.
   await page.mouse.move(r.x - 29.5 * factor, r.y + 2.25 * factor);
   await page.mouse.down();
   await page.mouse.move(r.x + 30 * factor, r.y + 2.25 * factor, { steps: 8 });
@@ -52,7 +52,7 @@ test(`mock creator shows original controls, merges centered twins and commits on
   await page.mouse.click(box.x + (155 * box.width) / 350, box.y + (150 * box.height) / 350);
   await page.mouse.click(r.x - 19 * factor, r.y + 2.25 * factor);
   await page.getByRole('button', { name: 'Undo', exact: true }).click();
-  expect((await snapshot()).parts).toHaveLength(2); // Source records the accepted no-op release.
+  expect((await snapshot()).parts).toHaveLength(2); // The accepted no-op release is recorded.
   await page.getByRole('button', { name: 'Undo', exact: true }).click();
   expect((await snapshot()).parts).toHaveLength(0);
   await dropPreview(page, -20, -25);
@@ -96,7 +96,7 @@ test(`mock creator shows original controls, merges centered twins and commits on
     true,
   );
   expect((await snapshot()).parts).toEqual(beforeResize.parts);
-  expect(await readClass()).toBe(beforeClass); // _-CI changes art; _-1N updates class on release.
+  expect(await readClass()).toBe(beforeClass); // Dragging changes the art; the class updates on release.
   expect(await creator.locator('.creator-meters > div').nth(2).innerText()).toBe(beforeBudget);
   await page.mouse.up();
   await expect.poll(readClass).toBeGreaterThan(beforeClass);

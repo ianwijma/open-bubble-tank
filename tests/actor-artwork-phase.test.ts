@@ -63,7 +63,7 @@ for (const [capture, original] of [
             .map((r) => r.frame),
         ),
       ];
-      expect(values).toHaveLength(1); // Reentrant original EXITs must agree; never select a fitted row.
+      expect(values).toHaveLength(1); // Reentrant EXITs must agree; never select a fitted row.
       return values[0];
     });
   test(`actor phases ${capture}: constructor reads precede initial scripts`, () => {

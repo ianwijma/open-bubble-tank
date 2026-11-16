@@ -1,5 +1,5 @@
 import original from './world-layer-original.json';
-/** Original builtin ByteArray words, not native-generated decimal expectations. */
+/** Builtin ByteArray words, not generated decimal expectations. */
 export function worldOriginalNumber(phase: string, age: number, role: string, key: string) {
   const row = original.samples.find((s) => s.phase === phase && s.age === age && s.role === role)!;
   const words = row.words[original.fields.indexOf(key)];

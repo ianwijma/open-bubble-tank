@@ -7,7 +7,7 @@ type AudioProbe = {
 };
 type ObservedWindow = Window & { __audioProbe: AudioProbe };
 
-/** Observe real media calls; source music starts at0 for a fade or0.8 for a restart. */
+/** Observe real media calls; music starts at0 for a fade or0.8 for a restart. */
 export async function watchAudio(page: Page) {
   await page.addInitScript(() => {
     const NativeAudio = window.Audio;

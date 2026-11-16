@@ -11,7 +11,7 @@ import { createProjectile } from '../../src/game/simulation/create-projectile';
 import { World, emptyInput } from '../../src/game/simulation/world';
 import { FieldVisit } from '../../src/game/core/field-visit';
 
-/** _-DO's owner-Run latch, retired hit children, and independently stopped protection clips. */
+/** The turret's owner-Run latch, retired hit children, and independently stopped protection clips. */
 export async function showTurretProtection(pack: AssetPack, host: HTMLElement) {
   const app = new Application(),
     textures = new SwfTextures(),

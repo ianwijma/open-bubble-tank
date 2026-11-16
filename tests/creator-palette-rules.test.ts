@@ -63,7 +63,7 @@ test('palette scroll retains source row overhang and distinct drag/arrow handle 
 });
 test('scroll arrows round negative list displacement before adding the row step', () => {
   const scroll = new CreatorPaletteScroll(18);
-  scroll.drag(38); // Source extent181.5 and barY38 give exactly30px, halfway through row1.
+  scroll.drag(38); // Extent181.5 and barY38 give exactly30px, halfway through row1.
   expect(scroll.offset).toBe(30);
   scroll.step(1);
   expect(scroll.offset).toBeCloseTo(40.33333333333333);

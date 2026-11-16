@@ -109,7 +109,7 @@ test(`mock clicking the already-selected source control still performs its actio
   await efficiency(page, true).check();
   const fast = page.getByRole('radio', { name: '65 FPS' });
   await expect(fast).toBeChecked();
-  await fast.click(); // Source MouseUp runs even though the selector was already highlighted.
+  await fast.click(); // MouseUp runs even though the selector was already highlighted.
   await stageRate(page, 65, 65);
   await expect(efficiency(page, true)).toBeChecked();
   await efficiency(page, false).check();

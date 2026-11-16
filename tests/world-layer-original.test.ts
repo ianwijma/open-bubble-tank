@@ -10,7 +10,7 @@ import {
   worldLayerTransform,
 } from '../src/game/render/field-transform';
 
-/** Decode the original ByteArray words, without decimal round trips or native-generated expectations. */
+/** Decode the ByteArray words, without decimal round trips or generated expectations. */
 function measured(phase: string, age: number, role: string, key: string) {
   const row = original.samples.find((s) => s.phase === phase && s.age === age && s.role === role)!;
   const words = row.words[original.fields.indexOf(key)];
@@ -27,7 +27,7 @@ for (const age of [0, 1, 2, 51, 119])
     world.fieldDisplays.moveCurrent(field, { x: 140, y: -70 });
     world.fieldDisplays.setupChildren(field, 1.4);
     world.worldDisplays.follow(field);
-    // Declared original setup selects the non-first highlight at wave scale1.4.
+    // Declared setup selects the non-first highlight at wave scale1.4.
     world.worldDisplays.setCollapseScale(field, 'highlight', 'scaleY', 1.4);
     world.worldDisplays.setCollapseScale(field, 'highlight', 'scaleX', 1.4);
     world.beginCollapse(0);

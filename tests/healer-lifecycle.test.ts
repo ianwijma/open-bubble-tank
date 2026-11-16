@@ -91,7 +91,7 @@ test('queued outgoing patient data aborts the incoming Healer catch retry, while
   const stage = stageFor(world);
   world.hitSoundTimer = 4;
   stage.advance();
-  expect(world.hitSoundTimer).toBe(4); // The aborted World.Run never reaches its sound-clock tail.
+  expect(world.hitSoundTimer).toBe(4); // The aborted world run never reaches its sound-clock tail.
   expect(patient.dead).toBe(true);
   expect(world.runtimeFor(outgoing).enemyRemovals).toContain(patient);
   expect(world.actorParents.hasParent(patient)).toBe(true);
@@ -142,7 +142,7 @@ test('a queued dead patient has an empty display, so its beam retains contact co
   stage.advance();
   expect(world.actorParents.hasParent(patient)).toBe(false);
   expect(world.bullets).not.toContain(beam);
-  // Source RemoveBullet splices the live array: its next old entry waits one more frame.
+  // Bullet removal splices the live array: its next old entry waits one more frame.
   expect([sentinel.age, world.player.age, stage.callbacks()]).toEqual([1, 2, 2]);
   stage.advance();
   expect([sentinel.age, world.player.age, stage.callbacks()]).toEqual([2, 3, 3]);

@@ -1,7 +1,7 @@
 import type { World } from '../../src/game/simulation/world';
 import type { TutorialStage } from '../../src/game/core/tutorial';
 
-/** Explicitly supply source pose/goto operations omitted by a raw scalar fixture layout.
+/** Explicitly supply pose/goto operations omitted by a raw scalar fixture layout.
  * Call only after artificial player/offset/scale/tutorial edits; never from production or drawing.
  */
 export function setFieldFixtureLayout(world: World) {

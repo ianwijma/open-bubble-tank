@@ -93,11 +93,11 @@ export interface ViewerLimits extends TankLoadProfile {
   /** Current-profile readout; candidate selection uses that tank's class budget. */
   gunPoints: number;
 }
-/** TankViewerScreen._-8V bypasses restrictions when selecting from the enemy viewer. */
+/** Selecting from the enemy viewer bypasses restrictions. */
 export function viewerSelectionError(tank: TankDesign, avatar: boolean, limits: ViewerLimits) {
   return avatar ? viewerEditError(tank, limits) : '';
 }
-/** EditTank / EditLargeTank check both modes and print the specific _-cL reason. */
+/** Editing checks both modes and prints the specific reason. */
 export function viewerEditError(tank: TankDesign, limits: ViewerLimits) {
   const { overGunPoints, overClass, missingParts, capacityLabel } = tankLoadEligibility(
       tank,
@@ -146,7 +146,7 @@ export function viewerEquipmentFields(tank: TankDesign) {
     passive_txt: tank.avatar ? infoWeapons(tank, 5) : '',
   };
 }
-/** TankLoadingBox.Setup's fit includes five invisible13px helpers at the extreme mount positions. */
+/** The loading box's fit includes five invisible13px helpers at the extreme mount positions. */
 export function viewerFit(
   tank: TankDesign,
   boxes: readonly Rect[],

@@ -60,6 +60,6 @@ test('body clusters retain authored travel, angles, independent children and lon
   const bladder = pose(2445, 341);
   expect(bladder.frame).toBe(1);
   expect(bladder.children.get(1)!.clip.age).toBeGreaterThan(300);
-  expect(pose(2447, 1).placements).toHaveLength(0); // The source allows a rounded random start of0→1.
+  expect(pose(2447, 1).placements).toHaveLength(0); // A rounded random start of0→1 is allowed.
   expect(pose(2447, 25).placements).toHaveLength(7);
 });

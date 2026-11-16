@@ -83,7 +83,7 @@ test('new win waits for the next cohort, shares catch-up, and retains stopped Ru
   expect(world.stats.frames).toBe(frames);
   expect(world.player.status.jam).toBe(20);
   expect(world.player.artAge).toBe(art + 5);
-  expect(world.hitSoundTimer).toBe(4); // Main3 still invokes stopped World.Run.
+  expect(world.hitSoundTimer).toBe(4); // Main in mode3 still invokes the stopped world run.
   screen!.dispose();
 });
 
@@ -149,7 +149,7 @@ test('Continue restores the shared saved mode, backgrounds and retained progress
     field = world.field;
   const commands: boolean[] = [];
   world.onBackgroundChange = (running) => commands.push(running);
-  // Another source callback may have overwritten intCurrentGameMode while the dialog lives.
+  // Another callback may have overwritten the saved game mode while the dialog lives.
   world['flow'].saved = 'stopped';
   world.continueAfterWin();
   expect(world.mode).toBe('stopped');

@@ -20,7 +20,7 @@ test(`mock creator detail thumbnails shrink once and retain independent preview 
     expect(row.removed.ink).toBe(0);
     expect(row.reset).toEqual(row.first);
   }
-  // The source never enlarges small clips; a palette preview retains full size.
+  // Small clips are never enlarged; a palette preview retains full size.
   expect(small.first).toEqual(small.preview);
   expect(Math.max(large.preview.width, large.preview.height)).toBeGreaterThan(48);
   expect(Math.max(large.first.width, large.first.height)).toBeLessThanOrEqual(50);

@@ -15,7 +15,7 @@ interface SapperState {
 const states = new WeakMap<Projectile, SapperState>();
 const attachedTanks = (world: World) => [...world.field.enemies, ...world.allies];
 
-/** _-3C retains SpawnNewBullet's object, including an uninitialized rejected birth. */
+/** The sapper retains the spawned object, including an uninitialized rejected birth. */
 export function fireSapper(world: World, owner: Tank, gun: GunState) {
   if (gun.sapperRef && world.hasBulletParent(gun.sapperRef)) return;
   const point = world.actorParents.pointAt(owner, world.muzzle(owner, gun), world.currentWrapper);
@@ -81,7 +81,7 @@ function steer(world: World, bullet: Projectile, state: SapperState) {
   state.movement = actorDirection(angle, bullet.speed);
 }
 
-/** _-Jp constructor stops on frame3; base Setup immediately steers toward the avatar. */
+/** The sapper constructor stops on frame3; base Setup immediately steers toward the avatar. */
 export function initializeSapper(world: World, bullet: Projectile, home?: Tank, target?: Tank) {
   if (bullet.kind !== 'sapper' || states.has(bullet)) return;
   const state: SapperState = {
@@ -95,7 +95,7 @@ export function initializeSapper(world: World, bullet: Projectile, home?: Tank, 
   steer(world, bullet, state);
 }
 
-/** _-Jp: wall, steering, master/shot/target contact, then the pre-contact movement. */
+/** Wall, steering, master/shot/target contact, then the pre-contact movement. */
 export function tickSapper(world: World, bullet: Projectile) {
   initializeSapper(world, bullet);
   const state = states.get(bullet)!;

@@ -3,7 +3,7 @@ import { WEAPONS } from '../data/weapons';
 import type { World } from './world';
 import { addTankChild, removeTankChild } from './tank-display';
 
-/** _-Zx.EffectMeCrazy replaces the previous set of attached effect clips. */
+/** Replaces the previous set of attached effect clips. */
 export function decorateStatus(world: World, tank: Tank, kind: DecoratedStatus, duration = 80) {
   if (tank.design.parts.some((part) => part.type === 5005)) return;
   const parts = tank.design.parts;
@@ -14,7 +14,7 @@ export function decorateStatus(world: World, tank: Tank, kind: DecoratedStatus, 
     artAge: 0,
     duration,
     marks: Array.from({ length: Math.min(5, parts.length) }, (_, index) => {
-      // At five or more parts the original picks with replacement, even if marks overlap.
+      // At five or more parts picks are made with replacement, even if marks overlap.
       const part = parts.length < 5 ? parts[index] : parts[world.rng.int(0, parts.length - 1)];
       return { x: part.x, y: part.y, angle: world.rng.int(-180, 180), frame: world.rng.int(1, 4) };
     }),
@@ -22,7 +22,7 @@ export function decorateStatus(world: World, tank: Tank, kind: DecoratedStatus, 
   if (tank.statusDecoration.marks.length) addTankChild(tank, 'status');
 }
 
-/** Applies the callbacks of _-aw/_-0L/_-Md/_-ar/_-U4, before impact damage. */
+/** Applies the status projectiles' callbacks, before impact damage. */
 export function applyProjectileStatus(world: World, tank: Tank, status: Status, duration = 80) {
   const forcefield = tank.design.parts.some((part) => part.type === 5005);
   if (status === 'infect') {
@@ -35,7 +35,7 @@ export function applyProjectileStatus(world: World, tank: Tank, status: Status, 
     return;
   }
   if (status === 'ink') {
-    // InkMe changes avatars only. The callback's separate screen effect also runs on allies.
+    // The ink effect changes avatars only. The callback's separate screen effect also runs on allies.
     if (tank.status.ink === 0) {
       if (tank.design.avatar) tank.status.ink = 121;
       if (!forcefield) world.addCombatEffect({ x: 0, y: 0 }, 'ink');

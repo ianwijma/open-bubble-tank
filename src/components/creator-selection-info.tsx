@@ -16,7 +16,7 @@ export function CreatorSelectionInfo({
 }) {
   const [focus, setFocus] = useState<{ key: string; icons: CreatorWeaponIcon[] } | null>(null),
     id = useId();
-  // Rebuilding source _-Ev removes its popup, even when the selected IDs are unchanged.
+  // Rebuilding the icon list removes its popup, even when the selected IDs are unchanged.
   const active = focus?.icons === icons ? icons.find((i) => i.key === focus.key) : undefined;
   const part = active && partById(active.type),
     p = CREATOR_PALETTE.selectionInfo,

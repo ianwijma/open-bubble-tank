@@ -25,7 +25,7 @@ test('editor checks complexity before class, then GP before the later class bran
   expect(creatorEditError([part(4013)], 2, 1, 0)).toBe(1);
   expect(creatorEditError([part(4013)], 7, 6, 0)).toBe(2);
   expect(creatorEditError([part(4013)], 7, 6, 1)).toBe(5);
-  expect(creatorEditError([part(4013)], 1, 6, 0.9)).toBe(0); // source convert_i truncates the difference
+  expect(creatorEditError([part(4013)], 1, 6, 0.9)).toBe(0); // the integer conversion truncates the difference
   expect(CREATOR_EDIT_ERRORS[1]).toBe('Excedes maximum tank size');
 });
 test('reverse mount order selects class/behavior errors and permits duplicate behavior instances', () => {

@@ -171,7 +171,7 @@ export class GameRenderer {
     const activeFields = world.attachedFields().map(({ field }) => field);
     this.captions?.update(world);
     // Project renderable owners only; obsolete wrapper projections must not retain
-    // historical worlds. The simulation retains source identities and poses.
+    // historical worlds. The simulation retains identities and poses.
     for (const [field, view] of this.underAvatarNodes)
       if (!activeFields.includes(field)) {
         view.destroy();
@@ -207,7 +207,7 @@ export class GameRenderer {
       node.position.set(transform.x, transform.y);
       node.scale.set(scale);
     }
-    // Setup places HUD last; AttachNewBubblefield raises the screen layer at first crossing.
+    // Setup places HUD last; attaching a new field raises the screen layer at first crossing.
     const screenInFront = world.transit !== null || world.connections.size > 0;
     if (
       this.app.stage.getChildIndex(this.screenEffects) >

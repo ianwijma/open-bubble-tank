@@ -13,7 +13,7 @@ export const viewerToolbar = [
   'btnViewLocalTanks_mc',
 ] as const;
 export const viewerToolbarName = (name: string) => `toolbar:${name}`;
-/** _-S6/_-P8 and ReturnToViewTanksFromSearch. The creator's back callback is present. */
+/** The creator's back callback is present. */
 export class ViewerCodeFlow {
   readonly panes = new ViewerPanes();
   readonly fades = this.panes.fades;
@@ -37,7 +37,7 @@ export class ViewerCodeFlow {
     for (const name of viewerToolbar) this.fades.show(viewerToolbarName(name));
     if (this.avatar) this.fades.show(viewerToolbarName('btnCurrentPoints_mc'));
     this.panes.rebuildCards(tanks.slice(0, 4), local);
-    // _-BB's creator-specific button setup removes this hidden profile control again.
+    // The creator-specific button setup removes this hidden profile control again.
     this.fades.cancel(viewerToolbarName('btnMyAvatar_mc'));
     this.fades.state(viewerToolbarName('btnMyAvatar_mc')).alpha = 0;
   }

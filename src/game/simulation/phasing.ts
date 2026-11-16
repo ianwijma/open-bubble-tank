@@ -5,7 +5,7 @@ import type { Random } from '../core/math';
 /** The Phasing clip constructor owns an integer counter before behavior registration. */
 export const createPhasing = (rng: Random) => ({ counter: rng.int(0, 50) | 0 });
 
-/** _-ct._-Ai.BehaviorRun, called by the active registered behavior after movement. */
+/** Called by the active registered behavior after movement. */
 export function tickPhasing(tank: Tank, gun: GunState) {
   const state = gun.phasing;
   if (!state) return;

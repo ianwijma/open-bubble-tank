@@ -58,7 +58,7 @@ export class TankView {
           view.sprite.width = raster.width;
           view.sprite.height = raster.height;
         }
-        // Editor leaves keep the shared source gold; hostile live mounts get a mild warm tint.
+        // Editor leaves keep the shared gold; hostile live mounts get a mild warm tint.
         view.root.tint = t.side === 'enemy' && part.type >= 2000 ? 0xffe6cc : 0xffffff;
       }
     }

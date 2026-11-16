@@ -22,7 +22,7 @@ export class AudioManager {
   constructor(stage: StageRuntime) {
     for (const id of [561, 562, 563, 564, 565, 566, 567, 568])
       this.urls.set(id, URL.createObjectURL(mockAudio(id)));
-    // MusicPlayer registers on the stage before the World/Main listener.
+    // The music player registers on the stage before the World/Main listener.
     this.unsubscribe = stage.subscribe({ beforeStep: () => this.tickMusic() });
   }
   playEvents(events: WorldEvent[], settings: Settings) {
@@ -51,7 +51,7 @@ export class AudioManager {
     const url = this.urls.get(id);
     if (!url) return;
     this.music = new Audio(url);
-    // MusicPlayer receives SOUND_COMPLETE and starts the same Sound again.
+    // The music player receives SOUND_COMPLETE and starts the same Sound again.
     // Native looping would bypass its volume write during an active transition.
     this.music.loop = false;
     this.music.volume = frames ? 0 : 0.8;
@@ -60,7 +60,7 @@ export class AudioManager {
       if (!this.musicEnabled || this.music !== audio) return;
       audio.currentTime = 0;
       audio.volume = 0.8;
-      // Completion replaces the voice, not MusicPlayer's transition/counter.
+      // Completion replaces the voice, not the music player's transition/counter.
       void audio.play().catch(() => {});
     };
     this.fade = frames ? { direction: 'in', frame: 0, total: frames, from: 0 } : null;
@@ -99,7 +99,7 @@ export class AudioManager {
       if (this.rememberedTrack) this.startMusic(this.rememberedTrack, 0);
     }
   }
-  /** Main._-RO is called for a fresh menu/game, including an already playing track. */
+  /** Music is requested for a fresh menu/game, including an already playing track. */
   requestMusic(mode: 'menu' | 'game') {
     // Muted/fading calls are discarded, not queued for a later settings update.
     if (!this.musicEnabled || this.fade) return;

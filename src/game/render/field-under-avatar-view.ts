@@ -3,9 +3,9 @@ import type { DisplayMatrix } from '../core/display-transform';
 import type { FieldDisplayRead } from '../simulation/field-display';
 import type { FieldTransform } from './field-transform';
 
-/** Original1551 depth10/12 branch only. No actor/life child inherits this mask.
+/** The 1551 depth10/12 branch only. No actor/life child inherits this mask.
  * Model instances survive detachment; projections use their actual retained owners.
- * Finite original paint controls qualify alpha masking, not pixel/Adobe equality.
+ * Finite paint controls qualify alpha masking, not pixel equality.
  */
 export class FieldUnderAvatarView {
   readonly root = new Container();

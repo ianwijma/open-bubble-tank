@@ -72,7 +72,7 @@ export function createTank(
   t.guns = design.parts.flatMap((part) => {
     const category = Math.floor(part.type / 1000);
     if (!cats.includes(category)) return [];
-    // The clip constructor runs before RegisterBehaviorPart rejects duplicate IDs.
+    // The clip constructor runs before behavior registration rejects duplicate IDs.
     const phasing = part.type === 6004 ? createPhasing(rng) : undefined;
     const wallFlower = part.type === 6005 ? createWallFlower(rng) : undefined;
     if (category === 6) {
@@ -93,7 +93,7 @@ export function createTank(
       if (part.type === 6002) acquireHealerTarget(state, t, population, rng);
       else acquireBehaviorTarget(state, side, population, rng);
     }
-    // Weapon.Setup acquires its target before _-1k.SeperatePartSetup caches a code.
+    // Weapon setup acquires its target before part setup caches a code.
     const fighters =
       part.type === 4003
         ? (world?.roster.units.get('SmallFighter') ??
@@ -119,7 +119,7 @@ export function createTank(
   world?.actorArtwork.construct(t);
   return t;
 }
-/** Weapon.Deactivate clears targets; the retained tank/beam artwork remains separate. */
+/** Weapon deactivation clears targets; the retained tank/beam artwork remains separate. */
 export function deactivateTankData(tank: Tank) {
   for (const gun of tank.guns) {
     if (gun.targeting) gun.targeting.target = null;
@@ -128,7 +128,7 @@ export function deactivateTankData(tank: Tank) {
     gun.patientId = undefined;
   }
   tank.dataActive = false;
-  // TankData.Deactivate -> WipeTank removes every child of the live actor.
+  // Tank deactivation wipes the tank: every child of the live actor is removed.
   // Its empty outer container remains parented until the field callback removes it.
   tank.displayChildren = [];
   tank.shieldClips = [];
@@ -136,7 +136,7 @@ export function deactivateTankData(tank: Tank) {
 }
 export function healTank(t: Tank, value: number) {
   t.life = (t.life + (value | 0)) | 0;
-  // AddLife increments its int property before the first objData.numLife read.
+  // Adding life increments its int property before the first life read.
   const data = requireHealerData(t);
   if (t.life > data.maxLife && data.design.avatar) t.life = data.maxLife | 0;
   if (t.side === 'enemy') {

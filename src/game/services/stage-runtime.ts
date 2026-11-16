@@ -5,7 +5,7 @@ import { MainBackground } from '../core/main-background';
 interface StageListener {
   elapsed?: (milliseconds: number) => void;
   beforeStep?: () => void;
-  /** Main.Run's selected menu/world branch, before the background recipients. */
+  /** The selected menu/world branch of Main's run, before the background recipients. */
   mainStep?: () => void;
   step?: () => void;
   draw?: () => void;
@@ -31,10 +31,10 @@ export class StageRuntime {
     this.accumulator += Math.min(elapsed, 100);
     const step = 1000 / fps;
     while (this.accumulator + 1e-8 >= step) {
-      // The AVM2 broadcast fixes its recipient range before any listener runs.
+      // The broadcast fixes its recipient range before any listener runs.
       // New views can draw now, but begin frame callbacks in the next cohort.
       const frameListeners = [...this.listeners];
-      // Main registers sEffects.Run before Main.Run: existing effects age first.
+      // Main registers the effects run before its own run: existing effects age first.
       this.effects.tick(this.random);
       for (const listener of frameListeners)
         if (this.listeners.has(listener)) listener.beforeStep?.();

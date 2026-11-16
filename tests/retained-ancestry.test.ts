@@ -33,7 +33,7 @@ function setup(age: number) {
   world.addBullet(bullet);
   world.beginCollapse(0);
   for (let i = 0; i < age; i++) world.step(emptyInput());
-  // The original synchronous shrink control never ticks Main between calls.
+  // The synchronous shrink control never ticks Main between calls.
   world.mainEffects.position = { x: 0, y: 0 };
   return { world, field, actor, bullet };
 }
@@ -83,7 +83,7 @@ test('scalar map/player edits cannot silently move actual display ancestry', () 
   expect(world.bulletGlobal(bullet)).toEqual(shot);
 });
 
-// These are actual original globalToLocal outputs, including lossy round trips.
+// These are actual globalToLocal outputs, including lossy round trips.
 // The intermediate stage Point is retained instead of assuming inverse(forward(p)) equals p.
 
 function pointValues(row: (typeof pointOriginal.samples)[number]) {

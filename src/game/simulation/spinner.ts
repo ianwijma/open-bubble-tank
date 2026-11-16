@@ -7,7 +7,7 @@ import type { World } from './world';
 
 const clocks = new WeakMap<Projectile, { counter: number; angle: number }>();
 
-/** _-V3: its collision return is ignored, so contact neither stops nor consumes it. */
+/** The spinner's collision return is ignored, so contact neither stops nor consumes it. */
 export function tickSpinner(world: World, b: Projectile) {
   if (projectileOutside(world, b)) {
     world.addCombatEffect(b, 'impact');
@@ -31,7 +31,7 @@ export function tickSpinner(world: World, b: Projectile) {
           enemy: true,
           kind: 'shell',
           symbol: 1717,
-          // The original passes its degree-valued angle directly to Math.cos/sin here.
+          // The degree-valued angle is passed directly to Math.cos/sin here.
           x: b.x + radius * Math.cos(a),
           y: b.y + radius * Math.sin(a),
           angle: (Math.atan2(vy, vx) * 180) / Math.PI,

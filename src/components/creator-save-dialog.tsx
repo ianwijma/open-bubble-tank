@@ -76,7 +76,7 @@ function ScreenButton({
     </button>
   );
 }
-/** TankScreens1070: source exit/name/code/error poses over the still-live editor. */
+/** Exit/name/code/error poses over the still-live editor. */
 export function CreatorSaveDialog({
   pack,
   kind,
@@ -123,7 +123,7 @@ export function CreatorSaveDialog({
   useEffect(() => {
     if (!saved) return;
     let cancelled = false;
-    // _-VM exports a freshly constructed TankData with difficulty1; local ImportTankData recalculates it.
+    // Export uses a freshly constructed tank with difficulty1; import recalculates it.
     void encodeTankCode({ ...saved, difficulty: 1 })
       .then((value) => {
         if (!cancelled) setCode(value);

@@ -3,7 +3,7 @@ import { positiveAxisAlignedSize } from '../core/axis-aligned-size';
 import { DISPLAY_IDENTITY } from '../core/display-transform';
 import type { UnderAvatarSizeResolver } from './field-display';
 
-// The supplied original's 1544 has exactly one identity-placed shape1543.
+// 1544 has exactly one identity-placed shape1543.
 // Reject changed layouts rather than silently treating a different tree as this leaf.
 const placements = authored.sprites['1544'];
 const child = placements[0];

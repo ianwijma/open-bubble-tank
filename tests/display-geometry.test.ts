@@ -19,7 +19,7 @@ const rectangle = (
   content: {
     kind: 'leaf',
     bounds: { xMin, xMax, yMin, yMax },
-    // Synthetic rectangular fill, not an approximation of original field art.
+    // Synthetic rectangular fill, not an approximation of field art.
     hit: ({ x, y }) => x * 20 >= xMin && x * 20 <= xMax && y * 20 >= yMin && y * 20 <= yMax,
   },
 });

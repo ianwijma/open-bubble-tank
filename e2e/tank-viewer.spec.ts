@@ -197,7 +197,7 @@ test(`mock creator load uses original local viewer, animated cards, code view an
   const closedHeight = (await statistics.boundingBox())!.height;
   await page.getByRole('button', { name: 'Tank equipment details', exact: true }).hover();
   await expect(statistics).toHaveAttribute('data-statistics-frame', '10');
-  // DOM layout quantizes fractional sizes before the source matrix is applied.
+  // DOM layout quantizes fractional sizes before the matrix is applied.
   expect(
     Math.abs((await statistics.boundingBox())!.height - closedHeight * (149.4 / 14.65)),
   ).toBeLessThan(0.5);

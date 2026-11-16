@@ -49,7 +49,7 @@ test('source Wiggle root windows continue through actual departure, cached absen
     positive = pose(tank, 1);
   cacheEmptyField(world);
   art(world, 110);
-  expect(negative.frame).toBe(12); // Actual EXIT110; original ENTER111 advances to13.
+  expect(negative.frame).toBe(12); // Actual EXIT110; ENTER111 advances to13.
   world.jump({ x: 1, y: 0 });
   world.player.x = world.transit!.target.x;
   world.player.y = world.transit!.target.y;
@@ -172,8 +172,8 @@ test('before-ENTER and inside-ENTER construction preserve the measured 1/2/3 and
     advanceTime(ms);
   };
   for (; enter <= 550; enter++) world.step(emptyInput());
-  // Literal deterministic negative-Y windows from both original captures; no
-  // original random bubble frame or RNG stream is fitted to this host playback.
+  // Literal deterministic negative-Y windows from both captures; no
+  // random bubble frame or RNG stream is fitted to this host playback.
   expect(beforeFrames).toEqual([13, 3, 4, 24, 25, 37, 8, 48, 49, 11]);
   expect(insideFrames).toEqual([12, 2, 3, 23, 24, 36, 7, 47, 48, 10]);
 });

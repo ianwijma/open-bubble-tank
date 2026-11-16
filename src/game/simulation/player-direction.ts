@@ -2,7 +2,7 @@ import { angleTo, length } from '../core/math';
 import type { InputFrame, Tank, Vec } from '../core/types';
 import { STAGE } from '../core/constants';
 
-/** _-KM._-Uo, including its positive/negative exact-opposite tie choices. */
+/** The turn step, including its positive/negative exact-opposite tie choices. */
 export function movementTurn(rotation: number, velocity: Vec) {
   const target = angleTo({ x: 0, y: 0 }, velocity),
     step = length(velocity) / 4;
@@ -16,7 +16,7 @@ export function movementTurn(rotation: number, velocity: Vec) {
   return target < 0 ? Math.max(-step, target - rotation) : -step;
 }
 
-/** AvatarInterface.ControlAvatarDirection runs before acceleration and even in state2. */
+/** Avatar direction control runs before acceleration and even in state2. */
 export function controlPlayerDirection(tank: Tank, input: InputFrame) {
   if (tank.design.classId <= 3)
     tank.rotation = angleTo(
@@ -25,7 +25,7 @@ export function controlPlayerDirection(tank: Tank, input: InputFrame) {
     );
   else {
     tank.rotation += movementTurn(tank.rotation, tank.velocity);
-    // Flash DisplayObject.rotation normalizes when assigned.
+    // Rotation is normalized when assigned.
     while (tank.rotation > 180) tank.rotation -= 360;
     while (tank.rotation < -180) tank.rotation += 360;
   }

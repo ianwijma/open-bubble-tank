@@ -140,7 +140,7 @@ export function useViewerArtwork(pack: AssetPack, stage: StageRuntime, jobs: Vie
           job.key !== current.current[index]?.key || job.fit !== current.current[index]?.fit,
       );
     current.current = jobs;
-    // Setup/_-VR attach a visible fresh frame immediately, even if the stage has not ticked.
+    // Setup and reparenting attach a visible fresh frame immediately, even if the stage has not ticked.
     if (changed) paintCurrent.current?.();
   });
   useEffect(() => {

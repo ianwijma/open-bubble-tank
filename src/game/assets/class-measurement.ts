@@ -2,7 +2,7 @@ import type { TankDesign } from '../core/types';
 import { classFromPixelCount } from '../simulation/designer';
 import type { AssetPack } from './asset-pack';
 
-/** TankCreatorScreen.UpdateClass / TankData._-7e: body-only, opaque black BitmapData. */
+/** Body-only, opaque black bitmap. */
 export function captureClass(design: TankDesign, pack: AssetPack) {
   const bodies = design.parts.filter((p) => p.type < 2000);
   const points = bodies.flatMap((p) => {
@@ -23,7 +23,7 @@ export function captureClass(design: TankDesign, pack: AssetPack) {
     height: points.length ? Math.max(...points.map((p) => p.y)) - y : 0,
   };
   const canvas = document.createElement('canvas');
-  // BitmapData's integer dimensions truncate; fractional drawing translation remains.
+  // A bitmap's integer dimensions truncate; fractional drawing translation remains.
   canvas.width = Math.max(1, Math.trunc(bounds.width + 10));
   canvas.height = Math.max(1, Math.trunc(bounds.height + 10));
   const ctx = canvas.getContext('2d', { willReadFrequently: true })!;

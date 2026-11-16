@@ -69,7 +69,7 @@ export const WEAPONS: Record<number, WeaponSpec> = {
     angles: Array.from({ length: 10 }, (_, i) => -144 + i * 36),
     symbol: 1717,
   }),
-  // _-J2 passes speed10 even though the mine's MoveBullet never advances position.
+  // The mine passes speed10 even though its bullet movement never advances position.
   4009: shell(40, 10, 10, { kind: 'mine', symbol: 1792 }),
   4010: shell(20, 3, 1, { kind: 'orbital' }),
   4011: shell(80, 6, 0, { status: 'sticky' }),
@@ -77,7 +77,7 @@ export const WEAPONS: Record<number, WeaponSpec> = {
   4013: shell(0, 0, 0),
   4015: shell(4, 6, 4, { size: 1.8, symbol: 1717 }),
   4016: shell(90, 5, 4, { size: 2.5, symbol: 1717 }),
-  // _-IB uses a rate-1 trigger plus its own 120/4 counters (not a rate-5 age gate).
+  // This weapon uses a rate-1 trigger plus its own 120/4 counters (not a rate-5 age gate).
   4017: shell(1, 7, 2, { symbol: 1717 }),
   4018: shell(80, 6, 0, { status: 'ink' }),
   4019: shell(240, 5, 3, { kind: 'spin' }),

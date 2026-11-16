@@ -100,7 +100,7 @@ test('an earlier queued callback removes the same mount’s newer film', () => {
   world.fireGun(tank, a, emptyInput());
   const first = a.shieldFilm!;
   tick(world, 10);
-  // Direct trigger exercises source callback identity before the normal60-frame rate permits it.
+  // Direct trigger exercises callback identity before the normal60-frame rate permits it.
   world.fireGun(tank, a, emptyInput());
   const newer = a.shieldFilm!;
   expect(newer).not.toBe(first);

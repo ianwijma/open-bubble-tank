@@ -81,7 +81,7 @@ export async function showHealerTargets(pack: AssetPack, host: HTMLElement) {
     sentinel = tank(fault, 'ally', 120);
   fault.allies = [owner, sentinel];
   importActorFixtures(fault);
-  fault.rng.next = () => 1; // Inclusive1..length reads missing index2 in both PartCallRun attempts.
+  fault.rng.next = () => 1; // Inclusive1..length reads missing index2 in both part-call run attempts.
   const stage = new StageRuntime(fault.mainEffects);
   stage.random = () => 0.5;
   let callbacks = 0;

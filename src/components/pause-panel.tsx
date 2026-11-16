@@ -36,7 +36,7 @@ const buttons = [
 const pauseMatrix = (m: (typeof PAUSE.root)[number]['matrix']) =>
   `matrix(${m.a} ${m.b} ${m.c} ${m.d} ${m.tx / 20} ${m.ty / 20})`;
 
-/** One retained source button layer, shared alpha and stage clock for pause and Info. */
+/** One retained button layer, shared alpha and stage clock for pause and Info. */
 export function PausePanel({
   pack,
   tank,

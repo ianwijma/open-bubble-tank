@@ -5,7 +5,7 @@ export interface ViewerPane {
   tank: TankDesign;
   instance: string;
   ownsArt: boolean;
-  /** Source tankType1 is assigned when pulled from the local profile, not after Save. */
+  /** The tank type is set to1 when pulled from the local profile, not after Save. */
   local: boolean;
 }
 export interface ViewerPaneSnapshot {
@@ -13,7 +13,7 @@ export interface ViewerPaneSnapshot {
   detail: ViewerPane | null;
 }
 export const viewerCardName = (index: number) => `card:${index}`;
-/** Source TankLoadingBox ownership, Setup/_-VR/DeleteTank and viewer fade queues. */
+/** Tank loading box ownership, setup, reparenting, deletion and viewer fade queues. */
 export class ViewerPanes {
   private serial = 0;
   private snapshot: ViewerPaneSnapshot = { cards: [null, null, null, null], detail: null };
@@ -67,7 +67,7 @@ export class ViewerPanes {
   detail(index: number) {
     const pane = this.snapshot.cards[index];
     if (!pane) return;
-    // _-VR reparents the same movie; the source card still owns its fading shell.
+    // Reparenting moves the same movie; the card still owns its fading shell.
     this.snapshot = {
       cards: this.snapshot.cards.map((p, i) => (i === index && p ? { ...p, ownsArt: false } : p)),
       detail: { ...pane },
@@ -86,7 +86,7 @@ export class ViewerPanes {
     this.rebuildCards(tanks, local);
     this.fades.deleteAfterFade('detail');
   }
-  /** GoToNextTank/GoBackATank: Setup slot1, reparent it to detail, then hide slot1. */
+  /** Going to the next or previous tank: Setup slot1, reparent it to detail, then hide slot1. */
   replaceDetail(tank: TankDesign, local = true) {
     this.snapshot = {
       ...this.snapshot,

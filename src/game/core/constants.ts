@@ -1,4 +1,4 @@
-// Verified: Main.as, AvatarInterface.as, _-HJ.as. All units are per simulation frame.
+// All units are per simulation frame.
 export const STAGE = { width: 550, height: 450, cx: 275, cy: 225 } as const;
 export const MAX_LIFE = [50, 100, 170, 250, 400, 800, 2000] as const;
 export const CLASS_SPEED = [1, 0.9, 0.8, 0.45, 0.4, 0.3] as const;
@@ -12,7 +12,7 @@ export const GUN_BUDGET = [
   [0, 0, 0, 0, 20, 25],
 ] as const;
 export const CLASS_PIXELS = [3465, 7600, 12370, 18850, 29700, Infinity];
-// TankCreatorScreen.rings_mc (symbol 819), recovered authored radii.
+// The creator's rings (symbol 819): authored radii.
 export const CLASS_RINGS = [35, 55, 75, 100, 137.5, 175] as const;
 export const FIELD_RADIUS = 423.75;
 export const BULLET_RADIUS = 415;

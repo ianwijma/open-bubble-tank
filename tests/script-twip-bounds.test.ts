@@ -81,7 +81,7 @@ test('AssetPack retained clip boundary uses exact twips without mutating shared 
     height: 696,
   });
   expect(pack.clipScriptBounds(pose)!.width).toBe(695.95);
-  // Repeated retained-pose queries and other instances keep the source metadata intact.
+  // Repeated retained-pose queries and other instances keep the metadata intact.
   expect(pack.clipScriptTwipBounds(pose, { ...I, tx: -1, ty: 1 })).toEqual({
     x: -348,
     y: -348,

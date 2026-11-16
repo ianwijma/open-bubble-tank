@@ -11,7 +11,7 @@ import { World } from '../../src/game/simulation/world';
 import { setEffectFixturePose } from './effect-pose';
 import original from '../../tests/fixtures/lower-effect-paint-original.json';
 
-/** Same GLUE disc/positions as the frozen original; no candidate generates expectations. */
+/** Same GLUE disc/positions as the frozen fixture; no candidate generates expectations. */
 export async function showLowerEffectPaint(pack: AssetPack, host: HTMLElement) {
   const app = new Application();
   await app.init({
@@ -47,7 +47,7 @@ export async function showLowerEffectPaint(pack: AssetPack, host: HTMLElement) {
       view.maskSlot.angle = sample.rotation;
       if (sample.mode === 'bare') {
         view.content.mask = null;
-        // Original draw(target) excludes the mask's separate parent branch.
+        // draw(target) excludes the mask's separate parent branch.
         view.maskSlot.visible = false;
       }
       app.render();

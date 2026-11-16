@@ -38,7 +38,7 @@ export async function showMockAssetsProof(native: AssetPack, host: HTMLElement) 
     renderer.draw(world, DEFAULT_SETTINGS);
     const frame = captureCanvas(renderer.app.renderer, {
       target: entities ? renderer.entities : renderer.projectiles,
-      // The retained source avatar stays at World-local0. Place the isolated
+      // The retained avatar stays at World-local0. Place the isolated
       // live-mount comparison in separate crop halves without moving that avatar.
       frame: new Rectangle(entities ? -60 : -120, -40, 240, 80),
       resolution: 2,
@@ -199,7 +199,7 @@ export async function showMockAssetsProof(native: AssetPack, host: HTMLElement) 
         values = [0, 0, 0];
       let count = 0;
       for (let i = 0; i < r.pixels.length; i += 4)
-        // Compare saturated paint; differently sized source rims/glints skew a whole-image average.
+        // Compare saturated paint; differently sized rims/glints skew a whole-image average.
         if (r.pixels[i + 3] > 128 && r.pixels[i] - r.pixels[i + 2] > 100) {
           count++;
           for (let c = 0; c < 3; c++) values[c] += r.pixels[i + c];

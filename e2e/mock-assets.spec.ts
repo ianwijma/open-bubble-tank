@@ -25,7 +25,7 @@ test(`mock bullet sizes, warm weapons and homing shoot-down use visible geometry
   // Editor previews share the original gold; hostile live mounts receive the tint.
   expect(Math.abs(proof.palette.player.g - proof.palette.enemy.g)).toBeLessThan(10);
   expect(proof.livePalette.player.g).toBeGreaterThan(proof.livePalette.enemy.g + 8);
-  // Recovered body fills are opaque in both supplied and procedural posters.
+  // Body fills are opaque in both supplied and procedural posters.
   expect(proof.palette.bodyAlpha).toBe(255);
   expect(proof.palette.bodyReferenceAlpha).toBe(255);
   for (const pixel of [proof.palette.bodyPixel, proof.palette.referenceBodyPixel])

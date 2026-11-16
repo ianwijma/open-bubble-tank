@@ -43,7 +43,7 @@ test('jam suspends Phasing alpha independently of the actor age and movement clo
 test('the last blocked jam frame and stun/pause preserve the private clock, then the reset frame resumes it', () => {
   const { world, tank, gun } = scenario();
   const counter = gun.phasing!.counter;
-  tank.status.jam = 2; // The simulation stores source duration plus its reset frame.
+  tank.status.jam = 2; // The simulation stores the duration plus its reset frame.
   world.step(emptyInput());
   expect(tank.status.jam).toBe(1);
   expect(gun.phasing!.counter).toBe(counter);

@@ -1,7 +1,7 @@
 import type { SwfGlowFilter } from '../../src/game/assets/asset-pack';
 import type { SwfColorTransform } from '../../src/game/assets/swf-color-transform';
 
-/** Independent byte-image oracle from the pinned WGPU formulas, never shipped in the game. */
+/** Independent byte-image oracle, never shipped in the game. */
 export function premultiply(data: Uint8ClampedArray) {
   const result = new Uint8ClampedArray(data);
   for (let i = 0; i < result.length; i += 4)

@@ -3,7 +3,7 @@ import { STAGE } from '../core/constants';
 import { rotate } from '../core/math';
 import type { TacticalHudState } from '../core/tactical-hud';
 
-/** _-GW rings, AInterfaceRadar arrows and _-Yb readouts are siblings of the fixed-stage HUD. */
+/** Ally rings, radar arrows and readouts are siblings of the fixed-stage HUD. */
 export class TacticalHudView {
   root = new Container();
   private mock = new Graphics();

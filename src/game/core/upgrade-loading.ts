@@ -9,7 +9,7 @@ export interface UpgradeLoadingTank {
 export interface UpgradeLoadRequest {
   readonly slotId: UpgradeSlotId;
   readonly classId: number;
-  /** Source TAG is requested class followed by authored slot, e.g. class1/slot2 = "12". */
+  /** The tag is requested class followed by authored slot, e.g. class1/slot2 = "12". */
   readonly tag: string;
 }
 
@@ -26,14 +26,14 @@ export interface UpgradeLoadingCard<T> {
   attached: boolean;
   clickListener: boolean;
   editClickListener: boolean;
-  /** Repeated successful source results append previews rather than deduplicating them. */
+  /** Repeated successful results append previews rather than deduplicating them. */
   readonly previews: UpgradePreviewReceipt<T>[];
 }
 
 export interface UpgradeLoadingSlot<T> {
   readonly id: UpgradeSlotId;
   requestedClass: number | null;
-  /** arrTankPreviews[id] is written before preview creation/field/listener installation. */
+  /** The preview list entry for the id is written before preview creation/field/listener installation. */
   tank: T | null;
   tankClass: number | null;
   readonly card: UpgradeLoadingCard<T>;
@@ -47,9 +47,7 @@ export interface UpgradeRecenterBlock {
 
 type Three<T> = [T, T, T];
 
-/** Pure state for UpgradeMenu._-96, SearchFailed, SecondSetup and _-aG.
- * Source: re/bt3/export_scripts/scripts/UpgradeMenu.as:159–174,210–298,478–641,787–801;
- * export_pcode/scripts/UpgradeMenu.pcode: _-96 ofs003c→002e→0016, _-aG ofs037c–0535.
+/** Pure state for the upgrade menu's initial setup, failed-search retry, second setup and result callback.
  *
  * The caller resolves requests using the existing lookup/RNG policy. For each callback,
  * receiveTank precedes initialization, completeAttachment reports a successful preview,
@@ -60,7 +58,7 @@ type Three<T> = [T, T, T];
 export class UpgradeLoadingState<T extends UpgradeLoadingTank = UpgradeLoadingTank> {
   readonly slots: Three<UpgradeLoadingSlot<T>>;
   /** Named properties can survive removal; cached slot.card identities always survive.
-   * Entries may be set null to represent an actually absent source name. Ordinary root
+   * Entries may be set null to represent an actually absent name. Ordinary root
    * frame changes do not do this. These are model records, not display references.
    */
   readonly namedCards: Three<UpgradeLoadingCard<T> | null>;
@@ -93,7 +91,7 @@ export class UpgradeLoadingState<T extends UpgradeLoadingTank = UpgradeLoadingTa
   }
 
   get initialized() {
-    // _-96 always pushes index0, even when no slot receives a tank.
+    // Setup always pushes index0, even when no slot receives a tank.
     return this.sentinel !== null;
   }
 
@@ -101,19 +99,19 @@ export class UpgradeLoadingState<T extends UpgradeLoadingTank = UpgradeLoadingTa
     return this.slots[id - 1];
   }
 
-  /** SecondSetup counts using the constructor cache; _-96 reads the LIVE avatar class. */
+  /** The second setup counts using the constructor cache; its requests read the LIVE avatar class. */
   secondSetup(liveAvatarClass: number): UpgradeLoadRequest[] {
     this.pending = this.cachedAvatarClass === 1 || this.cachedAvatarClass === 6 ? 2 : 3;
     if (this.initialized) {
       this.pending = 0;
-      this.finishResults(); // _-aG([]): no lookup, RNG draw, preview or card replacement.
+      this.finishResults(); // An empty result array: no lookup, RNG draw, preview or card replacement.
       return [];
     }
     this.sentinel = Object.freeze({ tank: null, classId: 0 });
     return this.requests(liveAvatarClass, false);
   }
 
-  /** SearchFailed retries valid live-class slots lacking a card CLICK listener (AS159–174). */
+  /** A failed search retries valid live-class slots lacking a card CLICK listener. */
   searchFailed(liveAvatarClass: number): UpgradeLoadRequest[] {
     return this.requests(liveAvatarClass, true);
   }
@@ -129,7 +127,7 @@ export class UpgradeLoadingState<T extends UpgradeLoadingTank = UpgradeLoadingTa
     return requests;
   }
 
-  /** AS498–505: successful DATA writes its actual class, which need not equal the TAG. */
+  /** A successful load writes its actual class, which need not equal the tag. */
   receiveTank(id: UpgradeSlotId, tank: T | null): UpgradePreviewReceipt<T> | null {
     if (tank === null) return null;
     const slot = this.slot(id);
@@ -138,8 +136,8 @@ export class UpgradeLoadingState<T extends UpgradeLoadingTank = UpgradeLoadingTa
     return { slotId: id, tank, attached: false };
   }
 
-  /** AS521–539 / pcode ofs037c: call only after attachment, fields and listeners succeed.
-   * A duplicate callback gets a NEW receipt and decrements again, as in the source.
+  /** Call only after attachment, fields and listeners succeed.
+   * A duplicate callback gets a NEW receipt and decrements again.
    * A receipt cannot report the same installation twice; this is the adapter contract.
    */
   completeAttachment(receipt: UpgradePreviewReceipt<T>) {
@@ -152,7 +150,7 @@ export class UpgradeLoadingState<T extends UpgradeLoadingTank = UpgradeLoadingTa
     --this.pending;
   }
 
-  /** AS543–603: the callback tail, including an explicitly empty result array.
+  /** The callback tail, including an explicitly empty result array.
    * Three independent try/catch blocks: failed removal aborts that block before shifts;
    * earlier successful writes survive, and later blocks still execute.
    */
@@ -164,7 +162,7 @@ export class UpgradeLoadingState<T extends UpgradeLoadingTank = UpgradeLoadingTa
     });
     const second = this.removeUnavailable(2, () => {
       this.shiftIfNamed(1, 90.5);
-      // AS572–574 / pcode ofs0472: tests viewer2's name, then writes viewer3.x.
+      // Tests viewer2's name, then writes viewer3.x.
       // Do not replace this with shiftIfNamed(3): a missing viewer3 throws here.
       if (this.namedCards[1] !== null) this.requireNamed(3).x -= 90.5;
     });
@@ -197,12 +195,12 @@ export class UpgradeLoadingState<T extends UpgradeLoadingTank = UpgradeLoadingTa
       shifts();
       return { slotId: id, outcome: 'removed' };
     } catch {
-      // Source catches Error per block; only model name/removal failures occur here.
+      // Each block catches its own Error; only model name/removal failures occur here.
       return { slotId: id, outcome: 'error' };
     }
   }
 
-  /** _-Zo(false), ONLY when the current progression entry is absent (AS793–796).
+  /** Applies ONLY when the current progression entry is absent.
    * Existing/saved entries destroy instead; their lifetime belongs to the caller.
    */
   returnFromUnsavedCreator(liveAvatarClass: number) {
@@ -210,14 +208,14 @@ export class UpgradeLoadingState<T extends UpgradeLoadingTank = UpgradeLoadingTa
     return this.secondSetup(liveAvatarClass);
   }
 
-  /** Root1935 frame3/4 retain named cards and their children; no loading reset or motion. */
+  /** Root frame3/4 retain named cards and their children; no loading reset or motion. */
   setRootFrame(frame: UpgradeRootFrame) {
     this.rootFrame = frame;
   }
 
-  /** LoadingAnimation_199.as frame25 immediately gotoAndPlay(3).
-   * One explicit child-art tick, independent of root frame and UpgradeMenuMotion.Run.
-   * Constructor/frame-script scheduling relative to source Run is outside this model.
+  /** Frame25 immediately does gotoAndPlay(3).
+   * One explicit child-art tick, independent of the root frame and UpgradeMenuMotion.
+   * Constructor/frame-script scheduling relative to the motion run is outside this model.
    */
   advanceLoadingAnimation() {
     this.loadingAnimationFrame =

@@ -1,6 +1,6 @@
 import type { Vec } from './types';
 
-/** TankData.GetLargestRadiusFromRegistration, including its strict-order/NaN quirks. */
+/** Largest radius from registration, including its strict-order/NaN quirks. */
 export function protectionRadius(children: readonly (Vec & { width: number; height: number })[]) {
   let maximum = 0,
     diagonal = NaN;
@@ -14,7 +14,7 @@ export function protectionRadius(children: readonly (Vec & { width: number; heig
   return maximum + diagonal;
 }
 
-/** Flash width/height assignment on a fresh protection clip; invalid sizes are ignored. */
+/** Width/height assignment on a fresh protection clip; invalid sizes are ignored. */
 export function protectionScale(
   bounds: { width: number; height: number } | undefined,
   diameter: number,

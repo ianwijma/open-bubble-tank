@@ -1,5 +1,5 @@
-/** Candidate-only comparison AFTER builtin binary words were frozen.
- * No original/capture/fixture writes; Script bounds never supply candidate bounds.
+/** Candidate-only comparison AFTER the binary words were frozen.
+ * No capture/fixture writes; Script bounds never supply candidate bounds.
  */
 import {
   DISPLAY_IDENTITY,
@@ -62,7 +62,7 @@ export function compareTextEngine(fixture: TextEngineFixture) {
     const concatenated = observedMatrix(v, 'targetConcatenated');
     const attached = !['target-detached', 'wrapper-detached'].includes(sample.phase);
     // Actual Main getters are fixed to identity in this cohort. Include that
-    // multiplication: source walks every parent; even signed zero can differ.
+    // multiplication: every parent is walked; even signed zero can differ.
     const composed = displayMatrixProduct(DISPLAY_IDENTITY, displayMatrixProduct(parent, own));
     const matrixMatches = !attached || same(composed, concatenated);
     const wrapperComposed = displayMatrixProduct(DISPLAY_IDENTITY, parent);
@@ -85,7 +85,7 @@ export function compareTextEngine(fixture: TextEngineFixture) {
     const bounds = staticTextEngineBounds(declared, own, [parent, DISPLAY_IDENTITY]);
     const leaf = advancedStaticTextStageContains(declared, own, [parent, DISPLAY_IDENTITY], point);
     // Explicit bounded wrapper dispatch: no assigned wrapper mask/other children
-    // exist here. The measured MovieClip checks its inverse before this child.
+    // exist here. The measured clip checks its inverse before this child.
     const wrapperInverse = inverseDisplayMatrix(wrapperComposed);
     const candidate = Number(
       attached && leaf && (sample.role !== 'wrapper' || wrapperInverse !== null),

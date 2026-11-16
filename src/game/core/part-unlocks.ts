@@ -10,7 +10,7 @@ export function partUnlocked(
   return unlockedParts ? unlockedParts.includes(id) : tier <= level;
 }
 
-/** PlayerProfile._-cq and UpgradeMenu.UpdateUnlocked. New worlds reset; downgrades do not. */
+/** New worlds reset the unlocks; downgrades do not. */
 export class RunPartUnlocks {
   private snapshot: readonly number[] = PARTS.filter(
     (p) =>

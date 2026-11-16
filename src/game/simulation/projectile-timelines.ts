@@ -21,7 +21,7 @@ const source = {
   },
 };
 
-/** Source-polled projectile MovieClips advance on the stage clock, including children. */
+/** Polled projectile clips advance on the stage clock, including children. */
 export class ProjectileTimelines {
   private clips = new WeakMap<Projectile, SwfClip>();
   constructor(private random: () => number) {}
@@ -53,7 +53,7 @@ export class ProjectileTimelines {
       clip = new SwfClip(id, source, this.random);
       this.clips.set(b, clip);
       if (b.kind === 'grow') {
-        // _-dO's constructor goto precedes frame-script polling. _-Wq is rounded.
+        // The grow constructor's goto precedes frame-script polling. The frame is rounded.
         const frame = Math.round(this.random() * (this.totalFrames(b) - 1 + 0.8) + 1 - 0.4);
         clip.start(frame);
       } else clip.start(b.kind === 'sapper' ? 3 : 1, b.kind !== 'sapper');

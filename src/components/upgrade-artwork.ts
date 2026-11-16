@@ -6,7 +6,7 @@ import type { UpgradeMenu } from '@/game/services/upgrade-menu';
 import type { UpgradeSlotId } from '@/game/core/upgrade-loading';
 import { upgradePartBounds, upgradePreviewPlacement } from '@/game/core/upgrade-screen';
 
-/** One retained renderer supplies the three _-Tr(0) previews, including their independent art clocks. */
+/** One retained renderer supplies the three previews, including their independent art clocks. */
 export function useUpgradeArtwork(
   pack: AssetPack,
   stage: StageRuntime,

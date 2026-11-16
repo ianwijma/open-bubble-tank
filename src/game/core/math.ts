@@ -25,7 +25,7 @@ export class Random {
     this.state = x >>> 0;
     return this.state / 4294967296;
   }
-  // The original uses this slightly non-uniform inclusive integer roll.
+  // This is a slightly non-uniform inclusive integer roll.
   int(min: number, max: number) {
     return Math.round(this.next() * (max - min + 0.8) + min - 0.4);
   }

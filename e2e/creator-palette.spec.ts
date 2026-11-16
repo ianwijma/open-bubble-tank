@@ -30,7 +30,7 @@ test(`mock creator rows preserve source paint, fractional scrolling and capture 
   await expect(medium).toHaveAttribute('data-row-frame', '2');
   await page.mouse.move(1, 1);
   await expect(medium).toHaveAttribute('data-row-frame', '1');
-  // Source selects on release over a row, even when the press began elsewhere.
+  // Selection happens on release over a row, even when the press began elsewhere.
   await page.mouse.down();
   const row = (await medium.boundingBox())!;
   await page.mouse.move(row.x + row.width / 2, row.y + row.height / 2);
@@ -50,7 +50,7 @@ test(`mock creator rows preserve source paint, fractional scrolling and capture 
   await carrier.click();
   await expect(carrier).toHaveAttribute('data-row-frame', '3');
   await expect(scroll).toHaveAttribute('aria-controls', (await port.getAttribute('id'))!);
-  await expect(scroll).toHaveAttribute('aria-valuemax', '341.5'); // 26 rows, source21.5px bounds.
+  await expect(scroll).toHaveAttribute('aria-valuemax', '341.5'); // 26 rows, 21.5px bounds.
   await down.click();
   const oneStep = 341.5 / 17;
   expect(Number(await scroll.getAttribute('aria-valuenow'))).toBeCloseTo(oneStep, 6);
@@ -71,7 +71,7 @@ test(`mock creator rows preserve source paint, fractional scrolling and capture 
   await scroll.hover();
   const hoverPaint = await paint();
   await scroll.click();
-  expect(await paint()).toEqual(hoverPaint); // Ordinary release retains source hover frame3.
+  expect(await paint()).toEqual(hoverPaint); // Ordinary release retains hover frame3.
   const bar = (await scroll.boundingBox())!;
   await page.mouse.move(bar.x + bar.width / 2, bar.y + bar.height / 2);
   await page.mouse.down();
@@ -127,7 +127,7 @@ test(`mock locked creator rows retain both alpha factors and clean up their whee
   await page.locator('#stage').screenshot({ path: testInfo.outputPath('locked-palette.png') });
   await port.hover();
   await page.mouse.wheel(0, 100);
-  // StrictMode setup must still produce exactly one source step for one wheel event.
+  // StrictMode setup must still produce exactly one step for one wheel event.
   await expect
     .poll(async () => Number(await scroll.getAttribute('aria-valuenow')))
     .toBeCloseTo(181.5 / 9, 6);

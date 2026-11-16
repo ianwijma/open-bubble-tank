@@ -5,7 +5,7 @@ import type { TankDesign } from '@/game/core/types';
 import type { StageRuntime } from '@/game/services/stage-runtime';
 import { TANK_VIEWER, viewerWidget, viewerEquipmentFields } from '@/game/core/tank-viewer';
 import { ViewerArt, ViewerFields, ViewerGroup } from './tank-viewer-art';
-/** InnerlargeSTatisticsbuttons1137: closed mask, fresh ten-frame expanding child, immediate collapse. */
+/** The statistics buttons: closed mask, fresh ten-frame expanding child, immediate collapse. */
 export function TankViewerStatistics({
   pack,
   stage,

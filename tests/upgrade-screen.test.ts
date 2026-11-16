@@ -83,7 +83,7 @@ test('mock card contours retain the separate preview and weapon panels rather th
   const art = upgradeWidget(1916).art;
   const fills = art.flatMap((p) => p.paths?.filter((path) => path.fill) ?? []);
   expect(fills.length).toBeGreaterThan(0);
-  // Compound source shape1907 contains both rounded rectangles, not one large AABB.
+  // Compound shape1907 contains both rounded rectangles, not one large AABB.
   expect(fills[0].d.match(/M/g)!.length).toBe(2);
   expect(upgradeWidget(1916, 2).art[0].fill).toEqual([255, 255, 255, 39]);
 });

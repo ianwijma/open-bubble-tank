@@ -111,7 +111,7 @@ test('music accepts steady-state route calls, remembers mute state, and uses the
     const firstMenu = channels[0];
     frames(5);
     expect(firstMenu.volume).toBe(0.1);
-    manager.requestMusic('game'); // PlayMusic ignores a call during initial fade-in.
+    manager.requestMusic('game'); // Playing music ignores a call during initial fade-in.
     frames(35);
     expect(channels).toHaveLength(1);
     expect(firstMenu.volume).toBe(0.8);
@@ -130,7 +130,7 @@ test('music accepts steady-state route calls, remembers mute state, and uses the
     frames(20);
     expect(game.volume).toBe(0.8);
     manager.setMusicEnabled(false);
-    manager.requestMusic('menu'); // Main does not call PlayMusic while muted.
+    manager.requestMusic('menu'); // Main does not play music while muted.
     frames(100);
     expect(game.paused).toBe(true);
     manager.setMusicEnabled(true);

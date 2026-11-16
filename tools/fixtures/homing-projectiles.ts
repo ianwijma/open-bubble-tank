@@ -12,7 +12,7 @@ import { createTank } from '../../src/game/simulation/tank';
 import { World, emptyInput } from '../../src/game/simulation/world';
 import { captureCanvas } from './pixi-capture';
 
-/** Real collision providers and production painting around the recovered homing clock. */
+/** Real collision providers and production painting around the homing clock. */
 export async function showHomingProjectiles(pack: AssetPack, host: HTMLElement) {
   const world = new World([], [], 31),
     renderer = new GameRenderer(pack);

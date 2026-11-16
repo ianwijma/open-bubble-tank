@@ -88,7 +88,7 @@ export class CreatorArtwork {
       thumbnailScale: creatorThumbnailScale(bounds.width, bounds.height),
     };
   }
-  /** A new source detail focus constructs a fresh clip, even for the same part type. */
+  /** A new detail focus constructs a fresh clip, even for the same part type. */
   clearLayer(layer: Layer) {
     const group = this.groups.get(layer);
     if (!group) return;

@@ -93,7 +93,7 @@ export function TankCreator({
     designLive = useRef(design);
   const [displayState] = useState(() => new EditorDisplayState(initial.parts));
   const displayedParts = displayState.present(design.parts);
-  // UpdateClass constructs fresh measurement clips from arrTankDetails metadata.
+  // Class measurement constructs fresh clips from the tank detail metadata.
   const measuredDesign = (tank: TankDesign) => ({
     ...tank,
     parts: tank.parts.map((part) => ({
@@ -265,7 +265,7 @@ export function TankCreator({
     const before = controlBefore.current;
     controlBefore.current = null;
     if (!before) return;
-    // _-1N/_-Xf refresh Script-bound outlines even after a no-op handle release.
+    // Script-bound outlines are refreshed even after a no-op handle release.
     selectionBoxes.current = null;
     if (cancel) {
       displayState.adopt(before.displayed);
@@ -577,7 +577,7 @@ export function TankCreator({
       hitPart,
       { saved, release, rectangle: !!rectangle },
     );
-    // _-bp refreshes both handles even when membership did not change.
+    // Both handles are refreshed even when membership did not change.
     setSelection({ keys: [...next.keys], ghosts: [...next.ghosts] });
     selectionBoxes.current = null;
   }
@@ -592,8 +592,8 @@ export function TankCreator({
     )
       return;
     releasedEvents.current.add(event.nativeEvent);
-    // _-0m remains registered after _-bp clears its painted rectangle. Only
-    // the workspace CLICK or _-JQ rebind clears the retained marquee flag.
+    // The release handler remains registered after the selection clears its painted
+    // rectangle. Only the workspace CLICK or a rebind clears the retained marquee flag.
     if (marqueePending.current) releaseMarquee(release);
   }
   function pendingPlacement(id: number, pos: { x: number; y: number }, key = 'preview') {
@@ -812,7 +812,7 @@ export function TankCreator({
             pointer.current = pos;
             const current = drag.current;
             if (current) {
-              // _-5M/_-QV begin on the first move event, including zero delta.
+              // The drag begins on the first move event, including zero delta.
               // A delivered move suppresses the following click selection toggle.
               current.moved = true;
               if (current.moved && current.moving) {

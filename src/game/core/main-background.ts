@@ -8,7 +8,7 @@ export interface BackgroundParticle extends Vec {
   dead: boolean;
 }
 
-/** _-Rm / _-2t / _-Me: retained linked particles, not wrapping tiled stars. */
+/** Retained linked particles, not wrapping tiled stars. */
 export class BackgroundParticles {
   readonly particles: BackgroundParticle[] = [];
   age = 0;
@@ -33,13 +33,13 @@ export class BackgroundParticles {
       vx,
       vy,
       z: -(this.random() + 0.2),
-      // Source arms5/6 deliberately repeat BB; the final arm is transparent.
+      // Arms5/6 deliberately repeat BB; the final arm is transparent.
       alpha: [255, 238, 221, 204, 187, 187, 170, 153, 136, 119, 102, 85, 68, 51, 34, 17, 0][
         color - 1
       ],
       dead: false,
     };
-    // _-8z inserts after the retained cursor (the head after each Update), not at the tail.
+    // Insertion happens after the retained cursor (the head after each Update), not at the tail.
     this.particles.splice(this.particles.length ? 1 : 0, 0, particle);
   }
   move(x: number, y: number) {
@@ -51,7 +51,7 @@ export class BackgroundParticles {
     const prune = [2, 3, 4, 5, 10].includes(this.counter);
     if (this.counter === 5 || this.counter === 10) this.spawn();
     if (this.counter === 10) this.counter = 0;
-    // intLength is the preceding Update's visited count, including its removed head.
+    // The length is the preceding update's visited count, including its removed head.
     if (this.length < 15) {
       const missing = 15 - this.length;
       for (let i = 0; i < missing; i++) this.spawn();
@@ -79,7 +79,7 @@ export class BackgroundParticles {
   painted: readonly BackgroundParticle[] = [];
 }
 
-/** Main._-N1 creates two identical layers: _-Rm overwrites its third argument to false. */
+/** Two identical layers are created: the layer constructor overwrites its third argument to false. */
 export class MainBackground {
   readonly layers: BackgroundParticles[];
   running = true;
@@ -88,7 +88,7 @@ export class MainBackground {
     return this.blocked;
   }
   set efficient(value: boolean) {
-    // _-7X(true)/_-KD(true): forced enable restarts even a pause-stopped layer.
+    // A forced enable restarts even a pause-stopped layer.
     this.blocked = value;
     this.running = !value;
   }

@@ -4,7 +4,7 @@ import { DISPLAY_IDENTITY, displayMousePoint } from '../src/game/core/display-tr
 import { displayPixel } from '../src/game/core/display-values';
 import { transformSelection } from '../src/game/simulation/editor-selection';
 
-// Each capture starts with source scale1/rotation0. The retained handle follows
+// Each capture starts with scale1/rotation0. The retained handle follows
 // its own display setter, not the raw mouse-down point or the saved angle.
 const handles = new Map<number, { Rotate_mc: number; Resize_mc: number }>();
 for (const row of reference.cases) {

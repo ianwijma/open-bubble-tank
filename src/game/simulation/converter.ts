@@ -4,7 +4,7 @@ import { projectileFlags } from './projectile-flags';
 import type { World } from './world';
 import projectileArt from '../data/projectile-art.json';
 
-/** _-0D.DroneConversionTest scans the live array, then flushes its removal queue. */
+/** Drone conversion scans the live array, then flushes its removal queue. */
 export function convertDrones(world: World, owner: Tank) {
   const removed = [];
   for (const old of world.bullets) {

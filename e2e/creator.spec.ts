@@ -105,7 +105,7 @@ test(`mock creator: additive selection, marquee, mirrored group edits and undo`,
   expect(moved.twin).toBe('');
   expect(saved.parts.find((p) => p.key === 'b')).toMatchObject({ x: -30, y: 45, twin: '' });
   // Restore the pair, then merge it with one extra horizontal mouse move
-  // after reaching the axis: the SWF checks snap candidates before moving.
+  // after reaching the axis: snap candidates are checked before moving.
   await page.getByRole('button', { name: 'Undo', exact: true }).click();
   await page.getByLabel('Symmetric Mode').check();
   await click(-30, -45);

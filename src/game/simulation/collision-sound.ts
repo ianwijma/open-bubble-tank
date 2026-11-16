@@ -1,7 +1,7 @@
 import type { Projectile } from '../core/types';
 import type { World } from './world';
 
-// Recovered BulletCallCollisionDetected overrides that never call SoundCall.
+// Collision-detected overrides that never play the collision sound.
 // The symbol identifies the virtual callback; damage and explosion size do not.
 const silent = new Set([
   13, 15, 1792, 1793, 1794, 1796, 1807, 1809, 1813, 1831, 2016, 2033, 2036, 2178, 2182, 2221, 2228,

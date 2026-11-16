@@ -1,4 +1,4 @@
-/** PlayerProfile.maxClass: session value written on upgrade, untouched on downgrade/reset-world. */
+/** The profile's maxClass: session value written on upgrade, untouched on downgrade/reset-world. */
 export class ProfileClassAllowance {
   value = 1;
   recordUpgrade(level: number) {

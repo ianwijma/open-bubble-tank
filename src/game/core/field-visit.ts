@@ -1,6 +1,6 @@
 import type { Field } from './types';
 
-/** _-0D._-FR belongs to a live Bubblefield wrapper, never its cached enemy list. */
+/** The visit belongs to a live Bubblefield wrapper, never its cached enemy list. */
 export class FieldVisit {
   completed = false;
   constructor(public starting = false) {}

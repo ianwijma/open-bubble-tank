@@ -14,7 +14,7 @@ export interface PendingEffect {
   rotation?: number;
 }
 export type EffectClip = Effect | PendingEffect;
-/** _-0D retains both the original object and the supplied registration writes. */
+/** Both the original object and the supplied registration writes are retained. */
 export interface EffectRequest {
   readonly clip: EffectClip;
   readonly x: number;
@@ -42,7 +42,7 @@ export class EffectCompletionReadError extends Error {}
 
 export const isArtwork = (clip: EffectClip): clip is Effect => 'duration' in clip;
 
-/** _-2c: ordered completion records and actual layer children are separate. */
+/** Ordered completion records and actual layer children are separate. */
 export class RegisteredEffects {
   readonly artwork = new EffectPlayback();
   private cohort = 0;
@@ -99,7 +99,7 @@ export class RegisteredEffects {
     return this.fieldLayers.get(field)?.[kind];
   }
   register(layer: EffectLayer) {
-    // _-8o appends; _-Z7 resolves the first matching name.
+    // Registering appends; lookup resolves the first matching name.
     this.registered.push(layer);
   }
   unregister(name: EffectLayerName) {
@@ -121,7 +121,7 @@ export class RegisteredEffects {
   *owned(layer: EffectLayer): IterableIterator<EffectClip> {
     yield* this.members.get(layer) ?? [];
   }
-  /** Source CreateEffect writes captured Number arguments onto the original display object. */
+  /** Creating the effect writes captured Number arguments onto the original display object. */
   createRequest(request: EffectRequest, context: Field, random: () => number) {
     const { clip, x, y, name, randomRotation, callback } = request;
     if (randomRotation) clip.rotation = Math.round(random() * 360);
@@ -192,7 +192,7 @@ export class RegisteredEffects {
     const index = this.completions.findIndex((entry) => entry.clip === clip);
     if (index < 0) return;
     this.completions[index].callback?.();
-    // _-9p rereads the indexed record after callback mutation, rather than
+    // The indexed record is reread after callback mutation, rather than
     // retaining an entry or splicing a replacement array over newborn effects.
     const entry = this.completions[index];
     if (!entry) throw new EffectCompletionReadError('Completion record disappeared in callback');
@@ -206,7 +206,7 @@ export class RegisteredEffects {
     this.parents.delete(clip);
     this.completions = this.completions.filter((entry) => entry.clip !== clip);
   }
-  /** _-8Y removes registered records without calling their completions. */
+  /** Clearing removes registered records without calling their completions. */
   clear() {
     for (const entry of this.completions) this.removeFromResolvedLayer(entry);
     this.completions.length = 0;

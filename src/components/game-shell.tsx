@@ -143,7 +143,7 @@ export default function GameShell() {
     [],
   );
   useEffect(() => {
-    // The source profile library stays live while creator/viewer children are open.
+    // The profile library stays live while creator/viewer children are open.
     if (world && profile) world.avatarLibrary = profile.tanks.filter((tank) => tank.avatar);
   }, [world, profile?.tanks]);
   function updateProfile(update: (p: Profile) => Profile, persist = true) {
@@ -165,11 +165,11 @@ export default function GameShell() {
   function settingsChange(settings: Settings, control?: 'shake' | 'efficiency') {
     if (control === 'efficiency') stage.background.efficient = settings.efficient;
     // Pause's standalone toggle only gates Massive Cannon. Menu and efficiency
-    // controls also call the source controller's enable/disable methods.
+    // controls also call the controller's enable/disable methods.
     if (control === 'efficiency' || (control === 'shake' && screen === 'menu'))
       stage.effects.setEnabled(settings.shake);
-    // Efficiency calls SaveGameData. Normal settings stay live until RemoveSettings
-    // (or another source save); requested camera zoom saves immediately.
+    // Efficiency saves the game data. Normal settings stay live until the settings close
+    // (or another save); requested camera zoom saves immediately.
     updateProfile(
       (p) => ({ ...p, settings }),
       control === 'efficiency' || settings.zoom !== profile?.settings.zoom,
@@ -289,7 +289,7 @@ export default function GameShell() {
         if (context.world.progression.history[context.world.progression.level]) {
           context.menu.complete();
         } else {
-          // _-Zo(false) calls SecondSetup on the same menu after an unsaved return.
+          // The same menu returns to its offers after an unsaved return.
           context.menu.returnToOffers(context.world.player.design.classId);
           showScreen('game');
           setEditor(null);

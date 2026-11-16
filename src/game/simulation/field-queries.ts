@@ -59,7 +59,7 @@ function compile(node: FieldPopulationNode, source: FieldGeometrySource): Displa
   };
 }
 
-/** Compile afresh at each call: source callbacks and field phases can change
+/** Compile afresh at each call: callbacks and field phases can change
  * physical children between queries. This does not install a gameplay adapter.
  */
 export function readFieldGeometry(world: World, field: Field, source: FieldGeometrySource) {
@@ -68,8 +68,8 @@ export function readFieldGeometry(world: World, field: Field, source: FieldGeome
 export function fieldScriptBounds(world: World, field: Field, source: FieldGeometrySource) {
   return displayGeometryBounds(readFieldGeometry(world, field, source));
 }
-/** Internal stage-space query. Public AVM2 player-root argument mapping must be
- * bound separately before replacing source hitTestPoint gameplay calls.
+/** Internal stage-space query. Public player-root argument mapping must be
+ * bound separately before replacing hitTestPoint gameplay calls.
  */
 export function fieldStageShapeHit(
   world: World,

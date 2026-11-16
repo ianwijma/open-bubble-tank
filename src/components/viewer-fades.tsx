@@ -2,7 +2,7 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 import type { ViewerFades } from '@/game/core/viewer-fades';
 
-/** Retain the preceding panel during source alpha-out, without per-frame React renders. */
+/** Retain the preceding panel during alpha-out, without per-frame React renders. */
 export function useViewerFade<T>(
   value: T | null,
   name: string,

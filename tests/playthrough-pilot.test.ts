@@ -12,8 +12,8 @@ function collecting() {
   ];
   const world = new World([], history, 17),
     pilot = new PlaythroughPilot();
-  // Observed native pre-crossing state at frame13450. The reward location is an
-  // explicit controlled fixture, not a recovered position from that trace.
+  // Observed pre-crossing state at frame13450. The reward location is an
+  // explicit controlled fixture, not a position from that trace.
   world.player.x = -118.5;
   world.player.y = 326.55;
   world.player.velocity = { x: 0, y: 4.380000000000003 };

@@ -297,7 +297,7 @@ export function CreatorSlider({
     [hover, setHover] = useState(false);
   const dragging = useRef<{ value: number; cursorX: number | null } | null>(null);
   const [cursorX, setCursorX] = useState<number | null>(null);
-  // Flash recomputes averages on selection changes, while a dragged handle retains its chosen value.
+  // Averages are recomputed on selection changes, while a dragged handle retains its chosen value.
   useLayoutEffect(() => {
     setCurrent(value);
     setCursorX(null);
@@ -397,7 +397,7 @@ export function CreatorSlider({
         }}
         onPointerUp={(event) => {
           if (event.button === 0 && dragging.current !== null) {
-            // Both source callbacks are on stage; its earlier workspace
+            // Both callbacks are on stage; its earlier workspace
             // listener can change selection before the transform copies it.
             onRelease?.(event, { x, y });
             finish(false);

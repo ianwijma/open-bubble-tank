@@ -11,7 +11,7 @@ export function winScreenPresentation(age: number) {
   };
 }
 
-/** _-EG's 40-frame bitmap preparation followed by ws_container_583's authored fade. */
+/** A 40-frame bitmap preparation followed by the container's authored fade. */
 export class WinScreenState {
   age = 0;
   get blurPasses() {

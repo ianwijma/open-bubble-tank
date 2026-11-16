@@ -38,7 +38,7 @@ test('suggestions retain the reward discount cap, minimum speed and unrestricted
       classId: 6,
     }),
   ).toEqual({ life: 240, reward: 24, speed: 0.1 });
-  // Manual slider limits must not clamp this independent source counter calculation.
+  // Manual slider limits must not clamp this independent counter calculation.
   expect(
     creatorSuggestedStats({
       parts: Array.from({ length: 400 }, (_, i) => part(1001, i)),
@@ -83,7 +83,7 @@ test('enemy handle inverse uses twips without changing the stored manual value',
   expect(enemyStatHandle('life', 250)).toBe(-0.05);
   expect(enemyStatHandle('speed', 1)).toBe(0);
   expect(enemyStatHandle('reward', 999)).toBe(55);
-  // Below-min life produces NaN in the source square root; the Ruffle x setter stores zero.
+  // Below-min life produces NaN in the square root; the x setter stores zero.
   expect(enemyStatHandle('life', 0)).toBe(0);
   expect(enemyStatHandle('speed', -1)).toBe(0);
 });

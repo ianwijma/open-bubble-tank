@@ -9,7 +9,7 @@ const exits: Record<string, keyof typeof PAUSE.out> = {
   btnPlayMoreGames_mc: 'Button6Out_mc',
 };
 
-/** PauseMenu._-1T/_-Af; all values advance in source stage frames. */
+/** All values advance in stage frames. */
 export class PauseMotion {
   phase: 'menu' | 'info' | 'closing' = 'menu';
   age = 0;

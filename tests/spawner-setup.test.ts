@@ -26,7 +26,7 @@ test('spawner Setup chooses after acquisition and before the following Phasing c
   };
   const owner = createTank(world.nextId(), design([4003, 6004]), 'enemy', 0, 0, 100, 100, world);
   expect(owner.guns[0].targeting!.target).toBe(world.player);
-  // GetRandomDataByKey uses the inclusive rounded roll, not floor(random * length).
+  // Random selection by key uses the inclusive rounded roll, not floor(random * length).
   expect(owner.guns[0].spawnDesign?.id).toBe(fighters[1].id);
   expect(owner.guns[1].phasing!.counter).toBe(40);
   expect(draws).toEqual([]);

@@ -121,7 +121,7 @@ export function GameViewport({
           mainStep: () => {
             world.viewZoom = settingsRef.current.zoom;
             world.screenShake = settingsRef.current.shake;
-            // Choose once at entry: a newly born menu does not interrupt this World.Run.
+            // Choose once at entry: a newly born menu does not interrupt this world's run.
             if (upgradeOpenRef.current?.()) world.advanceArtwork();
             else world.step(input!.frame(), 0, false);
             audio?.playEvents(world.drainEvents(), settingsRef.current);

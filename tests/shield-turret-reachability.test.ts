@@ -46,7 +46,7 @@ test('a valid creator save reaches the optional local roster and a literal Balan
   expect(saved[0].avatar).toBe(false);
   expect(matchesRule(saved[0], rules.Balanced)).toBe(true);
   // GameShell.startRun passes precisely these records only when My enemy tanks is enabled.
-  // A real seeded route under source count preparation/rejection; no RNG override.
+  // A real seeded route under count preparation/rejection; no RNG override.
   const seed = 10;
   const world = new World(
     saved.filter((tank: { avatar: boolean }) => !tank.avatar),

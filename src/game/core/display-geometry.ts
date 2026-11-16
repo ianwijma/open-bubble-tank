@@ -14,13 +14,13 @@ import type { Vec } from './types';
 export type DisplayGeometryContent =
   | { readonly kind: 'empty' }
   | {
-      /** Selected only from qualified native StaticText metadata, never glyph/paint bounds. */
+      /** Selected only from qualified native static text metadata, never glyph/paint bounds. */
       readonly kind: 'advanced-static-text';
       readonly bounds: Readonly<DisplayRectangle>;
     }
   | {
       readonly kind: 'leaf';
-      /** Original declared integer-twip extents, not raster or painted bounds. */
+      /** Declared integer-twip extents, not raster or painted bounds. */
       readonly bounds: Readonly<DisplayRectangle>;
       /** Geometry only, including the existing stage-pixel minimum for strokes. */
       readonly hit: (
@@ -106,7 +106,7 @@ export function displayGeometryHit(
 /** Public-query boundary with an explicitly selected argument coordinate space.
  * The caller supplies player-root versus stage mapping; this traversal does not
  * guess it from a display matrix. Keep transformed twips internal, avoiding an
- * extra Number/pixel roundtrip before native shape contact.
+ * extra Number/pixel roundtrip before shape contact.
  */
 export function displayGeometryHitTestPoint(
   receiver: {
@@ -168,7 +168,7 @@ function hitAtTwips(
         stagePoint: stage,
       });
     }
-    // The measured MovieClip text wrappers require an inverse before children.
+    // The measured text wrappers require an inverse before children.
     // Keep this correction bounded to text-bearing containers, preserving legacy
     // shape/Script products; no arbitrary container Engine AABB is substituted.
     if (containsText(node)) {

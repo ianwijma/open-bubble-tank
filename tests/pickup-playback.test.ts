@@ -32,7 +32,7 @@ for (const cohort of ['before', 'inside'] as const)
       const owner = new PickupDisplays(() => {
         const result = results.shift();
         if (result === undefined) throw new Error('Unexpected frame-script request');
-        // Per-clip observed outputs, not reconstruction of source global entropy.
+        // Per-clip observed outputs, not reconstruction of global entropy.
         return result / 10;
       });
       if (cohort === 'inside') owner.enterFrame();
