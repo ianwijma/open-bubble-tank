@@ -369,7 +369,7 @@
       "age": 0,
       "role": "world",
       "className": "BTAGameWorld",
-      "parentClass": "BT3WorldLayerProbe",
+      "parentClass": "WorldLayerProbe",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -399,7 +399,7 @@
       "phase": "collapse",
       "age": 0,
       "role": "main",
-      "className": "BT3WorldLayerProbe",
+      "className": "WorldLayerProbe",
       "parentClass": "flash.display::Stage",
       "parentMatches": true,
       "words": [
@@ -710,7 +710,7 @@
       "age": 1,
       "role": "world",
       "className": "BTAGameWorld",
-      "parentClass": "BT3WorldLayerProbe",
+      "parentClass": "WorldLayerProbe",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -740,7 +740,7 @@
       "phase": "collapse",
       "age": 1,
       "role": "main",
-      "className": "BT3WorldLayerProbe",
+      "className": "WorldLayerProbe",
       "parentClass": "flash.display::Stage",
       "parentMatches": true,
       "words": [
@@ -1051,7 +1051,7 @@
       "age": 2,
       "role": "world",
       "className": "BTAGameWorld",
-      "parentClass": "BT3WorldLayerProbe",
+      "parentClass": "WorldLayerProbe",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -1081,7 +1081,7 @@
       "phase": "collapse",
       "age": 2,
       "role": "main",
-      "className": "BT3WorldLayerProbe",
+      "className": "WorldLayerProbe",
       "parentClass": "flash.display::Stage",
       "parentMatches": true,
       "words": [
@@ -1392,7 +1392,7 @@
       "age": 51,
       "role": "world",
       "className": "BTAGameWorld",
-      "parentClass": "BT3WorldLayerProbe",
+      "parentClass": "WorldLayerProbe",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -1422,7 +1422,7 @@
       "phase": "collapse",
       "age": 51,
       "role": "main",
-      "className": "BT3WorldLayerProbe",
+      "className": "WorldLayerProbe",
       "parentClass": "flash.display::Stage",
       "parentMatches": true,
       "words": [
@@ -1733,7 +1733,7 @@
       "age": 119,
       "role": "world",
       "className": "BTAGameWorld",
-      "parentClass": "BT3WorldLayerProbe",
+      "parentClass": "WorldLayerProbe",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -1763,7 +1763,7 @@
       "phase": "collapse",
       "age": 119,
       "role": "main",
-      "className": "BT3WorldLayerProbe",
+      "className": "WorldLayerProbe",
       "parentClass": "flash.display::Stage",
       "parentMatches": true,
       "words": [
@@ -2074,7 +2074,7 @@
       "age": 119,
       "role": "world",
       "className": "BTAGameWorld",
-      "parentClass": "BT3WorldLayerProbe",
+      "parentClass": "WorldLayerProbe",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -2104,7 +2104,7 @@
       "phase": "main-fraction",
       "age": 119,
       "role": "main",
-      "className": "BT3WorldLayerProbe",
+      "className": "WorldLayerProbe",
       "parentClass": "flash.display::Stage",
       "parentMatches": true,
       "words": [
@@ -2415,7 +2415,7 @@
       "age": 120,
       "role": "world",
       "className": "BTAGameWorld",
-      "parentClass": "BT3WorldLayerProbe",
+      "parentClass": "WorldLayerProbe",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -2445,7 +2445,7 @@
       "phase": "finish-glue",
       "age": 120,
       "role": "main",
-      "className": "BT3WorldLayerProbe",
+      "className": "WorldLayerProbe",
       "parentClass": "flash.display::Stage",
       "parentMatches": true,
       "words": [
@@ -2818,7 +2818,7 @@
       "age": 120,
       "role": "world",
       "className": "BTAGameWorld",
-      "parentClass": "BT3WorldLayerProbe",
+      "parentClass": "WorldLayerProbe",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -2848,7 +2848,7 @@
       "phase": "detach-glue",
       "age": 120,
       "role": "main",
-      "className": "BT3WorldLayerProbe",
+      "className": "WorldLayerProbe",
       "parentClass": "flash.display::Stage",
       "parentMatches": true,
       "words": [

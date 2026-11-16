@@ -477,7 +477,7 @@
       "age": 1,
       "role": "world",
       "className": "BTAGameWorld",
-      "parentClass": "BT3WorldMotionProbe",
+      "parentClass": "WorldMotionProbe",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -517,7 +517,7 @@
       "phase": "right",
       "age": 1,
       "role": "main",
-      "className": "BT3WorldMotionProbe",
+      "className": "WorldMotionProbe",
       "parentClass": "flash.display::Stage",
       "parentMatches": true,
       "words": [
@@ -1133,7 +1133,7 @@
       "age": 2,
       "role": "world",
       "className": "BTAGameWorld",
-      "parentClass": "BT3WorldMotionProbe",
+      "parentClass": "WorldMotionProbe",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -1173,7 +1173,7 @@
       "phase": "right",
       "age": 2,
       "role": "main",
-      "className": "BT3WorldMotionProbe",
+      "className": "WorldMotionProbe",
       "parentClass": "flash.display::Stage",
       "parentMatches": true,
       "words": [
@@ -1789,7 +1789,7 @@
       "age": 10,
       "role": "world",
       "className": "BTAGameWorld",
-      "parentClass": "BT3WorldMotionProbe",
+      "parentClass": "WorldMotionProbe",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -1829,7 +1829,7 @@
       "phase": "right",
       "age": 10,
       "role": "main",
-      "className": "BT3WorldMotionProbe",
+      "className": "WorldMotionProbe",
       "parentClass": "flash.display::Stage",
       "parentMatches": true,
       "words": [
@@ -2445,7 +2445,7 @@
       "age": 20,
       "role": "world",
       "className": "BTAGameWorld",
-      "parentClass": "BT3WorldMotionProbe",
+      "parentClass": "WorldMotionProbe",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -2485,7 +2485,7 @@
       "phase": "right",
       "age": 20,
       "role": "main",
-      "className": "BT3WorldMotionProbe",
+      "className": "WorldMotionProbe",
       "parentClass": "flash.display::Stage",
       "parentMatches": true,
       "words": [
@@ -3101,7 +3101,7 @@
       "age": 40,
       "role": "world",
       "className": "BTAGameWorld",
-      "parentClass": "BT3WorldMotionProbe",
+      "parentClass": "WorldMotionProbe",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -3141,7 +3141,7 @@
       "phase": "right",
       "age": 40,
       "role": "main",
-      "className": "BT3WorldMotionProbe",
+      "className": "WorldMotionProbe",
       "parentClass": "flash.display::Stage",
       "parentMatches": true,
       "words": [
@@ -3757,7 +3757,7 @@
       "age": 40,
       "role": "world",
       "className": "BTAGameWorld",
-      "parentClass": "BT3WorldMotionProbe",
+      "parentClass": "WorldMotionProbe",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -3797,7 +3797,7 @@
       "phase": "right-fraction",
       "age": 40,
       "role": "main",
-      "className": "BT3WorldMotionProbe",
+      "className": "WorldMotionProbe",
       "parentClass": "flash.display::Stage",
       "parentMatches": true,
       "words": [
@@ -4413,7 +4413,7 @@
       "age": 1,
       "role": "world",
       "className": "BTAGameWorld",
-      "parentClass": "BT3WorldMotionProbe",
+      "parentClass": "WorldMotionProbe",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -4453,7 +4453,7 @@
       "phase": "down",
       "age": 1,
       "role": "main",
-      "className": "BT3WorldMotionProbe",
+      "className": "WorldMotionProbe",
       "parentClass": "flash.display::Stage",
       "parentMatches": true,
       "words": [
@@ -5069,7 +5069,7 @@
       "age": 2,
       "role": "world",
       "className": "BTAGameWorld",
-      "parentClass": "BT3WorldMotionProbe",
+      "parentClass": "WorldMotionProbe",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -5109,7 +5109,7 @@
       "phase": "down",
       "age": 2,
       "role": "main",
-      "className": "BT3WorldMotionProbe",
+      "className": "WorldMotionProbe",
       "parentClass": "flash.display::Stage",
       "parentMatches": true,
       "words": [
@@ -5725,7 +5725,7 @@
       "age": 10,
       "role": "world",
       "className": "BTAGameWorld",
-      "parentClass": "BT3WorldMotionProbe",
+      "parentClass": "WorldMotionProbe",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -5765,7 +5765,7 @@
       "phase": "down",
       "age": 10,
       "role": "main",
-      "className": "BT3WorldMotionProbe",
+      "className": "WorldMotionProbe",
       "parentClass": "flash.display::Stage",
       "parentMatches": true,
       "words": [
@@ -6381,7 +6381,7 @@
       "age": 20,
       "role": "world",
       "className": "BTAGameWorld",
-      "parentClass": "BT3WorldMotionProbe",
+      "parentClass": "WorldMotionProbe",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -6421,7 +6421,7 @@
       "phase": "down",
       "age": 20,
       "role": "main",
-      "className": "BT3WorldMotionProbe",
+      "className": "WorldMotionProbe",
       "parentClass": "flash.display::Stage",
       "parentMatches": true,
       "words": [
@@ -7037,7 +7037,7 @@
       "age": 40,
       "role": "world",
       "className": "BTAGameWorld",
-      "parentClass": "BT3WorldMotionProbe",
+      "parentClass": "WorldMotionProbe",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -7077,7 +7077,7 @@
       "phase": "down",
       "age": 40,
       "role": "main",
-      "className": "BT3WorldMotionProbe",
+      "className": "WorldMotionProbe",
       "parentClass": "flash.display::Stage",
       "parentMatches": true,
       "words": [
@@ -7693,7 +7693,7 @@
       "age": 40,
       "role": "world",
       "className": "BTAGameWorld",
-      "parentClass": "BT3WorldMotionProbe",
+      "parentClass": "WorldMotionProbe",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -7733,7 +7733,7 @@
       "phase": "down-fraction",
       "age": 40,
       "role": "main",
-      "className": "BT3WorldMotionProbe",
+      "className": "WorldMotionProbe",
       "parentClass": "flash.display::Stage",
       "parentMatches": true,
       "words": [
@@ -8349,7 +8349,7 @@
       "age": 1,
       "role": "world",
       "className": "BTAGameWorld",
-      "parentClass": "BT3WorldMotionProbe",
+      "parentClass": "WorldMotionProbe",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -8389,7 +8389,7 @@
       "phase": "both",
       "age": 1,
       "role": "main",
-      "className": "BT3WorldMotionProbe",
+      "className": "WorldMotionProbe",
       "parentClass": "flash.display::Stage",
       "parentMatches": true,
       "words": [
@@ -9005,7 +9005,7 @@
       "age": 2,
       "role": "world",
       "className": "BTAGameWorld",
-      "parentClass": "BT3WorldMotionProbe",
+      "parentClass": "WorldMotionProbe",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -9045,7 +9045,7 @@
       "phase": "both",
       "age": 2,
       "role": "main",
-      "className": "BT3WorldMotionProbe",
+      "className": "WorldMotionProbe",
       "parentClass": "flash.display::Stage",
       "parentMatches": true,
       "words": [
@@ -9661,7 +9661,7 @@
       "age": 10,
       "role": "world",
       "className": "BTAGameWorld",
-      "parentClass": "BT3WorldMotionProbe",
+      "parentClass": "WorldMotionProbe",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -9701,7 +9701,7 @@
       "phase": "both",
       "age": 10,
       "role": "main",
-      "className": "BT3WorldMotionProbe",
+      "className": "WorldMotionProbe",
       "parentClass": "flash.display::Stage",
       "parentMatches": true,
       "words": [
@@ -10317,7 +10317,7 @@
       "age": 20,
       "role": "world",
       "className": "BTAGameWorld",
-      "parentClass": "BT3WorldMotionProbe",
+      "parentClass": "WorldMotionProbe",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -10357,7 +10357,7 @@
       "phase": "both",
       "age": 20,
       "role": "main",
-      "className": "BT3WorldMotionProbe",
+      "className": "WorldMotionProbe",
       "parentClass": "flash.display::Stage",
       "parentMatches": true,
       "words": [
@@ -10973,7 +10973,7 @@
       "age": 40,
       "role": "world",
       "className": "BTAGameWorld",
-      "parentClass": "BT3WorldMotionProbe",
+      "parentClass": "WorldMotionProbe",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -11013,7 +11013,7 @@
       "phase": "both",
       "age": 40,
       "role": "main",
-      "className": "BT3WorldMotionProbe",
+      "className": "WorldMotionProbe",
       "parentClass": "flash.display::Stage",
       "parentMatches": true,
       "words": [
@@ -11629,7 +11629,7 @@
       "age": 40,
       "role": "world",
       "className": "BTAGameWorld",
-      "parentClass": "BT3WorldMotionProbe",
+      "parentClass": "WorldMotionProbe",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -11669,7 +11669,7 @@
       "phase": "both-fraction",
       "age": 40,
       "role": "main",
-      "className": "BT3WorldMotionProbe",
+      "className": "WorldMotionProbe",
       "parentClass": "flash.display::Stage",
       "parentMatches": true,
       "words": [
@@ -12285,7 +12285,7 @@
       "age": 41,
       "role": "world",
       "className": "BTAGameWorld",
-      "parentClass": "BT3WorldMotionProbe",
+      "parentClass": "WorldMotionProbe",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -12325,7 +12325,7 @@
       "phase": "teleport",
       "age": 41,
       "role": "main",
-      "className": "BT3WorldMotionProbe",
+      "className": "WorldMotionProbe",
       "parentClass": "flash.display::Stage",
       "parentMatches": true,
       "words": [
@@ -12941,7 +12941,7 @@
       "age": 1,
       "role": "world",
       "className": "BTAGameWorld",
-      "parentClass": "BT3WorldMotionProbe",
+      "parentClass": "WorldMotionProbe",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -12981,7 +12981,7 @@
       "phase": "negative",
       "age": 1,
       "role": "main",
-      "className": "BT3WorldMotionProbe",
+      "className": "WorldMotionProbe",
       "parentClass": "flash.display::Stage",
       "parentMatches": true,
       "words": [
@@ -13597,7 +13597,7 @@
       "age": 2,
       "role": "world",
       "className": "BTAGameWorld",
-      "parentClass": "BT3WorldMotionProbe",
+      "parentClass": "WorldMotionProbe",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -13637,7 +13637,7 @@
       "phase": "negative",
       "age": 2,
       "role": "main",
-      "className": "BT3WorldMotionProbe",
+      "className": "WorldMotionProbe",
       "parentClass": "flash.display::Stage",
       "parentMatches": true,
       "words": [
@@ -14253,7 +14253,7 @@
       "age": 10,
       "role": "world",
       "className": "BTAGameWorld",
-      "parentClass": "BT3WorldMotionProbe",
+      "parentClass": "WorldMotionProbe",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -14293,7 +14293,7 @@
       "phase": "negative",
       "age": 10,
       "role": "main",
-      "className": "BT3WorldMotionProbe",
+      "className": "WorldMotionProbe",
       "parentClass": "flash.display::Stage",
       "parentMatches": true,
       "words": [
@@ -14909,7 +14909,7 @@
       "age": 20,
       "role": "world",
       "className": "BTAGameWorld",
-      "parentClass": "BT3WorldMotionProbe",
+      "parentClass": "WorldMotionProbe",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -14949,7 +14949,7 @@
       "phase": "negative",
       "age": 20,
       "role": "main",
-      "className": "BT3WorldMotionProbe",
+      "className": "WorldMotionProbe",
       "parentClass": "flash.display::Stage",
       "parentMatches": true,
       "words": [
@@ -15565,7 +15565,7 @@
       "age": 40,
       "role": "world",
       "className": "BTAGameWorld",
-      "parentClass": "BT3WorldMotionProbe",
+      "parentClass": "WorldMotionProbe",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -15605,7 +15605,7 @@
       "phase": "negative",
       "age": 40,
       "role": "main",
-      "className": "BT3WorldMotionProbe",
+      "className": "WorldMotionProbe",
       "parentClass": "flash.display::Stage",
       "parentMatches": true,
       "words": [
@@ -16221,7 +16221,7 @@
       "age": 40,
       "role": "world",
       "className": "BTAGameWorld",
-      "parentClass": "BT3WorldMotionProbe",
+      "parentClass": "WorldMotionProbe",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -16261,7 +16261,7 @@
       "phase": "negative-fraction",
       "age": 40,
       "role": "main",
-      "className": "BT3WorldMotionProbe",
+      "className": "WorldMotionProbe",
       "parentClass": "flash.display::Stage",
       "parentMatches": true,
       "words": [

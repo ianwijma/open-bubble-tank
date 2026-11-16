@@ -14,7 +14,7 @@ export const PROTECTION_ART = {
   shieldHit: symbols['_-Ne'],
   turretShield: symbols['_-bM'],
   turretShieldHit: symbols['_-KJ'],
-  forcefield: symbols['BubbleTanks3_fla.forcefieldanimation_551'],
+  forcefield: symbols['main_fla.forcefieldanimation_551'],
 };
 
 export function shieldClipSymbol(clip: ShieldClip) {
