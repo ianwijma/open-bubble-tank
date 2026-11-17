@@ -22,7 +22,7 @@ const slots: Record<FieldSlot, string> = {
   background: 'BF_BG_mc',
   underMask: 'effect_mask_under',
   underEffects: 'effectLayer_under_mc',
-  exteriorMask: '_-SQ',
+  exteriorMask: 'exteriorMask_mc',
   avatarUnder: 'avatarUnderBubble_mc',
   life: 'lifeBubbleLayer_mc',
   actors: 'enemyLayer_mc',
