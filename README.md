@@ -73,6 +73,6 @@ The simulation advances in fixed steps, 50 a second by default, and React stays 
 
 ## License
 
-The code is licensed under `AGPL-3.0-only`. Anyone who runs a changed copy as a service must publish their changes.
+The code is licensed under `AGPL-3.0-only`; the full text is in [LICENSE](LICENSE). Anyone who runs a changed copy as a service must publish their changes.
 
 The license does not cover the content kept from the original game, Bubble Tanks 3 by Hero Interactive: the built-in tank designs, waves, part names and texts, menu and editor layouts, display data and the rules rebuilt from its code. [NOTICE.md](NOTICE.md) lists that content and the third-party licenses.
