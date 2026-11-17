@@ -9,7 +9,7 @@ import { STARTER } from '../../src/game/data/catalog';
 import { World, emptyInput } from '../../src/game/simulation/world';
 import { createTank } from '../../src/game/simulation/tank';
 
-/** Native overlay artwork in isolation, with authored frames, fixed HUD sizes and fill overrides. */
+/** Overlay artwork in isolation, with authored frames, fixed HUD sizes and fill overrides. */
 export async function showTacticalHudProof(host: HTMLElement) {
   const app = new Application(),
     textures = new ArtTextures(),

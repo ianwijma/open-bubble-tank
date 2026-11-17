@@ -72,7 +72,7 @@ test('sound slots recover after muting; music fades between tracks and restarts 
     }
   }
 });
-test('mock audio contains playable PCM samples and a quiet looping music phrase', async () => {
+test('synthesized audio contains playable PCM samples and a quiet looping music phrase', async () => {
   for (const id of [561, 562, 567, 568]) {
     const blob = mockAudio(id),
       bytes = new Uint8Array(await blob.arrayBuffer());

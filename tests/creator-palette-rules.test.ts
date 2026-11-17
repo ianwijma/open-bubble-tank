@@ -82,7 +82,7 @@ test('creator wrapping retains blank paragraphs and never splits a weapon word',
   expect(creatorTextLines('Longword abc', 3, (s) => s.length)).toEqual(['Longword', 'abc']);
 });
 
-test('mock caption uses authored character advances and stays on one line', () => {
+test('palette caption uses authored character advances and stays on one line', () => {
   const f = CREATOR_PALETTE.library.caption,
     text = 'Click and Drag Object';
   const { glyphs, width } = creatorGlyphLayout(text, f);

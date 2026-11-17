@@ -8,7 +8,7 @@ import { createProjectile } from '../../src/game/simulation/create-projectile';
 import { tickBullet } from '../../src/game/simulation/projectiles';
 import { World, emptyInput } from '../../src/game/simulation/world';
 
-/** Uses production width queries, clocks and native/mock rendering on both sides of state2. */
+/** Uses production width queries, clocks and rendering on both sides of state2. */
 export async function showBubbleBusterProof(pack: AssetPack, host: HTMLElement) {
   const world = new World([], [], 28),
     renderer = new GameRenderer(pack);

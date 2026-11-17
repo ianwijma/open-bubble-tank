@@ -77,7 +77,7 @@ test(`secondary help pauses on avatar replacement and persists before closing`, 
   await page.keyboard.press('KeyP');
   await expect(page.getByRole('dialog', { name: 'Paused', exact: true })).toBeVisible();
   await page.keyboard.press('KeyP');
-  // Native mode reloads with help still open; mock mode also exercises its explicit Close button.
+  // Help closed with its Close button stays closed when the game is entered again.
   await enter();
   await expect(help).toHaveCount(0);
   await page.keyboard.press('KeyP');

@@ -12,7 +12,7 @@ import { SymbolView } from '../../src/game/render/symbol-view';
 import { ArtTextures } from '../../src/game/render/art-textures';
 import { oracleColor, oracleGlow, premultiply } from './glow-oracle';
 
-/** Authored parameter coverage, independent shader pixels, and native-effect snapshots. */
+/** Authored parameter coverage, independent shader pixels, and effect snapshots. */
 export async function showGlowProof(pack: AssetPack, host: HTMLElement) {
   const app = new Application(),
     textures = new ArtTextures(),

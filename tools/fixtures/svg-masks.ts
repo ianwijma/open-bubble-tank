@@ -1,7 +1,7 @@
 import { svgMaskDefinition } from '../../src/game/assets/svg-mask';
 import { AssetPack, type Raster } from '../../src/game/assets/asset-pack';
 
-/** Stand-in leaf paint, as the mock pack prepares it: a canvas with its image URL. */
+/** Stand-in leaf paint, as the asset pack prepares it: a canvas with its image URL. */
 function leaf(paint: (context: CanvasRenderingContext2D) => void): Raster {
   const canvas = document.createElement('canvas');
   canvas.width = canvas.height = 100;

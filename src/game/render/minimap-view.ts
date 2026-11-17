@@ -5,16 +5,16 @@ import type { World } from '../simulation/world';
 /** The compact / large / hidden map, fixed in stage coordinates. */
 export class MinimapView {
   root = new Container();
-  private mock = new Graphics();
+  private paint = new Graphics();
   constructor() {
     this.root.position.set(MINIMAP.origin.x, MINIMAP.origin.y);
-    this.root.addChild(this.mock);
+    this.root.addChild(this.paint);
   }
   update(world: World) {
     this.drawMock(world);
   }
   private drawMock(world: World) {
-    const g = this.mock,
+    const g = this.paint,
       mode = world.mapMode,
       layout = MINIMAP.modes[mode - 1];
     const center = mapCenter(world);

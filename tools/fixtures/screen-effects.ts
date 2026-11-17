@@ -149,7 +149,7 @@ export async function showScreenEffectsProof(pack: AssetPack, host: HTMLElement)
       true,
     );
     setEffectFixturePose(flash, 11);
-    capture('Collapse completion · native flash12');
+    capture('Collapse completion · flash frame 12');
     let galleryHash = 2166136261;
     for (const byte of ctx.getImageData(0, 0, 550, 450).data)
       galleryHash = Math.imul(galleryHash ^ byte, 16777619);

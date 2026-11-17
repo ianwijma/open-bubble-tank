@@ -167,7 +167,7 @@ export class AssetPack {
     const pack = new AssetPack();
     pack.sprites = new Map(mockPartTimelines.sprites.map((s) => [s.id, s as SpriteInfo]));
     pack.shapes = new Map(mockPartTimelines.shapes.map((s) => [s.id, s]));
-    // Numeric bounds/playback; procedural mock paint remains separate.
+    // Numeric bounds/playback; procedural paint remains separate.
     for (const sprite of attachmentGeometry.sprites)
       pack.sprites.set(sprite.id, sprite as SpriteInfo);
     for (const shape of attachmentGeometry.shapes) pack.shapes.set(shape.id, shape);

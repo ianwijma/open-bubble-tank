@@ -17,8 +17,8 @@ export async function showPartSnapshots(pack: AssetPack, host: HTMLElement) {
     ctx.font = '12px Arial';
     ctx.fillText(label, x - 95, y + 63);
   };
-  paint(pack.part(3008), 140, 65, 'Mock Massive Cannon · idle');
-  paint(pack.part(4015), 415, 65, 'Mock Rotating Machine Gun');
+  paint(pack.part(3008), 140, 65, 'Massive Cannon · idle');
+  paint(pack.part(4015), 415, 65, 'Rotating Machine Gun');
   const body = (index: number, x: number, y: number): TankPart => ({
     ...STARTER.parts[0],
     key: `body-${index}`,

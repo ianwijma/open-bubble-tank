@@ -79,7 +79,7 @@ test('preview fitting never enlarges small tanks and centers asymmetric Script b
   expect(b.height).toBeCloseTo(20);
 });
 
-test('mock card contours retain the separate preview and weapon panels rather than filling their gap', () => {
+test('card contours retain the separate preview and weapon panels rather than filling their gap', () => {
   const art = upgradeWidget(1916).art;
   const fills = art.flatMap((p) => p.paths?.filter((path) => path.fill) ?? []);
   expect(fills.length).toBeGreaterThan(0);

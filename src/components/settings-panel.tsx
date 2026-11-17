@@ -163,7 +163,7 @@ export function SettingsPanel({
         selected = settingSelection(settings, entry.key, overPause, menu) === value;
       const option = (
         <label
-          className={`authored-option ${selected ? 'selected' : ''} mock`}
+          className={`authored-option ${selected ? 'selected' : ''}`}
           style={{ transform: transform(p) }}
           onPointerEnter={() => {
             if (entry.key === 'fps') setHoverFps(String(value));
@@ -222,7 +222,7 @@ export function SettingsPanel({
       };
       return (
         <button
-          className="authored-key mock"
+          className="authored-key"
           aria-label={`Change ${key[1].toLowerCase()} key`}
           aria-pressed={binding === key[0]}
           style={buttonStyle(hit)}
@@ -263,7 +263,7 @@ export function SettingsPanel({
     if (isHotkeys || isBack)
       return (
         <button
-          className={`authored-action mock ${isBack && screen === 'settings' ? 'back-orb' : ''}`}
+          className={`authored-action ${isBack && screen === 'settings' ? 'back-orb' : ''}`}
           style={buttonStyle(p)}
           aria-label={
             isHotkeys ? 'HotKey Options' : screen === 'hotkeys' ? 'Back to settings' : 'DONE'

@@ -35,7 +35,7 @@ function shot(world: World, type: number) {
 }
 const queue = (world: World) => world.runtimeFor(world.field).effectQueue;
 
-test('projectile callbacks choose native art separately from damage and splash', () => {
+test('projectile callbacks choose effect art separately from damage and splash', () => {
   const matrix: [number, number[]][] = [
     [2001, [1723]],
     [2009, [1723]],

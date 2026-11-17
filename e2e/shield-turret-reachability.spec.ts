@@ -19,7 +19,7 @@ test(`valid Shield Turrets creator save enables the optional local-enemy caller`
   });
   await page.getByRole('button', { name: 'Edit', exact: true }).click();
   const design = await readCreatorDesign(page);
-  expect(design.classId).toBe(3); // Actual mock/native body pixel measurement.
+  expect(design.classId).toBe(3); // Measured from the body artwork's pixels.
   expect(design.parts.at(-1)!.type).toBe(4032);
   // The unit proof validates this exact layout/class and its manual stats.
   expect(design.parts).toEqual(shieldTurretCaller().parts);

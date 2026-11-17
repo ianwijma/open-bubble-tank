@@ -113,7 +113,7 @@ test('hidden and alpha-zero tank parts retain contact while removed parts do not
   expect(pack.hitTest(tank, 0, 0)).toBe(false);
 });
 
-test('protection contact uses the same initial size assignment as native painting', () => {
+test('protection contact uses the same initial size assignment as painting', () => {
   const bounds = { width: 100, height: 80 };
   expect(protectionScale(bounds, 200)).toEqual({ x: 2, y: 2.5 });
   expect(protectionScale(bounds, 200, true)).toEqual({ x: 2, y: 2 });

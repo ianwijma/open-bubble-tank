@@ -9,7 +9,7 @@ import { tickBullet } from '../../src/game/simulation/projectiles';
 import { createProjectile } from '../../src/game/simulation/create-projectile';
 import { tankHitDetail } from '../../src/game/simulation/hit-location';
 
-/** Real alpha contact, simulation phases, callbacks and native rendering in one fixture. */
+/** Real alpha contact, simulation phases, callbacks and rendering in one fixture. */
 export async function showProjectileOrderProof(pack: AssetPack, host: HTMLElement) {
   const world = new World([], [], 4),
     renderer = new GameRenderer(pack);

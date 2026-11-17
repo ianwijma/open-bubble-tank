@@ -155,8 +155,8 @@ test('placement color transforms affect the mine palette and dynamic beam masks 
 });
 
 test('numeric child ages keep AssetPack single-frame child-age behavior and 40-frame phase', () => {
-  const native = new AssetPack();
-  Object.assign(native, {
+  const pack = new AssetPack();
+  Object.assign(pack, {
     sprites: new Map(Object.values(data.sprites).map((s) => [s.id, s as SpriteInfo])),
   });
   // Keep AssetPack's established single-frame child-age behavior and 40-frame phase.
@@ -169,6 +169,6 @@ test('numeric child ages keep AssetPack single-frame child-age behavior and 40-f
   };
   expect(projectileGeometrySource.childAge(1721, 50, placement)).toBe(53);
   expect(projectileGeometrySource.childAge(1721, 50, placement)).toBe(
-    native.childAge(1721, 50, placement),
+    pack.childAge(1721, 50, placement),
   );
 });

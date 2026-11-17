@@ -54,7 +54,7 @@ test('play resumes a stopped script without rerunning it or restarting an active
   expect(clip.playing).toBe(false);
 });
 
-test('mock charge uses the shared mounted timeline and removes particles on frame27', () => {
+test('charge artwork uses the shared mounted timeline and removes particles on frame27', () => {
   const mock = new AssetPack();
   Object.assign(mock, { sprites: new Map(mockData.sprites.map((s) => [s.id, s])) });
   const { tank, fire } = setup(),

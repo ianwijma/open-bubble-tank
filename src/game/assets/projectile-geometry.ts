@@ -133,7 +133,7 @@ function mixBounds(start: TwipBounds, end: TwipBounds | undefined, t: number): B
 }
 
 /**
- * Numeric ellipse silhouettes for both mock painting and contact. Fully transparent
+ * Numeric ellipse silhouettes for both painting and contact. Fully transparent
  * helpers and mask artwork are excluded; active masks are exposed as rectangular
  * constraints (their vector contours are intentionally not imported).
  */

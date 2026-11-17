@@ -111,7 +111,7 @@ export async function showMockAssetsProof(pack: AssetPack, host: HTMLElement) {
       ),
     ];
     importActorFixtures(world);
-    capture(0, 'Mock · yellow / orange', true);
+    capture(0, 'Weapon colors · yellow / orange', true);
     world.field.enemies = [];
     const rows = [
       [
