@@ -1,5 +1,5 @@
 import { expect, test } from 'bun:test';
-import original from './fixtures/world-layer-original.json';
+import original from './fixtures/world-layer.json';
 import { World, emptyInput } from '../src/game/simulation/world';
 import { displayMatrixPoint, displayMatrixProduct } from '../src/game/core/display-transform';
 import {

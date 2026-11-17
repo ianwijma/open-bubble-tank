@@ -1,5 +1,5 @@
 import { expect, test } from 'bun:test';
-import original from './fixtures/world-motion-original.json';
+import original from './fixtures/world-motion.json';
 import {
   directions,
   measured,

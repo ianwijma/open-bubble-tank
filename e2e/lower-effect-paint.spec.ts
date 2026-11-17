@@ -1,10 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { readFileSync, writeFileSync } from 'node:fs';
 const original = JSON.parse(
-  readFileSync(
-    new URL('../tests/fixtures/lower-effect-paint-original.json', import.meta.url),
-    'utf8',
-  ),
+  readFileSync(new URL('../tests/fixtures/lower-effect-paint.json', import.meta.url), 'utf8'),
 ) as { points: number[][]; samples: { pixels: number[] }[] };
 test(`mock lower effects follow their actual field mask and retain identity through reparenting`, async ({
   page,

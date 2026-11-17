@@ -4,7 +4,7 @@ import { GameRenderer } from '../../src/game/render/pixi-renderer';
 import { DEFAULT_SETTINGS } from '../../src/game/core/constants';
 import type { Field } from '../../src/game/core/types';
 import type { FieldUnderAvatarView } from '../../src/game/render/field-under-avatar-view';
-import original from '../../tests/fixtures/under-avatar-paint-original.json';
+import original from '../../tests/fixtures/under-avatar-paint.json';
 
 export async function showUnderAvatarPaint(pack: AssetPack, host: HTMLElement) {
   return { game: await gameControls(pack, host) };

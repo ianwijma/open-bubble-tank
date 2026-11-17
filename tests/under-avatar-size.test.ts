@@ -1,5 +1,5 @@
 import { expect, test } from 'bun:test';
-import original from './fixtures/under-avatar-original.json';
+import original from './fixtures/under-avatar.json';
 import authored from '../src/game/data/field-display.json';
 import { positiveAxisAlignedSize } from '../src/game/core/axis-aligned-size';
 import { RetainedTransform } from '../src/game/core/retained-transform';

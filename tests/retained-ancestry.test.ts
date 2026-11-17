@@ -1,10 +1,10 @@
-import pointOriginal from './fixtures/actor-point-original.json';
+import pointOriginal from './fixtures/actor-point.json';
 import { expect, test } from 'bun:test';
 import { World, emptyInput } from '../src/game/simulation/world';
 import { createTank } from '../src/game/simulation/tank';
 import { createProjectile } from '../src/game/simulation/create-projectile';
 import { STARTER } from '../src/game/data/catalog';
-import { worldOriginalNumber as measured } from './fixtures/world-original-number';
+import { worldLayerNumber as measured } from './fixtures/world-layer-number';
 
 function setup(age: number) {
   const world = new World([], [], 4),

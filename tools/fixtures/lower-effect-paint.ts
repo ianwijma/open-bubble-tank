@@ -9,7 +9,7 @@ import { ArtTextures } from '../../src/game/render/art-textures';
 import { combatEffect } from '../../src/game/simulation/effects';
 import { World } from '../../src/game/simulation/world';
 import { setEffectFixturePose } from './effect-pose';
-import original from '../../tests/fixtures/lower-effect-paint-original.json';
+import original from '../../tests/fixtures/lower-effect-paint.json';
 
 /** Same GLUE disc/positions as the frozen fixture; no candidate generates expectations. */
 export async function showLowerEffectPaint(pack: AssetPack, host: HTMLElement) {

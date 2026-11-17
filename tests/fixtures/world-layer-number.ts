@@ -1,6 +1,6 @@
-import original from './world-layer-original.json';
+import original from './world-layer.json';
 /** Builtin ByteArray words, not generated decimal expectations. */
-export function worldOriginalNumber(phase: string, age: number, role: string, key: string) {
+export function worldLayerNumber(phase: string, age: number, role: string, key: string) {
   const row = original.samples.find((s) => s.phase === phase && s.age === age && s.role === role)!;
   const words = row.words[original.fields.indexOf(key)];
   const bytes = new DataView(new ArrayBuffer(8));

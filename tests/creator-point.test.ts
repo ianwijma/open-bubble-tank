@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import reference from './fixtures/creator-point-reference.json';
+import reference from './fixtures/creator-point.json';
 import { CREATOR_CONTROLS } from '../src/game/core/creator-controls';
 import { DISPLAY_IDENTITY, displayMousePoint } from '../src/game/core/display-transform';
 import type { TankPart, Vec } from '../src/game/core/types';

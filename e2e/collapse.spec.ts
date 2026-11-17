@@ -1,4 +1,4 @@
-import original from '../tests/fixtures/world-layer-original.json' with { type: 'json' };
+import original from '../tests/fixtures/world-layer.json' with { type: 'json' };
 import { expect, test } from '@playwright/test';
 
 function measured(age: number, role: string, key: string) {

@@ -1,5 +1,5 @@
 import { expect, test } from 'bun:test';
-import original from './fixtures/field-mask-original.json';
+import original from './fixtures/field-mask.json';
 import {
   displayGeometryBounds,
   displayGeometryHitTestPoint,

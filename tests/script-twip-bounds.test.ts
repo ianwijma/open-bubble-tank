@@ -1,5 +1,5 @@
 import { expect, test } from 'bun:test';
-import original from './fixtures/script-bounds-original.json';
+import original from './fixtures/script-bounds.json';
 import { AssetPack, type DisplayPlacement, type ArtMatrix } from '../src/game/assets/asset-pack';
 import { scriptTwipBounds, type ScriptBoundsSource } from '../src/game/assets/projectile-bounds';
 import { ArtClip } from '../src/game/assets/art-clip';

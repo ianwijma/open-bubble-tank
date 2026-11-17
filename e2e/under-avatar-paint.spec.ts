@@ -1,10 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { readFileSync, writeFileSync } from 'node:fs';
 const original = JSON.parse(
-  readFileSync(
-    new URL('../tests/fixtures/under-avatar-paint-original.json', import.meta.url),
-    'utf8',
-  ),
+  readFileSync(new URL('../tests/fixtures/under-avatar-paint.json', import.meta.url), 'utf8'),
 ) as {
   points: number[][];
   samples: { mode: string; x: number; y: number; rotation: number; pixels: number[] }[];

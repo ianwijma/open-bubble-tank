@@ -1,5 +1,5 @@
 /** Candidate only: consumes already frozen words. Never produces an oracle. */
-import original from '../fixtures/world-motion-original.json';
+import original from '../fixtures/world-motion.json';
 import { World, emptyInput } from '../../src/game/simulation/world';
 import {
   displayMatrixPoint,

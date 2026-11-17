@@ -1,5 +1,5 @@
 import { expect, test } from 'bun:test';
-import reference from './fixtures/creator-transform-reference.json';
+import reference from './fixtures/creator-transform.json';
 import { DISPLAY_IDENTITY, displayMousePoint } from '../src/game/core/display-transform';
 import { displayPixel } from '../src/game/core/display-values';
 import { transformSelection } from '../src/game/simulation/editor-selection';

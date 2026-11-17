@@ -1,8 +1,8 @@
 import { setFieldFixtureLayout } from '../tools/fixtures/field-layout';
 import { expect, test } from 'bun:test';
 import authored from '../src/game/data/field-display.json';
-import original from './fixtures/script-bounds-original.json';
-import setterOriginal from './fixtures/field-setters-original.json';
+import original from './fixtures/script-bounds.json';
+import setterOriginal from './fixtures/field-setters.json';
 import { RetainedTransform } from '../src/game/core/retained-transform';
 import { displayMatrixProduct, type DisplayMatrix } from '../src/game/core/display-transform';
 import { scriptTwipBounds } from '../src/game/assets/projectile-bounds';

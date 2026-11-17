@@ -6,7 +6,7 @@ import {
   type DisplayGeometryNode,
 } from '../src/game/core/display-geometry';
 import { DISPLAY_IDENTITY, type DisplayMatrix } from '../src/game/core/display-transform';
-import original from './fixtures/script-bounds-original.json';
+import original from './fixtures/script-bounds.json';
 
 const matrix = ([a, b, c, d, tx, ty]: number[]): DisplayMatrix => ({ a, b, c, d, tx, ty });
 const rectangle = (

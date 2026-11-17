@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import type { TankDesign, TankPart } from '../src/game/core/types';
-import reference from '../tests/fixtures/creator-point-reference.json' with { type: 'json' };
+import reference from '../tests/fixtures/creator-point.json' with { type: 'json' };
 import { readCreatorDesign, readDisplayedCreatorDesign, exitCreator } from './helpers/creator';
 import { waitForMainMenu } from './helpers/main-menu';
 

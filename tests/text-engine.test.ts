@@ -1,6 +1,6 @@
 import { expect, test } from 'bun:test';
-import fixture from './fixtures/text-engine-original.json';
-import previous from './fixtures/text-contact-original.json';
+import fixture from './fixtures/text-engine.json';
+import previous from './fixtures/text-contact.json';
 import { compareTextEngine, observedValues } from './support/text-engine-compare';
 
 const key = (s: { case: string; phase: string; role: string; point: string; space: string }) =>

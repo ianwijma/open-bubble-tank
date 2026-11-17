@@ -22,7 +22,7 @@ test('retained pickup pose advances through pause and UID/Run edits instead of h
 });
 
 import { PickupDisplays } from '../src/game/simulation/pickup-display';
-import original from './fixtures/pickup-pose-original.json';
+import original from './fixtures/pickup-pose.json';
 import type { Pickup } from '../src/game/core/types';
 
 for (const cohort of ['before', 'inside'] as const)
