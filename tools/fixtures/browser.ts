@@ -413,7 +413,7 @@ async function reset() {
   if (fixture.value === 'mock-assets') {
     const proof = await showMockAssetsProof(pack, stage);
     status.dataset.mockAssets = JSON.stringify(proof);
-    status.textContent = 'Ready · mock colors, authored sizes and shoot-down geometry';
+    status.textContent = 'Ready · weapon colors, authored sizes and shoot-down geometry';
     return;
   }
   if (fixture.value === 'projectile-clocks') {
