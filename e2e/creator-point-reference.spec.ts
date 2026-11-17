@@ -17,7 +17,7 @@ for (const dpr of [1, 2])
       const errors: string[] = [];
       page.on('pageerror', (error) => errors.push(error.message));
       await page.goto('/');
-      await page.getByRole('button', { name: 'Play with mock assets' }).click();
+      await page.getByRole('button', { name: 'Play' }).click();
       await waitForMainMenu(page);
       await page.getByRole('button', { name: 'My tanks', exact: true }).click();
       const examples = reference.drag.filter((row) => row.dpr === dpr);
@@ -78,7 +78,7 @@ test(`mock public palette placements match original fractional exports`, async (
   page.on('pageerror', (error) => errors.push(error.message));
   await page.setViewportSize({ width: 2600, height: 2200 });
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'Enemy tank creator', exact: true }).click();
   await page.getByRole('button', { name: 'SAVE', exact: true }).hover();

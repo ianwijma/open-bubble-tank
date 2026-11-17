@@ -8,7 +8,7 @@ test(`mock win captures before completion, shares stopped World frames and relea
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto(`http://127.0.0.1:${process.env.SOAPTANK_FIXTURE_PORT ?? 3102}`);
   await page.getByLabel('Fixture').selectOption('win-screen');
-  await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
   await expect(page.getByRole('status')).toContainText('Ready', { timeout: 60000 });
   const host = page.locator('#stage');
   const next = (count: number) =>

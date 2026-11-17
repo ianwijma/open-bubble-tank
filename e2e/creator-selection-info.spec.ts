@@ -34,7 +34,7 @@ test(`mock selected weapon icons follow painted outline corners through drag, ma
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'My tanks', exact: true }).click();
   await page.getByLabel('Import tank design').setInputFiles({
@@ -43,7 +43,7 @@ test(`mock selected weapon icons follow painted outline corners through drag, ma
     buffer: Buffer.from(JSON.stringify(design)),
   });
   await page.getByRole('button', { name: 'Edit', exact: true }).click();
-  await page.getByRole('button', { name: 'Original game size', exact: true }).click();
+  await page.getByRole('button', { name: 'Actual size', exact: true }).click();
   const canvas = page.locator('.creator-workspace canvas'),
     icons = page.locator('.creator-weapon-info-icon');
   await expect.poll(async () => (await canvas.boundingBox())?.width).toBe(350);
@@ -135,7 +135,7 @@ test(`mock selection popups preserve numeric costs and close on overlay rebuild 
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('http://127.0.0.1:3102');
   await page.getByLabel('Fixture').selectOption('creator-selection-info');
-  await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
   await expect(page.getByRole('status')).toContainText('Ready', { timeout: 60000 });
   const icon = page.getByRole('button', { name: 'Info for Seeker Carrier', exact: true }),
     popup = page.getByRole('tooltip');

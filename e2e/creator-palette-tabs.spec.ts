@@ -12,14 +12,14 @@ test(`mock creator category tabs retain source geometry, rollover paint and mode
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'Enemy tank creator', exact: true }).click();
   const creator = page.locator('.creator'),
     canvas = page.locator('.creator-workspace canvas'),
     tabs = page.getByRole('group', { name: 'Part categories' }),
     tab = (name: string) => tabs.getByRole('button', { name, exact: true });
-  await page.getByRole('button', { name: 'Original game size', exact: true }).click();
+  await page.getByRole('button', { name: 'Actual size', exact: true }).click();
   await expect.poll(async () => (await canvas.boundingBox())?.width).toBe(350);
   const geometry = async (name: string, y: number, height: number) => {
     const stage = (await creator.boundingBox())!,

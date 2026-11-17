@@ -14,7 +14,7 @@ test(`mock gun and behavior silhouettes preserve catalog layouts and visible con
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('http://127.0.0.1:3102');
   await page.getByLabel('Fixture').selectOption('mock-parts');
-  await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
   const status = page.getByRole('status');
   await expect(status).toContainText('Ready', { timeout: 60000 });
   const proof = JSON.parse((await status.getAttribute('data-mock-parts'))!);
@@ -43,7 +43,7 @@ test('mock creator previews distinct guns and behaviors and places their authore
   page,
 }) => {
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'Enemy tank creator' }).click();
   await page.getByLabel('Symmetric Mode').uncheck();

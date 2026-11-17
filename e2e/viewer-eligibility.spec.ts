@@ -12,7 +12,7 @@ test(`mock viewer accepts a candidate class budget and reports specific capacity
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto('http://127.0.0.1:3102');
   await page.getByLabel('Fixture').selectOption('viewer-flow-eligibility');
-  await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
   await expect(page.locator('#status')).toContainText('Ready', { timeout: 60000 });
   const advance = () =>
     page.getByRole('button', { name: 'Viewer advance 20 frames', exact: true }).click();

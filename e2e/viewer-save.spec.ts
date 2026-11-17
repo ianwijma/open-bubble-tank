@@ -30,7 +30,7 @@ test(`mock viewer save keeps source button states, suppresses geometry duplicate
       );
   });
   const assets = async () => {
-    await page.getByRole('button', { name: 'Play with mock assets' }).click();
+    await page.getByRole('button', { name: 'Play' }).click();
     await waitForMainMenu(page);
   };
   await page.goto('/');

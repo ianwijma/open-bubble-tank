@@ -27,7 +27,7 @@ test(`mock enemy info retains source defaults, quadratic sliders, confirmation a
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'Enemy tank creator', exact: true }).click();
   expect(await snapshot(page)).toMatchObject({ life: 20, reward: 20, speed: 2, parts: [] });
@@ -159,7 +159,7 @@ test('mock early confirmation response resumes opening and retains the source fr
 }) => {
   await page.clock.install({ time: new Date('2024-12-10T08:00:00') });
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'Enemy tank creator', exact: true }).click();
   await page.getByRole('button', { name: 'Enemy Info', exact: true }).click();

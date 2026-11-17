@@ -40,7 +40,7 @@ test(`mock creator load uses original local viewer, animated cards, code view an
     if (!/^(http:\/\/(localhost|127\.0\.0\.1):|data:|blob:)/.test(r.url())) outbound.push(r.url());
   });
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'Enemy tank creator', exact: true }).click();
   await dropPreview(page, 40, 0);

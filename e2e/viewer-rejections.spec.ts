@@ -13,7 +13,7 @@ test(`mock viewer rejection uses authored fades, pointer shielding and independe
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto('http://127.0.0.1:3102');
   await page.getByLabel('Fixture').selectOption('viewer-flow-eligibility');
-  await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
   await expect(page.locator('#status')).toContainText('Ready', { timeout: 60000 });
   const advance = (n: 1 | 5 | 20) =>
     page.getByRole('button', { name: `Viewer advance ${n} frames`, exact: true }).click();

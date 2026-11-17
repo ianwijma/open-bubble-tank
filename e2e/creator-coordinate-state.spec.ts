@@ -13,7 +13,7 @@ test(`mock creator retains fractional saved coordinates through display, nudge, 
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'My tanks', exact: true }).click();
   await page.getByLabel('Import tank design').setInputFiles({
@@ -64,7 +64,7 @@ test(`mock creator retains fractional saved coordinates through display, nudge, 
   );
   expect(decoded[0]).toMatchObject({ x: 7.125, y: -9.875 });
   await dialog.getByRole('button', { name: 'Return to editing', exact: true }).click();
-  await page.getByRole('button', { name: 'Original game size', exact: true }).click();
+  await page.getByRole('button', { name: 'Actual size', exact: true }).click();
   const canvas = page.locator('.creator-workspace canvas');
   await expect.poll(async () => (await canvas.boundingBox())!.width).toBe(350);
   const at = async (x: number, y: number) => {

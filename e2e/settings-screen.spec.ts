@@ -6,7 +6,7 @@ test(`mock menu settings use authored frames and commit unrestricted duplicate h
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'Settings', exact: true }).click();
   const dialog = page.getByRole('dialog', { name: 'Settings', exact: true });
@@ -79,7 +79,7 @@ test(`mock paused settings retain row identities and gate hotkeys on the shared 
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto('http://127.0.0.1:3102');
   await page.getByLabel('Fixture').selectOption('pause-flow');
-  await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
   await expect(page.getByRole('status')).toContainText('Ready', { timeout: 60000 });
   const advance = (n: number) =>
     page.getByRole('button', { name: `Advance${n} frames`, exact: true }).dispatchEvent('click');

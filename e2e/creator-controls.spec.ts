@@ -7,7 +7,7 @@ test(`mock creator shows original controls, merges centered twins and commits on
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'Enemy tank creator', exact: true }).click();
   const creator = page.locator('.creator'),
@@ -20,7 +20,7 @@ test(`mock creator shows original controls, merges centered twins and commits on
   await expect(stats.locator('[data-creator-field="PrimarySecondary_txt"] > .sr-only')).toHaveText(
     'Primary Weapons:\n\n\nBehavior Weapons:',
   );
-  await page.getByRole('button', { name: 'Original game size', exact: true }).click();
+  await page.getByRole('button', { name: 'Actual size', exact: true }).click();
   await expect.poll(async () => (await canvas.boundingBox())?.width).toBe(350);
   await dropPreview(page, -20, -25);
   const box = (await canvas.boundingBox())!;

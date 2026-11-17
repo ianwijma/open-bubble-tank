@@ -6,7 +6,7 @@ test('mock path: menu, local enemy creator, settings, exploration and pause', as
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto('/');
   await expect(page.getByRole('heading', { name: 'Build a tank out of bubbles.' })).toBeVisible();
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'Enemy tank creator' }).click();
   await page.getByRole('button', { name: 'Place Small Bubble', exact: true }).click();
@@ -59,6 +59,6 @@ test('mock small viewport keeps the complete stage inside the page', async ({ pa
   await page.goto('/');
   await page.screenshot({ path: 'test-results/mobile-gate.png' });
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(375);
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await expect(page.getByRole('button', { name: 'Play', exact: true })).toBeVisible();
 });

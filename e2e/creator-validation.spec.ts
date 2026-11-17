@@ -19,7 +19,7 @@ const part = (type: number, key: string, change: Partial<TankPart> = {}): TankPa
 });
 async function open(page: Page, parts: TankPart[]) {
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'My tanks', exact: true }).click();
   await page.getByLabel('Import tank design').setInputFiles({

@@ -6,7 +6,7 @@ test(`mock ready sounds decode with their source sample windows`, async ({ page 
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('http://127.0.0.1:3102');
   await page.getByLabel('Fixture').selectOption('audio-windows');
-  await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
   const status = page.locator('#status');
   await expect(status).toContainText('Ready', { timeout: 60000 });
   const proof = JSON.parse((await status.getAttribute('data-audio-windows'))!);

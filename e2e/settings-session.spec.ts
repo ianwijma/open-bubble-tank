@@ -1,7 +1,7 @@
 import { waitForMainMenu } from './helpers/main-menu';
 import { expect, test, type Page } from '@playwright/test';
 async function load(page: Page) {
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await waitForMainMenu(page);
   await expect(page.getByRole('button', { name: 'Play', exact: true })).toBeVisible({
     timeout: 60000,

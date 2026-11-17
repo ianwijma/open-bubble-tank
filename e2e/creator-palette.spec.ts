@@ -6,14 +6,14 @@ test(`mock creator rows preserve source paint, fractional scrolling and capture 
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'Enemy tank creator', exact: true }).click();
   const creator = page.locator('.creator'),
     port = page.getByRole('group', { name: 'Parts palette' }),
     scroll = page.getByRole('scrollbar', { name: 'Scroll parts' }),
     down = page.getByRole('button', { name: 'Scroll parts down', exact: true });
-  await page.getByRole('button', { name: 'Original game size', exact: true }).click();
+  await page.getByRole('button', { name: 'Actual size', exact: true }).click();
   await expect
     .poll(async () => (await page.locator('.creator-workspace canvas').boundingBox())?.width)
     .toBe(350);
@@ -109,7 +109,7 @@ test(`mock locked creator rows retain both alpha factors and clean up their whee
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('http://127.0.0.1:3102');
   await page.getByLabel('Fixture').selectOption('creator-palette-rows');
-  await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
   await expect(page.getByRole('status')).toContainText('Ready', { timeout: 60000 });
   const port = page.getByRole('group', { name: 'Parts palette' }),
     scroll = page.getByRole('scrollbar', { name: 'Scroll parts' }),

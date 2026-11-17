@@ -36,10 +36,10 @@ test(`mock secondary help pauses on avatar replacement and persists before closi
   page.on('pageerror', (error) => errors.push(error.message));
   const enter = async () => {
     await page.goto('/');
-    await page.getByRole('button', { name: 'Play with mock assets' }).click();
+    await page.getByRole('button', { name: 'Play' }).click();
     await waitForMainMenu(page);
     await page.getByRole('button', { name: 'Play', exact: true }).click({ timeout: 60000 });
-    await page.getByRole('button', { name: 'Original game size', exact: true }).click();
+    await page.getByRole('button', { name: 'Actual size', exact: true }).click();
     await page.getByRole('checkbox', { name: 'Use saved avatars from previous game' }).check();
     await page
       .getByRole('dialog', { name: 'Choose your tanks' })

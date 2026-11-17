@@ -6,7 +6,7 @@ test(`mock Healer source targeting aborts one Run while stage frames and beam re
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto('http://127.0.0.1:3102');
   await page.getByLabel('Fixture').selectOption('healer-targets');
-  await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
   const status = page.locator('#status');
   await expect(status).toContainText('Ready', { timeout: 60000 });
   const proof = JSON.parse((await status.getAttribute('data-healer-targets'))!);

@@ -9,7 +9,7 @@ test(`mock creator uses preview placement, repeated drops, axis snap and cancell
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'Enemy tank creator' }).click({ timeout: 60000 });
   expect(await snapshot(page)).toMatchObject({ parts: [], life: 20, reward: 20, speed: 2 });

@@ -4,7 +4,7 @@ import { createDecipheriv } from 'node:crypto';
 async function openFixture(page: Page) {
   await page.goto('http://127.0.0.1:3102');
   await page.getByLabel('Fixture').selectOption('creator-save-dialog');
-  await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
   await expect(page.locator('#status')).toContainText('Ready', { timeout: 60000 });
 }
 async function profile(page: Page) {

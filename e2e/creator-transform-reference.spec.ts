@@ -28,7 +28,7 @@ for (const dpr of [1, 2])
       page.on('pageerror', (error) => errors.push(error.message));
       const cases = reference.cases.filter((row) => row.dpr === dpr);
       await page.goto('/');
-      await page.getByRole('button', { name: 'Play with mock assets' }).click();
+      await page.getByRole('button', { name: 'Play' }).click();
       await waitForMainMenu(page);
       await page.getByRole('button', { name: 'My tanks', exact: true }).click();
       await page.getByLabel('Import tank design').setInputFiles({
@@ -109,7 +109,7 @@ test(`mock imported transform getters copy on a no-move release and cancel resto
     radius: 7,
   };
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'My tanks', exact: true }).click();
   await page.getByLabel('Import tank design').setInputFiles({

@@ -6,7 +6,7 @@ test('mock creator previews animate Skittish and Phasing before and after placem
   page,
 }) => {
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'Enemy tank creator' }).click();
   await page.getByRole('button', { name: 'Behavior', exact: true }).click();

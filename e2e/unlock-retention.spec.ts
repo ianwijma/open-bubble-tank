@@ -9,7 +9,7 @@ test(`mock unlocked Radar survives real downgrades through creator and viewer, t
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto('http://127.0.0.1:3102');
   await page.getByLabel('Fixture').selectOption('unlock-retention');
-  await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
   await expect(page.locator('#status')).toContainText('Ready', { timeout: 60000 });
   const proof = page.locator('#unlock-retention-controls');
   await expect(proof).toHaveAttribute('data-unlock-level', '1');

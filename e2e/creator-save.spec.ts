@@ -27,7 +27,7 @@ test(`mock creator: authored exit/name/code dialogs, saved return and offline sh
     });
   });
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'My tanks', exact: true }).click();
   await page.getByLabel('Import tank design').setInputFiles({
@@ -138,7 +138,7 @@ test(`mock fresh creator names stay in the form and failed submission IDs surviv
   page,
 }) => {
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'Enemy tank creator', exact: true }).click();
   await dropPreview(page, 0, 0);

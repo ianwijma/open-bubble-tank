@@ -8,7 +8,7 @@ test(`mock viewer guide persists only after both pages and keeps offline local h
   page.on('pageerror', (e) => errors.push(e.message));
   const boot = async () => {
     await page.goto('/');
-    await page.getByRole('button', { name: 'Play with mock assets' }).click();
+    await page.getByRole('button', { name: 'Play' }).click();
     await waitForMainMenu(page);
     await page.getByRole('button', { name: 'Enemy tank creator', exact: true }).click();
     await page.getByRole('button', { name: 'Load a Tank...', exact: true }).click();

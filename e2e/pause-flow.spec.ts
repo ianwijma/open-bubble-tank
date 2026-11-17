@@ -9,7 +9,7 @@ test(`mock pause and Info retain one layer and share source transition frames`, 
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('http://127.0.0.1:3102');
   await page.getByLabel('Fixture').selectOption('pause-flow');
-  await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
   await expect(page.getByRole('status')).toContainText('Ready', { timeout: 60000 });
   const advance = async (count: number) =>
     page

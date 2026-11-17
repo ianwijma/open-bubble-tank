@@ -11,7 +11,7 @@ test(`mock creator saves fresh edited copies and persists the third-tank medal`,
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'My tanks', exact: true }).click({ timeout: 60000 });
   for (const [index, avatar] of [true, false].entries())
@@ -53,7 +53,7 @@ test(`mock creator saves fresh edited copies and persists the third-tank medal`,
   expect(profile.nextTankId).toBe(10000002);
   await page.reload();
   expect((await read()).achievements).toContain('Tank Creator');
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'My tanks', exact: true }).click({ timeout: 60000 });
   await expect(page.getByText('Edited copy', { exact: true })).toBeVisible();

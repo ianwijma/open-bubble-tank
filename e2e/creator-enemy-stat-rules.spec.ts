@@ -8,7 +8,7 @@ test(`mock enemy defaults, panel suggestions and automatic versus manual saves r
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'Enemy tank creator', exact: true }).click();
   expect(await snapshot(page)).toMatchObject({ life: 20, reward: 20, speed: 2, parts: [] });

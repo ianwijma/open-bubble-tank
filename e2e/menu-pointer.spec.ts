@@ -11,7 +11,7 @@ test(`mock menu picks shape contours, dispatches release actions once and retain
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('http://127.0.0.1:3102');
   await page.getByLabel('Fixture').selectOption('main-menu');
-  await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
   const menu = page.locator('.main-menu'),
     stage = page.locator('#stage');
   await expect(menu).toHaveAttribute('data-menu-age', '0', { timeout: 60000 });

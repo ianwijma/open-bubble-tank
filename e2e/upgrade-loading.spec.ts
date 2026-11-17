@@ -40,9 +40,9 @@ test(`mock missing class-three level-one default retains loading and stable offs
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Play', exact: true }).click();
   await waitForMainMenu(page);
-  await page.getByRole('button', { name: 'Original game size', exact: true }).click();
+  await page.getByRole('button', { name: 'Actual size', exact: true }).click();
   await page.getByRole('button', { name: 'Play', exact: true }).click();
   await page.getByRole('checkbox', { name: 'Use saved avatars from previous game' }).check();
   await page

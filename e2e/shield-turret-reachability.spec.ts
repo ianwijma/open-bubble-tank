@@ -9,7 +9,7 @@ test(`mock valid Shield Turrets creator save enables the optional local-enemy ca
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Play', exact: true }).click();
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'My tanks', exact: true }).click();
   await page.getByLabel('Import tank design').setInputFiles({

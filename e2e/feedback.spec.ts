@@ -15,7 +15,7 @@ test('mock sound, gesture resume, P/Escape, zoom, guide and centered creator but
 }) => {
   await watchAudio(page);
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await expect(page.locator('.main-menu')).toHaveAttribute('data-menu-parked', 'false');
   const create = page.getByRole('button', { name: 'Enemy tank creator' });
   const box = await create.boundingBox(),
@@ -79,7 +79,7 @@ test('mock cleared origin can be revisited and its traveled map edge is drawn on
   page,
 }) => {
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await play(page);
   await page.locator('.game-canvas').focus();
   await page.keyboard.down('KeyD');

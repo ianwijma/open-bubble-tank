@@ -13,7 +13,7 @@ test(`mock lower effects follow their actual field mask and retain identity thro
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto('http://127.0.0.1:3102');
   await page.getByLabel('Fixture').selectOption('lower-effect-paint');
-  await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
   await expect(page.locator('#status')).toContainText('Ready', { timeout: 60000 });
   const proof = JSON.parse(
     (await page.locator('#status').getAttribute('data-lower-effect-paint'))!,

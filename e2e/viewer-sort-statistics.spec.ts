@@ -8,7 +8,7 @@ test(`mock viewer sort and statistics widgets retain source timelines and rollov
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('http://127.0.0.1:3102');
   await page.getByLabel('Fixture').selectOption('viewer-sort-statistics');
-  await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
   await expect(page.locator('#status')).toContainText('Ready', { timeout: 60000 });
   const stage = page.locator('#stage'),
     description = page.getByLabel('Widget description'),

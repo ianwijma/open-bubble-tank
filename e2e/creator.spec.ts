@@ -31,7 +31,7 @@ test(`mock creator: additive selection, marquee, mirrored group edits and undo`,
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'My tanks', exact: true }).click({ timeout: 60000 });
   await page.getByLabel('Import tank design').setInputFiles({
@@ -42,7 +42,7 @@ test(`mock creator: additive selection, marquee, mirrored group edits and undo`,
   await page.getByRole('button', { name: 'Edit', exact: true }).click();
   const canvas = page.locator('.creator-workspace canvas');
   // Exact drag coordinates need an unscaled workspace; fitted pointer events lose precision.
-  await page.getByRole('button', { name: 'Original game size', exact: true }).click();
+  await page.getByRole('button', { name: 'Actual size', exact: true }).click();
   await expect.poll(async () => (await canvas.boundingBox())?.width).toBe(350);
   const at = async (x: number, y: number) => {
     const bounds = (await canvas.boundingBox())!;

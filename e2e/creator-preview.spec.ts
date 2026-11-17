@@ -6,14 +6,14 @@ test(`mock selected creator preview keeps source registration and clips full-siz
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'Enemy tank creator', exact: true }).click();
   const creator = page.locator('.creator'),
     preview = page.locator('.creator-part-preview'),
     canvas = preview.locator('canvas'),
     caption = page.locator('.creator-palette-caption > .creator-text-field');
-  await page.getByRole('button', { name: 'Original game size', exact: true }).click();
+  await page.getByRole('button', { name: 'Actual size', exact: true }).click();
   await expect
     .poll(async () => (await page.locator('.creator-workspace canvas').boundingBox())?.width)
     .toBe(350);

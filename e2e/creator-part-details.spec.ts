@@ -8,10 +8,10 @@ test(`mock creator part details retain authored text, masked thumbnail and sourc
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'Enemy tank creator', exact: true }).click();
-  await page.getByRole('button', { name: 'Original game size', exact: true }).click();
+  await page.getByRole('button', { name: 'Actual size', exact: true }).click();
   const creator = page.locator('.creator'),
     canvas = page.locator('.creator-workspace canvas');
   await expect.poll(async () => (await creator.boundingBox())?.width).toBe(550);
@@ -105,7 +105,7 @@ test(`mock locked palette parts reveal no details and clean up keyboard descript
 }) => {
   await page.goto('http://127.0.0.1:3102');
   await page.getByLabel('Fixture').selectOption('creator-palette-rows');
-  await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
   await expect(page.getByRole('status')).toContainText('Ready', { timeout: 60000 });
   const basic = page.getByRole('button', { name: 'Place Basic Cannon', exact: true });
   await basic.focus();

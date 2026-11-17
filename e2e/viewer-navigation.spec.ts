@@ -8,7 +8,7 @@ test(`mock viewer navigation retains route-specific button state and same-tank r
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto('http://127.0.0.1:3102');
   await page.getByLabel('Fixture').selectOption('viewer-flow');
-  await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
   await expect(page.getByRole('status')).toContainText('Ready', { timeout: 60000 });
   const advance = () =>
       page.getByRole('button', { name: 'Viewer advance 20 frames', exact: true }).click(),

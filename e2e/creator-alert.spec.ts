@@ -12,7 +12,7 @@ test(`mock creator restores empty-save alert, retained fade and fresh name defau
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'Enemy tank creator', exact: true }).click();
   const save = page.getByRole('button', { name: 'SAVE', exact: true }),

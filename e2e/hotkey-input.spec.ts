@@ -7,7 +7,7 @@ test('mock real keyboard events preserve logical aliases, direction priority and
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('http://127.0.0.1:3102');
   await page.getByLabel('Fixture').selectOption('hotkey-input');
-  await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
   await expect(page.getByRole('status')).toContainText('Ready');
   const stage = page.locator('#stage'),
     surface = page.getByRole('application', { name: 'Hotkey input surface' });
@@ -67,7 +67,7 @@ test('mock modifier pause binding resumes through the production dialog with eit
     ),
   );
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Play', exact: true }).click();
   await page.getByRole('button', { name: 'Play', exact: true }).click();
   await page
     .getByRole('dialog', { name: 'Choose your tanks' })
