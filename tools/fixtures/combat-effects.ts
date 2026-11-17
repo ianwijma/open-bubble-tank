@@ -1,6 +1,5 @@
 import { setEffectFixturePose } from './effect-pose';
 import { Application, Graphics } from 'pixi.js';
-import type { AssetPack } from '../../src/game/assets/asset-pack';
 import art from '../../src/game/data/effect-art.json';
 import { combatEffect, type CombatEffect } from '../../src/game/simulation/effects';
 import { CombatEffectsView } from '../../src/game/render/combat-effects-view';
@@ -8,7 +7,7 @@ import { ArtTextures } from '../../src/game/render/art-textures';
 import { World, emptyInput } from '../../src/game/simulation/world';
 
 /** Isolated pixels exercise the production effect view and simulation lifetime. */
-export async function showCombatEffectsProof(pack: AssetPack, host: HTMLElement) {
+export async function showCombatEffectsProof(host: HTMLElement) {
   const app = new Application(),
     textures = new ArtTextures();
   await app.init({

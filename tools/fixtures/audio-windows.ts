@@ -1,8 +1,7 @@
-import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { mockAudio } from '../../src/game/services/mock-audio';
 
 /** Inspect the actual ready-to-play blobs, independently decoding their WAV headers/data. */
-export async function showAudioWindows(pack: AssetPack, host: HTMLElement) {
+export async function showAudioWindows(host: HTMLElement) {
   host.replaceChildren();
   const sounds = new Map([561, 562, 563, 564, 565, 566, 567, 568].map((id) => [id, mockAudio(id)]));
   const proof = [];

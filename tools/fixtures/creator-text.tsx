@@ -4,9 +4,8 @@ import { CreatorText } from '../../src/components/creator-text';
 import { CreatorPrimitives } from '../../src/components/creator-controls';
 import { CREATOR_PALETTE } from '../../src/game/core/creator-palette';
 import { creatorDialogFrame } from '../../src/game/core/creator-dialogs';
-import type { AssetPack } from '../../src/game/assets/asset-pack';
 
-export function showCreatorText(pack: AssetPack, host: HTMLElement) {
+export function showCreatorText(host: HTMLElement) {
   const caption = { ...CREATOR_PALETTE.library.caption, name: 'caption' },
     cost = {
       ...CREATOR_PALETTE.row.fields.find((field) => field.name === 'cost_txt')!,

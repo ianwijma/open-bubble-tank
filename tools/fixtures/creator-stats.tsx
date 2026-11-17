@@ -4,9 +4,8 @@ import { createPortal } from 'react-dom';
 import { CreatorStats } from '../../src/components/creator-stats';
 import { STARTER } from '../../src/game/data/catalog';
 import type { TankDesign } from '../../src/game/core/types';
-import type { AssetPack } from '../../src/game/assets/asset-pack';
 
-function StatisticsFixture({ pack, controls }: { pack: AssetPack; controls: HTMLElement }) {
+function StatisticsFixture({ controls }: { controls: HTMLElement }) {
   const [avatar, setAvatar] = useState(true),
     [classId, setClassId] = useState(1);
   const design: TankDesign = {
@@ -42,14 +41,14 @@ function StatisticsFixture({ pack, controls }: { pack: AssetPack; controls: HTML
   );
 }
 
-export function showCreatorStatistics(pack: AssetPack, host: HTMLElement) {
+export function showCreatorStatistics(host: HTMLElement) {
   const controls = document.createElement('div');
   controls.id = 'creator-statistics-fixture-controls';
   host.before(controls);
   const root = createRoot(host);
   root.render(
     <StrictMode>
-      <StatisticsFixture pack={pack} controls={controls} />
+      <StatisticsFixture controls={controls} />
     </StrictMode>,
   );
   return () => {

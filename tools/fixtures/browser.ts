@@ -159,7 +159,7 @@ async function reset() {
     return;
   }
   if (fixture.value === 'audio-windows') {
-    status.dataset.audioWindows = JSON.stringify(await showAudioWindows(pack, stage));
+    status.dataset.audioWindows = JSON.stringify(await showAudioWindows(stage));
     status.textContent = 'Ready · decoded sound windows';
     return;
   }
@@ -216,22 +216,22 @@ async function reset() {
     return;
   }
   if (fixture.value === 'creator-stats') {
-    unmountScreen = showCreatorStatistics(pack, stage);
+    unmountScreen = showCreatorStatistics(stage);
     status.textContent = 'Ready · isolated creator statistics';
     return;
   }
   if (fixture.value === 'creator-palette-rows') {
-    unmountScreen = showCreatorPaletteRows(pack, stage);
+    unmountScreen = showCreatorPaletteRows(stage);
     status.textContent = 'Ready · isolated locked creator palette';
     return;
   }
   if (fixture.value === 'creator-save-dialog') {
-    unmountScreen = showCreatorSaveDialog(pack, stage);
+    unmountScreen = showCreatorSaveDialog(stage);
     status.textContent = 'Ready · isolated creator save dialog';
     return;
   }
   if (fixture.value === 'creator-selection-info') {
-    unmountScreen = showCreatorSelectionInfo(pack, stage);
+    unmountScreen = showCreatorSelectionInfo(stage);
     status.textContent = 'Ready · production selection-info popup lifecycle';
     return;
   }
@@ -241,12 +241,12 @@ async function reset() {
     return;
   }
   if (fixture.value === 'creator-text') {
-    unmountScreen = showCreatorText(pack, stage);
+    unmountScreen = showCreatorText(stage);
     status.textContent = 'Ready · isolated creator text fields';
     return;
   }
   if (fixture.value === 'creator-controls') {
-    unmountScreen = showCreatorControls(pack, stage);
+    unmountScreen = showCreatorControls(stage);
     status.textContent = 'Ready · isolated creator control components';
     return;
   }
@@ -281,7 +281,7 @@ async function reset() {
     return;
   }
   if (fixture.value === 'viewer-sort-statistics') {
-    unmountScreen = showViewerSortStatistics(pack, stage);
+    unmountScreen = showViewerSortStatistics(stage);
     status.textContent = 'Ready · viewer sort and statistics widgets';
     return;
   }
@@ -296,12 +296,12 @@ async function reset() {
     return;
   }
   if (fixture.value === 'svg-masks') {
-    status.dataset.svgMasks = JSON.stringify(await showSvgMasks(pack, stage));
+    status.dataset.svgMasks = JSON.stringify(await showSvgMasks(stage));
     status.textContent = 'Ready · grouped SVG mask pixels';
     return;
   }
   if (fixture.value === 'main-menu') {
-    unmountScreen = showMainMenuFlow(pack, stage);
+    unmountScreen = showMainMenuFlow(stage);
     status.textContent = 'Ready · manually clocked production main-menu flow';
     return;
   }
@@ -447,7 +447,7 @@ async function reset() {
     return;
   }
   if (fixture.value === 'combat-effects') {
-    const proof = await showCombatEffectsProof(pack, stage);
+    const proof = await showCombatEffectsProof(stage);
     status.dataset.combatEffects = JSON.stringify(proof);
     status.textContent = 'Ready · combat effect timelines and layers';
     return;
@@ -497,7 +497,7 @@ async function reset() {
     return;
   }
   if (fixture.value === 'tactical-hud') {
-    const proof = await showTacticalHudProof(pack, stage);
+    const proof = await showTacticalHudProof(stage);
     status.dataset.tacticalHud = JSON.stringify(proof);
     status.textContent = `Ready · tactical HUD ${JSON.stringify(proof)}`;
     return;

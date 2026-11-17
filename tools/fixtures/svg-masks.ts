@@ -103,7 +103,7 @@ async function composedMask() {
 }
 
 /** Pixel evidence for the production SVG composer, independent of Pixi masks. */
-export async function showSvgMasks(pack: AssetPack, host: HTMLElement) {
+export async function showSvgMasks(host: HTMLElement) {
   const canvas = document.createElement('canvas');
   canvas.width = 550;
   canvas.height = 450;

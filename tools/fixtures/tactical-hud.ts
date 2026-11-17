@@ -1,6 +1,5 @@
 import { importActorFixtures } from './actor-attachments';
 import { Application } from 'pixi.js';
-import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { TacticalHudState } from '../../src/game/core/tactical-hud';
 import { TacticalHudView } from '../../src/game/render/tactical-hud-view';
 import { ArtTextures } from '../../src/game/render/art-textures';
@@ -11,7 +10,7 @@ import { World, emptyInput } from '../../src/game/simulation/world';
 import { createTank } from '../../src/game/simulation/tank';
 
 /** Native overlay artwork in isolation, with authored frames, fixed HUD sizes and fill overrides. */
-export async function showTacticalHudProof(pack: AssetPack, host: HTMLElement) {
+export async function showTacticalHudProof(host: HTMLElement) {
   const app = new Application(),
     textures = new ArtTextures(),
     state = new TacticalHudState();

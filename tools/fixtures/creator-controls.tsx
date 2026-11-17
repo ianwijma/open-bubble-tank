@@ -11,17 +11,8 @@ import {
   enemyStatFromHandle,
   type EnemyStat,
 } from '../../src/game/core/creator-enemy-stats';
-import type { AssetPack } from '../../src/game/assets/asset-pack';
 
-function ControlsFixture({
-  pack,
-  host,
-  controlsHost,
-}: {
-  pack: AssetPack;
-  host: HTMLElement;
-  controlsHost: HTMLElement;
-}) {
+function ControlsFixture({ host, controlsHost }: { host: HTMLElement; controlsHost: HTMLElement }) {
   const [checked, setChecked] = useState(true),
     [undo, setUndo] = useState(false),
     [scale, setScale] = useState(1),
@@ -192,7 +183,7 @@ function ControlsFixture({
     </>
   );
 }
-export function showCreatorControls(pack: AssetPack, host: HTMLElement) {
+export function showCreatorControls(host: HTMLElement) {
   for (const name of [
     'controlClicks',
     'holdStarts',
@@ -208,7 +199,7 @@ export function showCreatorControls(pack: AssetPack, host: HTMLElement) {
   const root = createRoot(host);
   root.render(
     <StrictMode>
-      <ControlsFixture pack={pack} host={host} controlsHost={controlsHost} />
+      <ControlsFixture host={host} controlsHost={controlsHost} />
     </StrictMode>,
   );
   return () => {

@@ -4,7 +4,6 @@ import { createPortal } from 'react-dom';
 import { TankViewerSort } from '../../src/components/tank-viewer-sort';
 import { TankViewerStatistics } from '../../src/components/tank-viewer-statistics';
 import { ViewerGroup } from '../../src/components/tank-viewer-art';
-import type { AssetPack } from '../../src/game/assets/asset-pack';
 import type { ViewerSort } from '../../src/game/core/tank-viewer';
 import { StageRuntime } from '../../src/game/services/stage-runtime';
 import { STARTER } from '../../src/game/data/catalog';
@@ -14,15 +13,7 @@ const enemy = {
   avatar: false,
   parts: [4001, 4001, 6003].map((type, i) => ({ ...STARTER.parts[0], key: String(i), type })),
 };
-function Fixture({
-  pack,
-  stage,
-  controls,
-}: {
-  pack: AssetPack;
-  stage: StageRuntime;
-  controls: HTMLElement;
-}) {
+function Fixture({ stage, controls }: { stage: StageRuntime; controls: HTMLElement }) {
   const [open, setOpen] = useState(false),
     [enabled, setEnabled] = useState(true),
     [mounted, setMounted] = useState(true),
@@ -90,7 +81,7 @@ function Fixture({
     </>
   );
 }
-export function showViewerSortStatistics(pack: AssetPack, host: HTMLElement) {
+export function showViewerSortStatistics(host: HTMLElement) {
   const stage = new StageRuntime(),
     controls = document.createElement('div');
   host.after(controls);
@@ -108,7 +99,7 @@ export function showViewerSortStatistics(pack: AssetPack, host: HTMLElement) {
   const root = createRoot(host);
   root.render(
     <StrictMode>
-      <Fixture pack={pack} stage={stage} controls={controls} />
+      <Fixture stage={stage} controls={controls} />
     </StrictMode>,
   );
   return () => {
