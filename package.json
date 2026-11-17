@@ -12,8 +12,7 @@
     "test": "bun test tests",
     "check": "bun run typecheck && bun run test",
     "test:e2e": "bun run build && playwright test",
-    "test:e2e:smoke": "bun run test:e2e e2e/game.spec.ts --grep 'mock path:'",
-    "test:e2e:offline": "bun run test:e2e --grep 'mock|synthetic'",
+    "test:e2e:smoke": "bun run test:e2e e2e/game.spec.ts --grep 'smoke path:'",
     "fixtures": "bun tools/visual-fixtures.ts",
     "format": "prettier --write --ignore-unknown src tests e2e tools *.ts *.json *.mjs",
     "format:check": "prettier --check --ignore-unknown src tests e2e tools *.ts *.json *.mjs"

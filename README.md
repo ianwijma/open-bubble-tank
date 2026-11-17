@@ -24,9 +24,8 @@ Open [localhost:3000](http://localhost:3000).
 ```sh
 bun run check            # TypeScript and the rule tests in tests/
 bun run format:check     # Formatting
-bun run test:e2e         # Production build, then the Playwright browser tests in e2e/
+bun run test:e2e         # Production build, then the full Playwright browser suite in e2e/, run on master
 bun run test:e2e:smoke   # Production build and the quick browser check run on pull requests
-bun run test:e2e:offline # Production build and the full browser suite run on master
 bun run build            # Production build
 bun run start            # Serve the production build
 bun run fixtures         # Gameplay, artwork and screen fixtures on localhost:3102
