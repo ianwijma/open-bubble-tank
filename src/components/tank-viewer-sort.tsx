@@ -1,6 +1,5 @@
 'use client';
 import { useEffect, useRef } from 'react';
-import type { AssetPack } from '@/game/assets/asset-pack';
 import type { StageRuntime } from '@/game/services/stage-runtime';
 import { TANK_VIEWER, viewerWidget, viewerRoot, type ViewerSort } from '@/game/core/tank-viewer';
 import { ViewerArt, ViewerGroup, ViewerButton, viewerTransform } from './tank-viewer-art';
@@ -15,7 +14,6 @@ const sorts: Record<string, { label: string; sort: ViewerSort }> = {
 };
 /** The sort control replaces two independently playing children whenever its hover frame changes. */
 export function TankViewerSort({
-  pack,
   stage,
   open,
   enabled,
@@ -24,7 +22,6 @@ export function TankViewerSort({
   onHover,
   x = 501.6,
 }: {
-  pack: AssetPack;
   stage: StageRuntime;
   open: boolean;
   enabled: boolean;
@@ -107,7 +104,7 @@ export function TankViewerSort({
               }}
               style={{ display: frame === 1 ? 'block' : 'none' }}
             >
-              <ViewerArt pack={pack} symbol={icon} frame={frame} />
+              <ViewerArt symbol={icon} frame={frame} />
             </div>
           ))}
         </ViewerGroup>
@@ -123,7 +120,6 @@ export function TankViewerSort({
               style={{ transform: viewerTransform(piece.matrix) }}
             >
               <ViewerButton
-                pack={pack}
                 piece={{ ...piece, matrix: identity }}
                 label={`Sort by ${sorts[piece.name].label}`}
                 disabled={!open || !enabled}

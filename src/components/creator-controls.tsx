@@ -1,6 +1,5 @@
 'use client';
 import { useLayoutEffect, useRef, useState, type CSSProperties } from 'react';
-import type { AssetPack } from '@/game/assets/asset-pack';
 import type { Vec } from '@/game/core/types';
 import { displayPixel } from '@/game/core/display-values';
 import {
@@ -140,7 +139,6 @@ export function CreatorPrimitives({ pieces }: { pieces: CreatorPrimitive[] }) {
   });
 }
 export function CreatorButton({
-  pack,
   name,
   label,
   disabled = false,
@@ -151,7 +149,6 @@ export function CreatorButton({
   onHoldStart,
   onHoldEnd,
 }: {
-  pack: AssetPack;
   name: string;
   label: string;
   disabled?: boolean;
@@ -258,7 +255,6 @@ export function CreatorButton({
   );
 }
 export function CreatorSlider({
-  pack,
   layout,
   label,
   value,
@@ -273,7 +269,6 @@ export function CreatorSlider({
   coordinates,
   point,
 }: {
-  pack: AssetPack;
   layout: CreatorSliderLayout;
   label: string;
   value: number;

@@ -66,7 +66,7 @@ export class MenuPointer {
     const changed = !sameMenuTarget(target, this.target),
       previous = this.target;
     this.target = target;
-    this.root.style.cursor = target && target.kind !== 'blocked' ? 'pointer' : 'default';
+    this.root.style.cursor = target ? 'pointer' : 'default';
     if (changed) this.options.hover(target, previous);
     return changed;
   }

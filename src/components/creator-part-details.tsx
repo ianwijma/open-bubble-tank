@@ -1,18 +1,15 @@
 'use client';
 import type { RefObject } from 'react';
-import type { AssetPack } from '@/game/assets/asset-pack';
 import { CREATOR_PALETTE } from '@/game/core/creator-palette';
 import { creatorDetailText, type CreatorDetailFocus } from '@/game/core/creator-details';
 import { partById } from '@/game/data/catalog';
 import { CreatorPrimitives } from './creator-controls';
 import { CreatorText } from './creator-text';
 export function CreatorPartDetails({
-  pack,
   focus,
   canvas,
   id,
 }: {
-  pack: AssetPack;
   focus: CreatorDetailFocus | null;
   canvas: RefObject<HTMLCanvasElement | null>;
   id: string;

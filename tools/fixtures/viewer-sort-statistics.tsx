@@ -35,7 +35,6 @@ function Fixture({
         {mounted ? (
           <>
             <TankViewerSort
-              pack={pack}
               stage={stage}
               open={open}
               enabled={enabled}
@@ -48,7 +47,6 @@ function Fixture({
             />
             <ViewerGroup matrix={{ a: 1, b: 0, c: 0, d: 1, tx: 400, ty: 4600 }}>
               <TankViewerStatistics
-                pack={pack}
                 stage={stage}
                 tank={useEnemy ? enemy : STARTER}
                 onHover={setDescription}

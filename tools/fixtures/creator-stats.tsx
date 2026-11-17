@@ -27,7 +27,7 @@ function StatisticsFixture({ pack, controls }: { pack: AssetPack; controls: HTML
   return (
     <>
       <div className="creator stage-background">
-        <CreatorStats pack={pack} design={design} classId={classId} />
+        <CreatorStats design={design} classId={classId} />
       </div>
       {createPortal(
         <>

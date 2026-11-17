@@ -26,7 +26,7 @@ function Group({ matrix, children }: { matrix: ArtMatrix; children: ReactNode })
     </div>
   );
 }
-function Art({ pack, symbol, frame = 1 }: { pack: AssetPack; symbol: number; frame?: number }) {
+function Art({ symbol, frame = 1 }: { symbol: number; frame?: number }) {
   const widget = upgradeWidget(symbol, frame);
   return (
     <svg className="upgrade-art" width={1} height={1} aria-hidden="true">
@@ -121,7 +121,7 @@ export function UpgradePanel({
     >
       {loading.rootFrame !== 4 ? (
         <Group matrix={UPGRADE_SCREEN.shade.matrix}>
-          <Art pack={pack} symbol={UPGRADE_SCREEN.shade.symbol} />
+          <Art symbol={UPGRADE_SCREEN.shade.symbol} />
         </Group>
       ) : null}
       <svg width={0} height={0} aria-hidden="true">
@@ -173,11 +173,11 @@ export function UpgradePanel({
                   className="upgrade-group"
                   style={{ left: -piece.bounds.x, top: -piece.bounds.y }}
                 >
-                  <Art pack={pack} symbol={piece.symbol} frame={buildHovered ? 2 : 1} />
+                  <Art symbol={piece.symbol} frame={buildHovered ? 2 : 1} />
                 </span>
               </button>
             ) : (
-              <Art pack={pack} symbol={piece.symbol} />
+              <Art symbol={piece.symbol} />
             )}
           </Group>
         ))}
@@ -192,7 +192,7 @@ export function UpgradePanel({
             </span>
           ) : null}
           <Group matrix={UPGRADE_SCREEN.loading.label.matrix}>
-            <Art pack={pack} symbol={UPGRADE_SCREEN.loading.label.symbol} />
+            <Art symbol={UPGRADE_SCREEN.loading.label.symbol} />
           </Group>
           <Group matrix={UPGRADE_SCREEN.loading.animation.matrix}>
             {UPGRADE_SCREEN.loading.animation.frames[0].map((dot) => (
@@ -202,7 +202,7 @@ export function UpgradePanel({
                 data-upgrade-dot={dot.depth}
                 style={{ transform: transform(dot.matrix), opacity: dot.alpha }}
               >
-                <Art pack={pack} symbol={dot.symbol} />
+                <Art symbol={dot.symbol} />
               </span>
             ))}
           </Group>
@@ -251,7 +251,7 @@ export function UpgradePanel({
                   }}
                 >
                   <div className="upgrade-group" style={{ left: -bounds.x, top: -bounds.y }}>
-                    <Art pack={pack} symbol={card.symbol} frame={hovered === index ? 2 : 1} />
+                    <Art symbol={card.symbol} frame={hovered === index ? 2 : 1} />
                     {cardArt.fields.map((field) => (
                       <Group key={field.name} matrix={field.matrix}>
                         <CreatorText
@@ -272,7 +272,7 @@ export function UpgradePanel({
                       </Group>
                     ))}
                     <Group matrix={edit.matrix}>
-                      <Art pack={pack} symbol={edit.symbol} frame={editHovered === index ? 2 : 1} />
+                      <Art symbol={edit.symbol} frame={editHovered === index ? 2 : 1} />
                     </Group>
                     <canvas
                       width={1100}

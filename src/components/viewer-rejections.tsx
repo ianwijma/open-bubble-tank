@@ -1,6 +1,5 @@
 'use client';
 import { useCallback, useEffect, useLayoutEffect, useRef, useSyncExternalStore } from 'react';
-import type { AssetPack } from '@/game/assets/asset-pack';
 import type { StageRuntime } from '@/game/services/stage-runtime';
 import { TANK_VIEWER } from '@/game/core/tank-viewer';
 import type { ViewerRejections } from '@/game/core/viewer-rejections';
@@ -10,11 +9,9 @@ import { ViewerGroup } from './tank-viewer-art';
 
 /** Authored1557: timed pointer shield, independent backdrop/title/field fades, no modal dismissal. */
 export function ViewerRejectionEffects({
-  pack,
   stage,
   model,
 }: {
-  pack: AssetPack;
   stage: StageRuntime;
   model: ViewerRejections;
 }) {

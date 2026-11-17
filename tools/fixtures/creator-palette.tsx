@@ -20,9 +20,8 @@ function PaletteFixture({ pack }: { pack: AssetPack }) {
     id = useId();
   return (
     <div className="creator stage-background">
-      <CreatorPaletteFrame pack={pack} />
+      <CreatorPaletteFrame />
       <CreatorPaletteRows
-        pack={pack}
         parts={parts}
         context={context}
         chosen={chosen}
@@ -32,7 +31,7 @@ function PaletteFixture({ pack }: { pack: AssetPack }) {
           setFocus(anchor ? { ...anchor, instance: ++instance.current } : null)
         }
       />
-      <CreatorPartDetails pack={pack} focus={focus} canvas={canvas} id={id} />
+      <CreatorPartDetails focus={focus} canvas={canvas} id={id} />
     </div>
   );
 }

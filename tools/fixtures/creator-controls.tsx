@@ -59,7 +59,6 @@ function ControlsFixture({
           return (
             <CreatorButton
               key={c.name}
-              pack={pack}
               name={c.name}
               label={labels[c.name]}
               checked={c.name === 'SymmetricMode_mc' ? checked : undefined}
@@ -93,7 +92,6 @@ function ControlsFixture({
           return (
             <CreatorSlider
               key={layout.name}
-              pack={pack}
               layout={layout}
               label={resize ? 'Part scale' : 'Part rotation'}
               value={resize ? scale : rotation}
@@ -125,7 +123,6 @@ function ControlsFixture({
           return (
             <CreatorSlider
               key={layout.name}
-              pack={pack}
               layout={layout}
               label={`Fixture enemy ${key}`}
               value={enemy[key]}

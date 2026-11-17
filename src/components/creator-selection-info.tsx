@@ -1,19 +1,12 @@
 'use client';
 import { useId, useState } from 'react';
-import type { AssetPack } from '@/game/assets/asset-pack';
 import { CREATOR_CONTROLS } from '@/game/core/creator-controls';
 import { CREATOR_PALETTE } from '@/game/core/creator-palette';
 import { creatorWeaponInfoText, type CreatorWeaponIcon } from '@/game/core/creator-details';
 import { partById } from '@/game/data/catalog';
 import { CreatorPrimitives } from './creator-controls';
 import { CreatorText } from './creator-text';
-export function CreatorSelectionInfo({
-  pack,
-  icons,
-}: {
-  pack: AssetPack;
-  icons: CreatorWeaponIcon[];
-}) {
+export function CreatorSelectionInfo({ icons }: { icons: CreatorWeaponIcon[] }) {
   const [focus, setFocus] = useState<{ key: string; icons: CreatorWeaponIcon[] } | null>(null),
     id = useId();
   // Rebuilding the icon list removes its popup, even when the selected IDs are unchanged.

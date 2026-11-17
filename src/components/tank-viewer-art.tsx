@@ -24,15 +24,7 @@ export function ViewerGroup({
     </div>
   );
 }
-export function ViewerArt({
-  pack,
-  symbol,
-  frame = 1,
-}: {
-  pack: AssetPack;
-  symbol: number;
-  frame?: number;
-}) {
+export function ViewerArt({ symbol, frame = 1 }: { symbol: number; frame?: number }) {
   const w = viewerWidget(symbol, frame);
   return (
     <svg className="viewer-art" width={1} height={1} aria-hidden="true">
@@ -41,13 +33,11 @@ export function ViewerArt({
   );
 }
 export function ViewerFields({
-  pack,
   symbol,
   frame = 1,
   values = {},
   opacities = {},
 }: {
-  pack: AssetPack;
   symbol: number;
   frame?: number;
   values?: Record<string, string>;
@@ -64,7 +54,6 @@ export function ViewerFields({
   ));
 }
 export function ViewerButton({
-  pack,
   piece,
   label,
   disabled = false,
@@ -73,7 +62,6 @@ export function ViewerButton({
   onClick,
   onHover,
 }: {
-  pack: AssetPack;
   piece: ViewerPiece;
   label: string;
   disabled?: boolean;
@@ -113,8 +101,8 @@ export function ViewerButton({
         }}
       >
         <span style={{ position: 'absolute', left: -b.x, top: -b.y }}>
-          <ViewerArt pack={pack} symbol={piece.symbol} frame={w.frame} />
-          <ViewerFields pack={pack} symbol={piece.symbol} frame={w.frame} />
+          <ViewerArt symbol={piece.symbol} frame={w.frame} />
+          <ViewerFields symbol={piece.symbol} frame={w.frame} />
         </span>
       </button>
     </ViewerGroup>

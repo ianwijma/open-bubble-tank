@@ -2,13 +2,10 @@ import type { ArtMatrix } from '../assets/asset-pack';
 import { MAIN_MENU } from './main-menu';
 import type { Vec } from './types';
 
-export type MenuTarget = { kind: 'control' | 'decoration'; name: string } | { kind: 'blocked' };
+export type MenuTarget = { kind: 'control'; name: string };
 
 export function sameMenuTarget(a?: MenuTarget, b?: MenuTarget) {
-  return (
-    a?.kind === b?.kind &&
-    (a && 'name' in a ? a.name : undefined) === (b && 'name' in b ? b.name : undefined)
-  );
+  return a?.kind === b?.kind && a?.name === b?.name;
 }
 
 export function menuLocal(point: Vec, matrix: ArtMatrix): Vec | undefined {

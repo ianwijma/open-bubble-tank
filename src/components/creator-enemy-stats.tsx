@@ -1,6 +1,5 @@
 'use client';
 import { useEffect, useId, useRef, useState } from 'react';
-import type { AssetPack } from '@/game/assets/asset-pack';
 import { CREATOR_PALETTE, type CreatorField } from '@/game/core/creator-palette';
 import {
   advanceSuggestedConfirm,
@@ -16,11 +15,9 @@ import { CreatorPrimitives, CreatorSlider } from './creator-controls';
 import { CreatorText } from './creator-text';
 const keys: EnemyStat[] = ['life', 'reward', 'speed'];
 export function CreatorStatsTab({
-  pack,
   basic = false,
   onClick,
 }: {
-  pack: AssetPack;
   basic?: boolean;
   onClick: () => void;
 }) {
@@ -63,7 +60,6 @@ export function CreatorStatsTab({
   );
 }
 export function CreatorEnemyStats({
-  pack,
   values,
   suggested,
   open,
@@ -72,7 +68,6 @@ export function CreatorEnemyStats({
   onValues,
   onSuggested,
 }: {
-  pack: AssetPack;
   values: EnemyStats;
   suggested: boolean;
   open: boolean;
@@ -120,7 +115,7 @@ export function CreatorEnemyStats({
         ? { ...r, [key]: r[key] + 1 }
         : { life: r.life + 1, reward: r.reward + 1, speed: r.speed + 1 },
     );
-  if (!open) return <CreatorStatsTab pack={pack} onClick={onOpen} />;
+  if (!open) return <CreatorStatsTab onClick={onOpen} />;
   const box = p.suggested.bounds;
   const confirmFrame = p.confirm.frames.find((f) => f.frame === confirm.frame),
     hoveredButton =
@@ -252,7 +247,6 @@ export function CreatorEnemyStats({
               }}
             />
             <CreatorSlider
-              pack={pack}
               layout={p.sliders[i]}
               label={`Enemy ${key} slider`}
               min={limits.min}

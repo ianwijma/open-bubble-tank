@@ -1,18 +1,15 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
-import type { AssetPack } from '@/game/assets/asset-pack';
 import type { TankDesign } from '@/game/core/types';
 import type { StageRuntime } from '@/game/services/stage-runtime';
 import { TANK_VIEWER, viewerWidget, viewerEquipmentFields } from '@/game/core/tank-viewer';
 import { ViewerArt, ViewerFields, ViewerGroup } from './tank-viewer-art';
 /** The statistics buttons: closed mask, fresh ten-frame expanding child, immediate collapse. */
 export function TankViewerStatistics({
-  pack,
   stage,
   tank,
   onHover,
 }: {
-  pack: AssetPack;
   stage: StageRuntime;
   tank: TankDesign;
   onHover: (text: string) => void;
@@ -66,10 +63,10 @@ export function TankViewerStatistics({
               background: `linear-gradient(to bottom, ${TANK_VIEWER.statistics.background.stops.map((s) => `rgb(${s.color.slice(0, 3).join(',')}) ${(s.ratio / 255) * 100}%`).join(',')})`,
             }}
           />
-          <ViewerArt pack={pack} symbol={1137} frame={open ? 2 : 1} />
+          <ViewerArt symbol={1137} frame={open ? 2 : 1} />
           <ViewerGroup matrix={clip.matrix}>
-            <ViewerArt pack={pack} symbol={1129} />
-            <ViewerFields pack={pack} symbol={1129} values={viewerEquipmentFields(tank)} />
+            <ViewerArt symbol={1129} />
+            <ViewerFields symbol={1129} values={viewerEquipmentFields(tank)} />
           </ViewerGroup>
         </div>
       </div>

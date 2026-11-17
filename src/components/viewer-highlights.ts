@@ -1,6 +1,5 @@
 'use client';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import type { AssetPack } from '@/game/assets/asset-pack';
 import { ViewerHighlights, viewerCardWarning } from '@/game/core/viewer-highlights';
 import { TANK_VIEWER, viewerRoot, type ViewerLimits } from '@/game/core/tank-viewer';
 import type { ViewerPane } from '@/game/core/viewer-panes';
@@ -8,7 +7,6 @@ import type { StageRuntime } from '@/game/services/stage-runtime';
 
 /** Frame-driven card decoration; React owns lifetime, the stage owns alpha and hit sampling. */
 export function useViewerHighlights(
-  pack: AssetPack,
   stage: StageRuntime,
   cards: readonly (ViewerPane | null)[],
   limits: ViewerLimits,
@@ -69,6 +67,6 @@ export function useViewerHighlights(
         paint();
       },
     });
-  }, [model, pack, stage]);
+  }, [model, stage]);
   return { model, host, pointer, focused, lines, cautions };
 }

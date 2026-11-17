@@ -29,7 +29,6 @@ export function showCreatorSaveDialog(pack: AssetPack, host: HTMLElement) {
         <output data-testid="fixture-exits">{exits}</output>
         {dialog ? (
           <CreatorSaveDialog
-            pack={pack}
             kind={dialog.kind}
             tank={dialog.tank}
             initialName={dialog.tank.name}

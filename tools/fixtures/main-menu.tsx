@@ -67,7 +67,6 @@ function MenuFixture({
     <>
       <MainBackground stage={stage} />
       <MainMenu
-        pack={pack}
         stage={stage}
         motion={motion}
         covered={overlay !== null}
@@ -85,7 +84,6 @@ function MenuFixture({
       >
         {overlay === 'settings' ? (
           <SettingsPanel
-            pack={pack}
             settings={settings}
             onChange={(next, control) => {
               if (control === 'efficiency') stage.background.efficient = next.efficient;

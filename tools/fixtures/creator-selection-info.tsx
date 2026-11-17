@@ -16,7 +16,7 @@ function SelectionInfoFixture({ pack }: { pack: AssetPack }) {
         Rebuild identical selection
       </button>
       <button onClick={() => setIcons([])}>Clear selection</button>
-      <CreatorSelectionInfo pack={pack} icons={icons} />
+      <CreatorSelectionInfo icons={icons} />
     </div>
   );
 }

@@ -16,7 +16,7 @@ test('pointer targets retain identity across frame probes while distinguishing i
     sameMenuTarget({ kind: 'control', name: 'play_btn' }, { kind: 'control', name: 'play_btn' }),
   ).toBe(true);
   expect(
-    sameMenuTarget({ kind: 'control', name: 'play_btn' }, { kind: 'decoration', name: 'play_btn' }),
+    sameMenuTarget({ kind: 'control', name: 'play_btn' }, { kind: 'control', name: 'other_btn' }),
   ).toBe(false);
 });
 

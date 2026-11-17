@@ -385,7 +385,6 @@ export default function GameShell() {
             ) : null}
             {pack && profile && screen === 'menu' ? (
               <MainMenu
-                pack={pack}
                 stage={stage}
                 motion={menuMotion}
                 covered={overlay !== null}
@@ -517,7 +516,7 @@ export default function GameShell() {
                   />
                 ) : null}
                 {screen === 'game' && world.mode === 'won' && win ? (
-                  <WinPanel pack={pack} screen={win} />
+                  <WinPanel screen={win} />
                 ) : null}
               </>
             ) : null}
@@ -594,7 +593,6 @@ export default function GameShell() {
               {pack && settings && overlay === 'settings' && screen !== 'game' ? (
                 <SettingsPanel
                   menuState={menuSettings}
-                  pack={pack}
                   settings={settings}
                   onChange={settingsChange}
                   onClose={closeOverlay}
