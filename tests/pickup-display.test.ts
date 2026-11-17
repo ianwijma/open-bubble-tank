@@ -162,7 +162,6 @@ test('playback keeps its roots and animated poses without consuming gameplay RNG
     expect(clip.playback.status).toBe('retained');
     expect(clip.playback.currentFrame).toBe(1);
     expect(clip.playback.entropy).toBe('host-artwork');
-    expect(clip.playback.globalSourceEntropy).toBe('unproved');
   }
   const rng = world.rng.state;
   world.pause();

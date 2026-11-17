@@ -236,14 +236,12 @@ test('line graphics belong to the constructor named child and replacement/reads 
   expect(replacement.lines).toEqual([]);
 });
 
-test('unknown native and legacy mock effects expose their incomplete playback path explicitly', () => {
-  const legacy = { kind: 'pop' } as Effect;
-  const unknown = { kind: 'native', symbol: 999999 } as Effect;
-  expect(readEffectPlayback(legacy).status).toBe('legacy-mock');
-  expect(readEffectPlayback(unknown).status).toBe('unsupported-native');
-  expect(() => new RegisteredEffects().artwork.construct(unknown)).toThrow(
-    'Unsupported native effect',
-  );
+test('unknown clip and procedural effects expose their playback path explicitly', () => {
+  const procedural = { kind: 'pop' } as Effect;
+  const unknown = { kind: 'clip', symbol: 999999 } as Effect;
+  expect(readEffectPlayback(procedural).status).toBe('procedural');
+  expect(readEffectPlayback(unknown).status).toBe('unknown-clip');
+  expect(() => new RegisteredEffects().artwork.construct(unknown)).toThrow('Unknown effect clip');
 });
 
 test('completion uses authoritative native frame/count while compatibility ages and durations can no longer fake readiness', () => {

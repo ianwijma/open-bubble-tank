@@ -22,18 +22,16 @@ export interface RetainedEffectPlayback {
   /** The constructor's named child reference, independent of later depths/names. */
   readonly lineTarget?: ArtClip;
   readonly currentFrame: number;
-  readonly entropy: 'none-in-audited-graph';
 }
 export type EffectPlaybackRead =
-  | RetainedEffectPlayback
-  | Readonly<{ status: 'unsupported-native' | 'legacy-mock'; symbol?: number }>;
+  RetainedEffectPlayback | Readonly<{ status: 'unknown-clip' | 'procedural'; symbol?: number }>;
 
 /** Pure read shared by renderer and future field geometry. No discovery/clock/entropy. */
 export function readEffectPlayback(effect: Effect): EffectPlaybackRead {
   return (
     effect.playback ??
     Object.freeze({
-      status: effect.kind === 'native' ? 'unsupported-native' : 'legacy-mock',
+      status: effect.kind === 'clip' ? 'unknown-clip' : 'procedural',
       symbol: effect.symbol,
     })
   );
@@ -64,7 +62,7 @@ export class EffectPlayback {
   construct(effect: Effect): RetainedEffectPlayback {
     if (effect.playback) return effect.playback;
     const root = metadata.roots.find((root) => root.symbol === effect.symbol);
-    if (!root) throw new Error(`Unsupported native effect ${effect.symbol}`);
+    if (!root) throw new Error(`Unknown effect clip ${effect.symbol}`);
     const pose = new ArtClip(root.symbol, source, () => {
       throw new Error('Unexpected entropy in the effect graph');
     });
@@ -80,7 +78,6 @@ export class EffectPlayback {
       get currentFrame() {
         return clock.pose.frame;
       },
-      entropy: 'none-in-audited-graph',
     });
     Object.defineProperties(effect, {
       playback: { enumerable: true, value: playback },

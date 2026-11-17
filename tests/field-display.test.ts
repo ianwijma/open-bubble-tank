@@ -317,7 +317,7 @@ test('the resolved sizing seam executes synchronously and height observes the wi
   const world = new World([], [], 5, undefined, undefined, undefined, (operation) => {
     operations.push(operation);
     return {
-      qualification: 'qualified',
+      resolution: 'resolved',
       scaleX: operation.property === 'width' ? 2 : operation.before.scaleX,
       scaleY: operation.property === 'height' ? 3 : operation.before.scaleY,
     };
@@ -327,7 +327,7 @@ test('the resolved sizing seam executes synchronously and height observes the wi
   expect(operations[1].before.scaleY).toBe(1);
   const read = world.fieldDisplays.read(world.currentWrapper);
   expect(read.slots.avatarUnder.pose).toMatchObject({ scaleX: 2, scaleY: 3 });
-  expect(read.underAvatarSizing.status).toBe('qualified');
+  expect(read.underAvatarSizing.status).toBe('resolved');
   expect(() => world.fieldDisplays.requireResolvedGeometry(world.currentWrapper)).not.toThrow();
 });
 

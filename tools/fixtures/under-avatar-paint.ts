@@ -39,7 +39,7 @@ async function gameControls(pack: AssetPack, host: HTMLElement) {
     for (const [i, sample] of fixture.samples.entries()) {
       if (sample.mode !== 'masked') continue;
       const world = new World([], [], 172, undefined, undefined, [], () => ({
-        qualification: 'qualified',
+        resolution: 'resolved',
         scaleX: 1,
         scaleY: 1,
       }));

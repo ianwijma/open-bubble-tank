@@ -22,7 +22,7 @@ const clip = (uid: number): Effect => ({
   uid,
   x: 0,
   y: 0,
-  kind: 'native',
+  kind: 'clip',
   age: 3,
   duration: 4,
   radius: 10,

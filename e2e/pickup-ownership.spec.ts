@@ -42,7 +42,6 @@ test(`pickups render physical child order and retain identity through Run mutati
     expect(playback.status).toBe('retained');
     expect(playback.currentFrame).toBe(playback.poseFrame);
     expect(playback.entropy).toBe('host-artwork');
-    expect(playback.globalSourceEntropy).toBe('unproved');
   }
   expect(proof.animationFrames.map((f: number[]) => f[0])).toEqual([15, 30]);
   expect(proof.animationFrames[0]).not.toEqual(proof.animationFrames[1]);

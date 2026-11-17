@@ -31,7 +31,6 @@ export interface PickupClip {
     status: 'retained';
     currentFrame: number;
     entropy: 'host-artwork';
-    globalSourceEntropy: 'unproved';
   }>;
 }
 interface Instance {
@@ -104,7 +103,6 @@ export class PickupDisplays {
           status: 'retained' as const,
           currentFrame: clock.pose.frame,
           entropy: 'host-artwork' as const,
-          globalSourceEntropy: 'unproved' as const,
         });
       },
     });

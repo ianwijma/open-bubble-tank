@@ -85,14 +85,13 @@ export interface UnderAvatarSizeOperation {
   readonly before: NumericPose;
   readonly previousUnresolved: boolean;
 }
-/** Called synchronously at the setter; it must qualify geometry/setter arithmetic. */
+/** Called synchronously at the setter; it must resolve the size from the shape geometry and setter arithmetic. */
 export type UnderAvatarSizeResolver = (
   operation: UnderAvatarSizeOperation,
 ) =>
-  | { readonly qualification: 'qualified'; readonly scaleX: number; readonly scaleY: number }
-  | undefined;
+  { readonly resolution: 'resolved'; readonly scaleX: number; readonly scaleY: number } | undefined;
 export interface UnderAvatarSizeWrite extends UnderAvatarSizeOperation {
-  readonly status: 'qualified' | 'unresolved';
+  readonly status: 'resolved' | 'unresolved';
 }
 interface Wrapper {
   field: Field;
@@ -122,7 +121,7 @@ export interface FieldDisplayRead {
   /** Concrete117 instance, distinct from authored1540 and from effect requests. */
   readonly bottom: FieldInstanceRead;
   readonly underAvatarSizing: {
-    readonly status: 'authored' | 'qualified' | 'unresolved';
+    readonly status: 'authored' | 'resolved' | 'unresolved';
     readonly writes: readonly UnderAvatarSizeWrite[];
   };
   readonly collapse?: Readonly<NonNullable<Wrapper['collapse']>>;
@@ -327,12 +326,12 @@ export class FieldDisplays {
         });
         // A late resolver cannot silently replay over an unknown earlier setter.
         const result = state.unresolvedSize ? undefined : this.resolveSize?.(operation);
-        if (result?.qualification === 'qualified') {
+        if (result?.resolution === 'resolved') {
           state.slots.avatarUnder.pose.scaleX = result.scaleX;
           state.slots.avatarUnder.pose.scaleY = result.scaleY;
         } else state.unresolvedSize = true;
         state.sizeWrites.push(
-          Object.freeze({ ...operation, status: result ? 'qualified' : 'unresolved' }),
+          Object.freeze({ ...operation, status: result ? 'resolved' : 'unresolved' }),
         );
         this.revision++;
       }
@@ -494,7 +493,7 @@ export class FieldDisplays {
         status: state.unresolvedSize
           ? ('unresolved' as const)
           : state.sizeWrites.length
-            ? ('qualified' as const)
+            ? ('resolved' as const)
             : ('authored' as const),
         writes: Object.freeze([...state.sizeWrites]),
       }),

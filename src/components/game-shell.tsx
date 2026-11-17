@@ -56,7 +56,7 @@ export default function GameShell() {
     [editor, setEditor] = useState<EditorContext | null>(null),
     [viewer, setViewer] = useState<(ViewerLimits & { avatar: boolean }) | null>(null),
     [storageError, setStorageError] = useState(false),
-    [nativeSize, setNativeSize] = useState(false),
+    [actualSize, setActualSize] = useState(false),
     [fullscreen, setFullscreen] = useState(false),
     [audio, setAudio] = useState<AudioManager | null>(null);
   const [musicRequest, setMusicRequest] = useState<{ mode: 'menu' | 'game' }>({ mode: 'menu' });
@@ -352,11 +352,11 @@ export default function GameShell() {
         <span className="header-caption">AN ARENA SHOOTER MADE OF BUBBLES</span>
         <div className="window-actions">
           <button
-            aria-label={nativeSize ? 'Enlarge game' : 'Actual size'}
+            aria-label={actualSize ? 'Enlarge game' : 'Actual size'}
             title="Toggle actual size"
-            onClick={() => setNativeSize(!nativeSize)}
+            onClick={() => setActualSize(!actualSize)}
           >
-            {nativeSize ? 'FIT' : '1×'}
+            {actualSize ? 'FIT' : '1×'}
           </button>
           <button
             aria-label={fullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
@@ -369,7 +369,7 @@ export default function GameShell() {
           </button>
         </div>
       </header>
-      <div ref={frame} className={`stage-frame ${nativeSize ? 'actual-size' : ''}`}>
+      <div ref={frame} className={`stage-frame ${actualSize ? 'actual-size' : ''}`}>
         <div ref={space} className="stage-space">
           <MainStage runtime={stage} fps={profile?.settings.fps ?? 50}>
             {!pack ? (

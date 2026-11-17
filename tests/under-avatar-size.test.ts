@@ -77,7 +77,7 @@ test('normal World binds sizing before its first request and retains exact metad
     parts: [{ ...STARTER.parts[0], x: 13, y: 7, radius: 10 }],
   });
   const before = world.fieldDisplays.read(world.currentWrapper);
-  expect(before.underAvatarSizing.status).toBe('qualified');
+  expect(before.underAvatarSizing.status).toBe('resolved');
   expect(() => world.fieldDisplays.requireResolvedGeometry(world.currentWrapper)).not.toThrow();
   const expected = fixture.phases.find((row) => row.index === 6 && row.phase === 'height')!;
   const read = before.slots.avatarUnder.pose;
