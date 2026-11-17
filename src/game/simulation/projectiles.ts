@@ -204,7 +204,7 @@ export function explode(
     for (const tank of world.field.enemies)
       if (tank !== directTarget && !tank.dead && inRange(tank, b)) world.damage(tank, damage);
   }
-  // Enemy area cleanup uses param2 (the contact), unlike tank damage centered on param3.
+  // Enemy area cleanup centers on the direct target (the contact), unlike tank damage centered on the shot.
   const center = b.enemy ? directTarget : b;
   if (center)
     for (let index = 0; index < world.bullets.length; index++) {

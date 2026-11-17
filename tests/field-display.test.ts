@@ -262,7 +262,7 @@ test('under-avatar sizing captures source detail radius, width-before-height and
   );
 });
 
-test('empty/NaN detail inputs preserve _-ZD initial0 and strict comparison; no protection or minimum radius', () => {
+test('empty/NaN detail inputs preserve the zero initial maximum and strict comparison; no protection or minimum radius', () => {
   const world = new World([], [], 5);
   world.editPlayer({ ...STARTER, id: 'empty', parts: [] });
   expect(

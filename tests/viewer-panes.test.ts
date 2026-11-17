@@ -53,7 +53,7 @@ test('Back constructs fresh cards at alpha0 and retains the old detail through i
   expect(panes.getSnapshot().detail).toBeNull();
   expect(panes.getSnapshot().cards.filter(Boolean)).toHaveLength(4);
 });
-test('source pending delete executes immediately when _-We requeues a slot, including rapid Back', () => {
+test('source pending delete executes immediately when returning to the cards requeues a slot, including rapid Back', () => {
   const fades = new ViewerFades(),
     panes = new ViewerPanes(fades);
   panes.setup(ENEMIES.slice(0, 4));
