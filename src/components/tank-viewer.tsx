@@ -41,6 +41,7 @@ import { ViewerPaneLayer } from './viewer-pane-layer';
 import { useViewerHighlights } from './viewer-highlights';
 import { ViewerRejections } from '@/game/core/viewer-rejections';
 import { ViewerRejectionEffects } from './viewer-rejections';
+import { useBusyFocus } from './ui';
 import {
   ViewerArt,
   ViewerFields,
@@ -55,18 +56,21 @@ function SourceModal({
   onClose,
   children,
   active = true,
+  busy = false,
   motionRef,
 }: {
   label: string;
   onClose: () => void;
   children: ReactNode;
   active?: boolean;
+  busy?: boolean;
   motionRef?: RefObject<HTMLDivElement | null>;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (active) ref.current?.focus({ preventScroll: true });
   }, [active]);
+  useBusyFocus(ref, busy);
   return (
     <div
       ref={(node) => {
@@ -768,6 +772,7 @@ export function TankViewer({
           label="Enter tank code"
           onClose={closeCode}
           active={codeOpen}
+          busy={busy}
           motionRef={codeLayer.ref}
         >
           <ViewerGroup matrix={viewerRoot('SearchForTanksScreen_mc').matrix}>

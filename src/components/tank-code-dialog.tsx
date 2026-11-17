@@ -37,7 +37,7 @@ export function TankCodeDialog({
     };
   }, [tank]);
   return (
-    <Dialog title={tank ? 'Share tank code' : 'Import tank code'} onClose={onClose}>
+    <Dialog title={tank ? 'Share tank code' : 'Import tank code'} onClose={onClose} busy={busy}>
       <p>
         {tank
           ? 'This code uses the tank code format.'

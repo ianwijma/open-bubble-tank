@@ -13,6 +13,7 @@ import { community } from '@/game/services/extensions';
 import { encodeTankCode } from '@/game/services/tank-code';
 import { CreatorPrimitives } from './creator-controls';
 import { CreatorText } from './creator-text';
+import { useBusyFocus } from './ui';
 function ScreenButton({
   piece,
   label,
@@ -103,6 +104,7 @@ export function CreatorSaveDialog({
     [busy, setBusy] = useState(false);
   const root = useRef<HTMLDivElement>(null),
     mounted = useRef(true);
+  useBusyFocus(root, busy);
   useEffect(() => {
     root.current?.focus();
   }, [frame]);

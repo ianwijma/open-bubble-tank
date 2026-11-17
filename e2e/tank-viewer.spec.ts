@@ -156,6 +156,10 @@ test(`creator load uses the local viewer, animated cards, code view and fresh ed
   });
   await code.getByRole('button', { name: 'Submit tank code', exact: true }).click();
   await expect(code.getByRole('button', { name: 'Submit tank code', exact: true })).toBeDisabled();
+  // After a rendering update the browser has moved focus off the disabled button.
+  // The dialog must hold it, or Escape would go to BODY.
+  await page.evaluate(() => new Promise(requestAnimationFrame));
+  await expect(code).toBeFocused();
   await page.keyboard.press('Escape');
   await expect(code).toHaveCount(0);
   await page.waitForFunction(
