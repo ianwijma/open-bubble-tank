@@ -31,11 +31,11 @@ Each entry is marked **decided** (the maintainer confirmed it), **proposed** (re
 | Repository | `soaptank` on the maintainer's personal GitHub account, open source. | Decided |
 | License | `AGPL-3.0-only` for the repository's code, game and backend alike. Chosen so that a hosted copy with changes must publish them. The license cannot cover content kept from the original game, so that content is named in `NOTICE.md` and `README.md` as excluded (section 3). | Decided |
 | Contributor agreement | Outside contributors accept a contributor license agreement once, on their first pull request. They keep ownership of their code and may use it as they like. The maintainer receives a broad, permanent license to it, including the right to publish it under other terms. No copyright is transferred. The text comes from an established template, not written from scratch. | Decided |
-| Contributor agreement bot | CLA Assistant (`cla-assistant.io`): free, open source and maintained as of 2026-11-16. It keeps the signatures on its own service, so the list is exported from time to time. It shows the agreement from a GitHub Gist, so the agreement file in the repository and the Gist must hold the same text. It is active before any outside pull request is accepted. | Decided |
+| Contributor agreement bot | CLA Assistant (`cla-assistant.io`): free, open source and maintained as of 2026-11-16. It keeps the signatures on its own service, so the list is exported from time to time. It shows the agreement from a GitHub Gist, so the agreement file in the repository and the Gist must hold the same text. It is active before the repository goes public (section 3). | Decided |
 | itch.io | A project called Soap Tank under the identifier `soaptank`, for a later desktop or embedded web release. | Decided |
 | npm | No package name is reserved. It only matters if a library is published. | Decided |
 | Trademark | None is registered, and the trademark registers are not searched. Soap Tank was named without a search (decided 2026-11-16). | Decided |
-| When Soap Tank work starts | On a date the maintainer chooses. Classic is wrapped up and is not part of this plan. | Decided |
+| When Soap Tank work starts | After the repository meets the requirements in section 3, on a date the maintainer chooses. Classic is wrapped up and is not part of this plan. | Decided |
 | Compatibility with classic | None required. Saves do not carry over, and Soap Tank has its own tank code. | Decided |
 | Test safety net | Before Soap Tank changes the game, tests pin what it does today, both in the rules and in the browser. | Decided |
 | Code modernization phase | After the safety net, the code is restructured so it can take the Soap Tank changes. Nothing the player can see changes in this phase, and the tests prove it. | Decided |
@@ -187,6 +187,18 @@ The maintainer chose the lightest of three levels: the name and the documents. T
 
 **License scope.** `AGPL-3.0-only` covers the code the maintainer and contributors wrote. It cannot grant rights to the kept content from the original game, or to third-party material. The `LICENSE` file is the unmodified license text, which may not be changed. `NOTICE.md` and `README.md` name the excluded content and the third-party licenses. The contributor agreement covers only what a contributor has the right to license. The license does not protect the name.
 
+### License, contributor agreement and publication
+
+All rows are decided.
+
+| Item | Requirement |
+| --- | --- |
+| License | The unmodified AGPL-3.0 text as `LICENSE`, and `"license": "AGPL-3.0-only"` in `package.json`. Both are in. |
+| Contributor agreement | The contributor license agreement is part of the repository's first commit, with a short explanation in `README.md` of why it exists. Its template is chosen before that commit (section 9). Neither the agreement nor the explanation is in yet. |
+| CLA Assistant | Collects each contributor's acceptance and is active before the repository goes public. It shows the agreement from a GitHub Gist, so the committed file and the Gist hold the same text. |
+| Default branch | Matches the CI trigger in `.github/workflows/ci.yml`. |
+| Going public | The repository goes public only when all of these hold: a case-insensitive search for the names of the original game and its makers finds them only in `NOTICE.md`, the exclusion note in `README.md` and the kept data files in `src/game/data`; format, `bun run check` and the full browser suite (`bun run test:e2e`, which includes the bot playthrough) pass on the published commit; and CLA Assistant is active. |
+
 ### How the tests guard the engine
 
 - **Browser tests.** Each browser test runs once, on Soap Tank's own stand-in artwork.
@@ -336,7 +348,7 @@ Declarations are counted from the source on 2026-11-17. The numbers of tests run
 
 ### Phase 1: safety net
 
-- **Baseline.** Run every test once. Record what passes, what is flaky and how long it takes. Flaky tests are fixed or set aside with a note, so that a red result later means something.
+- **Baseline.** Run every test once on the repository's first commit. Record what passes, what is flaky and how long it takes. Flaky tests are fixed or set aside with a note, so that a red result later means something.
 - **Coverage map.** Measure which engine code the rule tests reach and add tests where Soap Tank will cut deepest: movement and facing, input, the profile, wave and roster selection.
 - **Player journeys in the browser.** A small set of end-to-end tests written as what a player does, with the game's own artwork so they run in CI:
   - Start a game, play, pause, upgrade, clear a field, quit and continue. "Continue" restores progression only today; a true resume journey arrives with workstream C.
@@ -783,7 +795,7 @@ So a small tank with late-game weapons is already possible, within its smaller b
 
 ## 8. Order and dependencies
 
-1. **Name and repository** (section 3): done. Soap Tank has its own name, license and repository, with no original-file reader or import tools.
+1. **Name, license and repository** (section 3). Soap Tank has its own name, the `LICENSE` file and the license field, and no original-file reader or import tools. Still to come: claiming the itch.io name, the contributor license agreement in the repository's first commit, and going public once the checks in section 3 pass.
 2. **Safety net** (section 5, phase 1), starting with the baseline.
 3. **Self-contained rules** (phase 2). Small deliberate rule changes; includes the size calculation.
 4. **Recorded runs** (phase 3).
@@ -798,7 +810,7 @@ So a small tank with late-game weapons is already possible, within its smaller b
    4. H. Enemy sources and the new upgrade screen, with library tanks
    5. Backend, then G. Workshop and packs, which also brings Publish, subscriptions and workshop tanks into E, F and H
 10. **I. Further gameplay:** tiers 7 and 8, then the endgame.
-11. **Public launch** at `soaptank.net`: the artwork overhaul and the publishing terms.
+11. **Public launch** at `soaptank.net`: the artwork overhaul, the publishing terms, and the repository made public if it is not already.
 12. **Later:** link preview images, community-made bosses, difficulty levels.
 
 **J. Own artwork and sound** runs alongside from step 6: the stand-in artwork stops being a fallback, own sound effects and music replace the placeholders, and new parts get artwork as they are added.
@@ -807,10 +819,13 @@ Delivery follows the five-PR stacks in `docs/delivery.md`.
 
 ## 9. Open questions
 
-**Undecided:**
+**To settle before the repository's first commit** (section 3):
 
-- Which established template the contributor agreement uses (section 2).
+- Which established template the contributor agreement uses (section 2). It is chosen first, because the agreement text is part of that commit.
 - How the catalog of built-in tanks that `tank-code.test.ts` and `roster-identity.test.ts` read from outside the repository is replaced (section 3).
+
+**Undecided, needed later:**
+
 - What stays at the game's earlier address (section 2).
 - The monthly cost ceiling for the VPS and CDN (section 4).
 - How tiers 7 and 8 open after the first boss: together, or tier 8 at a later level (section 2, workstream I).
@@ -825,7 +840,7 @@ Delivery follows the five-PR stacks in `docs/delivery.md`.
 - The new tank code format; its determinism is decided (workstream D).
 - The boss trigger moves from the old health bar to level and growth, with K.
 
-Decided on 2026-11-16, after the plan was written: Soap Tank never reads the original game file, music included, and gets its own music; the data in `src/game/data` is hand-maintained source; the license is `AGPL-3.0-only`.
+Decided on 2026-11-16, after the plan was written: Soap Tank never reads the original game file, music included, and gets its own music; it has no tools that import, capture or probe the original game, and the data in `src/game/data` is hand-maintained source, while the test infrastructure in `tools/` stays; code comments do not cite the original's decompiled code; decompiled class names and source-file hashes are left out of the data where no code reads them; the game has no credits screen or series menu; the license is `AGPL-3.0-only`.
 
 Also decided on 2026-11-16: a use counts once per run, with no daily cap per device; the role rule (workstream G); the license is AGPL-3.0, with the kept original content named as excluded; full health after an upgrade, with survival of several hits tuned later rather than guaranteed now; tiers 7 and 8 open only after the first boss; no trademark search for the name.
 
@@ -848,5 +863,6 @@ Left for the implementation phase, by decision: the balance between tiers, the s
 - The length of a new full code for large tanks. It no longer limits links, but a very long code may still be awkward to paste into some chat apps.
 - Which browsers offer a share window. The copy panel is the fallback.
 - Whether "Soap Tank" is free in the trademark registers (not searched, by decision).
+- Whether CLA Assistant can be linked to a repository while it is private. If not, it is linked at the moment the repository is made public, before any outside pull request is accepted.
 - Whether the kept content may be published under these terms. No legal review has been done.
 - itch.io's current tag list and Discord's length limit for a server description.
