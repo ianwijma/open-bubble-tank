@@ -5,7 +5,7 @@ import { waitForMainMenu } from './helpers/main-menu';
 import { dropPreview, saveCreator } from './helpers/creator';
 const starter = JSON.parse(readFileSync(resolve('src/game/data/tanks.json'), 'utf8'))
   .avatar_defaults[0];
-test(`mock creator: authored exit/name/code dialogs, saved return and offline sharing`, async ({
+test(`creator: authored exit/name/code dialogs, saved return and offline sharing`, async ({
   page,
 }) => {
   const errors: string[] = [],
@@ -134,7 +134,7 @@ test(`mock creator: authored exit/name/code dialogs, saved return and offline sh
   expect(popups).toEqual([]);
 });
 
-test(`mock fresh creator names stay in the form and failed submission IDs survive reload`, async ({
+test(`fresh creator names stay in the form and failed submission IDs survive reload`, async ({
   page,
 }) => {
   await page.goto('/');

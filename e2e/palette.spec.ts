@@ -42,7 +42,7 @@ async function importTank(page: Page, tank: TankDesign) {
     .getByRole('button', { name: 'Edit', exact: true })
     .click();
 }
-test(`mock palette dims unaffordable parts but permits selection and rolls back rejected edits`, async ({
+test(`palette dims unaffordable parts but permits selection and rolls back rejected edits`, async ({
   page,
 }) => {
   const errors: string[] = [];

@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-test(`mock aim flags preserve fixed secondaries while Spike uses all seven contact points`, async ({
+test(`aim flags preserve fixed secondaries while Spike uses all seven contact points`, async ({
   page,
 }) => {
   const errors: string[] = [];
@@ -25,7 +25,7 @@ test(`mock aim flags preserve fixed secondaries while Spike uses all seven conta
   await page.locator('#stage').screenshot({ path: `test-results/mock-aim-contracts.png` });
   expect(errors).toEqual([]);
 });
-test(`mock ally-health arcs leave the origin and inter-ring connectors transparent`, async ({
+test(`ally-health arcs leave the origin and inter-ring connectors transparent`, async ({
   page,
 }) => {
   const errors: string[] = [];

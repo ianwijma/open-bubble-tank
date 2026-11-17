@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 import { waitForMainMenu } from './helpers/main-menu';
 import { exitCreator } from './helpers/creator';
 
-test(`mock creator part details retain authored text, masked thumbnail and hover lifecycle`, async ({
+test(`creator part details retain authored text, masked thumbnail and hover lifecycle`, async ({
   page,
 }, testInfo) => {
   const errors: string[] = [];
@@ -100,7 +100,7 @@ test(`mock creator part details retain authored text, masked thumbnail and hover
   expect(errors).toEqual([]);
 });
 
-test(`mock locked palette parts reveal no details and clean up keyboard descriptions`, async ({
+test(`locked palette parts reveal no details and clean up keyboard descriptions`, async ({
   page,
 }) => {
   await page.goto('http://127.0.0.1:3102');

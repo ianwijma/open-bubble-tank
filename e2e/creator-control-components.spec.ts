@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-test(`mock creator controls retain button state, hold boundaries and slider handle geometry`, async ({
+test(`creator controls retain button state, hold boundaries and slider handle geometry`, async ({
   page,
 }) => {
   const errors: string[] = [];

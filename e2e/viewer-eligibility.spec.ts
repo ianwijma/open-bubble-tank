@@ -5,7 +5,7 @@ import type { TankDesign } from '../src/game/core/types';
 const avatars: TankDesign[] = JSON.parse(
   readFileSync('src/game/data/tanks.json', 'utf8'),
 ).avatar_defaults;
-test(`mock viewer accepts a candidate class budget and reports specific capacity/unlock failures`, async ({
+test(`viewer accepts a candidate class budget and reports specific capacity/unlock failures`, async ({
   page,
 }) => {
   const errors: string[] = [];

@@ -1,9 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 const layout = JSON.parse(readFileSync('src/game/data/tank-viewer.json', 'utf8'));
-test(`mock whole-card frame hover paints preview glow and locked-design warning`, async ({
-  page,
-}) => {
+test(`whole-card frame hover paints preview glow and locked-design warning`, async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto('http://127.0.0.1:3102');

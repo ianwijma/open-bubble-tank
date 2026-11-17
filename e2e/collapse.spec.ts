@@ -12,7 +12,7 @@ function measured(age: number, role: string, key: string) {
   return bytes.getFloat64(0);
 }
 
-test(`mock collapse retains its field pivot, separate layers and isolated knockout composition`, async ({
+test(`collapse retains its field pivot, separate layers and isolated knockout composition`, async ({
   page,
 }) => {
   const errors: string[] = [];

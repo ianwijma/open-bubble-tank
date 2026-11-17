@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { waitForMainMenu } from './helpers/main-menu';
 
-test(`mock viewer guide persists only after both pages and keeps offline local help`, async ({
+test(`viewer guide persists only after both pages and keeps offline local help`, async ({
   page,
 }) => {
   const errors: string[] = [];

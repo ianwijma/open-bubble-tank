@@ -1,7 +1,5 @@
 import { expect, test } from '@playwright/test';
-test(`mock forcefield detaches on crossing and reconstructs after passive Run`, async ({
-  page,
-}) => {
+test(`forcefield detaches on crossing and reconstructs after passive Run`, async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto('http://127.0.0.1:3102');

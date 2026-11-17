@@ -1,8 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-test(`mock beam samples the shell-cleared raw enemy before next-frame removal`, async ({
-  page,
-}) => {
+test(`beam samples the shell-cleared raw enemy before next-frame removal`, async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('http://127.0.0.1:3102');

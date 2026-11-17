@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { writeFileSync } from 'node:fs';
-test(`mock viewer caution artwork preserves its hollow triangle and separate dark mark`, async ({
+test(`viewer caution artwork preserves its hollow triangle and separate dark mark`, async ({
   page,
 }, testInfo) => {
   const errors: string[] = [];

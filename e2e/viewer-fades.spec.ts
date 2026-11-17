@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-test(`mock viewer modals keep their frame fades and release dismissed input immediately`, async ({
+test(`viewer modals keep their frame fades and release dismissed input immediately`, async ({
   page,
 }) => {
   const errors: string[] = [];

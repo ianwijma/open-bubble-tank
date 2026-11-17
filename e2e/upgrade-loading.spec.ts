@@ -8,7 +8,7 @@ import type { TankDesign } from '../src/game/core/types';
 const avatars: TankDesign[] = JSON.parse(
   readFileSync('src/game/data/tanks.json', 'utf8'),
 ).avatar_defaults;
-test(`mock missing class-three level-one default retains loading and stable offstage previews`, async ({
+test(`missing class-three level-one default retains loading and stable offstage previews`, async ({
   page,
 }) => {
   test.setTimeout(120000);

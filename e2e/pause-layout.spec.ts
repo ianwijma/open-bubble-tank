@@ -25,7 +25,7 @@ async function changedPixels(page: Page, first: Buffer, second: Buffer, area: nu
     { first: [...first], second: [...second], area },
   );
 }
-test(`mock pause retains authored raster extents, caption geometry and root paint beneath its bitmap`, async ({
+test(`pause retains authored raster extents, caption geometry and root paint beneath its bitmap`, async ({
   page,
 }, testInfo) => {
   const errors: string[] = [];

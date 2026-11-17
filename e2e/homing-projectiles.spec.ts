@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { displayPixel } from '../src/game/core/display-values';
-test(`mock homing keeps independent movement, delayed aim and close contact`, async ({ page }) => {
+test(`homing keeps independent movement, delayed aim and close contact`, async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('http://127.0.0.1:3102');

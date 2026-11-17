@@ -10,7 +10,7 @@ const avatars: TankDesign[] = JSON.parse(
   readFileSync('src/game/data/tanks.json', 'utf8'),
 ).avatar_defaults;
 
-test(`mock exact upgrade defaults use newest saved avatars independently of enemy sources`, async ({
+test(`exact upgrade defaults use newest saved avatars independently of enemy sources`, async ({
   page,
 }) => {
   test.setTimeout(120000);

@@ -1,7 +1,5 @@
 import { expect, test } from '@playwright/test';
-test(`mock menu retains intro countdown, parent fades and 31-frame action guard`, async ({
-  page,
-}) => {
+test(`menu retains intro countdown, parent fades and 31-frame action guard`, async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('http://127.0.0.1:3102');

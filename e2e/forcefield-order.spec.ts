@@ -1,7 +1,5 @@
 import { expect, test } from '@playwright/test';
-test(`mock forcefield reorders existing artwork and preserves the arrival film`, async ({
-  page,
-}) => {
+test(`forcefield reorders existing artwork and preserves the arrival film`, async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto('http://127.0.0.1:3102');

@@ -3,7 +3,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 const fixture = JSON.parse(
   readFileSync(new URL('../tests/fixtures/lower-effect-paint.json', import.meta.url), 'utf8'),
 ) as { points: number[][]; samples: { pixels: number[] }[] };
-test(`mock lower effects follow their actual field mask and retain identity through reparenting`, async ({
+test(`lower effects follow their actual field mask and retain identity through reparenting`, async ({
   page,
 }, testInfo) => {
   const errors: string[] = [];

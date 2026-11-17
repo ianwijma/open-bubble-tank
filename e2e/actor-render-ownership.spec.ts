@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { writeFileSync } from 'node:fs';
 
-test(`mock renderer follows actual actor objects, parents, order and child presence`, async ({
+test(`renderer follows actual actor objects, parents, order and child presence`, async ({
   page,
 }, testInfo) => {
   const errors: string[] = [];

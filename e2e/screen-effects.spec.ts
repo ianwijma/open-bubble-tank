@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-test(`mock ink loops independently, centers on stage and clears through the effects engine`, async ({
+test(`ink loops independently, centers on stage and clears through the effects engine`, async ({
   page,
 }) => {
   const errors: string[] = [];

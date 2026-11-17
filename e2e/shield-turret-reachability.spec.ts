@@ -3,7 +3,7 @@ import { shieldTurretCaller } from '../tests/fixtures/shield-turret-caller';
 import { waitForMainMenu } from './helpers/main-menu';
 import { readCreatorDesign, saveCreator } from './helpers/creator';
 
-test(`mock valid Shield Turrets creator save enables the optional local-enemy caller`, async ({
+test(`valid Shield Turrets creator save enables the optional local-enemy caller`, async ({
   page,
 }) => {
   const errors: string[] = [];

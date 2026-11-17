@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-test(`mock mounted guns retain separate targets and fire the preceding aim on ally-count retarget`, async ({
+test(`mounted guns retain separate targets and fire the preceding aim on ally-count retarget`, async ({
   page,
 }) => {
   const errors: string[] = [];

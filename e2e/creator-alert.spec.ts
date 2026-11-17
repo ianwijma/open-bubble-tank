@@ -6,7 +6,7 @@ import { dropPreview, exitCreator, readCreatorDesign } from './helpers/creator';
 
 const starter = JSON.parse(readFileSync(resolve('src/game/data/tanks.json'), 'utf8'))
   .avatar_defaults[0];
-test(`mock creator restores empty-save alert, retained fade and fresh name defaults`, async ({
+test(`creator restores empty-save alert, retained fade and fresh name defaults`, async ({
   page,
 }) => {
   const errors: string[] = [];

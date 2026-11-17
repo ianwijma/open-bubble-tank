@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { writeFileSync } from 'node:fs';
 
-test(`mock retained actor mounts keep clock, paint, contact and identity through cache/removal`, async ({
+test(`retained actor mounts keep clock, paint, contact and identity through cache/removal`, async ({
   page,
 }, testInfo) => {
   const errors: string[] = [];

@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { writeFileSync } from 'node:fs';
 
-test(`mock viewer sort and statistics widgets keep their timelines and rollover descriptions`, async ({
+test(`viewer sort and statistics widgets keep their timelines and rollover descriptions`, async ({
   page,
 }, testInfo) => {
   const errors: string[] = [];

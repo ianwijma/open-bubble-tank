@@ -1,7 +1,5 @@
 import { expect, test } from '@playwright/test';
-test(`mock orbital launch uses live Script width and shared retained status poses`, async ({
-  page,
-}) => {
+test(`orbital launch uses live Script width and shared retained status poses`, async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto('http://127.0.0.1:3102');

@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-test('mock real keyboard events preserve logical aliases, direction priority and Space latches', async ({
+test('real keyboard events preserve logical aliases, direction priority and Space latches', async ({
   page,
 }) => {
   const errors: string[] = [];
@@ -57,7 +57,7 @@ test('mock real keyboard events preserve logical aliases, direction priority and
   expect(errors).toEqual([]);
 });
 
-test('mock modifier pause binding resumes through the production dialog with either alias', async ({
+test('modifier pause binding resumes through the production dialog with either alias', async ({
   page,
 }) => {
   await page.addInitScript(() =>

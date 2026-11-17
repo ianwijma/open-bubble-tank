@@ -7,7 +7,7 @@ import { waitForMainMenu } from './helpers/main-menu';
 
 const starter: TankDesign = JSON.parse(readFileSync('src/game/data/tanks.json', 'utf8'))
   .avatar_defaults[0];
-test(`mock creator retains fractional saved coordinates through display, nudge, drag release and undo`, async ({
+test(`creator retains fractional saved coordinates through display, nudge, drag release and undo`, async ({
   page,
 }) => {
   const errors: string[] = [];

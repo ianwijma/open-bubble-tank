@@ -9,7 +9,7 @@ import type { TankDesign } from '../src/game/core/types';
 const avatars: TankDesign[] = JSON.parse(
   readFileSync('src/game/data/tanks.json', 'utf8'),
 ).avatar_defaults;
-test(`mock upgrade screen preserves authored three-card geometry, summaries and live fitted artwork`, async ({
+test(`upgrade screen preserves authored three-card geometry, summaries and live fitted artwork`, async ({
   page,
 }) => {
   test.setTimeout(120000);

@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 import { waitForMainMenu } from './helpers/main-menu';
 import { readCreatorDesign, dropPreview, saveCreator } from './helpers/creator';
 const snapshot = readCreatorDesign;
-test(`mock enemy defaults, panel suggestions and automatic versus manual saves keep their stored values`, async ({
+test(`enemy defaults, panel suggestions and automatic versus manual saves keep their stored values`, async ({
   page,
 }) => {
   const errors: string[] = [];

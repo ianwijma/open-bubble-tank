@@ -4,7 +4,7 @@ const geometry: typeof import('../src/game/data/main-menu-geometry.json') = JSON
   readFileSync(new URL('../src/game/data/main-menu-geometry.json', import.meta.url), 'utf8'),
 );
 
-test(`mock menu picks shape contours, dispatches release actions once and retains keyboard access`, async ({
+test(`menu picks shape contours, dispatches release actions once and retains keyboard access`, async ({
   page,
 }) => {
   const errors: string[] = [];

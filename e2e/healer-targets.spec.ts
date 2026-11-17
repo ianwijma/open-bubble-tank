@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-test(`mock failed Healer target read aborts one Run while stage frames and beam recovery continue`, async ({
+test(`failed Healer target read aborts one Run while stage frames and beam recovery continue`, async ({
   page,
 }) => {
   const errors: string[] = [];

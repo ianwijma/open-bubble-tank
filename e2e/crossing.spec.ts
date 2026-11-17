@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-test(`mock crossing renders both live field populations and retains the destination`, async ({
+test(`crossing renders both live field populations and retains the destination`, async ({
   page,
 }) => {
   const errors: string[] = [];
@@ -31,7 +31,7 @@ test(`mock crossing renders both live field populations and retains the destinat
   expect(errors).toEqual([]);
 });
 
-test(`mock replaced next wrapper keeps its stage pose and artwork without combat Run`, async ({
+test(`replaced next wrapper keeps its stage pose and artwork without combat Run`, async ({
   page,
 }, testInfo) => {
   const errors: string[] = [];

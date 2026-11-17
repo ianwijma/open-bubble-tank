@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-test(`mock pause captures once, holds through settings and Info, and reverses its bitmap history`, async ({
+test(`pause captures once, holds through settings and Info, and reverses its bitmap history`, async ({
   page,
 }) => {
   test.setTimeout(90000);

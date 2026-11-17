@@ -28,7 +28,7 @@ const design: TankDesign = {
     part('behavior', 6003, -10, -50),
   ],
 };
-test(`mock selected weapon icons follow painted outline corners through drag, marquee and nudge`, async ({
+test(`selected weapon icons follow painted outline corners through drag, marquee and nudge`, async ({
   page,
 }, testInfo) => {
   const errors: string[] = [];
@@ -128,7 +128,7 @@ test(`mock selected weapon icons follow painted outline corners through drag, ma
   expect(errors).toEqual([]);
 });
 
-test(`mock selection popups preserve numeric costs and close on overlay rebuild and keyboard escape`, async ({
+test(`selection popups preserve numeric costs and close on overlay rebuild and keyboard escape`, async ({
   page,
 }, testInfo) => {
   const errors: string[] = [];

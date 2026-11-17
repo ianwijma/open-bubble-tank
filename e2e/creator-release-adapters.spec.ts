@@ -54,7 +54,7 @@ async function openCreator(page: Page, parts: TankPart[]) {
   return { stage, move, marquee };
 }
 
-test(`mock browser cancellation and keyboard range adapters preserve marquee selection`, async ({
+test(`browser cancellation and keyboard range adapters preserve marquee selection`, async ({
   page,
 }) => {
   const errors: string[] = [];
@@ -92,9 +92,7 @@ test(`mock browser cancellation and keyboard range adapters preserve marquee sel
   expect(errors).toEqual([]);
 });
 
-test(`mock accepted center no-op after marquee retains its earlier Undo entry`, async ({
-  page,
-}) => {
+test(`accepted center no-op after marquee retains its earlier Undo entry`, async ({ page }) => {
   const { stage, move, marquee } = await openCreator(page, snapshot(1, 'placed-pair'));
   await page.mouse.click(stage.x + 145.95, stage.y + 221.7);
   await expect(page.getByText('Selected parts (2)', { exact: true })).toBeVisible();

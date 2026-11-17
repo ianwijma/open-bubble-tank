@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-test(`mock seeker mines use rectangle contact and animate through paused simulation`, async ({
+test(`seeker mines use rectangle contact and animate through paused simulation`, async ({
   page,
 }) => {
   const errors: string[] = [];

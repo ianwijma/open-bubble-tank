@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-test(`mock tank art uses independent paused clocks and protection geometry`, async ({ page }) => {
+test(`tank art uses independent paused clocks and protection geometry`, async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('http://127.0.0.1:3102');

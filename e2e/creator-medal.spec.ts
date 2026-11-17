@@ -5,9 +5,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 const STARTER = JSON.parse(readFileSync(resolve('src/game/data/tanks.json'), 'utf8'))
   .avatar_defaults[0];
-test(`mock creator saves fresh edited copies and persists the third-tank medal`, async ({
-  page,
-}) => {
+test(`creator saves fresh edited copies and persists the third-tank medal`, async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/');

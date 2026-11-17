@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-test(`mock live actor movement and ordered behaviors run through production drawing`, async ({
+test(`live actor movement and ordered behaviors run through production drawing`, async ({
   page,
 }) => {
   const errors: string[] = [];

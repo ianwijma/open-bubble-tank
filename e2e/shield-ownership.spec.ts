@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-test(`mock shield mounts retain independent artwork and callback ownership`, async ({ page }) => {
+test(`shield mounts retain independent artwork and callback ownership`, async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto('http://127.0.0.1:3102');

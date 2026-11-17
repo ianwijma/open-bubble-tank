@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { writeFileSync } from 'node:fs';
 
-test(`mock creator detail thumbnails shrink once and retain independent preview and clip lifetimes`, async ({
+test(`creator detail thumbnails shrink once and retain independent preview and clip lifetimes`, async ({
   page,
 }, testInfo) => {
   const errors: string[] = [];

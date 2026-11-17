@@ -41,7 +41,7 @@ async function open(page: Page, parts: TankPart[]) {
   // Complete the guide through its real controls before reading the editor's metadata.
   await page.getByRole('button', { name: 'SAVE', exact: true }).hover();
 }
-test(`mock edit validation rejects symmetric overspend and distinct behaviors without losing stats or history`, async ({
+test(`edit validation rejects symmetric overspend and distinct behaviors without losing stats or history`, async ({
   page,
 }) => {
   const errors: string[] = [];
@@ -83,7 +83,7 @@ test(`mock edit validation rejects symmetric overspend and distinct behaviors wi
   expect((await readCreatorDesign(page)).parts.map((p) => p.type)).toEqual([1001]);
   expect(errors).toEqual([]);
 });
-test(`mock resize rejection restores pre-click snapshot and accepted no-op/import undo states`, async ({
+test(`resize rejection restores pre-click snapshot and accepted no-op/import undo states`, async ({
   page,
 }) => {
   const errors: string[] = [];

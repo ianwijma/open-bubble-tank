@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { writeFileSync } from 'node:fs';
 
-test(`mock viewer artwork components retain stage jobs, field transforms and button states`, async ({
+test(`viewer artwork components retain stage jobs, field transforms and button states`, async ({
   page,
 }, testInfo) => {
   const errors: string[] = [];

@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-test(`mock effects follow actual parents and retain same-ID objects across reparent`, async ({
+test(`effects follow actual parents and retain same-ID objects across reparent`, async ({
   page,
 }, testInfo) => {
   const errors: string[] = [];

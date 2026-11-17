@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-test(`synthetic glow filters match byte-image composition and apply tint after filtering`, async ({
+test(`glow filters match byte-image composition and apply tint after filtering`, async ({
   page,
 }) => {
   const errors: string[] = [];

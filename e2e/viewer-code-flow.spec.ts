@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 const enemies = JSON.parse(readFileSync('src/game/data/tanks.json', 'utf8')).enemy_tanks;
-test(`mock viewer code entry disposes previews, fades separate controls and returns to page one`, async ({
+test(`viewer code entry disposes previews, fades separate controls and returns to page one`, async ({
   page,
 }) => {
   const errors: string[] = [];

@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { writeFileSync } from 'node:fs';
 
-test(`mock NPC death contact and boundary exits retain ordered final callbacks and sound events`, async ({
+test(`NPC death contact and boundary exits retain ordered final callbacks and sound events`, async ({
   page,
 }, testInfo) => {
   const errors: string[] = [];

@@ -9,7 +9,7 @@ import { DEFAULT_SETTINGS } from '../src/game/core/constants';
 const STARTER: TankDesign = JSON.parse(readFileSync(resolve('src/game/data/tanks.json'), 'utf8'))
   .avatar_defaults[0];
 
-test(`mock secondary help pauses on avatar replacement and persists before closing`, async ({
+test(`secondary help pauses on avatar replacement and persists before closing`, async ({
   page,
 }) => {
   const guard = {

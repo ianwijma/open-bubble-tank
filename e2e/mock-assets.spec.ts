@@ -1,7 +1,5 @@
 import { expect, test } from '@playwright/test';
-test(`mock bullet sizes, warm weapons and homing shoot-down use visible geometry`, async ({
-  page,
-}) => {
+test(`bullet sizes, warm weapons and homing shoot-down use visible geometry`, async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('http://127.0.0.1:3102');

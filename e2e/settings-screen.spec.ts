@@ -1,6 +1,6 @@
 import { waitForMainMenu } from './helpers/main-menu';
 import { expect, test } from '@playwright/test';
-test(`mock menu settings use authored frames and commit unrestricted duplicate hotkeys on Back`, async ({
+test(`menu settings use authored frames and commit unrestricted duplicate hotkeys on Back`, async ({
   page,
 }) => {
   const errors: string[] = [];
@@ -69,7 +69,7 @@ test(`mock menu settings use authored frames and commit unrestricted duplicate h
   expect([...(await saved()).h1]).toEqual([...'ShiftLeft']);
   expect(errors).toEqual([]);
 });
-test(`mock paused settings retain row identities and gate hotkeys on the shared stage`, async ({
+test(`paused settings retain row identities and gate hotkeys on the shared stage`, async ({
   page,
 }) => {
   // CI records 15–19s pointer/presentation waits across these Settings/Info visits.

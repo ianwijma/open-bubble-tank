@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 import { waitForMainMenu } from './helpers/main-menu';
 
 test.use({ storageState: { cookies: [], origins: [] } });
-test(`mock creator guide follows its six pages and latches on entry`, async ({ page }) => {
+test(`creator guide follows its six pages and latches on entry`, async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/');

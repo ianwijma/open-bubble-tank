@@ -93,7 +93,7 @@ for (const dpr of [1, 2])
     test.use({ deviceScaleFactor: dpr, viewport: { width: 1100, height: 1000 } });
     for (const control of ['rotation', 'scale'] as const)
       for (const outside of [false, true])
-        test(`mock ${outside ? 'outside' : 'inside'} marquee ${control} release and click recovery match the measured codes`, async ({
+        test(`${outside ? 'outside' : 'inside'} marquee ${control} release and click recovery match the measured codes`, async ({
           page,
         }) => {
           const errors: string[] = [];
@@ -135,7 +135,7 @@ for (const dpr of [1, 2])
           });
           expect(errors).toEqual([]);
         });
-    test(`mock target mouse-up, stage release, layering click and palette rebind keep the measured order`, async ({
+    test(`target mouse-up, stage release, layering click and palette rebind keep the measured order`, async ({
       page,
     }) => {
       const errors: string[] = [];

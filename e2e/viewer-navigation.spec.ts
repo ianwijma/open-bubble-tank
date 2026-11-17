@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 const enemies = JSON.parse(readFileSync('src/game/data/tanks.json', 'utf8')).enemy_tanks;
-test(`mock viewer navigation retains route-specific button state and same-tank refreshes`, async ({
+test(`viewer navigation retains route-specific button state and same-tank refreshes`, async ({
   page,
 }) => {
   const errors: string[] = [];

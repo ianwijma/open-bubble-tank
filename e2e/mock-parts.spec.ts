@@ -7,7 +7,7 @@ const layouts = JSON.parse(
   readFileSync(resolve('src/game/data/part-geometry.json'), 'utf8'),
 ) as Record<number, { bounds: { width: number } }>;
 
-test(`mock gun and behavior silhouettes preserve catalog layouts and visible contact`, async ({
+test(`gun and behavior silhouettes preserve catalog layouts and visible contact`, async ({
   page,
 }) => {
   const errors: string[] = [];
@@ -39,7 +39,7 @@ test(`mock gun and behavior silhouettes preserve catalog layouts and visible con
   expect(errors).toEqual([]);
 });
 
-test('mock creator previews distinct guns and behaviors and places their authored extents', async ({
+test('creator previews distinct guns and behaviors and places their authored extents', async ({
   page,
 }) => {
   await page.goto('/');

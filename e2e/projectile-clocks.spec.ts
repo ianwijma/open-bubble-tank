@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-test(`mock Whip Grow and Flak retain stage clocks through pause`, async ({ page }) => {
+test(`Whip Grow and Flak retain stage clocks through pause`, async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('http://127.0.0.1:3102');

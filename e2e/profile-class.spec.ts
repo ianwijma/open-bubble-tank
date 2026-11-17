@@ -5,7 +5,7 @@ import { encodeFixtureTank } from './helpers/tank-code';
 const avatars: TankDesign[] = JSON.parse(
   readFileSync('src/game/data/tanks.json', 'utf8'),
 ).avatar_defaults;
-test(`mock viewer profile class stays separate from current-level editor and selection limits`, async ({
+test(`viewer profile class stays separate from current-level editor and selection limits`, async ({
   page,
 }) => {
   const errors: string[] = [];

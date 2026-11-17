@@ -10,7 +10,7 @@ import { DEFAULT_SETTINGS } from '../src/game/core/constants';
 const STARTER: TankDesign = JSON.parse(readFileSync(resolve('src/game/data/tanks.json'), 'utf8'))
   .avatar_defaults[0];
 
-test(`mock edit slider: native map variants, confirmation, same-level choice and editor cancellation`, async ({
+test(`edit slider: native map variants, confirmation, same-level choice and editor cancellation`, async ({
   page,
 }) => {
   const guard = {

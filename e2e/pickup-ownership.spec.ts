@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-test(`mock pickups render physical child order and retain identity through Run mutations`, async ({
+test(`pickups render physical child order and retain identity through Run mutations`, async ({
   page,
 }, testInfo) => {
   const errors: string[] = [];

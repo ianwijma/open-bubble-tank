@@ -18,7 +18,7 @@ const pair: TankPart[] = [-10, 10].map((y, i) => ({
   radius: 7,
 }));
 
-test(`mock creator follows the twin merge/respawn rules and accepts quarter-pixel and zero-delta drag events`, async ({
+test(`creator follows the twin merge/respawn rules and accepts quarter-pixel and zero-delta drag events`, async ({
   page,
 }) => {
   const errors: string[] = [];

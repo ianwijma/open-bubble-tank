@@ -3,7 +3,7 @@ import { waitForMainMenu, dismissCreatorGuide } from './helpers/main-menu';
 import { exitCreator } from './helpers/creator';
 import { watchAudio, musicState } from './helpers/audio';
 
-test(`mock music distinguishes new menus from retained settings and creator/viewer visits`, async ({
+test(`music distinguishes new menus from retained settings and creator/viewer visits`, async ({
   page,
 }) => {
   test.setTimeout(60000);
@@ -47,7 +47,7 @@ test(`mock music distinguishes new menus from retained settings and creator/view
   expect(errors).toEqual([]);
 });
 
-test('mock music completes actual media playback and restarts at its starting volume', async ({
+test('music completes actual media playback and restarts at its starting volume', async ({
   page,
 }) => {
   await watchAudio(page);
@@ -65,7 +65,7 @@ test('mock music completes actual media playback and restarts at its starting vo
   expect(music.error).toBe(false);
 });
 
-test('mock muted game entry does not replace the menu track remembered by paused Settings', async ({
+test('muted game entry does not replace the menu track remembered by paused Settings', async ({
   page,
 }) => {
   await watchAudio(page);

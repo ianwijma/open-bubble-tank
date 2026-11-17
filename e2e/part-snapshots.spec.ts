@@ -7,7 +7,7 @@ import type { TankDesign, TankPart } from '../src/game/core/types';
 
 const starter: TankDesign = JSON.parse(readFileSync(resolve('src/game/data/tanks.json'), 'utf8'))
   .avatar_defaults[0];
-test(`mock frozen class samples exclude weapons and keep their poster states`, async ({ page }) => {
+test(`frozen class samples exclude weapons and keep their poster states`, async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('http://127.0.0.1:3102');
@@ -51,7 +51,7 @@ test(`mock frozen class samples exclude weapons and keep their poster states`, a
   expect(errors).toEqual([]);
 });
 
-test(`mock creator derives body class despite a large mounted weapon`, async ({ page }) => {
+test(`creator derives body class despite a large mounted weapon`, async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'Play' }).click();
   await waitForMainMenu(page);

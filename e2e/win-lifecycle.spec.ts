@@ -1,6 +1,6 @@
 import { expect, test } from './helpers/frame-paced-test';
 
-test(`mock win captures before completion, shares stopped World frames and releases its lifetime`, async ({
+test(`win captures before completion, shares stopped World frames and releases its lifetime`, async ({
   page,
 }, testInfo) => {
   test.setTimeout(120000);

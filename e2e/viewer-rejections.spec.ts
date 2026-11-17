@@ -6,7 +6,7 @@ const rejectionLayout = JSON.parse(
 const avatar = JSON.parse(readFileSync('src/game/data/tanks.json', 'utf8')).avatar_defaults.find(
   (t: { name: string }) => t.name === 'Super Nimble',
 );
-test(`mock viewer rejection uses authored fades, pointer shielding and independent timed lifetimes`, async ({
+test(`viewer rejection uses authored fades, pointer shielding and independent timed lifetimes`, async ({
   page,
 }) => {
   const errors: string[] = [];

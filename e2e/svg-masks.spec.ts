@@ -1,9 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { writeFileSync } from 'node:fs';
 
-test(`mock SVG masks retain grouped fill geometry and nested transforms`, async ({
-  page,
-}, testInfo) => {
+test(`SVG masks retain grouped fill geometry and nested transforms`, async ({ page }, testInfo) => {
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto('http://127.0.0.1:3102');

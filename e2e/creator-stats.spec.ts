@@ -1,7 +1,5 @@
 import { expect, test } from '@playwright/test';
-test(`mock creator statistics keep category summaries and enemy offsets`, async ({
-  page,
-}, testInfo) => {
+test(`creator statistics keep category summaries and enemy offsets`, async ({ page }, testInfo) => {
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('http://127.0.0.1:3102');

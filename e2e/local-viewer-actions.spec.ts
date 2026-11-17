@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-test(`mock local viewer pages, sorts, deletes, round-trips codes and reports isolated offline search`, async ({
+test(`local viewer pages, sorts, deletes, round-trips codes and reports isolated offline search`, async ({
   page,
   context,
 }, testInfo) => {
@@ -95,7 +95,7 @@ test(`mock local viewer pages, sorts, deletes, round-trips codes and reports iso
   expect(errors).toEqual([]);
   expect(outbound).toEqual([]);
 });
-test(`mock viewer guide completes through its two local pages`, async ({ page }, testInfo) => {
+test(`viewer guide completes through its two local pages`, async ({ page }, testInfo) => {
   await page.goto('http://127.0.0.1:3102');
   await page.getByLabel('Fixture').selectOption('viewer-guide');
   await page.getByRole('button', { name: 'Start', exact: true }).click();

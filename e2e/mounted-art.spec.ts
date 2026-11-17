@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-test(`mock mounted Massive charges animate and share contact geometry`, async ({ page }) => {
+test(`mounted Massive charges animate and share contact geometry`, async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto('http://127.0.0.1:3102');

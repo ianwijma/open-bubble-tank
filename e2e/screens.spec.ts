@@ -1,7 +1,7 @@
 import { waitForMainMenu } from './helpers/main-menu';
 import { expect, test } from './helpers/frame-paced-test';
 
-test('mock Info exit keeps the immediate pause key on the returned dialog', async ({ page }) => {
+test('Info exit keeps the immediate pause key on the returned dialog', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'Play' }).click();
   await page.getByRole('button', { name: 'Play', exact: true }).click();
@@ -40,7 +40,7 @@ test('mock Info exit keeps the immediate pause key on the returned dialog', asyn
   await expect(page.locator('body')).toHaveAttribute('data-info-return-focus', 'Paused');
 });
 
-test(`mock tank information shows native class attributes and returns to a frozen pause`, async ({
+test(`tank information shows native class attributes and returns to a frozen pause`, async ({
   page,
 }) => {
   const errors: string[] = [];
@@ -88,9 +88,7 @@ test(`mock tank information shows native class attributes and returns to a froze
   expect(errors).toEqual([]);
 });
 
-test(`mock win screen fades in its authored controls and omits retired promotion`, async ({
-  page,
-}) => {
+test(`win screen fades in its authored controls and omits retired promotion`, async ({ page }) => {
   // The fixture mounts the production component; no test hooks enter the game.
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));

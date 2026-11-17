@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-test(`mock pickups move into visible tank artwork before the following collection phase`, async ({
+test(`pickups move into visible tank artwork before the following collection phase`, async ({
   page,
 }) => {
   const errors: string[] = [];

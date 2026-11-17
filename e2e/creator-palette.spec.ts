@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { waitForMainMenu } from './helpers/main-menu';
-test(`mock creator rows preserve row paint, fractional scrolling and capture cleanup`, async ({
+test(`creator rows preserve row paint, fractional scrolling and capture cleanup`, async ({
   page,
 }, testInfo) => {
   const errors: string[] = [];
@@ -102,7 +102,7 @@ test(`mock creator rows preserve row paint, fractional scrolling and capture cle
   expect(errors).toEqual([]);
 });
 
-test(`mock locked creator rows retain both alpha factors and clean up their wheel listener`, async ({
+test(`locked creator rows retain both alpha factors and clean up their wheel listener`, async ({
   page,
 }, testInfo) => {
   const errors: string[] = [];

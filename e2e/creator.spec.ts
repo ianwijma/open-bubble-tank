@@ -25,9 +25,7 @@ const seed: TankDesign = {
   parts: [part('a', -40, -30, 'b'), part('b', -40, 30, 'a'), part('c', 35, -30), part('d', 90, 0)],
 };
 const snapshot = readCreatorDesign;
-test(`mock creator: additive selection, marquee, mirrored group edits and undo`, async ({
-  page,
-}) => {
+test(`creator: additive selection, marquee, mirrored group edits and undo`, async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto('/');

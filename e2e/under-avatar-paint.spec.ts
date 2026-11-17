@@ -8,7 +8,7 @@ const fixture = JSON.parse(
 };
 const masked = fixture.samples.flatMap((sample, i) => (sample.mode === 'masked' ? [i] : []));
 
-test('mock under-avatar paint follows retained poses and releases obsolete projections', async ({
+test('under-avatar paint follows retained poses and releases obsolete projections', async ({
   page,
 }, testInfo) => {
   const errors: string[] = [];

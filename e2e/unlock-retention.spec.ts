@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 import { readCreatorDesign, dropPreview, saveCreator } from './helpers/creator';
 import { encodeFixtureTank } from './helpers/tank-code';
 const design = readCreatorDesign;
-test(`mock unlocked Radar survives real downgrades through creator and viewer, then resets in a fresh session`, async ({
+test(`unlocked Radar survives real downgrades through creator and viewer, then resets in a fresh session`, async ({
   page,
 }) => {
   const errors: string[] = [];

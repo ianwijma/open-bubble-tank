@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-test(`mock production viewport releases a paused beam and continues the launcher's wall timer`, async ({
+test(`production viewport releases a paused beam and continues the launcher's wall timer`, async ({
   page,
 }) => {
   const errors: string[] = [];

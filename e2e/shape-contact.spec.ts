@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { writeFileSync } from 'node:fs';
-test(`mock contact follows geometric shapes and attached protection rather than painted alpha`, async ({
+test(`contact follows geometric shapes and attached protection rather than painted alpha`, async ({
   page,
 }, testInfo) => {
   const errors: string[] = [];

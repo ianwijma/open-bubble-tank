@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-test(`mock projectile contact uses the current alpha point before movement and preserves deflection`, async ({
+test(`projectile contact uses the current alpha point before movement and preserves deflection`, async ({
   page,
 }) => {
   const errors: string[] = [];

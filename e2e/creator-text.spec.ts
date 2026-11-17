@@ -7,7 +7,7 @@ const CREATOR_PALETTE = JSON.parse(
 const dialogs = JSON.parse(
   readFileSync(resolve('src/game/data/creator-dialogs.json'), 'utf8'),
 ) as typeof import('../src/game/core/creator-dialogs').CREATOR_DIALOGS;
-test(`mock creator text uses the authored fonts, alignment, line spacing and clipped accessible fields`, async ({
+test(`creator text uses the authored fonts, alignment, line spacing and clipped accessible fields`, async ({
   page,
 }, testInfo) => {
   const errors: string[] = [];
@@ -69,7 +69,7 @@ test(`mock creator text uses the authored fonts, alignment, line spacing and cli
   expect(errors).toEqual([]);
 });
 
-test(`mock creator device-font text retains paragraphs, color and inline advances`, async ({
+test(`creator device-font text retains paragraphs, color and inline advances`, async ({
   page,
 }, testInfo) => {
   const errors: string[] = [];

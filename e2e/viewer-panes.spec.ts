@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-test(`mock viewer reparents the selected preview and retains fading card/detail lifetimes`, async ({
+test(`viewer reparents the selected preview and retains fading card/detail lifetimes`, async ({
   page,
 }) => {
   const errors: string[] = [];

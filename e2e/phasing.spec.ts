@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-test(`mock Phasing paint follows its private fixed-point clock through reset and pause`, async ({
+test(`Phasing paint follows its private fixed-point clock through reset and pause`, async ({
   page,
 }) => {
   const errors: string[] = [];

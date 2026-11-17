@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { writeFileSync } from 'node:fs';
 
-test(`mock viewer tank layers keep independent poses, scale and clean up`, async ({
+test(`viewer tank layers keep independent poses, scale and clean up`, async ({
   page,
 }, testInfo) => {
   const errors: string[] = [];
