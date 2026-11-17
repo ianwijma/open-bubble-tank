@@ -53,11 +53,3 @@ export const CREATOR_CONTROLS = data as {
 };
 export const creatorControl = (name: string) =>
   CREATOR_CONTROLS.controls.find((c) => c.name === name)!;
-export const CREATOR_SELECTION_CONTROLS = [
-  'DeleteButton_mc',
-  'BringFront_mc',
-  'SendBack_mc',
-  'AlignCenter_mc',
-  'Left_mc',
-  'Right_mc',
-] as const;

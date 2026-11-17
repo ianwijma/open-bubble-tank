@@ -786,23 +786,6 @@ kbd {
     Arial,
     sans-serif;
 }
-.pause-stats {
-  display: flex;
-  justify-content: space-around;
-  margin: 12px 0 24px;
-}
-.pause-stats span {
-  font-size: 7px;
-  letter-spacing: 0.7px;
-  color: #83a8b7;
-}
-.pause-stats strong {
-  display: block;
-  font-size: 22px;
-  color: #e4f6fc;
-  font-weight: normal;
-  margin-top: 8px;
-}
 .stage-dialog {
   position: absolute;
   inset: 0;
@@ -1030,18 +1013,6 @@ kbd {
 .pause-orb:not(:has(img)) {
   background: #a6d2e42e;
 }
-.pause-play {
-  left: 195px;
-  top: 172px;
-  width: 160px;
-  height: 121px;
-}
-.pause-quit {
-  left: 133px;
-  top: 248px;
-  width: 41px;
-  height: 31px;
-}
 .pause-info {
   left: 377px;
   top: 250px;
@@ -1161,15 +1132,6 @@ kbd {
 .tank-info dd {
   margin: 0;
   color: #e3f5fa;
-}
-.part-list {
-  font-size: 9px !important;
-  border-top: 1px solid #a4d9ee22;
-  padding-top: 14px;
-  margin-top: 15px;
-}
-.win-medal {
-  padding: 20px 0;
 }
 .creator {
   color: #fff;

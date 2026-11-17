@@ -68,15 +68,3 @@ export function tickStatusTail(world: World, tank: Tank) {
   }
   if (tank.status.weaken > 0) tank.status.weaken--;
 }
-
-/** Avatar status phase. Enemy/ally Run distributes these phases around their parts. */
-export function tickStatus(world: World, tank: Tank) {
-  tickStatusDecoration(tank);
-  tank.stunned = tank.status.stun > 0;
-  if (tank.stunned) {
-    tank.status.stun--;
-    return;
-  }
-  for (const kind of ['jam', 'sticky'] as const) if (tank.status[kind] > 0) tank.status[kind]--;
-  tickStatusTail(world, tank);
-}
