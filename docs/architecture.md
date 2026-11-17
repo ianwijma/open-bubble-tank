@@ -1,6 +1,6 @@
 # Architecture
 
-This describes the code as it stands after the move to Soap Tank: the classic engine, running on its own stand-in artwork and sound, with no reader for the original game file. The changes the plan makes to it are in [the plan](v2-plan.md), sections 4 to 6.
+This describes the code as it stands: the classic engine, running on its own stand-in artwork and sound, with no reader for the original game file. The changes the plan makes to it are in [the plan](v2-plan.md), sections 4 to 6.
 
 ## Engine choice
 
