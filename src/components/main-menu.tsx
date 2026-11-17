@@ -32,14 +32,6 @@ const controls = [
     icon: 'library',
     size: 26,
   },
-  {
-    name: 'pmg_btn',
-    label: 'Change assets',
-    hint: 'Change assets',
-    css: 'assets',
-    icon: 'back',
-    size: 20,
-  },
 ] as const;
 
 export function MainMenu({

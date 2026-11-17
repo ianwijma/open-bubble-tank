@@ -408,10 +408,6 @@ export default function GameShell() {
                       parts: [],
                     });
                   } else if (name === 'partsPacks_btn') showScreen('library');
-                  else if (name === 'pmg_btn') {
-                    setWorld(null);
-                    setPack(null);
-                  }
                 }}
               />
             ) : null}

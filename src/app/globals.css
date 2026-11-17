@@ -511,12 +511,6 @@ kbd {
   width: 40px;
   height: 31px;
 }
-.menu-assets {
-  left: 255px;
-  top: 303px;
-  width: 40px;
-  height: 31px;
-}
 .modal-scrim {
   position: absolute;
   z-index: 20;
