@@ -12,7 +12,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 - Soap Tank is a successor built on the classic engine, not a recreation. Changing rules, screens and content is allowed. `docs/v2-plan.md` records what is decided, proposed and open; follow it and do not invent decisions.
 - Keep rendering, browser services and simulation separate. Simulation units are per-frame (pixels per frame, frame counters); do not scale rules by wall-clock time. Keep part IDs stable, because tank codes refer to them.
-- Never commit SWFs, extracted images or audio, or dependency and build output.
+- Never commit game files or assets you do not own, or dependency and build output.
 - The JSON files in `src/game/data` are hand-maintained source. Edit them directly and cover rule-relevant changes with tests.
 - Run `bun run check` for rule changes and `bun run test:e2e` for affected browser flows. Run `bun run format` before handing over changes.
 - Deliver work as described in `docs/delivery.md`.
