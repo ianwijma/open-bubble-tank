@@ -190,7 +190,7 @@ test('all frozen EXIT multi-frame retained comparisons remain covered', () => {
   );
 });
 
-test('native retained lifetimes advance while paused, detached or Main4 skips World.Run, without gameplay entropy or UID allocation', () => {
+test('native retained lifetimes advance while paused, detached or the upgrade menu skips World.Run, without gameplay entropy or UID allocation', () => {
   const world = new World([], [], 8);
   const effect = world.addCombatEffect({ x: 17, y: 29 }, 'impact');
   expect([effect.x, effect.y, effect.frame]).toEqual([0, 0, 1]);

@@ -309,7 +309,7 @@ export function CreatorEnemyStats({
                 ))}
               </mask>
             </defs>
-            {/* Source913 has button cutouts; numerical mock rectangles need that mask. */}
+            {/* The confirmation frame (art id 913) has button cutouts; the plain button rectangles need that mask. */}
             <g mask={`url(#${confirmationMask})`}>
               <CreatorPrimitives pieces={confirmFrame.art.filter((leaf) => leaf.id === 913)} />
             </g>

@@ -70,7 +70,7 @@ export const HIDDEN_SUGGESTED_CONFIRM: SuggestedConfirmation = {
   playing: false,
   interactive: false,
 };
-/** Symbol915 stops at1/12; Yes/No call play() rather than jumping to a closing frame. */
+/** The suggested-stats confirmation stops at frames 1 and 12; Yes/No call play() rather than jumping to a closing frame. */
 export function advanceSuggestedConfirm(
   state: SuggestedConfirmation,
   frames: number,

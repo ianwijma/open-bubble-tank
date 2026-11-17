@@ -150,7 +150,7 @@ export function compareTextEngine(fixture: TextEngineFixture) {
       inverseBeforeLeaf: contacts.filter((c) => c.inverseBeforeLeafCandidate !== c.actual).length,
     },
     limitations:
-      'Finite authored1659–1666 and the advanced copy, Main0, 2D transforms without scrollRect. Normal glyphs/mask options/authored text masks, arbitrary singular/nonfinite/overflow and loaded roots are not covered.',
+      'Finite authored1659–1666 and the advanced copy under an untransformed stage root, 2D transforms without scrollRect. Normal glyphs/mask options/authored text masks, arbitrary singular/nonfinite/overflow and loaded roots are not covered.',
     results: rows,
   };
 }

@@ -1644,7 +1644,7 @@ kbd {
   pointer-events: none;
 }
 
-/* Authored Settings645 and PauseMenu Settings1584/HotKeys1624 placements. */
+/* Authored placements of the settings screen and the pause menu's settings and hot keys panes. */
 .authored-settings .settings-layers {
   position: absolute;
   inset: 0;
@@ -1780,8 +1780,8 @@ kbd {
   letter-spacing: normal;
   text-shadow: none;
 }
-/* PausedMenuButtons1636 direct-child depths: title3, Settings7, Info79,
-   HotKeys117 and main buttons164+. These panes share the source parent alpha. */
+/* Pause menu direct-child depths: title 3, settings 7, Info 79,
+   hot keys 117 and main buttons 164+. These panes share the source parent alpha. */
 .pause-screen .settings-page[data-settings-page='settings'] {
   z-index: 7;
 }

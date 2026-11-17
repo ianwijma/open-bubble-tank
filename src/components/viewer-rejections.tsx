@@ -7,7 +7,7 @@ import { CreatorPrimitives } from './creator-controls';
 import { CreatorText } from './creator-text';
 import { ViewerGroup } from './tank-viewer-art';
 
-/** Authored1557: timed pointer shield, independent backdrop/title/field fades, no modal dismissal. */
+/** Viewer rejection notice: timed pointer shield, independent backdrop/title/field fades, no modal dismissal. */
 export function ViewerRejectionEffects({
   stage,
   model,
