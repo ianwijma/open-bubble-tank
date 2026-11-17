@@ -1,12 +1,12 @@
 {
-  "sourceAudit": {
+  "clips": {
     "roots": [
       {
         "key": "impact",
         "className": "ImpactEffect",
         "symbol": 1723,
         "frames": 4,
-        "constructorOnlySuper": true,
+        "plainConstructor": true,
         "descendants": []
       },
       {
@@ -14,12 +14,11 @@
         "className": "SeekerExplosionEffect",
         "symbol": 1767,
         "frames": 10,
-        "constructorOnlySuper": true,
+        "plainConstructor": true,
         "descendants": [
           {
             "symbol": 1766,
             "frames": 1,
-            "className": null,
             "frameScript": false,
             "random": false
           }
@@ -30,12 +29,11 @@
         "className": "MineExplosionEffect",
         "symbol": 1834,
         "frames": 6,
-        "constructorOnlySuper": true,
+        "plainConstructor": true,
         "descendants": [
           {
             "symbol": 1833,
             "frames": 1,
-            "className": null,
             "frameScript": false,
             "random": false
           }
@@ -46,7 +44,7 @@
         "className": "ExplosionEffect",
         "symbol": 1746,
         "frames": 15,
-        "constructorOnlySuper": true,
+        "plainConstructor": true,
         "descendants": []
       },
       {
@@ -54,7 +52,7 @@
         "className": "DamageBurstEffect",
         "symbol": 1745,
         "frames": 16,
-        "constructorOnlySuper": true,
+        "plainConstructor": true,
         "descendants": []
       },
       {
@@ -62,7 +60,7 @@
         "className": "LeechEffect",
         "symbol": 1740,
         "frames": 18,
-        "constructorOnlySuper": true,
+        "plainConstructor": true,
         "descendants": []
       },
       {
@@ -70,12 +68,11 @@
         "className": "RocketTrailEffect",
         "symbol": 2175,
         "frames": 25,
-        "constructorOnlySuper": true,
+        "plainConstructor": true,
         "descendants": [
           {
             "symbol": 2174,
             "frames": 1,
-            "className": null,
             "frameScript": false,
             "random": false
           }
@@ -86,12 +83,11 @@
         "className": "AreaBurstEffect",
         "symbol": 1789,
         "frames": 25,
-        "constructorOnlySuper": true,
+        "plainConstructor": true,
         "descendants": [
           {
             "symbol": 1788,
             "frames": 1,
-            "className": null,
             "frameScript": false,
             "random": false
           }
@@ -102,7 +98,7 @@
         "className": "TeleportEffect",
         "symbol": 1769,
         "frames": 12,
-        "constructorOnlySuper": true,
+        "plainConstructor": true,
         "descendants": []
       },
       {
@@ -110,12 +106,11 @@
         "className": "ConversionEffect",
         "symbol": 1735,
         "frames": 21,
-        "constructorOnlySuper": true,
+        "plainConstructor": true,
         "descendants": [
           {
             "symbol": 1734,
             "frames": 4,
-            "className": null,
             "frameScript": false,
             "random": false
           }
@@ -126,12 +121,11 @@
         "className": "RippleEffect",
         "symbol": 52,
         "frames": 15,
-        "constructorOnlySuper": true,
+        "plainConstructor": true,
         "descendants": [
           {
             "symbol": 51,
             "frames": 1,
-            "className": null,
             "frameScript": false,
             "random": false
           }
@@ -142,7 +136,7 @@
         "className": "NeutralizeEffect",
         "symbol": 2212,
         "frames": 29,
-        "constructorOnlySuper": true,
+        "plainConstructor": true,
         "descendants": []
       },
       {
@@ -150,7 +144,7 @@
         "className": "InkEffect",
         "symbol": 11,
         "frames": 100,
-        "constructorOnlySuper": true,
+        "plainConstructor": true,
         "descendants": []
       },
       {
@@ -158,7 +152,7 @@
         "className": "CollapseFlashEffect",
         "symbol": 114,
         "frames": 30,
-        "constructorOnlySuper": true,
+        "plainConstructor": true,
         "descendants": []
       },
       {
@@ -166,19 +160,17 @@
         "className": "CollapseEffect",
         "symbol": 2173,
         "frames": 120,
-        "constructorOnlySuper": true,
+        "plainConstructor": true,
         "descendants": [
           {
             "symbol": 2069,
             "frames": 103,
-            "className": "CollapseGlow",
             "frameScript": true,
             "random": false
           },
           {
             "symbol": 2068,
             "frames": 14,
-            "className": null,
             "frameScript": false,
             "random": false
           }
@@ -202,15 +194,15 @@
   ],
   "contract": {
     "strings": [
-      "PROBE_EFFECT_BEGIN",
-      "PROBE_EFFECT_ACTION",
+      "EFFECT_BEGIN",
+      "EFFECT_ACTION",
       "constructor",
       "before:impact",
       "0",
       "1",
       "4",
       "undefined",
-      "PROBE_EFFECT_BITS",
+      "EFFECT_BITS",
       "tree",
       "ImpactEffect",
       "true",
@@ -218,14 +210,14 @@
       "$auto",
       "0/0",
       "2",
-      "flash.display::Shape",
+      "Shape",
       "retained",
       "queued",
       "before:seekerExplosion",
       "10",
       "3",
       "SeekerExplosionEffect",
-      "flash.display::MovieClip",
+      "MovieClip",
       "0/0/0",
       "5",
       "before:mineExplosion",
@@ -276,7 +268,7 @@
       "30",
       "NeutralizeEffect",
       "31",
-      "flash.display::MorphShape",
+      "MorphShape",
       "before:ink",
       "100",
       "32",
@@ -605,7 +597,7 @@
       "250",
       "enter",
       "exit",
-      "PROBE_EFFECT_NULL",
+      "EFFECT_NULL",
       "251",
       "252",
       "253",
@@ -651,7 +643,7 @@
       "effect_28",
       "effect_29",
       "effect_30",
-      "PROBE_EFFECT_POLL",
+      "EFFECT_POLL",
       "before",
       "callback",
       "after",
@@ -1281,7 +1273,7 @@
       "882",
       "883",
       "884",
-      "PROBE_EFFECT_DONE"
+      "EFFECT_DONE"
     ],
     "poses": [
       "000000000000000000000000000000003ff00000000000003ff000000000000000000000000000003ff00000000000003ff0000000000000000000000000000000000000000000003ff000000000000000000000000000000000000000000000",

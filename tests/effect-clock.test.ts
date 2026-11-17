@@ -7,7 +7,7 @@ import type { Field } from '../src/game/core/types';
 
 const measured = rows(original.contract);
 const roots = measured.filter((r) => r.path === '0' && r.kind === 'tree');
-for (const source of original.sourceAudit.roots)
+for (const source of original.clips.roots)
   test(`original ${source.key}: independent construction, registration, completion and removed clocks`, () => {
     for (const cohort of ['before', 'inside']) {
       const group = roots.filter((r) => r.label === `${cohort}:${source.key}`);
@@ -54,20 +54,20 @@ test('stopped collapse child retains identity and frame103 across parent wrap wh
 
 test('original transient child lookup holes and unavailable playing getters stay explicit', () => {
   const lines = unpack(original.contract);
-  expect(lines.filter((s) => s.startsWith('PROBE_EFFECT_NULL ')).length).toBe(399);
-  expect(lines).toContain('PROBE_EFFECT_NULL 3 enter before:explosion 0/1 tree');
+  expect(lines.filter((s) => s.startsWith('EFFECT_NULL ')).length).toBe(399);
+  expect(lines).toContain('EFFECT_NULL 3 enter before:explosion 0/1 tree');
   const lookup = measured.filter(
     (r) => r.label === 'before:explosion' && r.tick === 3 && r.path === '0/1',
   );
   expect(lookup.map((r) => r.phase)).toEqual(['exit']);
-  expect(lookup[0].className).toBe('flash.display::Shape');
+  expect(lookup[0].className).toBe('Shape');
   expect(measured.filter((r) => r.total > 0).every((r) => r.isPlaying === 'undefined')).toBe(true);
 });
 
 test('root-only scripts audit does not erase the qualified descendant stop action', () => {
-  expect(original.sourceAudit.roots).toHaveLength(15);
-  expect(original.sourceAudit.roots.every((r) => r.constructorOnlySuper)).toBe(true);
-  const descendants = original.sourceAudit.roots.flatMap((r) => r.descendants);
+  expect(original.clips.roots).toHaveLength(15);
+  expect(original.clips.roots.every((r) => r.plainConstructor)).toBe(true);
+  const descendants = original.clips.roots.flatMap((r) => r.descendants);
   expect(descendants.filter((r) => r.frameScript).map((r) => r.symbol)).toEqual([2069]);
   expect(descendants.some((r) => r.random)).toBe(false);
 });

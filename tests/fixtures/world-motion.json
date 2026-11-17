@@ -53,8 +53,7 @@
     "friction": 0.09,
     "snap": 0.5,
     "mainFractionRequested": [0.07, -0.07],
-    "teleportDestination": [250.079, -100.149],
-    "originalCameraCalls": 161
+    "teleportDestination": [250.079, -100.149]
   },
   "samples": [
     {

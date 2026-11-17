@@ -1,114 +1,4 @@
 {
-  "sourceAudit": {
-    "mounts": [
-      {
-        "id": 1501,
-        "name": "Wiggle Cluster",
-        "symbol": 20,
-        "tree": [
-          {
-            "symbol": 20,
-            "frames": 100,
-            "frameScript": true,
-            "stop": false,
-            "random": false
-          },
-          {
-            "symbol": 17,
-            "frames": 40,
-            "frameScript": true,
-            "stop": false,
-            "random": true
-          },
-          {
-            "symbol": 19,
-            "frames": 40,
-            "frameScript": true,
-            "stop": false,
-            "random": true
-          }
-        ]
-      },
-      {
-        "id": 4015,
-        "name": "Rotating Machine Gun",
-        "symbol": 701,
-        "tree": [
-          {
-            "symbol": 701,
-            "frames": 2,
-            "frameScript": true,
-            "stop": true,
-            "random": false
-          },
-          {
-            "symbol": 34,
-            "frames": 40,
-            "frameScript": true,
-            "stop": false,
-            "random": true
-          },
-          {
-            "symbol": 31,
-            "frames": 1,
-            "frameScript": false,
-            "stop": false,
-            "random": false
-          },
-          {
-            "symbol": 700,
-            "frames": 2,
-            "frameScript": false,
-            "stop": false,
-            "random": false
-          }
-        ]
-      },
-      {
-        "id": 1001,
-        "name": "Small Bubble",
-        "symbol": 680,
-        "tree": [
-          {
-            "symbol": 680,
-            "frames": 40,
-            "frameScript": true,
-            "stop": false,
-            "random": true
-          }
-        ]
-      },
-      {
-        "id": 1102,
-        "name": "Medium Dark Bubble",
-        "symbol": 17,
-        "tree": [
-          {
-            "symbol": 17,
-            "frames": 40,
-            "frameScript": true,
-            "stop": false,
-            "random": true
-          }
-        ]
-      }
-    ],
-    "npc": {
-      "id": "E10000033",
-      "name": "Floaty",
-      "index": 13,
-      "mode": 3,
-      "partTypes": [1001, 1001, 1001, 1102]
-    },
-    "controlled": {
-      "mode": 0,
-      "parts": [
-        ["wiggle-negative", 1501, 0, -20],
-        ["wiggle-positive", 1501, 0, 20],
-        ["rotor", 4015, 30, 0]
-      ]
-    }
-  },
   "fields": [
     "x",
     "y",
@@ -125,16 +15,16 @@
   ],
   "contract": {
     "strings": [
-      "PROBE_ACTOR_CLOCK_BEGIN",
-      "PROBE_ACTOR_CLOCK_ACTION",
+      "ACTOR_CLOCK_BEGIN",
+      "ACTOR_CLOCK_ACTION",
       "constructor",
       "before:controlled",
       "0",
       "1",
       "3",
-      "PROBE_ACTOR_CLOCK_BITS",
+      "ACTOR_CLOCK_BITS",
       "tree",
-      "flash.display::MovieClip",
+      "MovieClip",
       "true",
       "false",
       "$auto",
@@ -184,9 +74,9 @@
       "retained",
       "attached-glue",
       "-1",
-      "PROBE_ACTOR_CLOCK_NPC",
+      "ACTOR_CLOCK_NPC",
       "E10000033",
-      "PROBE_ACTOR_CLOCK_STATE",
+      "ACTOR_CLOCK_STATE",
       "before:npc",
       "18",
       "EnemyTank",
@@ -353,7 +243,7 @@
       "441",
       "pre-restore",
       "post-restore-original",
-      "PROBE_ACTOR_CLOCK_RESTORE",
+      "ACTOR_CLOCK_RESTORE",
       "post-root-restore-glue",
       "442",
       "443",
@@ -380,7 +270,7 @@
       "541",
       "542",
       "550",
-      "PROBE_ACTOR_CLOCK_DONE"
+      "ACTOR_CLOCK_DONE"
     ],
     "poses": [
       "000000000000000000000000000000003ff00000000000003ff000000000000000000000000000003ff00000000000003ff0000000000000000000000000000000000000000000003ff000000000000000000000000000000000000000000000",

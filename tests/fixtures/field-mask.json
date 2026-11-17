@@ -390,21 +390,18 @@
       "case": "overlap-miss-hit",
       "phase": "baseline",
       "role": "wrapper",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [0, 1, 2, 3, 1, 1, 1, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 4, 5]
     },
     {
       "case": "overlap-miss-hit",
       "phase": "baseline",
       "role": "target",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [7, 0, 2, 0, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
     },
     {
       "case": "overlap-miss-hit",
       "phase": "baseline",
       "role": "m1",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [
         10, 0, 2, 2, 2, 2, 1, 11, 2, 5, 5, 5, 5, 11, 2, 1, 1, 2, 2, 2, 12, 2, 13, 6, 5, 5
       ]
@@ -413,35 +410,30 @@
       "case": "overlap-miss-hit",
       "phase": "baseline",
       "role": "m2",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [14, 0, 2, 1, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
     },
     {
       "case": "overlap-hit-miss",
       "phase": "baseline",
       "role": "wrapper",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [0, 1, 2, 3, 2, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 4, 5]
     },
     {
       "case": "overlap-hit-miss",
       "phase": "baseline",
       "role": "target",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [7, 0, 2, 0, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
     },
     {
       "case": "overlap-hit-miss",
       "phase": "baseline",
       "role": "m1",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [10, 0, 2, 2, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
     },
     {
       "case": "overlap-hit-miss",
       "phase": "baseline",
       "role": "m2",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [
         14, 0, 2, 1, 2, 2, 1, 11, 2, 5, 5, 5, 5, 11, 2, 1, 1, 2, 2, 2, 12, 2, 13, 6, 5, 5
       ]
@@ -450,35 +442,30 @@
       "case": "overlap-hit-hit",
       "phase": "baseline",
       "role": "wrapper",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [0, 1, 2, 3, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
     },
     {
       "case": "overlap-hit-hit",
       "phase": "baseline",
       "role": "target",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [7, 0, 2, 0, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
     },
     {
       "case": "overlap-hit-hit",
       "phase": "baseline",
       "role": "m1",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [10, 0, 2, 2, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
     },
     {
       "case": "overlap-hit-hit",
       "phase": "baseline",
       "role": "m2",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [14, 0, 2, 1, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
     },
     {
       "case": "overlap-miss-miss",
       "phase": "baseline",
       "role": "wrapper",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [
         0, 1, 2, 3, 2, 2, 2, 2, 2, 15, 5, 15, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 6, 15, 5
       ]
@@ -487,14 +474,12 @@
       "case": "overlap-miss-miss",
       "phase": "baseline",
       "role": "target",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [7, 0, 2, 0, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
     },
     {
       "case": "overlap-miss-miss",
       "phase": "baseline",
       "role": "m1",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [
         10, 0, 2, 2, 2, 2, 1, 11, 2, 5, 5, 5, 5, 11, 2, 1, 1, 2, 2, 2, 12, 2, 13, 6, 5, 5
       ]
@@ -503,7 +488,6 @@
       "case": "overlap-miss-miss",
       "phase": "baseline",
       "role": "m2",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [
         14, 0, 2, 1, 2, 2, 1, 11, 2, 5, 5, 5, 5, 11, 2, 1, 1, 2, 2, 2, 12, 2, 13, 6, 5, 5
       ]
@@ -512,7 +496,6 @@
       "case": "end-9",
       "phase": "baseline",
       "role": "wrapper",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [
         0, 1, 2, 3, 2, 2, 2, 2, 2, 15, 5, 15, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 6, 15, 5
       ]
@@ -521,14 +504,12 @@
       "case": "end-9",
       "phase": "baseline",
       "role": "target",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [7, 0, 2, 1, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
     },
     {
       "case": "end-9",
       "phase": "baseline",
       "role": "m1",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [
         10, 0, 2, 2, 2, 2, 1, 11, 2, 5, 5, 5, 5, 11, 2, 1, 1, 2, 2, 2, 12, 2, 13, 6, 5, 5
       ]
@@ -537,7 +518,6 @@
       "case": "end-10",
       "phase": "baseline",
       "role": "wrapper",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [
         0, 1, 2, 3, 1, 1, 1, 2, 2, 15, 5, 15, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 6, 15, 5
       ]
@@ -546,14 +526,12 @@
       "case": "end-10",
       "phase": "baseline",
       "role": "target",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [7, 0, 2, 1, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
     },
     {
       "case": "end-10",
       "phase": "baseline",
       "role": "m1",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [
         10, 0, 2, 2, 2, 2, 1, 11, 2, 5, 5, 5, 5, 11, 2, 1, 1, 2, 2, 2, 12, 2, 13, 6, 5, 5
       ]
@@ -562,7 +540,6 @@
       "case": "end-11",
       "phase": "baseline",
       "role": "wrapper",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [
         0, 1, 2, 3, 1, 1, 1, 2, 2, 15, 5, 15, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 6, 15, 5
       ]
@@ -571,14 +548,12 @@
       "case": "end-11",
       "phase": "baseline",
       "role": "target",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [7, 0, 2, 1, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
     },
     {
       "case": "end-11",
       "phase": "baseline",
       "role": "m1",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [
         10, 0, 2, 2, 2, 2, 1, 11, 2, 5, 5, 5, 5, 11, 2, 1, 1, 2, 2, 2, 12, 2, 13, 6, 5, 5
       ]
@@ -587,21 +562,18 @@
       "case": "nonoverlap-miss-hit",
       "phase": "baseline",
       "role": "wrapper",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [0, 1, 2, 3, 1, 1, 1, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 4, 5]
     },
     {
       "case": "nonoverlap-miss-hit",
       "phase": "baseline",
       "role": "target",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [7, 0, 2, 0, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
     },
     {
       "case": "nonoverlap-miss-hit",
       "phase": "baseline",
       "role": "m1",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [
         10, 0, 2, 2, 2, 2, 1, 11, 2, 5, 5, 5, 5, 11, 2, 1, 1, 2, 2, 2, 12, 2, 13, 6, 5, 5
       ]
@@ -610,35 +582,30 @@
       "case": "nonoverlap-miss-hit",
       "phase": "baseline",
       "role": "m2",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [14, 0, 2, 1, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
     },
     {
       "case": "nonoverlap-hit-miss",
       "phase": "baseline",
       "role": "wrapper",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [0, 1, 2, 3, 2, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 4, 5]
     },
     {
       "case": "nonoverlap-hit-miss",
       "phase": "baseline",
       "role": "target",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [7, 0, 2, 0, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
     },
     {
       "case": "nonoverlap-hit-miss",
       "phase": "baseline",
       "role": "m1",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [10, 0, 2, 2, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
     },
     {
       "case": "nonoverlap-hit-miss",
       "phase": "baseline",
       "role": "m2",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [
         14, 0, 2, 1, 2, 2, 1, 11, 2, 5, 5, 5, 5, 11, 2, 1, 1, 2, 2, 2, 12, 2, 13, 6, 5, 5
       ]
@@ -647,70 +614,60 @@
       "case": "nonoverlap-hit-hit",
       "phase": "baseline",
       "role": "wrapper",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [0, 1, 2, 3, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
     },
     {
       "case": "nonoverlap-hit-hit",
       "phase": "baseline",
       "role": "target",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [7, 0, 2, 0, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
     },
     {
       "case": "nonoverlap-hit-hit",
       "phase": "baseline",
       "role": "m1",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [10, 0, 2, 2, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
     },
     {
       "case": "nonoverlap-hit-hit",
       "phase": "baseline",
       "role": "m2",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [14, 0, 2, 1, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
     },
     {
       "case": "ancestor-hit",
       "phase": "baseline",
       "role": "wrapper",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [0, 1, 2, 3, 1, 1, 1, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 4, 5]
     },
     {
       "case": "ancestor-hit",
       "phase": "baseline",
       "role": "target",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [7, 0, 2, 1, 1, 1, 1, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 4, 5]
     },
     {
       "case": "ancestor-hit",
       "phase": "baseline",
       "role": "m1",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [10, 0, 2, 2, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
     },
     {
       "case": "ancestor-miss",
       "phase": "baseline",
       "role": "wrapper",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [0, 1, 2, 3, 2, 2, 2, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 4, 5]
     },
     {
       "case": "ancestor-miss",
       "phase": "baseline",
       "role": "target",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [7, 0, 2, 1, 1, 1, 1, 2, 2, 4, 5, 4, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 4, 5]
     },
     {
       "case": "ancestor-miss",
       "phase": "baseline",
       "role": "m1",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [
         10, 0, 2, 2, 2, 2, 1, 11, 2, 5, 5, 5, 5, 11, 2, 1, 1, 2, 2, 2, 12, 2, 13, 6, 5, 5
       ]
@@ -719,49 +676,42 @@
       "case": "runtime",
       "phase": "baseline",
       "role": "wrapper",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [0, 1, 2, 3, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
     },
     {
       "case": "runtime",
       "phase": "baseline",
       "role": "target",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [7, 0, 2, 1, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
     },
     {
       "case": "runtime",
       "phase": "baseline",
       "role": "m1",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [10, 0, 2, 2, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
     },
     {
       "case": "runtime",
       "phase": "assigned",
       "role": "wrapper",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [0, 1, 2, 3, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
     },
     {
       "case": "runtime",
       "phase": "assigned",
       "role": "target",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [7, 0, 10, 1, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
     },
     {
       "case": "runtime",
       "phase": "assigned",
       "role": "m1",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [10, 0, 2, 2, 2, 2, 2, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
     },
     {
       "case": "runtime",
       "phase": "mask-miss",
       "role": "wrapper",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [
         0, 1, 2, 3, 2, 2, 2, 2, 2, 15, 5, 15, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 6, 15, 5
       ]
@@ -770,14 +720,12 @@
       "case": "runtime",
       "phase": "mask-miss",
       "role": "target",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [7, 0, 10, 1, 2, 2, 2, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
     },
     {
       "case": "runtime",
       "phase": "mask-miss",
       "role": "m1",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [
         10, 0, 2, 2, 2, 2, 2, 11, 2, 5, 5, 5, 5, 11, 2, 1, 1, 2, 2, 2, 12, 2, 13, 6, 5, 5
       ]
@@ -786,63 +734,54 @@
       "case": "runtime",
       "phase": "mask-hidden",
       "role": "wrapper",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [0, 1, 2, 3, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
     },
     {
       "case": "runtime",
       "phase": "mask-hidden",
       "role": "target",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [7, 0, 10, 1, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
     },
     {
       "case": "runtime",
       "phase": "mask-hidden",
       "role": "m1",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [10, 0, 2, 2, 2, 2, 2, 2, 2, 5, 5, 5, 5, 2, 2, 2, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
     },
     {
       "case": "runtime",
       "phase": "mask-alpha0",
       "role": "wrapper",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [0, 1, 2, 3, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
     },
     {
       "case": "runtime",
       "phase": "mask-alpha0",
       "role": "target",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [7, 0, 10, 1, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
     },
     {
       "case": "runtime",
       "phase": "mask-alpha0",
       "role": "m1",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [10, 0, 2, 2, 2, 2, 2, 2, 2, 5, 5, 5, 5, 2, 2, 1, 2, 2, 2, 2, 2, 2, 6, 6, 5, 5]
     },
     {
       "case": "runtime",
       "phase": "different-parent",
       "role": "wrapper",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [0, 1, 2, 3, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
     },
     {
       "case": "runtime",
       "phase": "different-parent",
       "role": "target",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [7, 0, 10, 2, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
     },
     {
       "case": "runtime",
       "phase": "different-parent",
       "role": "m1",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [
         10, 16, 2, 2, 2, 2, 2, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5
       ]
@@ -851,7 +790,6 @@
       "case": "runtime",
       "phase": "different-parent",
       "role": "holder",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [
         16, 1, 2, 17, 2, 2, 2, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5
       ]
@@ -860,21 +798,18 @@
       "case": "runtime",
       "phase": "mask-removed",
       "role": "wrapper",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [0, 1, 2, 3, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
     },
     {
       "case": "runtime",
       "phase": "mask-removed",
       "role": "target",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [7, 0, 10, 2, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
     },
     {
       "case": "runtime",
       "phase": "mask-removed",
       "role": "m1",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [
         10, 2, 2, 18, 2, 2, 2, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5
       ]
@@ -883,21 +818,18 @@
       "case": "runtime",
       "phase": "mask-removed-miss",
       "role": "wrapper",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [0, 1, 2, 3, 2, 2, 2, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
     },
     {
       "case": "runtime",
       "phase": "mask-removed-miss",
       "role": "target",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [7, 0, 10, 2, 2, 2, 2, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
     },
     {
       "case": "runtime",
       "phase": "mask-removed-miss",
       "role": "m1",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [
         10, 2, 2, 18, 2, 2, 2, 11, 2, 5, 5, 5, 5, 11, 2, 1, 1, 2, 2, 2, 12, 2, 13, 6, 5, 5
       ]
@@ -906,14 +838,12 @@
       "case": "runtime",
       "phase": "target-removed",
       "role": "wrapper",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [0, 1, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2]
     },
     {
       "case": "runtime",
       "phase": "target-removed",
       "role": "target",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [
         7, 2, 10, 18, 2, 2, 2, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8
       ]
@@ -922,7 +852,6 @@
       "case": "runtime",
       "phase": "target-removed",
       "role": "m1",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [
         10, 2, 2, 18, 2, 2, 2, 11, 2, 5, 5, 5, 5, 11, 2, 1, 1, 2, 2, 2, 12, 2, 13, 6, 5, 5
       ]
@@ -931,21 +860,18 @@
       "case": "runtime",
       "phase": "detached-unmasked",
       "role": "wrapper",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [0, 1, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2]
     },
     {
       "case": "runtime",
       "phase": "detached-unmasked",
       "role": "target",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [7, 2, 2, 18, 2, 2, 2, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
     },
     {
       "case": "runtime",
       "phase": "detached-unmasked",
       "role": "m1",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [
         10, 2, 2, 18, 2, 2, 2, 11, 2, 5, 5, 5, 5, 11, 2, 1, 1, 2, 2, 2, 12, 2, 13, 6, 5, 5
       ]
@@ -954,21 +880,18 @@
       "case": "runtime",
       "phase": "cleared",
       "role": "wrapper",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [0, 1, 2, 3, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
     },
     {
       "case": "runtime",
       "phase": "cleared",
       "role": "target",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [7, 0, 2, 2, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
     },
     {
       "case": "runtime",
       "phase": "cleared",
       "role": "m1",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [
         10, 2, 2, 18, 2, 2, 2, 11, 2, 5, 5, 5, 5, 11, 2, 1, 1, 2, 2, 2, 12, 2, 13, 6, 5, 5
       ]
@@ -977,112 +900,96 @@
       "case": "visibility",
       "phase": "baseline",
       "role": "wrapper",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [0, 1, 2, 3, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
     },
     {
       "case": "visibility",
       "phase": "baseline",
       "role": "target",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [7, 0, 2, 1, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
     },
     {
       "case": "visibility",
       "phase": "baseline",
       "role": "m1",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [10, 0, 2, 2, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
     },
     {
       "case": "visibility",
       "phase": "mask-hidden",
       "role": "wrapper",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [0, 1, 2, 3, 2, 2, 2, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
     },
     {
       "case": "visibility",
       "phase": "mask-hidden",
       "role": "target",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [7, 0, 2, 1, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
     },
     {
       "case": "visibility",
       "phase": "mask-hidden",
       "role": "m1",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [10, 0, 2, 2, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 2, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
     },
     {
       "case": "visibility",
       "phase": "mask-alpha0",
       "role": "wrapper",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [0, 1, 2, 3, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
     },
     {
       "case": "visibility",
       "phase": "mask-alpha0",
       "role": "target",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [7, 0, 2, 1, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
     },
     {
       "case": "visibility",
       "phase": "mask-alpha0",
       "role": "m1",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [10, 0, 2, 2, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 2, 2, 2, 2, 2, 2, 6, 6, 5, 5]
     },
     {
       "case": "visibility",
       "phase": "target-hidden",
       "role": "wrapper",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [0, 1, 2, 3, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
     },
     {
       "case": "visibility",
       "phase": "target-hidden",
       "role": "target",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [7, 0, 2, 1, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 2, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
     },
     {
       "case": "visibility",
       "phase": "target-hidden",
       "role": "m1",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [10, 0, 2, 2, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
     },
     {
       "case": "visibility",
       "phase": "target-alpha0",
       "role": "wrapper",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [0, 1, 2, 3, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
     },
     {
       "case": "visibility",
       "phase": "target-alpha0",
       "role": "target",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [7, 0, 2, 1, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 2, 2, 2, 2, 2, 2, 9, 9, 8, 8]
     },
     {
       "case": "visibility",
       "phase": "target-alpha0",
       "role": "m1",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [10, 0, 2, 2, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
     },
     {
       "case": "field1551",
       "phase": "baseline",
       "role": "wrapper",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [
         0, 1, 2, 3, 1, 1, 1, 2, 2, 19, 19, 19, 19, 2, 2, 1, 1, 2, 2, 2, 2, 2, 20, 20, 19, 19
       ]
@@ -1091,21 +998,18 @@
       "case": "field1551",
       "phase": "baseline",
       "role": "target",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [7, 0, 2, 10, 1, 1, 1, 2, 2, 8, 8, 8, 8, 2, 2, 1, 1, 2, 2, 2, 2, 2, 9, 9, 8, 8]
     },
     {
       "case": "field1551",
       "phase": "baseline",
       "role": "m1",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [10, 0, 2, 1, 1, 1, 1, 2, 2, 5, 5, 5, 5, 2, 2, 1, 1, 2, 2, 2, 2, 2, 6, 6, 5, 5]
     },
     {
       "case": "field1551",
       "phase": "baseline",
       "role": "m2",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [
         14, 0, 2, 7, 2, 2, 2, 21, 21, 19, 19, 19, 19, 21, 21, 1, 1, 2, 2, 2, 22, 22, 20, 20, 19, 19
       ]
@@ -1114,7 +1018,6 @@
       "case": "field1551",
       "phase": "exterior-point",
       "role": "m2",
-      "pointClass": "flash.geom::Point",
       "wordIndices": [
         14, 0, 2, 7, 1, 1, 2, 21, 21, 19, 19, 19, 19, 21, 21, 1, 1, 23, 2, 2, 24, 22, 20, 20, 19, 19
       ]

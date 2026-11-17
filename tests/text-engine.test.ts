@@ -6,7 +6,7 @@ import { compareTextEngine, observedValues } from './support/text-engine-compare
 const key = (s: { case: string; phase: string; role: string; point: string; space: string }) =>
   [s.case, s.phase, s.role, s.point, s.space].join('/');
 const report = compareTextEngine(fixture);
-const row = (phase: string, point: string, role = 'target', caseName = 'original-1659') => {
+const row = (phase: string, point: string, role = 'target', caseName = 'authored-1659') => {
   const s = fixture.samples.find(
     (s) => s.case === caseName && s.phase === phase && s.point === point && s.role === role,
   );
@@ -31,7 +31,7 @@ test('distinct Engine controls preserve every earlier frozen Number and control 
 });
 
 test('the measured matrix schema is frozen', () => {
-  expect(fixture.originalTextInventory).toEqual(previous.originalTextInventory);
+  expect(fixture.textInventory).toEqual(previous.textInventory);
   expect(fixture.fields.slice(42)).toEqual(
     ['targetOwn', 'wrapperOwn', 'targetConcatenated', 'wrapperConcatenated'].flatMap((p) =>
       ['a', 'b', 'c', 'd', 'tx', 'ty'].map((k) => p + '.' + k),

@@ -69,7 +69,7 @@ test('AssetPack retained clip boundary uses exact twips without mutating shared 
   const placement = { ...child(1541, { ...I, a: 0.5, d: 0.5, tx: 1, ty: -1 }), clipDepth: 2 };
   const pack = new AssetPack('mock');
   Object.assign(pack, {
-    shapes: new Map([[1541, { bounds: original.originalLeafTwips }]]),
+    shapes: new Map([[1541, { bounds: original.leafTwips }]]),
     sprites: new Map([[1542, { id: 1542, frameCount: 1, placements: [placement] }]]),
   });
   const pose = new ArtClip(1542, pack);

@@ -41,10 +41,10 @@ const measuredMaskWidth = (matrix: DisplayMatrix) =>
       leafBounds: (id) =>
         id === 1541
           ? {
-              x: original.originalLeafTwips.xMin / 20,
-              y: original.originalLeafTwips.yMin / 20,
-              width: (original.originalLeafTwips.xMax - original.originalLeafTwips.xMin) / 20,
-              height: (original.originalLeafTwips.yMax - original.originalLeafTwips.yMin) / 20,
+              x: original.leafTwips.xMin / 20,
+              y: original.leafTwips.yMin / 20,
+              width: (original.leafTwips.xMax - original.leafTwips.xMin) / 20,
+              height: (original.leafTwips.yMax - original.leafTwips.yMin) / 20,
             }
           : undefined,
       displayList: () => [],
@@ -433,7 +433,7 @@ test('read snapshots never change identity, pose, clocks, entropy or shared auth
 // comparisons use parsed trace text; they are not f64 word proofs.
 const sourceSetter = (row: number) => {
   const values = setterOriginal.rows
-    .find((trace) => trace.startsWith(`PROBE_FIELD_POSE ${row} `))!
+    .find((trace) => trace.startsWith(`FIELD_POSE ${row} `))!
     .split(' ')
     .slice(2)
     .map(Number);

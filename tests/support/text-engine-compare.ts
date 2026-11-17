@@ -18,7 +18,7 @@ import {
 export interface TextEngineFixture {
   fields: string[];
   binaryWords: number[][];
-  originalTextInventory: { id: number; boundsTwips: number[] }[];
+  textInventory: { id: number; boundsTwips: number[] }[];
   samples: {
     case: string;
     phase: string;
@@ -78,7 +78,7 @@ export function compareTextEngine(fixture: TextEngineFixture) {
         contact: null,
       };
     const id = sample.case === 'derived-advanced' ? 1659 : Number(sample.case.split('-')[1]);
-    const twips = fixture.originalTextInventory.find((t) => t.id === id)!.boundsTwips;
+    const twips = fixture.textInventory.find((t) => t.id === id)!.boundsTwips;
     const declared = { xMin: twips[0]!, xMax: twips[1]!, yMin: twips[2]!, yMax: twips[3]! };
     // Keep the public Point write distinct from the bounds transformation.
     const point = { x: displayTwips(v['point.x']!), y: displayTwips(v['point.y']!) };

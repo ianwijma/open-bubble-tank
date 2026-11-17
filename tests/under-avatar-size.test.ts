@@ -27,7 +27,7 @@ function sample(pose: RetainedTransform, requested: number) {
 }
 
 test('all 29 original setter phases match exact binary getters and effective matrix words', () => {
-  expect(bounds).toEqual(original.originalLeafTwips);
+  expect(bounds).toEqual(original.leafTwips);
   let count = 0;
   for (const [index, control] of original.cases.entries()) {
     const pose = new RetainedTransform();

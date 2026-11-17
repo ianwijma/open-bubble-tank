@@ -1,7 +1,7 @@
 {
   "drag": [
     {
-      "name": "original: precision-eighth-positive",
+      "name": "dpr1: precision-eighth-positive",
       "dpr": 1,
       "scale": 4,
       "down": {
@@ -44,7 +44,7 @@
       ]
     },
     {
-      "name": "original: precision-eighth-negative",
+      "name": "dpr1: precision-eighth-negative",
       "dpr": 1,
       "scale": 4,
       "down": {
@@ -87,7 +87,7 @@
       ]
     },
     {
-      "name": "original: precision-thirds-three-events",
+      "name": "dpr1: precision-thirds-three-events",
       "dpr": 1,
       "scale": 3,
       "down": {
@@ -138,7 +138,7 @@
       ]
     },
     {
-      "name": "original: precision-eighths-thirtytwo-events",
+      "name": "dpr1: precision-eighths-thirtytwo-events",
       "dpr": 1,
       "scale": 4,
       "down": {
@@ -305,7 +305,7 @@
       ]
     },
     {
-      "name": "original: precision-tenths-ten-events",
+      "name": "dpr1: precision-tenths-ten-events",
       "dpr": 1,
       "scale": 4,
       "down": {
@@ -384,7 +384,7 @@
       ]
     },
     {
-      "name": "original-dpr2: precision-eighth-positive",
+      "name": "dpr2: precision-eighth-positive",
       "dpr": 2,
       "scale": 1,
       "down": {
@@ -427,7 +427,7 @@
       ]
     },
     {
-      "name": "original-dpr2: precision-eighth-negative",
+      "name": "dpr2: precision-eighth-negative",
       "dpr": 2,
       "scale": 1,
       "down": {
@@ -470,7 +470,7 @@
       ]
     },
     {
-      "name": "original-dpr2: precision-thirds-three-events",
+      "name": "dpr2: precision-thirds-three-events",
       "dpr": 2,
       "scale": 1.5,
       "down": {
@@ -521,7 +521,7 @@
       ]
     },
     {
-      "name": "original-dpr2: precision-eighths-thirtytwo-events",
+      "name": "dpr2: precision-eighths-thirtytwo-events",
       "dpr": 2,
       "scale": 1,
       "down": {
@@ -688,7 +688,7 @@
       ]
     },
     {
-      "name": "original-dpr2: precision-tenths-ten-events",
+      "name": "dpr2: precision-tenths-ten-events",
       "dpr": 2,
       "scale": 1,
       "down": {

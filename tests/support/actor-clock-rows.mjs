@@ -3,7 +3,7 @@
 export function unpack(contract) {
   return contract.records.map((record) => {
     const r = record.split(',').map(Number);
-    return r.length === 17 && contract.strings[r[0]] === 'PROBE_ACTOR_CLOCK_BITS'
+    return r.length === 17 && contract.strings[r[0]] === 'ACTOR_CLOCK_BITS'
       ? [
           ...r.slice(0, 16).map((i) => contract.strings[i]),
           ...contract.poses[r[16]].match(/.{8}/g).map((w) => parseInt(w, 16)),
@@ -15,7 +15,7 @@ export function unpack(contract) {
 /** @returns {ActorClockRow[]} */
 export function rows(contract) {
   return unpack(contract)
-    .filter((s) => s.startsWith('PROBE_ACTOR_CLOCK_BITS '))
+    .filter((s) => s.startsWith('ACTOR_CLOCK_BITS '))
     .map((s) => {
       const t = s.split(' ');
       return {

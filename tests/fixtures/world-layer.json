@@ -31,7 +31,6 @@
     "avatarScale": 1,
     "waveChildAndHighlightScale": 1.4,
     "bottomXY": [0, 0],
-    "bottomParent": "original1540-under-receiver1551",
     "collapseCalls": 119,
     "sampleAges": [0, 1, 2, 51, 119],
     "finishAge": 120,
@@ -42,8 +41,7 @@
       [0, 0],
       [100, 40]
     ],
-    "nextRootXY": [700, -90],
-    "nextBulletTopCopy": "current receiver root, not next root"
+    "nextRootXY": [700, -90]
   },
   "samples": [
     {

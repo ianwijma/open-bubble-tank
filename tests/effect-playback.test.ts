@@ -27,7 +27,7 @@ const totals = {
   identityComparisons: 0,
   currentMatrixComparisons: 0,
 };
-for (const root of original.sourceAudit.roots)
+for (const root of original.clips.roots)
   for (const cohort of ['before', 'inside'])
     test(`retained production ${cohort}:${root.key} matches frozen root/descendant frames, correspondence and own poses`, () => {
       const engine = new RegisteredEffects(),
@@ -145,7 +145,7 @@ for (const root of original.sourceAudit.roots)
         sample('enter', tick);
         if (tick === 7) {
           sample('pre-register', tick);
-          const index = original.sourceAudit.roots.indexOf(root) + (cohort === 'inside' ? 15 : 0);
+          const index = original.clips.roots.indexOf(root) + (cohort === 'inside' ? 15 : 0);
           engine.createRequest(
             {
               clip: effect!,
