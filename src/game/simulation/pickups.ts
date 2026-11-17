@@ -104,7 +104,7 @@ export function movePickup(world: World, pickup: Pickup) {
   if (length(pickup) > BULLET_RADIUS * world.currentWrapper.scale) {
     pickup.dead = true;
     const callbackField = world.pickupDisplays.read(pickup)?.callbackField;
-    if (!callbackField) throw new Error('Pickup Run requires its original Setup callback');
+    if (!callbackField) throw new Error('Pickup Run requires its Setup callback');
     removePickup(world, pickup, callbackField);
     return;
   }

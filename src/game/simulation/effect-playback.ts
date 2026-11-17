@@ -46,7 +46,7 @@ interface Clock {
   effect: Effect;
 }
 
-/** All15 audited plain constructors and their numeric descendants. No asset/browser services.
+/** All15 plain constructors and their numeric descendants. No asset/browser services.
  * Stage roots remain independent of queue/engine/physical parents. Weak references avoid
  * rooting expired objects; a retained Effect or playback handle retains its clock.
  */
@@ -66,7 +66,7 @@ export class EffectPlayback {
     const root = metadata.roots.find((root) => root.symbol === effect.symbol);
     if (!root) throw new Error(`Unsupported native effect ${effect.symbol}`);
     const pose = new ArtClip(root.symbol, source, () => {
-      throw new Error('Unexpected entropy in audited effect graph');
+      throw new Error('Unexpected entropy in the effect graph');
     });
     pose.construct();
     const line = pose.placements.find((placement) => placement.name === 'line_mc');
