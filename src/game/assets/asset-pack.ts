@@ -201,7 +201,7 @@ export class AssetPack {
         const sample = await pack.rasterClip(classPose);
         if (sample) pack.classFrames.set(part.id, sample);
       } else pack.frames.set(part.id, [mockPart(part.id)]);
-      onProgress((i + 1) / PARTS.length, 'Drawing mock bubbles');
+      onProgress((i + 1) / PARTS.length, 'Drawing bubbles');
     }
     return pack;
   }

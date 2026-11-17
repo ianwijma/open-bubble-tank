@@ -176,7 +176,7 @@ p {
   background: #0a3b56;
   align-self: center;
 }
-.stage-frame.native-size {
+.stage-frame.actual-size {
   max-width: 550px;
 }
 .stage-space {
@@ -321,16 +321,16 @@ kbd {
   line-height: 1.6;
   margin-bottom: 14px;
 }
-.mock-button {
+.play-button {
   margin-top: 12px;
   font-size: 10px;
   color: #a4cfda;
   padding: 7px 8px;
 }
-.mock-button:hover {
+.play-button:hover {
   color: #e5faff;
 }
-.mock-button span {
+.play-button span {
   padding-left: 9px;
 }
 .gate-bubbles i {
@@ -433,7 +433,7 @@ kbd {
   background: transparent;
   backdrop-filter: none;
 }
-.recreation-details {
+.about-details {
   width: min(880px, 96vw);
   margin: 12px auto;
   color: #9bc3d1;
@@ -441,7 +441,7 @@ kbd {
     12px/1.5 Arial,
     sans-serif;
 }
-.recreation-details summary {
+.about-details summary {
   cursor: pointer;
 }
 .menu-title {

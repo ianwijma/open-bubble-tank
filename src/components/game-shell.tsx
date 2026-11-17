@@ -349,11 +349,11 @@ export default function GameShell() {
           </span>
           SOAP TANK
         </a>
-        <span className="header-caption">A FLASH CLASSIC, REBUILT</span>
+        <span className="header-caption">AN ARENA SHOOTER MADE OF BUBBLES</span>
         <div className="window-actions">
           <button
-            aria-label={nativeSize ? 'Enlarge game' : 'Original game size'}
-            title="Toggle original size"
+            aria-label={nativeSize ? 'Enlarge game' : 'Actual size'}
+            title="Toggle actual size"
             onClick={() => setNativeSize(!nativeSize)}
           >
             {nativeSize ? 'FIT' : '1×'}
@@ -369,7 +369,7 @@ export default function GameShell() {
           </button>
         </div>
       </header>
-      <div ref={frame} className={`stage-frame ${nativeSize ? 'native-size' : ''}`}>
+      <div ref={frame} className={`stage-frame ${nativeSize ? 'actual-size' : ''}`}>
         <div ref={space} className="stage-space">
           <MainStage runtime={stage} fps={profile?.settings.fps ?? 50}>
             {!pack ? (
@@ -597,8 +597,7 @@ export default function GameShell() {
               {pack && profile && overlay === 'sources' ? (
                 <Dialog title="Choose your tanks" onClose={closeOverlay}>
                   <p className="source-intro">
-                    Explore an endless world of bubblefields with the original built-in tank
-                    collection.
+                    Explore an endless world of bubblefields with the built-in tank collection.
                   </p>
                   <label className="source-option">
                     <input type="checkbox" checked readOnly /> Built-in tanks{' '}
@@ -636,7 +635,7 @@ export default function GameShell() {
         </div>
       </div>
       <footer className="site-footer">
-        <span>{pack ? 'PROCEDURAL MOCK ASSETS' : 'YOUR DEVICE'}</span>
+        <span>{pack ? 'PLACEHOLDER ARTWORK' : 'YOUR DEVICE'}</span>
         <p>
           <kbd>W</kbd>
           <kbd>A</kbd>
@@ -646,13 +645,12 @@ export default function GameShell() {
         </p>
         <span>{storageError ? 'LOCAL SAVING UNAVAILABLE' : 'LOCAL SAVE'}</span>
       </footer>
-      <details className="recreation-details">
+      <details className="about-details">
         <summary>About Soap Tank</summary>
         <p>
-          Soap Tank grows out of a recreation of an older Flash game. The built-in tanks, part names
-          and texts come from that game and are credited in the project&apos;s notice file.
+          Soap Tank is a free, open-source arena shooter where every tank is built from bubbles. The
+          artwork is a placeholder until the game&apos;s own artwork is ready.
         </p>
-        {pack ? <p className="asset-summary">Playing with procedural mock artwork.</p> : null}
       </details>
     </main>
   );
