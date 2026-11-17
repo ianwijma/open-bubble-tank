@@ -1,6 +1,6 @@
 # Soap Tank: plan
 
-**Status: plan. Little of it is implemented yet.** Written 2026-11-13 from planning discussions with Ian, revised after two reviews, and rewritten 2026-11-16 for the move to the new repository, with Ian's decisions of that day applied. No tests or game code were run for this plan. Counts come from reading the source and data files of classic before the cleanup, and code references may drift.
+**Status: plan. Little of it is implemented yet.** Written 2026-11-13 from planning discussions with the maintainer, revised after two reviews, rewritten 2026-11-16 with the maintainer's decisions of that day applied, and brought up to date with the repository on 2026-11-17. No game code was run for this plan. Counts come from reading the source and data files, except the numbers of tests run, which come from test runs; code references may drift.
 
 ## 1. What Soap Tank is
 
@@ -13,46 +13,46 @@ Goals, in priority order:
 3. A community forms around it: people build tanks, share them, and fight each other's designs.
 4. Gameplay is improved where the original is awkward. Soap Tank is not bound to reproduce classic.
 
-Soap Tank uses its own artwork and sound and never reads the original game file. It is free to break with classic: saves and tank codes do not carry over. It lives in its own repository and at its own address, `soaptank.net` (section 3).
+Soap Tank uses its own artwork and sound and never reads the original game file. It is free to break with classic: saves and tank codes do not carry over. It lives in its own repository, `soaptank`, and at its own address, `soaptank.net` (section 3).
 
 Out of scope: payments of any kind. The workshop is a free gallery. Original artwork belongs to the original's makers and is never bundled, uploaded or hosted (see `NOTICE.md`).
 
 ## 2. Decisions
 
-Each entry is marked **decided** (Ian confirmed it), **proposed** (recommended, not yet confirmed) or **open**.
+Each entry is marked **decided** (the maintainer confirmed it), **proposed** (recommended, not yet confirmed) or **open**.
 
 ### Project
 
 | Topic | Decision | State |
 | --- | --- | --- |
-| Relation to classic | Classic stays in the old repository, which remains private and is renamed. Soap Tank lives in a new repository (section 3). | Decided |
+| Relation to classic | Classic is a separate project and is not developed here. Soap Tank lives in its own repository (section 3). | Decided |
 | Name | **Soap Tank**, two words, wherever people read it. `soaptank`, one word, wherever a space is not allowed. | Decided |
-| Where Soap Tank lives | `soaptank.net`. What stays at the current address is decided later. | Decided |
-| Repository | `soaptank` on Ian's personal GitHub account, open source. | Decided |
+| Where Soap Tank lives | `soaptank.net`. What stays at the game's earlier address is decided later. | Decided |
+| Repository | `soaptank` on the maintainer's personal GitHub account, open source. | Decided |
 | License | `AGPL-3.0-only` for the repository's code, game and backend alike. Chosen so that a hosted copy with changes must publish them. The license cannot cover content kept from the original game, so that content is named in `NOTICE.md` and `README.md` as excluded (section 3). | Decided |
-| Contributor agreement | Outside contributors accept a contributor license agreement once, on their first pull request. They keep ownership of their code and may use it as they like. Ian receives a broad, permanent license to it, including the right to publish it under other terms. No copyright is transferred. The text comes from an established template, not written from scratch. | Decided |
-| Contributor agreement bot | CLA Assistant (`cla-assistant.io`): free, open source and maintained as of 2026-11-16. It keeps the signatures on its own service, so the list is exported from time to time. It is set up before the repository goes public (section 3). | Decided |
+| Contributor agreement | Outside contributors accept a contributor license agreement once, on their first pull request. They keep ownership of their code and may use it as they like. The maintainer receives a broad, permanent license to it, including the right to publish it under other terms. No copyright is transferred. The text comes from an established template, not written from scratch. | Decided |
+| Contributor agreement bot | CLA Assistant (`cla-assistant.io`): free, open source and maintained as of 2026-11-16. It keeps the signatures on its own service, so the list is exported from time to time. It shows the agreement from a GitHub Gist, so the agreement file in the repository and the Gist must hold the same text. It is active before any outside pull request is accepted. | Decided |
 | itch.io | A project called Soap Tank under the identifier `soaptank`, for a later desktop or embedded web release. | Decided |
 | npm | No package name is reserved. It only matters if a library is published. | Decided |
-| Trademark | None is registered, and the trademark registers are not searched. The rename to Soap Tank goes ahead without a search (decided 2026-11-16). | Decided |
-| When Soap Tank work starts | After the steps in section 3, on a date Ian chooses. Classic is wrapped up and is not part of this plan. | Decided |
+| Trademark | None is registered, and the trademark registers are not searched. Soap Tank was named without a search (decided 2026-11-16). | Decided |
+| When Soap Tank work starts | On a date the maintainer chooses. Classic is wrapped up and is not part of this plan. | Decided |
 | Compatibility with classic | None required. Saves do not carry over, and Soap Tank has its own tank code. | Decided |
-| Test safety net | Before Soap Tank changes the game, tests pin what it does today, both in the rules and in the browser. One exception: the original-file reader is removed at the cut, guarded only by the stand-in tests and the bot playthrough (section 3). | Decided |
+| Test safety net | Before Soap Tank changes the game, tests pin what it does today, both in the rules and in the browser. | Decided |
 | Code modernization phase | After the safety net, the code is restructured so it can take the Soap Tank changes. Nothing the player can see changes in this phase, and the tests prove it. | Decided |
-| Rebrand | The rename comes first, before any other work, together with the move to the new repository. It covers the name, the documents, the branding images, the removal of the original-file reader and the import tools, and their tests (section 3). The artwork overhaul still comes before the public launch. | Decided |
-| What the rename leaves | The built-in tank designs, waves, part names, texts, and menu and editor layouts taken from the original stay, and so do the rules rebuilt from the original's code. Ian accepts the remaining risk. | Decided |
-| Game data | The JSON files in `src/game/data` are hand-maintained source. The tools that imported them from the original are removed (decided 2026-11-16). | Decided |
+| Rebrand | Soap Tank has its own name, documents and branding images, and no original-file reader or import tools (section 3). The artwork overhaul comes before the public launch. | Decided |
+| What is kept from the original | The built-in tank designs, waves, part names, texts, and menu and editor layouts taken from the original stay, and so do the rules rebuilt from the original's code. The maintainer accepts the remaining risk. | Decided |
+| Game data | The JSON files in `src/game/data` are hand-maintained source, edited directly and guarded by the tests (decided 2026-11-16). | Decided |
 | Frontend hosting | Vercel. | Decided |
 | Backend hosting | A small rented VPS, built so it can move to another host later. Not Vercel (cost). | Decided |
-| Phones | Must run well on a mid-range phone. Ian's high-end iPhone is the main test device. | Decided |
+| Phones | Must run well on a mid-range phone. The maintainer's high-end iPhone is the main test device. | Decided |
 
 ### Artwork, screen and controls
 
 | Topic | Decision | State |
 | --- | --- | --- |
-| Artwork | Soap Tank uses its own artwork everywhere. The current stand-in artwork is kept through the rename and the cut. The artwork overhaul comes later, before the public launch. | Decided |
-| Original game file | Never read, for anything, music included (decided 2026-11-16). The whole original-file reader is removed at the cut. Classic remains the place for the original look and sound. | Decided |
-| Music | Soap Tank gets its own music ("Let's reimplement our own music", Ian, 2026-11-16). Until it exists, the game plays the placeholder tones it already has. This replaces loading the original file for its music. | Decided |
+| Artwork | Soap Tank uses its own artwork everywhere. The current stand-in artwork stays until the artwork overhaul, before the public launch. | Decided |
+| Original game file | Never read, for anything, music included (decided 2026-11-16). The game has no reader for it. Classic remains the place for the original look and sound. | Decided |
+| Music | Soap Tank gets its own music (decided 2026-11-16). Until it exists, the game plays the placeholder tones it already has. | Decided |
 | Artwork in tests | Tests use Soap Tank's own artwork only. | Decided |
 | Screen | The game fills the window and shows more of the field. No letterboxed box. | Decided |
 | Order | Widescreen before mobile, because phones are wide and need the same view and HUD anchoring. | Decided |
@@ -114,7 +114,7 @@ Each entry is marked **decided** (Ian confirmed it), **proposed** (recommended, 
 | Versions | A published tank is one entry with versions. Each version never changes. The latest is shown by default. A new version does not reset the tank's use figures. | Decided |
 | Unpublishing | Not possible. A published tank stays published. Its author can hide it from their own page, and it remains findable elsewhere. | Decided |
 | Removal | Only by a moderator, after confirming a report. Nothing is ever erased: a removed tank is hidden from everyone and the owner can restore it. A removed tank also leaves every pack. | Decided |
-| Moderators | One owner account, Ian's, appoints and removes moderators and can undo anything a moderator did. | Decided |
+| Moderators | One owner account, the maintainer's, appoints and removes moderators and can undo anything a moderator did. | Decided |
 | Account deletion | Supported. The account's personal details are erased and its tanks stay, shown under "deleted user". | Decided |
 | Library | Two kinds of entry. A subscribed workshop tank follows its latest version and cannot be edited. A copy is the player's own tank, editable, with no link back to the original. | Decided |
 | Copies | Copying someone's tank, changing it and publishing it as your own is allowed. Exact copies are not refused. | Decided |
@@ -125,26 +125,27 @@ Each entry is marked **decided** (Ian confirmed it), **proposed** (recommended, 
 | Weekly pack schedule | Built automatically every Friday at 06:00 UTC. Past weeks stay playable, and the current week is advertised in the game. | Decided |
 | Packs and stat changes | Old packs play with the current stat formulas. | Decided |
 
-## 3. Rebrand and new repository
+## 3. Name, license and what comes from the original
 
-Decided 2026-11-15. Soap Tank starts with a rename and a move to a new repository, so that it is disconnected from the old project from its first commit. The cleanup that prepares the new repository is carried out on a `v2` branch of the old repository, which stays private and keeps classic on `master`.
+Decided 2026-11-15. Soap Tank has its own name, repository and address. The repository starts from a single commit and carries no earlier history.
 
 ### Name and places
 
-| Thing | Value | State |
-| --- | --- | --- |
-| Display name | Soap Tank, two words | Decided |
-| Identifier | `soaptank`, where a space is not allowed: the repository, the package name, the itch.io identifier | Decided |
-| Environment variables | Prefix `SOAPTANK_`, for example `SOAPTANK_PLAYTHROUGH_LONG_RUN` | Decided |
-| Profile storage key | `soaptank.profile.v1` | Decided |
-| Website | `soaptank.net` | Decided. Registered by Ian. |
-| Discord server | Soap Tank | Decided. Claimed by Ian. |
-| Repository | `soaptank` on Ian's personal GitHub account | Decided. Created, still empty. |
-| itch.io | Project "Soap Tank", identifier `soaptank` | Decided. Not yet claimed. |
-| Old repository | Stays private and is renamed | Decided |
-| License | `AGPL-3.0-only` for the code; kept original content is named as excluded | Decided |
+All rows are decided.
 
-The name is a nod to the original without using its name. "Open" was dropped because "Open X" reads as an open clone of X. In prose the name is always two words, never joined.
+| Thing | Value |
+| --- | --- |
+| Display name | Soap Tank, two words |
+| Identifier | `soaptank`, where a space is not allowed: the repository, the package name, the itch.io identifier |
+| Environment variables | Prefix `SOAPTANK_`, for example `SOAPTANK_PLAYTHROUGH_LONG_RUN` |
+| Profile storage key | `soaptank.profile.v1` |
+| Website | `soaptank.net` |
+| Discord server | Soap Tank |
+| Repository | `soaptank` on the maintainer's personal GitHub account |
+| itch.io | Project "Soap Tank", identifier `soaptank` |
+| License | `AGPL-3.0-only` for the code; kept original content is named as excluded |
+
+The name is a nod to the original without using its name. In prose the name is always two words, never joined.
 
 **Saves.** Soap Tank does not read classic saves. It stores its data under its own name and lives at its own address, so the two never touch.
 
@@ -152,57 +153,46 @@ The name is a nod to the original without using its name. "Open" was dropped bec
 
 For itch.io and the Discord server. itch.io allows 120 characters for the short description.
 
-- **Tagline** (51 characters, liked by Ian): "Build a tank out of bubbles. Fight everyone else's."
+- **Tagline** (51 characters, liked by the maintainer): "Build a tank out of bubbles. Fight everyone else's."
 - **Short description** (105 characters, proposed): "Build a tank out of bubbles and fight everyone else's. A free, open-source arena shooter in your browser."
 - **Once phones are supported** (111 characters, proposed): "Build a tank out of bubbles and fight everyone else's. A free, open-source arena shooter for browser and phone."
 - **Longer description** (proposed): "Soap Tank is a free, open-source arena shooter where every tank is built from bubbles. Pop enemies, collect what they drop, and grow into something bigger. Design your own tanks in the editor, share them in the workshop, and fight the community's creations. Plays in the browser, on desktop and phone." This describes the finished game. Until the workshop and phone support exist, cut those sentences or mark the game as in development.
 - **Genre.** A top-down arena shooter: a twin-stick shooter with a tank builder. On itch.io: Shooter. Proposed tags: `twin-stick-shooter`, `top-down-shooter`, `arena-shooter`, `tanks`, `level-editor`, `open-source`. Not called a roguelite, because runs are saved and resumed.
 
-### The cleanup
+### How the repository stands
 
-Ian chose the lightest of three levels: the name and the documents. The content and the engine stay, apart from the original-file reader and the import tools. All rows are decided.
+The maintainer chose the lightest of three levels: the name and the documents. The content and the engine stay; the original-file reader and the import tools do not. All rows are decided.
 
-| Item | What happens |
+| Item | How it is |
 | --- | --- |
-| The old name and mentions of the original game | Replaced or removed across code, tests, tools and texts, except what `NOTICE.md`, the exclusion note in `README.md` and the kept content need. |
-| Old identifiers | Renamed with the name: the environment variable prefix, the profile storage key and the package name (table above). |
-| Provenance comments | Citations of the original's decompiled code are removed from code comments. The plain explanation of each rule stays. |
-| Classic documents | The reference documents, the classic work notes and the classic status documents are removed. `AGENTS.md`, `goals.markdown`, `README.md`, `NOTICE.md`, `docs/architecture.md`, `docs/delivery.md` and this plan are rewritten for Soap Tank. |
-| Branding images | The two icon files in `assets/branding/` are renamed and kept, and `src/app/icon.svg` is kept: all three are the project's own artwork and none shows the old name. New artwork comes with the artwork overhaul. |
-| The original-file reader | Removed entirely, music included, together with the tests that cover it (below). Soap Tank never reads the original game file (decided 2026-11-16). |
-| Import and reference tools | Removed: everything under `tools/` that imports, captures or probes the original game, and the `@ruffle-rs/ruffle` development dependency. The data in `src/game/data` becomes hand-maintained source, edited directly and guarded by the tests. |
-| Test infrastructure in `tools/` | Kept: `tools/fixtures/`, `tools/visual-fixtures.ts` and `tools/playthrough/`. Fixtures that serve only the removed reader go with it; mixed fixtures keep their stand-in checks. |
-| Credits screen and series menu | Removed from the game. Credit to the original lives in `NOTICE.md` and `README.md` only. |
+| Mentions of the original game | Only in `NOTICE.md`, the exclusion note in `README.md` and the kept content. |
+| Identifiers | The environment variable prefix, the profile storage key and the package name use `soaptank` (table above). |
+| Code comments | Each rule is explained in plain terms. Comments do not cite the original's decompiled code. |
+| Branding images | The two icon files in `assets/branding/` and `src/app/icon.svg` are the project's own artwork. New artwork comes with the artwork overhaul. |
+| The original game file | Soap Tank has no reader for it and never reads it, music included (decided 2026-11-16). |
+| Game data | The data in `src/game/data` is hand-maintained source, edited directly and guarded by the tests. No tool imports it from the original. |
+| Test infrastructure in `tools/` | `tools/fixtures/`, `tools/visual-fixtures.ts` and `tools/playthrough/`. |
+| Credit to the original | In `NOTICE.md` and `README.md` only. The game has no credits screen or series menu. |
 
 ### What was kept from the original
 
 | Item | Why it stays |
 | --- | --- |
 | Built-in tank designs, waves, part names and texts | The game is not playable without them. The built-in tanks stay as they are, stored stats included; converting them to the new format (workstream D) and recalculating their stats (workstream K) come later. The boss keeps hand-set stats. |
-| Imported display data in `src/game/data` | The stand-in artwork and the screens are drawn from it: timelines, layouts, geometry and effect clips. Decompiled class names and source-file hashes are stripped where no code reads them. |
+| Imported display data in `src/game/data` | The stand-in artwork and the screens are drawn from it: timelines, layouts, geometry and effect clips. Decompiled class names and source-file hashes are left out wherever no code reads them. |
 | Menu and editor layouts | Kept for now. They are replaced when those screens are rebuilt (workstreams A and E). |
 | Rules rebuilt from the original's code | They are the engine. The code modernization in section 5 restructures them. |
 
-**A known risk.** A new name and a clean history remove the branding, but the kept rows are content and rules that come from the original game. `NOTICE.md` credits them to their creators and names them as excluded from the license. Ian accepts this risk for now. No legal review has been done.
+**A known risk.** A new name and a clean history remove the branding, but the kept rows are content and rules that come from the original game. `NOTICE.md` credits them to their creators and names them as excluded from the license. The maintainer accepts this risk for now. No legal review has been done.
 
-**License scope.** `AGPL-3.0-only` covers the code Ian and contributors wrote. It cannot grant rights to the kept content from the original game, or to third-party material. The `LICENSE` file is the unmodified license text, which may not be changed. `NOTICE.md` and `README.md` name the excluded content and the third-party licenses. The contributor agreement covers only what a contributor has the right to license. The license does not protect the name.
+**License scope.** `AGPL-3.0-only` covers the code the maintainer and contributors wrote. It cannot grant rights to the kept content from the original game, or to third-party material. The `LICENSE` file is the unmodified license text, which may not be changed. `NOTICE.md` and `README.md` name the excluded content and the third-party licenses. The contributor agreement covers only what a contributor has the right to license. The license does not protect the name.
 
-### Tests after the cleanup
+### How the tests guard the engine
 
-- **Browser specs.** Most spec files ran each test twice, on the stand-in artwork and on the original file. The loops collapse to the stand-in case; the files stay.
-- **Rule tests.** Tests of the original-file reader are retired with it, including those that parse synthetic bytes. Tests that import a removed tool move to the data in `src/game/data` or go with the tool. Two test files, `tank-code.test.ts` and `roster-identity.test.ts`, read recovered tank data from outside the repository; they cover classic tank codes and the roster, which stay, so they are kept. How their outside data is replaced is open (section 9).
-- **Music.** No music test is kept. The original-file music test in `e2e/feedback.spec.ts` is retired with the reader.
-- **What guards the removal.** The stand-in tests and the bot playthrough. Recorded runs (section 5, phase 3) do not exist yet.
-
-### Remaining steps
-
-1. **Secure the name.** Create the private `soaptank` repository and claim the itch.io name. No trademark search is done (section 2).
-2. **Finish the cleanup** on the `v2` branch: the table above. It passes when format, `bun run check` and the full offline browser suite (`bun run test:e2e:offline`, which includes the bot playthrough) pass.
-3. **License and contributor agreement.** The `v2` branch gains the unmodified AGPL-3.0 text as `LICENSE`, `"license": "AGPL-3.0-only"` in `package.json`, the contributor license agreement, and a short explanation in `README.md` of why the agreement exists. The agreement template is chosen before this step, because the text is part of the first commit. CLA Assistant, which collects each contributor's acceptance, is set up on the new repository before it goes public. It shows the agreement from a GitHub Gist, so the committed file and the Gist must hold the same text.
-4. **One squashed commit.** Once the `v2` branch is clean, its tree is copied to the new repository as a single commit. No history is carried over, because a history keeps every old reference readable however much a later commit removes. The new repository's default branch must match the CI trigger (`branches: [master]` in `.github/workflows/ci.yml`), and the full offline suite is run once on the squashed commit.
-5. **Private until clean.** The new repository is made public only when the cleanup is finished and checked. Checked means: a case-insensitive search for the old names finds them only in `NOTICE.md`, the exclusion note in `README.md` and the kept texts and data (such as tank authors and part flavor text); format, `bun run check` and the full offline browser suite pass on the squashed commit; and CLA Assistant is active on the new repository.
-
-Soap Tank work starts after these steps.
+- **Browser tests.** Each browser test runs once, on Soap Tank's own stand-in artwork.
+- **Rule tests.** They read the data in `src/game/data`. Two test files, `tank-code.test.ts` and `roster-identity.test.ts`, each have one test that reads a catalog of the built-in tanks from outside the repository, named by `SOAPTANK_BUILTIN_TANKS_FILE`, and is skipped without it. They cover classic tank codes and the roster. How that outside data is replaced is open (section 9).
+- **Music.** No test covers own music, which does not exist yet. `e2e/feedback.spec.ts` checks that the placeholder tones play.
+- **The whole game.** The stand-in tests and the bot playthrough. Recorded runs (section 5, phase 3) do not exist yet.
 
 ## 4. Architecture and hosting
 
@@ -325,13 +315,13 @@ Four phases come before any Soap Tank feature. Tests first pin what the game doe
 
 ### What exists today
 
-Counted from classic at the `classic-v1` tag (`5d2eb72`), before the cleanup. The cleanup retires the original-file tests and changes these numbers. Nothing was run, so pass rates and run times are unknown.
+Declarations are counted from the source on 2026-11-17. The numbers of tests run come from runs of the suites; pass rates over repeated runs and run times are not recorded.
 
-- **Rule tests.** About 1,120 test declarations in 172 files under `tests/`, run by `bun run check`. This counts declarations in the source, not tests executed; some are repeated over several inputs. They exercise the engine without a browser, and none import a React component. After the cleanup, two files still read data from outside the repository (section 3).
-- **Browser tests.** 160 test declarations in 121 files under `e2e/`, run by `bun run test:e2e` one at a time against a production build. Most files ran each test twice, on the stand-in artwork and on the original file; the cleanup keeps only the stand-in case.
-- **CI.** On pull requests: the format check, the TypeScript check, the rule tests, a production build and a quick stand-in smoke of `e2e/game.spec.ts` (`test:e2e:smoke`). On pushes to `master` and on manual runs, the smoke is replaced by the full offline suite: every browser test with "mock" or "synthetic" in its title, including the long bot playthrough (`test:e2e:offline`). Some stand-in tests have neither word in their title and so never run in CI; the offline suite is not every stand-in test.
+- **Rule tests.** About 1,050 test declarations in 157 files under `tests/`, run by `bun run check`, which runs 1,213 tests; some declarations are repeated over several inputs. Two more are skipped unless `SOAPTANK_BUILTIN_TANKS_FILE` names a catalog of the built-in tanks from outside the repository (section 3). They exercise the engine without a browser, and none import a React component.
+- **Browser tests.** 146 test declarations in 111 files under `e2e/`, run by `bun run test:e2e` one at a time against a production build. The full suite runs 150 tests, all on the stand-in artwork.
+- **CI.** On pull requests: the format check, the TypeScript check, the rule tests, a production build and a quick smoke of `e2e/game.spec.ts` (`bun run test:e2e:smoke`). On pushes to `master` and on manual runs, the smoke is replaced by the full browser suite (`bun run test:e2e`), including the long bot playthrough.
 - **A full playthrough.** A bot plays a fresh game through to the boss and the win screen from a fixed random seed (`tools/playthrough/`, `e2e/playthrough.spec.ts`). It runs in a browser and checks broad outcomes such as "won" and "reached every level", not the exact course of the run.
-- **Not present.** Coverage measurement and a linter. Five development dependencies (`@playwright/test` and four type packages) are set to `latest` in `package.json`; the committed `bun.lock` and CI's `--frozen-lockfile` fix them until someone regenerates the lockfile.
+- **Not present.** Coverage measurement and a linter. No development dependency is set to `latest`: `@playwright/test` and the type packages are pinned to exact versions in `package.json`, and the others use version ranges that the committed `bun.lock` and CI's `--frozen-lockfile` fix.
 
 ### Gaps
 
@@ -340,13 +330,13 @@ Counted from classic at the `classic-v1` tag (`5d2eb72`), before the cleanup. Th
    - **Shared random numbers.** The background particles draw from the same random-number generator as the rules (`src/components/game-shell.tsx`), so a visual effect changes which enemies appear.
    - **Rules that read the artwork.** In the browser, hits, tank widths, shield sizes and shot outlines come from the loaded artwork through six hooks (`src/components/game-viewport.tsx`), and hit tests also take the zoom setting. Without a browser the engine falls back to rough approximations, so it plays a slightly different game.
    - **Real time and side commands.** Some timers advance on real elapsed time, and choices such as an upgrade pick are sent outside the per-step input record.
-3. **Many tests pin the classic presentation.** About 30 of the 121 browser test files refer to the 550×450 stage or the original-size switch (a text count), and Soap Tank replaces those screens on purpose. A failing test must say clearly whether something broke or something was meant to change.
+3. **Many tests pin the classic presentation.** About 30 of the 111 browser test files refer to the 550×450 stage or the original-size switch (a text count), and Soap Tank replaces those screens on purpose. A failing test must say clearly whether something broke or something was meant to change.
 4. **Nothing covers what Soap Tank adds:** other window shapes, touch, gamepad, save and restore, the new tank code, the backend.
 5. **Coverage is unknown.** Nobody has measured which engine code no test reaches.
 
 ### Phase 1: safety net
 
-- **Baseline.** Run every test once on the new repository's first commit. Record what passes, what is flaky and how long it takes. Flaky tests are fixed or set aside with a note, so that a red result later means something.
+- **Baseline.** Run every test once. Record what passes, what is flaky and how long it takes. Flaky tests are fixed or set aside with a note, so that a red result later means something.
 - **Coverage map.** Measure which engine code the rule tests reach and add tests where Soap Tank will cut deepest: movement and facing, input, the profile, wave and roster selection.
 - **Player journeys in the browser.** A small set of end-to-end tests written as what a player does, with the game's own artwork so they run in CI:
   - Start a game, play, pause, upgrade, clear a field, quit and continue. "Continue" restores progression only today; a true resume journey arrives with workstream C.
@@ -354,7 +344,7 @@ Counted from classic at the `classic-v1` tag (`5d2eb72`), before the cleanup. Th
   - Change settings and key bindings, reload the page and find them kept.
   - Journeys reach the page through shared helpers. When Soap Tank replaces a screen, the helpers change and the journey stays.
 - **Sort the tests.** Mark each test file as **engine** (rules that Soap Tank keeps) or **classic presentation** (exact layouts, pixel comparisons, the 550×450 stage). The mark decides what a failure means later.
-- **CI.** Add the journeys to the pull-request run. Pin the five `latest` development dependencies in `package.json`, so regenerating the lockfile cannot change results in the middle of a restructure.
+- **CI.** Add the journeys to the pull-request run.
 - **The bot playthrough stays** as the only whole-run check until recorded runs exist.
 
 ### Phase 2: self-contained rules
@@ -385,9 +375,9 @@ The code is restructured so each workstream has a place to attach. Each item kee
 
 | Change | Prepares |
 | --- | --- |
-| **One source for the stage size.** The numbers 550, 450, 275 and 225 appear on about 70 lines across 29 source files outside `src/game/data` (a text count, so a few may be unrelated). Replace them with two named things: the simulation box and the visible area. Both start at 550×450. | A |
+| **One source for the stage size.** The numbers 550, 450, 275 and 225 appear on about 65 lines across 25 source files outside `src/game/data` (a text count, so a few may be unrelated). Replace them with two named things: the simulation box and the visible area. Both start at 550×450. | A |
 | **One place that decides sharpness.** Canvas resolution and the size artwork is drawn at come from one service, set to today's values. | A |
-| **Split the asset loader.** What remains of `src/game/assets/asset-pack.ts` once the original-file reader is removed is separated into the stand-in artwork, drawing and caching. | A, D, J |
+| **Split the asset loader.** `src/game/assets/asset-pack.ts` is separated into the stand-in artwork, drawing and caching. | A, D, J |
 | **Input as actions.** Devices produce the same per-step input record the simulation already takes. Keyboard and mouse become the first device, with identical output. | B |
 | **Handling and tier tables as data.** Speed, armor and size tables stop assuming six tiers. Values stay the same. | B, I, K |
 | **World state inventory.** List everything a run holds and separate plain data from the callbacks and timers attached to it. Saving and restoring is workstream C, not this phase. | C |
@@ -637,7 +627,7 @@ The engine already supports the core of this: a world can start with a chosen ta
 
 **Moderation and removal.**
 
-- **Roles.** One owner account, Ian's. The owner appoints and removes moderators.
+- **Roles.** One owner account, the maintainer's. The owner appoints and removes moderators.
 - **Reports.** A report button on every tank. A report alone removes nothing. A moderator confirms it first. How the report queue works in detail is not designed.
 - **Removal hides, it never erases.** A removed tank disappears from listings, packs and link caches, and nobody but the owner can reach it. Its data stays on the server.
 - **Everything can be undone.** Every moderator action is logged with who did it and when. The owner can restore one tank, or undo everything one moderator did in a period, in case an account is misused or taken over.
@@ -702,9 +692,9 @@ The direction is decided. The details are designed during implementation.
 
 ### J. Own artwork and sound
 
-Soap Tank is built on its own artwork and sound. The current stand-in artwork is kept through the rename and the cut, until the artwork overhaul before the public launch.
+Soap Tank is built on its own artwork and sound. The current stand-in artwork is kept until the artwork overhaul before the public launch.
 
-**What exists today.** A "mock" mode, which since the cut is the only mode: translucent bubble bodies, yellow and orange weapons, drawn projectiles and synthesized sound effects, with quiet looping tones in place of music. It covers all 20 body parts and has numeric layouts for the other 73 parts.
+**What exists today.** The stand-in artwork, the only artwork the game has: translucent bubble bodies, yellow and orange weapons, drawn projectiles and synthesized sound effects, with quiet looping tones in place of music. It covers all 20 body parts and has numeric layouts for the other 73 parts.
 
 **Work.**
 
@@ -714,7 +704,7 @@ Soap Tank is built on its own artwork and sound. The current stand-in artwork is
 - **Sound.** Own sound effects, built on the synthesized ones.
 - **Music.** Own music, in place of the placeholder tones. Until it exists the game plays those tones.
 
-**The original game file.** Soap Tank does not read it for anything, music included (decided 2026-11-16). The whole reader is removed at the cut (section 3), together with the tests that need it.
+**The original game file.** Soap Tank does not read it for anything, music included (decided 2026-11-16), and has no reader for it (section 3).
 
 ### K. Stats from the build
 
@@ -786,15 +776,15 @@ So a small tank with late-game weapons is already possible, within its smaller b
 
 ## 7. Requirements across workstreams
 
-- **Phones.** The target is a mid-range phone. Ian's high-end iPhone is the main test device, so iPhone Safari and an installed copy are tested throughout. Frame-time, memory and download-size limits are set once the wide view runs on a phone, and large tanks and large enemy sources are part of that test. Browser emulation is not enough: sound, graphics-context loss and the editor's touch controls are checked on real devices.
+- **Phones.** The target is a mid-range phone. The maintainer's high-end iPhone is the main test device, so iPhone Safari and an installed copy are tested throughout. Frame-time, memory and download-size limits are set once the wide view runs on a phone, and large tanks and large enemy sources are part of that test. Browser emulation is not enough: sound, graphics-context loss and the editor's touch controls are checked on real devices.
 - **Accessibility.** Menus, the editor and the workshop are usable by keyboard with a visible focus. Text has enough contrast. A setting reduces flashes and screen shake.
 - **Works without the backend.** The game, the editor and installed packs keep working when the server is down or the device is offline.
-- **Rebrand and rights.** Soap Tank lives at `soaptank.net` (section 3). The rename replaces the name and the documents. The stand-in artwork still uses part names, texts, layouts and colors taken from the original game (`NOTICE.md`), and those stay for now by decision. Before the public launch come the artwork overhaul and the terms under which players publish tanks. No review of what remains from the original has been done. The contact standing with the original's makers is not recorded in this plan.
+- **Rebrand and rights.** Soap Tank lives at `soaptank.net` (section 3). The name and the documents are Soap Tank's own. The stand-in artwork still uses part names, texts, layouts and colors taken from the original game (`NOTICE.md`), and those stay for now by decision. Before the public launch come the artwork overhaul and the terms under which players publish tanks. No review of what remains from the original has been done. The contact standing with the original's makers is not recorded in this plan.
 
 ## 8. Order and dependencies
 
-1. **Rebrand and cut** (section 3): securing the name, the cleanup on the `v2` branch with the removal of the original-file reader and the import tools, the license and contributor agreement, and the new repository started from one squashed commit.
-2. **Safety net** (section 5, phase 1), starting with the baseline on the new repository.
+1. **Name and repository** (section 3): done. Soap Tank has its own name, license and repository, with no original-file reader or import tools.
+2. **Safety net** (section 5, phase 1), starting with the baseline.
 3. **Self-contained rules** (phase 2). Small deliberate rule changes; includes the size calculation.
 4. **Recorded runs** (phase 3).
 5. **Code modernization** (phase 4). Nothing visible changes.
@@ -808,23 +798,20 @@ So a small tank with late-game weapons is already possible, within its smaller b
    4. H. Enemy sources and the new upgrade screen, with library tanks
    5. Backend, then G. Workshop and packs, which also brings Publish, subscriptions and workshop tanks into E, F and H
 10. **I. Further gameplay:** tiers 7 and 8, then the endgame.
-11. **Public launch** at `soaptank.net`: the artwork overhaul, the publishing terms, and the new repository made public if it is not already. The rename itself is step 1.
+11. **Public launch** at `soaptank.net`: the artwork overhaul and the publishing terms.
 12. **Later:** link preview images, community-made bosses, difficulty levels.
 
-**J. Own artwork and sound** runs alongside from step 6: the stand-in artwork stops being a fallback, own sound effects and music replace the placeholders, and new parts get artwork as they are added. The original-file reader is already removed in step 1.
+**J. Own artwork and sound** runs alongside from step 6: the stand-in artwork stops being a fallback, own sound effects and music replace the placeholders, and new parts get artwork as they are added.
 
 Delivery follows the five-PR stacks in `docs/delivery.md`.
 
 ## 9. Open questions
 
-**To settle before or during the cut** (section 3):
+**Undecided:**
 
-- **Contributor agreement template.** Chosen before the license step, because the agreement text is part of the first commit.
-- **Outside test data.** How the recovered tank data that `tank-code.test.ts` and `roster-identity.test.ts` read from outside the repository is replaced.
-
-**Undecided, needed later:**
-
-- What stays at the current address (section 2).
+- Which established template the contributor agreement uses (section 2).
+- How the catalog of built-in tanks that `tank-code.test.ts` and `roster-identity.test.ts` read from outside the repository is replaced (section 3).
+- What stays at the game's earlier address (section 2).
 - The monthly cost ceiling for the VPS and CDN (section 4).
 - How tiers 7 and 8 open after the first boss: together, or tier 8 at a later level (section 2, workstream I).
 - What happens when health reaches zero at the lowest level (workstream K).
@@ -838,11 +825,11 @@ Delivery follows the five-PR stacks in `docs/delivery.md`.
 - The new tank code format; its determinism is decided (workstream D).
 - The boss trigger moves from the old health bar to level and growth, with K.
 
-Decided on 2026-11-16, after the plan was written: Soap Tank never reads the original game file, music included, and gets its own music; the import and reference tools are removed and the data in `src/game/data` becomes hand-maintained source, while the test infrastructure in `tools/` stays; provenance citations are removed from code comments; decompiled class names and source-file hashes are stripped from the data where no code reads them; the credits screen and series menu are removed; the license is `AGPL-3.0-only`; and every cleanup row proposed before is confirmed: old identifiers renamed, classic work notes removed, the delivery document and this plan rewritten, `src/app/icon.svg` replaced, the test fixtures kept.
+Decided on 2026-11-16, after the plan was written: Soap Tank never reads the original game file, music included, and gets its own music; the data in `src/game/data` is hand-maintained source; the license is `AGPL-3.0-only`.
 
-Also decided on 2026-11-16: a use counts once per run, with no daily cap per device; the role rule (workstream G); the license is AGPL-3.0, with the kept original content named as excluded; full health after an upgrade, with survival of several hits tuned later rather than guaranteed now; tiers 7 and 8 open only after the first boss; no trademark search before the rename.
+Also decided on 2026-11-16: a use counts once per run, with no daily cap per device; the role rule (workstream G); the license is AGPL-3.0, with the kept original content named as excluded; full health after an upgrade, with survival of several hits tuned later rather than guaranteed now; tiers 7 and 8 open only after the first boss; no trademark search for the name.
 
-Settled on 2026-11-15: the `v2` branch lives in the old repository, the original-file reader is removed at the cut, and the built-in tanks are converted to the new format (after the cut, in workstreams D and K).
+Settled on 2026-11-15: the built-in tanks are converted to the new format (workstreams D and K).
 
 The smaller proposals were all confirmed on 2026-11-14: the 30-day recent window, the aim-reach limit, names with a per-version change log, and weekly-pack ties going to the tank with the higher overall use.
 
@@ -851,7 +838,7 @@ Left for the implementation phase, by decision: the balance between tiers, the s
 ## 10. Not verified
 
 - Pass rates and run times of the existing tests.
-- The browser test counts as executed (how many cases the loops expand to), and the text counts of stage-size references and of presentation tests.
+- The text counts of stage-size references and of presentation tests.
 - Whether the bot and the engine run identically inside and outside a browser once phase 2 is done, and how fast.
 - Which built-in tanks change tier under a size calculation without artwork.
 - Whether any rule treats off-screen enemies as inactive.
@@ -861,6 +848,5 @@ Left for the implementation phase, by decision: the balance between tiers, the s
 - The length of a new full code for large tanks. It no longer limits links, but a very long code may still be awkward to paste into some chat apps.
 - Which browsers offer a share window. The copy panel is the fallback.
 - Whether "Soap Tank" is free in the trademark registers (not searched, by decision).
-- Whether CLA Assistant can be linked to a repository while it is private. If not, it is linked at the moment the repository is made public, before any outside pull request is accepted.
 - Whether the kept content may be published under these terms. No legal review has been done.
 - itch.io's current tag list and Discord's length limit for a server description.
