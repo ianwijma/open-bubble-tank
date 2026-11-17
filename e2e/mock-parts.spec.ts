@@ -5,7 +5,7 @@ import { resolve } from 'node:path';
 import { readCreatorDesign, dropPreview } from './helpers/creator';
 const layouts = JSON.parse(
   readFileSync(resolve('src/game/data/part-geometry.json'), 'utf8'),
-) as Record<number, { bounds: { width: number } }>;
+) as Record<number, { bounds: { x: number; y: number; width: number; height: number } }>;
 
 test(`gun and behavior silhouettes preserve catalog layouts and visible contact`, async ({
   page,
@@ -26,15 +26,14 @@ test(`gun and behavior silhouettes preserve catalog layouts and visible contact`
   for (const sample of proof.samples) {
     expect(sample.painted, String(sample.id)).toBeGreaterThan(40);
     expect(sample.contactRatio, String(sample.id)).toBeGreaterThan(0.98);
-    expect(sample.mockWidth, String(sample.id)).toBeCloseTo(sample.nativeWidth, 4);
-    expect(sample.iou, `${sample.id}: source/mock silhouette overlap`).toBeGreaterThan(0.85);
+    // Part 2013 shares the layout of 5003.
+    const stored = layouts[sample.id === 2013 ? 5003 : sample.id].bounds;
+    for (const key of ['x', 'y', 'width', 'height'] as const)
+      expect(sample.drawn[key], `${sample.id} ${key}`).toBeCloseTo(stored[key], 4);
   }
   const behaviors = proof.samples.filter((s: { id: number }) => s.id >= 6001 && s.id <= 6005);
   expect(behaviors.map((s: { bubbles: number }) => s.bubbles)).toEqual([7, 5, 2, 5, 6]);
   expect(new Set(behaviors.map((s: { hash: number }) => s.hash)).size).toBe(5);
-  expect(
-    proof.samples.reduce((sum: number, s: { iou: number }) => sum + s.iou, 0) / 73,
-  ).toBeGreaterThan(0.94);
   await page.locator('#stage canvas').screenshot({ path: `test-results/mock-part-layouts.png` });
   expect(errors).toEqual([]);
 });

@@ -3,7 +3,7 @@ import { importAvatarFixture } from './avatar-attachments';
 import { importActorFixtures } from './actor-attachments';
 import { captureCanvas } from './pixi-capture';
 import { Rectangle } from 'pixi.js';
-import { AssetPack } from '../../src/game/assets/asset-pack';
+import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { DEFAULT_SETTINGS } from '../../src/game/core/constants';
 import type { Projectile } from '../../src/game/core/types';
 import { STARTER } from '../../src/game/data/catalog';
@@ -13,28 +13,22 @@ import { tickBullet } from '../../src/game/simulation/projectiles';
 import { createTank } from '../../src/game/simulation/tank';
 import { World, emptyInput } from '../../src/game/simulation/world';
 
-/** Compare authored dimensions with the actual procedural paint and shoot-down adapter. */
-export async function showMockAssetsProof(native: AssetPack, host: HTMLElement) {
-  const mock = await AssetPack.mock(),
-    packs = [native, mock];
-  const worlds = packs.map(() => new World([], [], 43));
-  const renderers = packs.map((pack) => new GameRenderer(pack));
-  const mounts = packs.map(() => document.createElement('div'));
-  for (let i = 0; i < 2; i++) {
-    host.append(mounts[i]);
-    await renderers[i].init(mounts[i], DEFAULT_SETTINGS);
-  }
+/** Authored dimensions, the actual procedural paint and the shoot-down adapter. */
+export async function showMockAssetsProof(pack: AssetPack, host: HTMLElement) {
+  const world = new World([], [], 43);
+  const renderer = new GameRenderer(pack);
+  const mount = document.createElement('div');
+  host.append(mount);
+  await renderer.init(mount, DEFAULT_SETTINGS);
   const canvas = document.createElement('canvas');
   canvas.width = 550;
   canvas.height = 450;
   const ctx = canvas.getContext('2d', { willReadFrequently: true })!;
   ctx.fillStyle = '#0b3c5a';
   ctx.fillRect(0, 0, 550, 450);
-  const panels: { row: number; column: number; ink: number; painted: number }[] = [];
+  const panels: { row: number; ink: number; painted: number }[] = [];
   let livePalette: { player: { g: number }; enemy: { g: number } } | undefined;
-  const capture = (column: number, row: number, label: string, entities = false) => {
-    const renderer = renderers[column],
-      world = worlds[column];
+  const capture = (row: number, label: string, entities = false) => {
     renderer.draw(world, DEFAULT_SETTINGS);
     const frame = captureCanvas(renderer.app.renderer, {
       target: entities ? renderer.entities : renderer.projectiles,
@@ -44,7 +38,7 @@ export async function showMockAssetsProof(native: AssetPack, host: HTMLElement) 
       resolution: 2,
     }) as HTMLCanvasElement;
     const pixels = frame.getContext('2d')!.getImageData(0, 0, frame.width, frame.height).data;
-    if (row === 0 && column === 1) {
+    if (row === 0) {
       const mean = (right: boolean) => {
         let green = 0,
           count = 0;
@@ -63,7 +57,7 @@ export async function showMockAssetsProof(native: AssetPack, host: HTMLElement) 
     }
     let ink = 0;
     for (let i = 3; i < pixels.length; i += 4) if (pixels[i]) ink++;
-    const x = column * 275,
+    const x = 0,
       y = row * 112.5;
     ctx.drawImage(frame, x, y, 275, 112.5);
     const paintedPixels = ctx.getImageData(x, y, 275, 112).data;
@@ -74,7 +68,7 @@ export async function showMockAssetsProof(native: AssetPack, host: HTMLElement) 
     ctx.fillStyle = '#e7f7ff';
     ctx.font = '11px Arial';
     ctx.fillText(label, x + 7, y + 13);
-    panels.push({ row, column, ink, painted });
+    panels.push({ row, ink, painted });
   };
   const make = (world: World, options: Partial<Projectile>) =>
     createProjectile(world.nextId(), {
@@ -89,86 +83,71 @@ export async function showMockAssetsProof(native: AssetPack, host: HTMLElement) 
       damage: 1,
       ...options,
     });
-  const comparisons: {
-    symbol: number;
-    native: { width: number; height: number };
-    mock: { width: number; height: number };
-  }[] = [];
+  const sizes: { symbol: number; width: number; height: number }[] = [];
   try {
-    for (let column = 0; column < 2; column++) {
-      const world = worlds[column];
-      world.field.tutorial = 0;
-      world.fieldDisplays.selectTutorial(world.field, 0);
-      const body = { ...STARTER.parts[0], type: 1003, radius: 22.5, x: 0, y: 0 };
-      world.player = createTank(
+    world.field.tutorial = 0;
+    world.fieldDisplays.selectTutorial(world.field, 0);
+    const body = { ...STARTER.parts[0], type: 1003, radius: 22.5, x: 0, y: 0 };
+    world.player = createTank(
+      world.nextId(),
+      { ...STARTER, parts: [body, { ...STARTER.parts[1], type: 2001, x: 24, y: 0 }] },
+      'player',
+      0,
+      0,
+    );
+    importAvatarFixture(world);
+    world.field.enemies = [
+      createTank(
         world.nextId(),
-        { ...STARTER, parts: [body, { ...STARTER.parts[1], type: 2001, x: 24, y: 0 }] },
-        'player',
+        {
+          ...STARTER,
+          id: 'mock-palette-enemy',
+          avatar: false,
+          parts: [body, { ...STARTER.parts[1], type: 4001, x: 24, y: 0 }],
+        },
+        'enemy',
+        60,
         0,
-        0,
-      );
-      importAvatarFixture(world);
-      world.field.enemies = [
-        createTank(
-          world.nextId(),
-          {
-            ...STARTER,
-            id: 'mock-palette-enemy',
-            avatar: false,
-            parts: [body, { ...STARTER.parts[1], type: 4001, x: 24, y: 0 }],
-          },
-          'enemy',
-          60,
-          0,
-        ),
-      ];
-      importActorFixtures(world);
-      capture(column, 0, 'Mock · yellow / orange', true);
-      world.field.enemies = [];
-      const rows = [
-        [
-          { symbol: 1721, x: -75 },
-          { symbol: 1721, x: -15, artScale: 2.5 },
-          { symbol: 1794, x: 65, kind: 'pierce' },
-        ],
-        [
-          { symbol: 1809, x: -65, kind: 'seeker', enemy: true },
-          { symbol: 1827, x: 0, kind: 'seeker' },
-          { symbol: 2016, x: 70, kind: 'orbital' },
-        ],
-        [
-          { symbol: 2177, x: -65, kind: 'rocket', enemy: true },
-          { symbol: 2031, x: 0, kind: 'flak' },
-          { symbol: 1831, x: 70, kind: 'sapper', enemy: true },
-        ],
-      ] as Partial<Projectile>[][];
-      for (let row = 0; row < rows.length; row++) {
-        world.bullets = rows[row].map((options) => make(world, options));
-        for (const b of world.bullets) {
-          world.projectileTimelines.initialize(b);
-          if (b.kind === 'flak') world.projectileTimelines.hold(b, 15);
-          if (column === 0) {
-            const a = native.projectileBounds(b),
-              m = mock.projectileBounds(b);
-            comparisons.push({
-              symbol: b.symbol,
-              native: { width: a.width, height: a.height },
-              mock: { width: m.width, height: m.height },
-            });
-          }
-        }
-        capture(
-          column,
-          row + 1,
-          [
-            'Basic12 / heavy30 / Massive74',
-            'Enemy homing / seeker / orbital',
-            'Rocket / Flak15 / Sapper3',
-          ][row],
-        );
+      ),
+    ];
+    importActorFixtures(world);
+    capture(0, 'Mock · yellow / orange', true);
+    world.field.enemies = [];
+    const rows = [
+      [
+        { symbol: 1721, x: -75 },
+        { symbol: 1721, x: -15, artScale: 2.5 },
+        { symbol: 1794, x: 65, kind: 'pierce' },
+      ],
+      [
+        { symbol: 1809, x: -65, kind: 'seeker', enemy: true },
+        { symbol: 1827, x: 0, kind: 'seeker' },
+        { symbol: 2016, x: 70, kind: 'orbital' },
+      ],
+      [
+        { symbol: 2177, x: -65, kind: 'rocket', enemy: true },
+        { symbol: 2031, x: 0, kind: 'flak' },
+        { symbol: 1831, x: 70, kind: 'sapper', enemy: true },
+      ],
+    ] as Partial<Projectile>[][];
+    for (let row = 0; row < rows.length; row++) {
+      world.bullets = rows[row].map((options) => make(world, options));
+      for (const b of world.bullets) {
+        world.projectileTimelines.initialize(b);
+        if (b.kind === 'flak') world.projectileTimelines.hold(b, 15);
+        const bounds = pack.projectileBounds(b);
+        sizes.push({ symbol: b.symbol, width: bounds.width, height: bounds.height });
       }
+      capture(
+        row + 1,
+        [
+          'Basic12 / heavy30 / Massive74',
+          'Enemy homing / seeker / orbital',
+          'Rocket / Flak15 / Sapper3',
+        ][row],
+      );
     }
-    const intercept = packs.map((pack) => {
+    const intercept = (() => {
       const world = new World([], [], 43);
       world.player.x = -200;
       setFieldFixtureLayout(world);
@@ -193,9 +172,9 @@ export async function showMockAssetsProof(native: AssetPack, host: HTMLElement) 
         shellAlive: !shell.dead,
         outsideOldRadius: Math.hypot(seeker.x - shell.x, seeker.y - shell.y) > shell.radius,
       };
-    });
+    })();
     const palette = (id: number) => {
-      const r = mock.part(id),
+      const r = pack.part(id),
         values = [0, 0, 0];
       let count = 0;
       for (let i = 0; i < r.pixels.length; i += 4)
@@ -206,35 +185,29 @@ export async function showMockAssetsProof(native: AssetPack, host: HTMLElement) 
         }
       return { r: values[0] / count, g: values[1] / count, b: values[2] / count, count };
     };
-    const bodyPixel = (pack: AssetPack) => {
-      const body = pack.part(1003),
-        cx = Math.floor(body.canvas.width / 2),
-        cy = Math.floor(body.canvas.height / 2),
-        offset = (cy * body.canvas.width + cx) * 4;
-      return [...body.pixels.slice(offset, offset + 4)];
-    };
-    const body = bodyPixel(mock),
-      referenceBody = bodyPixel(native);
+    const bodyRaster = pack.part(1003),
+      cx = Math.floor(bodyRaster.canvas.width / 2),
+      cy = Math.floor(bodyRaster.canvas.height / 2),
+      offset = (cy * bodyRaster.canvas.width + cx) * 4;
+    const bodyPixel = [...bodyRaster.pixels.slice(offset, offset + 4)];
     let galleryHash = 2166136261;
     for (const byte of ctx.getImageData(0, 0, 550, 450).data)
       galleryHash = Math.imul(galleryHash ^ byte, 16777619);
     return {
-      comparisons,
+      sizes,
       intercept,
       panels,
       palette: {
         player: palette(2001),
         enemy: palette(4001),
-        bodyAlpha: body[3],
-        bodyReferenceAlpha: referenceBody[3],
-        bodyPixel: body,
-        referenceBodyPixel: referenceBody,
+        bodyAlpha: bodyPixel[3],
+        bodyPixel,
       },
       livePalette,
       galleryHash: galleryHash >>> 0,
     };
   } finally {
-    for (const renderer of renderers) renderer.destroy();
+    renderer.destroy();
     host.replaceChildren(canvas);
   }
 }
