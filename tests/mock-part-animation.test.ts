@@ -45,7 +45,7 @@ test('Sapper retains its late pale-pellet transform and Carrier loops before its
   for (const age of [40, 79, 118, 157]) expect(pose(695, age).frame).toBe(1);
 });
 
-test('all body roots retain their source timelines, including three static base variants', () => {
+test('all body roots keep their timelines, including three static base variants', () => {
   expect(PARTS.filter((p) => p.id < 2000)).toHaveLength(20);
   for (const part of PARTS) expect(sprites.has(part.symbol), String(part.id)).toBe(true);
   for (const id of [1782, 2185, 29]) expect(sprites.get(id)!.frameCount).toBe(1);

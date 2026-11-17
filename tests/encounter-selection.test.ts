@@ -5,7 +5,7 @@ import rules from '../src/game/data/rules.json';
 import { UnitRoster, matchesRule } from '../src/game/simulation/waves';
 import { World } from '../src/game/simulation/world';
 
-test('offline builtin candidates use the source rounded index instead of a floor pick', () => {
+test('offline builtin candidates use the rounded index instead of a floor pick', () => {
   const pool = ENEMIES.filter((tank) => matchesRule(tank, rules.Balanced));
   expect(pool).toHaveLength(3);
   const rng = new Random(11);
@@ -15,7 +15,7 @@ test('offline builtin candidates use the source rounded index instead of a floor
   expect(roster.units.get('Balanced')).toEqual([pool[1]]);
 });
 
-test('matching saved candidates retain the offline source choice but use its rounded index', () => {
+test('matching saved candidates keep the offline choice but use its rounded index', () => {
   const template = ENEMIES.find((tank) => matchesRule(tank, rules.Balanced))!;
   const saved = [0, 1, 2].map((index) => {
     const tank = { ...template, id: `saved-balanced-${index}` };
@@ -29,7 +29,7 @@ test('matching saved candidates retain the offline source choice but use its rou
   expect(roster.units.get('Balanced')).toEqual([saved[1]]);
 });
 
-test('the singleton builtin boss consumes its source 1-based selection draw before Setup', () => {
+test('the singleton builtin boss consumes its 1-based selection draw before Setup', () => {
   const world = new World([], [], 11);
   world.progression.level = 5;
   world.player.life = 1000;

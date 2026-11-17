@@ -8,7 +8,7 @@ const enemy: TankDesign = JSON.parse(readFileSync('src/game/data/tanks.json', 'u
   .enemy_tanks[0];
 const savedTanks = (page: Page): Promise<TankDesign[]> =>
   page.evaluate(() => JSON.parse(localStorage.getItem('soaptank.profile.v1')!).tanks);
-test(`mock viewer save keeps source button states, suppresses geometry duplicates and preserves shared-ID designs`, async ({
+test(`mock viewer save keeps its button states, suppresses geometry duplicates and preserves shared-ID designs`, async ({
   page,
 }) => {
   test.setTimeout(120000);

@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-test(`mock mapped enemy sliders retain source scaling, cursor position and cancellation`, async ({
+test(`mock mapped enemy sliders retain their scaling, cursor position and cancellation`, async ({
   page,
 }, testInfo) => {
   const errors: string[] = [];

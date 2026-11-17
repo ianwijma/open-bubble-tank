@@ -99,7 +99,7 @@ export async function showHealerTargets(pack: AssetPack, host: HTMLElement) {
   });
   stage.advance(20, 50);
   const before = read();
-  await draw(fault, 2, 'Source read: remaining Run aborted', 0);
+  await draw(fault, 2, 'Failed target read: remaining Run aborted', 0);
   fault.player.life--;
   for (let i = 0; i < 3; i++) stage.advance(20, 50);
   const after = read();

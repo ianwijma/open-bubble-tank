@@ -92,7 +92,7 @@ test(`mock browser cancellation and keyboard range adapters preserve marquee sel
   expect(errors).toEqual([]);
 });
 
-test(`mock accepted center no-op after marquee retains its original Undo entry`, async ({
+test(`mock accepted center no-op after marquee retains its earlier Undo entry`, async ({
   page,
 }) => {
   const { stage, move, marquee } = await openCreator(page, snapshot(1, 'placed-pair'));

@@ -161,7 +161,7 @@ test('splash callback runs before direct damage and excludes only the current co
   expect(calls).toEqual([other.uid, target.uid]);
 });
 
-test('source flags distinguish flak targets from area-cleanup targets and do not emit destroyed-shot callbacks', () => {
+test('hit flags distinguish flak targets from area-cleanup targets and do not emit destroyed-shot callbacks', () => {
   const { world } = setup(),
     symbols = [1809, 1807, 2016, 1831, 15, 1827, 2178];
   const shots = symbols.map((symbol) => bullet(world, { symbol, enemy: true, x: 5 }));
@@ -305,7 +305,7 @@ test('the shipped infection acquisition bug expires at setup and first Run rathe
   ]);
 });
 
-test('flak acquires source Seeker flags rather than sapper/friendly-seeker kinds', () => {
+test('flak acquires Seeker flags rather than sapper/friendly-seeker kinds', () => {
   const { world } = setup();
   const tank = createTank(
     world.nextId(),

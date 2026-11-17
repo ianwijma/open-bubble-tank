@@ -5,7 +5,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { createDecipheriv } from 'node:crypto';
 // Optional external catalog of the built-in tanks; the check is skipped when unset or missing.
 const source = process.env.SOAPTANK_BUILTIN_TANKS_FILE ?? '';
-test('original tank code encrypt/decrypt round-trip preserves all part geometry', async () => {
+test('tank code encrypt/decrypt round-trip preserves all part geometry', async () => {
   const code = await encodeTankCode(STARTER);
   expect(code.length % 32).toBe(6);
   const decoded = await decodeTankCode(code);
@@ -13,12 +13,12 @@ test('original tank code encrypt/decrypt round-trip preserves all part geometry'
   expect(decoded.name).toBe(STARTER.name);
   expect(decoded.classId).toBe(1);
 });
-test('invalid and truncated original codes fail with an actionable error', async () => {
+test('invalid and truncated tank codes fail with an actionable error', async () => {
   await expect(decodeTankCode('bad')).rejects.toThrow('complete');
   await expect(decodeTankCode('abc' + '00'.repeat(16) + 'def')).rejects.toThrow();
 });
 test.skipIf(!source || !existsSync(source))(
-  'all 75 original encrypted tank codes decode to the recovered geometry',
+  'all 75 built-in encrypted tank codes decode to their stored geometry',
   async () => {
     const catalog = JSON.parse(readFileSync(source, 'utf8')) as Record<
       string,
@@ -33,7 +33,7 @@ test.skipIf(!source || !existsSync(source))(
   },
 );
 
-test('original export writes stored difficulty while import recalculates it from the design', async () => {
+test('tank code export writes stored difficulty while import recalculates it from the design', async () => {
   const code = await encodeTankCode({ ...STARTER, difficulty: -12345 });
   const decipher = createDecipheriv(
     'aes-128-ecb',

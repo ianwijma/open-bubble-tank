@@ -47,7 +47,7 @@ test(`mock music distinguishes new menus from retained settings and creator/view
   expect(errors).toEqual([]);
 });
 
-test('mock music completes actual media playback and restarts at source volume', async ({
+test('mock music completes actual media playback and restarts at its starting volume', async ({
   page,
 }) => {
   await watchAudio(page);

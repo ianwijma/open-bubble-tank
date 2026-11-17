@@ -1,6 +1,6 @@
 import { expect, test } from 'bun:test';
 import { writeFileSync } from 'node:fs';
-import original from './fixtures/effect-clock.json';
+import fixture from './fixtures/effect-clock.json';
 import { decode, rows } from './support/effect-clock-rows.mjs';
 import { effectClockChildAtPath } from './support/effect-clock-child';
 import { RegisteredEffects } from '../src/game/simulation/registered-effects';
@@ -11,7 +11,7 @@ import type { ArtClip } from '../src/game/assets/art-clip';
 import { World, emptyInput } from '../src/game/simulation/world';
 import { RetainedTransform } from '../src/game/core/retained-transform';
 
-const measured = rows(original.contract);
+const measured = rows(fixture.contract);
 const field = (): Field => ({
   col: 0,
   row: 0,
@@ -27,7 +27,7 @@ const totals = {
   identityComparisons: 0,
   currentMatrixComparisons: 0,
 };
-for (const root of original.clips.roots)
+for (const root of fixture.clips.roots)
   for (const cohort of ['before', 'inside'])
     test(`retained production ${cohort}:${root.key} matches frozen root/descendant frames, correspondence and own poses`, () => {
       const engine = new RegisteredEffects(),
@@ -68,7 +68,7 @@ for (const root of original.clips.roots)
             totals.currentMatrixComparisons++;
           }
           // Native Shape wrappers can change their symbol without changing identity.
-          // ArtClip leaf placeholders model geometry, not that unqualified wrapper reuse.
+          // ArtClip leaf placeholders model geometry, not that untested wrapper reuse.
           if (row.total === 0) continue;
           // Transient wrapper holes are neither synthesized nor read here.
           // All own-pose/descendant correspondence claims are EXIT only.
@@ -145,7 +145,7 @@ for (const root of original.clips.roots)
         sample('enter', tick);
         if (tick === 7) {
           sample('pre-register', tick);
-          const index = original.clips.roots.indexOf(root) + (cohort === 'inside' ? 15 : 0);
+          const index = fixture.clips.roots.indexOf(root) + (cohort === 'inside' ? 15 : 0);
           engine.createRequest(
             {
               clip: effect!,
@@ -210,7 +210,7 @@ test('native retained lifetimes advance while paused, detached or Main4 skips Wo
   expect(world.effectEngine.parent(effect)).toBeUndefined();
 });
 
-test('line graphics belong to the constructor named child and replacement/reads never recreate a source drawing call', () => {
+test('line graphics belong to the constructor named child and replacement/reads never repeat a drawing call', () => {
   const engine = new RegisteredEffects();
   const effect = combatEffect(1, 'rocketTrail', { line: { x: -90, y: 3 } }, engine.artwork);
   const playback = effect.playback!,

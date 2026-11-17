@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { writeFileSync } from 'node:fs';
-test(`mock all31 referenced parts retain moving source timelines`, async ({ page }) => {
+test(`mock all31 referenced parts keep their moving timelines`, async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto('http://127.0.0.1:3102');

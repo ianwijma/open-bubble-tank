@@ -32,7 +32,7 @@ test('native CT concatenation uses signed Fixed8 multiply and signed integer off
   expect(fixedColorMultiplier(0.7899)).toBe(202 / 256);
   expect(fixedColorMultiplier(-0.1)).toBe(-25 / 256);
 });
-test('CT wrapping preserves source overflow instead of clamping the concatenated transform', () => {
+test('CT wrapping preserves overflow instead of clamping the concatenated transform', () => {
   const extreme = { mult: [127, -128, 1, 1], add: [32767, -32768, 0, 0] };
   expect(composeColor(extreme, { mult: [2, 2, 1, 1], add: [2, 1, 0, 0] })).toEqual({
     mult: [-2, 0, 1, 1],

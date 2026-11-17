@@ -1,7 +1,7 @@
 import { expect, test } from 'bun:test';
 import { CREATOR_PALETTE } from '../src/game/core/creator-palette';
 import { PARTS } from '../src/game/data/catalog';
-test('source palette metadata retains original preview registration, row dimensions and dynamic font variants', () => {
+test('palette metadata keeps preview registration, row dimensions and dynamic font variants', () => {
   expect(CREATOR_PALETTE.origin).toMatchObject({ tx: 7840, ty: 100 });
   expect(CREATOR_PALETTE.library.mask).toEqual({ x: 6, y: 83.05, width: 119, height: 182 });
   expect(CREATOR_PALETTE.tabs.map((tab) => [tab.name, tab.category])).toEqual([

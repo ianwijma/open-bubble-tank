@@ -35,7 +35,7 @@ test('creator dialog metadata retains authored frames, input limits and device f
   });
 });
 
-test('creator dialog states retain button text and positive bounds without original contours', () => {
+test('creator dialog states retain button text and positive bounds without authored contours', () => {
   expect(creatorDialogFrame(1).buttons.map((button) => button.name)).toEqual([
     'cancel_btn',
     'exit_btn',

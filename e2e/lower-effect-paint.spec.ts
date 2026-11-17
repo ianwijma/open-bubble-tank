@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { readFileSync, writeFileSync } from 'node:fs';
-const original = JSON.parse(
+const fixture = JSON.parse(
   readFileSync(new URL('../tests/fixtures/lower-effect-paint.json', import.meta.url), 'utf8'),
 ) as { points: number[][]; samples: { pixels: number[] }[] };
 test(`mock lower effects follow their actual field mask and retain identity through reparenting`, async ({
@@ -15,18 +15,18 @@ test(`mock lower effects follow their actual field mask and retain identity thro
   const proof = JSON.parse(
     (await page.locator('#status').getAttribute('data-lower-effect-paint'))!,
   );
-  expect(proof.results.map((r: { i: number }) => r.i)).toEqual(original.samples.map((_, i) => i));
+  expect(proof.results.map((r: { i: number }) => r.i)).toEqual(fixture.samples.map((_, i) => i));
   const differences = [];
   for (const row of proof.results as { i: number; pixels: number[][] }[]) {
-    expect(row.pixels).toHaveLength(original.points.length);
+    expect(row.pixels).toHaveLength(fixture.points.length);
     for (const [j, pixel] of row.pixels.entries()) {
-      const expected = original.samples[row.i].pixels[j];
+      const expected = fixture.samples[row.i].pixels[j];
       if (
         expected === 0
           ? pixel[3] > 32
           : pixel[3] < 240 || pixel.slice(0, 3).some((v, k) => Math.abs(v - [187, 217, 242][k]) > 3)
       )
-        differences.push({ i: row.i, point: original.points[j], expected, pixel });
+        differences.push({ i: row.i, point: fixture.points[j], expected, pixel });
     }
   }
   expect(differences).toEqual([]);

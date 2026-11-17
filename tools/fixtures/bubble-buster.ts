@@ -71,7 +71,7 @@ export async function showBubbleBusterProof(pack: AssetPack, host: HTMLElement) 
     const buster = make({ kind: 'buster', symbol: 1800, enemy: false, angle: 0, speed: 10 });
     const seeker = make({ kind: 'seeker', symbol: 1809, x: 20 });
     const width = world.projectileWidth(seeker);
-    capture('Enemy seeker · original heading', seeker);
+    capture('Enemy seeker · initial heading', seeker);
     world.bullets = [buster, seeker];
     tickBullet(world, buster, emptyInput());
     const copied = seeker.deflected ? { ...seeker.deflected } : null;

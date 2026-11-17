@@ -22,7 +22,7 @@ const parts = (values: TankPart[]) =>
 for (const dpr of [1, 2])
   test.describe(`creator transform reference DPR${dpr}`, () => {
     test.use({ deviceScaleFactor: dpr, viewport: { width: 1100, height: 1000 } });
-    test(`mock slider gestures and saved codes match eight original exports`, async ({ page }) => {
+    test(`mock slider gestures and saved codes match eight measured exports`, async ({ page }) => {
       test.setTimeout(180000);
       const errors: string[] = [];
       page.on('pageerror', (error) => errors.push(error.message));

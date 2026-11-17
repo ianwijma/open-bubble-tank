@@ -67,7 +67,7 @@ test('direct creator/confirmation completion skips reversal and releases its sub
   expect(menu.motion.closing).toBe(false);
 });
 
-test('source card placement is synchronous and keeps the attached menu until Destroy', () => {
+test('card placement is synchronous and keeps the attached menu until Destroy', () => {
   const world = new World([], [], 1);
   world.secondaryHelpSeen = true;
   let opened = 0;
@@ -145,7 +145,7 @@ test('browser menu preserves null slots until preview completion and reuses a pa
   menu.complete();
 });
 
-test('source selection removes both card handlers while bottom input remains live during closing', () => {
+test('selection removes both card handlers while bottom input remains live during closing', () => {
   const stage = new StageRuntime();
   stage.capture.capture = () => undefined;
   const menu = new UpgradeMenu(stage, () => {});

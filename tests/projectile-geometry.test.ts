@@ -30,7 +30,7 @@ function close(actual: Bounds | undefined, expected: Bounds) {
     expect(actual![key]).toBeCloseTo(expected[key], 8);
   expect(actual!.empty).toBe(expected.empty);
 }
-test('basic and scaled shells retain authored strokes, dimensions, offset and source palette', () => {
+test('basic and scaled shells retain authored strokes, dimensions, offset and palette', () => {
   close(authoredProjectileBounds(bullet(1721)), { x: -6, y: -6, width: 12, height: 12 });
   close(authoredProjectileBounds(bullet(1717)), { x: -4.25, y: -4.25, width: 8.5, height: 8.5 });
   close(authoredProjectileBounds(bullet(1721, { x: 10, y: 20, angle: 90, artScale: 2.5 })), {

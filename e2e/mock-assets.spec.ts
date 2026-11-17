@@ -22,7 +22,7 @@ test(`mock bullet sizes, warm weapons and homing shoot-down use visible geometry
   );
   expect(proof.palette.player.r).toBeGreaterThan(proof.palette.player.b + 80);
   expect(proof.palette.enemy.r).toBeGreaterThan(proof.palette.enemy.b + 80);
-  // Editor previews share the original gold; hostile live mounts receive the tint.
+  // Editor previews share the untinted gold; hostile live mounts receive the tint.
   expect(Math.abs(proof.palette.player.g - proof.palette.enemy.g)).toBeLessThan(10);
   expect(proof.livePalette.player.g).toBeGreaterThan(proof.livePalette.enemy.g + 8);
   // Body fills are opaque in both supplied and procedural posters.

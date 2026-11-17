@@ -6,7 +6,7 @@ import {
 } from '../src/game/core/viewer-highlights';
 import { STARTER, AVATARS } from '../src/game/data/catalog';
 
-test('card hover advances on frames, retains source warning overshoot, and freezes under a modal', () => {
+test('card hover advances on frames, keeps warning overshoot, and freezes under a modal', () => {
   const h = new ViewerHighlights();
   h.setup(0, 'one', true);
   h.step([true]);

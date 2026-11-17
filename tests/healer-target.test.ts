@@ -139,7 +139,7 @@ test('inclusive ally miss throws before assigning the patient, after sampling ma
   expect(r.calls()).toBe(1);
 });
 
-test('source selector wrapper does not bound the ally scan to valid injured candidates', () => {
+test('the selector wrapper does not bound the ally scan to valid injured candidates', () => {
   const { world, owner, patient, gun } = live('ally');
   world.player.life = world.player.maxLife;
   world.allies = [patient, owner];
@@ -149,7 +149,7 @@ test('source selector wrapper does not bound the ally scan to valid injured cand
   expect(gun.behaviorTarget!.target).toBe(owner);
 });
 
-test('source read aborts the remaining world frame while stage callbacks/artwork and later frames continue', () => {
+test('a failed target read aborts the remaining world frame while stage callbacks/artwork and later frames continue', () => {
   const { world, owner, patient, gun } = live('ally');
   world.player.life = world.player.maxLife;
   world.rng.next = () => 1;
@@ -192,7 +192,7 @@ test('full-patient reacquisition retries its read error inside PartCallRun befor
   expect(gun.behaviorTarget!.target).toBeNull();
 });
 
-test('unrelated host errors are not swallowed by the source event-boundary adapter', () => {
+test('unrelated host errors are not swallowed by the event-boundary adapter', () => {
   const { world } = live();
   world.actorParents.point = () => {
     throw new Error('unexpected host fault');
@@ -200,7 +200,7 @@ test('unrelated host errors are not swallowed by the source event-boundary adapt
   expect(() => world.step(emptyInput())).toThrow('unexpected host fault');
 });
 
-test('a retained overfull patient is not treated as source full-health equality', () => {
+test('a retained overfull patient is not treated as full-health equality', () => {
   const { world, owner, patient, gun } = live();
   healerPatient(world, owner, gun);
   patient.life = 101;

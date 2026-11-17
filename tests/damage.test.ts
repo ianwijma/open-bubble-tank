@@ -144,7 +144,7 @@ test('player hurt sound is gated by eight active tank frames and freezes during 
   expect(world.drainEvents().filter((event) => event.type === 'hurt')).toHaveLength(0);
 });
 
-test('zero-damage player impacts still use the source hurt channel', () => {
+test('zero-damage player impacts still use the hurt channel', () => {
   const world = new World();
   world.damage(world.player, 0.5);
   expect(world.player.life).toBe(1);

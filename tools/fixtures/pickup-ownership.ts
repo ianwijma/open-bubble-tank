@@ -6,7 +6,7 @@ import { GameRenderer } from '../../src/game/render/pixi-renderer';
 import { spawnPickups } from '../../src/game/simulation/pickups';
 import { World } from '../../src/game/simulation/world';
 
-/** Artificial physical-child controls; neither ordinary gameplay nor qualified native timing. */
+/** Artificial physical-child controls; neither ordinary gameplay nor measured native timing. */
 export async function showPickupOwnership(pack: AssetPack, host: HTMLElement) {
   const world = new World([], [], 151),
     renderer = new GameRenderer(pack);
@@ -56,7 +56,7 @@ export async function showPickupOwnership(pack: AssetPack, host: HTMLElement) {
     });
   };
   try {
-    panel('Original object children');
+    panel('First object children');
     const originals = [a, b, c].map(view);
     const rng = world.rng.state;
     world.pickups = [];
@@ -80,7 +80,7 @@ export async function showPickupOwnership(pack: AssetPack, host: HTMLElement) {
     panel('Explicit physical removal');
     const explicitRemoval = !view(b) && removed.destroyed;
     world.pickupDisplays.attach(b, old);
-    panel('Reattach original retained clip lifetime');
+    panel('Reattach retained clip lifetime');
     const lifetimeRetention = [a, b, c].every(
       (p, i) => world.pickupDisplays.read(p)!.clip === clips[i],
     );

@@ -14,7 +14,7 @@ const part = (key: string, y: number, twin = ''): TankPart => ({
 const pair = [part('a', -10, 'b'), part('b', 10, 'a')];
 const selection = { keys: ['a', 'b'], ghosts: ['b'] };
 
-test('axis drag merges the faded twin on the next source mouse-move and respawns it above its owner', () => {
+test('axis drag merges the faded twin on the next mouse-move and respawns it above its owner', () => {
   let drag = beginSelectionDrag(pair, selection, { x: 10, y: -7 }, true);
   drag = advanceSelectionDrag(drag, { x: 10, y: 3 });
   expect(drag.parts.map((p) => p.y)).toEqual([0, 0]);
@@ -60,7 +60,7 @@ test('a center part keeps the first-move grab offset and spawns one reciprocal m
   expect(drag.parts.map((p) => p.y)).toEqual([3, -3, 50]);
   expect(drag.parts.filter((p) => p.twin === 'p')).toHaveLength(1);
 });
-test('a respawned half-turn twin keeps the source positive180 rotation getter', () => {
+test('a respawned half-turn twin keeps the positive180 rotation getter', () => {
   for (const rotation of [180, -180]) {
     let drag = beginSelectionDrag(
       [{ ...part('p', 0), rotation }],
@@ -89,7 +89,7 @@ test('axis merging requires both twins selected and asymmetric dragging never du
     [10, ''],
   ]);
 });
-test('the bytecode half-pixel candidate threshold and positive entry delta are retained', () => {
+test('the half-pixel candidate threshold and positive entry delta are retained', () => {
   let drag = beginSelectionDrag(
     [part('p', 0.4)],
     { keys: ['p'], ghosts: [] },

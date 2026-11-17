@@ -10,7 +10,7 @@ const enemy: TankDesign =
     (t: TankDesign) => t.classId === 1 && t.parts.some((p) => p.type === 1002),
   ) ?? data.enemy_tanks[0];
 const snapshot = readCreatorDesign;
-test(`mock creator load uses original local viewer, animated cards, code view and fresh editor routing`, async ({
+test(`mock creator load uses the local viewer, animated cards, code view and fresh editor routing`, async ({
   page,
   context,
 }) => {

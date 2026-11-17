@@ -12,7 +12,7 @@ test('preview placement snaps new objects within three pixels in either symmetry
     ['p-twin', 3, 'p'],
   ]);
 });
-test('new objects obey both the design rectangle and recovered body/weapon ring checks', () => {
+test('new objects obey both the design rectangle and the body/weapon ring checks', () => {
   expect(acceptedPlacement(placementParts(1001, 10, { x: 170, y: 0 }, false, 'a'), 1, 6)).toEqual(
     [],
   );

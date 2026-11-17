@@ -47,7 +47,7 @@ test('interface parts deduplicate in mounted order; bars keep stage height/offse
   expect(hud.passives.map((p) => p.kind)).toEqual(['health', 'health']);
   expect(hud.passives[0]).toMatchObject({ x: 315, y: 235 - 10 - enemy.radius, width: 120 });
 });
-test('radar uses strict center boundaries and the source angle, independent of target radius', () => {
+test('radar uses strict center boundaries and the bearing angle, independent of target radius', () => {
   const { player, far } = scene(),
     hud = new TacticalHudState();
   player.design = { ...STARTER, parts: [design.parts[3]] };

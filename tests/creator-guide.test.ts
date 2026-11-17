@@ -2,7 +2,7 @@ import { expect, test } from 'bun:test';
 import { CREATOR_GUIDE, advanceCreatorGuide } from '../src/game/core/creator-guide';
 import { defaultProfile, loadProfile } from '../src/game/services/profile';
 
-test('creator tutorial keeps six authored pages, offscreen initial Back, and original parent offset', () => {
+test('creator tutorial keeps six authored pages, offscreen initial Back, and its parent offset', () => {
   expect(CREATOR_GUIDE.symbol).toBe(968);
   expect(CREATOR_GUIDE.frames.map((f) => f.frame)).toEqual([2, 3, 4, 5, 6, 7]);
   expect(CREATOR_GUIDE.parent).toMatchObject({ tx: -213, ty: -280 });
@@ -12,7 +12,7 @@ test('creator tutorial keeps six authored pages, offscreen initial Back, and ori
   expect(CREATOR_GUIDE.frames[5].text).toContain('symmetric mode');
 });
 
-test('Next and Back follow source frame stepping and final Next selects off', () => {
+test('Next and Back follow frame stepping and final Next selects off', () => {
   expect(advanceCreatorGuide(2)).toBe(3);
   expect(advanceCreatorGuide(3, true)).toBe(2);
   expect(advanceCreatorGuide(7)).toBe(1);

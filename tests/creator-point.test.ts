@@ -6,7 +6,7 @@ import type { TankPart, Vec } from '../src/game/core/types';
 import { beginSelectionDrag, advanceSelectionDrag } from '../src/game/simulation/editor-drag';
 import { placementParts } from '../src/game/simulation/editor-placement';
 
-describe('original public creator coordinate exports', () => {
+describe('public creator coordinate exports', () => {
   const local = CREATOR_CONTROLS.workspace;
   const cursor = (point: Vec, scale: number, dpr: number) =>
     displayMousePoint(

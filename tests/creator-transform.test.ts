@@ -23,7 +23,7 @@ for (const row of reference.cases) {
   pose[control] = displayPixel(chosen);
   handles.set(row.dpr, pose);
   const change = control === 'Rotate_mc' ? { rotation: ratio * 360 } : { scale: ratio * 1.5 + 0.5 };
-  test(`original DPR${row.dpr} ${row.name} exports`, () => {
+  test(`DPR${row.dpr} ${row.name} exports`, () => {
     const actual = transformSelection(
       row.before,
       { keys: row.before.map((p) => p.key), ghosts: [] },

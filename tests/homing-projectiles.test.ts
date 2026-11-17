@@ -300,7 +300,7 @@ test('explicit home and target references survive same-UID replacements and a ca
   expect(retained.dead).toBe(false);
 });
 
-test('homing Run waits during pause and source target-read errors end only the current frame', () => {
+test('homing Run waits during pause and target-read errors end only the current frame', () => {
   const world = setup(),
     b = shot(world);
   world.player.life = 99;

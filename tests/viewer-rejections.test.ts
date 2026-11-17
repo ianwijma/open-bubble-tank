@@ -2,7 +2,7 @@ import { expect, test } from 'bun:test';
 import { ViewerRejections } from '../src/game/core/viewer-rejections';
 import { TANK_VIEWER } from '../src/game/core/tank-viewer';
 
-test('rejection metadata retains the authored91-frame independent alpha tracks and source placement', () => {
+test('rejection metadata retains the authored91-frame independent alpha tracks and placement', () => {
   const art = TANK_VIEWER.rejection;
   expect([art.symbol, art.x, art.y, art.frameCount]).toEqual([1557, 224, 196, 91]);
   expect(art.frames[59]).toEqual([1, 1, 1]);

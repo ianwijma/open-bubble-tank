@@ -61,7 +61,7 @@ export function compareTextEngine(fixture: TextEngineFixture) {
       parent = observedMatrix(v, 'wrapperOwn');
     const concatenated = observedMatrix(v, 'targetConcatenated');
     const attached = !['target-detached', 'wrapper-detached'].includes(sample.phase);
-    // Actual Main getters are fixed to identity in this cohort. Include that
+    // Main getters are fixed to identity in this cohort. Include that
     // multiplication: every parent is walked; even signed zero can differ.
     const composed = displayMatrixProduct(DISPLAY_IDENTITY, displayMatrixProduct(parent, own));
     const matrixMatches = !attached || same(composed, concatenated);
@@ -132,7 +132,7 @@ export function compareTextEngine(fixture: TextEngineFixture) {
   const contacts = rows.flatMap((row) => (row.contact ? [row.contact] : []));
   return {
     method:
-      'Declared original twips plus measured own/parent matrices; source-derived Float32 composition, rounded corners and inclusive bounds. Separately quantized query Point. No Script bounds input or generated oracle.',
+      'Declared twips plus measured own/parent matrices; Float32 composition, rounded corners and inclusive bounds. Separately quantized query Point. No Script bounds input or generated oracle.',
     rows: rows.length,
     advancedContacts: contacts.length,
     matrixChecks:
@@ -150,7 +150,7 @@ export function compareTextEngine(fixture: TextEngineFixture) {
       inverseBeforeLeaf: contacts.filter((c) => c.inverseBeforeLeafCandidate !== c.actual).length,
     },
     limitations:
-      'Finite original1659–1666 and project advanced copy, Main0, 2D transforms without scrollRect. Normal glyphs/mask options/authored text masks, arbitrary singular/nonfinite/overflow, loaded-root, compiled revision and Adobe remain unqualified.',
+      'Finite authored1659–1666 and the advanced copy, Main0, 2D transforms without scrollRect. Normal glyphs/mask options/authored text masks, arbitrary singular/nonfinite/overflow and loaded roots are not covered.',
     results: rows,
   };
 }

@@ -1,5 +1,5 @@
 import { expect, test } from 'bun:test';
-import original from './fixtures/world-layer.json';
+import fixture from './fixtures/world-layer.json';
 import { World, emptyInput } from '../src/game/simulation/world';
 import { displayMatrixPoint, displayMatrixProduct } from '../src/game/core/display-transform';
 import {
@@ -12,8 +12,8 @@ import {
 
 /** Decode the ByteArray words, without decimal round trips or generated expectations. */
 function measured(phase: string, age: number, role: string, key: string) {
-  const row = original.samples.find((s) => s.phase === phase && s.age === age && s.role === role)!;
-  const words = row.words[original.fields.indexOf(key)];
+  const row = fixture.samples.find((s) => s.phase === phase && s.age === age && s.role === role)!;
+  const words = row.words[fixture.fields.indexOf(key)];
   const bytes = new DataView(new ArrayBuffer(8));
   bytes.setUint32(0, words[0]);
   bytes.setUint32(4, words[1]);
@@ -21,7 +21,7 @@ function measured(phase: string, age: number, role: string, key: string) {
 }
 
 for (const age of [0, 1, 2, 51, 119])
-  test(`retained collapse age ${age} matches original method getter words and quantized Points`, () => {
+  test(`retained collapse age ${age} matches measured method getter words and quantized Points`, () => {
     const world = new World([], [], 4),
       field = world.currentWrapper;
     world.fieldDisplays.moveCurrent(field, { x: 140, y: -70 });

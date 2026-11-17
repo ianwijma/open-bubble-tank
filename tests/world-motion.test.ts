@@ -1,5 +1,5 @@
 import { expect, test } from 'bun:test';
-import original from './fixtures/world-motion.json';
+import fixture from './fixtures/world-motion.json';
 import {
   directions,
   measured,
@@ -8,7 +8,7 @@ import {
 } from './support/world-motion-compare';
 
 for (const phase of directions)
-  test(`public World ${phase} movement and receiver bridge match actual original camera calls`, () => {
+  test(`public World ${phase} movement and receiver bridge match measured camera calls`, () => {
     for (const snapshot of publicSequence(phase)) {
       const root = measured(snapshot.phase, snapshot.age, 'root');
       for (const role of ['root', 'avatarUnder', 'avatar', 'top', 'bullet', 'highlight'] as const)
@@ -26,8 +26,8 @@ for (const phase of directions)
     }
   });
 
-test('attached Point arithmetic matches all400 original camera receiver rows, including masks and fractional Main', () => {
-  for (const row of original.samples) {
+test('attached Point arithmetic matches all400 measured camera receiver rows, including masks and fractional Main', () => {
+  for (const row of fixture.samples) {
     const result = pointComparison(row);
     expect(result.candidate, `${row.phase}/${row.age}/${row.role}`).toEqual(result.actual);
   }
@@ -46,7 +46,7 @@ test('measured camera outcome distinguishes the physical bridge from independent
 });
 
 test('actual next copies and mask results retain the declared constructor-only setup boundary', () => {
-  for (const row of original.samples.filter((s) => s.role === 'root')) {
+  for (const row of fixture.samples.filter((s) => s.role === 'root')) {
     const next = measured(row.phase, row.age, 'nextRoot');
     for (const role of ['nextTop', 'nextBullet'])
       for (const axis of ['x', 'y'])

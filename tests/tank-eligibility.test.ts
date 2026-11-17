@@ -19,7 +19,7 @@ test('loading uses the candidate class budget rather than the preceding editor d
     'Do not have the parts and exceeds Gun Points',
   );
 });
-test('selection reports source capacity labels independently of missing parts and ignores body-point totals', () => {
+test('selection reports capacity labels independently of missing parts and ignores body-point totals', () => {
   const bodies = Array.from({ length: 101 }, (_, i) => ({
     ...STARTER.parts[0],
     type: 1001,

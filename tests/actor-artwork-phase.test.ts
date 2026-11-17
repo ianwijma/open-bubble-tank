@@ -47,11 +47,11 @@ function setup() {
 }
 const frames = (clips: ArtClip[]) => clips.map((clip) => clip.frame);
 
-for (const [capture, original] of [
+for (const [capture, fixture] of [
   ['a', first],
   ['b', second],
 ] as const) {
-  const measured = rows(original.contract).filter((r) => names.includes(r.name));
+  const measured = rows(fixture.contract).filter((r) => names.includes(r.name));
   const expected = (label: string, tick: number, phase: string) =>
     names.map((name) => {
       const values = [
@@ -146,7 +146,7 @@ for (const [capture, original] of [
   }
 }
 
-test('actual Main reads entered geometry; final own Y reaches the pending frame script', () => {
+test('the world update reads entered geometry; final own Y reaches the pending frame script', () => {
   const { world, make, clips, pack } = setup(),
     tank = make(),
     roots = clips(tank);

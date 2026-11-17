@@ -54,7 +54,7 @@ test('creator X steps retain links while slider initialization averages normaliz
   ]);
 });
 
-test('creator centering keeps the source index walk when a faded twin precedes its owner', () => {
+test('creator centering keeps the index walk when a faded twin precedes its owner', () => {
   const centered = centerSelection(parts, { keys: ['b', 'a', 'c'], ghosts: ['b'] });
   // Removing current index0 shifts the opaque owner left, then the index increments to1.
   expect(centered.parts.map((p) => [p.key, p.y, p.twin])).toEqual([

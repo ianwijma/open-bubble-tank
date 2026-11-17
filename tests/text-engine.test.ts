@@ -10,7 +10,7 @@ const row = (phase: string, point: string, role = 'target', caseName = 'authored
   const s = fixture.samples.find(
     (s) => s.case === caseName && s.phase === phase && s.point === point && s.role === role,
   );
-  if (!s) throw new Error('Missing original control');
+  if (!s) throw new Error('Missing measured control');
   return observedValues(fixture, s);
 };
 

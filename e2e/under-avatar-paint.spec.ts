@@ -1,12 +1,12 @@
 import { expect, test } from '@playwright/test';
 import { readFileSync, writeFileSync } from 'node:fs';
-const original = JSON.parse(
+const fixture = JSON.parse(
   readFileSync(new URL('../tests/fixtures/under-avatar-paint.json', import.meta.url), 'utf8'),
 ) as {
   points: number[][];
   samples: { mode: string; x: number; y: number; rotation: number; pixels: number[] }[];
 };
-const masked = original.samples.flatMap((sample, i) => (sample.mode === 'masked' ? [i] : []));
+const masked = fixture.samples.flatMap((sample, i) => (sample.mode === 'masked' ? [i] : []));
 
 test('mock under-avatar paint follows retained poses and releases obsolete projections', async ({
   page,
@@ -21,18 +21,18 @@ test('mock under-avatar paint follows retained poses and releases obsolete proje
     (await page.locator('#status').getAttribute('data-under-avatar-paint'))!,
   );
   expect(proof.game.results.map((row: { i: number }) => row.i)).toEqual(masked);
-  const center = original.points.findIndex(([x, y]) => x === 0 && y === 0);
+  const center = fixture.points.findIndex(([x, y]) => x === 0 && y === 0);
   for (const [x, expectedAlpha] of [
     [0, 0],
     [475, 255],
   ]) {
-    const i = original.samples.findIndex(
+    const i = fixture.samples.findIndex(
       (sample) =>
         sample.mode === 'masked' && sample.x === x && sample.y === 0 && sample.rotation === 0,
     );
     expect(i).toBeGreaterThanOrEqual(0);
     const row = proof.game.results.find((row: { i: number }) => row.i === i);
-    expect(row.pixels).toHaveLength(original.points.length);
+    expect(row.pixels).toHaveLength(fixture.points.length);
     expect(row.pixels[center][3]).toBe(expectedAlpha);
     if (expectedAlpha) expect(row.pixels[center].slice(0, 3)).toEqual([187, 217, 242]);
   }

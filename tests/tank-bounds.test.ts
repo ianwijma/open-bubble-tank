@@ -113,7 +113,7 @@ test('retained legacy shield scalars cannot expand Script bounds after physical 
   expect(tankScriptBounds(tank, source, clips)!.width).toBe(52);
 });
 
-test('forcefield measurement includes both its uncut clip and retained original mask', () => {
+test('forcefield measurement includes both its uncut clip and retained mask', () => {
   const { tank, source, clips } = setup();
   tank.forcefieldAttached = true;
   tank.displayChildren.push('forcefield');

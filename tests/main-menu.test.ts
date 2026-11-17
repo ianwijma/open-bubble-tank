@@ -44,7 +44,7 @@ test('Settings begins fading immediately but lock actions for31 Run calls', () =
   advance(menu, 30);
   expect(menu.titleAlpha).toBeGreaterThanOrEqual(1);
 });
-test('Play glow retains source floating-point overshoot/reversal and continues behind overlays', () => {
+test('Play glow keeps floating-point overshoot/reversal and continues behind overlays', () => {
   const menu = new MainMenuMotion();
   advance(menu, 39);
   expect(menu.glowStrength).toBeCloseTo(1.95);

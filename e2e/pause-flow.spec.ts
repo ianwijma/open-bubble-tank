@@ -1,7 +1,5 @@
 import { expect, test } from '@playwright/test';
-test(`mock pause and Info retain one layer and share source transition frames`, async ({
-  page,
-}) => {
+test(`mock pause and Info retain one layer and share their transition frames`, async ({ page }) => {
   // Software-rendered CI recorded 16s presentation/action waits per visit.
   // Keep the complete two-visit pointer/focus proof within one test budget.
   test.setTimeout(120000);

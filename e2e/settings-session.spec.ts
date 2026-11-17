@@ -16,7 +16,7 @@ const stageRate = async (page: Page, live: number, configured: number) => {
   await expect(layer).toHaveAttribute('data-stage-fps', String(live));
   await expect(layer).toHaveAttribute('data-configured-fps', String(configured));
 };
-test(`mock live FPS, saved preference and menu-instance selection retain their separate source lifetimes`, async ({
+test(`mock live FPS, saved preference and menu-instance selection keep their separate lifetimes`, async ({
   page,
 }) => {
   test.setTimeout(90000);
@@ -97,9 +97,7 @@ test(`mock live FPS, saved preference and menu-instance selection retain their s
     .screenshot({ path: `test-results/mock-settings-restored-rate.png` });
   expect(errors).toEqual([]);
 });
-test(`mock clicking the already-selected source control still performs its action`, async ({
-  page,
-}) => {
+test(`mock clicking the already-selected control still performs its action`, async ({ page }) => {
   await page.goto('/');
   await load(page);
   await page.getByRole('button', { name: 'Settings', exact: true }).click();

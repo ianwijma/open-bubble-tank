@@ -6,7 +6,7 @@ import { createHash } from 'node:crypto';
 import { waitForMainMenu } from './helpers/main-menu';
 const STARTER = JSON.parse(readFileSync(resolve('src/game/data/tanks.json'), 'utf8'))
   .avatar_defaults[0];
-test(`mock creator category tabs retain source geometry, rollover paint and mode-specific choices`, async ({
+test(`mock creator category tabs keep their geometry, rollover paint and mode-specific choices`, async ({
   page,
 }, testInfo) => {
   const errors: string[] = [];

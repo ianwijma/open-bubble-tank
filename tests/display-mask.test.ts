@@ -1,5 +1,5 @@
 import { expect, test } from 'bun:test';
-import original from './fixtures/field-mask.json';
+import fixture from './fixtures/field-mask.json';
 import {
   displayGeometryBounds,
   displayGeometryHitTestPoint,
@@ -7,11 +7,11 @@ import {
 } from '../src/game/core/display-geometry';
 import { DISPLAY_IDENTITY } from '../src/game/core/display-transform';
 
-type Sample = (typeof original.samples)[number];
-type Wrapper = (typeof original.wrappers)[number];
+type Sample = (typeof fixture.samples)[number];
+type Wrapper = (typeof fixture.wrappers)[number];
 function value(sample: Sample, field: string) {
-  const index = original.fields.indexOf(field),
-    words = original.binaryWords[sample.wordIndices[index]],
+  const index = fixture.fields.indexOf(field),
+    words = fixture.binaryWords[sample.wordIndices[index]],
     bytes = new DataView(new ArrayBuffer(8));
   if (index < 0 || !words) throw new Error('Missing frozen field ' + field);
   bytes.setUint32(0, words[0]);
@@ -19,10 +19,10 @@ function value(sample: Sample, field: string) {
   return bytes.getFloat64(0);
 }
 const sample = (label: string, phase: string, role: string) => {
-  const found = original.samples.find(
+  const found = fixture.samples.find(
     (s) => s.case === label && s.phase === phase && s.role === role,
   );
-  if (!found) throw new Error(`Missing original ${label}/${phase}/${role}`);
+  if (!found) throw new Error(`Missing measured sample ${label}/${phase}/${role}`);
   return found;
 };
 
@@ -41,7 +41,7 @@ function controlLeaf(symbol: number): DisplayGeometryNode {
       hit: ({ x, y }) => {
         if (x === 0 && y === 0) return true;
         if (Math.abs(x) === 1000 && y === 0) return false;
-        throw new Error(`Unqualified contour Point ${x}/${y}`);
+        throw new Error(`Unsupported contour Point ${x}/${y}`);
       },
     },
   };
@@ -52,7 +52,7 @@ function authored(wrapper: Wrapper): DisplayGeometryNode {
     content: {
       kind: 'container',
       children: wrapper.children.map((child) => {
-        const nested = original.wrappers.find((w) => w.id === child.symbol),
+        const nested = fixture.wrappers.find((w) => w.id === child.symbol),
           geometry = nested ? authored(nested) : controlLeaf(child.symbol);
         return {
           ...geometry,
@@ -79,8 +79,8 @@ const dimensions = (node: DisplayGeometryNode) => {
   return b ? [(b.xMax - b.xMin) / 20, (b.yMax - b.yMin) / 20] : [0, 0];
 };
 
-test('depth-latch traversal matches the independent original overlap/end/nested controls and declared Script bounds', () => {
-  for (const wrapper of original.wrappers.filter(
+test('depth-latch traversal matches the independent overlap/end/nested controls and declared Script bounds', () => {
+  for (const wrapper of fixture.wrappers.filter(
     (w) => !['runtime', 'visibility'].includes(w.label),
   )) {
     const node = authored(wrapper),
@@ -90,8 +90,8 @@ test('depth-latch traversal matches the independent original overlap/end/nested 
   }
 });
 
-test('authored visibility follows original hidden-mask versus hidden-target controls', () => {
-  const wrapper = original.wrappers.find((w) => w.label === 'visibility')!;
+test('authored visibility follows the measured hidden-mask versus hidden-target controls', () => {
+  const wrapper = fixture.wrappers.find((w) => w.label === 'visibility')!;
   for (const phase of [
     'baseline',
     'mask-hidden',
@@ -114,7 +114,7 @@ test('authored visibility follows original hidden-mask versus hidden-target cont
 
 test('runtime reference masks reproduce every measured assignment/reparent/removal phase', () => {
   const phases = [
-    ...new Set(original.samples.filter((s) => s.case === 'runtime').map((s) => s.phase)),
+    ...new Set(fixture.samples.filter((s) => s.case === 'runtime').map((s) => s.phase)),
   ];
   for (const phase of phases) {
     const m = sample('runtime', phase, 'm1'),

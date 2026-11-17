@@ -78,10 +78,10 @@ test(`mock creator: authored exit/name/code dialogs, saved return and offline sh
   await expect(author).toHaveAttribute('maxlength', '20');
   await expect(name).toHaveAttribute('maxlength', '25');
   await author.fill("Alice O'Brien");
-  await name.fill('  Faithful Tank  ');
+  await name.fill('  Spaced Tank  ');
   await name.press('End');
   await page.keyboard.insertText('!');
-  await expect(name).toHaveValue('  Faithful Tank  ');
+  await expect(name).toHaveValue('  Spaced Tank  ');
   await page
     .locator('.creator-save-dialog')
     .screenshot({ path: `test-results/mock-creator-save-name.png` });
@@ -94,14 +94,14 @@ test(`mock creator: authored exit/name/code dialogs, saved return and offline sh
   await error.getByRole('button', { name: 'Return to editing', exact: true }).click();
   await page.getByRole('button', { name: 'SAVE', exact: true }).click();
   await author.fill("Alice O'Brien");
-  await name.fill('  Faithful Tank  ');
+  await name.fill('  Spaced Tank  ');
   await form.getByRole('button', { name: 'Continue', exact: true }).click();
   const saved = page.getByRole('dialog', { name: 'Tank saved', exact: true }),
     code = saved.getByRole('textbox', { name: 'Saved tank code', exact: true });
   await expect(code).not.toHaveValue('');
   expect((await read()).tanks[1]).toMatchObject({
     id: 'L10000002',
-    name: '  Faithful Tank  ',
+    name: '  Spaced Tank  ',
     author: "Alice O'Brien",
   });
   await code.click();
@@ -127,7 +127,7 @@ test(`mock creator: authored exit/name/code dialogs, saved return and offline sh
   await expect(error).toContainText('Community tank sharing is not connected.');
   expect((await read()).tanks).toHaveLength(3);
   await error.getByRole('button', { name: 'Exit creator', exact: true }).click();
-  await expect(page.getByText('Faithful Tank', { exact: true })).toBeVisible();
+  await expect(page.getByText('Spaced Tank', { exact: true })).toBeVisible();
   await expect(page.getByText('Second Saved Copy', { exact: true })).toBeVisible();
   expect(errors).toEqual([]);
   expect(external).toEqual([]);

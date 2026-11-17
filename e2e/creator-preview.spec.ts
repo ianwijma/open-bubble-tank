@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { waitForMainMenu } from './helpers/main-menu';
-test(`mock selected creator preview keeps source registration and clips full-size artwork`, async ({
+test(`mock selected creator preview keeps its registration and clips full-size artwork`, async ({
   page,
 }, testInfo) => {
   const errors: string[] = [];

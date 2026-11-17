@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 import { waitForMainMenu } from './helpers/main-menu';
 import { exitCreator } from './helpers/creator';
 
-test(`mock creator part details retain authored text, masked thumbnail and source hover lifecycle`, async ({
+test(`mock creator part details retain authored text, masked thumbnail and hover lifecycle`, async ({
   page,
 }, testInfo) => {
   const errors: string[] = [];

@@ -10,7 +10,7 @@ async function openFixture(page: Page) {
 async function profile(page: Page) {
   return JSON.parse((await page.locator('#stage').getAttribute('data-creator-submission'))!);
 }
-test(`mock authored save dialog preserves names, exports source code and isolates unavailable sharing`, async ({
+test(`mock authored save dialog preserves names, exports the tank code and isolates unavailable sharing`, async ({
   page,
   context,
 }, testInfo) => {
@@ -95,7 +95,7 @@ test(`mock authored save dialog preserves names, exports source code and isolate
   expect(external).toEqual([]);
   expect(errors).toEqual([]);
 });
-test(`mock save dialog keeps source input limits, whole-chunk rejection and browser focus adapters`, async ({
+test(`mock save dialog keeps its input limits, whole-chunk rejection and browser focus adapters`, async ({
   page,
 }, testInfo) => {
   await openFixture(page);

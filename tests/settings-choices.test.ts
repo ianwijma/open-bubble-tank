@@ -6,7 +6,7 @@ import {
   settingSelection,
 } from '../src/game/core/settings-screen';
 
-test('changing FPS preserves efficiency mode, while the source efficiency toggle resets its coupled settings', () => {
+test('changing FPS preserves efficiency mode, while the efficiency toggle resets its coupled settings', () => {
   const efficient = changeSetting(DEFAULT_SETTINGS, 'efficient', true);
   expect([
     efficient.fps,

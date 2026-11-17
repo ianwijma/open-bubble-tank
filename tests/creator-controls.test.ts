@@ -1,7 +1,7 @@
 import { expect, test } from 'bun:test';
 import { CREATOR_CONTROLS, creatorControl } from '../src/game/core/creator-controls';
 
-test('creator layout retains source workspace registration, mirrored nudge and transform-slider placements', () => {
+test('creator layout keeps workspace registration, mirrored nudge and transform-slider placements', () => {
   expect(CREATOR_CONTROLS.symbol).toBe(969);
   expect(CREATOR_CONTROLS.workspace).toEqual({ a: 1, b: 0, c: 0, d: 1, tx: 3719, ty: 4634 });
   expect(CREATOR_CONTROLS.controls).toHaveLength(11);
@@ -23,7 +23,7 @@ test('creator layout retains source workspace registration, mirrored nudge and t
   );
 });
 
-test('creator text matrices do not enlarge the source Undo rectangle twice', () => {
+test('creator text matrices do not enlarge the Undo rectangle twice', () => {
   const undo = creatorControl('Undo_mc');
   expect(undo.bounds).toEqual({ x: -0.5, y: -0.5, width: 58, height: 23 });
   const label = undo.variants['1:up'].find((p) => p.kind === 'text')!;
@@ -36,7 +36,7 @@ test('creator text matrices do not enlarge the source Undo rectangle twice', () 
   expect((label.bounds.xMax + label.boundsMatrix!.tx) / 20).toBe(51);
 });
 
-test('creator sliders retain shared two-frame handles and source track widths', () => {
+test('creator sliders retain shared two-frame handles and track widths', () => {
   for (const [index, slider] of CREATOR_CONTROLS.sliders.entries()) {
     expect(slider.handle.symbol).toBe(833);
     expect(slider.handle.matrix).toEqual({ a: 1, b: 0, c: 0, d: 1, tx: 590, ty: 45 });

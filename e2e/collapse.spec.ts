@@ -1,11 +1,11 @@
-import original from '../tests/fixtures/world-layer.json' with { type: 'json' };
+import fixture from '../tests/fixtures/world-layer.json' with { type: 'json' };
 import { expect, test } from '@playwright/test';
 
 function measured(age: number, role: string, key: string) {
-  const row = original.samples.find(
+  const row = fixture.samples.find(
     (s) => s.phase === 'collapse' && s.age === age && s.role === role,
   )!;
-  const words = row.words[original.fields.indexOf(key)],
+  const words = row.words[fixture.fields.indexOf(key)],
     bytes = new DataView(new ArrayBuffer(8));
   bytes.setUint32(0, words[0]);
   bytes.setUint32(4, words[1]);

@@ -24,7 +24,7 @@ function quietRandom() {
   return rng;
 }
 
-test('Wall Flower projects with source Scale(radius / length) order and keeps an independent point', () => {
+test('Wall Flower projects in Scale(radius / length) order and keeps an independent point', () => {
   const tank = actor(),
     state = createWallFlower(quietRandom());
   tank.x = 3;

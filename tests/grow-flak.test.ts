@@ -150,7 +150,7 @@ test('Grow scale and alpha freeze under state2 deflection and World pause', () =
   ]);
 });
 
-test('Grow immediate removal preserves the source live-loop skip of the shifted next bullet', () => {
+test('Grow immediate removal preserves the live-loop skip of the shifted next bullet', () => {
   const { world, bullet } = setup('grow');
   bullet.artAlpha = 0;
   const shifted = createProjectile(world.nextId(), {

@@ -1,21 +1,21 @@
 import { expect, test } from 'bun:test';
-import original from './fixtures/effect-clock.json';
+import fixture from './fixtures/effect-clock.json';
 import { decode, rows, unpack } from './support/effect-clock-rows.mjs';
 import { RegisteredEffects } from '../src/game/simulation/registered-effects';
 import { combatEffect } from '../src/game/simulation/effects';
 import type { Field } from '../src/game/core/types';
 
-const measured = rows(original.contract);
+const measured = rows(fixture.contract);
 const roots = measured.filter((r) => r.path === '0' && r.kind === 'tree');
-for (const source of original.clips.roots)
-  test(`original ${source.key}: independent construction, registration, completion and removed clocks`, () => {
+for (const clip of fixture.clips.roots)
+  test(`${clip.key}: independent construction, registration, completion and removed clocks`, () => {
     for (const cohort of ['before', 'inside']) {
-      const group = roots.filter((r) => r.label === `${cohort}:${source.key}`);
+      const group = roots.filter((r) => r.label === `${cohort}:${clip.key}`);
       const at = (phase: string, tick: number) =>
         group.find((r) => r.phase === phase && r.tick === tick)!;
-      expect(
-        group.every((r) => r.className === source.className && r.total === source.frames),
-      ).toBe(true);
+      expect(group.every((r) => r.className === clip.className && r.total === clip.frames)).toBe(
+        true,
+      );
       expect(new Set(group.map((r) => r.id)).size).toBe(1);
       expect([1, 2, 3].map((t) => at('enter', t).frame)).toEqual(
         cohort === 'before' ? [1, 2, 3] : [1, 1, 2],
@@ -27,7 +27,7 @@ for (const source of original.clips.roots)
       expect(at('post-register', 7).parentTop).toBe(true);
       expect(at('post-register', 7).frame).toBe(at('pre-register', 7).frame);
       const done = group.find((r) => r.phase === 'callback')!;
-      expect([done.frame, done.parentTop, done.parentNull]).toEqual([source.frames, true, false]);
+      expect([done.frame, done.parentTop, done.parentNull]).toEqual([clip.frames, true, false]);
       expect(at('exit', done.tick).parentNull).toBe(true);
       expect(at('exit', 243).parentNull).toBe(true);
       expect(at('exit', 243).frame).not.toBe(done.frame);
@@ -52,8 +52,8 @@ test('stopped collapse child retains identity and frame103 across parent wrap wh
   expect(decode(at(stopped, 121).words).slice(0, 4)).toEqual([399.25, 0, 1, 1]);
 });
 
-test('original transient child lookup holes and unavailable playing getters stay explicit', () => {
-  const lines = unpack(original.contract);
+test('transient child lookup holes and unavailable playing getters stay explicit', () => {
+  const lines = unpack(fixture.contract);
   expect(lines.filter((s) => s.startsWith('EFFECT_NULL ')).length).toBe(399);
   expect(lines).toContain('EFFECT_NULL 3 enter before:explosion 0/1 tree');
   const lookup = measured.filter(
@@ -64,15 +64,15 @@ test('original transient child lookup holes and unavailable playing getters stay
   expect(measured.filter((r) => r.total > 0).every((r) => r.isPlaying === 'undefined')).toBe(true);
 });
 
-test('root-only scripts audit does not erase the qualified descendant stop action', () => {
-  expect(original.clips.roots).toHaveLength(15);
-  expect(original.clips.roots.every((r) => r.plainConstructor)).toBe(true);
-  const descendants = original.clips.roots.flatMap((r) => r.descendants);
+test('plain root constructors do not erase the descendant stop action', () => {
+  expect(fixture.clips.roots).toHaveLength(15);
+  expect(fixture.clips.roots.every((r) => r.plainConstructor)).toBe(true);
+  const descendants = fixture.clips.roots.flatMap((r) => r.descendants);
   expect(descendants.filter((r) => r.frameScript).map((r) => r.symbol)).toEqual([2069]);
   expect(descendants.some((r) => r.random)).toBe(false);
 });
 
-test('production retained impact now matches original pre-registration and removed root clocks', () => {
+test('production retained impact matches measured pre-registration and removed root clocks', () => {
   const engine = new RegisteredEffects();
   const owner = {
     col: 0,

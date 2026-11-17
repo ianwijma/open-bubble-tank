@@ -1,7 +1,7 @@
 import { expect, test } from 'bun:test';
 import { Random } from '../src/game/core/math';
 
-test('source integer rolls retain descending safety-turn bounds and draw order', () => {
+test('integer rolls keep descending safety-turn bounds and draw order', () => {
   const random = new Random(1),
     draws = [0, 0.25, 0.5, 0.75, 1 - 2 ** -32];
   let index = 0;
@@ -10,7 +10,7 @@ test('source integer rolls retain descending safety-turn bounds and draw order',
   expect(index).toBe(draws.length);
 });
 
-test('source inclusive rounding retains ascending and equal-bound outcomes', () => {
+test('inclusive rounding keeps ascending and equal-bound outcomes', () => {
   const random = new Random(1);
   for (const [draw, expected] of [
     [0, 1],

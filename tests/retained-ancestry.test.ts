@@ -1,4 +1,4 @@
-import pointOriginal from './fixtures/actor-point.json';
+import points from './fixtures/actor-point.json';
 import { expect, test } from 'bun:test';
 import { World, emptyInput } from '../src/game/simulation/world';
 import { createTank } from '../src/game/simulation/tank';
@@ -38,7 +38,7 @@ function setup(age: number) {
   return { world, field, actor, bullet };
 }
 for (const age of [0, 1, 2, 51, 119])
-  test(`combat ancestry age ${age} agrees with the independently frozen original Points`, () => {
+  test(`combat ancestry age ${age} agrees with the independently frozen Points`, () => {
     const { world, field, actor, bullet } = setup(age);
     const samples = [
       ['root', world.actorParents.localToGlobal(actor, { x: 0, y: 0 })],
@@ -52,7 +52,7 @@ for (const age of [0, 1, 2, 51, 119])
           measured('collapse', age, role, `point100x40.${axis}`),
         );
   });
-test('separate fractional Main and actual detach preserve original Point results', () => {
+test('separate fractional Main and actual detach preserve measured Point results', () => {
   const { world, field, actor, bullet } = setup(119);
   world.mainEffects.position = { x: 0.07, y: -0.07 };
   for (const [role, point] of [
@@ -86,13 +86,13 @@ test('scalar map/player edits cannot silently move actual display ancestry', () 
 // These are actual globalToLocal outputs, including lossy round trips.
 // The intermediate stage Point is retained instead of assuming inverse(forward(p)) equals p.
 
-function pointValues(row: (typeof pointOriginal.samples)[number]) {
+function pointValues(row: (typeof points.samples)[number]) {
   return Object.fromEntries(
     row.words.map(([high, low], i) => {
       const bytes = new DataView(new ArrayBuffer(8));
       bytes.setUint32(0, high);
       bytes.setUint32(4, low);
-      return [pointOriginal.fields[i], bytes.getFloat64(0)];
+      return [points.fields[i], bytes.getFloat64(0)];
     }),
   );
 }
@@ -103,11 +103,11 @@ for (const [phase, age] of [
   ['main-fraction', 119],
   ['detach', 119],
 ] as const)
-  test(`field Point inverses preserve original boundary losses: ${phase}/${age}`, () => {
+  test(`field Point inverses preserve measured boundary losses: ${phase}/${age}`, () => {
     const { world, field } = setup(age);
     if (phase !== 'collapse') world.mainEffects.position = { x: 0.07, y: -0.07 };
     if (phase === 'detach') world.fieldDisplays.detach(field);
-    const rows = pointOriginal.samples.filter(
+    const rows = points.samples.filter(
       (row) =>
         row.phase === phase &&
         row.age === age &&
@@ -128,10 +128,10 @@ for (const [phase, age] of [
     }
   });
 for (const rotation of [30, 60, 90])
-  test(`avatar detail and parent Position remain distinct at original rotation${rotation}`, () => {
+  test(`avatar detail and parent Position remain distinct at measured rotation${rotation}`, () => {
     const { world } = setup(119);
     world.player.rotation = rotation;
-    for (const row of pointOriginal.samples.filter((row) => row.phase === `rotation${rotation}`)) {
+    for (const row of points.samples.filter((row) => row.phase === `rotation${rotation}`)) {
       const v = pointValues(row),
         input = row.kind === 'transfer' ? { x: 0, y: 0 } : { x: v['input.x'], y: v['input.y'] };
       expect(world.actorParents.localToGlobal(world.player, input), row.role).toEqual({
@@ -153,7 +153,7 @@ test('ordinary movement reads field-local avatar position from compound display 
   expect(world.player.y).toBe(170.55);
 });
 
-test('movement callbacks observe source field setters before sibling follow', () => {
+test('movement callbacks observe field setters before sibling follow', () => {
   const world = new World([], [], 4),
     field = world.currentWrapper;
   let calls = 0;

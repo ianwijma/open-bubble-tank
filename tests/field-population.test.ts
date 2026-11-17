@@ -150,7 +150,7 @@ test('detached wrapper reads retain actors and pickups, but exclude its actually
   expect(world.effectEngine.parent(world.effects[0])).toBeDefined();
 });
 
-test('population reads neither discover raw children nor advance poses, entropy, IDs or source metadata', () => {
+test('population reads neither discover raw children nor advance poses, entropy, IDs or metadata', () => {
   const world = new World([], [], 31),
     field = world.field,
     raw = createTank(77, STARTER, 'enemy');

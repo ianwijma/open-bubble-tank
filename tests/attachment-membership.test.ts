@@ -52,7 +52,7 @@ test('removed forcefield wrapper cannot contact through stale readiness or a ret
       ],
     ]),
   });
-  // The actual live mount is removed; the forcefield's source clone keeps it.
+  // The actual live mount is removed; the forcefield's clone keeps it.
   tank.removedParts.add(design.parts[0].key);
   removeTankChild(tank, `part:${design.parts[0].key}`);
   expect(assets.hitTest(tank, 40, 0)).toBe(true);

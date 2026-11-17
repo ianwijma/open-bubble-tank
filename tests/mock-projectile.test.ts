@@ -25,7 +25,7 @@ const extrema = (points: number[]) => ({
   bottom: Math.max(...points.filter((_, i) => i % 2 === 1)),
 });
 
-test('mock basic and heavy cannon shots retain original12px and30px visible diameters and contact', () => {
+test('mock basic and heavy cannon shots keep 12px and 30px visible diameters and contact', () => {
   const small = basic(),
     heavy = basic(2.5),
     pack = new AssetPack('mock');

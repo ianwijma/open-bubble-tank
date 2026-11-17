@@ -38,7 +38,7 @@ function engine() {
   return { effects, owner };
 }
 
-test('next-field requests attach the original modified object to the outgoing registered bottom layer', () => {
+test('next-field requests attach the same modified object to the outgoing registered bottom layer', () => {
   const world = new World([], [], 1),
     outgoing = world.field;
   world.player.life = 1;

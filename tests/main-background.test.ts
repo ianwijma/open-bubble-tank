@@ -16,7 +16,7 @@ test('Main shape356 retains its authored gradient matrix and duplicate end stops
   ]);
 });
 
-test('background construction, previous visited count and counter produce the source overfill', () => {
+test('background construction, previous visited count and counter produce the overfill', () => {
   const layer = new BackgroundParticles(() => 0.5);
   expect(layer.particles).toHaveLength(5);
   expect(layer.painted).toHaveLength(0); // constructors create nodes, not bitmap pixels
@@ -114,7 +114,7 @@ test('Main has two identical layers and efficiency freezes their pixels and fram
   expect(background.revision).toBe(2);
 });
 
-test('source efficiency Off forcibly resumes a paused background, including repeated Off actions', () => {
+test('efficiency Off forcibly resumes a paused background, including repeated Off actions', () => {
   const background = new MainBackground(() => 0.5);
   background.stop();
   background.advance();

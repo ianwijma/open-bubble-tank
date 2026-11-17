@@ -64,7 +64,7 @@ test('cached attachment resets primary target only, preserving master, count and
   expect(gun.targeting).toEqual({ master: 'ally', target: world.player, allies: 7 });
   expect(behavior.behaviorTarget).toEqual({ master: 'enemy', target: ally, allies: 8 });
 });
-test('mounted weapons acquire and retain independent source targets during Setup', () => {
+test('mounted weapons acquire and keep independent targets during Setup', () => {
   const { world, ally } = scenario([]);
   const values = [0, 0, 0.99];
   world.rng.next = () => values.shift() ?? 0.99;
@@ -123,7 +123,7 @@ test('EnemyAim acquisition after a failed Run retry keeps the old angle even whe
   expect(gun.angle).toBe(37);
   expect(world.bullets[0].angle).toBe(37);
 });
-test('dead but attached targets remain referenced until the source parent detaches', () => {
+test('dead but attached targets remain referenced until the parent detaches', () => {
   const { world, ally, owner, gun } = scenario();
   gun.targeting!.target = ally;
   ally.dead = true;

@@ -165,7 +165,7 @@ export async function showActorArtwork(pack: AssetPack, host: HTMLElement) {
       rotorFrames: panels.map((panel) => panel.frames[2]),
       childFrames: panels.map((panel) => panel.childFrame),
       boundary:
-        'host artwork entropy; lazy construction/provider and global original phase remain unproved',
+        'host artwork entropy; lazy construction/provider and the global phase are not covered',
     };
   } finally {
     view.destroy();

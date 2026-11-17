@@ -1,5 +1,5 @@
 import { expect, test } from 'bun:test';
-import original from './fixtures/script-bounds.json';
+import fixture from './fixtures/script-bounds.json';
 import { AssetPack, type DisplayPlacement, type ArtMatrix } from '../src/game/assets/asset-pack';
 import { scriptTwipBounds, type ScriptBoundsSource } from '../src/game/assets/projectile-bounds';
 import { ArtClip } from '../src/game/assets/art-clip';
@@ -16,8 +16,8 @@ const child = (charId: number, m: ArtMatrix, depth = 1): DisplayPlacement => ({
 const leaf = { x: -695.95, y: -695.95, width: 1391.9, height: 1391.9 };
 const dimensions = (trace: string) => trace.split(' ').slice(2, 4).map(Number);
 
-for (const [index, control] of original.cases.entries()) {
-  test(`preserved original Script width/height control ${index}`, () => {
+for (const [index, control] of fixture.cases.entries()) {
+  test(`preserved Script width/height control ${index}`, () => {
     const geometry: ScriptBoundsSource = {
       leafBounds: (id) => (id === 1541 ? leaf : undefined),
       displayList: (id) =>
@@ -69,7 +69,7 @@ test('AssetPack retained clip boundary uses exact twips without mutating shared 
   const placement = { ...child(1541, { ...I, a: 0.5, d: 0.5, tx: 1, ty: -1 }), clipDepth: 2 };
   const pack = new AssetPack('mock');
   Object.assign(pack, {
-    shapes: new Map([[1541, { bounds: original.leafTwips }]]),
+    shapes: new Map([[1541, { bounds: fixture.leafTwips }]]),
     sprites: new Map([[1542, { id: 1542, frameCount: 1, placements: [placement] }]]),
   });
   const pose = new ArtClip(1542, pack);

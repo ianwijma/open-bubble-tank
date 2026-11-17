@@ -2,7 +2,7 @@ import { waitForMainMenu } from './helpers/main-menu';
 import { expect, test } from '@playwright/test';
 import { writeFileSync } from 'node:fs';
 import { dropPreview } from './helpers/creator';
-test(`mock all20 bodies retain source motion and static base variants`, async ({ page }) => {
+test(`mock all20 bodies keep their motion and static base variants`, async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto('http://127.0.0.1:3102');

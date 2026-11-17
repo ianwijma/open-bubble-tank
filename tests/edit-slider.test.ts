@@ -20,7 +20,7 @@ test('native edit variants use compact, large and hidden map geometry', () => {
     expect(state.x).toBeCloseTo(firstX, 8);
   }
 });
-test('edit motion scales its speed by remaining distance and keeps the source final movement', () => {
+test('edit motion scales its speed by remaining distance and keeps the final movement', () => {
   const state = new EditSliderState();
   state.trigger(1, 1);
   state.advance();

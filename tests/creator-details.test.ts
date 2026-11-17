@@ -10,7 +10,7 @@ import {
 import { PARTS, partById } from '../src/game/data/catalog';
 import type { TankPart } from '../src/game/core/types';
 import { CREATOR_PALETTE } from '../src/game/core/creator-palette';
-test('rollover labels retain the bytecode complexity branch and precise class wording', () => {
+test('rollover labels keep the complexity branch and precise class wording', () => {
   expect([0, 1, 2, 3, 4, 8].map(creatorComplexityLabel)).toEqual([
     'Low',
     'Low',
@@ -27,7 +27,7 @@ test('rollover labels retain the bytecode complexity branch and precise class wo
     'Must be class 2 or higher.',
   );
 });
-test('catalog details retain original damage strings and decode quoted flavor text exactly once', () => {
+test('catalog details keep their damage strings and decode quoted flavor text exactly once', () => {
   expect(PARTS.every((p) => typeof p.damageText === 'string')).toBe(true);
   expect(creatorDetailText(partById(2001)!)).toMatchObject({
     name_txt: 'Basic Cannon',

@@ -59,7 +59,7 @@ test('friendly shell callback sounds before shield absorption; enemy shell damag
   expect(ally.life).toBe(99);
   expect(hits()).toHaveLength(0);
 });
-test('interception dispatch honors the source collision argument independently of projectile ownership', () => {
+test('interception dispatch honors the collision argument independently of projectile ownership', () => {
   const { world, shot, hits } = setup();
   const friendly = shot();
   projectileCallback(world, friendly, shot({ enemy: true }));
@@ -72,7 +72,7 @@ test('leech damage and massive-pierce area callbacks keep their silent overrides
   expect(tank.life).toBe(98);
   expect(hits()).toHaveLength(0);
 });
-test('one shared world cooldown gates same-frame callbacks and keeps the source zero-reset frame', () => {
+test('one shared world cooldown gates same-frame callbacks and keeps the zero-reset frame', () => {
   const { world, shot, hits } = setup();
   projectileCallback(world, shot());
   projectileCallback(world, shot());

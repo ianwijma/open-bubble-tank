@@ -21,7 +21,7 @@ async function confirmationPixel(page: Page) {
     `data:image/png;base64,${png.toString('base64')}`,
   );
 }
-test(`mock enemy info retains source defaults, quadratic sliders, confirmation and manual save`, async ({
+test(`mock enemy info keeps its defaults, quadratic sliders, confirmation and manual save`, async ({
   page,
 }) => {
   const errors: string[] = [];
@@ -154,7 +154,7 @@ test(`mock enemy info retains source defaults, quadratic sliders, confirmation a
   expect(errors).toEqual([]);
 });
 
-test('mock early confirmation response resumes opening and retains the source frame12 stop', async ({
+test('mock early confirmation response resumes opening and keeps the frame12 stop', async ({
   page,
 }) => {
   await page.clock.install({ time: new Date('2024-12-10T08:00:00') });

@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-test(`mock creator statistics retain source category summaries and enemy offsets`, async ({
+test(`mock creator statistics keep category summaries and enemy offsets`, async ({
   page,
 }, testInfo) => {
   const errors: string[] = [];

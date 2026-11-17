@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { waitForMainMenu } from './helpers/main-menu';
-test(`mock creator rows preserve source paint, fractional scrolling and capture cleanup`, async ({
+test(`mock creator rows preserve row paint, fractional scrolling and capture cleanup`, async ({
   page,
 }, testInfo) => {
   const errors: string[] = [];
@@ -98,7 +98,7 @@ test(`mock creator rows preserve source paint, fractional scrolling and capture 
   await page.getByRole('button', { name: 'Weapons', exact: true }).click();
   await expect(scroll).toHaveAttribute('aria-valuenow', '0');
   await carrier.click();
-  await creator.screenshot({ path: testInfo.outputPath('source-palette-rows.png') });
+  await creator.screenshot({ path: testInfo.outputPath('palette-rows.png') });
   expect(errors).toEqual([]);
 });
 

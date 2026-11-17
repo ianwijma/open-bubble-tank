@@ -12,7 +12,7 @@ const coordinates = (parts: TankPart[]) =>
 for (const dpr of [1, 2])
   test.describe(`creator reference DPR${dpr}`, () => {
     test.use({ deviceScaleFactor: dpr, viewport: { width: 2600, height: 2200 } });
-    test(`mock public drag exports match five measured original gestures`, async ({ page }) => {
+    test(`mock public drag exports match five measured gestures`, async ({ page }) => {
       test.setTimeout(180000);
       const errors: string[] = [];
       page.on('pageerror', (error) => errors.push(error.message));
@@ -71,7 +71,7 @@ for (const dpr of [1, 2])
     });
   });
 
-test(`mock public palette placements match original fractional exports`, async ({
+test(`mock public palette placements match the measured fractional exports`, async ({
   page,
 }, testInfo) => {
   const errors: string[] = [];

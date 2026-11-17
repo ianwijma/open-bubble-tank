@@ -18,7 +18,7 @@ const pair: TankPart[] = [-10, 10].map((y, i) => ({
   radius: 7,
 }));
 
-test(`mock creator follows original merge/respawn and accepts quarter-pixel and zero-delta drag events`, async ({
+test(`mock creator follows the twin merge/respawn rules and accepts quarter-pixel and zero-delta drag events`, async ({
   page,
 }) => {
   const errors: string[] = [];
@@ -28,13 +28,13 @@ test(`mock creator follows original merge/respawn and accepts quarter-pixel and 
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'My tanks', exact: true }).click();
   await page.getByLabel('Import tank design').setInputFiles({
-    name: 'original-drag.json',
+    name: 'twin-drag.json',
     mimeType: 'application/json',
     buffer: Buffer.from(
       JSON.stringify({
         ...starter,
         sourceCode: undefined,
-        id: 'original-drag',
+        id: 'twin-drag',
         avatar: false,
         parts: pair,
       }),

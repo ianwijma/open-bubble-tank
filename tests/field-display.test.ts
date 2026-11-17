@@ -1,8 +1,8 @@
 import { setFieldFixtureLayout } from '../tools/fixtures/field-layout';
 import { expect, test } from 'bun:test';
 import authored from '../src/game/data/field-display.json';
-import original from './fixtures/script-bounds.json';
-import setterOriginal from './fixtures/field-setters.json';
+import fixture from './fixtures/script-bounds.json';
+import setters from './fixtures/field-setters.json';
 import { RetainedTransform } from '../src/game/core/retained-transform';
 import { displayMatrixProduct, type DisplayMatrix } from '../src/game/core/display-transform';
 import { scriptTwipBounds } from '../src/game/assets/projectile-bounds';
@@ -41,10 +41,10 @@ const measuredMaskWidth = (matrix: DisplayMatrix) =>
       leafBounds: (id) =>
         id === 1541
           ? {
-              x: original.leafTwips.xMin / 20,
-              y: original.leafTwips.yMin / 20,
-              width: (original.leafTwips.xMax - original.leafTwips.xMin) / 20,
-              height: (original.leafTwips.yMax - original.leafTwips.yMin) / 20,
+              x: fixture.leafTwips.xMin / 20,
+              y: fixture.leafTwips.yMin / 20,
+              width: (fixture.leafTwips.xMax - fixture.leafTwips.xMin) / 20,
+              height: (fixture.leafTwips.yMax - fixture.leafTwips.yMin) / 20,
             }
           : undefined,
       displayList: () => [],
@@ -97,7 +97,7 @@ test('first wrapper retains every authored slot, root tutorial, mask range and l
   expect(measuredMaskWidth(read.slots.exteriorMask.pose.matrix)).toBe(1381.4); // measured control
 });
 
-test('four child writes replace authored scale in qualified pcode order, leaving root and other slots alone', () => {
+test('four child writes replace authored scale in order, leaving root and other slots alone', () => {
   const displays = new FieldDisplays(),
     wrapper = field(2);
   displays.create(wrapper);
@@ -126,7 +126,7 @@ test('four child writes replace authored scale in qualified pcode order, leaving
   expect(read.slots.exteriorMask.pose.matrix).toMatchObject({ tx: -1, ty: -1 });
 });
 
-test('retained setter matrices reproduce prior original child/root width controls without rounded-width multiplication', () => {
+test('retained setter matrices reproduce the measured child/root width controls without rounded-width multiplication', () => {
   for (const [scale, width] of [
     [0.5, 696],
     [1, 1391.9],
@@ -236,7 +236,7 @@ test('superseded wrappers retain their own rooted pose and stage clocks; detache
   expect(world.fieldDisplays.read(orphan).root.pose).toEqual(before.root.pose);
 });
 
-test('under-avatar sizing captures source detail radius, width-before-height and rejects unresolved geometry', () => {
+test('under-avatar sizing captures detail radius, width-before-height and rejects unresolved geometry', () => {
   const world = new World([], [], 5, undefined, undefined, undefined, () => undefined);
   const tiny: TankDesign = {
     ...STARTER,
@@ -311,7 +311,7 @@ test('transit sizes the captured old under-bubble and latest next, then promotio
   expect(world.fieldDisplays.read(third).underAvatarSizing.writes.at(-1)!.value).toBe(45);
 });
 
-test('qualified sizing seam executes synchronously and height observes the width result without measuring a changed avatar', () => {
+test('the resolved sizing seam executes synchronously and height observes the width result without measuring a changed avatar', () => {
   const operations: UnderAvatarSizeOperation[] = [];
   // Synthetic identity/setter-order control ONLY; this callback is not shipped geometry.
   const world = new World([], [], 5, undefined, undefined, undefined, (operation) => {
@@ -432,7 +432,7 @@ test('read snapshots never change identity, pose, clocks, entropy or shared auth
 // Number ulp from the exact binary32-to-Number expansion). Cached Number
 // comparisons use parsed trace text; they are not f64 word proofs.
 const sourceSetter = (row: number) => {
-  const values = setterOriginal.rows
+  const values = setters.rows
     .find((trace) => trace.startsWith(`FIELD_POSE ${row} `))!
     .split(' ')
     .slice(2)
@@ -453,7 +453,7 @@ const sourceSetter = (row: number) => {
     },
   };
 };
-test('finite cached getters and float32 columns reproduce decoded original decimal controls', () => {
+test('finite cached getters and float32 columns reproduce the decoded decimal controls', () => {
   const authored = { a: 0.9924774169921875, b: 0, c: 0, d: 0.9924774169921875, tx: -1, ty: -1 };
   let pose = new RetainedTransform(authored);
   pose.rotation = 180;
@@ -472,7 +472,7 @@ test('finite cached getters and float32 columns reproduce decoded original decim
   pose.scaleX = 1.2;
   expect(pose.read()).toMatchObject(sourceSetter(3));
 });
-test('World collapse retains original repeated getter arithmetic through119 updates and position setters read back twips', () => {
+test('World collapse keeps repeated getter arithmetic through119 updates and position setters read back twips', () => {
   const world = new World([], [], 17),
     field = world.currentWrapper;
   world.beginCollapse(0);

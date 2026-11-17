@@ -150,7 +150,7 @@ async function reset() {
   }
   if (fixture.value === 'aim-contracts') {
     status.dataset.aimContracts = JSON.stringify(await showAimContracts(pack, stage));
-    status.textContent = 'Ready · source aim flags and Spike contact';
+    status.textContent = 'Ready · aim flags and Spike contact';
     return;
   }
   if (fixture.value === 'weapon-targets') {
@@ -160,7 +160,7 @@ async function reset() {
   }
   if (fixture.value === 'audio-windows') {
     status.dataset.audioWindows = JSON.stringify(await showAudioWindows(pack, stage));
-    status.textContent = 'Ready · decoded source sound windows';
+    status.textContent = 'Ready · decoded sound windows';
     return;
   }
   if (fixture.value === 'lower-effect-paint') {
@@ -320,12 +320,12 @@ async function reset() {
   }
   if (fixture.value === 'mock-part-motion') {
     status.dataset.mockPartMotion = JSON.stringify(await showMockPartMotion(pack, stage));
-    status.textContent = 'Ready · all31 weapon and behavior previews with source motion';
+    status.textContent = 'Ready · all31 weapon and behavior previews with their motion';
     return;
   }
   if (fixture.value === 'mock-body-motion') {
     status.dataset.mockBodyMotion = JSON.stringify(await showMockPartMotion(pack, stage, true));
-    status.textContent = 'Ready · all20 procedural body parts with source motion';
+    status.textContent = 'Ready · all20 procedural body parts with their motion';
     return;
   }
   if (fixture.value === 'turret-protection') {
@@ -340,7 +340,7 @@ async function reset() {
   }
   if (fixture.value === 'forcefield-order') {
     status.dataset.forcefieldOrder = JSON.stringify(await showForcefieldOrder(pack, stage));
-    status.textContent = 'Ready · source child order and retained shield film';
+    status.textContent = 'Ready · child order and retained shield film';
     return;
   }
   if (fixture.value === 'shape-contact') {
@@ -401,7 +401,7 @@ async function reset() {
   if (fixture.value === 'tank-art') {
     const proof = await showTankArtProof(pack, stage);
     status.dataset.tankArt = JSON.stringify(proof);
-    status.textContent = 'Ready · tank stage clocks and source protection sizing';
+    status.textContent = 'Ready · tank stage clocks and protection sizing';
     return;
   }
   if (fixture.value === 'bubble-buster') {

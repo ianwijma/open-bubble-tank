@@ -21,7 +21,7 @@ const design = (ids: number[]): TankDesign => ({
     twin: '',
   })),
 });
-test('creator summary preserves source counts, trailing commas and sorted weapon IDs', () => {
+test('creator summary preserves counts, trailing commas and sorted weapon IDs', () => {
   expect(creatorWeaponSummary(design([]), 2)).toBe('N/A');
   expect(creatorWeaponSummary(design([2001]), 2)).toBe('1 Basic Cannon, ');
   expect(creatorWeaponSummary(design([2002, 2001, 2001]), 2)).toBe(
@@ -34,7 +34,7 @@ test('creator summary preserves source counts, trailing commas and sorted weapon
     [5002, 5001].map((id) => `1 ${partById(id)!.name}, `).join(''),
   );
 });
-test('palette scroll retains source row overhang and distinct drag/arrow handle spans', () => {
+test('palette scroll keeps row overhang and distinct drag/arrow handle spans', () => {
   const m = new CreatorPaletteScroll(26);
   expect(m.extent).toBe(341.5);
   m.step(1);
@@ -82,7 +82,7 @@ test('creator wrapping retains blank paragraphs and never splits a weapon word',
   expect(creatorTextLines('Longword abc', 3, (s) => s.length)).toEqual(['Longword', 'abc']);
 });
 
-test('mock caption uses source character advances and stays on one line', () => {
+test('mock caption uses authored character advances and stays on one line', () => {
   const f = CREATOR_PALETTE.library.caption,
     text = 'Click and Drag Object';
   const { glyphs, width } = creatorGlyphLayout(text, f);

@@ -7,9 +7,7 @@ import type { TankDesign, TankPart } from '../src/game/core/types';
 
 const starter: TankDesign = JSON.parse(readFileSync(resolve('src/game/data/tanks.json'), 'utf8'))
   .avatar_defaults[0];
-test(`mock frozen class samples exclude weapons and retain source poster states`, async ({
-  page,
-}) => {
+test(`mock frozen class samples exclude weapons and keep their poster states`, async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('http://127.0.0.1:3102');

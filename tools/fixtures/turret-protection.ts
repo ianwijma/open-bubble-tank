@@ -165,7 +165,7 @@ export async function showTurretProtection(pack: AssetPack, host: HTMLElement) {
       artAdvance: tank.artAge - age,
       shield: tank.shield,
     };
-    capture('Cached return · source read abort, shield retained');
+    capture('Cached return · target read abort, shield retained');
     return {
       panels,
       removedFilm,

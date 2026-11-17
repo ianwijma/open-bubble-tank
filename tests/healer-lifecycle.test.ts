@@ -335,7 +335,7 @@ test('a born healing beam does not resolve its home or patient through active UI
   expect(beam.healingHome).toBe(owner);
 });
 
-test('a host collision failure still escapes the scoped source listener boundary', () => {
+test('a host collision failure still escapes the scoped listener boundary', () => {
   const world = setup();
   const owner = createTank(world.nextId(), design, 'enemy');
   const patient = createTank(world.nextId(), design, 'enemy', 100, 0, 100, 50);

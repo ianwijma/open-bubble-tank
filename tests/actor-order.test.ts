@@ -147,7 +147,7 @@ test('suppression volleys retain the separate 120-call delay and five-call spaci
   expect(tank.guns[0].suppressionCycle?.delay).toBe(-16);
 });
 
-test('destination enemy boundaries and death drops retain the source outgoing-wrapper quirk', () => {
+test('destination enemy boundaries and death drops keep the outgoing-wrapper quirk', () => {
   const { world, tank } = setup();
   world.field.scale = 0.5;
   world.field.enemies = [];

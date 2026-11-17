@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { waitForMainMenu } from './helpers/main-menu';
 import { readCreatorDesign, readDisplayedCreatorDesign, dropPreview } from './helpers/creator';
-test(`mock creator shows original controls, merges centered twins and commits one undo per slider gesture`, async ({
+test(`mock creator shows its controls, merges centered twins and commits one undo per slider gesture`, async ({
   page,
 }) => {
   const errors: string[] = [];

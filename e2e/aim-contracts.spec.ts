@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-test(`mock aim flags preserve fixed secondaries while Spike uses all seven source contact points`, async ({
+test(`mock aim flags preserve fixed secondaries while Spike uses all seven contact points`, async ({
   page,
 }) => {
   const errors: string[] = [];
