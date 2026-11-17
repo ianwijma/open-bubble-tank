@@ -23,7 +23,7 @@ test('the headless contact fallback keeps hidden attached parts hittable', () =>
 });
 
 test('zero-alpha children still contact through retained transforms, but masks do not hit independently', () => {
-  const pack = new AssetPack('mock');
+  const pack = new AssetPack();
   const matrix = { a: 1, b: 0, c: 0, d: 1, tx: 0, ty: 0 };
   const sprites: SpriteInfo[] = [
     {
@@ -67,7 +67,7 @@ test('zero-alpha children still contact through retained transforms, but masks d
 });
 
 test('hidden and alpha-zero tank parts retain contact while removed parts do not', () => {
-  const pack = new AssetPack('mock'),
+  const pack = new AssetPack(),
     body = { ...STARTER.parts[0], type: 1001, x: 0, y: 0, scale: 1 };
   // Supply opaque paint so the pre-fix provider passes the visible baseline first.
   Object.assign(pack, {
@@ -122,7 +122,7 @@ test('protection contact uses the same initial size assignment as native paintin
 });
 
 test('infection retains independent scripted child phases and shares a stable stage-clock tree', () => {
-  const pack = new AssetPack('mock'),
+  const pack = new AssetPack(),
     matrix = { a: 1, b: 0, c: 0, d: 1, tx: 0, ty: 0 };
   const sprites: SpriteInfo[] = [
     {

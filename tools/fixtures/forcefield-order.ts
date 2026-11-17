@@ -126,7 +126,7 @@ export async function showForcefieldOrder(pack: AssetPack, host: HTMLElement) {
     capture('Infection · new child above wrapper');
     tick(1);
     capture('Run · wrapper above infection');
-    return { panels, retained, generation: tank.forcefieldGeneration, mode: pack.mode };
+    return { panels, retained, generation: tank.forcefieldGeneration };
   } finally {
     view.destroy();
     app.destroy({ removeView: true }, { children: true });

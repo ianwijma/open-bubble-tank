@@ -137,7 +137,6 @@ export async function showBubbleBusterProof(pack: AssetPack, host: HTMLElement) 
     for (const byte of ctx.getImageData(0, 0, 550, 450).data)
       galleryHash = Math.imul(galleryHash ^ byte, 16777619);
     return {
-      mode: pack.mode,
       seeker: seekerProof,
       beam: beamProof,
       turret: turretProof,

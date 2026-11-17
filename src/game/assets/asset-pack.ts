@@ -128,7 +128,6 @@ function matrixAttr(m: Matrix) {
 }
 
 export class AssetPack {
-  readonly mode: 'mock';
   frames = new Map<number, Raster[]>();
   leaves = new Map<number, Raster>();
   private sprites = new Map<number, SpriteInfo>();
@@ -164,11 +163,8 @@ export class AssetPack {
     displayList: (id, age) => this.displayList(id, age),
     childAge: (id, age, p) => this.childAge(id, age, p),
   };
-  constructor(mode: 'mock') {
-    this.mode = mode;
-  }
   static async mock(onProgress: (n: number, label: string) => void = () => {}) {
-    const pack = new AssetPack('mock');
+    const pack = new AssetPack();
     pack.sprites = new Map(mockPartTimelines.sprites.map((s) => [s.id, s as SpriteInfo]));
     pack.shapes = new Map(mockPartTimelines.shapes.map((s) => [s.id, s]));
     // Numeric bounds/playback; procedural mock paint remains separate.

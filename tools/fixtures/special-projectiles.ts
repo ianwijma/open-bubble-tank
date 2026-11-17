@@ -192,7 +192,6 @@ export async function showSpecialProjectilesProof(pack: AssetPack, host: HTMLEle
       sap,
       conversion,
       panels,
-      mode: pack.mode,
       galleryHash: galleryHash >>> 0,
     };
   } finally {

@@ -66,7 +66,7 @@ test('class bounds transform separate leaves before union for rotated fractional
         : [],
   };
   const pose = partSnapshot({ id: 1501, symbol: 20 }, clipSource, 'class');
-  const pack = new AssetPack('mock');
+  const pack = new AssetPack();
   Object.assign(pack, {
     classPoses: new Map([[1501, pose]]),
     shapes: new Map([[90001, { id: 90001, bounds: { xMin: 0, xMax: 200, yMin: 0, yMax: 40 } }]]),

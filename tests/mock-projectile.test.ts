@@ -28,7 +28,7 @@ const extrema = (points: number[]) => ({
 test('mock basic and heavy cannon shots keep 12px and 30px visible diameters and contact', () => {
   const small = basic(),
     heavy = basic(2.5),
-    pack = new AssetPack('mock');
+    pack = new AssetPack();
   expect(extrema(mockProjectilePolygons(small)![0].points)).toEqual({
     left: -6,
     right: 6,

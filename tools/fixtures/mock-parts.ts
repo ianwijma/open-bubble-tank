@@ -94,5 +94,5 @@ export async function showMockPartsProof(source: AssetPack, host: HTMLElement) {
   );
   host.replaceChildren(canvas);
   mock.dispose();
-  return { mode: source.mode, samples };
+  return { samples };
 }

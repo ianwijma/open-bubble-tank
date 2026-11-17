@@ -21,7 +21,7 @@ function leaf(paint: (context: CanvasRenderingContext2D) => void): Raster {
 
 /** The real compiler must retain nested group transforms, holes and alpha-zero mask fills. */
 async function composedMask() {
-  const pack = new AssetPack('mock');
+  const pack = new AssetPack();
   const matrix = (x = 0, y = 0) => ({ a: 1, b: 0, c: 0, d: 1, tx: x * 20, ty: y * 20 });
   Object.assign(pack, {
     shapes: new Map(

@@ -27,7 +27,7 @@ const design: TankDesign = {
 };
 function setup() {
   const world = new World([], [], 47),
-    pack = new AssetPack('mock');
+    pack = new AssetPack();
   Object.assign(pack, {
     sprites: new Map((metadata.sprites as SpriteInfo[]).map((s) => [s.id, s])),
   });

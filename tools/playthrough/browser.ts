@@ -127,7 +127,6 @@ export async function runPlaythrough(
     host.after(sheet);
     const proof = {
       seed,
-      assets: pack.mode,
       frames: frame,
       inputDigest: digest >>> 0,
       mode: world.mode,

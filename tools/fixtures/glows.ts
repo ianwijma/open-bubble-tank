@@ -16,7 +16,7 @@ import { oracleColor, oracleGlow, premultiply } from './glow-oracle';
 export async function showGlowProof(pack: AssetPack, host: HTMLElement) {
   const app = new Application(),
     textures = new ArtTextures(),
-    synthetic = new AssetPack('mock');
+    synthetic = new AssetPack();
   await app.init({
     width: 550,
     height: 450,
@@ -205,7 +205,7 @@ export async function showGlowProof(pack: AssetPack, host: HTMLElement) {
       }
     let hash = 2166136261;
     for (const byte of g.getImageData(0, 0, 550, 450).data) hash = Math.imul(hash ^ byte, 16777619);
-    return { mode: pack.mode, variants: unique.size, results, cache, galleryHash: hash >>> 0 };
+    return { variants: unique.size, results, cache, galleryHash: hash >>> 0 };
   } finally {
     view.destroy();
     scene.destroy({ children: true });

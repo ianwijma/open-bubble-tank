@@ -131,7 +131,6 @@ export async function showMountedArt(pack: AssetPack, host: HTMLElement) {
       (c) => c.placement.name === 'bullet_mc',
     )!.clip.frame;
     return {
-      mode: pack.mode,
       panels,
       firstPlayAge,
       cloneFrame,

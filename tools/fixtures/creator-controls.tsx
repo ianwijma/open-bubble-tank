@@ -53,7 +53,7 @@ function ControlsFixture({
   };
   return (
     <>
-      <div className="creator stage-background" data-assets={pack.mode}>
+      <div className="creator stage-background">
         {CREATOR_CONTROLS.controls.map((c) => {
           const direction = c.name === 'Left_mc' ? -1 : c.name === 'Right_mc' ? 1 : 0;
           return (

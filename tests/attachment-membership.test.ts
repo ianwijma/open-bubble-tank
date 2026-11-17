@@ -21,7 +21,7 @@ function raster(opaque = true, size = 20): Raster {
   };
 }
 function pack(leaves: [number, Raster][], frames: [number, Raster[]][] = []) {
-  const result = new AssetPack('mock');
+  const result = new AssetPack();
   Object.assign(result, { leaves: new Map(leaves), frames: new Map(frames) });
   return result;
 }

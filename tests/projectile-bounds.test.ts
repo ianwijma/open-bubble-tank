@@ -196,7 +196,7 @@ test('turret construction selects inner frame and owner-facing barrel rotation',
 });
 
 test('stand-in shell bounds derive from the authored projectile geometry', () => {
-  close(new AssetPack('mock').projectileBounds(bullet({ kind: 'shell', x: 10, y: 20 })), {
+  close(new AssetPack().projectileBounds(bullet({ kind: 'shell', x: 10, y: 20 })), {
     x: 8,
     y: 18,
     width: 4,
@@ -205,7 +205,7 @@ test('stand-in shell bounds derive from the authored projectile geometry', () =>
 });
 
 test('unknown-symbol fallback bounds cover procedural mine/turret strokes and rotated beam', () => {
-  const pack = new AssetPack('mock');
+  const pack = new AssetPack();
   close(pack.projectileBounds(bullet({ x: 10, y: 20 })), {
     x: 5.75,
     y: 15.75,

@@ -22,7 +22,7 @@ test('protection uses successive axis records and the last record child dimensio
 });
 
 function geometry() {
-  const pack = new AssetPack('mock'),
+  const pack = new AssetPack(),
     id = partById(2001)!.symbol;
   // Stand-in parts without a timeline are sized from their poster, here an empty one.
   const poster = {

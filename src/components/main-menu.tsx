@@ -152,7 +152,7 @@ export function MainMenu({
   const caption = MAIN_MENU.rollover,
     captionFont = caption.font;
   return (
-    <div ref={root} className="main-menu stage-background" data-assets="mock">
+    <div ref={root} className="main-menu stage-background">
       <div className="menu-guest">
         <span aria-hidden="true">×</span> Playing as Guest
       </div>

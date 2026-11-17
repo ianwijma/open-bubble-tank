@@ -197,7 +197,7 @@ export async function showShapeContact(pack: AssetPack, host: HTMLElement) {
     checkMembership(field, 'forcefield', fieldPoint.global);
     detachForcefield(field);
     panels.at(-1)!.detached = pack.hitTest(field, fieldPoint.global.x, fieldPoint.global.y);
-    return { mode: pack.mode, panels, membership };
+    return { panels, membership };
   } finally {
     app.destroy({ removeView: true }, { children: true });
     textures.destroy();

@@ -677,7 +677,6 @@ export function TankCreator({
   const editor = (
     <div
       className={`creator stage-background ${overGame ? 'over-game' : ''}`}
-      data-assets={pack.mode}
       data-design={JSON.stringify(finalDesign)}
       data-displayed-design={JSON.stringify({ ...finalDesign, parts: displayedParts })}
       inert={!!saveDialog || guideActive || alertActive}

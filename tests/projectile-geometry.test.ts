@@ -155,7 +155,7 @@ test('placement color transforms affect the mine palette and dynamic beam masks 
 });
 
 test('numeric child ages keep AssetPack single-frame child-age behavior and 40-frame phase', () => {
-  const native = new AssetPack('mock');
+  const native = new AssetPack();
   Object.assign(native, {
     sprites: new Map(Object.values(data.sprites).map((s) => [s.id, s as SpriteInfo])),
   });

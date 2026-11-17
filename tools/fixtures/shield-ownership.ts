@@ -145,7 +145,6 @@ export async function showShieldOwnership(pack: AssetPack, host: HTMLElement) {
     tick(1);
     capture('Arrival · current film retained, immunity cleared');
     return {
-      mode: pack.mode,
       panels,
       contact,
       retainedB,

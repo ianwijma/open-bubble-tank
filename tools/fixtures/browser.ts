@@ -140,7 +140,7 @@ async function reset() {
   stage.style.height = '';
   if (fixture.value === 'homing-projectiles') {
     status.dataset.homingProjectiles = JSON.stringify(await showHomingProjectiles(pack, stage));
-    status.textContent = `Ready · ${pack.mode} · homing projectile states`;
+    status.textContent = 'Ready · homing projectile states';
     return;
   }
   if (fixture.value === 'orbital-width') {

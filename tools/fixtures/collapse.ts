@@ -123,7 +123,7 @@ export async function showCollapseProof(pack: AssetPack, host: HTMLElement) {
       shake: world.mainEffects.remaining,
       flash: world.effects.some((e) => e.symbol === 114),
     };
-    const synthetic = new AssetPack('mock'),
+    const synthetic = new AssetPack(),
       textures = new ArtTextures();
     const leaf = (id: number, radius: number, color: string, square = false) => {
       const canvas = document.createElement('canvas');
@@ -241,7 +241,6 @@ export async function showCollapseProof(pack: AssetPack, host: HTMLElement) {
     for (const byte of ctx.getImageData(0, 0, 550, 450).data)
       hash = Math.imul(hash ^ byte, 16777619);
     return {
-      mode: pack.mode,
       snapshots,
       completed,
       erase,

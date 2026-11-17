@@ -157,7 +157,7 @@ export async function showMockPartMotion(source: AssetPack, host: HTMLElement, b
         view.destroy();
       }
     });
-    return { mode: source.mode, bodies, results, opacity };
+    return { bodies, results, opacity };
   } finally {
     app.destroy({ removeView: true }, { children: true });
     textures.destroy();

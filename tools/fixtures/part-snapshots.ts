@@ -87,5 +87,5 @@ export async function showPartSnapshots(pack: AssetPack, host: HTMLElement) {
     ),
   ];
   host.replaceChildren(canvas);
-  return { mode: pack.mode, classes };
+  return { classes };
 }

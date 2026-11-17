@@ -136,7 +136,6 @@ export async function showForcefieldLifecycle(pack: AssetPack, host: HTMLElement
     tick(12);
     capture('New instance · paused impact advances');
     return {
-      mode: pack.mode,
       panels,
       fresh,
       ready: tank.forcefieldReady,
