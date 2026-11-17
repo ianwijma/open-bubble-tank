@@ -1,6 +1,6 @@
 import { importAvatarFixture } from './avatar-attachments';
 import { setFieldFixtureLayout } from './field-layout';
-import type { SwfClip } from '../../src/game/assets/swf-clip';
+import type { ArtClip } from '../../src/game/assets/art-clip';
 import { Container, Rectangle } from 'pixi.js';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { DEFAULT_SETTINGS } from '../../src/game/core/constants';
@@ -8,7 +8,7 @@ import type { Tank } from '../../src/game/core/types';
 import { STARTER } from '../../src/game/data/catalog';
 import { GameRenderer } from '../../src/game/render/pixi-renderer';
 import { TankView } from '../../src/game/render/tank-view';
-import { SwfTextures } from '../../src/game/render/swf-textures';
+import { ArtTextures } from '../../src/game/render/art-textures';
 import { createTank, deactivateTankData } from '../../src/game/simulation/tank';
 import { applyProjectileStatus } from '../../src/game/simulation/status';
 import { World, emptyInput } from '../../src/game/simulation/world';
@@ -86,13 +86,13 @@ export async function showActorRenderOwnership(pack: AssetPack, host: HTMLElemen
     return result;
   };
   const panels: { label: string; order: string[] }[] = [];
-  const textures = new SwfTextures();
+  const textures = new ArtTextures();
   let childView: TankView | undefined, statusView: TankView | undefined;
   try {
     panel('Actual enemy / ally / display-only order');
     const originals = actors.map(view);
     const pose = pack.partClip(d, d.design.parts[0]);
-    const poseState = (clip: SwfClip): unknown => ({
+    const poseState = (clip: ArtClip): unknown => ({
       age: clip.age,
       frame: clip.frame,
       children: [...clip.children].map(([depth, child]) => [depth, poseState(child.clip)]),

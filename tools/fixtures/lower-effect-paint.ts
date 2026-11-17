@@ -5,11 +5,11 @@ import { FieldLowerEffectsView } from '../../src/game/render/field-lower-effects
 import { fieldTransform } from '../../src/game/render/field-transform';
 import { GameRenderer } from '../../src/game/render/pixi-renderer';
 import type { CombatEffectsView } from '../../src/game/render/combat-effects-view';
-import { SwfTextures } from '../../src/game/render/swf-textures';
+import { ArtTextures } from '../../src/game/render/art-textures';
 import { combatEffect } from '../../src/game/simulation/effects';
 import { World } from '../../src/game/simulation/world';
 import { setEffectFixturePose } from './effect-pose';
-import original from '../../tests/fixtures/lower-effect-paint-original.json';
+import paint from '../../tests/fixtures/lower-effect-paint.json';
 
 /** Same GLUE disc/positions as the frozen fixture; no candidate generates expectations. */
 export async function showLowerEffectPaint(pack: AssetPack, host: HTMLElement) {
@@ -25,7 +25,7 @@ export async function showLowerEffectPaint(pack: AssetPack, host: HTMLElement) {
   });
   host.appendChild(app.canvas);
   const world = new World([], [], 113),
-    textures = new SwfTextures();
+    textures = new ArtTextures();
   const read = world.fieldDisplays.read(world.field);
   const view = new FieldLowerEffectsView(read);
   view.update({
@@ -40,7 +40,7 @@ export async function showLowerEffectPaint(pack: AssetPack, host: HTMLElement) {
   const before = JSON.stringify([world.fieldDisplays.read(world.field), world.rng.state]);
   let clippedPaint = '';
   try {
-    for (const [i, sample] of original.samples.entries()) {
+    for (const [i, sample] of paint.samples.entries()) {
       app.stage.position.set(60 - sample.x, 60 - sample.y);
       disc.position.set(sample.x, sample.y);
       disc.visible = sample.mode !== 'hidden';
@@ -55,7 +55,7 @@ export async function showLowerEffectPaint(pack: AssetPack, host: HTMLElement) {
       canvas.width = canvas.height = 120;
       const context = canvas.getContext('2d')!;
       context.drawImage(app.canvas, 0, 0);
-      const pixels = original.points.map(([x, y]) => [
+      const pixels = paint.points.map(([x, y]) => [
         ...context.getImageData(60 + x, 60 + y, 1, 1).data,
       ]);
       results.push({ i, pixels });

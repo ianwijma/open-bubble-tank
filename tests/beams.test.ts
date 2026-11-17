@@ -124,7 +124,7 @@ test('damage beams count contact frames and stop at the bubble wall', () => {
   expect(beamWallDistance({ x: 0, y: 0 }, 0, 1, 6)).toBe(426);
 });
 
-test('damage beams sample every target on the shared source minimum-distance grid', () => {
+test('damage beams sample every target on the shared minimum-distance grid', () => {
   const world = new World([], [], 10);
   world.player = createTank(
     100,

@@ -56,7 +56,7 @@ export default function GameShell() {
     [editor, setEditor] = useState<EditorContext | null>(null),
     [viewer, setViewer] = useState<(ViewerLimits & { avatar: boolean }) | null>(null),
     [storageError, setStorageError] = useState(false),
-    [nativeSize, setNativeSize] = useState(false),
+    [actualSize, setActualSize] = useState(false),
     [fullscreen, setFullscreen] = useState(false),
     [audio, setAudio] = useState<AudioManager | null>(null);
   const [musicRequest, setMusicRequest] = useState<{ mode: 'menu' | 'game' }>({ mode: 'menu' });
@@ -349,14 +349,14 @@ export default function GameShell() {
           </span>
           SOAP TANK
         </a>
-        <span className="header-caption">A FLASH CLASSIC, REBUILT</span>
+        <span className="header-caption">AN ARENA SHOOTER MADE OF BUBBLES</span>
         <div className="window-actions">
           <button
-            aria-label={nativeSize ? 'Enlarge game' : 'Original game size'}
-            title="Toggle original size"
-            onClick={() => setNativeSize(!nativeSize)}
+            aria-label={actualSize ? 'Enlarge game' : 'Actual size'}
+            title="Toggle actual size"
+            onClick={() => setActualSize(!actualSize)}
           >
-            {nativeSize ? 'FIT' : '1×'}
+            {actualSize ? 'FIT' : '1×'}
           </button>
           <button
             aria-label={fullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
@@ -369,7 +369,7 @@ export default function GameShell() {
           </button>
         </div>
       </header>
-      <div ref={frame} className={`stage-frame ${nativeSize ? 'native-size' : ''}`}>
+      <div ref={frame} className={`stage-frame ${actualSize ? 'actual-size' : ''}`}>
         <div ref={space} className="stage-space">
           <MainStage runtime={stage} fps={profile?.settings.fps ?? 50}>
             {!pack ? (
@@ -385,7 +385,6 @@ export default function GameShell() {
             ) : null}
             {pack && profile && screen === 'menu' ? (
               <MainMenu
-                pack={pack}
                 stage={stage}
                 motion={menuMotion}
                 covered={overlay !== null}
@@ -409,10 +408,6 @@ export default function GameShell() {
                       parts: [],
                     });
                   } else if (name === 'partsPacks_btn') showScreen('library');
-                  else if (name === 'pmg_btn') {
-                    setWorld(null);
-                    setPack(null);
-                  }
                 }}
               />
             ) : null}
@@ -517,7 +512,7 @@ export default function GameShell() {
                   />
                 ) : null}
                 {screen === 'game' && world.mode === 'won' && win ? (
-                  <WinPanel pack={pack} screen={win} />
+                  <WinPanel screen={win} />
                 ) : null}
               </>
             ) : null}
@@ -594,7 +589,6 @@ export default function GameShell() {
               {pack && settings && overlay === 'settings' && screen !== 'game' ? (
                 <SettingsPanel
                   menuState={menuSettings}
-                  pack={pack}
                   settings={settings}
                   onChange={settingsChange}
                   onClose={closeOverlay}
@@ -603,8 +597,7 @@ export default function GameShell() {
               {pack && profile && overlay === 'sources' ? (
                 <Dialog title="Choose your tanks" onClose={closeOverlay}>
                   <p className="source-intro">
-                    Explore an endless world of bubblefields with the original built-in tank
-                    collection.
+                    Explore an endless world of bubblefields with the built-in tank collection.
                   </p>
                   <label className="source-option">
                     <input type="checkbox" checked readOnly /> Built-in tanks{' '}
@@ -642,7 +635,7 @@ export default function GameShell() {
         </div>
       </div>
       <footer className="site-footer">
-        <span>{pack ? 'PROCEDURAL MOCK ASSETS' : 'YOUR DEVICE'}</span>
+        <span>{pack ? 'PLACEHOLDER ARTWORK' : 'YOUR DEVICE'}</span>
         <p>
           <kbd>W</kbd>
           <kbd>A</kbd>
@@ -652,13 +645,12 @@ export default function GameShell() {
         </p>
         <span>{storageError ? 'LOCAL SAVING UNAVAILABLE' : 'LOCAL SAVE'}</span>
       </footer>
-      <details className="recreation-details">
+      <details className="about-details">
         <summary>About Soap Tank</summary>
         <p>
-          Soap Tank grows out of a recreation of an older Flash game. The built-in tanks, part names
-          and texts come from that game and are credited in the project&apos;s notice file.
+          Soap Tank is a free, open-source arena shooter where every tank is built from bubbles. The
+          artwork is a placeholder until the game&apos;s own artwork is ready.
         </p>
-        {pack ? <p className="asset-summary">Playing with procedural mock artwork.</p> : null}
       </details>
     </main>
   );

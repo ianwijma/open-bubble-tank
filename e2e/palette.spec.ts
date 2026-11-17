@@ -42,13 +42,13 @@ async function importTank(page: Page, tank: TankDesign) {
     .getByRole('button', { name: 'Edit', exact: true })
     .click();
 }
-test(`mock palette dims unaffordable parts but permits selection and rolls back rejected edits`, async ({
+test(`palette dims unaffordable parts but permits selection and rolls back rejected edits`, async ({
   page,
 }) => {
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'My tanks', exact: true }).click({ timeout: 60000 });
   await importTank(page, budget);

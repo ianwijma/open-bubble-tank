@@ -16,7 +16,7 @@ function quietRandom() {
   return rng;
 }
 
-test('translation stores source twips before applying the preceding turn and damps force by whole-vector length', () => {
+test('translation stores twips before applying the preceding turn and damps force by whole-vector length', () => {
   const tank = actor();
   tank.movement.frames = 2;
   tank.movement.rate = 3;
@@ -31,7 +31,7 @@ test('translation stores source twips before applying the preceding turn and dam
   expect(tank.velocity).toEqual({ x: 0, y: 0 });
 });
 
-test('movement setup owns independent state and samples the source radial heading', () => {
+test('movement setup owns independent state and samples a radial heading', () => {
   const first = createActorMovement({ x: 0, y: 10 }),
     second = createActorMovement();
   expect(first.lastAngle).toBe(90);
@@ -143,7 +143,7 @@ test('boss B1 centers, advances the previous turn then plans from the avatar; ot
   expect([other.x, other.y, other.rotation, other.velocity.x]).toEqual([100, 0, 0, 0.2]);
 });
 
-test('opposite-direction planning retains the source signed 180-degree ties', () => {
+test('opposite-direction planning keeps signed 180-degree ties', () => {
   expect([actorAngle(180), actorAngle(-180), actorAngle(540), actorAngle(-540)]).toEqual([
     180, -180, 180, -180,
   ]);
@@ -171,7 +171,7 @@ test('the shipped GetLength property read keeps outer-ring wandering unbiased', 
   expect(index).toBe(2);
 });
 
-test('zero-speed pursuit and a zero wander roll retain source Infinity/NaN state', () => {
+test('zero-speed pursuit and a zero wander roll keep their Infinity/NaN state', () => {
   const stopped = actor();
   stopped.design = { ...stopped.design, speed: 0 };
   stopped.movement.swarmPoint = { x: 0, y: 400 };

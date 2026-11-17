@@ -1,6 +1,6 @@
 import { rotate } from '../core/math';
 import type { Projectile, Vec } from '../core/types';
-import type { Bounds, SwfMatrix } from './asset-pack';
+import type { Bounds, ArtMatrix } from './asset-pack';
 import { mockProjectileShapes } from './projectile-geometry';
 
 export interface MockProjectilePolygon {
@@ -14,7 +14,7 @@ export interface MockProjectilePolygon {
   details: { points: number[]; color: number; alpha: number }[];
 }
 const segments = 48;
-function rectangle(bounds: Bounds, matrix: SwfMatrix): Vec[] {
+function rectangle(bounds: Bounds, matrix: ArtMatrix): Vec[] {
   return [
     [bounds.x, bounds.y],
     [bounds.x + bounds.width, bounds.y],
@@ -25,7 +25,7 @@ function rectangle(bounds: Bounds, matrix: SwfMatrix): Vec[] {
     y: matrix.b * x + matrix.d * y + matrix.ty / 20,
   }));
 }
-function ellipse(bounds: Bounds, matrix: SwfMatrix): Vec[] {
+function ellipse(bounds: Bounds, matrix: ArtMatrix): Vec[] {
   const cx = bounds.x + bounds.width / 2,
     cy = bounds.y + bounds.height / 2;
   return Array.from({ length: segments }, (_, index) => {

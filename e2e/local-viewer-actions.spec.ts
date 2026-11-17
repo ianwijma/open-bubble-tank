@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-test(`mock local viewer pages, sorts, deletes, round-trips codes and reports isolated offline search`, async ({
+test(`local viewer pages, sorts, deletes, round-trips codes and reports isolated offline search`, async ({
   page,
   context,
 }, testInfo) => {
@@ -14,7 +14,7 @@ test(`mock local viewer pages, sorts, deletes, round-trips codes and reports iso
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
   await page.goto('http://127.0.0.1:3102');
   await page.getByLabel('Fixture').selectOption('viewer-actions');
-  await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
   await expect(page.locator('#status')).toContainText('Ready', { timeout: 60000 });
   const stage = page.locator('#stage'),
     viewer = stage.locator('.tank-viewer');
@@ -95,10 +95,10 @@ test(`mock local viewer pages, sorts, deletes, round-trips codes and reports iso
   expect(errors).toEqual([]);
   expect(outbound).toEqual([]);
 });
-test(`mock viewer guide completes through its two local pages`, async ({ page }, testInfo) => {
+test(`viewer guide completes through its two local pages`, async ({ page }, testInfo) => {
   await page.goto('http://127.0.0.1:3102');
   await page.getByLabel('Fixture').selectOption('viewer-guide');
-  await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
   await expect(page.locator('#status')).toContainText('Ready', { timeout: 60000 });
   await page.getByRole('button', { name: 'Viewer advance 20 frames', exact: true }).click();
   const guide = page.getByRole('dialog', { name: 'Tank viewer guide', exact: true });

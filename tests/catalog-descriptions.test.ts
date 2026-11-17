@@ -1,7 +1,7 @@
 import { expect, test } from 'bun:test';
 import { PARTS, partById } from '../src/game/data/catalog';
 
-test('part descriptions retain original damage, special and behavior labels', () => {
+test('part descriptions keep their damage, special and behavior labels', () => {
   expect(PARTS).toHaveLength(93);
   expect(PARTS.filter((part) => part.id < 2000).every((part) => part.damageText === '')).toBe(true);
   expect(PARTS.filter((part) => part.id >= 2000).every((part) => part.damageText.length > 0)).toBe(
@@ -19,7 +19,7 @@ test('part descriptions retain original damage, special and behavior labels', ()
     expect(partById(id)?.damageText).toBe(text);
 });
 
-test('part prose decodes source quote escapes once and preserves authored wording', () => {
+test('part prose decodes quote escapes once and preserves authored wording', () => {
   expect(partById(4013)?.flavor).toBe(
     'We\'ve always wondered what sort of dark little secrets were inside of those big yellow bubbles. "Shoot it.  You know you want to." says the Carrier.',
   );

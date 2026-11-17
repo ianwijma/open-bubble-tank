@@ -25,14 +25,14 @@ export function TankPortrait({
       cleanup?.();
     };
     async function render() {
-      const [{ Application }, { TankView }, { SwfTextures }] = await Promise.all([
+      const [{ Application }, { TankView }, { ArtTextures }] = await Promise.all([
         import('pixi.js'),
         import('@/game/render/tank-view'),
-        import('@/game/render/swf-textures'),
+        import('@/game/render/art-textures'),
       ]);
       if (cancelled) return;
       const app = new Application(),
-        textures = new SwfTextures();
+        textures = new ArtTextures();
       await app.init({
         width: 550,
         height: 450,

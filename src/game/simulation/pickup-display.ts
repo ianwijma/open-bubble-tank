@@ -1,7 +1,7 @@
 import type { Field, Pickup, Tank } from '../core/types';
 import metadata from '../data/pickup-display.json';
 import type { World } from './world';
-import { SwfClip } from '../assets/swf-clip';
+import { ArtClip } from '../assets/art-clip';
 import { DisplayListCache } from '../assets/display-list';
 import type { SpriteInfo } from '../assets/asset-pack';
 
@@ -15,7 +15,7 @@ const sourceClips = {
   },
 };
 interface Clock {
-  pose: SwfClip;
+  pose: ArtClip;
   born: number;
   initialized: boolean;
   advanceAt: number;
@@ -26,12 +26,11 @@ export interface PickupClip {
   readonly symbol: number;
   readonly totalFrames: number;
   readonly registersFrame1: boolean;
-  readonly pose: SwfClip;
+  readonly pose: ArtClip;
   readonly playback: Readonly<{
     status: 'retained';
     currentFrame: number;
     entropy: 'host-artwork';
-    globalSourceEntropy: 'unproved';
   }>;
 }
 interface Instance {
@@ -89,7 +88,7 @@ export class PickupDisplays {
     if (existing) return existing.clip;
     const source = metadata.roots.find((root) => root.value === denomination);
     if (!source) throw new Error(`Unknown pickup denomination ${denomination}`);
-    const pose = new SwfClip(source.symbol, sourceClips, this.artworkRandom);
+    const pose = new ArtClip(source.symbol, sourceClips, this.artworkRandom);
     pose.construct();
     const clock: Clock = { pose, born: this.cohort, initialized: false, advanceAt: Infinity };
     this.clocks.add(new WeakRef(clock));
@@ -104,7 +103,6 @@ export class PickupDisplays {
           status: 'retained' as const,
           currentFrame: clock.pose.frame,
           entropy: 'host-artwork' as const,
-          globalSourceEntropy: 'unproved' as const,
         });
       },
     });

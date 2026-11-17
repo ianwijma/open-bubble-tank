@@ -12,17 +12,16 @@
     "test": "bun test tests",
     "check": "bun run typecheck && bun run test",
     "test:e2e": "bun run build && playwright test",
-    "test:e2e:smoke": "bun run test:e2e e2e/game.spec.ts --grep 'mock path:'",
-    "test:e2e:offline": "bun run test:e2e --grep 'mock|synthetic'",
+    "test:e2e:smoke": "bun run test:e2e e2e/game.spec.ts --grep 'smoke path:'",
     "fixtures": "bun tools/visual-fixtures.ts",
     "format": "prettier --write --ignore-unknown src tests e2e tools *.ts *.json *.mjs",
     "format:check": "prettier --check --ignore-unknown src tests e2e tools *.ts *.json *.mjs"
   },
   "dependencies": {
-    "next": "16.4.3",
+    "next": "16.4.6",
+    "pixi.js": "8.22.0",
     "react": "19.3.1",
-    "react-dom": "19.3.1",
-    "pixi.js": "8.22.0"
+    "react-dom": "19.3.1"
   },
   "devDependencies": {
     "@playwright/test": "1.64.1",

@@ -5,7 +5,7 @@ import {
 } from '../src/game/assets/contact-transform';
 import { expect, test } from 'bun:test';
 import { AssetPack, type SpriteInfo } from '../src/game/assets/asset-pack';
-import { SwfClip } from '../src/game/assets/swf-clip';
+import { ArtClip } from '../src/game/assets/art-clip';
 import { STARTER, partById } from '../src/game/data/catalog';
 import { createTank } from '../src/game/simulation/tank';
 import { protectionScale } from '../src/game/core/protection-size';
@@ -23,7 +23,7 @@ test('the headless contact fallback keeps hidden attached parts hittable', () =>
 });
 
 test('zero-alpha children still contact through retained transforms, but masks do not hit independently', () => {
-  const pack = new AssetPack('mock');
+  const pack = new AssetPack();
   const matrix = { a: 1, b: 0, c: 0, d: 1, tx: 0, ty: 0 };
   const sprites: SpriteInfo[] = [
     {
@@ -55,7 +55,7 @@ test('zero-alpha children still contact through retained transforms, but masks d
   ];
   Object.assign(pack, { sprites: new Map(sprites.map((s) => [s.id, s])) });
   const pose = (id: number) => {
-    const clip = new SwfClip(id, pack);
+    const clip = new ArtClip(id, pack);
     clip.advance(1);
     return clip;
   };
@@ -67,7 +67,7 @@ test('zero-alpha children still contact through retained transforms, but masks d
 });
 
 test('hidden and alpha-zero tank parts retain contact while removed parts do not', () => {
-  const pack = new AssetPack('mock'),
+  const pack = new AssetPack(),
     body = { ...STARTER.parts[0], type: 1001, x: 0, y: 0, scale: 1 };
   // Supply opaque paint so the pre-fix provider passes the visible baseline first.
   Object.assign(pack, {
@@ -113,7 +113,7 @@ test('hidden and alpha-zero tank parts retain contact while removed parts do not
   expect(pack.hitTest(tank, 0, 0)).toBe(false);
 });
 
-test('protection contact uses the same initial size assignment as native painting', () => {
+test('protection contact uses the same initial size assignment as painting', () => {
   const bounds = { width: 100, height: 80 };
   expect(protectionScale(bounds, 200)).toEqual({ x: 2, y: 2.5 });
   expect(protectionScale(bounds, 200, true)).toEqual({ x: 2, y: 2 });
@@ -122,7 +122,7 @@ test('protection contact uses the same initial size assignment as native paintin
 });
 
 test('infection retains independent scripted child phases and shares a stable stage-clock tree', () => {
-  const pack = new AssetPack('mock'),
+  const pack = new AssetPack(),
     matrix = { a: 1, b: 0, c: 0, d: 1, tx: 0, ty: 0 };
   const sprites: SpriteInfo[] = [
     {

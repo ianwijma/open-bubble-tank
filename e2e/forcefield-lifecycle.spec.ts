@@ -1,12 +1,10 @@
 import { expect, test } from '@playwright/test';
-test(`mock forcefield detaches on crossing and reconstructs after passive Run`, async ({
-  page,
-}) => {
+test(`forcefield detaches on crossing and reconstructs after passive Run`, async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto('http://127.0.0.1:3102');
   await page.getByLabel('Fixture').selectOption('forcefield-lifecycle');
-  await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
   const status = page.getByRole('status');
   await expect(status).toContainText('Ready', { timeout: 60000 });
   const proof = JSON.parse((await status.getAttribute('data-forcefield-lifecycle'))!);

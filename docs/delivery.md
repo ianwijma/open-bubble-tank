@@ -23,7 +23,7 @@ Once five layers exist, gather every change on the last PR's branch and point th
 | Event | What runs | Time limit |
 | --- | --- | --- |
 | Pull request | Formatting, `bun run check`, a production build and the quick browser check (`bun run test:e2e:smoke`) | 10 minutes |
-| Push to `master`, manual run | Formatting, `bun run check`, a production build and the full browser suite (`bun run test:e2e:offline`), including the bot playthrough | 45 minutes |
+| Push to `master`, manual run | Formatting, `bun run check`, a production build and the full browser suite (`bun run test:e2e`), including the bot playthrough | 45 minutes |
 
 On `master` the job sets `SOAPTANK_PLAYTHROUGH_LONG_RUN=1`, which gives the bot playthrough a 10-minute budget instead of the local 5 minutes. Its inputs, simulation cap and assertions stay the same.
 

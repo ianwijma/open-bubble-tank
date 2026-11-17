@@ -1,6 +1,5 @@
 import { StrictMode, useId, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { PARTS } from '../../src/game/data/catalog';
 import { orderedPalette } from '../../src/game/simulation/editor-palette';
 import { CreatorPaletteFrame, CreatorPaletteRows } from '../../src/components/creator-palette';
@@ -12,7 +11,7 @@ const parts = orderedPalette(
   PARTS.filter((part) => Math.floor(part.id / 1000) === 2),
   context,
 );
-function PaletteFixture({ pack }: { pack: AssetPack }) {
+function PaletteFixture() {
   const [chosen, setChosen] = useState<number | null>(2001);
   const [focus, setFocus] = useState<CreatorDetailFocus | null>(null);
   const instance = useRef(0),
@@ -20,9 +19,8 @@ function PaletteFixture({ pack }: { pack: AssetPack }) {
     id = useId();
   return (
     <div className="creator stage-background">
-      <CreatorPaletteFrame pack={pack} />
+      <CreatorPaletteFrame />
       <CreatorPaletteRows
-        pack={pack}
         parts={parts}
         context={context}
         chosen={chosen}
@@ -32,15 +30,15 @@ function PaletteFixture({ pack }: { pack: AssetPack }) {
           setFocus(anchor ? { ...anchor, instance: ++instance.current } : null)
         }
       />
-      <CreatorPartDetails pack={pack} focus={focus} canvas={canvas} id={id} />
+      <CreatorPartDetails focus={focus} canvas={canvas} id={id} />
     </div>
   );
 }
-export function showCreatorPaletteRows(pack: AssetPack, host: HTMLElement) {
+export function showCreatorPaletteRows(host: HTMLElement) {
   const root = createRoot(host);
   root.render(
     <StrictMode>
-      <PaletteFixture pack={pack} />
+      <PaletteFixture />
     </StrictMode>,
   );
   return () => root.unmount();

@@ -18,7 +18,7 @@ function step(world: World, n: number, change: Partial<ReturnType<typeof input>>
   for (let i = 0; i < n; i++) world.step({ ...input(), ...change });
 }
 
-describe('original gameplay contracts', () => {
+describe('gameplay rules', () => {
   test('new game starts in an empty tutorial field with 1 of 50 life', () => {
     const w = new World([], [], 1);
     expect(w.player.life).toBe(1);
@@ -26,7 +26,7 @@ describe('original gameplay contracts', () => {
     expect(w.field.enemies).toHaveLength(0);
     expect(w.field.tutorial).toBe(1);
   });
-  test('acceleration is per axis, diagonal motion is not normalized, coasting has the original snap', () => {
+  test('acceleration is per axis, diagonal motion is not normalized, coasting snaps to rest', () => {
     const w = new World([], [], 1);
     step(w, 10, { right: true, down: true });
     expect(w.player.velocity.x).toBeCloseTo(6);
@@ -266,8 +266,8 @@ describe('original gameplay contracts', () => {
     expect(w.stats.shots).toBe(4);
   });
 });
-describe('recovered catalog and wave tables', () => {
-  test('all parts have linked Flash symbols and all built-in parts exist', () => {
+describe('catalog and wave tables', () => {
+  test('all parts have linked artwork symbols and all built-in parts exist', () => {
     expect(PARTS).toHaveLength(93);
     expect(PARTS.every((p) => p.symbol > 0)).toBe(true);
     const ids = new Set(PARTS.map((p) => p.id));
@@ -276,7 +276,7 @@ describe('recovered catalog and wave tables', () => {
     );
     expect(MAX_LIFE).toEqual([50, 100, 170, 250, 400, 800, 2000]);
   });
-  test('early wave options are restored and select by the original distance branch', () => {
+  test('early wave options select by the distance branch', () => {
     expect(availableWaves(1)).toHaveLength(2);
     expect(availableWaves(3)).toHaveLength(2);
     expect(availableWaves(5)).toHaveLength(3);
@@ -333,7 +333,7 @@ describe('advanced parts', () => {
     expect(w.player.forcefieldReady).toBe(true);
     expect(w.player.forcefield).toBe(40);
   });
-  test('Massive Cannon defers its projectile until the original 26-frame effect completes', () => {
+  test('Massive Cannon defers its projectile until its 26-frame effect completes', () => {
     const w = new World([], [], 1);
     const gun = {
       part: { ...STARTER.parts[1], type: 3008 },
@@ -407,7 +407,7 @@ describe('advanced parts', () => {
   });
 });
 
-test('the recovered roster expands at the original distance milestones', () => {
+test('the roster expands at its distance milestones', () => {
   const w = new World([], [], 123);
   expect(w.roster.units.has('Heavy')).toBe(false);
   w.roster.update(7);

@@ -1,5 +1,5 @@
 import { expect, test } from 'bun:test';
-import reference from './fixtures/bitmap-blur-reference.json';
+import reference from './fixtures/bitmap-blur.json';
 import {
   blurPauseBitmap,
   drawBitmapOver,

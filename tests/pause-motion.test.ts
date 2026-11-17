@@ -5,7 +5,7 @@ const frames = (motion: PauseMotion, count: number) => {
   for (let i = 0; i < count; i++) motion.advance();
 };
 
-test('display property assignment agrees with the project-authored Ruffle numeric probe', () => {
+test('display property assignment agrees with the recorded numeric samples', () => {
   expect([displayPixel(0.03), displayPixel(-0.03)]).toEqual([0, 0]);
   const motion = new PauseMotion();
   const positions = [];
@@ -62,7 +62,7 @@ test('Info shares the current parent alpha, fades the title/play, and retracts t
   expect(motion.layerAlpha).toBe(displayAlpha(alpha + 0.05));
 });
 
-test('hover eases from source base scales and resume waits for reverse preparation', () => {
+test('hover eases from base scales and resume waits for reverse preparation', () => {
   const motion = new PauseMotion();
   motion.hovered = 'btnPlay_mc';
   frames(motion, 1);

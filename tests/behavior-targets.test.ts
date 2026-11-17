@@ -39,7 +39,7 @@ test('enemy acquisition consumes its coin even with no allies', () => {
   expect(state.allies).toBe(0); // Setup acquisition does not update Run's private count.
 });
 
-test('enemy target index preserves source inclusive-length null rather than clamping/falling back', () => {
+test('enemy target index keeps the inclusive-length null rather than clamping/falling back', () => {
   const p = population(),
     state = createBehaviorTarget(),
     random = rolls(0, 1);
@@ -117,7 +117,7 @@ test('an ally-count change acquires again after successful Run acquisition', () 
   expect(last.calls()).toBe(1);
 });
 
-test('three acquisition attempts can leave a source null index until the next active call', () => {
+test('three acquisition attempts can leave a null index until the next active call', () => {
   const p = population(),
     state = createBehaviorTarget(),
     random = rolls(0, 1, 0, 1, 0, 1);

@@ -677,7 +677,6 @@ export function TankCreator({
   const editor = (
     <div
       className={`creator stage-background ${overGame ? 'over-game' : ''}`}
-      data-assets={pack.mode}
       data-design={JSON.stringify(finalDesign)}
       data-displayed-design={JSON.stringify({ ...finalDesign, parts: displayedParts })}
       inert={!!saveDialog || guideActive || alertActive}
@@ -694,7 +693,6 @@ export function TankCreator({
       onPointerUp={stageSelectionRelease}
     >
       <CreatorButton
-        pack={pack}
         name="SymmetricMode_mc"
         label="Symmetric Mode"
         checked={symmetric}
@@ -704,7 +702,6 @@ export function TankCreator({
         }}
       />
       <CreatorButton
-        pack={pack}
         name="LoadTank_mc"
         label="Load a Tank..."
         onClick={() => {
@@ -720,7 +717,6 @@ export function TankCreator({
         }}
       />
       <CreatorButton
-        pack={pack}
         name="SaveExit_mc"
         label="SAVE"
         onClick={() => {
@@ -743,7 +739,6 @@ export function TankCreator({
         }}
       />
       <CreatorButton
-        pack={pack}
         name="Exit_mc"
         label="Exit tank creator"
         onClick={() => {
@@ -875,14 +870,13 @@ export function TankCreator({
           onPointerCancel={() => finishDrag(true)}
         />
         {advanced ? (
-          <CreatorStatsTab pack={pack} basic onClick={() => setAdvanced(false)} />
+          <CreatorStatsTab basic onClick={() => setAdvanced(false)} />
         ) : (
-          <CreatorStats pack={pack} design={design} classId={classId} />
+          <CreatorStats design={design} classId={classId} />
         )}
       </div>
       {!design.avatar ? (
         <CreatorEnemyStats
-          pack={pack}
           values={design}
           suggested={suggested}
           open={advanced}
@@ -904,7 +898,6 @@ export function TankCreator({
           Selected parts ({selection.keys.length})
         </span>
         <CreatorButton
-          pack={pack}
           name="DeleteButton_mc"
           label="Delete selected part"
           releaseAction
@@ -917,7 +910,6 @@ export function TankCreator({
           }}
         />
         <CreatorButton
-          pack={pack}
           name="BringFront_mc"
           label="To front"
           onClick={() =>
@@ -931,7 +923,6 @@ export function TankCreator({
           }
         />
         <CreatorButton
-          pack={pack}
           name="SendBack_mc"
           label="To back"
           onClick={() =>
@@ -945,7 +936,6 @@ export function TankCreator({
           }
         />
         <CreatorButton
-          pack={pack}
           name="AlignCenter_mc"
           label="Align to Center"
           onClick={() => {
@@ -968,7 +958,6 @@ export function TankCreator({
         {([-1, 1] as const).map((direction) => (
           <CreatorButton
             key={direction}
-            pack={pack}
             name={direction < 0 ? 'Left_mc' : 'Right_mc'}
             label={direction < 0 ? 'Move selection left' : 'Move selection right'}
             onClick={() => {
@@ -984,7 +973,6 @@ export function TankCreator({
         {CREATOR_CONTROLS.sliders.map((layout) => (
           <CreatorSlider
             key={layout.name}
-            pack={pack}
             layout={layout}
             label={layout.name === 'Resize_mc' ? 'Part scale' : 'Part rotation'}
             value={layout.name === 'Resize_mc' ? transform.scale : transform.rotation}
@@ -1027,7 +1015,6 @@ export function TankCreator({
         ))}
       </div>
       <CreatorButton
-        pack={pack}
         name="Undo_mc"
         label="Undo"
         disabled={history.length <= 1}
@@ -1048,7 +1035,7 @@ export function TankCreator({
           {message}
         </p>
       ) : null}
-      <CreatorPaletteFrame pack={pack} />
+      <CreatorPaletteFrame />
       <button
         type="button"
         ref={preview}
@@ -1092,7 +1079,6 @@ export function TankCreator({
         <canvas ref={previewCanvas} width={282} height={134} aria-hidden="true" />
       </button>
       <CreatorPaletteTabs
-        pack={pack}
         avatar={design.avatar}
         category={category}
         onCategory={(id) => {
@@ -1111,7 +1097,6 @@ export function TankCreator({
       />
       <CreatorPaletteRows
         key={category}
-        pack={pack}
         parts={palette}
         context={paletteContext}
         chosen={chosen}
@@ -1136,25 +1121,19 @@ export function TankCreator({
           setMessage('');
         }}
       />
-      <CreatorSelectionInfo pack={pack} icons={selectionIcons} />
-      <CreatorPartDetails pack={pack} focus={details} canvas={detailCanvas} id={detailsId} />
+      <CreatorSelectionInfo icons={selectionIcons} />
+      <CreatorPartDetails focus={details} canvas={detailCanvas} id={detailsId} />
     </div>
   );
   return (
     <>
       {editor}
       {guideActive ? (
-        <CreatorGuide
-          pack={pack}
-          seen={false}
-          onStart={onHelpStart}
-          onClose={() => setGuideActive(false)}
-        />
+        <CreatorGuide seen={false} onStart={onHelpStart} onClose={() => setGuideActive(false)} />
       ) : null}
-      <CreatorAlert pack={pack} fps={fps} request={alertRequest} onActiveChange={setAlertActive} />
+      <CreatorAlert fps={fps} request={alertRequest} onActiveChange={setAlertActive} />
       {saveDialog ? (
         <CreatorSaveDialog
-          pack={pack}
           kind={saveDialog.kind}
           tank={saveDialog.tank}
           initialName={initialSaveName}

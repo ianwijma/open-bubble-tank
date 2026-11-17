@@ -31,4 +31,4 @@ Use case: background-extraction. Edit the supplied tank icon by removing ONLY th
 Use case: background-extraction. Refine ONLY the alpha cutout boundary of this already-transparent tank icon. Remove ALL ragged white/cyan/yellow fringe, detached specks, flecks, stray pixels, and residual glow outside the smooth intended silhouette. The edges must be smooth precise antialiased curves that look clean on black, white, or colored backgrounds. Keep every visible part of the tank itself unchanged: all bubble circles, internal gradients, blue shading, white highlights, gold cannon, proportions, exact framing and scale. Do not enlarge or shrink the subject, do not change its design, do not alter its interior, do not add a stroke or halo. Background and gaps must remain genuinely fully transparent. Output PNG with alpha.
 ```
 
-The prompts are recorded as used, except that the old project and game names are reworded as plain descriptions.
+The prompts are recorded as used, except that names of other projects and games are reworded as plain descriptions.

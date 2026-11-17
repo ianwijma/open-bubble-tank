@@ -1,13 +1,13 @@
 import { expect, test } from '@playwright/test';
 
-test(`mock crossing renders both live field populations and retains the destination`, async ({
+test(`crossing renders both live field populations and retains the destination`, async ({
   page,
 }) => {
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('http://127.0.0.1:3102');
   await page.getByLabel('Fixture').selectOption('crossing-combat');
-  await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
   const status = page.getByRole('status');
   await expect(status).toContainText('Ready', { timeout: 60000 });
   const proof = JSON.parse((await status.getAttribute('data-crossing'))!);
@@ -31,14 +31,14 @@ test(`mock crossing renders both live field populations and retains the destinat
   expect(errors).toEqual([]);
 });
 
-test(`mock replaced next wrapper keeps its stage pose and artwork without combat Run`, async ({
+test(`replaced next wrapper keeps its stage pose and artwork without combat Run`, async ({
   page,
 }, testInfo) => {
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('http://127.0.0.1:3102');
   await page.getByLabel('Fixture').selectOption('crossing-nested');
-  await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
   const status = page.getByRole('status');
   await expect(status).toContainText('Ready', { timeout: 60000 });
   const proof = JSON.parse((await status.getAttribute('data-crossing'))!);

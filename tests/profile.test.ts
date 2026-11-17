@@ -56,7 +56,7 @@ test('settings migrate safely without accepting arbitrary frame rates or hotkeys
   expect(validateSettings({ zoom: 20 }).zoom).toBe(1.5);
   expect(validateSettings({ zoom: NaN }).zoom).toBe(1);
 });
-test('class is a pixel area measurement with inclusive original thresholds', () => {
+test('class is a pixel area measurement with inclusive thresholds', () => {
   expect(classFromPixelCount(3465)).toBe(1);
   expect(classFromPixelCount(3466)).toBe(2);
   expect(classFromPixelCount(29701)).toBe(6);
@@ -112,7 +112,7 @@ test('creator medal counts retained custom designs and excludes builtin library 
   expect(third.profile.achievements).toEqual(['Tank Creator']);
 });
 
-test('optional original-code identity metadata rejects nonstrings and oversized or malformed input', () => {
+test('optional tank-code identity metadata rejects nonstrings and oversized or malformed input', () => {
   expect(validateDesign({ ...STARTER, sourceCode: 1 })).toBe(false);
   expect(validateDesign({ ...STARTER, sourceCode: 'wrong' })).toBe(false);
   expect(validateDesign({ ...STARTER, sourceCode: 'a'.repeat(200006) })).toBe(false);

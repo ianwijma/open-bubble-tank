@@ -176,7 +176,7 @@ p {
   background: #0a3b56;
   align-self: center;
 }
-.stage-frame.native-size {
+.stage-frame.actual-size {
   max-width: 550px;
 }
 .stage-space {
@@ -321,16 +321,16 @@ kbd {
   line-height: 1.6;
   margin-bottom: 14px;
 }
-.mock-button {
+.play-button {
   margin-top: 12px;
   font-size: 10px;
   color: #a4cfda;
   padding: 7px 8px;
 }
-.mock-button:hover {
+.play-button:hover {
   color: #e5faff;
 }
-.mock-button span {
+.play-button span {
   padding-left: 9px;
 }
 .gate-bubbles i {
@@ -433,7 +433,7 @@ kbd {
   background: transparent;
   backdrop-filter: none;
 }
-.recreation-details {
+.about-details {
   width: min(880px, 96vw);
   margin: 12px auto;
   color: #9bc3d1;
@@ -441,7 +441,7 @@ kbd {
     12px/1.5 Arial,
     sans-serif;
 }
-.recreation-details summary {
+.about-details summary {
   cursor: pointer;
 }
 .menu-title {
@@ -508,12 +508,6 @@ kbd {
 .menu-settings {
   left: 184px;
   top: 284px;
-  width: 40px;
-  height: 31px;
-}
-.menu-assets {
-  left: 255px;
-  top: 303px;
   width: 40px;
   height: 31px;
 }
@@ -792,23 +786,6 @@ kbd {
     Arial,
     sans-serif;
 }
-.pause-stats {
-  display: flex;
-  justify-content: space-around;
-  margin: 12px 0 24px;
-}
-.pause-stats span {
-  font-size: 7px;
-  letter-spacing: 0.7px;
-  color: #83a8b7;
-}
-.pause-stats strong {
-  display: block;
-  font-size: 22px;
-  color: #e4f6fc;
-  font-weight: normal;
-  margin-top: 8px;
-}
 .stage-dialog {
   position: absolute;
   inset: 0;
@@ -1036,18 +1013,6 @@ kbd {
 .pause-orb:not(:has(img)) {
   background: #a6d2e42e;
 }
-.pause-play {
-  left: 195px;
-  top: 172px;
-  width: 160px;
-  height: 121px;
-}
-.pause-quit {
-  left: 133px;
-  top: 248px;
-  width: 41px;
-  height: 31px;
-}
 .pause-info {
   left: 377px;
   top: 250px;
@@ -1167,15 +1132,6 @@ kbd {
 .tank-info dd {
   margin: 0;
   color: #e3f5fa;
-}
-.part-list {
-  font-size: 9px !important;
-  border-top: 1px solid #a4d9ee22;
-  padding-top: 14px;
-  margin-top: 15px;
-}
-.win-medal {
-  padding: 20px 0;
 }
 .creator {
   color: #fff;
@@ -1688,7 +1644,7 @@ kbd {
   pointer-events: none;
 }
 
-/* Authored Settings645 and PauseMenu Settings1584/HotKeys1624 placements. */
+/* Authored placements of the settings screen and the pause menu's settings and hot keys panes. */
 .authored-settings .settings-layers {
   position: absolute;
   inset: 0;
@@ -1824,8 +1780,8 @@ kbd {
   letter-spacing: normal;
   text-shadow: none;
 }
-/* PausedMenuButtons1636 direct-child depths: title3, Settings7, Info79,
-   HotKeys117 and main buttons164+. These panes share the source parent alpha. */
+/* Pause menu direct-child depths: title 3, settings 7, Info 79,
+   hot keys 117 and main buttons 164+. These panes share the source parent alpha. */
 .pause-screen .settings-page[data-settings-page='settings'] {
   z-index: 7;
 }

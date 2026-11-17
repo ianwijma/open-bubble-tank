@@ -1,13 +1,13 @@
 import { expect, test } from '@playwright/test';
 
-test(`mock mapped enemy sliders retain source scaling, cursor position and cancellation`, async ({
+test(`mapped enemy sliders retain their scaling, cursor position and cancellation`, async ({
   page,
 }, testInfo) => {
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('http://127.0.0.1:3102');
   await page.getByLabel('Fixture').selectOption('creator-controls');
-  await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
   const values = async () =>
     JSON.parse((await page.locator('[data-control-values]').textContent())!);
   await expect(page.locator('[data-control-values]')).toContainText('"life":20', {

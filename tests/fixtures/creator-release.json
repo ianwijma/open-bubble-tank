@@ -1,0 +1,1034 @@
+{
+  "runs": [
+    {
+      "dpr": 1,
+      "snapshots": [
+        {
+          "name": "placed-pair",
+          "parts": [
+            {
+              "key": "1_mc",
+              "type": 1001,
+              "twin": "2_mc",
+              "x": -40,
+              "y": -10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            },
+            {
+              "key": "2_mc",
+              "type": 1001,
+              "twin": "1_mc",
+              "x": -40,
+              "y": 10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            }
+          ]
+        },
+        {
+          "name": "inside-rotation",
+          "parts": [
+            {
+              "key": "1_mc",
+              "type": 1001,
+              "twin": "2_mc",
+              "x": -40,
+              "y": -10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            },
+            {
+              "key": "2_mc",
+              "type": 1001,
+              "twin": "1_mc",
+              "x": -40,
+              "y": 10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            }
+          ]
+        },
+        {
+          "name": "click-reset-rotation",
+          "parts": [
+            {
+              "key": "1_mc",
+              "type": 1001,
+              "twin": "2_mc",
+              "x": -40,
+              "y": -10,
+              "rotation": 88.42105263157895,
+              "scale": 1,
+              "radius": 7
+            },
+            {
+              "key": "2_mc",
+              "type": 1001,
+              "twin": "1_mc",
+              "x": -40,
+              "y": 10,
+              "rotation": -88.42105263157896,
+              "scale": 1,
+              "radius": 7
+            }
+          ]
+        },
+        {
+          "name": "click-reset-zero",
+          "parts": [
+            {
+              "key": "1_mc",
+              "type": 1001,
+              "twin": "2_mc",
+              "x": -40,
+              "y": -10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            },
+            {
+              "key": "2_mc",
+              "type": 1001,
+              "twin": "1_mc",
+              "x": -40,
+              "y": 10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            }
+          ]
+        },
+        {
+          "name": "outside-rotation",
+          "parts": [
+            {
+              "key": "1_mc",
+              "type": 1001,
+              "twin": "2_mc",
+              "x": -40,
+              "y": -10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            },
+            {
+              "key": "2_mc",
+              "type": 1001,
+              "twin": "1_mc",
+              "x": -40,
+              "y": 10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            }
+          ]
+        },
+        {
+          "name": "inside-scale",
+          "parts": [
+            {
+              "key": "1_mc",
+              "type": 1001,
+              "twin": "2_mc",
+              "x": -40,
+              "y": -10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            },
+            {
+              "key": "2_mc",
+              "type": 1001,
+              "twin": "1_mc",
+              "x": -40,
+              "y": 10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            }
+          ]
+        },
+        {
+          "name": "click-reset-scale",
+          "parts": [
+            {
+              "key": "1_mc",
+              "type": 1001,
+              "twin": "2_mc",
+              "x": -40,
+              "y": -10,
+              "rotation": 0,
+              "scale": 2,
+              "radius": 7
+            },
+            {
+              "key": "2_mc",
+              "type": 1001,
+              "twin": "1_mc",
+              "x": -40,
+              "y": 10,
+              "rotation": 0,
+              "scale": 2,
+              "radius": 7
+            }
+          ]
+        },
+        {
+          "name": "click-reset-unit",
+          "parts": [
+            {
+              "key": "1_mc",
+              "type": 1001,
+              "twin": "2_mc",
+              "x": -40,
+              "y": -10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            },
+            {
+              "key": "2_mc",
+              "type": 1001,
+              "twin": "1_mc",
+              "x": -40,
+              "y": 10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            }
+          ]
+        },
+        {
+          "name": "outside-scale",
+          "parts": [
+            {
+              "key": "1_mc",
+              "type": 1001,
+              "twin": "2_mc",
+              "x": -40,
+              "y": -10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            },
+            {
+              "key": "2_mc",
+              "type": 1001,
+              "twin": "1_mc",
+              "x": -40,
+              "y": 10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            }
+          ]
+        },
+        {
+          "name": "setup-unit",
+          "parts": [
+            {
+              "key": "1_mc",
+              "type": 1001,
+              "twin": "2_mc",
+              "x": -40,
+              "y": -10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            },
+            {
+              "key": "2_mc",
+              "type": 1001,
+              "twin": "1_mc",
+              "x": -40,
+              "y": 10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            }
+          ]
+        },
+        {
+          "name": "setup-zero",
+          "parts": [
+            {
+              "key": "1_mc",
+              "type": 1001,
+              "twin": "2_mc",
+              "x": -40,
+              "y": -10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            },
+            {
+              "key": "2_mc",
+              "type": 1001,
+              "twin": "1_mc",
+              "x": -40,
+              "y": 10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            }
+          ]
+        },
+        {
+          "name": "drag-rotation",
+          "parts": [
+            {
+              "key": "1_mc",
+              "type": 1001,
+              "twin": "2_mc",
+              "x": -35,
+              "y": -10,
+              "rotation": -88.42105263157896,
+              "scale": 1,
+              "radius": 7
+            },
+            {
+              "key": "2_mc",
+              "type": 1001,
+              "twin": "1_mc",
+              "x": -35,
+              "y": 10,
+              "rotation": 88.42105263157896,
+              "scale": 1,
+              "radius": 7
+            }
+          ]
+        },
+        {
+          "name": "drag-reset-zero",
+          "parts": [
+            {
+              "key": "1_mc",
+              "type": 1001,
+              "twin": "2_mc",
+              "x": -35,
+              "y": -10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            },
+            {
+              "key": "2_mc",
+              "type": 1001,
+              "twin": "1_mc",
+              "x": -35,
+              "y": 10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            }
+          ]
+        },
+        {
+          "name": "marquee-center",
+          "parts": [
+            {
+              "key": "1_mc",
+              "type": 1001,
+              "twin": "2_mc",
+              "x": -35,
+              "y": -10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            },
+            {
+              "key": "2_mc",
+              "type": 1001,
+              "twin": "1_mc",
+              "x": -35,
+              "y": 10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            }
+          ]
+        },
+        {
+          "name": "marquee-placement",
+          "parts": [
+            {
+              "key": "1_mc",
+              "type": 1001,
+              "twin": "2_mc",
+              "x": -35,
+              "y": -10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            },
+            {
+              "key": "2_mc",
+              "type": 1001,
+              "twin": "1_mc",
+              "x": -35,
+              "y": 10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            },
+            {
+              "key": "3_mc",
+              "type": 1001,
+              "twin": "4_mc",
+              "x": 40,
+              "y": -10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            },
+            {
+              "key": "4_mc",
+              "type": 1001,
+              "twin": "3_mc",
+              "x": 40,
+              "y": 10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            }
+          ]
+        },
+        {
+          "name": "marquee-front",
+          "parts": [
+            {
+              "key": "1_mc",
+              "type": 1001,
+              "twin": "2_mc",
+              "x": -35,
+              "y": -10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            },
+            {
+              "key": "2_mc",
+              "type": 1001,
+              "twin": "1_mc",
+              "x": -35,
+              "y": 10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            },
+            {
+              "key": "3_mc",
+              "type": 1001,
+              "twin": "4_mc",
+              "x": 40,
+              "y": -10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            },
+            {
+              "key": "4_mc",
+              "type": 1001,
+              "twin": "3_mc",
+              "x": 40,
+              "y": 10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            }
+          ]
+        },
+        {
+          "name": "click-front",
+          "parts": [
+            {
+              "key": "3_mc",
+              "type": 1001,
+              "twin": "4_mc",
+              "x": 40,
+              "y": -10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            },
+            {
+              "key": "4_mc",
+              "type": 1001,
+              "twin": "3_mc",
+              "x": 40,
+              "y": 10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            },
+            {
+              "key": "1_mc",
+              "type": 1001,
+              "twin": "2_mc",
+              "x": -35,
+              "y": -10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            },
+            {
+              "key": "2_mc",
+              "type": 1001,
+              "twin": "1_mc",
+              "x": -35,
+              "y": 10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            }
+          ]
+        },
+        {
+          "name": "marquee-delete",
+          "parts": [
+            {
+              "key": "3_mc",
+              "type": 1001,
+              "twin": "4_mc",
+              "x": 40,
+              "y": -10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            },
+            {
+              "key": "4_mc",
+              "type": 1001,
+              "twin": "3_mc",
+              "x": 40,
+              "y": 10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "dpr": 2,
+      "snapshots": [
+        {
+          "name": "placed-pair",
+          "parts": [
+            {
+              "key": "1_mc",
+              "type": 1001,
+              "twin": "2_mc",
+              "x": -40,
+              "y": -10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            },
+            {
+              "key": "2_mc",
+              "type": 1001,
+              "twin": "1_mc",
+              "x": -40,
+              "y": 10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            }
+          ]
+        },
+        {
+          "name": "inside-rotation",
+          "parts": [
+            {
+              "key": "1_mc",
+              "type": 1001,
+              "twin": "2_mc",
+              "x": -40,
+              "y": -10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            },
+            {
+              "key": "2_mc",
+              "type": 1001,
+              "twin": "1_mc",
+              "x": -40,
+              "y": 10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            }
+          ]
+        },
+        {
+          "name": "click-reset-rotation",
+          "parts": [
+            {
+              "key": "1_mc",
+              "type": 1001,
+              "twin": "2_mc",
+              "x": -40,
+              "y": -10,
+              "rotation": 90,
+              "scale": 1,
+              "radius": 7
+            },
+            {
+              "key": "2_mc",
+              "type": 1001,
+              "twin": "1_mc",
+              "x": -40,
+              "y": 10,
+              "rotation": -90,
+              "scale": 1,
+              "radius": 7
+            }
+          ]
+        },
+        {
+          "name": "click-reset-zero",
+          "parts": [
+            {
+              "key": "1_mc",
+              "type": 1001,
+              "twin": "2_mc",
+              "x": -40,
+              "y": -10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            },
+            {
+              "key": "2_mc",
+              "type": 1001,
+              "twin": "1_mc",
+              "x": -40,
+              "y": 10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            }
+          ]
+        },
+        {
+          "name": "outside-rotation",
+          "parts": [
+            {
+              "key": "1_mc",
+              "type": 1001,
+              "twin": "2_mc",
+              "x": -40,
+              "y": -10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            },
+            {
+              "key": "2_mc",
+              "type": 1001,
+              "twin": "1_mc",
+              "x": -40,
+              "y": 10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            }
+          ]
+        },
+        {
+          "name": "inside-scale",
+          "parts": [
+            {
+              "key": "1_mc",
+              "type": 1001,
+              "twin": "2_mc",
+              "x": -40,
+              "y": -10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            },
+            {
+              "key": "2_mc",
+              "type": 1001,
+              "twin": "1_mc",
+              "x": -40,
+              "y": 10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            }
+          ]
+        },
+        {
+          "name": "click-reset-scale",
+          "parts": [
+            {
+              "key": "1_mc",
+              "type": 1001,
+              "twin": "2_mc",
+              "x": -40,
+              "y": -10,
+              "rotation": 0,
+              "scale": 2,
+              "radius": 7
+            },
+            {
+              "key": "2_mc",
+              "type": 1001,
+              "twin": "1_mc",
+              "x": -40,
+              "y": 10,
+              "rotation": 0,
+              "scale": 2,
+              "radius": 7
+            }
+          ]
+        },
+        {
+          "name": "click-reset-unit",
+          "parts": [
+            {
+              "key": "1_mc",
+              "type": 1001,
+              "twin": "2_mc",
+              "x": -40,
+              "y": -10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            },
+            {
+              "key": "2_mc",
+              "type": 1001,
+              "twin": "1_mc",
+              "x": -40,
+              "y": 10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            }
+          ]
+        },
+        {
+          "name": "outside-scale",
+          "parts": [
+            {
+              "key": "1_mc",
+              "type": 1001,
+              "twin": "2_mc",
+              "x": -40,
+              "y": -10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            },
+            {
+              "key": "2_mc",
+              "type": 1001,
+              "twin": "1_mc",
+              "x": -40,
+              "y": 10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            }
+          ]
+        },
+        {
+          "name": "setup-unit",
+          "parts": [
+            {
+              "key": "1_mc",
+              "type": 1001,
+              "twin": "2_mc",
+              "x": -40,
+              "y": -10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            },
+            {
+              "key": "2_mc",
+              "type": 1001,
+              "twin": "1_mc",
+              "x": -40,
+              "y": 10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            }
+          ]
+        },
+        {
+          "name": "setup-zero",
+          "parts": [
+            {
+              "key": "1_mc",
+              "type": 1001,
+              "twin": "2_mc",
+              "x": -40,
+              "y": -10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            },
+            {
+              "key": "2_mc",
+              "type": 1001,
+              "twin": "1_mc",
+              "x": -40,
+              "y": 10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            }
+          ]
+        },
+        {
+          "name": "drag-rotation",
+          "parts": [
+            {
+              "key": "1_mc",
+              "type": 1001,
+              "twin": "2_mc",
+              "x": -35,
+              "y": -10,
+              "rotation": -90,
+              "scale": 1,
+              "radius": 7
+            },
+            {
+              "key": "2_mc",
+              "type": 1001,
+              "twin": "1_mc",
+              "x": -35,
+              "y": 10,
+              "rotation": 90,
+              "scale": 1,
+              "radius": 7
+            }
+          ]
+        },
+        {
+          "name": "drag-reset-zero",
+          "parts": [
+            {
+              "key": "1_mc",
+              "type": 1001,
+              "twin": "2_mc",
+              "x": -35,
+              "y": -10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            },
+            {
+              "key": "2_mc",
+              "type": 1001,
+              "twin": "1_mc",
+              "x": -35,
+              "y": 10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            }
+          ]
+        },
+        {
+          "name": "marquee-center",
+          "parts": [
+            {
+              "key": "1_mc",
+              "type": 1001,
+              "twin": "2_mc",
+              "x": -35,
+              "y": -10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            },
+            {
+              "key": "2_mc",
+              "type": 1001,
+              "twin": "1_mc",
+              "x": -35,
+              "y": 10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            }
+          ]
+        },
+        {
+          "name": "marquee-placement",
+          "parts": [
+            {
+              "key": "1_mc",
+              "type": 1001,
+              "twin": "2_mc",
+              "x": -35,
+              "y": -10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            },
+            {
+              "key": "2_mc",
+              "type": 1001,
+              "twin": "1_mc",
+              "x": -35,
+              "y": 10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            },
+            {
+              "key": "3_mc",
+              "type": 1001,
+              "twin": "4_mc",
+              "x": 40,
+              "y": -10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            },
+            {
+              "key": "4_mc",
+              "type": 1001,
+              "twin": "3_mc",
+              "x": 40,
+              "y": 10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            }
+          ]
+        },
+        {
+          "name": "marquee-front",
+          "parts": [
+            {
+              "key": "1_mc",
+              "type": 1001,
+              "twin": "2_mc",
+              "x": -35,
+              "y": -10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            },
+            {
+              "key": "2_mc",
+              "type": 1001,
+              "twin": "1_mc",
+              "x": -35,
+              "y": 10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            },
+            {
+              "key": "3_mc",
+              "type": 1001,
+              "twin": "4_mc",
+              "x": 40,
+              "y": -10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            },
+            {
+              "key": "4_mc",
+              "type": 1001,
+              "twin": "3_mc",
+              "x": 40,
+              "y": 10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            }
+          ]
+        },
+        {
+          "name": "click-front",
+          "parts": [
+            {
+              "key": "3_mc",
+              "type": 1001,
+              "twin": "4_mc",
+              "x": 40,
+              "y": -10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            },
+            {
+              "key": "4_mc",
+              "type": 1001,
+              "twin": "3_mc",
+              "x": 40,
+              "y": 10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            },
+            {
+              "key": "1_mc",
+              "type": 1001,
+              "twin": "2_mc",
+              "x": -35,
+              "y": -10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            },
+            {
+              "key": "2_mc",
+              "type": 1001,
+              "twin": "1_mc",
+              "x": -35,
+              "y": 10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            }
+          ]
+        },
+        {
+          "name": "marquee-delete",
+          "parts": [
+            {
+              "key": "3_mc",
+              "type": 1001,
+              "twin": "4_mc",
+              "x": 40,
+              "y": -10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            },
+            {
+              "key": "4_mc",
+              "type": 1001,
+              "twin": "3_mc",
+              "x": 40,
+              "y": 10,
+              "rotation": 0,
+              "scale": 1,
+              "radius": 7
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

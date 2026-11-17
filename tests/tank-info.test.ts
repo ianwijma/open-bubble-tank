@@ -16,7 +16,7 @@ test('tank information sorts and counts categories, abbreviating only lists with
   expect(infoWeapons(tank(2001, 2002, 2003, 3001, 5001), 3)).toBe('Sticky Burst');
   expect(infoWeapons(tank(5005, 5002, 5001), 5)).toBe('1 R, 1 HR, 1 FF');
 });
-test('tank information uses source class speed and armor rather than current life or enemy multipliers', () => {
+test('tank information uses class speed and armor rather than current life or enemy multipliers', () => {
   const fields = tankInfoFields({ ...tank(3001), classId: 4, life: 17, speed: 99 });
   expect([fields.txtClass_txt, fields.txtSpeed_txt, fields.txtArmor_txt]).toEqual([
     '4',
@@ -48,7 +48,7 @@ test('tank information entrance gates each authored panel and its return moves a
   for (let i = 0; i < 100; i++) state.advance();
   expect(state.finished).toBe(true);
 });
-test('Info retraction preserves the source literal coefficient before twip assignment', () => {
+test('Info retraction preserves the literal coefficient before twip assignment', () => {
   const state = new TankInfoMotion();
   for (let i = 0; i < 26; i++) state.advance();
   state.exiting = true;

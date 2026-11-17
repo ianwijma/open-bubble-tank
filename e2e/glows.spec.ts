@@ -1,12 +1,12 @@
 import { expect, test } from '@playwright/test';
-test(`synthetic glow filters match byte-image composition and apply tint after filtering`, async ({
+test(`glow filters match byte-image composition and apply tint after filtering`, async ({
   page,
 }) => {
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('http://127.0.0.1:3102');
   await page.getByLabel('Fixture').selectOption('glows');
-  await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
   const status = page.getByRole('status');
   await expect(status).toContainText('Ready', { timeout: 60000 });
   const proof = JSON.parse((await status.getAttribute('data-glows'))!);

@@ -41,6 +41,7 @@ import { ViewerPaneLayer } from './viewer-pane-layer';
 import { useViewerHighlights } from './viewer-highlights';
 import { ViewerRejections } from '@/game/core/viewer-rejections';
 import { ViewerRejectionEffects } from './viewer-rejections';
+import { useBusyFocus } from './ui';
 import {
   ViewerArt,
   ViewerFields,
@@ -55,18 +56,21 @@ function SourceModal({
   onClose,
   children,
   active = true,
+  busy = false,
   motionRef,
 }: {
   label: string;
   onClose: () => void;
   children: ReactNode;
   active?: boolean;
+  busy?: boolean;
   motionRef?: RefObject<HTMLDivElement | null>;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (active) ref.current?.focus({ preventScroll: true });
   }, [active]);
+  useBusyFocus(ref, busy);
   return (
     <div
       ref={(node) => {
@@ -184,7 +188,6 @@ export function TankViewer({
     selected = paneView.detail?.tank,
     covered = !!confirmation || codeOpen || !!message || (ready && guide > 0);
   const highlights = useViewerHighlights(
-    pack,
     stage,
     paneView.cards,
     limits,
@@ -374,7 +377,6 @@ export function TankViewer({
     return (
       <ViewerButton
         key={piece.name}
-        pack={pack}
         piece={piece}
         label={label}
         onClick={action}
@@ -399,7 +401,7 @@ export function TankViewer({
       error = viewerSelectionError(tank, avatar, limits);
     return (
       <ViewerGroup key={pane.instance} matrix={place.matrix} className="viewer-card">
-        <ViewerArt pack={pack} symbol={1176} />
+        <ViewerArt symbol={1176} />
         <div
           className="viewer-preview-mask"
           style={{
@@ -422,7 +424,7 @@ export function TankViewer({
           }}
         >
           <ViewerGroup matrix={row.children.find((p) => p.name === 'lines_mc')!.matrix}>
-            <ViewerArt pack={pack} symbol={1173} />
+            <ViewerArt symbol={1173} />
           </ViewerGroup>
         </div>
         <ViewerGroup matrix={selection.matrix}>
@@ -446,9 +448,8 @@ export function TankViewer({
           />
         </ViewerGroup>
         <ViewerGroup matrix={row.children.find((p) => p.name === 'ButtonsContainer')!.matrix}>
-          <ViewerArt pack={pack} symbol={1116} />
+          <ViewerArt symbol={1116} />
           <ViewerFields
-            pack={pack}
             symbol={1116}
             values={{
               txtTankName_txt: tank.name,
@@ -493,7 +494,7 @@ export function TankViewer({
             <ViewerGroup
               matrix={rowButtons.children.find((p) => p.name === 'CautionSign_mc')!.matrix}
             >
-              <ViewerArt pack={pack} symbol={1115} />
+              <ViewerArt symbol={1115} />
             </ViewerGroup>
           </div>
         </ViewerGroup>
@@ -522,9 +523,8 @@ export function TankViewer({
       <div className="viewer-content" inert={covered} aria-hidden={covered || undefined}>
         {!ready ? (
           <ViewerGroup matrix={{ a: 1, b: 0, c: 0, d: 1, tx: 5500, ty: 4500 }}>
-            <ViewerArt pack={pack} symbol={1431} />
+            <ViewerArt symbol={1431} />
             <ViewerFields
-              pack={pack}
               symbol={1431}
               values={{ txtLoading_txt: 'Loading Tanks...', txtErrorMessage_txt: '' }}
             />
@@ -547,10 +547,9 @@ export function TankViewer({
         {selected && paneView.detail ? (
           <ViewerPaneLayer fades={fades} name="detail" active={detail && !codeOpen}>
             <ViewerGroup className="viewer-detail" matrix={viewerRoot('DetailedTank_mc').matrix}>
-              <ViewerArt pack={pack} symbol={1169} />
+              <ViewerArt symbol={1169} />
               {canvas(paneView.detail.instance, selected)}
               <ViewerFields
-                pack={pack}
                 symbol={1169}
                 opacities={{ txtTankData_txt: 0.8 }}
                 values={{
@@ -568,12 +567,7 @@ export function TankViewer({
                     : `Difficulty Rating: ${selected.difficulty}`,
                 }}
               />
-              <TankViewerStatistics
-                pack={pack}
-                stage={stage}
-                tank={selected}
-                onHover={setDescription}
-              />
+              <TankViewerStatistics stage={stage} tank={selected} onHover={setDescription} />
               {detailWidget.children
                 .filter((p) =>
                   ['btnLargeBack_mc', 'btnLargeDelete_mc', 'btnCopy_mc', 'btnLargeSave'].includes(
@@ -672,7 +666,6 @@ export function TankViewer({
         >
           <TankViewerSort
             x={codeFlow.sortX}
-            pack={pack}
             stage={stage}
             open={sortOpen}
             enabled={ready && !detail}
@@ -690,9 +683,8 @@ export function TankViewer({
             active={!codeOpen}
           >
             <ViewerGroup matrix={viewerRoot('btnCurrentPoints_mc').matrix}>
-              <ViewerArt pack={pack} symbol={1258} />
+              <ViewerArt symbol={1258} />
               <ViewerFields
-                pack={pack}
                 symbol={1258}
                 values={{
                   txtClass_txt: String(limits.profileMaxClass ?? limits.maxClass),
@@ -705,7 +697,6 @@ export function TankViewer({
         ) : null}
         {ready ? (
           <ViewerFields
-            pack={pack}
             symbol={1413}
             values={{
               txtPageNumCurrent_txt: codeOpen
@@ -726,7 +717,7 @@ export function TankViewer({
               : 'View built-in and saved tanks. Online sharing is offline. Search through your locally stored tanks here.'}
           </span>
           <ViewerGroup matrix={viewerRoot('Tutorial_mc').matrix}>
-            <ViewerArt pack={pack} symbol={1412} frame={guide} />
+            <ViewerArt symbol={1412} frame={guide} />
             {guide === 2 ? (
               <ViewerGroup matrix={TANK_VIEWER.guideNote.matrix}>
                 <CreatorText
@@ -758,7 +749,7 @@ export function TankViewer({
           onClose={() => setConfirmation(null)}
         >
           <ViewerGroup matrix={viewerRoot('selectTankScreen_mc').matrix}>
-            <ViewerArt pack={pack} symbol={1403} frame={confirmation?.deleting ? 2 : 1} />
+            <ViewerArt symbol={1403} frame={confirmation?.deleting ? 2 : 1} />
             {confirmation
               ? canvas(`confirm:${shownConfirmation.instance}`, shownConfirmation.tank)
               : null}
@@ -781,11 +772,12 @@ export function TankViewer({
           label="Enter tank code"
           onClose={closeCode}
           active={codeOpen}
+          busy={busy}
           motionRef={codeLayer.ref}
         >
           <ViewerGroup matrix={viewerRoot('SearchForTanksScreen_mc').matrix}>
-            <ViewerArt pack={pack} symbol={1386} frame={4} />
-            <ViewerFields pack={pack} symbol={1386} frame={4} values={{ txtEnterID_txt: '' }} />
+            <ViewerArt symbol={1386} frame={4} />
+            <ViewerFields symbol={1386} frame={4} values={{ txtEnterID_txt: '' }} />
             {codeWidget.fields
               .filter((f) => f.name === 'txtEnterID_txt')
               .map((f) => (
@@ -832,17 +824,13 @@ export function TankViewer({
             onClick={() => setMessage('')}
           >
             <ViewerGroup matrix={viewerRoot('NotifyScreen_mc').matrix}>
-              <ViewerArt pack={pack} symbol={1390} />
-              <ViewerFields
-                pack={pack}
-                symbol={1390}
-                values={{ txtDisplayMessage_txt: messageLayer.value }}
-              />
+              <ViewerArt symbol={1390} />
+              <ViewerFields symbol={1390} values={{ txtDisplayMessage_txt: messageLayer.value }} />
             </ViewerGroup>
           </button>
         </SourceModal>
       ) : null}
-      <ViewerRejectionEffects pack={pack} stage={stage} model={rejections} />
+      <ViewerRejectionEffects stage={stage} model={rejections} />
     </div>
   );
 }

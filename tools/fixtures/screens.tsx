@@ -170,7 +170,7 @@ export function showWinScreen(
             }}
           />
         ) : null}
-        {win ? <WinPanel pack={pack} screen={win} /> : null}
+        {win ? <WinPanel screen={win} /> : null}
       </MainStage>
     );
   }

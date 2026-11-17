@@ -8,7 +8,7 @@ import { createProjectile } from '../../src/game/simulation/create-projectile';
 import { tickBullet } from '../../src/game/simulation/projectiles';
 import { World, emptyInput } from '../../src/game/simulation/world';
 
-/** Uses production width queries, clocks and native/mock rendering on both sides of state2. */
+/** Uses production width queries, clocks and rendering on both sides of state2. */
 export async function showBubbleBusterProof(pack: AssetPack, host: HTMLElement) {
   const world = new World([], [], 28),
     renderer = new GameRenderer(pack);
@@ -71,7 +71,7 @@ export async function showBubbleBusterProof(pack: AssetPack, host: HTMLElement) 
     const buster = make({ kind: 'buster', symbol: 1800, enemy: false, angle: 0, speed: 10 });
     const seeker = make({ kind: 'seeker', symbol: 1809, x: 20 });
     const width = world.projectileWidth(seeker);
-    capture('Enemy seeker · original heading', seeker);
+    capture('Enemy seeker · initial heading', seeker);
     world.bullets = [buster, seeker];
     tickBullet(world, buster, emptyInput());
     const copied = seeker.deflected ? { ...seeker.deflected } : null;
@@ -137,7 +137,6 @@ export async function showBubbleBusterProof(pack: AssetPack, host: HTMLElement) 
     for (const byte of ctx.getImageData(0, 0, 550, 450).data)
       galleryHash = Math.imul(galleryHash ^ byte, 16777619);
     return {
-      mode: pack.mode,
       seeker: seekerProof,
       beam: beamProof,
       turret: turretProof,

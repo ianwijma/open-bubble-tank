@@ -1,17 +1,17 @@
 import { expect, test } from 'bun:test';
 import { writeFileSync } from 'node:fs';
-import original from './fixtures/effect-clock-original.json';
+import fixture from './fixtures/effect-clock.json';
 import { decode, rows } from './support/effect-clock-rows.mjs';
 import { effectClockChildAtPath } from './support/effect-clock-child';
 import { RegisteredEffects } from '../src/game/simulation/registered-effects';
 import { combatEffect, type CombatEffect } from '../src/game/simulation/effects';
 import { readEffectPlayback, drawEffectLine } from '../src/game/simulation/effect-playback';
 import type { Effect, Field } from '../src/game/core/types';
-import type { SwfClip } from '../src/game/assets/swf-clip';
+import type { ArtClip } from '../src/game/assets/art-clip';
 import { World, emptyInput } from '../src/game/simulation/world';
 import { RetainedTransform } from '../src/game/core/retained-transform';
 
-const measured = rows(original.contract);
+const measured = rows(fixture.contract);
 const field = (): Field => ({
   col: 0,
   row: 0,
@@ -27,7 +27,7 @@ const totals = {
   identityComparisons: 0,
   currentMatrixComparisons: 0,
 };
-for (const root of original.sourceAudit.roots)
+for (const root of fixture.clips.roots)
   for (const cohort of ['before', 'inside'])
     test(`retained production ${cohort}:${root.key} matches frozen root/descendant frames, correspondence and own poses`, () => {
       const engine = new RegisteredEffects(),
@@ -39,8 +39,8 @@ for (const root of original.sourceAudit.roots)
       const construct = () =>
         (effect = combatEffect(1, root.key as CombatEffect, {}, engine.artwork));
       if (cohort === 'before') construct();
-      const retained = new Map<number, SwfClip>(),
-        aliases = new Map<SwfClip, number>();
+      const retained = new Map<number, ArtClip>(),
+        aliases = new Map<ArtClip, number>();
       let callbackTick = 0,
         stageTick = 0;
       const differences: unknown[] = [];
@@ -68,7 +68,7 @@ for (const root of original.sourceAudit.roots)
             totals.currentMatrixComparisons++;
           }
           // Native Shape wrappers can change their symbol without changing identity.
-          // SwfClip leaf placeholders model geometry, not that unqualified wrapper reuse.
+          // ArtClip leaf placeholders model geometry, not that untested wrapper reuse.
           if (row.total === 0) continue;
           // Transient wrapper holes are neither synthesized nor read here.
           // All own-pose/descendant correspondence claims are EXIT only.
@@ -145,7 +145,7 @@ for (const root of original.sourceAudit.roots)
         sample('enter', tick);
         if (tick === 7) {
           sample('pre-register', tick);
-          const index = original.sourceAudit.roots.indexOf(root) + (cohort === 'inside' ? 15 : 0);
+          const index = fixture.clips.roots.indexOf(root) + (cohort === 'inside' ? 15 : 0);
           engine.createRequest(
             {
               clip: effect!,
@@ -171,10 +171,8 @@ for (const root of original.sourceAudit.roots)
       }
       expect(callbackTick).toBe(samples.find((r) => r.phase === 'callback')!.tick);
       expect(readEffectPlayback(effect!).status).toBe('retained');
-      expect(effect!.playback!.className).toBe(root.className);
       expect(effect!.playback!.symbol).toBe(root.symbol);
       expect(effect!.playback!.totalFrames).toBe(root.frames);
-      expect(effect!.playback!.sourceSha256).toBe(original.originalSha256);
       if (differences.length && process.env.SOAPTANK_EFFECT_DIAGNOSTICS)
         writeFileSync(
           `test-results/retained-effects/${cohort}-${root.key}.json`,
@@ -192,7 +190,7 @@ test('all frozen EXIT multi-frame retained comparisons remain covered', () => {
   );
 });
 
-test('native retained lifetimes advance while paused, detached or Main4 skips World.Run, without gameplay entropy or UID allocation', () => {
+test('retained effect lifetimes advance while paused, detached or the upgrade menu skips World.Run, without gameplay entropy or UID allocation', () => {
   const world = new World([], [], 8);
   const effect = world.addCombatEffect({ x: 17, y: 29 }, 'impact');
   expect([effect.x, effect.y, effect.frame]).toEqual([0, 0, 1]);
@@ -212,7 +210,7 @@ test('native retained lifetimes advance while paused, detached or Main4 skips Wo
   expect(world.effectEngine.parent(effect)).toBeUndefined();
 });
 
-test('line graphics belong to the constructor named child and replacement/reads never recreate a source drawing call', () => {
+test('line graphics belong to the constructor named child and replacement/reads never repeat a drawing call', () => {
   const engine = new RegisteredEffects();
   const effect = combatEffect(1, 'rocketTrail', { line: { x: -90, y: 3 } }, engine.artwork);
   const playback = effect.playback!,
@@ -238,14 +236,12 @@ test('line graphics belong to the constructor named child and replacement/reads 
   expect(replacement.lines).toEqual([]);
 });
 
-test('unknown native and legacy mock effects expose their incomplete playback path explicitly', () => {
-  const legacy = { kind: 'pop' } as Effect;
-  const unknown = { kind: 'native', symbol: 999999 } as Effect;
-  expect(readEffectPlayback(legacy).status).toBe('legacy-mock');
-  expect(readEffectPlayback(unknown).status).toBe('unsupported-native');
-  expect(() => new RegisteredEffects().artwork.construct(unknown)).toThrow(
-    'Unsupported native effect',
-  );
+test('unknown clip and procedural effects expose their playback path explicitly', () => {
+  const procedural = { kind: 'pop' } as Effect;
+  const unknown = { kind: 'clip', symbol: 999999 } as Effect;
+  expect(readEffectPlayback(procedural).status).toBe('procedural');
+  expect(readEffectPlayback(unknown).status).toBe('unknown-clip');
+  expect(() => new RegisteredEffects().artwork.construct(unknown)).toThrow('Unknown effect clip');
 });
 
 test('completion uses authoritative native frame/count while compatibility ages and durations can no longer fake readiness', () => {

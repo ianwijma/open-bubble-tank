@@ -1,6 +1,6 @@
 import { expect, test } from 'bun:test';
 import data from '../src/game/data/mock-part-timelines.json';
-import { SwfClip, type ClipSource } from '../src/game/assets/swf-clip';
+import { ArtClip, type ClipSource } from '../src/game/assets/art-clip';
 import { buildDisplayList } from '../src/game/assets/display-list';
 import type { SpriteInfo } from '../src/game/assets/asset-pack';
 import { PARTS } from '../src/game/data/catalog';
@@ -10,7 +10,7 @@ const source: ClipSource = {
   displayList: (id, frame) => (sprites.has(id) ? buildDisplayList(sprites.get(id)!, frame) : []),
 };
 function pose(id: number, age: number) {
-  const clip = new SwfClip(id, source, () => 0);
+  const clip = new ArtClip(id, source, () => 0);
   clip.advance(age);
   return clip;
 }
@@ -45,7 +45,7 @@ test('Sapper retains its late pale-pellet transform and Carrier loops before its
   for (const age of [40, 79, 118, 157]) expect(pose(695, age).frame).toBe(1);
 });
 
-test('all body roots retain their source timelines, including three static base variants', () => {
+test('all body roots keep their timelines, including three static base variants', () => {
   expect(PARTS.filter((p) => p.id < 2000)).toHaveLength(20);
   for (const part of PARTS) expect(sprites.has(part.symbol), String(part.id)).toBe(true);
   for (const id of [1782, 2185, 29]) expect(sprites.get(id)!.frameCount).toBe(1);

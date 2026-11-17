@@ -1,7 +1,7 @@
 import { test, expect, type Page } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
-import reference from '../tests/fixtures/creator-release-reference.json' with { type: 'json' };
+import reference from '../tests/fixtures/creator-release.json' with { type: 'json' };
 import type { TankDesign, TankPart } from '../src/game/core/types';
 import {
   readCreatorDesign,
@@ -27,7 +27,7 @@ const numericParts = (parts: TankPart[]) =>
   }));
 async function openCreator(page: Page, parts: TankPart[]) {
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'My tanks', exact: true }).click();
   await page.getByLabel('Import tank design').setInputFiles({
@@ -93,7 +93,7 @@ for (const dpr of [1, 2])
     test.use({ deviceScaleFactor: dpr, viewport: { width: 1100, height: 1000 } });
     for (const control of ['rotation', 'scale'] as const)
       for (const outside of [false, true])
-        test(`mock ${outside ? 'outside' : 'inside'} marquee ${control} release and click recovery match original codes`, async ({
+        test(`${outside ? 'outside' : 'inside'} marquee ${control} release and click recovery match the measured codes`, async ({
           page,
         }) => {
           const errors: string[] = [];
@@ -135,7 +135,7 @@ for (const dpr of [1, 2])
           });
           expect(errors).toEqual([]);
         });
-    test(`mock target mouse-up, stage release, layering click and palette rebind match original order`, async ({
+    test(`target mouse-up, stage release, layering click and palette rebind keep the measured order`, async ({
       page,
     }) => {
       const errors: string[] = [];

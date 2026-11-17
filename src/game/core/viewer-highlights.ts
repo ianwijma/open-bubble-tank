@@ -1,11 +1,11 @@
-import type { SwfGlowFilter } from '../assets/asset-pack';
+import type { GlowFilter } from '../assets/asset-pack';
 import type { TankDesign } from './types';
 import type { ViewerLimits } from './tank-viewer';
 import { tankLoadEligibility } from './tank-eligibility';
 import { displayAlpha } from './display-values';
 
 /** Tank highlights: glow filter (0xffffff, 0.1, 28, 28, 3, 3). */
-export const VIEWER_HOVER_GLOW: SwfGlowFilter = {
+export const VIEWER_HOVER_GLOW: GlowFilter = {
   kind: 'glow',
   color: [255, 255, 255, 25.5],
   blurX: 28,

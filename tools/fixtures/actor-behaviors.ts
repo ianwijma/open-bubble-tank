@@ -6,7 +6,7 @@ import { GameRenderer } from '../../src/game/render/pixi-renderer';
 import { createTank } from '../../src/game/simulation/tank';
 import { World, emptyInput } from '../../src/game/simulation/world';
 
-/** Real World movement, registered behavior updates and production native/mock drawing. */
+/** Real World movement, registered behavior updates and production drawing. */
 export async function showActorBehaviors(pack: AssetPack, host: HTMLElement) {
   const world = new World([], [], 81),
     renderer = new GameRenderer(pack);

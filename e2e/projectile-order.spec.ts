@@ -1,12 +1,12 @@
 import { expect, test } from '@playwright/test';
-test(`mock projectile contact uses the current alpha point before movement and preserves deflection`, async ({
+test(`projectile contact uses the current alpha point before movement and preserves deflection`, async ({
   page,
 }) => {
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto('http://127.0.0.1:3102');
   await page.getByLabel('Fixture').selectOption('projectile-order');
-  await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
   const status = page.getByRole('status');
   await expect(status).toContainText('Ready', { timeout: 60000 });
   const proof = JSON.parse((await status.getAttribute('data-projectile-order'))!);

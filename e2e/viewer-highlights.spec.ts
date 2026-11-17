@@ -1,14 +1,12 @@
 import { expect, test } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 const layout = JSON.parse(readFileSync('src/game/data/tank-viewer.json', 'utf8'));
-test(`mock whole-card frame hover paints preview glow and locked-design warning`, async ({
-  page,
-}) => {
+test(`whole-card frame hover paints preview glow and locked-design warning`, async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto('http://127.0.0.1:3102');
   await page.getByLabel('Fixture').selectOption('viewer-flow-avatar');
-  await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
   await expect(page.locator('#status')).toContainText('Ready', { timeout: 60000 });
   // Keep the physical pointer over the card while advancing the externally clocked viewer.
   const advance = async (n: 1 | 20) => {

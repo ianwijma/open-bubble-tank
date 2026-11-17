@@ -7,14 +7,12 @@ import type { TankDesign, TankPart } from '../src/game/core/types';
 
 const starter: TankDesign = JSON.parse(readFileSync(resolve('src/game/data/tanks.json'), 'utf8'))
   .avatar_defaults[0];
-test(`mock frozen class samples exclude weapons and retain source poster states`, async ({
-  page,
-}) => {
+test(`frozen class samples exclude weapons and keep their poster states`, async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('http://127.0.0.1:3102');
   await page.getByLabel('Fixture').selectOption('part-snapshots');
-  await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
   const status = page.getByRole('status');
   await expect(status).toContainText('Ready', { timeout: 60000 });
   const proof = JSON.parse((await status.getAttribute('data-part-snapshots'))!);
@@ -53,9 +51,9 @@ test(`mock frozen class samples exclude weapons and retain source poster states`
   expect(errors).toEqual([]);
 });
 
-test(`mock creator derives body class despite a large mounted weapon`, async ({ page }) => {
+test(`creator derives body class despite a large mounted weapon`, async ({ page }) => {
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'My tanks', exact: true }).click({ timeout: 60000 });
   const bodies: TankPart[] = Array.from({ length: 4 }, (_, i) => ({

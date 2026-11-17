@@ -1,0 +1,948 @@
+{
+  "cases": [
+    {
+      "name": "rotation-fractional",
+      "dpr": 1,
+      "control": "Rotate_mc",
+      "down": {
+        "x": 154,
+        "y": 432.25
+      },
+      "moves": [
+        {
+          "x": 239.5,
+          "y": 432.25
+        }
+      ],
+      "before": [
+        {
+          "key": "1_mc",
+          "type": 1001,
+          "twin": "2_mc",
+          "x": -40,
+          "y": -10,
+          "rotation": 0,
+          "scale": 1,
+          "radius": 7
+        },
+        {
+          "key": "2_mc",
+          "type": 1001,
+          "twin": "1_mc",
+          "x": -40,
+          "y": 10,
+          "rotation": 0,
+          "scale": 1,
+          "radius": 7
+        }
+      ],
+      "expected": [
+        {
+          "key": "1_mc",
+          "type": 1001,
+          "twin": "2_mc",
+          "x": -40,
+          "y": -10,
+          "rotation": -88.42105263157896,
+          "scale": 1,
+          "radius": 7
+        },
+        {
+          "key": "2_mc",
+          "type": 1001,
+          "twin": "1_mc",
+          "x": -40,
+          "y": 10,
+          "rotation": 88.42105263157896,
+          "scale": 1,
+          "radius": 7
+        }
+      ]
+    },
+    {
+      "name": "rotation-endpoint",
+      "dpr": 1,
+      "control": "Rotate_mc",
+      "down": {
+        "x": 239.5,
+        "y": 432.25
+      },
+      "moves": [
+        {
+          "x": 268,
+          "y": 432.25
+        }
+      ],
+      "before": [
+        {
+          "key": "1_mc",
+          "type": 1001,
+          "twin": "2_mc",
+          "x": -40,
+          "y": -10,
+          "rotation": -88.42105263157896,
+          "scale": 1,
+          "radius": 7
+        },
+        {
+          "key": "2_mc",
+          "type": 1001,
+          "twin": "1_mc",
+          "x": -40,
+          "y": 10,
+          "rotation": 88.42105263157896,
+          "scale": 1,
+          "radius": 7
+        }
+      ],
+      "expected": [
+        {
+          "key": "1_mc",
+          "type": 1001,
+          "twin": "2_mc",
+          "x": -40,
+          "y": -10,
+          "rotation": 0,
+          "scale": 1,
+          "radius": 7
+        },
+        {
+          "key": "2_mc",
+          "type": 1001,
+          "twin": "1_mc",
+          "x": -40,
+          "y": 10,
+          "rotation": 0,
+          "scale": 1,
+          "radius": 7
+        }
+      ]
+    },
+    {
+      "name": "rotation-midpoint",
+      "dpr": 1,
+      "control": "Rotate_mc",
+      "down": {
+        "x": 268,
+        "y": 432.25
+      },
+      "moves": [
+        {
+          "x": 211,
+          "y": 432.25
+        }
+      ],
+      "before": [
+        {
+          "key": "1_mc",
+          "type": 1001,
+          "twin": "2_mc",
+          "x": -40,
+          "y": -10,
+          "rotation": 0,
+          "scale": 1,
+          "radius": 7
+        },
+        {
+          "key": "2_mc",
+          "type": 1001,
+          "twin": "1_mc",
+          "x": -40,
+          "y": 10,
+          "rotation": 0,
+          "scale": 1,
+          "radius": 7
+        }
+      ],
+      "expected": [
+        {
+          "key": "1_mc",
+          "type": 1001,
+          "twin": "2_mc",
+          "x": -40,
+          "y": -10,
+          "rotation": 180,
+          "scale": 1,
+          "radius": 7
+        },
+        {
+          "key": "2_mc",
+          "type": 1001,
+          "twin": "1_mc",
+          "x": -40,
+          "y": 10,
+          "rotation": 180,
+          "scale": 1,
+          "radius": 7
+        }
+      ]
+    },
+    {
+      "name": "rotation-zero",
+      "dpr": 1,
+      "control": "Rotate_mc",
+      "down": {
+        "x": 211,
+        "y": 432.25
+      },
+      "moves": [
+        {
+          "x": 154,
+          "y": 432.25
+        }
+      ],
+      "before": [
+        {
+          "key": "1_mc",
+          "type": 1001,
+          "twin": "2_mc",
+          "x": -40,
+          "y": -10,
+          "rotation": 180,
+          "scale": 1,
+          "radius": 7
+        },
+        {
+          "key": "2_mc",
+          "type": 1001,
+          "twin": "1_mc",
+          "x": -40,
+          "y": 10,
+          "rotation": 180,
+          "scale": 1,
+          "radius": 7
+        }
+      ],
+      "expected": [
+        {
+          "key": "1_mc",
+          "type": 1001,
+          "twin": "2_mc",
+          "x": -40,
+          "y": -10,
+          "rotation": 0,
+          "scale": 1,
+          "radius": 7
+        },
+        {
+          "key": "2_mc",
+          "type": 1001,
+          "twin": "1_mc",
+          "x": -40,
+          "y": 10,
+          "rotation": 0,
+          "scale": 1,
+          "radius": 7
+        }
+      ]
+    },
+    {
+      "name": "scale-fractional",
+      "dpr": 1,
+      "control": "Resize_mc",
+      "down": {
+        "x": 52,
+        "y": 432.25
+      },
+      "moves": [
+        {
+          "x": 91.5,
+          "y": 432.25
+        }
+      ],
+      "before": [
+        {
+          "key": "1_mc",
+          "type": 1001,
+          "twin": "2_mc",
+          "x": -40,
+          "y": -10,
+          "rotation": 0,
+          "scale": 1,
+          "radius": 7
+        },
+        {
+          "key": "2_mc",
+          "type": 1001,
+          "twin": "1_mc",
+          "x": -40,
+          "y": 10,
+          "rotation": 0,
+          "scale": 1,
+          "radius": 7
+        }
+      ],
+      "expected": [
+        {
+          "key": "1_mc",
+          "type": 1001,
+          "twin": "2_mc",
+          "x": -40,
+          "y": -10,
+          "rotation": 0,
+          "scale": 1.5263157894736843,
+          "radius": 7
+        },
+        {
+          "key": "2_mc",
+          "type": 1001,
+          "twin": "1_mc",
+          "x": -40,
+          "y": 10,
+          "rotation": 0,
+          "scale": 1.5263157894736843,
+          "radius": 7
+        }
+      ]
+    },
+    {
+      "name": "scale-maximum",
+      "dpr": 1,
+      "control": "Resize_mc",
+      "down": {
+        "x": 91.5,
+        "y": 432.25
+      },
+      "moves": [
+        {
+          "x": 128,
+          "y": 432.25
+        }
+      ],
+      "before": [
+        {
+          "key": "1_mc",
+          "type": 1001,
+          "twin": "2_mc",
+          "x": -40,
+          "y": -10,
+          "rotation": 0,
+          "scale": 1.5263157894736843,
+          "radius": 7
+        },
+        {
+          "key": "2_mc",
+          "type": 1001,
+          "twin": "1_mc",
+          "x": -40,
+          "y": 10,
+          "rotation": 0,
+          "scale": 1.5263157894736843,
+          "radius": 7
+        }
+      ],
+      "expected": [
+        {
+          "key": "1_mc",
+          "type": 1001,
+          "twin": "2_mc",
+          "x": -40,
+          "y": -10,
+          "rotation": 0,
+          "scale": 2,
+          "radius": 7
+        },
+        {
+          "key": "2_mc",
+          "type": 1001,
+          "twin": "1_mc",
+          "x": -40,
+          "y": 10,
+          "rotation": 0,
+          "scale": 2,
+          "radius": 7
+        }
+      ]
+    },
+    {
+      "name": "scale-minimum",
+      "dpr": 1,
+      "control": "Resize_mc",
+      "down": {
+        "x": 128,
+        "y": 432.25
+      },
+      "moves": [
+        {
+          "x": 14,
+          "y": 432.25
+        }
+      ],
+      "before": [
+        {
+          "key": "1_mc",
+          "type": 1001,
+          "twin": "2_mc",
+          "x": -40,
+          "y": -10,
+          "rotation": 0,
+          "scale": 2,
+          "radius": 7
+        },
+        {
+          "key": "2_mc",
+          "type": 1001,
+          "twin": "1_mc",
+          "x": -40,
+          "y": 10,
+          "rotation": 0,
+          "scale": 2,
+          "radius": 7
+        }
+      ],
+      "expected": [
+        {
+          "key": "1_mc",
+          "type": 1001,
+          "twin": "2_mc",
+          "x": -40,
+          "y": -10,
+          "rotation": 0,
+          "scale": 0.5,
+          "radius": 7
+        },
+        {
+          "key": "2_mc",
+          "type": 1001,
+          "twin": "1_mc",
+          "x": -40,
+          "y": 10,
+          "rotation": 0,
+          "scale": 0.5,
+          "radius": 7
+        }
+      ]
+    },
+    {
+      "name": "scale-one",
+      "dpr": 1,
+      "control": "Resize_mc",
+      "down": {
+        "x": 14,
+        "y": 432.25
+      },
+      "moves": [
+        {
+          "x": 52,
+          "y": 432.25
+        }
+      ],
+      "before": [
+        {
+          "key": "1_mc",
+          "type": 1001,
+          "twin": "2_mc",
+          "x": -40,
+          "y": -10,
+          "rotation": 0,
+          "scale": 0.5,
+          "radius": 7
+        },
+        {
+          "key": "2_mc",
+          "type": 1001,
+          "twin": "1_mc",
+          "x": -40,
+          "y": 10,
+          "rotation": 0,
+          "scale": 0.5,
+          "radius": 7
+        }
+      ],
+      "expected": [
+        {
+          "key": "1_mc",
+          "type": 1001,
+          "twin": "2_mc",
+          "x": -40,
+          "y": -10,
+          "rotation": 0,
+          "scale": 1,
+          "radius": 7
+        },
+        {
+          "key": "2_mc",
+          "type": 1001,
+          "twin": "1_mc",
+          "x": -40,
+          "y": 10,
+          "rotation": 0,
+          "scale": 1,
+          "radius": 7
+        }
+      ]
+    },
+    {
+      "name": "rotation-fractional",
+      "dpr": 2,
+      "control": "Rotate_mc",
+      "down": {
+        "x": 154,
+        "y": 432.25
+      },
+      "moves": [
+        {
+          "x": 239.5,
+          "y": 432.25
+        }
+      ],
+      "before": [
+        {
+          "key": "1_mc",
+          "type": 1001,
+          "twin": "2_mc",
+          "x": -40,
+          "y": -10,
+          "rotation": 0,
+          "scale": 1,
+          "radius": 7
+        },
+        {
+          "key": "2_mc",
+          "type": 1001,
+          "twin": "1_mc",
+          "x": -40,
+          "y": 10,
+          "rotation": 0,
+          "scale": 1,
+          "radius": 7
+        }
+      ],
+      "expected": [
+        {
+          "key": "1_mc",
+          "type": 1001,
+          "twin": "2_mc",
+          "x": -40,
+          "y": -10,
+          "rotation": -90,
+          "scale": 1,
+          "radius": 7
+        },
+        {
+          "key": "2_mc",
+          "type": 1001,
+          "twin": "1_mc",
+          "x": -40,
+          "y": 10,
+          "rotation": 90,
+          "scale": 1,
+          "radius": 7
+        }
+      ]
+    },
+    {
+      "name": "rotation-endpoint",
+      "dpr": 2,
+      "control": "Rotate_mc",
+      "down": {
+        "x": 239.5,
+        "y": 432.25
+      },
+      "moves": [
+        {
+          "x": 268,
+          "y": 432.25
+        }
+      ],
+      "before": [
+        {
+          "key": "1_mc",
+          "type": 1001,
+          "twin": "2_mc",
+          "x": -40,
+          "y": -10,
+          "rotation": -90,
+          "scale": 1,
+          "radius": 7
+        },
+        {
+          "key": "2_mc",
+          "type": 1001,
+          "twin": "1_mc",
+          "x": -40,
+          "y": 10,
+          "rotation": 90,
+          "scale": 1,
+          "radius": 7
+        }
+      ],
+      "expected": [
+        {
+          "key": "1_mc",
+          "type": 1001,
+          "twin": "2_mc",
+          "x": -40,
+          "y": -10,
+          "rotation": 0,
+          "scale": 1,
+          "radius": 7
+        },
+        {
+          "key": "2_mc",
+          "type": 1001,
+          "twin": "1_mc",
+          "x": -40,
+          "y": 10,
+          "rotation": 0,
+          "scale": 1,
+          "radius": 7
+        }
+      ]
+    },
+    {
+      "name": "rotation-midpoint",
+      "dpr": 2,
+      "control": "Rotate_mc",
+      "down": {
+        "x": 268,
+        "y": 432.25
+      },
+      "moves": [
+        {
+          "x": 211,
+          "y": 432.25
+        }
+      ],
+      "before": [
+        {
+          "key": "1_mc",
+          "type": 1001,
+          "twin": "2_mc",
+          "x": -40,
+          "y": -10,
+          "rotation": 0,
+          "scale": 1,
+          "radius": 7
+        },
+        {
+          "key": "2_mc",
+          "type": 1001,
+          "twin": "1_mc",
+          "x": -40,
+          "y": 10,
+          "rotation": 0,
+          "scale": 1,
+          "radius": 7
+        }
+      ],
+      "expected": [
+        {
+          "key": "1_mc",
+          "type": 1001,
+          "twin": "2_mc",
+          "x": -40,
+          "y": -10,
+          "rotation": 180,
+          "scale": 1,
+          "radius": 7
+        },
+        {
+          "key": "2_mc",
+          "type": 1001,
+          "twin": "1_mc",
+          "x": -40,
+          "y": 10,
+          "rotation": 180,
+          "scale": 1,
+          "radius": 7
+        }
+      ]
+    },
+    {
+      "name": "rotation-zero",
+      "dpr": 2,
+      "control": "Rotate_mc",
+      "down": {
+        "x": 211,
+        "y": 432.25
+      },
+      "moves": [
+        {
+          "x": 154,
+          "y": 432.25
+        }
+      ],
+      "before": [
+        {
+          "key": "1_mc",
+          "type": 1001,
+          "twin": "2_mc",
+          "x": -40,
+          "y": -10,
+          "rotation": 180,
+          "scale": 1,
+          "radius": 7
+        },
+        {
+          "key": "2_mc",
+          "type": 1001,
+          "twin": "1_mc",
+          "x": -40,
+          "y": 10,
+          "rotation": 180,
+          "scale": 1,
+          "radius": 7
+        }
+      ],
+      "expected": [
+        {
+          "key": "1_mc",
+          "type": 1001,
+          "twin": "2_mc",
+          "x": -40,
+          "y": -10,
+          "rotation": 0,
+          "scale": 1,
+          "radius": 7
+        },
+        {
+          "key": "2_mc",
+          "type": 1001,
+          "twin": "1_mc",
+          "x": -40,
+          "y": 10,
+          "rotation": 0,
+          "scale": 1,
+          "radius": 7
+        }
+      ]
+    },
+    {
+      "name": "scale-fractional",
+      "dpr": 2,
+      "control": "Resize_mc",
+      "down": {
+        "x": 52,
+        "y": 432.25
+      },
+      "moves": [
+        {
+          "x": 91.5,
+          "y": 432.25
+        }
+      ],
+      "before": [
+        {
+          "key": "1_mc",
+          "type": 1001,
+          "twin": "2_mc",
+          "x": -40,
+          "y": -10,
+          "rotation": 0,
+          "scale": 1,
+          "radius": 7
+        },
+        {
+          "key": "2_mc",
+          "type": 1001,
+          "twin": "1_mc",
+          "x": -40,
+          "y": 10,
+          "rotation": 0,
+          "scale": 1,
+          "radius": 7
+        }
+      ],
+      "expected": [
+        {
+          "key": "1_mc",
+          "type": 1001,
+          "twin": "2_mc",
+          "x": -40,
+          "y": -10,
+          "rotation": 0,
+          "scale": 1.5197368421052633,
+          "radius": 7
+        },
+        {
+          "key": "2_mc",
+          "type": 1001,
+          "twin": "1_mc",
+          "x": -40,
+          "y": 10,
+          "rotation": 0,
+          "scale": 1.5197368421052633,
+          "radius": 7
+        }
+      ]
+    },
+    {
+      "name": "scale-maximum",
+      "dpr": 2,
+      "control": "Resize_mc",
+      "down": {
+        "x": 91.5,
+        "y": 432.25
+      },
+      "moves": [
+        {
+          "x": 128,
+          "y": 432.25
+        }
+      ],
+      "before": [
+        {
+          "key": "1_mc",
+          "type": 1001,
+          "twin": "2_mc",
+          "x": -40,
+          "y": -10,
+          "rotation": 0,
+          "scale": 1.5197368421052633,
+          "radius": 7
+        },
+        {
+          "key": "2_mc",
+          "type": 1001,
+          "twin": "1_mc",
+          "x": -40,
+          "y": 10,
+          "rotation": 0,
+          "scale": 1.5197368421052633,
+          "radius": 7
+        }
+      ],
+      "expected": [
+        {
+          "key": "1_mc",
+          "type": 1001,
+          "twin": "2_mc",
+          "x": -40,
+          "y": -10,
+          "rotation": 0,
+          "scale": 2,
+          "radius": 7
+        },
+        {
+          "key": "2_mc",
+          "type": 1001,
+          "twin": "1_mc",
+          "x": -40,
+          "y": 10,
+          "rotation": 0,
+          "scale": 2,
+          "radius": 7
+        }
+      ]
+    },
+    {
+      "name": "scale-minimum",
+      "dpr": 2,
+      "control": "Resize_mc",
+      "down": {
+        "x": 128,
+        "y": 432.25
+      },
+      "moves": [
+        {
+          "x": 14,
+          "y": 432.25
+        }
+      ],
+      "before": [
+        {
+          "key": "1_mc",
+          "type": 1001,
+          "twin": "2_mc",
+          "x": -40,
+          "y": -10,
+          "rotation": 0,
+          "scale": 2,
+          "radius": 7
+        },
+        {
+          "key": "2_mc",
+          "type": 1001,
+          "twin": "1_mc",
+          "x": -40,
+          "y": 10,
+          "rotation": 0,
+          "scale": 2,
+          "radius": 7
+        }
+      ],
+      "expected": [
+        {
+          "key": "1_mc",
+          "type": 1001,
+          "twin": "2_mc",
+          "x": -40,
+          "y": -10,
+          "rotation": 0,
+          "scale": 0.5,
+          "radius": 7
+        },
+        {
+          "key": "2_mc",
+          "type": 1001,
+          "twin": "1_mc",
+          "x": -40,
+          "y": 10,
+          "rotation": 0,
+          "scale": 0.5,
+          "radius": 7
+        }
+      ]
+    },
+    {
+      "name": "scale-one",
+      "dpr": 2,
+      "control": "Resize_mc",
+      "down": {
+        "x": 14,
+        "y": 432.25
+      },
+      "moves": [
+        {
+          "x": 52,
+          "y": 432.25
+        }
+      ],
+      "before": [
+        {
+          "key": "1_mc",
+          "type": 1001,
+          "twin": "2_mc",
+          "x": -40,
+          "y": -10,
+          "rotation": 0,
+          "scale": 0.5,
+          "radius": 7
+        },
+        {
+          "key": "2_mc",
+          "type": 1001,
+          "twin": "1_mc",
+          "x": -40,
+          "y": 10,
+          "rotation": 0,
+          "scale": 0.5,
+          "radius": 7
+        }
+      ],
+      "expected": [
+        {
+          "key": "1_mc",
+          "type": 1001,
+          "twin": "2_mc",
+          "x": -40,
+          "y": -10,
+          "rotation": 0,
+          "scale": 1,
+          "radius": 7
+        },
+        {
+          "key": "2_mc",
+          "type": 1001,
+          "twin": "1_mc",
+          "x": -40,
+          "y": 10,
+          "rotation": 0,
+          "scale": 1,
+          "radius": 7
+        }
+      ]
+    }
+  ]
+}

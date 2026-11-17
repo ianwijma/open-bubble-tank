@@ -27,7 +27,7 @@ const frames = (w: World, n: number) => {
 const carrier = (w: World, total = 26): PendingEffect =>
   w.effectEngine.constructCarrier({ owner: w.player, gun: w.player.guns[0], frame: 1, total });
 
-test('constructed parentless carriers match all 70 original before-ENTER cohort poses and keep wrapping', () => {
+test('constructed parentless carriers match all 70 measured before-ENTER cohort poses and keep wrapping', () => {
   const w = world(),
     clips = [carrier(w, 25), carrier(w, 26)];
   w.pause();
@@ -54,7 +54,7 @@ test('construction inside Run holds frame1 at its EXIT and at the next ENTER/EXI
   expect(clip.frame).toBe(2);
 });
 
-test('delayed field tail resolves current names, retains request writes and original carrier without reset', () => {
+test('delayed field tail resolves current names, retains request writes and the same carrier without reset', () => {
   const w = world(),
     old = w.field,
     clip = carrier(w, 25);

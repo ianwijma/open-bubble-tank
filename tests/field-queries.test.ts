@@ -13,7 +13,7 @@ import { spawnPickups } from '../src/game/simulation/pickups';
 import { World, emptyInput } from '../src/game/simulation/world';
 import { cacheEmptyField } from './fixtures/empty-field';
 
-/** Synthetic fills qualify traversal/routing, never field contours. */
+/** Synthetic fills test traversal/routing, never field contours. */
 const leaf = (
   xMin: number,
   yMin: number,
@@ -49,7 +49,7 @@ const width = (world: World, geometry: FieldGeometrySource, field = world.field)
   return (bounds.xMax - bounds.xMin) / 20;
 };
 
-test('live first/new field Script widths retain original authored and four-child setter controls', () => {
+test('live first/new field Script widths keep the authored and four-child setter controls', () => {
   const world = new World([], [], 31),
     geometry = source();
   expect(width(world, geometry)).toBe(1381.4);
@@ -187,10 +187,10 @@ test('unsupported geometry fails explicitly instead of substituting the existing
     tank = createTank(77, STARTER, 'enemy', 900, 0);
   world.attachActor(tank, world.field);
   geometry.actor = () => {
-    throw new Error('Unqualified actor artwork');
+    throw new Error('Unresolved actor artwork');
   };
-  expect(() => width(world, geometry)).toThrow('Unqualified actor artwork');
+  expect(() => width(world, geometry)).toThrow('Unresolved actor artwork');
   expect(() => fieldStageShapeHit(world, world.field, geometry, { x: 0, y: 0 })).toThrow(
-    'Unqualified actor artwork',
+    'Unresolved actor artwork',
   );
 });

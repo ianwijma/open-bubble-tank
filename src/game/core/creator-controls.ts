@@ -1,5 +1,5 @@
 import data from '../data/creator-controls.json';
-import type { SwfMatrix } from '../assets/asset-pack';
+import type { ArtMatrix } from '../assets/asset-pack';
 export interface CreatorPrimitive {
   font?: string;
   bold?: boolean;
@@ -7,8 +7,8 @@ export interface CreatorPrimitive {
   id: number;
   kind: string;
   innerBounds?: { xMin: number; xMax: number; yMin: number; yMax: number };
-  matrix: SwfMatrix;
-  boundsMatrix?: SwfMatrix;
+  matrix: ArtMatrix;
+  boundsMatrix?: ArtMatrix;
   bounds: { xMin: number; xMax: number; yMin: number; yMax: number };
   fill?: number[] | null;
   stroke?: { color: number[]; width: number } | null;
@@ -34,30 +34,22 @@ export interface CreatorPrimitive {
 export interface CreatorControl {
   name: string;
   symbol: number;
-  matrix: SwfMatrix;
+  matrix: ArtMatrix;
   bounds: { x: number; y: number; width: number; height: number };
   variants: Record<string, CreatorPrimitive[]>;
 }
 export interface CreatorSliderLayout {
   name: string;
   symbol: number;
-  matrix: SwfMatrix;
+  matrix: ArtMatrix;
   track: CreatorPrimitive[];
-  handle: { symbol: number; matrix: SwfMatrix; variants: CreatorPrimitive[][] };
+  handle: { symbol: number; matrix: ArtMatrix; variants: CreatorPrimitive[][] };
 }
 export const CREATOR_CONTROLS = data as {
   symbol: number;
-  workspace: SwfMatrix;
+  workspace: ArtMatrix;
   controls: CreatorControl[];
   sliders: CreatorSliderLayout[];
 };
 export const creatorControl = (name: string) =>
   CREATOR_CONTROLS.controls.find((c) => c.name === name)!;
-export const CREATOR_SELECTION_CONTROLS = [
-  'DeleteButton_mc',
-  'BringFront_mc',
-  'SendBack_mc',
-  'AlignCenter_mc',
-  'Left_mc',
-  'Right_mc',
-] as const;

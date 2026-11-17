@@ -22,28 +22,25 @@ function emptyRoster() {
 // Optional external catalog of the built-in tanks; the check is skipped when unset or missing.
 const source = process.env.SOAPTANK_BUILTIN_TANKS_FILE ?? '';
 test.skipIf(!source || !existsSync(source))(
-  'all imported builtin designs retain their exact original encrypted DATA identity',
+  'all imported builtin designs retain their exact encrypted DATA identity',
   () => {
-    const recovered = JSON.parse(readFileSync(source, 'utf8')) as Record<
-      string,
-      { code: string }[]
-    >;
+    const stored = JSON.parse(readFileSync(source, 'utf8')) as Record<string, { code: string }[]>;
     const builtin = [AVATARS, ENEMIES, BOSSES].flat();
-    const original = Object.values(recovered).flat();
+    const codes = Object.values(stored).flat();
     expect(builtin).toHaveLength(75);
-    expect(original).toHaveLength(builtin.length);
+    expect(codes).toHaveLength(builtin.length);
     for (let index = 0; index < builtin.length; index++) {
       // Compare booleans so a failed assertion cannot dump encrypted strings.
-      expect(builtin[index].sourceCode === original[index].code).toBe(true);
-      expect(tankRosterIdentity(builtin[index]) === original[index].code).toBe(true);
+      expect(builtin[index].sourceCode === codes[index].code).toBe(true);
+      expect(tankRosterIdentity(builtin[index]) === codes[index].code).toBe(true);
     }
   },
 );
 
-test('decoding an original tank code preserves the supplied trimmed identity', async () => {
-  const original = STARTER.sourceCode!;
-  const decoded = await decodeTankCode(`\n ${original} \n`);
-  expect(decoded.sourceCode === original).toBe(true);
+test('decoding a stored tank code preserves the supplied trimmed identity', async () => {
+  const code = STARTER.sourceCode!;
+  const decoded = await decodeTankCode(`\n ${code} \n`);
+  expect(decoded.sourceCode === code).toBe(true);
   expect(tankRosterIdentity(decoded) === tankRosterIdentity(STARTER)).toBe(true);
 });
 
@@ -111,10 +108,10 @@ test('roster lookup distinguishes duplicate IDs with different design contents',
   expect(roster.lookupKey(tankRosterIdentity({ ...first, name: 'not loaded' }))).toBe('');
 });
 
-test('roster lookup distinguishes identical decoded content supplied under different source codes', () => {
+test('roster lookup distinguishes identical decoded content supplied under different stored codes', () => {
   const roster = emptyRoster();
-  const first = { ...mockDesign(), sourceCode: 'original-data-one' },
-    second = { ...first, sourceCode: 'original-data-two' };
+  const first = { ...mockDesign(), sourceCode: 'code-data-one' },
+    second = { ...first, sourceCode: 'code-data-two' };
   roster.units.set('Fighter', [first]);
   roster.units.set('HeavyMiniBoss', [second]);
   expect(roster.lookupKey(tankRosterIdentity(first))).toBe('Fighter');
@@ -149,7 +146,7 @@ test('a tank caches birth roster identity despite later health, body and design 
   expect(roster.lookupKey(tank.rosterIdentity)).toBe('HeavyMiniBoss');
 });
 
-test('a tank retains its imported birth DATA even when live source metadata is replaced', () => {
+test('a tank retains its imported birth DATA even when its live code metadata is replaced', () => {
   const design = { ...mockDesign(), sourceCode: 'birth-data' },
     tank = createTank(1, design, 'enemy');
   design.sourceCode = 'replacement-data';

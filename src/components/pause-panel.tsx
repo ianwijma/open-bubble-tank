@@ -292,7 +292,6 @@ export function PausePanel({
           </div>
         </div>
         <SettingsPanel
-          pack={pack}
           settings={settings}
           stage={stage}
           overPause

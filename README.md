@@ -24,17 +24,24 @@ Open [localhost:3000](http://localhost:3000).
 ```sh
 bun run check            # TypeScript and the rule tests in tests/
 bun run format:check     # Formatting
-bun run test:e2e         # Production build, then the Playwright browser tests in e2e/
+bun run test:e2e         # Production build, then the full Playwright browser suite in e2e/, run on master
 bun run test:e2e:smoke   # Production build and the quick browser check run on pull requests
-bun run test:e2e:offline # Production build and the full browser suite run on master
 bun run build            # Production build
 bun run start            # Serve the production build
 bun run fixtures         # Gameplay, artwork and screen fixtures on localhost:3102
 ```
 
-The browser tests use Chrome if it is installed, otherwise Playwright's Chromium (`bun x playwright install chromium`). Playwright writes its per-test output to `test-results/playwright`. Keep your own validation records elsewhere, for example in an ignored `reference-captures/` directory.
+The browser tests use Chrome if it is installed, otherwise Playwright's Chromium (`bun x playwright install chromium`). Playwright writes its per-test output to `test-results/playwright`.
 
 The full suite includes a bot that plays a fresh game through to the boss and the win screen from a fixed random seed. Locally it has a 5-minute budget. `SOAPTANK_PLAYTHROUGH_LONG_RUN=1` raises it to 10 minutes, as CI does on master.
+
+### Environment variables for tests
+
+- `SOAPTANK_PLAYTHROUGH_LONG_RUN`: see the playthrough bot above.
+- `SOAPTANK_EFFECT_DIAGNOSTICS`: when set, `tests/effect-playback.test.ts` writes the frame differences of a failing comparison to `test-results/retained-effects/`.
+- `SOAPTANK_FIXTURE_PORT`: port of the fixture server in `tools/visual-fixtures.ts`. The default is 3102.
+- `SOAPTANK_E2E_FRAME_DELAY_MS`: milliseconds to delay each game animation frame in the browser tests, to stress slow rendering. The default is 0.
+- `SOAPTANK_BUILTIN_TANKS_FILE`: path to a JSON catalog of the built-in tanks. `tests/tank-code.test.ts` and `tests/roster-identity.test.ts` each have one test that is skipped without it. The file is not part of the repository.
 
 Pull requests run formatting, the rule tests, a production build and the quick browser check. Pushes to `master` and manual runs replace the quick check with the full browser suite. See [delivery](docs/delivery.md).
 
@@ -73,6 +80,6 @@ The simulation advances in fixed steps, 50 a second by default, and React stays 
 
 ## License
 
-The code is licensed under `AGPL-3.0-only`. Anyone who runs a changed copy as a service must publish their changes.
+The code is licensed under `AGPL-3.0-only`; the full text is in [LICENSE](LICENSE). Anyone who runs a changed copy as a service must publish their changes.
 
 The license does not cover the content kept from the original game, Bubble Tanks 3 by Hero Interactive: the built-in tank designs, waves, part names and texts, menu and editor layouts, display data and the rules rebuilt from its code. [NOTICE.md](NOTICE.md) lists that content and the third-party licenses.

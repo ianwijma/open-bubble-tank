@@ -1,5 +1,5 @@
 import { expect, test } from 'bun:test';
-import { SwfClip, type ClipSource } from '../src/game/assets/swf-clip';
+import { ArtClip, type ClipSource } from '../src/game/assets/art-clip';
 import { AssetPack, type Bounds, type DisplayPlacement } from '../src/game/assets/asset-pack';
 import {
   projectileScriptBounds,
@@ -196,7 +196,7 @@ test('turret construction selects inner frame and owner-facing barrel rotation',
 });
 
 test('stand-in shell bounds derive from the authored projectile geometry', () => {
-  close(new AssetPack('mock').projectileBounds(bullet({ kind: 'shell', x: 10, y: 20 })), {
+  close(new AssetPack().projectileBounds(bullet({ kind: 'shell', x: 10, y: 20 })), {
     x: 8,
     y: 18,
     width: 4,
@@ -205,7 +205,7 @@ test('stand-in shell bounds derive from the authored projectile geometry', () =>
 });
 
 test('unknown-symbol fallback bounds cover procedural mine/turret strokes and rotated beam', () => {
-  const pack = new AssetPack('mock');
+  const pack = new AssetPack();
   close(pack.projectileBounds(bullet({ x: 10, y: 20 })), {
     x: 5.75,
     y: 15.75,
@@ -232,7 +232,7 @@ test('retained child poses drive transformed Script bounds', () => {
     displayList: (id, frame) =>
       id === 10000 ? [placement(10001, 1)] : id === 10001 ? [placement(1, 1, frame * 10)] : [],
   };
-  const pose = new SwfClip(10000, clips);
+  const pose = new ArtClip(10000, clips);
   pose.advance(1);
   pose.gotoAndPlay(20);
   expect(pose.children.get(1)!.clip.frame).toBe(1);

@@ -3,7 +3,7 @@ import { waitForMainMenu, dismissCreatorGuide } from './helpers/main-menu';
 import { exitCreator } from './helpers/creator';
 import { watchAudio, musicState } from './helpers/audio';
 
-test(`mock music distinguishes new menus from retained settings and creator/viewer visits`, async ({
+test(`music distinguishes new menus from retained settings and creator/viewer visits`, async ({
   page,
 }) => {
   test.setTimeout(60000);
@@ -11,7 +11,7 @@ test(`mock music distinguishes new menus from retained settings and creator/view
   page.on('pageerror', (error) => errors.push(error.message));
   await watchAudio(page);
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await waitForMainMenu(page, { creatorGuide: 'keep' });
   await expect.poll(async () => (await musicState(page))[0]?.volume).toBe(0.8);
   const first = (await musicState(page))[0];
@@ -47,12 +47,12 @@ test(`mock music distinguishes new menus from retained settings and creator/view
   expect(errors).toEqual([]);
 });
 
-test('mock music completes actual media playback and restarts at source volume', async ({
+test('music completes actual media playback and restarts at its starting volume', async ({
   page,
 }) => {
   await watchAudio(page);
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await waitForMainMenu(page);
   await expect.poll(async () => (await musicState(page))[0]?.duration).toBeGreaterThan(0);
   await expect
@@ -65,12 +65,12 @@ test('mock music completes actual media playback and restarts at source volume',
   expect(music.error).toBe(false);
 });
 
-test('mock muted game entry does not replace the menu track remembered by paused Settings', async ({
+test('muted game entry does not replace the menu track remembered by paused Settings', async ({
   page,
 }) => {
   await watchAudio(page);
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await waitForMainMenu(page);
   await expect.poll(async () => (await musicState(page))[0]?.volume).toBe(0.8);
   const menu = (await musicState(page))[0];

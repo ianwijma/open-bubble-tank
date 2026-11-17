@@ -9,7 +9,7 @@ import { DEFAULT_SETTINGS } from '../src/game/core/constants';
 const STARTER: TankDesign = JSON.parse(readFileSync(resolve('src/game/data/tanks.json'), 'utf8'))
   .avatar_defaults[0];
 
-test(`mock secondary help pauses on avatar replacement and persists before closing`, async ({
+test(`secondary help pauses on avatar replacement and persists before closing`, async ({
   page,
 }) => {
   const guard = {
@@ -36,10 +36,10 @@ test(`mock secondary help pauses on avatar replacement and persists before closi
   page.on('pageerror', (error) => errors.push(error.message));
   const enter = async () => {
     await page.goto('/');
-    await page.getByRole('button', { name: 'Play with mock assets' }).click();
+    await page.getByRole('button', { name: 'Play' }).click();
     await waitForMainMenu(page);
     await page.getByRole('button', { name: 'Play', exact: true }).click({ timeout: 60000 });
-    await page.getByRole('button', { name: 'Original game size', exact: true }).click();
+    await page.getByRole('button', { name: 'Actual size', exact: true }).click();
     await page.getByRole('checkbox', { name: 'Use saved avatars from previous game' }).check();
     await page
       .getByRole('dialog', { name: 'Choose your tanks' })
@@ -77,7 +77,7 @@ test(`mock secondary help pauses on avatar replacement and persists before closi
   await page.keyboard.press('KeyP');
   await expect(page.getByRole('dialog', { name: 'Paused', exact: true })).toBeVisible();
   await page.keyboard.press('KeyP');
-  // Native mode reloads with help still open; mock mode also exercises its explicit Close button.
+  // Help closed with its Close button stays closed when the game is entered again.
   await enter();
   await expect(help).toHaveCount(0);
   await page.keyboard.press('KeyP');

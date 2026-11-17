@@ -1,12 +1,12 @@
 import { expect, test } from '@playwright/test';
-test(`mock viewer modals retain source frame fades and release dismissed input immediately`, async ({
+test(`viewer modals keep their frame fades and release dismissed input immediately`, async ({
   page,
 }) => {
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto('http://127.0.0.1:3102');
   await page.getByLabel('Fixture').selectOption('viewer-flow');
-  await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
   await expect(page.getByRole('status')).toContainText('Ready', { timeout: 60000 });
   await page.getByRole('button', { name: 'Viewer advance 20 frames', exact: true }).click();
   await expect(page.locator('.tank-viewer')).toHaveAttribute('data-viewer-ready', 'true');

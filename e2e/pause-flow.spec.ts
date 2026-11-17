@@ -1,7 +1,5 @@
 import { expect, test } from '@playwright/test';
-test(`mock pause and Info retain one layer and share source transition frames`, async ({
-  page,
-}) => {
+test(`pause and Info retain one layer and share their transition frames`, async ({ page }) => {
   // Software-rendered CI recorded 16s presentation/action waits per visit.
   // Keep the complete two-visit pointer/focus proof within one test budget.
   test.setTimeout(120000);
@@ -9,7 +7,7 @@ test(`mock pause and Info retain one layer and share source transition frames`, 
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('http://127.0.0.1:3102');
   await page.getByLabel('Fixture').selectOption('pause-flow');
-  await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
   await expect(page.getByRole('status')).toContainText('Ready', { timeout: 60000 });
   const advance = async (count: number) =>
     page

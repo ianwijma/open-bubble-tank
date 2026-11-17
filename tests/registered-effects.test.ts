@@ -22,7 +22,7 @@ const clip = (uid: number): Effect => ({
   uid,
   x: 0,
   y: 0,
-  kind: 'native',
+  kind: 'clip',
   age: 3,
   duration: 4,
   radius: 10,
@@ -38,7 +38,7 @@ function engine() {
   return { effects, owner };
 }
 
-test('next-field requests attach the original modified object to the outgoing registered bottom layer', () => {
+test('next-field requests attach the same modified object to the outgoing registered bottom layer', () => {
   const world = new World([], [], 1),
     outgoing = world.field;
   world.player.life = 1;

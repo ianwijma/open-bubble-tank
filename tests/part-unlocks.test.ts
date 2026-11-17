@@ -6,7 +6,7 @@ import { paletteState } from '../src/game/simulation/editor-palette';
 import { validateBuild } from '../src/game/simulation/designer';
 import { viewerSelectionError } from '../src/game/core/tank-viewer';
 
-test('new-world baseline matches the source reset and tier updates append without relocking earlier parts', () => {
+test('new-world baseline matches the reset and tier updates append without relocking earlier parts', () => {
   const run = new RunPartUnlocks();
   expect(run.parts).toContain(2001);
   expect(run.parts).toContain(4001);
@@ -67,7 +67,7 @@ test('creator palette, save validation and viewer loading share the retained lis
   ).toBe('Do not have all the parts for this tank');
 });
 
-test('tier order appends source IDs once and earlier snapshots remain unchanged', () => {
+test('tier order appends IDs once and earlier snapshots remain unchanged', () => {
   const run = new RunPartUnlocks(),
     baseline = run.parts;
   run.unlockThrough(1);

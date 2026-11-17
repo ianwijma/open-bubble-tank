@@ -1,36 +1,32 @@
 import { expect, test } from '@playwright/test';
-test(`mock bullet sizes, warm weapons and homing shoot-down use visible geometry`, async ({
-  page,
-}) => {
+test(`bullet sizes, warm weapons and homing shoot-down use visible geometry`, async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('http://127.0.0.1:3102');
   await page.getByLabel('Fixture').selectOption('mock-assets');
-  await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
   const status = page.getByRole('status');
   await expect(status).toContainText('Ready', { timeout: 60000 });
   const proof = JSON.parse((await status.getAttribute('data-mock-assets'))!);
-  for (const item of proof.comparisons) {
-    expect(item.mock.width).toBeCloseTo(item.native.width, 5);
-    expect(item.mock.height).toBeCloseTo(item.native.height, 5);
-  }
-  expect(
-    proof.comparisons.slice(0, 3).map((item: { mock: { width: number } }) => item.mock.width),
-  ).toEqual([12, 30, 74.25]);
-  expect(proof.intercept).toEqual(
-    Array(2).fill({ hit: true, seekerRemoved: true, shellAlive: true, outsideOldRadius: true }),
-  );
+  expect(proof.sizes.slice(0, 3).map((item: { width: number }) => item.width)).toEqual([
+    12, 30, 74.25,
+  ]);
+  expect(proof.intercept).toEqual({
+    hit: true,
+    seekerRemoved: true,
+    shellAlive: true,
+    outsideOldRadius: true,
+  });
   expect(proof.palette.player.r).toBeGreaterThan(proof.palette.player.b + 80);
   expect(proof.palette.enemy.r).toBeGreaterThan(proof.palette.enemy.b + 80);
-  // Editor previews share the original gold; hostile live mounts receive the tint.
+  // Editor previews share the untinted gold; hostile live mounts receive the tint.
   expect(Math.abs(proof.palette.player.g - proof.palette.enemy.g)).toBeLessThan(10);
   expect(proof.livePalette.player.g).toBeGreaterThan(proof.livePalette.enemy.g + 8);
-  // Body fills are opaque in both supplied and procedural posters.
+  // Body fills are opaque.
   expect(proof.palette.bodyAlpha).toBe(255);
-  expect(proof.palette.bodyReferenceAlpha).toBe(255);
-  for (const pixel of [proof.palette.bodyPixel, proof.palette.referenceBodyPixel])
-    expect(pixel[2]).toBeGreaterThan(pixel[0]); // Sample blue fill, not its white rim.
-  expect(proof.panels).toHaveLength(8);
+  // Sample blue fill, not its white rim.
+  expect(proof.palette.bodyPixel[2]).toBeGreaterThan(proof.palette.bodyPixel[0]);
+  expect(proof.panels).toHaveLength(4);
   expect(
     proof.panels.every((p: { ink: number; painted: number }) => p.ink > 100 && p.painted > 100),
     JSON.stringify(proof),

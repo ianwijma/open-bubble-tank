@@ -35,7 +35,7 @@ test('the app-session profile allowance is shared across worlds, not inferred fr
   const restored = new World([], [STARTER, STARTER, STARTER, STARTER], 1);
   expect([restored.progression.level, restored.profileClass.value]).toEqual([3, 1]);
 });
-test('stored profile class does not grant a higher current-level selection limit or get normalized into the source label', () => {
+test('stored profile class does not grant a higher current-level selection limit or get normalized into the class label', () => {
   const body = { ...STARTER, classId: 3, parts: [STARTER.parts[0]] },
     limits = { level: 1, maxClass: 2, profileMaxClass: 4, gunPoints: 2 };
   expect(tankLoadEligibility(body, limits)).toMatchObject({

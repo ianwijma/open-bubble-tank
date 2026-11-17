@@ -1,14 +1,14 @@
 import { expect, test } from '@playwright/test';
 import { waitForMainMenu } from './helpers/main-menu';
 
-test(`mock viewer guide persists only after both pages and keeps offline local help`, async ({
+test(`viewer guide persists only after both pages and keeps offline local help`, async ({
   page,
 }) => {
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
   const boot = async () => {
     await page.goto('/');
-    await page.getByRole('button', { name: 'Play with mock assets' }).click();
+    await page.getByRole('button', { name: 'Play' }).click();
     await waitForMainMenu(page);
     await page.getByRole('button', { name: 'Enemy tank creator', exact: true }).click();
     await page.getByRole('button', { name: 'Load a Tank...', exact: true }).click();

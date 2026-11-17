@@ -1,6 +1,5 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
-import type { AssetPack } from '@/game/assets/asset-pack';
 import type { TankDesign } from '@/game/core/types';
 import {
   acceptsCreatorNameInput,
@@ -14,14 +13,13 @@ import { community } from '@/game/services/extensions';
 import { encodeTankCode } from '@/game/services/tank-code';
 import { CreatorPrimitives } from './creator-controls';
 import { CreatorText } from './creator-text';
+import { useBusyFocus } from './ui';
 function ScreenButton({
-  pack,
   piece,
   label,
   disabled,
   onClick,
 }: {
-  pack: AssetPack;
   piece: CreatorDialogButton;
   label: string;
   disabled?: boolean;
@@ -78,7 +76,6 @@ function ScreenButton({
 }
 /** Exit/name/code/error poses over the still-live editor. */
 export function CreatorSaveDialog({
-  pack,
   kind,
   tank,
   initialName,
@@ -88,7 +85,6 @@ export function CreatorSaveDialog({
   onClose,
   onExit,
 }: {
-  pack: AssetPack;
   kind: 'save' | 'exit';
   tank: TankDesign;
   initialName: string;
@@ -108,6 +104,7 @@ export function CreatorSaveDialog({
     [busy, setBusy] = useState(false);
   const root = useRef<HTMLDivElement>(null),
     mounted = useRef(true);
+  useBusyFocus(root, busy);
   useEffect(() => {
     root.current?.focus();
   }, [frame]);
@@ -303,7 +300,6 @@ export function CreatorSaveDialog({
       {screen.buttons.map((piece) => (
         <ScreenButton
           key={`${frame}:${piece.name}`}
-          pack={pack}
           piece={piece}
           label={
             (

@@ -9,7 +9,7 @@ import {
 } from 'react';
 import type { UpgradeMenu } from '@/game/services/upgrade-menu';
 import type { UpgradeSlotId } from '@/game/core/upgrade-loading';
-import type { AssetPack, SwfMatrix } from '@/game/assets/asset-pack';
+import type { AssetPack, ArtMatrix } from '@/game/assets/asset-pack';
 import type { StageRuntime } from '@/game/services/stage-runtime';
 import type { TankDesign } from '@/game/core/types';
 import { UPGRADE_SCREEN, upgradeWidget, upgradeWeaponSummary } from '@/game/core/upgrade-screen';
@@ -18,15 +18,15 @@ import { CreatorText } from './creator-text';
 import { useUpgradeArtwork } from './upgrade-artwork';
 import { Dialog } from './ui';
 
-const transform = (m: SwfMatrix) => `matrix(${m.a},${m.b},${m.c},${m.d},${m.tx / 20},${m.ty / 20})`;
-function Group({ matrix, children }: { matrix: SwfMatrix; children: ReactNode }) {
+const transform = (m: ArtMatrix) => `matrix(${m.a},${m.b},${m.c},${m.d},${m.tx / 20},${m.ty / 20})`;
+function Group({ matrix, children }: { matrix: ArtMatrix; children: ReactNode }) {
   return (
     <div className="upgrade-group" style={{ transform: transform(matrix) }}>
       {children}
     </div>
   );
 }
-function Art({ pack, symbol, frame = 1 }: { pack: AssetPack; symbol: number; frame?: number }) {
+function Art({ symbol, frame = 1 }: { symbol: number; frame?: number }) {
   const widget = upgradeWidget(symbol, frame);
   return (
     <svg className="upgrade-art" width={1} height={1} aria-hidden="true">
@@ -121,7 +121,7 @@ export function UpgradePanel({
     >
       {loading.rootFrame !== 4 ? (
         <Group matrix={UPGRADE_SCREEN.shade.matrix}>
-          <Art pack={pack} symbol={UPGRADE_SCREEN.shade.symbol} />
+          <Art symbol={UPGRADE_SCREEN.shade.symbol} />
         </Group>
       ) : null}
       <svg width={0} height={0} aria-hidden="true">
@@ -173,11 +173,11 @@ export function UpgradePanel({
                   className="upgrade-group"
                   style={{ left: -piece.bounds.x, top: -piece.bounds.y }}
                 >
-                  <Art pack={pack} symbol={piece.symbol} frame={buildHovered ? 2 : 1} />
+                  <Art symbol={piece.symbol} frame={buildHovered ? 2 : 1} />
                 </span>
               </button>
             ) : (
-              <Art pack={pack} symbol={piece.symbol} />
+              <Art symbol={piece.symbol} />
             )}
           </Group>
         ))}
@@ -192,7 +192,7 @@ export function UpgradePanel({
             </span>
           ) : null}
           <Group matrix={UPGRADE_SCREEN.loading.label.matrix}>
-            <Art pack={pack} symbol={UPGRADE_SCREEN.loading.label.symbol} />
+            <Art symbol={UPGRADE_SCREEN.loading.label.symbol} />
           </Group>
           <Group matrix={UPGRADE_SCREEN.loading.animation.matrix}>
             {UPGRADE_SCREEN.loading.animation.frames[0].map((dot) => (
@@ -202,7 +202,7 @@ export function UpgradePanel({
                 data-upgrade-dot={dot.depth}
                 style={{ transform: transform(dot.matrix), opacity: dot.alpha }}
               >
-                <Art pack={pack} symbol={dot.symbol} />
+                <Art symbol={dot.symbol} />
               </span>
             ))}
           </Group>
@@ -251,7 +251,7 @@ export function UpgradePanel({
                   }}
                 >
                   <div className="upgrade-group" style={{ left: -bounds.x, top: -bounds.y }}>
-                    <Art pack={pack} symbol={card.symbol} frame={hovered === index ? 2 : 1} />
+                    <Art symbol={card.symbol} frame={hovered === index ? 2 : 1} />
                     {cardArt.fields.map((field) => (
                       <Group key={field.name} matrix={field.matrix}>
                         <CreatorText
@@ -272,7 +272,7 @@ export function UpgradePanel({
                       </Group>
                     ))}
                     <Group matrix={edit.matrix}>
-                      <Art pack={pack} symbol={edit.symbol} frame={editHovered === index ? 2 : 1} />
+                      <Art symbol={edit.symbol} frame={editHovered === index ? 2 : 1} />
                     </Group>
                     <canvas
                       width={1100}

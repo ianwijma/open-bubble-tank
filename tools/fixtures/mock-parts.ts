@@ -1,10 +1,9 @@
-import { AssetPack, type Raster } from '../../src/game/assets/asset-pack';
+import type { AssetPack, Raster } from '../../src/game/assets/asset-pack';
 import { mockPartLayout } from '../../src/game/assets/mock-part';
 import { PARTS, STARTER } from '../../src/game/data/catalog';
 
-/** All catalog silhouettes, compared with the same authored frame/scale/registration. */
-export async function showMockPartsProof(source: AssetPack, host: HTMLElement) {
-  const mock = await AssetPack.mock();
+/** All catalog silhouettes, drawn with their authored frame/scale/registration. */
+export async function showMockPartsProof(pack: AssetPack, host: HTMLElement) {
   const parts = PARTS.filter((p) => p.id >= 2000);
   const canvas = document.createElement('canvas');
   canvas.width = 1100;
@@ -28,27 +27,26 @@ export async function showMockPartsProof(source: AssetPack, host: HTMLElement) {
   const samples = await Promise.all(
     parts.map(async (part, index) => {
       const layout = mockPartLayout(part.id)!;
-      const original = source.part(part.id),
-        procedural = mock.part(part.id);
+      const procedural = pack.part(part.id);
       const x = (index % 4) * 275,
         y = Math.floor(index / 4) * 110;
       ctx.fillStyle = '#e7f7ff';
       ctx.font = '13px Arial';
       ctx.fillText(`${part.id} ${part.name}`, x + 5, y + 15);
       ctx.font = '10px Arial';
-      ctx.fillText('Mock', x + 50, y + 103);
-      ctx.fillText('Mock', x + 185, y + 103);
-      [original, procedural].forEach((r, side) => {
-        ctx.save();
-        ctx.translate(x + 68 + side * 137, y + 58);
-        ctx.scale(1.45, 1.45);
-        ctx.drawImage(r.canvas, r.x, r.y, r.width, r.height);
-        ctx.restore();
-      });
+      ctx.save();
+      ctx.translate(x + 68, y + 58);
+      ctx.scale(1.45, 1.45);
+      ctx.drawImage(
+        procedural.canvas,
+        procedural.x,
+        procedural.y,
+        procedural.width,
+        procedural.height,
+      );
+      ctx.restore();
       const bounds = layout.bounds;
-      let union = 0,
-        intersection = 0,
-        painted = 0,
+      let painted = 0,
         contact = 0;
       const placement = {
         ...STARTER.parts[0],
@@ -61,14 +59,10 @@ export async function showMockPartsProof(source: AssetPack, host: HTMLElement) {
       const angle = (placement.rotation * Math.PI) / 180;
       for (let y = bounds.y - 1; y < bounds.y + bounds.height + 1; y += 0.5)
         for (let x = bounds.x - 1; x < bounds.x + bounds.width + 1; x += 0.5) {
-          const a = visible(original, x, y),
-            b = visible(procedural, x, y);
-          if (a || b) union++;
-          if (a && b) intersection++;
-          if (b) {
+          if (visible(procedural, x, y)) {
             painted++;
             if (
-              mock.hitDesignPart(
+              pack.hitDesignPart(
                 placement,
                 placement.x + placement.scale * (Math.cos(angle) * x - Math.sin(angle) * y),
                 placement.y + placement.scale * (Math.sin(angle) * x + Math.cos(angle) * y),
@@ -83,16 +77,19 @@ export async function showMockPartsProof(source: AssetPack, host: HTMLElement) {
       return {
         id: part.id,
         bubbles: layout.bubbles.length,
-        iou: intersection / union,
         painted,
         contactRatio: contact / painted,
         hash: hash >>> 0,
-        nativeWidth: original.width - 6,
-        mockWidth: procedural.width - 6,
+        // The raster pads the drawn bounds by 3 on every side.
+        drawn: {
+          x: procedural.x + 3,
+          y: procedural.y + 3,
+          width: procedural.width - 6,
+          height: procedural.height - 6,
+        },
       };
     }),
   );
   host.replaceChildren(canvas);
-  mock.dispose();
-  return { mode: source.mode, samples };
+  return { samples };
 }

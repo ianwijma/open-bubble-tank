@@ -155,7 +155,6 @@ export async function showSeekerMineProof(pack: AssetPack, host: HTMLElement) {
       animation,
       galleryInk,
       blink,
-      mode: pack.mode,
       mineBounds: mb,
     };
   } finally {

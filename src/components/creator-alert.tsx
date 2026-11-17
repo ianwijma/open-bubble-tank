@@ -1,18 +1,15 @@
 'use client';
 import { useEffect, useId, useRef, useState } from 'react';
-import type { AssetPack } from '@/game/assets/asset-pack';
 import { CREATOR_DIALOGS } from '@/game/core/creator-dialogs';
 import { CreatorAlertClock } from '@/game/core/creator-alert';
 import { CreatorPrimitives } from './creator-controls';
 import { CreatorText } from './creator-text';
 
 export function CreatorAlert({
-  pack,
   fps,
   request,
   onActiveChange,
 }: {
-  pack: AssetPack;
   fps: number;
   request: { message: string } | null;
   onActiveChange: (active: boolean) => void;

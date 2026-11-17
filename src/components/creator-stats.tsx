@@ -1,19 +1,10 @@
 'use client';
-import type { AssetPack } from '@/game/assets/asset-pack';
 import type { TankDesign } from '@/game/core/types';
 import { CLASS_SPEED } from '@/game/core/constants';
 import { CREATOR_PALETTE, creatorWeaponSummary } from '@/game/core/creator-palette';
 import { CreatorPrimitives } from './creator-controls';
 import { CreatorText } from './creator-text';
-export function CreatorStats({
-  pack,
-  design,
-  classId,
-}: {
-  pack: AssetPack;
-  design: TankDesign;
-  classId: number;
-}) {
+export function CreatorStats({ design, classId }: { design: TankDesign; classId: number }) {
   const p = CREATOR_PALETTE;
   const values: Record<string, string> = {
     Speed_txt: design.avatar ? 'Speed:' : '',

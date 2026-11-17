@@ -1,6 +1,6 @@
 # Architecture
 
-This describes the code as it stands after the move to Soap Tank: the classic engine, running on its own stand-in artwork and sound, with no reader for the original game file. The changes the plan makes to it are in [the plan](v2-plan.md), sections 4 to 6.
+This describes the code as it stands: the classic engine, running on its own stand-in artwork and sound, with no reader for the original game file. The changes the plan makes to it are in [the plan](v2-plan.md), sections 4 to 6.
 
 ## Engine choice
 
@@ -62,8 +62,8 @@ The game draws all of its artwork from numbers in `src/game/data`; no picture fi
 ## Services
 
 - **Profile.** `src/game/services/profile.ts` validates versioned JSON in `localStorage` under `soaptank.profile.v1`. A version mismatch resets it today; the plan adds step-by-step upgrades (workstream C).
-- **Tank codes.** `src/game/services/tank-code.ts` reads and writes the classic encrypted tank-code format (AES-128-ECB with PKCS7 padding, built on Web Crypto). It is a compatibility format, not a security measure. The plan adds a new deterministic format (workstream D).
-- **Online services.** `src/game/services/extensions.ts` holds typed interfaces for community tanks, accounts and similar services, with offline stubs. The workshop client replaces the community-tanks stub (workstream G). Gameplay code never calls an endpoint.
+- **Tank codes.** `src/game/services/tank-code.ts` reads and writes the current encrypted tank-code format (AES-128-ECB with PKCS7 padding, built on Web Crypto). It is a compatibility format, not a security measure. The plan adds a new deterministic format (workstream D).
+- **Online services.** `src/game/services/extensions.ts` holds a typed interface for community tanks, with an offline stub. The workshop client replaces the community-tanks stub (workstream G). Gameplay code never calls an endpoint.
 
 ## Data
 

@@ -1,10 +1,10 @@
 import { expect, test } from '@playwright/test';
-test(`mock Whip Grow and Flak retain stage clocks through pause`, async ({ page }) => {
+test(`Whip Grow and Flak retain stage clocks through pause`, async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('http://127.0.0.1:3102');
   await page.getByLabel('Fixture').selectOption('projectile-clocks');
-  await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
   const status = page.getByRole('status');
   await expect(status).toContainText('Ready', { timeout: 60000 });
   const proof = JSON.parse((await status.getAttribute('data-projectile-clocks'))!);

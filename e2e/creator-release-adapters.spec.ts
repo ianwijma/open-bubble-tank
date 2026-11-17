@@ -1,6 +1,6 @@
 import { test, expect, type Page } from '@playwright/test';
 import { readFileSync } from 'node:fs';
-import reference from '../tests/fixtures/creator-release-reference.json' with { type: 'json' };
+import reference from '../tests/fixtures/creator-release.json' with { type: 'json' };
 import type { TankDesign, TankPart } from '../src/game/core/types';
 import { readCreatorDesign, readDisplayedCreatorDesign } from './helpers/creator';
 import { waitForMainMenu } from './helpers/main-menu';
@@ -11,7 +11,7 @@ const snapshot = (dpr: number, name: string): TankPart[] =>
 
 async function openCreator(page: Page, parts: TankPart[]) {
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'My tanks', exact: true }).click();
   await page.getByLabel('Import tank design').setInputFiles({
@@ -54,7 +54,7 @@ async function openCreator(page: Page, parts: TankPart[]) {
   return { stage, move, marquee };
 }
 
-test(`mock browser cancellation and keyboard range adapters preserve marquee selection`, async ({
+test(`browser cancellation and keyboard range adapters preserve marquee selection`, async ({
   page,
 }) => {
   const errors: string[] = [];
@@ -92,9 +92,7 @@ test(`mock browser cancellation and keyboard range adapters preserve marquee sel
   expect(errors).toEqual([]);
 });
 
-test(`mock accepted center no-op after marquee retains its original Undo entry`, async ({
-  page,
-}) => {
+test(`accepted center no-op after marquee retains its earlier Undo entry`, async ({ page }) => {
   const { stage, move, marquee } = await openCreator(page, snapshot(1, 'placed-pair'));
   await page.mouse.click(stage.x + 145.95, stage.y + 221.7);
   await expect(page.getByText('Selected parts (2)', { exact: true })).toBeVisible();

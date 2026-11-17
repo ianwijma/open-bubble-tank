@@ -8,7 +8,7 @@ import { AVATARS, STARTER } from '../src/game/data/catalog';
 import { World } from '../src/game/simulation/world';
 import { Random } from '../src/game/core/math';
 
-test('fresh source fallback names match every recovered class/tier, including the level-two reference capture', () => {
+test('fresh fallback names match every class/tier, including the level-two case', () => {
   const names = [
     ['Infiltrator', 'Sturdy', null, null, null, null],
     ['Nimble', 'Heavy Seeker', 'Punisher', null, null, null],
@@ -67,7 +67,7 @@ test('GetDefaultTank takes the last exact local avatar, never under-budget or mi
   expect(defaultUpgradeTank([STARTER], 1, 0)).toBeNull();
 });
 
-test('adjacent slots retain source class order and offline fallback consumes preference rolls without randomizing defaults', () => {
+test('adjacent slots keep class order and offline fallback consumes preference rolls without randomizing defaults', () => {
   expect(upgradeClasses(1)).toEqual([1, 2]);
   expect(upgradeClasses(3)).toEqual([2, 3, 4]);
   expect(upgradeClasses(6)).toEqual([5, 6]);

@@ -25,7 +25,7 @@ const design: TankDesign = {
 };
 function setup() {
   const world = new World([], [], 47),
-    pack = new AssetPack('mock');
+    pack = new AssetPack();
   Object.assign(pack, {
     sprites: new Map((metadata.sprites as SpriteInfo[]).map((s) => [s.id, s])),
   });
@@ -38,7 +38,7 @@ function art(world: World, frames: number) {
   for (let i = 0; i < frames; i++) world.advanceArtwork();
 }
 
-test('source Wiggle root windows continue through actual departure, cached absence and revisit', () => {
+test('Wiggle root windows continue through departure, cached absence and revisit', () => {
   const { world, make, pose } = setup(),
     home = world.field,
     tank = make();

@@ -11,17 +11,8 @@ import {
   enemyStatFromHandle,
   type EnemyStat,
 } from '../../src/game/core/creator-enemy-stats';
-import type { AssetPack } from '../../src/game/assets/asset-pack';
 
-function ControlsFixture({
-  pack,
-  host,
-  controlsHost,
-}: {
-  pack: AssetPack;
-  host: HTMLElement;
-  controlsHost: HTMLElement;
-}) {
+function ControlsFixture({ host, controlsHost }: { host: HTMLElement; controlsHost: HTMLElement }) {
   const [checked, setChecked] = useState(true),
     [undo, setUndo] = useState(false),
     [scale, setScale] = useState(1),
@@ -53,13 +44,12 @@ function ControlsFixture({
   };
   return (
     <>
-      <div className="creator stage-background" data-assets={pack.mode}>
+      <div className="creator stage-background">
         {CREATOR_CONTROLS.controls.map((c) => {
           const direction = c.name === 'Left_mc' ? -1 : c.name === 'Right_mc' ? 1 : 0;
           return (
             <CreatorButton
               key={c.name}
-              pack={pack}
               name={c.name}
               label={labels[c.name]}
               checked={c.name === 'SymmetricMode_mc' ? checked : undefined}
@@ -93,7 +83,6 @@ function ControlsFixture({
           return (
             <CreatorSlider
               key={layout.name}
-              pack={pack}
               layout={layout}
               label={resize ? 'Part scale' : 'Part rotation'}
               value={resize ? scale : rotation}
@@ -125,7 +114,6 @@ function ControlsFixture({
           return (
             <CreatorSlider
               key={layout.name}
-              pack={pack}
               layout={layout}
               label={`Fixture enemy ${key}`}
               value={enemy[key]}
@@ -195,7 +183,7 @@ function ControlsFixture({
     </>
   );
 }
-export function showCreatorControls(pack: AssetPack, host: HTMLElement) {
+export function showCreatorControls(host: HTMLElement) {
   for (const name of [
     'controlClicks',
     'holdStarts',
@@ -211,7 +199,7 @@ export function showCreatorControls(pack: AssetPack, host: HTMLElement) {
   const root = createRoot(host);
   root.render(
     <StrictMode>
-      <ControlsFixture pack={pack} host={host} controlsHost={controlsHost} />
+      <ControlsFixture host={host} controlsHost={controlsHost} />
     </StrictMode>,
   );
   return () => {

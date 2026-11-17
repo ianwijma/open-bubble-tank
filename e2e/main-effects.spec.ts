@@ -1,13 +1,13 @@
 import { expect, test } from './helpers/frame-paced-test';
 
-test(`mock Main moves canvas and interface together and flashes fade after viewport unmount`, async ({
+test(`Main moves canvas and interface together and flashes fade after viewport unmount`, async ({
   page,
 }) => {
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('http://127.0.0.1:3102');
   await page.getByLabel('Fixture').selectOption('main-effects');
-  await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
   const status = page.getByRole('status');
   await expect(status).toContainText('Ready', { timeout: 60000 });
   await expect(page.locator('.game-canvas canvas')).toBeVisible();
@@ -92,14 +92,12 @@ test(`mock Main moves canvas and interface together and flashes fade after viewp
   expect(errors).toEqual([]);
 });
 
-test(`mock upgrade capture includes current flash paint before RAF presentation`, async ({
-  page,
-}) => {
+test(`upgrade capture includes current flash paint before RAF presentation`, async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('http://127.0.0.1:3102');
   await page.getByLabel('Fixture').selectOption('main-effects');
-  await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
   const status = page.getByRole('status');
   await expect(status).toContainText('Ready', { timeout: 60000 });
   await expect(page.locator('.game-canvas canvas')).toBeVisible();

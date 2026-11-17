@@ -4,7 +4,7 @@ import type { Bounds, SpriteInfo } from '../src/game/assets/asset-pack';
 import { StatusPlayback } from '../src/game/assets/status-playback';
 import { buildDisplayList } from '../src/game/assets/display-list';
 import type { ScriptBoundsSource } from '../src/game/assets/projectile-bounds';
-import { SwfClip } from '../src/game/assets/swf-clip';
+import { ArtClip } from '../src/game/assets/art-clip';
 import { tankScriptBounds, type TankBoundsClips } from '../src/game/assets/tank-bounds';
 import { STARTER, partById } from '../src/game/data/catalog';
 import attachmentGeometry from '../src/game/data/attachment-geometry.json';
@@ -40,7 +40,7 @@ function setup() {
     childAge: () => 1,
   };
   const pose = (id: number) =>
-    new SwfClip(id, { spriteInfo: () => undefined, displayList: () => [] });
+    new ArtClip(id, { spriteInfo: () => undefined, displayList: () => [] });
   const clips: TankBoundsClips = {
     part: () => undefined,
     status: () => pose(STATUS_ART.jam),
@@ -113,7 +113,7 @@ test('retained legacy shield scalars cannot expand Script bounds after physical 
   expect(tankScriptBounds(tank, source, clips)!.width).toBe(52);
 });
 
-test('forcefield measurement includes both its uncut clip and retained original mask', () => {
+test('forcefield measurement includes both its uncut clip and retained mask', () => {
   const { tank, source, clips } = setup();
   tank.forcefieldAttached = true;
   tank.displayChildren.push('forcefield');

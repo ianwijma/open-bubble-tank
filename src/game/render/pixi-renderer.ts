@@ -7,7 +7,7 @@ import type { Field, Pickup, Settings, Tank } from '../core/types';
 import type { World } from '../simulation/world';
 import { whipSamples } from '../simulation/whip';
 import { drawMockProjectile } from './mock-projectile-view';
-import { SwfTextures } from './swf-textures';
+import { ArtTextures } from './art-textures';
 import { MinimapView } from './minimap-view';
 import { HudView } from './hud-view';
 import { EditSliderView } from './edit-slider-view';
@@ -45,7 +45,7 @@ export class GameRenderer {
   private tacticalHud?: TacticalHudView;
   overlay = new Graphics();
   screenEffects = new Container();
-  private rasterTextures = new SwfTextures();
+  private rasterTextures = new ArtTextures();
   private ownedTextures: Texture[] = [];
   private tankNodes = new Map<Tank, TankView>();
   private actorLayers = new Map<Field, Container>();

@@ -3,13 +3,13 @@ import { shieldTurretCaller } from '../tests/fixtures/shield-turret-caller';
 import { waitForMainMenu } from './helpers/main-menu';
 import { readCreatorDesign, saveCreator } from './helpers/creator';
 
-test(`mock valid Shield Turrets creator save enables the optional local-enemy caller`, async ({
+test(`valid Shield Turrets creator save enables the optional local-enemy caller`, async ({
   page,
 }) => {
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Play', exact: true }).click();
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'My tanks', exact: true }).click();
   await page.getByLabel('Import tank design').setInputFiles({
@@ -19,7 +19,7 @@ test(`mock valid Shield Turrets creator save enables the optional local-enemy ca
   });
   await page.getByRole('button', { name: 'Edit', exact: true }).click();
   const design = await readCreatorDesign(page);
-  expect(design.classId).toBe(3); // Actual mock/native body pixel measurement.
+  expect(design.classId).toBe(3); // Measured from the body artwork's pixels.
   expect(design.parts.at(-1)!.type).toBe(4032);
   // The unit proof validates this exact layout/class and its manual stats.
   expect(design.parts).toEqual(shieldTurretCaller().parts);

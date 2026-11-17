@@ -7,7 +7,7 @@ import { GameRenderer } from '../../src/game/render/pixi-renderer';
 import { createTank } from '../../src/game/simulation/tank';
 import { World, emptyInput } from '../../src/game/simulation/world';
 
-/** Native alpha contact and the rendered bubble disappear in the same collection phase. */
+/** Alpha contact and the rendered bubble disappear in the same collection phase. */
 export async function showPickupProof(pack: AssetPack, host: HTMLElement) {
   const world = new World([], [], 1),
     renderer = new GameRenderer(pack);

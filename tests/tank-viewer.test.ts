@@ -68,7 +68,7 @@ test('viewer action errors preserve specific gun/class reason ordering and disti
   expect(viewerEditError(both, limits)).toBe('Exceeds your Gun Points, Class');
   expect(viewerEditWarning(both, limits)).toBe('Exceeds your Class, Gun, or Bubble Points');
 });
-test('viewer missing-part errors are separate from budget failures and preserve source phase strings', () => {
+test('viewer missing-part errors are separate from budget failures and preserve phase strings', () => {
   const limits = { level: 0, maxClass: 1, gunPoints: 999 };
   expect(viewerEditError(tank([2002]), limits)).toBe('Do not have all the parts for this tank');
   const both = tank(Array(3).fill(2002));
@@ -110,7 +110,7 @@ test('viewer stored unlock lists override tier fallback and never lock decorativ
     'Do not have all the parts for this tank',
   );
 });
-test('viewer summaries preserve first-name occurrence order, source counts and trailing newline', () => {
+test('viewer summaries preserve first-name occurrence order, part counts and trailing newline', () => {
   expect(viewerPartSummary(tank([4001, 1001, 4001, 6003]))).toBe(
     '2 x Basic Cannon\n1 x Small Bubble\n1 x Skittish\n',
   );

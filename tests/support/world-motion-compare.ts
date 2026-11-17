@@ -1,5 +1,5 @@
 /** Candidate only: consumes already frozen words. Never produces an oracle. */
-import original from '../fixtures/world-motion-original.json';
+import fixture from '../fixtures/world-motion.json';
 import { World, emptyInput } from '../../src/game/simulation/world';
 import {
   displayMatrixPoint,
@@ -9,20 +9,20 @@ import {
 } from '../../src/game/core/display-transform';
 import type { Vec } from '../../src/game/core/types';
 
-type Row = (typeof original.samples)[number];
+type Row = (typeof fixture.samples)[number];
 export function values(row: Row): Record<string, number> {
   return Object.fromEntries(
     row.words.map(([hi, lo], i) => {
       const bytes = new DataView(new ArrayBuffer(8));
       bytes.setUint32(0, hi);
       bytes.setUint32(4, lo);
-      return [original.fields[i], bytes.getFloat64(0)];
+      return [fixture.fields[i], bytes.getFloat64(0)];
     }),
   );
 }
 export function measured(phase: string, age: number, role: string) {
-  const row = original.samples.find((s) => s.phase === phase && s.age === age && s.role === role);
-  if (!row) throw new Error(`Missing original ${phase}/${age}/${role}`);
+  const row = fixture.samples.find((s) => s.phase === phase && s.age === age && s.role === role);
+  if (!row) throw new Error(`Missing measured sample ${phase}/${age}/${role}`);
   return values(row);
 }
 const own = (v: Record<string, number>): DisplayMatrix => ({

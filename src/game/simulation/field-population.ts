@@ -1,4 +1,4 @@
-import type { SwfClip } from '../assets/swf-clip';
+import type { ArtClip } from '../assets/art-clip';
 import type { Field, Pickup, Tank } from '../core/types';
 import type { FieldInstanceRead } from './field-display';
 import { isArtwork, type EffectClip } from './registered-effects';
@@ -36,7 +36,7 @@ export interface PickupFieldPopulation extends PositionedPopulation {
   readonly instance: Pickup;
   readonly symbol: number;
   /** The existing owner supplies this retained tree; reading never initializes it. */
-  readonly pose: SwfClip;
+  readonly pose: ArtClip;
 }
 export interface EffectFieldPopulation extends PositionedPopulation {
   readonly kind: 'effect' | 'carrier';
@@ -71,7 +71,7 @@ function transform(source: {
  * Merge the actual wrapper/actor/pickup/engine owners at their physical slots.
  * Run arrays, map coordinates, UIDs, dead/alpha flags and request contexts never
  * determine membership. Read again after any callback that can mutate displays.
- * This supplies population only: consumers still need qualified leaf geometry,
+ * This supplies population only: consumers still need resolved leaf geometry,
  * per-instance artwork, depth masks and separate hit/Script-width arithmetic.
  */
 export function readFieldPopulation(world: World, field: Field): AuthoredFieldPopulation {

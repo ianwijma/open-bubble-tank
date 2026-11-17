@@ -4,14 +4,14 @@ const geometry: typeof import('../src/game/data/main-menu-geometry.json') = JSON
   readFileSync(new URL('../src/game/data/main-menu-geometry.json', import.meta.url), 'utf8'),
 );
 
-test(`mock menu picks shape contours, dispatches release actions once and retains keyboard access`, async ({
+test(`menu picks shape contours, dispatches release actions once and retains keyboard access`, async ({
   page,
 }) => {
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('http://127.0.0.1:3102');
   await page.getByLabel('Fixture').selectOption('main-menu');
-  await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
   const menu = page.locator('.main-menu'),
     stage = page.locator('#stage');
   await expect(menu).toHaveAttribute('data-menu-age', '0', { timeout: 60000 });

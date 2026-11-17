@@ -1,16 +1,13 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
-import type { AssetPack } from '@/game/assets/asset-pack';
 import { CREATOR_GUIDE, advanceCreatorGuide } from '@/game/core/creator-guide';
 import { CreatorPrimitives } from './creator-controls';
 
 export function CreatorGuide({
-  pack,
   seen,
   onStart,
   onClose,
 }: {
-  pack: AssetPack;
   seen: boolean;
   onStart?: () => void;
   onClose: () => void;

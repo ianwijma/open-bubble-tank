@@ -2,11 +2,11 @@ import { expect, test } from '@playwright/test';
 import { dropPreview, readCreatorDesign } from './helpers/creator';
 import { waitForMainMenu } from './helpers/main-menu';
 
-test('mock creator previews animate Skittish and Phasing before and after placement', async ({
+test('creator previews animate Skittish and Phasing before and after placement', async ({
   page,
 }) => {
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'Enemy tank creator' }).click();
   await page.getByRole('button', { name: 'Behavior', exact: true }).click();

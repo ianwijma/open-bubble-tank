@@ -47,7 +47,7 @@ test('partial last page stays valid and direct last-tank detail refresh changes 
   state = navigateViewer(state, 9, { type: 'page', direction: 1 });
   expect([state.offset, state.page, state.next]).toEqual([8, 3, false]);
 });
-test('detail first/previous/next use the source one-tank stride and explicit final writes', () => {
+test('detail first/previous/next use a one-tank stride and explicit final writes', () => {
   let state = navigateViewer(initialViewerNavigation(5), 5, { type: 'detail', index: 4 });
   state = navigateViewer(state, 5, { type: 'page', direction: -1 });
   expect([state.offset, state.next]).toEqual([3, true]);

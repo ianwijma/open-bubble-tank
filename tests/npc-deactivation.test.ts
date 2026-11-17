@@ -194,7 +194,7 @@ test('allied boundary exit bypasses protection, drops then pops and runs primary
 });
 
 for (const [name, design] of Object.entries(allies))
-  test(`recovered ${name} summon blueprint plays pop on an explicit boundary exit`, () => {
+  test(`${name} summon blueprint plays pop on an explicit boundary exit`, () => {
     const { world } = setup('ally', true, 0);
     const ally = createTank(world.nextId(), design, 'ally', 440, 0, 15, 15, world);
     world.allies = [ally];

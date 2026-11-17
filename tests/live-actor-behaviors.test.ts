@@ -32,7 +32,7 @@ function scenario(ids: number[], { x = 0, y = 0, speed = 2 } = {}) {
   return { world, tank };
 }
 
-test('World translates with preceding rotation and source twips before updating behavior destinations', () => {
+test('World translates with preceding rotation and twips before updating behavior destinations', () => {
   const { world, tank } = scenario([6001]);
   world.player.x = 300;
   setFieldFixtureLayout(world);
@@ -230,7 +230,7 @@ test('allied 7001 and 4001 primary weapons keep authored order before behavior w
   expect(ally.movement.swarmPoint).toEqual({ x: 100, y: 0 });
 });
 
-test('source category 7001 registers only on allied actors while authored visuals remain', () => {
+test('category 7001 registers only on allied actors while authored visuals remain', () => {
   const parts = [7001, 4001, 6001].map((type, i) => ({ ...STARTER.parts[1], key: `${i}`, type }));
   const design = { ...STARTER, avatar: false, parts };
   const enemy = createTank(10, design, 'enemy'),

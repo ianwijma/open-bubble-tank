@@ -34,11 +34,11 @@ export function AssetGate({ onReady }: { onReady: (pack: AssetPack) => void }) {
         <BubbleText size={40}>soap tank</BubbleText>
       </div>
       <div className="asset-panel">
-        <div className="eyebrow">BRING YOUR BUBBLES</div>
+        <div className="eyebrow">ARENA SHOOTER</div>
         <h1>Build a tank out of bubbles.</h1>
         {progress === null ? (
-          <button className="mock-button" disabled={!ready} onClick={() => void load()}>
-            Play with mock assets <span aria-hidden="true">→</span>
+          <button className="play-button" disabled={!ready} onClick={() => void load()}>
+            Play <span aria-hidden="true">→</span>
           </button>
         ) : (
           <div className="asset-progress" role="status">
@@ -47,7 +47,7 @@ export function AssetGate({ onReady }: { onReady: (pack: AssetPack) => void }) {
               <small>%</small>
             </div>
             <p>{label}</p>
-            <progress max="1" value={progress} aria-label="Asset extraction progress" />
+            <progress max="1" value={progress} aria-label="Loading progress" />
           </div>
         )}
         {error ? (

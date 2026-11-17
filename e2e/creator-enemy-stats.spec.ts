@@ -21,13 +21,13 @@ async function confirmationPixel(page: Page) {
     `data:image/png;base64,${png.toString('base64')}`,
   );
 }
-test(`mock enemy info retains source defaults, quadratic sliders, confirmation and manual save`, async ({
+test(`enemy info keeps its defaults, quadratic sliders, confirmation and manual save`, async ({
   page,
 }) => {
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'Enemy tank creator', exact: true }).click();
   expect(await snapshot(page)).toMatchObject({ life: 20, reward: 20, speed: 2, parts: [] });
@@ -154,12 +154,10 @@ test(`mock enemy info retains source defaults, quadratic sliders, confirmation a
   expect(errors).toEqual([]);
 });
 
-test('mock early confirmation response resumes opening and retains the source frame12 stop', async ({
-  page,
-}) => {
+test('early confirmation response resumes opening and keeps the frame12 stop', async ({ page }) => {
   await page.clock.install({ time: new Date('2024-12-10T08:00:00') });
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'Enemy tank creator', exact: true }).click();
   await page.getByRole('button', { name: 'Enemy Info', exact: true }).click();

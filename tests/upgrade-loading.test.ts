@@ -21,7 +21,7 @@ function install(menu: UpgradeLoadingState<NamedTank>, id: UpgradeSlotId, data =
   return receipt;
 }
 
-describe('UpgradeLoadingState source slot initialization (_-96 / SecondSetup)', () => {
+describe('UpgradeLoadingState slot initialization (constructor / second setup)', () => {
   test('constructor preserves three authored identities before the index0 sentinel exists', () => {
     const menu = model();
     expect(menu.initialized).toBe(false);
@@ -110,7 +110,7 @@ describe('UpgradeLoadingState source slot initialization (_-96 / SecondSetup)', 
   });
 });
 
-describe('data receipt versus successful source installation (_-aG AS489–539)', () => {
+describe('data receipt versus successful installation (attachment completion)', () => {
   test('data and its actual class precede preview/field/listener success and counter decrement', () => {
     const menu = model();
     menu.secondSetup(3);
@@ -190,7 +190,7 @@ describe('data receipt versus successful source installation (_-aG AS489–539)'
   });
 });
 
-describe('retained unsaved creator return and ordered removal (_-Zo / SecondSetup / _-aG)', () => {
+describe('retained unsaved creator return and ordered removal (creator return / second setup / attachment completion)', () => {
   test.each([
     [[], [0, 0, 0]],
     [[1], [0, 90.5, 90.5]],
@@ -213,7 +213,7 @@ describe('retained unsaved creator return and ordered removal (_-Zo / SecondSetu
       [-181, 0, 181],
     ],
   ] as const)(
-    'CLICK slots %j retain source-order positions %j, including detached named cards',
+    'CLICK slots %j keep their ordered positions %j, including detached named cards',
     (available, expectedX) => {
       const menu = model();
       menu.secondSetup(3);

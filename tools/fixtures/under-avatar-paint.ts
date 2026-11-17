@@ -4,7 +4,7 @@ import { GameRenderer } from '../../src/game/render/pixi-renderer';
 import { DEFAULT_SETTINGS } from '../../src/game/core/constants';
 import type { Field } from '../../src/game/core/types';
 import type { FieldUnderAvatarView } from '../../src/game/render/field-under-avatar-view';
-import original from '../../tests/fixtures/under-avatar-paint-original.json';
+import fixture from '../../tests/fixtures/under-avatar-paint.json';
 
 export async function showUnderAvatarPaint(pack: AssetPack, host: HTMLElement) {
   return { game: await gameControls(pack, host) };
@@ -25,7 +25,7 @@ async function gameControls(pack: AssetPack, host: HTMLElement) {
     cv.height = 450;
     const ctx = cv.getContext('2d')!;
     ctx.drawImage(renderer.app.canvas, 0, 0);
-    return original.points.map(([dx, dy]) => [...ctx.getImageData(x + dx, y + dy, 1, 1).data]);
+    return fixture.points.map(([dx, dy]) => [...ctx.getImageData(x + dx, y + dy, 1, 1).data]);
   };
   const results = [];
   let stable = true,
@@ -36,10 +36,10 @@ async function gameControls(pack: AssetPack, host: HTMLElement) {
   let previous: FieldUnderAvatarView | undefined;
   let exteriorPaint = '';
   try {
-    for (const [i, sample] of original.samples.entries()) {
+    for (const [i, sample] of fixture.samples.entries()) {
       if (sample.mode !== 'masked') continue;
       const world = new World([], [], 172, undefined, undefined, [], () => ({
-        qualification: 'qualified',
+        resolution: 'resolved',
         scaleX: 1,
         scaleY: 1,
       }));

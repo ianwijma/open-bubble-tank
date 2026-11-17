@@ -13,7 +13,7 @@ function born(amount = 6) {
   return world;
 }
 
-test('SpawnLifeBubbles attaches original objects before Setup and Run append, then forces collection', () => {
+test('SpawnLifeBubbles attaches the spawned objects before Setup and Run append, then forces collection', () => {
   const world = new World([], [], 31);
   const seen: unknown[] = [];
   const attach = world.pickupDisplays.attach.bind(world.pickupDisplays);
@@ -103,7 +103,7 @@ test('addChild reorders/reparents actual objects and duplicate UIDs do not alias
   expect(world.pickupDisplays.read(a)?.callbackField).toBe(old);
 });
 
-test('collection explicitly removes the actual child and retains its original detached lifetime', () => {
+test('collection explicitly removes the actual child and keeps its detached lifetime', () => {
   const world = born(),
     [a, b] = world.pickups;
   const clip = world.pickupDisplays.read(a)!.clip;
@@ -137,7 +137,7 @@ test('bulk cleanup walks the Run vector; array-removed display-only children sur
   expect(world.pickupDisplays.read(b)?.parent).toBeNull();
 });
 
-test('stale callbacks retain source splice-before-removeChild failure instead of removing a new parent', () => {
+test('stale callbacks keep the splice-before-removeChild failure instead of removing a new parent', () => {
   const world = born(1),
     old = world.field,
     a = world.pickups[0];
@@ -150,7 +150,7 @@ test('stale callbacks retain source splice-before-removeChild failure instead of
   expect(children(world, next)).toEqual([a]);
 });
 
-test('playback retains source roots and animated poses without consuming gameplay RNG', () => {
+test('playback keeps its roots and animated poses without consuming gameplay RNG', () => {
   const world = born(55);
   const clips = world.pickups.map((p) => world.pickupDisplays.read(p)!.clip);
   expect(clips.map((c) => [c.symbol, c.totalFrames, c.registersFrame1])).toEqual([
@@ -162,7 +162,6 @@ test('playback retains source roots and animated poses without consuming gamepla
     expect(clip.playback.status).toBe('retained');
     expect(clip.playback.currentFrame).toBe(1);
     expect(clip.playback.entropy).toBe('host-artwork');
-    expect(clip.playback.globalSourceEntropy).toBe('unproved');
   }
   const rng = world.rng.state;
   world.pause();

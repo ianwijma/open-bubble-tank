@@ -1,5 +1,5 @@
 'use client';
-import { useLayoutEffect, useRef } from 'react';
+import { useLayoutEffect, useRef, type RefObject } from 'react';
 import { canonicalHotkey } from '@/game/core/hotkeys';
 export function BubbleText({
   children,
@@ -94,6 +94,34 @@ export function Icon({
     </svg>
   );
 }
+/**
+ * Disabling the focused control while a dialog is busy drops focus to BODY,
+ * where the dialog's keys (Escape, Tab) no longer arrive. The dialog holds
+ * focus while busy and hands it back to that control afterwards.
+ */
+export function useBusyFocus(root: RefObject<HTMLElement | null>, busy: boolean) {
+  const held = useRef<HTMLElement | null>(null);
+  useLayoutEffect(() => {
+    const node = root.current;
+    if (!node) return;
+    const active = document.activeElement;
+    if (busy) {
+      held.current = active instanceof HTMLElement && node.contains(active) ? active : null;
+      if (!active || active === document.body || active.matches(':disabled'))
+        node.focus({ preventScroll: true });
+      return;
+    }
+    const control = held.current;
+    held.current = null;
+    if (
+      active === node &&
+      control?.isConnected &&
+      node.contains(control) &&
+      !control.matches(':disabled')
+    )
+      control.focus({ preventScroll: true });
+  }, [root, busy]);
+}
 export function Dialog({
   title,
   children,
@@ -103,6 +131,7 @@ export function Dialog({
   onShortcutClose,
   active = true,
   scrimClassName = '',
+  busy = false,
 }: {
   title: string;
   children: React.ReactNode;
@@ -112,6 +141,8 @@ export function Dialog({
   onShortcutClose?: () => void;
   active?: boolean;
   scrimClassName?: string;
+  /** While true, controls inside may be disabled; focus stays in the dialog. */
+  busy?: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   // Swapping dialogs must transfer keyboard focus in the same DOM commit.
@@ -122,6 +153,7 @@ export function Dialog({
     ref.current?.focus();
     return () => previous?.focus({ preventScroll: true });
   }, [active]);
+  useBusyFocus(ref, busy);
   return (
     <div
       className={`modal-scrim ${scrimClassName}`}

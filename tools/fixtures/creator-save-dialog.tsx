@@ -3,10 +3,9 @@ import { createRoot } from 'react-dom/client';
 import { CreatorSaveDialog } from '../../src/components/creator-save-dialog';
 import { defaultProfile, submitCreatedTank } from '../../src/game/services/profile';
 import { STARTER } from '../../src/game/data/catalog';
-import type { AssetPack } from '../../src/game/assets/asset-pack';
 import type { TankDesign } from '../../src/game/core/types';
 
-export function showCreatorSaveDialog(pack: AssetPack, host: HTMLElement) {
+export function showCreatorSaveDialog(host: HTMLElement) {
   function Fixture() {
     const profile = useRef(defaultProfile());
     const [dialog, setDialog] = useState<{
@@ -29,7 +28,6 @@ export function showCreatorSaveDialog(pack: AssetPack, host: HTMLElement) {
         <output data-testid="fixture-exits">{exits}</output>
         {dialog ? (
           <CreatorSaveDialog
-            pack={pack}
             kind={dialog.kind}
             tank={dialog.tank}
             initialName={dialog.tank.name}

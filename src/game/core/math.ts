@@ -42,9 +42,3 @@ export class Random {
     return items[items.length - 1];
   }
 }
-export function segmentDistance(p: Vec, a: Vec, b: Vec) {
-  const dx = b.x - a.x,
-    dy = b.y - a.y;
-  const t = clamp(((p.x - a.x) * dx + (p.y - a.y) * dy) / (dx * dx + dy * dy || 1), 0, 1);
-  return Math.hypot(p.x - a.x - t * dx, p.y - a.y - t * dy);
-}

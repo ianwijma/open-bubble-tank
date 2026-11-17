@@ -1,5 +1,5 @@
 import type { RetainedEffectPlayback } from '../simulation/effect-playback';
-import type { SwfClip } from '../assets/swf-clip';
+import type { ArtClip } from '../assets/art-clip';
 
 export interface Vec {
   x: number;
@@ -241,7 +241,7 @@ export interface Projectile extends Vec {
   partType?: number;
   artFrame?: number;
   /** Pure retained display-list pose, shared by stage playback, painting and contact. */
-  artPose?: SwfClip;
+  artPose?: ArtClip;
   artAlpha?: number;
   wobbleFrequency?: number;
   wobbleAmplitude?: number;
@@ -286,7 +286,7 @@ export interface Pickup extends Vec {
 }
 export interface Effect extends Vec {
   uid: number;
-  kind: 'pop' | 'burst' | 'shield' | 'warp' | 'hit' | 'smoke' | 'native';
+  kind: 'pop' | 'burst' | 'shield' | 'warp' | 'hit' | 'smoke' | 'clip';
   age: number;
   duration: number;
   radius: number;
@@ -297,7 +297,7 @@ export interface Effect extends Vec {
   scale?: number;
   randomRotation?: boolean;
   line?: Vec;
-  /** Actual retained currentFrame for supported native roots; legacy mock override otherwise. */
+  /** Retained currentFrame for clip effects; an explicit override for procedural effects. */
   readonly frame?: number;
   readonly playback?: RetainedEffectPlayback;
   blendMode?: 'layer';

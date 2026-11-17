@@ -9,7 +9,7 @@ Goals, in priority order:
 3. A community forms around it: people build tanks, share them, and fight each other's designs.
 4. Gameplay is improved where the original is awkward. Soap Tank is not bound to reproduce classic.
 
-Soap Tank uses its own artwork and sound, and never reads the original game file. It is free to break with classic: classic saves and tank codes do not carry over. It lives at `soaptank.net`.
+Soap Tank uses its own artwork and sound, and never reads the original game file. It is free to break with classic: saves and tank codes do not carry over. Until the new tank code exists, the game still reads the current code format. It lives at `soaptank.net`.
 
 Out of scope: payments of any kind. The workshop is a free gallery.
 

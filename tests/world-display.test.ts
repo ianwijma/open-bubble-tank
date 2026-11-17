@@ -79,7 +79,7 @@ test('superseded next siblings stay rooted at their actual last poses', () => {
   expect(world.worldDisplays.read(orphan, 'top').rooted).toBe(true);
 });
 
-test('collapse binds original repeated setters to siblings while screen remains independent', () => {
+test('collapse binds repeated setters to siblings while screen remains independent', () => {
   const world = new World([], [], 4),
     field = world.currentWrapper;
   world.fieldDisplays.moveCurrent(field, { x: 140, y: -70 });

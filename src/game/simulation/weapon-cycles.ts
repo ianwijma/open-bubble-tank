@@ -1,7 +1,7 @@
 import type { GunState } from '../core/types';
 import { actorAngle } from './actor-movement';
 
-/** Symbol701 flips after 100 calls plus a separate switch frame. */
+/** The enemy Rotating Machine Gun flips after 100 calls plus a separate switch frame. */
 export function advanceRotatingCycle(gun: GunState) {
   const cycle = (gun.rotatingCycle ??= { remaining: 100, active: false });
   if (cycle.remaining > 0) cycle.remaining--;
@@ -13,7 +13,7 @@ export function advanceRotatingCycle(gun: GunState) {
   return cycle.active;
 }
 
-/** Symbol25 trigger clock: 120-call delay, then one shot every five calls. */
+/** Machine Gun trigger clock: 120-call delay, then one shot every five calls. */
 export function triggerSuppressionCycle(gun: GunState) {
   const cycle = (gun.suppressionCycle ??= { delay: 120, spacing: 4 });
   if (--cycle.delay > 0) return false;

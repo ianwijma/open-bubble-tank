@@ -1,14 +1,14 @@
 import { expect, test } from 'bun:test';
 import { AssetPack, type SpriteInfo } from '../src/game/assets/asset-pack';
-import type { SwfClip } from '../src/game/assets/swf-clip';
+import type { ArtClip } from '../src/game/assets/art-clip';
 import type { Tank, TankDesign } from '../src/game/core/types';
 import { STARTER } from '../src/game/data/catalog';
 import metadata from '../src/game/data/mock-part-timelines.json';
 import { createTank } from '../src/game/simulation/tank';
 import { removeTankChild } from '../src/game/simulation/tank-display';
 import { World, emptyInput } from '../src/game/simulation/world';
-import first from './fixtures/actor-clock-original-a.json';
-import second from './fixtures/actor-clock-original-b.json';
+import first from './fixtures/actor-clock-a.json';
+import second from './fixtures/actor-clock-b.json';
 import { rows } from './support/actor-clock-rows.mjs';
 
 const names = ['wiggle-negative', 'wiggle-positive', 'rotor'];
@@ -27,7 +27,7 @@ const design: TankDesign = {
 };
 function setup() {
   const world = new World([], [], 47),
-    pack = new AssetPack('mock');
+    pack = new AssetPack();
   Object.assign(pack, {
     sprites: new Map((metadata.sprites as SpriteInfo[]).map((s) => [s.id, s])),
   });
@@ -45,13 +45,13 @@ function setup() {
   const clips = (tank: Tank) => tank.design.parts.map((part) => pack.partClip(tank, part));
   return { world, pack, make, clips };
 }
-const frames = (clips: SwfClip[]) => clips.map((clip) => clip.frame);
+const frames = (clips: ArtClip[]) => clips.map((clip) => clip.frame);
 
-for (const [capture, original] of [
+for (const [capture, fixture] of [
   ['a', first],
   ['b', second],
 ] as const) {
-  const measured = rows(original.contract).filter((r) => names.includes(r.name));
+  const measured = rows(fixture.contract).filter((r) => names.includes(r.name));
   const expected = (label: string, tick: number, phase: string) =>
     names.map((name) => {
       const values = [
@@ -77,7 +77,7 @@ for (const [capture, original] of [
         roots = clips(before);
       let expectedRng = world.rng.state;
       let inside: Tank | undefined,
-        insideRoots: SwfClip[] = [],
+        insideRoots: ArtClip[] = [],
         tick = 0;
       const actual: unknown[] = [],
         oracle: unknown[] = [];
@@ -146,7 +146,7 @@ for (const [capture, original] of [
   }
 }
 
-test('actual Main reads entered geometry; final own Y reaches the pending frame script', () => {
+test('the world update reads entered geometry; final own Y reaches the pending frame script', () => {
   const { world, make, clips, pack } = setup(),
     tank = make(),
     roots = clips(tank);

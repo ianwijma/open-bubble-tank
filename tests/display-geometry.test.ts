@@ -6,7 +6,7 @@ import {
   type DisplayGeometryNode,
 } from '../src/game/core/display-geometry';
 import { DISPLAY_IDENTITY, type DisplayMatrix } from '../src/game/core/display-transform';
-import original from './fixtures/script-bounds-original.json';
+import fixture from './fixtures/script-bounds.json';
 
 const matrix = ([a, b, c, d, tx, ty]: number[]): DisplayMatrix => ({ a, b, c, d, tx, ty });
 const rectangle = (
@@ -31,8 +31,8 @@ const group = (
   content: { kind: 'container', children },
 });
 
-test('geometry-tree Script traversal matches all independently frozen original bounds controls', () => {
-  for (const control of original.cases) {
+test('geometry-tree Script traversal matches all independently frozen bounds controls', () => {
+  for (const control of fixture.cases) {
     const leaf = rectangle(-13919, -13919, 13919, 13919),
       tree = group([group([leaf], matrix(control.inner))], matrix(control.outer)),
       bounds = displayGeometryBounds(tree)!,
@@ -44,7 +44,7 @@ test('geometry-tree Script traversal matches all independently frozen original b
   }
 });
 
-test('overlapping depth masks use the original mutable latch rather than conjunction', () => {
+test('overlapping depth masks use a mutable latch rather than conjunction', () => {
   const mask1 = { ...rectangle(0, 0, 400, 400), depth: 1, clipDepth: 6 },
     mask2 = { ...rectangle(200, 0, 600, 400), depth: 2, clipDepth: 6 },
     target = { ...rectangle(0, 0, 1000, 1000), depth: 4 },

@@ -3,18 +3,18 @@ import type { DecoratedStatus, ShieldClip } from '../core/types';
 
 // Status effect constructors; numeric IDs come from the symbol table.
 export const STATUS_ART: Record<DecoratedStatus, number> = {
-  sticky: symbols['_-6d'],
-  stun: symbols['_-Y1'],
-  jam: symbols['_-Aa'],
-  weaken: symbols['_-It'],
+  sticky: symbols.stickyStatus,
+  stun: symbols.stunStatus,
+  jam: symbols.jamStatus,
+  weaken: symbols.weakenStatus,
 };
-export const INFECTED_ART = symbols.effect_infected;
+export const INFECTED_ART = symbols.infectedStatus;
 export const PROTECTION_ART = {
-  shield: symbols['_-BF'],
-  shieldHit: symbols['_-Ne'],
-  turretShield: symbols['_-bM'],
-  turretShieldHit: symbols['_-KJ'],
-  forcefield: symbols['main_fla.forcefieldanimation_551'],
+  shield: symbols.shield,
+  shieldHit: symbols.shieldHit,
+  turretShield: symbols.turretShield,
+  turretShieldHit: symbols.turretShieldHit,
+  forcefield: symbols.forcefield,
 };
 
 export function shieldClipSymbol(clip: ShieldClip) {

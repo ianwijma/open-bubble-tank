@@ -38,7 +38,7 @@ test('revisiting reconstructs the guide without incrementing the unique-field co
   expect(world.transit!.next.tutorial).toBe(2);
   expect(world.stats.visited).toBe(1);
 });
-test('the original guide remains stopped during idle, firing and pause, and retains its hardcoded P text', () => {
+test('the guide remains stopped during idle, firing and pause, and retains its hardcoded P text', () => {
   const world = new World([], [], 50);
   for (let i = 0; i < 800; i++) world.step({ ...emptyInput(), fire: true });
   world.pause();

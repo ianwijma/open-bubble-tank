@@ -95,9 +95,7 @@ export async function decodeTankCode(code: string): Promise<TankDesign> {
 export async function encodeTankCode(tank: TankDesign): Promise<string> {
   if (!validateDesign(tank)) throw new Error('Cannot encode an invalid tank.');
   if ([tank.name, tank.author, tank.id].some((s) => /[,;|~]/.test(s)))
-    throw new Error(
-      'Original tank codes cannot contain commas, semicolons, pipes, or tildes in names.',
-    );
+    throw new Error('Tank codes cannot contain commas, semicolons, pipes, or tildes in names.');
   const random = crypto.getRandomValues(new Uint8Array(6)),
     first = hex(random.slice(0, 3)).slice(0, 3),
     last = hex(random.slice(3)).slice(0, 3),

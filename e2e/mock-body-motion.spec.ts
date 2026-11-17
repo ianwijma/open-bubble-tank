@@ -2,28 +2,22 @@ import { waitForMainMenu } from './helpers/main-menu';
 import { expect, test } from '@playwright/test';
 import { writeFileSync } from 'node:fs';
 import { dropPreview } from './helpers/creator';
-test(`mock all20 bodies retain source motion and static base variants`, async ({ page }) => {
+test(`all20 bodies keep their motion and static base variants`, async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto('http://127.0.0.1:3102');
   await page.getByLabel('Fixture').selectOption('mock-body-motion');
-  await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
   const status = page.getByRole('status');
   await expect(status).toContainText('Ready', { timeout: 60000 });
   const proof = JSON.parse((await status.getAttribute('data-mock-body-motion'))!);
   expect(proof.results).toHaveLength(20);
   for (const part of proof.results) {
-    expect(
-      part.frames.every((f: { timelineEqual: boolean }) => f.timelineEqual),
-      String(part.id),
-    ).toBe(true);
-    for (const frame of part.frames)
-      expect(frame.iou, `${part.id} age${frame.age}`).toBeGreaterThan(0.85);
-    const hashes = new Set(part.frames.map((f: { hashes: number[] }) => f.hashes[1]));
+    const hashes = new Set(part.frames.map((f: { hash: number }) => f.hash));
     if ([1005, 1105, 1205].includes(part.id)) expect(hashes.size).toBe(1);
     else expect(hashes.size, String(part.id)).toBeGreaterThan(1);
   }
-  for (const ratios of proof.opacity) for (const ratio of ratios) expect(ratio).toBeCloseTo(0.5, 1);
+  for (const ratio of proof.opacity) expect(ratio).toBeCloseTo(0.5, 1);
   const png = await page
     .locator('#stage canvas')
     .evaluate((c) => (c as HTMLCanvasElement).toDataURL());
@@ -31,9 +25,9 @@ test(`mock all20 bodies retain source motion and static base variants`, async ({
   expect(errors).toEqual([]);
 });
 
-test('mock creator body previews and placed clusters stay animated', async ({ page }) => {
+test('creator body previews and placed clusters stay animated', async ({ page }) => {
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'Enemy tank creator' }).click();
   await page.getByLabel('Symmetric Mode').uncheck();

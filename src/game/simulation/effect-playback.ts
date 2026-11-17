@@ -1,6 +1,6 @@
 import type { SpriteInfo } from '../assets/asset-pack';
 import { DisplayListCache } from '../assets/display-list';
-import { SwfClip, type ClipLine } from '../assets/swf-clip';
+import { ArtClip, type ClipLine } from '../assets/art-clip';
 import type { Effect, Vec } from '../core/types';
 import metadata from '../data/effect-clips.json';
 
@@ -17,46 +17,41 @@ const source = {
 export interface RetainedEffectPlayback {
   readonly status: 'retained';
   readonly symbol: number;
-  readonly className: string;
   readonly totalFrames: number;
-  readonly sourceSha256: string;
-  readonly pcodeSha256: string;
-  readonly pose: SwfClip;
+  readonly pose: ArtClip;
   /** The constructor's named child reference, independent of later depths/names. */
-  readonly lineTarget?: SwfClip;
+  readonly lineTarget?: ArtClip;
   readonly currentFrame: number;
-  readonly entropy: 'none-in-audited-graph';
 }
 export type EffectPlaybackRead =
-  | RetainedEffectPlayback
-  | Readonly<{ status: 'unsupported-native' | 'legacy-mock'; symbol?: number }>;
+  RetainedEffectPlayback | Readonly<{ status: 'unknown-clip' | 'procedural'; symbol?: number }>;
 
 /** Pure read shared by renderer and future field geometry. No discovery/clock/entropy. */
 export function readEffectPlayback(effect: Effect): EffectPlaybackRead {
   return (
     effect.playback ??
     Object.freeze({
-      status: effect.kind === 'native' ? 'unsupported-native' : 'legacy-mock',
+      status: effect.kind === 'clip' ? 'unknown-clip' : 'procedural',
       symbol: effect.symbol,
     })
   );
 }
 
 interface Clock {
-  pose: SwfClip;
+  pose: ArtClip;
   born: number;
   initialized: boolean;
   effect: Effect;
 }
 
-/** All15 audited plain constructors and their numeric descendants. No asset/browser services.
+/** All15 plain constructors and their numeric descendants. No asset/browser services.
  * Stage roots remain independent of queue/engine/physical parents. Weak references avoid
  * rooting expired objects; a retained Effect or playback handle retains its clock.
  */
 export class EffectPlayback {
   private cohort = 0;
   private clocks = new Set<WeakRef<Clock>>();
-  private lifetimes = new WeakMap<SwfClip, Clock>();
+  private lifetimes = new WeakMap<ArtClip, Clock>();
   private *live() {
     for (const reference of this.clocks) {
       const clock = reference.deref();
@@ -67,9 +62,9 @@ export class EffectPlayback {
   construct(effect: Effect): RetainedEffectPlayback {
     if (effect.playback) return effect.playback;
     const root = metadata.roots.find((root) => root.symbol === effect.symbol);
-    if (!root) throw new Error(`Unsupported native effect ${effect.symbol}`);
-    const pose = new SwfClip(root.symbol, source, () => {
-      throw new Error('Unexpected entropy in audited effect graph');
+    if (!root) throw new Error(`Unknown effect clip ${effect.symbol}`);
+    const pose = new ArtClip(root.symbol, source, () => {
+      throw new Error('Unexpected entropy in the effect graph');
     });
     pose.construct();
     const line = pose.placements.find((placement) => placement.name === 'line_mc');
@@ -77,16 +72,12 @@ export class EffectPlayback {
     const playback: RetainedEffectPlayback = Object.freeze({
       status: 'retained',
       symbol: root.symbol,
-      className: root.className,
       totalFrames: root.frameCount,
-      sourceSha256: metadata.sourceSha256,
-      pcodeSha256: root.pcodeSha256,
       pose,
       lineTarget: line ? pose.children.get(line.depth)!.clip : undefined,
       get currentFrame() {
         return clock.pose.frame;
       },
-      entropy: 'none-in-audited-graph',
     });
     Object.defineProperties(effect, {
       playback: { enumerable: true, value: playback },

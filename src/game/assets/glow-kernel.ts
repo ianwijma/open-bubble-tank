@@ -1,4 +1,4 @@
-import type { SwfGlowFilter } from './asset-pack';
+import type { GlowFilter } from './asset-pack';
 
 export interface BoxKernel {
   size: number;
@@ -17,7 +17,7 @@ export function glowKernel(width: number): BoxKernel | undefined {
 
 // Conservative, explicitly approximate destination-rectangle factors.
 const passScales = [1, 2.1, 2.7, 3.1, 3.5, 3.8, 4, 4.2, 4.4, 4.6, 5, 6, 6, 7, 7];
-export function glowPadding(filter: SwfGlowFilter): number {
+export function glowPadding(filter: GlowFilter): number {
   const scale = passScales[Math.max(1, Math.min(15, filter.passes)) - 1];
   return Math.ceil(Math.trunc(Math.max(0, filter.blurX, filter.blurY) * scale * 20) / 20);
 }

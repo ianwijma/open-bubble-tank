@@ -99,7 +99,7 @@ test('enemy ink repeatedly hits allies and queues overlapping screen clips witho
   expect(queued(w).filter((e) => e.layer === 'screen')).toHaveLength(2);
 });
 
-test('queue registration consumes rotation RNG in source order and each instance has its own clock', () => {
+test('queue registration consumes rotation RNG in queue order and each instance has its own clock', () => {
   const w = setup(),
     ally = createTank(w.nextId(), { ...STARTER, avatar: false }, 'ally');
   applyProjectileStatus(w, ally, 'ink');
@@ -170,7 +170,7 @@ test('arrival clears both screen layers and field effects without resetting surv
   expect(w.player.status.ink).toBe(timer);
 });
 
-test('collapse completion starts escape before creating its original immediate screen flash', () => {
+test('collapse completion starts escape before creating its immediate screen flash', () => {
   const w = setup();
   w.beginCollapse(0);
   w.collapse!.age = 119;

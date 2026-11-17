@@ -2,11 +2,11 @@ import { expect, test } from '@playwright/test';
 import { waitForMainMenu } from './helpers/main-menu';
 
 test.use({ storageState: { cookies: [], origins: [] } });
-test(`mock creator guide follows six original pages and latches on entry`, async ({ page }) => {
+test(`creator guide follows its six pages and latches on entry`, async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await waitForMainMenu(page, { creatorGuide: 'keep' });
   await page.getByRole('button', { name: 'Enemy tank creator', exact: true }).click();
   const guide = page.getByRole('dialog', { name: 'Tank creator guide' }),
@@ -42,7 +42,7 @@ test(`mock creator guide follows six original pages and latches on entry`, async
   await next.click();
   await expect(guide).toHaveCount(0);
   await page.reload();
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await waitForMainMenu(page, { creatorGuide: 'keep' });
   await page.getByRole('button', { name: 'Enemy tank creator', exact: true }).click();
   await expect(guide).toHaveCount(0);

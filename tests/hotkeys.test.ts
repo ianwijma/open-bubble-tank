@@ -8,7 +8,7 @@ import {
 import { validateSettings } from '../src/game/services/profile';
 import { DEFAULT_SETTINGS } from '../src/game/core/constants';
 
-test('Flash key codes preserve punctuation, duplicate bindings and left/right modifier equivalence', () => {
+test('legacy key codes preserve punctuation, duplicate bindings and left/right modifier equivalence', () => {
   for (const code of [
     'ShiftLeft',
     'ShiftRight',

@@ -123,7 +123,7 @@ test('collection audio uses each field timer rather than the world-frame remaind
   expect(world.runtimeFor(world.field).collectTimer).toBe(counter);
 });
 
-test('denominations preserve the recovered small-drop distribution and large-drop remainder bug', () => {
+test('denominations preserve the small-drop distribution and large-drop remainder bug', () => {
   expect(pickupValues(4)).toEqual([1, 1, 1, 1]);
   expect(pickupValues(8)).toEqual([5, 1, 1, 1]);
   expect(pickupValues(13)).toEqual([5, ...Array(8).fill(1)]);

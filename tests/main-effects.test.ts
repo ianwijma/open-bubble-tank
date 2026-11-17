@@ -11,7 +11,7 @@ const ticks = (effects: MainEffects, count: number, random = () => 1) => {
   for (let i = 0; i < count; i++) effects.tick(random);
 };
 
-test('Main shake retains each third-frame sample and the bytecode-confirmed double addition', () => {
+test('Main shake retains each third-frame sample and the double addition', () => {
   const effects = new MainEffects(),
     rng = new Random(12345);
   effects.shake(12);
@@ -75,7 +75,7 @@ test('active shakes reject replacements; disable retains an active duration at t
   expect(effects.remaining).toBe(12);
 });
 
-test('Main reset adds the rounded baseline itself, including the source nonzero-baseline bug', () => {
+test('Main reset adds the rounded baseline itself, including the nonzero-baseline bug', () => {
   const effects = new MainEffects();
   effects.position = { x: 10.25, y: -20.25 };
   effects.shake(12);

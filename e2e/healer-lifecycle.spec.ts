@@ -1,13 +1,13 @@
 import { expect, test } from '@playwright/test';
 import { writeFileSync } from 'node:fs';
-test(`mock Healer beams retain homes while dead patients lose their paint`, async ({
+test(`Healer beams retain homes while dead patients lose their paint`, async ({
   page,
 }, testInfo) => {
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('http://127.0.0.1:3102');
   await page.getByLabel('Fixture').selectOption('healer-lifecycle');
-  await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
   const status = page.locator('#status');
   await expect(status).toContainText('Ready', { timeout: 60000 });
   const proof = JSON.parse((await status.getAttribute('data-healer-lifecycle'))!);

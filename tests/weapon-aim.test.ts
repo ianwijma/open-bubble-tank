@@ -69,7 +69,7 @@ test('a spawner keeps its authored facing while a normal enemy cannon tracks its
   tickGuns(world, tank, emptyInput());
   expect(tank.guns.map((g) => g.angle)).toEqual([25, -90]);
 });
-test('B1 disables primary rotation only when its first primary has the source rotate flag', () => {
+test('B1 disables primary rotation only when its first primary has the rotate flag', () => {
   const world = new World([], [], 3);
   for (const [first, expected] of [
     [4001, false],
@@ -169,7 +169,7 @@ test('orbital Run advances its timer without the base target/Aim/count refresh p
   expect(gun.targeting!.target).toBeNull();
 });
 
-test('rotating Run stores the MovieClip signed-angle wrap on every active rotation', () => {
+test('rotating Run stores the signed-angle wrap on every active rotation', () => {
   const world = new World([], [], 3);
   const tank = createTank(world.nextId(), { ...design([4015]), avatar: false }, 'enemy');
   const gun = tank.guns[0];

@@ -1,12 +1,12 @@
 import { expect, test } from '@playwright/test';
-test(`mock creator controls retain button state, hold boundaries and slider handle geometry`, async ({
+test(`creator controls retain button state, hold boundaries and slider handle geometry`, async ({
   page,
 }) => {
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto('http://127.0.0.1:3102');
   await page.getByLabel('Fixture').selectOption('creator-controls');
-  await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
   const stage = page.locator('#stage');
   const values = async () =>
     JSON.parse((await page.locator('[data-control-values]').textContent())!);

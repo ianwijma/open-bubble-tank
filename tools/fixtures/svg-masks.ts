@@ -1,7 +1,7 @@
 import { svgMaskDefinition } from '../../src/game/assets/svg-mask';
 import { AssetPack, type Raster } from '../../src/game/assets/asset-pack';
 
-/** Stand-in leaf paint, as the mock pack prepares it: a canvas with its image URL. */
+/** Stand-in leaf paint, as the asset pack prepares it: a canvas with its image URL. */
 function leaf(paint: (context: CanvasRenderingContext2D) => void): Raster {
   const canvas = document.createElement('canvas');
   canvas.width = canvas.height = 100;
@@ -21,7 +21,7 @@ function leaf(paint: (context: CanvasRenderingContext2D) => void): Raster {
 
 /** The real compiler must retain nested group transforms, holes and alpha-zero mask fills. */
 async function composedMask() {
-  const pack = new AssetPack('mock');
+  const pack = new AssetPack();
   const matrix = (x = 0, y = 0) => ({ a: 1, b: 0, c: 0, d: 1, tx: x * 20, ty: y * 20 });
   Object.assign(pack, {
     shapes: new Map(
@@ -103,7 +103,7 @@ async function composedMask() {
 }
 
 /** Pixel evidence for the production SVG composer, independent of Pixi masks. */
-export async function showSvgMasks(pack: AssetPack, host: HTMLElement) {
+export async function showSvgMasks(host: HTMLElement) {
   const canvas = document.createElement('canvas');
   canvas.width = 550;
   canvas.height = 450;

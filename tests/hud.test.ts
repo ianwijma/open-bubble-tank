@@ -24,7 +24,7 @@ function player(...ids: number[]) {
     2,
   );
 }
-test('HUD motion uses original frame easing and detects health changes after motion', () => {
+test('HUD motion uses frame easing and detects health changes after motion', () => {
   const hud = new HudState();
   hud.advance(1, 54);
   expect(hud.lifeY).toBeCloseTo(496.04, 8);

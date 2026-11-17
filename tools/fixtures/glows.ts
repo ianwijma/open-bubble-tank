@@ -4,19 +4,19 @@ import {
   AssetPack,
   type Raster,
   type SpriteInfo,
-  type SwfGlowFilter,
+  type GlowFilter,
 } from '../../src/game/assets/asset-pack';
 import { buildDisplayList } from '../../src/game/assets/display-list';
-import { IDENTITY_COLOR, type SwfColorTransform } from '../../src/game/assets/swf-color-transform';
-import { SwfSymbolView } from '../../src/game/render/swf-symbol-view';
-import { SwfTextures } from '../../src/game/render/swf-textures';
+import { IDENTITY_COLOR, type ColorTransform } from '../../src/game/assets/color-transform';
+import { SymbolView } from '../../src/game/render/symbol-view';
+import { ArtTextures } from '../../src/game/render/art-textures';
 import { oracleColor, oracleGlow, premultiply } from './glow-oracle';
 
-/** Authored parameter coverage, independent shader pixels, and native-effect snapshots. */
+/** Authored parameter coverage, independent shader pixels, and effect snapshots. */
 export async function showGlowProof(pack: AssetPack, host: HTMLElement) {
   const app = new Application(),
-    textures = new SwfTextures(),
-    synthetic = new AssetPack('mock');
+    textures = new ArtTextures(),
+    synthetic = new AssetPack();
   await app.init({
     width: 550,
     height: 450,
@@ -71,7 +71,7 @@ export async function showGlowProof(pack: AssetPack, host: HTMLElement) {
     const info = sprites.get(id);
     return info ? buildDisplayList(info, age) : [];
   };
-  const view = new SwfSymbolView(30000, synthetic, textures),
+  const view = new SymbolView(30000, synthetic, textures),
     scene = new Container();
   scene.addChild(view.root);
   view.root.position.set(64, 64);
@@ -80,7 +80,7 @@ export async function showGlowProof(pack: AssetPack, host: HTMLElement) {
   const rawCtx = raw.getContext('2d')!;
   rawCtx.drawImage(canvas, 48, 52);
   const base = premultiply(rawCtx.getImageData(0, 0, 128, 128).data);
-  const baseFilter: SwfGlowFilter = {
+  const baseFilter: GlowFilter = {
     kind: 'glow',
     color: [255, 153, 51, 255],
     blurX: 6,
@@ -93,8 +93,8 @@ export async function showGlowProof(pack: AssetPack, host: HTMLElement) {
   };
   const cases: {
     name: string;
-    filters: SwfGlowFilter[];
-    color?: SwfColorTransform;
+    filters: GlowFilter[];
+    color?: ColorTransform;
     alpha?: number;
   }[] = [
     { name: 'Unfiltered control', filters: [] },
@@ -135,7 +135,7 @@ export async function showGlowProof(pack: AssetPack, host: HTMLElement) {
       color: { mult: [1, 1, 1, 0.5], add: [0, 0, 0, 40] },
     },
   ];
-  const unique = new Map<string, SwfGlowFilter>();
+  const unique = new Map<string, GlowFilter>();
   for (let id = 1; id < 65536; id++)
     for (const p of pack.spriteInfo(id)?.placements ?? [])
       for (const f of p.filters ?? []) unique.set(JSON.stringify(f), f);
@@ -205,7 +205,7 @@ export async function showGlowProof(pack: AssetPack, host: HTMLElement) {
       }
     let hash = 2166136261;
     for (const byte of g.getImageData(0, 0, 550, 450).data) hash = Math.imul(hash ^ byte, 16777619);
-    return { mode: pack.mode, variants: unique.size, results, cache, galleryHash: hash >>> 0 };
+    return { variants: unique.size, results, cache, galleryHash: hash >>> 0 };
   } finally {
     view.destroy();
     scene.destroy({ children: true });

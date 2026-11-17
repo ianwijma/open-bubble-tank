@@ -27,7 +27,7 @@ export function combatEffect(
     uid,
     x: 0,
     y: 0,
-    kind: 'native',
+    kind: 'clip',
     symbol: clip.symbol,
     age: 0,
     duration: clip.frames,

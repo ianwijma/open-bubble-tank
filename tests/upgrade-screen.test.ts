@@ -9,7 +9,7 @@ import {
   upgradeWidget,
 } from '../src/game/core/upgrade-screen';
 
-test('upgrade root imports the original shade, foreground, field metrics and centered card geometry', () => {
+test('upgrade root imports the shade, foreground, field metrics and centered card geometry', () => {
   expect(UPGRADE_SCREEN.symbol).toBe(1935);
   expect(UPGRADE_SCREEN.shade.symbol).toBe(1096);
   expect(UPGRADE_SCREEN.foreground.map((p) => p.name)).toEqual(['buildTank_mc', 'text_mc']);
@@ -31,7 +31,7 @@ test('upgrade root imports the original shade, foreground, field metrics and cen
   expect(UPGRADE_SCREEN.edit).toMatchObject({ symbol: 1098, bounds: { width: 50, height: 17 } });
 });
 
-test('source upgrade weapon summaries sort IDs, choose plurals, and keep the unassigned substring trims', () => {
+test('upgrade weapon summaries sort IDs, choose plurals, and keep the unassigned substring trims', () => {
   const tank = {
     ...STARTER,
     parts: [
@@ -79,7 +79,7 @@ test('preview fitting never enlarges small tanks and centers asymmetric Script b
   expect(b.height).toBeCloseTo(20);
 });
 
-test('mock card contours retain the separate preview and weapon panels rather than filling their gap', () => {
+test('card contours retain the separate preview and weapon panels rather than filling their gap', () => {
   const art = upgradeWidget(1916).art;
   const fills = art.flatMap((p) => p.paths?.filter((path) => path.fill) ?? []);
   expect(fills.length).toBeGreaterThan(0);

@@ -23,7 +23,7 @@ test('viewer show/hide queues change input only on Update and retain signed8.8 f
   expect(fades.state('confirm').alpha).toBe(0);
   expect(fades.settled('confirm')).toBe(true);
 });
-test('viewer queue reversal keeps current alpha unless the source resets a new confirmation', () => {
+test('viewer queue reversal keeps current alpha unless a new confirmation resets it', () => {
   const fades = new ViewerFades();
   fades.show('code');
   fades.step();
@@ -38,7 +38,7 @@ test('viewer queue reversal keeps current alpha unless the source resets a new c
   fades.show('code', true);
   expect(fades.state('code').alpha).toBe(0);
 });
-test('forward splicing defers the neighboring source queue entry by one frame', () => {
+test('forward splicing defers the neighboring queue entry by one frame', () => {
   const fades = new ViewerFades();
   fades.state('a', 1);
   fades.show('a');

@@ -65,7 +65,7 @@ test('Spike applies its source15-call contact memory and still pushes through pr
   expect(world.player.velocity.x).toBe(14);
   expect(gun.spikeContacts![0].remaining).toBe(15);
 });
-test('a remembered earlier ally stops the source candidate loop, then a later ally receives replacement force after expiry', () => {
+test('a remembered earlier ally stops the candidate loop, then a later ally receives replacement force after expiry', () => {
   const { world, owner, gun } = setup();
   const first = createTank(world.nextId(), { ...STARTER, avatar: false, life: 100 }, 'ally', 0, 0),
     second = createTank(
@@ -114,7 +114,7 @@ test('Spike direct PartCallTrigger is empty; contact belongs to BehaviorRun', ()
   expect(world.bullets).toHaveLength(0);
 });
 
-test('a non-finite source radius fails the inclusive radial comparison before pixel testing', () => {
+test('a non-finite radius fails the inclusive radial comparison before pixel testing', () => {
   const { world, owner } = setup();
   world.player.radius = NaN;
   let probes = 0;
@@ -141,7 +141,7 @@ test('Spike memory distinguishes a replacement clip with the same UID', () => {
   expect(gun.spikeContacts!.map((contact) => contact.target)).toEqual([first, replacement]);
 });
 
-test('Spike normalizes its unit direction before class scaling, retaining source floating-point order', () => {
+test('Spike normalizes its unit direction before class scaling, keeping floating-point order', () => {
   const { world, owner } = setup();
   owner.rotation = 3;
   world.player.radius = 100;
@@ -182,7 +182,7 @@ test('Spike Setup and Run consume no ordinary target draws', () => {
   expect(owner.guns[0].targeting).toMatchObject({ master: 'enemy', target: null, allies: 1 });
 });
 
-test('lethal Spike contact aborts the source Run before force and memory, while later stage frames continue', () => {
+test('lethal Spike contact aborts the Run before force and memory, while later stage frames continue', () => {
   const { world, owner, gun } = setup();
   world.progression.level = 6;
   const victim = createTank(

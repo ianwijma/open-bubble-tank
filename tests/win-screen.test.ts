@@ -1,7 +1,7 @@
 import { expect, test } from 'bun:test';
 import { WIN_SCREEN, WinScreenState } from '../src/game/core/win-screen';
 
-test('win preparation takes forty source frames and nineteen blur passes before the native fade', () => {
+test('win preparation takes forty frames and nineteen blur passes before the native fade', () => {
   const state = new WinScreenState();
   expect([state.contentFrame, state.alpha, state.blurPasses]).toEqual([1, 0, 0]);
   for (let i = 0; i < 39; i++) state.advance();

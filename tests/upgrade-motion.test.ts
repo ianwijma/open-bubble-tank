@@ -75,7 +75,7 @@ describe('UpgradeMenu retained presentation clock', () => {
     expect(menu.advance()).toEqual([{ type: 'finish' }]);
   });
 
-  test('even partial opening retains the source reverse-slot asymmetry', () => {
+  test('even partial opening keeps the reverse-slot asymmetry', () => {
     const { menu } = openingSteps(2);
     menu.beginClosing();
     expect(menu.advance().map((command) => command.type)).toEqual(['write-foreground-alpha']);

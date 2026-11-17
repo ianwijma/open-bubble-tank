@@ -2,12 +2,12 @@ import { Container, Graphics, Sprite } from 'pixi.js';
 import type { AssetPack } from '../assets/asset-pack';
 import type { Tank, TankChild, TankDesign } from '../core/types';
 import { partById } from '../data/catalog';
-import { SwfSymbolView, type RasterTextures } from './swf-symbol-view';
+import { SymbolView, type RasterTextures } from './symbol-view';
 
 /** Shared live pose for the world and tank-information portrait. No simulation clocks advance here. */
 export class TankView {
   container = new Container();
-  private parts: { root: Container; animation?: SwfSymbolView; sprite?: Sprite }[];
+  private parts: { root: Container; animation?: SymbolView; sprite?: Sprite }[];
   private shield = new Graphics();
   private mockStatus = new Graphics();
   private mountedShields = new Map<TankChild, Graphics>();
@@ -19,9 +19,9 @@ export class TankView {
     this.parts = design.parts.map((p) => {
       const root = new Container(),
         symbol = partById(p.type)?.symbol;
-      let animation: SwfSymbolView | undefined, sprite: Sprite | undefined;
+      let animation: SymbolView | undefined, sprite: Sprite | undefined;
       if (assets.hasPartTimeline(p.type) && symbol) {
-        animation = new SwfSymbolView(symbol, assets, textures);
+        animation = new SymbolView(symbol, assets, textures);
         root.addChild(animation.root);
       } else {
         const raster = assets.part(p.type);

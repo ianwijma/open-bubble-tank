@@ -2,13 +2,13 @@ import { expect, test } from '@playwright/test';
 import { waitForMainMenu } from './helpers/main-menu';
 import { readCreatorDesign, dropPreview, saveCreator } from './helpers/creator';
 const snapshot = readCreatorDesign;
-test(`mock enemy defaults, panel suggestions and automatic versus manual saves retain source values`, async ({
+test(`enemy defaults, panel suggestions and automatic versus manual saves keep their stored values`, async ({
   page,
 }) => {
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'Enemy tank creator', exact: true }).click();
   expect(await snapshot(page)).toMatchObject({ life: 20, reward: 20, speed: 2, parts: [] });

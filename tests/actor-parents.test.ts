@@ -30,7 +30,7 @@ function scenario() {
   return { world, old, next, outgoing, incoming };
 }
 
-test('active field parent conversion covers both populations and source Point twips', () => {
+test('active field parent conversion covers both populations and Point twips', () => {
   const { world, old, next, outgoing, incoming } = scenario();
   expect(world.actorParents.point(outgoing, next)).toEqual({ x: -790, y: 20 });
   expect(world.actorParents.point(incoming, old)).toEqual({ x: 810, y: 20 });
@@ -127,7 +127,7 @@ test('retained artwork advances a display-only actor through direct removal with
   expect(world.field.enemies).not.toContain(actor);
   world.actorParents.detach(actor);
   world.step(emptyInput());
-  // Actor-clock qualification contradicts the former detached-art freeze.
+  // The actor-clock measurements contradict the former detached-art freeze.
   expect(actor.artAge).toBe(2);
 });
 

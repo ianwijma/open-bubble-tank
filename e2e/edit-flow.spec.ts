@@ -10,7 +10,7 @@ import { DEFAULT_SETTINGS } from '../src/game/core/constants';
 const STARTER: TankDesign = JSON.parse(readFileSync(resolve('src/game/data/tanks.json'), 'utf8'))
   .avatar_defaults[0];
 
-test(`mock edit slider: native map variants, confirmation, same-level choice and editor cancellation`, async ({
+test(`edit slider: native map variants, confirmation, same-level choice and editor cancellation`, async ({
   page,
 }) => {
   const guard = {
@@ -36,12 +36,12 @@ test(`mock edit slider: native map variants, confirmation, same-level choice and
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await waitForMainMenu(page);
   await expect(page.getByRole('button', { name: 'Play', exact: true })).toBeVisible({
     timeout: 60000,
   });
-  await page.getByRole('button', { name: 'Original game size', exact: true }).click();
+  await page.getByRole('button', { name: 'Actual size', exact: true }).click();
   await page.getByRole('button', { name: 'Play', exact: true }).click({ timeout: 60000 });
   await page.getByRole('checkbox', { name: 'Use saved avatars from previous game' }).check();
   await page

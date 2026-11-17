@@ -6,7 +6,7 @@ import {
   removeViewerTank,
 } from '../src/game/core/viewer-storage';
 
-test('source save identity ignores ID, code provenance, class and tank statistics', () => {
+test('save identity ignores ID, code provenance, class and tank statistics', () => {
   expect(
     sameViewerTank(STARTER, {
       ...STARTER,
@@ -22,7 +22,7 @@ test('source save identity ignores ID, code provenance, class and tank statistic
     }),
   ).toBe(true);
 });
-test('source save identity checks exact author/name and every ordered part field', () => {
+test('save identity checks exact author/name and every ordered part field', () => {
   for (const patch of [
     { author: 'other' },
     { name: STARTER.name.toUpperCase() },
@@ -46,7 +46,7 @@ test('viewer save suppresses matching geometry under a different ID but retains 
   expect(appendViewerTank(tanks, renamed)).toEqual([STARTER, renamed]);
   expect(appendViewerTank(tanks, { ...alias, avatar: !alias.avatar })).toHaveLength(2);
 });
-test('viewer deletion removes the first source match without deleting other designs sharing its ID', () => {
+test('viewer deletion removes the first matching design without deleting other designs sharing its ID', () => {
   const renamed = { ...STARTER, name: 'Distinct' },
     alias = { ...STARTER, id: 'L-other' },
     tanks = [STARTER, renamed, alias];

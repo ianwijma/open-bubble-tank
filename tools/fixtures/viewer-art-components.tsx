@@ -59,9 +59,8 @@ function Artwork({
         if (i === 1 && !active) return null;
         return (
           <ViewerGroup key={i} matrix={matrix(130 + i * 280, 160)}>
-            <ViewerArt pack={pack} symbol={1176} />
+            <ViewerArt symbol={1176} />
             <ViewerFields
-              pack={pack}
               symbol={1176}
               values={{ largeName_txt: i ? 'Live pose' : 'Fitted tank' }}
               opacities={{ largeAuthor_txt: 0.35 }}
@@ -131,11 +130,10 @@ function Fixture({
           style={{ position: 'absolute', left: 370, top: 275, width: 160, height: 160 }}
         >
           <ViewerGroup matrix={matrix(80, 80)}>
-            <ViewerArt pack={pack} symbol={1115} />
+            <ViewerArt symbol={1115} />
           </ViewerGroup>
         </div>
         <ViewerButton
-          pack={pack}
           piece={viewerRoot('btnNext_mc')}
           label="Next tank"
           disabled={disabled}

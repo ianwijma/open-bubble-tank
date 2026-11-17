@@ -10,7 +10,6 @@ import {
 import { DEFAULT_SETTINGS } from '@/game/core/constants';
 import type { Settings } from '@/game/core/types';
 import { BubbleText, Dialog } from './ui';
-import type { AssetPack } from '@/game/assets/asset-pack';
 import type { StageRuntime } from '@/game/services/stage-runtime';
 import {
   SETTINGS_SCREEN,
@@ -45,7 +44,6 @@ const artworkOffset = (p: Leaf): CSSProperties => ({
 
 export function SettingsPanel({
   settings,
-  pack,
   onChange,
   onClose,
   overPause = false,
@@ -58,7 +56,6 @@ export function SettingsPanel({
   menuState,
 }: {
   settings: Settings;
-  pack: AssetPack;
   onChange: (s: Settings, control?: 'shake' | 'efficiency') => void;
   onClose: () => void;
   overPause?: boolean;
@@ -166,7 +163,7 @@ export function SettingsPanel({
         selected = settingSelection(settings, entry.key, overPause, menu) === value;
       const option = (
         <label
-          className={`authored-option ${selected ? 'selected' : ''} ${pack.mode}`}
+          className={`authored-option ${selected ? 'selected' : ''}`}
           style={{ transform: transform(p) }}
           onPointerEnter={() => {
             if (entry.key === 'fps') setHoverFps(String(value));
@@ -225,7 +222,7 @@ export function SettingsPanel({
       };
       return (
         <button
-          className={`authored-key ${pack.mode}`}
+          className="authored-key"
           aria-label={`Change ${key[1].toLowerCase()} key`}
           aria-pressed={binding === key[0]}
           style={buttonStyle(hit)}
@@ -266,7 +263,7 @@ export function SettingsPanel({
     if (isHotkeys || isBack)
       return (
         <button
-          className={`authored-action ${pack.mode} ${isBack && screen === 'settings' ? 'back-orb' : ''}`}
+          className={`authored-action ${isBack && screen === 'settings' ? 'back-orb' : ''}`}
           style={buttonStyle(p)}
           aria-label={
             isHotkeys ? 'HotKey Options' : screen === 'hotkeys' ? 'Back to settings' : 'DONE'

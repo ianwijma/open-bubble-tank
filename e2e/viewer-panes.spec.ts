@@ -1,12 +1,12 @@
 import { expect, test } from '@playwright/test';
-test(`mock viewer reparents the selected preview and retains fading card/detail lifetimes`, async ({
+test(`viewer reparents the selected preview and retains fading card/detail lifetimes`, async ({
   page,
 }) => {
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto('http://127.0.0.1:3102');
   await page.getByLabel('Fixture').selectOption('viewer-flow');
-  await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
   await expect(page.getByRole('status')).toContainText('Ready', { timeout: 60000 });
   const advance = async (n: 1 | 5 | 20) =>
     page.getByRole('button', { name: `Viewer advance ${n} frames`, exact: true }).click();

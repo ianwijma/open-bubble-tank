@@ -31,7 +31,7 @@ export async function showBeamContracts(pack: AssetPack, host: HTMLElement) {
   world.fieldDisplays.selectTutorial(world.field, 0);
   world.hitPart = pack.hitPart;
   world.hitProjectile = pack.hitProjectile;
-  // A fixed emitter isolates the shared grid from the separate mounted-matrix audit.
+  // A fixed emitter isolates the shared grid from the separate mounted-matrix check.
   world.muzzle = () => ({ x: 0, y: 0 });
   const victim = createTank(world.nextId(), design, 'enemy', 50, 0, 100, 1),
     healthy = createTank(world.nextId(), design, 'enemy', 100, 0);

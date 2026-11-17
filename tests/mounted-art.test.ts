@@ -17,7 +17,7 @@ const sprites: SpriteInfo[] = [
   { id: 720, frameCount: 27, placements: [{ charId: 718, depth: 1, matrix, frame: 2 }] },
 ];
 function setup(owned = false) {
-  const pack = new AssetPack('mock');
+  const pack = new AssetPack();
   Object.assign(pack, { sprites: new Map(sprites.map((s) => [s.id, s])) });
   const world = new World([], [], 1);
   world.field.enemies = [];
@@ -54,8 +54,8 @@ test('play resumes a stopped script without rerunning it or restarting an active
   expect(clip.playing).toBe(false);
 });
 
-test('mock charge uses the shared mounted timeline and removes particles on frame27', () => {
-  const mock = new AssetPack('mock');
+test('charge artwork uses the shared mounted timeline and removes particles on frame27', () => {
+  const mock = new AssetPack();
   Object.assign(mock, { sprites: new Map(mockData.sprites.map((s) => [s.id, s])) });
   const { tank, fire } = setup(),
     part = tank.guns[0].part;

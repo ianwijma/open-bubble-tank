@@ -1,6 +1,6 @@
-import type { Bounds, DisplayPlacement, SpriteInfo, SwfMatrix } from './asset-pack';
+import type { Bounds, DisplayPlacement, SpriteInfo, ArtMatrix } from './asset-pack';
 import type { Projectile, Vec } from '../core/types';
-import type { SwfClip } from './swf-clip';
+import type { ArtClip } from './art-clip';
 import { buildDisplayList } from './display-list';
 import { projectileScriptBounds, scriptBounds, type ScriptBoundsSource } from './projectile-bounds';
 import data from '../data/projectile-geometry.json';
@@ -25,7 +25,7 @@ interface Leaf {
 }
 const sprites = data.sprites as unknown as Record<number, SpriteInfo>;
 const leaves = data.shapes as unknown as Record<number, Leaf>;
-const identity: SwfMatrix = { a: 1, b: 0, c: 0, d: 1, tx: 0, ty: 0 };
+const identity: ArtMatrix = { a: 1, b: 0, c: 0, d: 1, tx: 0, ty: 0 };
 const cache = new Map<string, DisplayPlacement[]>();
 const pixels = (b: TwipBounds): Bounds => ({
   x: b.xMin / 20,
@@ -34,7 +34,7 @@ const pixels = (b: TwipBounds): Bounds => ({
   height: (b.yMax - b.yMin) / 20,
 });
 
-/** Same frame wrapping and child-age convention as AssetPack; SwfClip supplies retained actions. */
+/** Same frame wrapping and child-age convention as AssetPack; ArtClip supplies retained actions. */
 export const projectileGeometrySource: ScriptBoundsSource & {
   spriteInfo(id: number): SpriteInfo | undefined;
   displayList(id: number, age: number): DisplayPlacement[];
@@ -80,13 +80,13 @@ export function authoredProjectileBounds(b: Projectile, owner?: Vec): Bounds | u
 export interface MockProjectileMask {
   /** Conservative rectangular clip in mask-local pixels; matrix translations are twips. */
   bounds: Bounds;
-  matrix: SwfMatrix;
+  matrix: ArtMatrix;
 }
 export interface MockProjectileShape {
   /** An ellipse inscribed in the visible leaf's declared pixel bounds (strokes included). */
   bounds: Bounds;
   /** Flattened leaf→projectile-root-local transform. Root scale/angle/position are NOT applied. */
-  matrix: SwfMatrix;
+  matrix: ArtMatrix;
   alpha: number;
   color?: number;
   lineColor?: number;
@@ -96,7 +96,7 @@ export interface MockProjectileShape {
   lineWidth: number;
   masks?: MockProjectileMask[];
 }
-function multiply(a: SwfMatrix, b: SwfMatrix): SwfMatrix {
+function multiply(a: ArtMatrix, b: ArtMatrix): ArtMatrix {
   return {
     a: a.a * b.a + a.c * b.b,
     b: a.b * b.a + a.d * b.b,
@@ -133,7 +133,7 @@ function mixBounds(start: TwipBounds, end: TwipBounds | undefined, t: number): B
 }
 
 /**
- * Numeric ellipse silhouettes for both mock painting and contact. Fully transparent
+ * Numeric ellipse silhouettes for both painting and contact. Fully transparent
  * helpers and mask artwork are excluded; active masks are exposed as rectangular
  * constraints (their vector contours are intentionally not imported).
  */
@@ -146,10 +146,10 @@ export function mockProjectileShapes(
   function visit(
     id: number,
     age: number,
-    matrix: SwfMatrix,
+    matrix: ArtMatrix,
     color: Color,
     ratio = 0,
-    pose?: SwfClip,
+    pose?: ArtClip,
     path: string[] = [],
     masks: MockProjectileMask[] = [],
     depth = 0,

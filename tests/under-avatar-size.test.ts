@@ -1,5 +1,5 @@
 import { expect, test } from 'bun:test';
-import original from './fixtures/under-avatar-original.json';
+import fixture from './fixtures/under-avatar.json';
 import authored from '../src/game/data/field-display.json';
 import { positiveAxisAlignedSize } from '../src/game/core/axis-aligned-size';
 import { RetainedTransform } from '../src/game/core/retained-transform';
@@ -26,10 +26,10 @@ function sample(pose: RetainedTransform, requested: number) {
   ].map(words);
 }
 
-test('all 29 original setter phases match exact binary getters and effective matrix words', () => {
-  expect(bounds).toEqual(original.originalLeafTwips);
+test('all 29 measured setter phases match exact binary getters and effective matrix words', () => {
+  expect(bounds).toEqual(fixture.leafTwips);
   let count = 0;
-  for (const [index, control] of original.cases.entries()) {
+  for (const [index, control] of fixture.cases.entries()) {
     const pose = new RetainedTransform();
     pose.scaleX = control.scaleX;
     pose.scaleY = control.scaleY;
@@ -40,7 +40,7 @@ test('all 29 original setter phases match exact binary getters and effective mat
             2 +
           45
         : control.diameter!;
-    for (const phase of original.phases.filter((row) => row.index === index)) {
+    for (const phase of fixture.phases.filter((row) => row.index === index)) {
       if (phase.phase !== 'before') {
         const property = phase.phase.endsWith('width') ? 'width' : 'height';
         const result = positiveAxisAlignedSize(pose.read(), bounds, property, requested);
@@ -56,7 +56,7 @@ test('all 29 original setter phases match exact binary getters and effective mat
   expect(count).toBe(29);
 });
 
-test('unsupported rotation, reflection, skew and invalid sizing stay unqualified', () => {
+test('unsupported rotation, reflection, skew and invalid sizing stay unsupported', () => {
   const pose = new RetainedTransform();
   for (const value of [0, -1, NaN, Infinity])
     expect(positiveAxisAlignedSize(pose.read(), bounds, 'width', value)).toBeUndefined();
@@ -77,9 +77,9 @@ test('normal World binds sizing before its first request and retains exact metad
     parts: [{ ...STARTER.parts[0], x: 13, y: 7, radius: 10 }],
   });
   const before = world.fieldDisplays.read(world.currentWrapper);
-  expect(before.underAvatarSizing.status).toBe('qualified');
+  expect(before.underAvatarSizing.status).toBe('resolved');
   expect(() => world.fieldDisplays.requireResolvedGeometry(world.currentWrapper)).not.toThrow();
-  const expected = original.phases.find((row) => row.index === 6 && row.phase === 'height')!;
+  const expected = fixture.phases.find((row) => row.index === 6 && row.phase === 'height')!;
   const read = before.slots.avatarUnder.pose;
   expect(words(read.scaleX)).toEqual(expected.words[3]);
   expect(words(read.scaleY)).toEqual(expected.words[4]);

@@ -1,14 +1,14 @@
 import { expect, test } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 const enemies = JSON.parse(readFileSync('src/game/data/tanks.json', 'utf8')).enemy_tanks;
-test(`mock viewer navigation retains route-specific button state and same-tank refreshes`, async ({
+test(`viewer navigation retains route-specific button state and same-tank refreshes`, async ({
   page,
 }) => {
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto('http://127.0.0.1:3102');
   await page.getByLabel('Fixture').selectOption('viewer-flow');
-  await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
   await expect(page.getByRole('status')).toContainText('Ready', { timeout: 60000 });
   const advance = () =>
       page.getByRole('button', { name: 'Viewer advance 20 frames', exact: true }).click(),

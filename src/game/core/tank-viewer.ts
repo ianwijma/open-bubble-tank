@@ -1,19 +1,19 @@
 import data from '../data/tank-viewer.json';
 import type { CreatorField } from './creator-palette';
 import type { CreatorPrimitive } from './creator-controls';
-import type { SwfMatrix } from '../assets/asset-pack';
+import type { ArtMatrix } from '../assets/asset-pack';
 import type { Rect, TankDesign } from './types';
 import { AVATARS, ENEMIES, costs, partById } from '../data/catalog';
 import { infoWeapons } from './tank-info';
 import { tankLoadEligibility, type TankLoadProfile } from './tank-eligibility';
 export interface ViewerField extends CreatorField {
   maxLength?: number;
-  matrix: SwfMatrix;
+  matrix: ArtMatrix;
 }
 export interface ViewerPiece {
   name: string;
   symbol: number;
-  matrix: SwfMatrix;
+  matrix: ArtMatrix;
   bounds: Rect;
 }
 export interface ViewerWidget {
@@ -35,7 +35,7 @@ export const TANK_VIEWER = data as {
   mask: Rect;
   helper: Rect;
   sortButtonBounds: Rect;
-  sortIconMatrix: SwfMatrix;
+  sortIconMatrix: ArtMatrix;
   statistics: {
     background: { bounds: Rect; stops: { ratio: number; color: number[] }[] };
     closed: Rect;
@@ -48,7 +48,7 @@ export const TANK_VIEWER = data as {
     frameCount: number;
     fields: ViewerField[];
     fieldIndex: number;
-    pieces: { symbol: number; index: number; matrix: SwfMatrix; art: CreatorPrimitive[] }[];
+    pieces: { symbol: number; index: number; matrix: ArtMatrix; art: CreatorPrimitive[] }[];
     frames: number[][];
   };
 };

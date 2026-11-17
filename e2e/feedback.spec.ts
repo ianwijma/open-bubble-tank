@@ -10,12 +10,12 @@ async function play(page: Page) {
     .click();
   await expect(page.locator('.game-canvas canvas')).toBeVisible();
 }
-test('mock sound, gesture resume, P/Escape, zoom, guide and centered creator button', async ({
+test('sound, gesture resume, P/Escape, zoom, guide and centered creator button', async ({
   page,
 }) => {
   await watchAudio(page);
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await expect(page.locator('.main-menu')).toHaveAttribute('data-menu-parked', 'false');
   const create = page.getByRole('button', { name: 'Enemy tank creator' });
   const box = await create.boundingBox(),
@@ -75,11 +75,11 @@ test('mock sound, gesture resume, P/Escape, zoom, guide and centered creator but
   ).toBe(0.65);
 });
 
-test('mock cleared origin can be revisited and its traveled map edge is drawn once', async ({
+test('cleared origin can be revisited and its traveled map edge is drawn once', async ({
   page,
 }) => {
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await play(page);
   await page.locator('.game-canvas').focus();
   await page.keyboard.down('KeyD');

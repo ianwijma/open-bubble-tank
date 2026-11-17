@@ -16,7 +16,7 @@ test('pointer targets retain identity across frame probes while distinguishing i
     sameMenuTarget({ kind: 'control', name: 'play_btn' }, { kind: 'control', name: 'play_btn' }),
   ).toBe(true);
   expect(
-    sameMenuTarget({ kind: 'control', name: 'play_btn' }, { kind: 'decoration', name: 'play_btn' }),
+    sameMenuTarget({ kind: 'control', name: 'play_btn' }, { kind: 'control', name: 'other_btn' }),
   ).toBe(false);
 });
 
@@ -33,7 +33,7 @@ test('procedural buttons reject empty bounding-box corners but retain their pain
   }
 });
 
-test('menu inversion keeps valid minimum16.16 SWF scale coefficients', () => {
+test('menu inversion keeps valid minimum 16.16 scale coefficients', () => {
   const scale = 1 / 65536;
   expect(
     menuLocal(

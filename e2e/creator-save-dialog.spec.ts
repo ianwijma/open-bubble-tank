@@ -4,13 +4,13 @@ import { createDecipheriv } from 'node:crypto';
 async function openFixture(page: Page) {
   await page.goto('http://127.0.0.1:3102');
   await page.getByLabel('Fixture').selectOption('creator-save-dialog');
-  await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
   await expect(page.locator('#status')).toContainText('Ready', { timeout: 60000 });
 }
 async function profile(page: Page) {
   return JSON.parse((await page.locator('#stage').getAttribute('data-creator-submission'))!);
 }
-test(`mock authored save dialog preserves names, exports source code and isolates unavailable sharing`, async ({
+test(`authored save dialog preserves names, exports the tank code and isolates unavailable sharing`, async ({
   page,
   context,
 }, testInfo) => {
@@ -95,7 +95,7 @@ test(`mock authored save dialog preserves names, exports source code and isolate
   expect(external).toEqual([]);
   expect(errors).toEqual([]);
 });
-test(`mock save dialog keeps source input limits, whole-chunk rejection and browser focus adapters`, async ({
+test(`save dialog keeps its input limits, whole-chunk rejection and browser focus adapters`, async ({
   page,
 }, testInfo) => {
   await openFixture(page);
@@ -180,7 +180,7 @@ test(`mock save dialog keeps source input limits, whole-chunk rejection and brow
   await expect(dialog).toHaveCount(0);
   await expect(opener).toBeFocused();
 });
-test(`mock save errors consume an ID and exit confirmation keeps cancel and exit distinct`, async ({
+test(`save errors consume an ID and exit confirmation keeps cancel and exit distinct`, async ({
   page,
 }) => {
   await openFixture(page);

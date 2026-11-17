@@ -27,7 +27,7 @@ test('code entry retains card previews through their independent deletion fade a
   flow.localPosition();
   expect(flow.sortX).toBe(501.6);
 });
-test('avatar point-panel fade retains the original hidden-control queue deferral', () => {
+test('avatar point-panel fade keeps the hidden-control queue deferral', () => {
   const flow = new ViewerCodeFlow(true),
     { fades } = flow;
   flow.open(false);
@@ -38,7 +38,7 @@ test('avatar point-panel fade retains the original hidden-control queue deferral
   expect(points.alpha).toBe(0.796875);
   expect(fades.state(viewerToolbarName('btnNext_mc')).alpha).toBe(0.59375);
 });
-test('detail entry uses its own delete queue and source omits the hidden Create control', () => {
+test('detail entry uses its own delete queue and omits the hidden Create control', () => {
   const flow = new ViewerCodeFlow(true),
     { panes, fades } = flow;
   panes.setup(ENEMIES.slice(0, 4));
@@ -67,7 +67,7 @@ test('asynchronous read/cancel releases old pending previews before rebuilding, 
   expect(panes.getSnapshot().cards[0]!.instance).toBe(rebuilt);
   expect(panes.getSnapshot().cards[0]!.tank).toBe(ENEMIES[0]);
 });
-test('direct Back retains the source delete-on-requeue quirk during an unfinished outgoing fade', () => {
+test('direct Back keeps the delete-on-requeue quirk during an unfinished outgoing fade', () => {
   const flow = new ViewerCodeFlow(false);
   flow.panes.setup(ENEMIES.slice(4, 8));
   flow.open(false);

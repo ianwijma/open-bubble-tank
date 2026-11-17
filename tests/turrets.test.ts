@@ -194,7 +194,7 @@ test('only the last mature turret loss removes the film; launcher aim follows co
   expect(gun.turretRefs).toEqual([]);
 });
 
-test('the enemy turret launcher passes the source hostile flag even on an allied custom design', () => {
+test('the enemy turret launcher passes the hostile flag even on an allied custom design', () => {
   const { world, owner } = turretWorld();
   const ally = createTank(world.nextId(), owner.design, 'ally', 200, 200);
   world.fireGun(ally, ally.guns[0], emptyInput());

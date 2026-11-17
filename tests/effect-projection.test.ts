@@ -6,7 +6,7 @@ import { cacheEmptyField } from './fixtures/empty-field';
 
 const effect = (uid: number, layer: Effect['layer'] = 'bottom'): Effect => ({
   uid,
-  kind: 'native',
+  kind: 'clip',
   layer,
   symbol: 1723,
   x: 100,

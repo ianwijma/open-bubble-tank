@@ -10,7 +10,7 @@ const avatars: TankDesign[] = JSON.parse(
   readFileSync('src/game/data/tanks.json', 'utf8'),
 ).avatar_defaults;
 
-test(`mock exact upgrade defaults use newest saved avatars independently of enemy sources`, async ({
+test(`exact upgrade defaults use newest saved avatars independently of enemy sources`, async ({
   page,
 }) => {
   test.setTimeout(120000);
@@ -45,9 +45,9 @@ test(`mock exact upgrade defaults use newest saved avatars independently of enem
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Play', exact: true }).click();
   await waitForMainMenu(page);
-  await page.getByRole('button', { name: 'Original game size', exact: true }).click();
+  await page.getByRole('button', { name: 'Actual size', exact: true }).click();
   await page.getByRole('button', { name: 'Play', exact: true }).click();
   await expect(page.getByRole('checkbox', { name: /My enemy tanks/ })).toBeDisabled();
   await page.getByRole('checkbox', { name: 'Use saved avatars from previous game' }).check();

@@ -3,7 +3,7 @@ import { partSnapshot } from '../src/game/assets/part-snapshot';
 import { buildDisplayList } from '../src/game/assets/display-list';
 import { AssetPack, type SpriteInfo } from '../src/game/assets/asset-pack';
 import { STARTER } from '../src/game/data/catalog';
-import type { ClipSource } from '../src/game/assets/swf-clip';
+import type { ClipSource } from '../src/game/assets/art-clip';
 
 const matrix = { a: 1, b: 0, c: 0, d: 1, tx: 0, ty: 0 };
 const sprites: Record<number, SpriteInfo> = {
@@ -66,7 +66,7 @@ test('class bounds transform separate leaves before union for rotated fractional
         : [],
   };
   const pose = partSnapshot({ id: 1501, symbol: 20 }, clipSource, 'class');
-  const pack = new AssetPack('mock');
+  const pack = new AssetPack();
   Object.assign(pack, {
     classPoses: new Map([[1501, pose]]),
     shapes: new Map([[90001, { id: 90001, bounds: { xMin: 0, xMax: 200, yMin: 0, yMax: 40 } }]]),

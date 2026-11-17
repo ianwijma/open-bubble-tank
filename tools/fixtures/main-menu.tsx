@@ -2,7 +2,6 @@ import { StrictMode, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { MainMenu } from '../../src/components/main-menu';
 import { SettingsPanel } from '../../src/components/settings-panel';
-import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { MainMenuMotion } from '../../src/game/core/main-menu';
 import { DEFAULT_SETTINGS } from '../../src/game/core/constants';
 import type { Settings } from '../../src/game/core/types';
@@ -47,12 +46,10 @@ function backgroundPaintProof() {
 }
 
 function MenuFixture({
-  pack,
   stage,
   motion,
   reportAction,
 }: {
-  pack: AssetPack;
   stage: StageRuntime;
   motion: MainMenuMotion;
   reportAction: (name: string) => void;
@@ -67,7 +64,6 @@ function MenuFixture({
     <>
       <MainBackground stage={stage} />
       <MainMenu
-        pack={pack}
         stage={stage}
         motion={motion}
         covered={overlay !== null}
@@ -85,7 +81,6 @@ function MenuFixture({
       >
         {overlay === 'settings' ? (
           <SettingsPanel
-            pack={pack}
             settings={settings}
             onChange={(next, control) => {
               if (control === 'efficiency') stage.background.efficient = next.efficient;
@@ -100,7 +95,7 @@ function MenuFixture({
 }
 
 /** Production menu component and shared stage, with deterministic external frame controls. */
-export function showMainMenuFlow(pack: AssetPack, host: HTMLElement) {
+export function showMainMenuFlow(host: HTMLElement) {
   host.dataset.backgroundPaintProof = JSON.stringify(backgroundPaintProof());
   const stage = new StageRuntime(),
     motion = new MainMenuMotion();
@@ -123,7 +118,7 @@ export function showMainMenuFlow(pack: AssetPack, host: HTMLElement) {
   host.before(controls);
   root.render(
     <StrictMode>
-      <MenuFixture pack={pack} stage={stage} motion={motion} reportAction={reportAction} />
+      <MenuFixture stage={stage} motion={motion} reportAction={reportAction} />
     </StrictMode>,
   );
   return () => {

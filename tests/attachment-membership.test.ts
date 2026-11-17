@@ -21,7 +21,7 @@ function raster(opaque = true, size = 20): Raster {
   };
 }
 function pack(leaves: [number, Raster][], frames: [number, Raster[]][] = []) {
-  const result = new AssetPack('mock');
+  const result = new AssetPack();
   Object.assign(result, { leaves: new Map(leaves), frames: new Map(frames) });
   return result;
 }
@@ -52,7 +52,7 @@ test('removed forcefield wrapper cannot contact through stale readiness or a ret
       ],
     ]),
   });
-  // The actual live mount is removed; the forcefield's source clone keeps it.
+  // The actual live mount is removed; the forcefield's clone keeps it.
   tank.removedParts.add(design.parts[0].key);
   removeTankChild(tank, `part:${design.parts[0].key}`);
   expect(assets.hitTest(tank, 40, 0)).toBe(true);

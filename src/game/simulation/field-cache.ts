@@ -12,7 +12,7 @@ export interface StoredField {
   enemies: StoredEnemy[];
 }
 
-/** _-W- stores enemy references and pose scalars, never the Bubblefield wrapper. */
+/** The field cache stores enemy references and pose scalars, never the Bubblefield wrapper. */
 export class FieldCache {
   private cells = new Map<string, StoredField>();
   get(col: number, row: number) {

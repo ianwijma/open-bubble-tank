@@ -1,6 +1,5 @@
 'use client';
 import { useEffect, useId, useRef, useState, type CSSProperties, type PointerEvent } from 'react';
-import type { AssetPack } from '@/game/assets/asset-pack';
 import type { CreatorDetailAnchor } from '@/game/core/creator-details';
 import { CREATOR_PALETTE, CreatorPaletteScroll } from '@/game/core/creator-palette';
 import type { PartDefinition } from '@/game/core/types';
@@ -12,7 +11,7 @@ import {
 import { CreatorPrimitives } from './creator-controls';
 import { CreatorText } from './creator-text';
 
-export function CreatorPaletteFrame({ pack }: { pack: AssetPack }) {
+export function CreatorPaletteFrame({}: {}) {
   const p = CREATOR_PALETTE,
     lib = p.library,
     x = p.origin.tx / 20 + lib.matrix.tx / 20,
@@ -53,12 +52,10 @@ export function CreatorPaletteFrame({ pack }: { pack: AssetPack }) {
 }
 
 export function CreatorPaletteTabs({
-  pack,
   avatar,
   category,
   onCategory,
 }: {
-  pack: AssetPack;
   avatar: boolean;
   category: number;
   onCategory: (category: number) => void;
@@ -116,7 +113,6 @@ export function CreatorPaletteTabs({
 }
 
 export function CreatorPaletteRows({
-  pack,
   parts,
   context,
   chosen,
@@ -126,7 +122,6 @@ export function CreatorPaletteRows({
   onScrollStart,
   onScrollEnd,
 }: {
-  pack: AssetPack;
   parts: PartDefinition[];
   context: PaletteContext;
   chosen: number | null;
@@ -306,7 +301,6 @@ export function CreatorPaletteRows({
         </div>
       </div>
       <PaletteScrollbar
-        pack={pack}
         portId={portId}
         enabled={model.current.enabled}
         offset={position.offset}
@@ -322,7 +316,6 @@ export function CreatorPaletteRows({
 }
 
 function PaletteScrollbar({
-  pack,
   portId,
   enabled,
   barY,
@@ -333,7 +326,6 @@ function PaletteScrollbar({
   onDragStart,
   onDragEnd,
 }: {
-  pack: AssetPack;
   portId: string;
   enabled: boolean;
   barY: number;

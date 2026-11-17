@@ -50,7 +50,7 @@ test('carrier offsets stay on field axes after its emitter Point conversion', ()
   expect(owner.guns).toEqual([]);
 });
 
-test('carrier births use original enemy-seeker artwork', () => {
+test('carrier births use the enemy-seeker artwork', () => {
   const { world } = carrier();
   expect(world.bullets.map((b) => b.symbol)).toEqual([1809, 1809, 1809, 1809, 1809, 1809]);
 });

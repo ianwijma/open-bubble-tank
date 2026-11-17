@@ -1,12 +1,12 @@
 import { waitForMainMenu } from './helpers/main-menu';
 import { test, expect } from '@playwright/test';
 import { dropPreview, saveCreator } from './helpers/creator';
-test('mock path: menu, local enemy creator, settings, exploration and pause', async ({ page }) => {
+test('smoke path: menu, local enemy creator, settings, exploration and pause', async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto('/');
   await expect(page.getByRole('heading', { name: 'Build a tank out of bubbles.' })).toBeVisible();
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'Enemy tank creator' }).click();
   await page.getByRole('button', { name: 'Place Small Bubble', exact: true }).click();
@@ -54,11 +54,11 @@ test('mock path: menu, local enemy creator, settings, exploration and pause', as
   await expect(page.locator('.stage-frame').getByRole('alert')).toHaveCount(0);
   expect(errors).toEqual([]);
 });
-test('mock small viewport keeps the complete stage inside the page', async ({ page }) => {
+test('small viewport keeps the complete stage inside the page', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 812 });
   await page.goto('/');
   await page.screenshot({ path: 'test-results/mobile-gate.png' });
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(375);
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await expect(page.getByRole('button', { name: 'Play', exact: true })).toBeVisible();
 });

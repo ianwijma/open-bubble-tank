@@ -9,7 +9,11 @@ import { tankRosterIdentity } from '../core/tank-identity';
 export interface WaveOption {
   chance: number;
   scale: number;
-  conditions: string[];
+  /** Inclusive bounds on the whole-number distance. */
+  minDistance?: number;
+  maxDistance?: number;
+  /** Only offered when local tanks are present. */
+  needsLocalTanks?: boolean;
   instructions: { key: string; min: number; max: number }[];
 }
 export function matchesRule(tank: TankDesign, rule: string): boolean {
@@ -32,24 +36,13 @@ export function matchesRule(tank: TankDesign, rule: string): boolean {
   });
 }
 export function availableWaves(distance: number, includeLocal = false): WaveOption[] {
-  const band = distance < 0 ? '_-Iy' : distance < 10 ? '_-Pb' : distance < 20 ? '_-ad' : '_-9k';
-  const d = Math.floor(distance); // The band functions accept uint.
-  return (data[band] as WaveOption[]).filter((w) =>
-    w.conditions.every((cond) => {
-      if (cond.includes('_loc4_')) return includeLocal;
-      return [...cond.matchAll(/param1\s*(<=|>=|==|<|>)\s*(\d+)/g)].every(([, op, raw]) => {
-        const n = Number(raw);
-        return op === '<='
-          ? d <= n
-          : op === '>='
-            ? d >= n
-            : op === '=='
-              ? d === n
-              : op === '<'
-                ? d < n
-                : d > n;
-      });
-    }),
+  const band = distance < 0 ? 'deadhead' : distance < 10 ? 'near' : distance < 20 ? 'mid' : 'far';
+  const d = Math.floor(distance); // Distance bounds compare whole numbers.
+  return (data[band] as WaveOption[]).filter(
+    (w) =>
+      (!w.needsLocalTanks || includeLocal) &&
+      (w.minDistance === undefined || d >= w.minDistance) &&
+      (w.maxDistance === undefined || d <= w.maxDistance),
   );
 }
 export function rollWave(

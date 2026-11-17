@@ -7,14 +7,14 @@ const CREATOR_PALETTE = JSON.parse(
 const dialogs = JSON.parse(
   readFileSync(resolve('src/game/data/creator-dialogs.json'), 'utf8'),
 ) as typeof import('../src/game/core/creator-dialogs').CREATOR_DIALOGS;
-test(`mock creator text uses source fonts, alignment, line spacing and clipped accessible fields`, async ({
+test(`creator text uses the authored fonts, alignment, line spacing and clipped accessible fields`, async ({
   page,
 }, testInfo) => {
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('http://127.0.0.1:3102');
   await page.getByLabel('Fixture').selectOption('creator-text');
-  await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
   await expect(page.getByRole('status')).toContainText('Ready', { timeout: 60000 });
   const caption = page.locator('[data-creator-field="caption"]'),
     wrapped = page.locator('[data-creator-field="wrapped"]'),
@@ -69,14 +69,14 @@ test(`mock creator text uses source fonts, alignment, line spacing and clipped a
   expect(errors).toEqual([]);
 });
 
-test(`mock creator device-font text retains paragraphs, color and inline advances`, async ({
+test(`creator device-font text retains paragraphs, color and inline advances`, async ({
   page,
 }, testInfo) => {
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('http://127.0.0.1:3102');
   await page.getByLabel('Fixture').selectOption('creator-text');
-  await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
   await expect(page.getByRole('status')).toContainText('Ready', { timeout: 60000 });
   const device = page.locator('[data-creator-field="device"]'),
     paragraph = device.locator(':scope > [aria-hidden="true"]'),

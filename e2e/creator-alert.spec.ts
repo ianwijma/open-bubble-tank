@@ -6,13 +6,13 @@ import { dropPreview, exitCreator, readCreatorDesign } from './helpers/creator';
 
 const starter = JSON.parse(readFileSync(resolve('src/game/data/tanks.json'), 'utf8'))
   .avatar_defaults[0];
-test(`mock creator restores empty-save alert, retained fade and fresh name defaults`, async ({
+test(`creator restores empty-save alert, retained fade and fresh name defaults`, async ({
   page,
 }) => {
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'Enemy tank creator', exact: true }).click();
   const save = page.getByRole('button', { name: 'SAVE', exact: true }),

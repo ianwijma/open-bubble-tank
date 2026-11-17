@@ -28,7 +28,7 @@ test('suggested life keeps the distinct panel, save and import rounding order', 
   expect(creatorSuggestedStats(build, 'save')).toEqual({ life: 3, reward: 1, speed: 2 });
   expect(creatorSuggestedStats(build, 'load')).toEqual({ life: 1.5, reward: 1, speed: 2 });
 });
-test('the existing designer adapter retains source zero life for an empty suggestion', () => {
+test('the existing designer adapter keeps zero life for an empty suggestion', () => {
   expect(suggestedStats({ parts: [], classId: 1 })).toEqual({ life: 0, reward: 1, speed: 3 });
 });
 test('suggestions retain the reward discount cap, minimum speed and unrestricted life', () => {

@@ -1,12 +1,11 @@
 'use client';
 import { useLayoutEffect, useRef, useState } from 'react';
-import type { AssetPack } from '@/game/assets/asset-pack';
 import { WIN_SCREEN } from '@/game/core/win-screen';
 import type { WinScreen } from '@/game/services/win-screen';
 import { Dialog } from './ui';
 
 /** Authored win art, with the retired Parts Pack Manager promotion intentionally omitted. */
-export function WinPanel({ pack, screen }: { pack: AssetPack; screen: WinScreen }) {
+export function WinPanel({ screen }: { screen: WinScreen }) {
   const [hovered, setHovered] = useState('');
   const backdrop = useRef<HTMLCanvasElement>(null),
     foreground = useRef<HTMLDivElement>(null),

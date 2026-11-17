@@ -32,11 +32,11 @@ jobs:
       - name: Production build and quick browser smoke
         if: github.event_name == 'pull_request'
         run: bun run test:e2e:smoke
-      - name: Production build and full offline browser suite
+      - name: Production build and full browser suite
         if: github.event_name != 'pull_request'
         env:
           SOAPTANK_PLAYTHROUGH_LONG_RUN: '1'
-        run: bun run test:e2e:offline
+        run: bun run test:e2e
       - name: Retain failed browser traces
         if: failure()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4

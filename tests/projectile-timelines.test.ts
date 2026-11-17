@@ -106,7 +106,7 @@ test('empty retained frames remove fallback pixel contact and rectangle geometry
   const clocks = new ProjectileTimelines(() => 0.5);
   clocks.initialize(b);
   for (let i = 0; i < 30; i++) clocks.advance(b);
-  const pack = new AssetPack('mock');
+  const pack = new AssetPack();
   expect(b.artPose!.placements).toHaveLength(0);
   expect(pack.hitProjectile(b, b.x, b.y)).toBe(false);
   expect(pack.projectileBounds(b)).toEqual({ x: 0, y: 0, width: 0, height: 0, empty: true });

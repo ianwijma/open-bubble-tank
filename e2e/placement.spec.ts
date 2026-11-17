@@ -1,15 +1,15 @@
 import { waitForMainMenu } from './helpers/main-menu';
 import { test, expect } from '@playwright/test';
 import { readCreatorDesign, dropPreview } from './helpers/creator';
-import reference from '../tests/fixtures/creator-point-reference.json' with { type: 'json' };
+import reference from '../tests/fixtures/creator-point.json' with { type: 'json' };
 const snapshot = readCreatorDesign;
-test(`mock creator uses preview placement, repeated drops, axis snap and cancellation`, async ({
+test(`creator uses preview placement, repeated drops, axis snap and cancellation`, async ({
   page,
 }) => {
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'Enemy tank creator' }).click({ timeout: 60000 });
   expect(await snapshot(page)).toMatchObject({ parts: [], life: 20, reward: 20, speed: 2 });

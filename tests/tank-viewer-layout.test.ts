@@ -1,7 +1,7 @@
 import { expect, test } from 'bun:test';
 import { TANK_VIEWER, viewerRoot, viewerWidget } from '../src/game/core/tank-viewer';
 
-test('viewer layout retains source four-row registrations, local mask and invisible fit helper', () => {
+test('viewer layout keeps four-row registrations, local mask and invisible fit helper', () => {
   expect(TANK_VIEWER.symbol).toBe(1413);
   expect([1, 2, 3, 4].map((i) => viewerRoot(`TankLoad${i}_mc`).matrix)).toEqual([
     { a: 1, b: 0, c: 0, d: 1, tx: 2295, ty: 2020 },
@@ -50,7 +50,7 @@ test('viewer lookup retains all authored sort poses and clamps one-frame button 
   expect(TANK_VIEWER.sortIconMatrix).toEqual({ a: 1, b: 0, c: 0, d: 1, tx: -91, ty: 0 });
 });
 
-test('viewer statistics retain source gradient, closed mask and nonlinear ten-frame expansion', () => {
+test('viewer statistics keep their gradient, closed mask and nonlinear ten-frame expansion', () => {
   const s = TANK_VIEWER.statistics;
   expect(s.closed).toEqual(s.frames[0].mask);
   expect(s.frames.map((f) => Math.round(f.mask.height * 100))).toEqual([
@@ -83,7 +83,7 @@ test('offline guide metadata clips retired upper callout and leaves local copy a
   });
 });
 
-test('closing sort frame10 applies its source AnimatorFactory3D Bubble Points row override', () => {
+test('closing sort frame10 applies its Bubble Points row override', () => {
   const bubbles = (frame: number) =>
     viewerWidget(1218, frame).children.find((p) => p.name === 'btnSortByBubbles_mc')!;
   expect(bubbles(9).matrix.ty).toBe(1084);

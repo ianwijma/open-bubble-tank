@@ -1,12 +1,12 @@
 import { expect, test } from '@playwright/test';
-test(`mock aim flags preserve fixed secondaries while Spike uses all seven source contact points`, async ({
+test(`aim flags preserve fixed secondaries while Spike uses all seven contact points`, async ({
   page,
 }) => {
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto('http://127.0.0.1:3102');
   await page.getByLabel('Fixture').selectOption('aim-contracts');
-  await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
   const status = page.locator('#status');
   await expect(status).toContainText('Ready', { timeout: 60000 });
   const proof = JSON.parse((await status.getAttribute('data-aim-contracts'))!);
@@ -25,14 +25,14 @@ test(`mock aim flags preserve fixed secondaries while Spike uses all seven sourc
   await page.locator('#stage').screenshot({ path: `test-results/mock-aim-contracts.png` });
   expect(errors).toEqual([]);
 });
-test(`mock ally-health arcs leave the origin and inter-ring connectors transparent`, async ({
+test(`ally-health arcs leave the origin and inter-ring connectors transparent`, async ({
   page,
 }) => {
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto('http://127.0.0.1:3102');
   await page.getByLabel('Fixture').selectOption('tactical-hud');
-  await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
   const status = page.locator('#status');
   await expect(status).toContainText('Ready', { timeout: 60000 });
   const proof = JSON.parse((await status.getAttribute('data-tactical-hud'))!);

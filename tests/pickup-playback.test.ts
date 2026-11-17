@@ -22,12 +22,12 @@ test('retained pickup pose advances through pause and UID/Run edits instead of h
 });
 
 import { PickupDisplays } from '../src/game/simulation/pickup-display';
-import original from './fixtures/pickup-pose-original.json';
+import fixture from './fixtures/pickup-pose.json';
 import type { Pickup } from '../src/game/core/types';
 
 for (const cohort of ['before', 'inside'] as const)
-  for (const [label, reference] of Object.entries(original[cohort]))
-    test(`original ${cohort} ${label}: retained root and native child checkpoint replay`, () => {
+  for (const [label, reference] of Object.entries(fixture[cohort]))
+    test(`${cohort} ${label}: retained root and native child checkpoint replay`, () => {
       const results = [...reference.randomResults];
       const owner = new PickupDisplays(() => {
         const result = results.shift();

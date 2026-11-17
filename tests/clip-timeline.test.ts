@@ -30,7 +30,7 @@ test('the mirrored cluster branches by its current Y only at its authored frame 
   expect(above.tick(0)).toBe(1);
   expect(advance(above, 49)).toBe(1);
 });
-test('the three-branch cluster retains its source rounded distribution and segment boundaries', () => {
+test('the three-branch cluster keeps its rounded distribution and segment boundaries', () => {
   expect(new ClipTimeline(180, actions[2446], () => 0).tick()).toBe(1);
   expect(new ClipTimeline(180, actions[2446], () => 0.5).tick()).toBe(61);
   expect(new ClipTimeline(180, actions[2446], () => 0.9999).tick()).toBe(141);
@@ -75,7 +75,7 @@ test('stopped effects retain their pose, explicit jumps execute destination scri
   advance(single, 100);
   expect(calls).toBe(1);
 });
-test('all scripted clips reachable from the part catalog have recovered actions', () => {
+test('all scripted clips reachable from the part catalog have frame actions', () => {
   const partClips = [
     680, 682, 684, 686, 19, 17, 2187, 2188, 46, 40, 27, 37, 20, 2445, 2446, 2447, 22, 1803, 720, 34,
     42, 695, 701, 2034, 2450,

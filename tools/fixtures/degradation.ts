@@ -2,14 +2,14 @@ import { Application } from 'pixi.js';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { STARTER } from '../../src/game/data/catalog';
 import { TankView } from '../../src/game/render/tank-view';
-import { SwfTextures } from '../../src/game/render/swf-textures';
+import { ArtTextures } from '../../src/game/render/art-textures';
 import { createTank, healTank } from '../../src/game/simulation/tank';
 import { World } from '../../src/game/simulation/world';
 
 /** Same mounted body/gun geometry at full health, after damage, after healing, and as avatar. */
 export async function showDegradationProof(pack: AssetPack, host: HTMLElement) {
   const app = new Application(),
-    textures = new SwfTextures(),
+    textures = new ArtTextures(),
     world = new World([], [], 1);
   await app.init({
     width: 550,

@@ -3,7 +3,7 @@ import { writeFileSync } from 'node:fs';
 // The full post-merge suite has a larger hosted wall-clock budget. The pilot's
 // inputs, simulated frames, frame cap and all earned-progression assertions stay fixed.
 const playthroughTimeout = process.env.SOAPTANK_PLAYTHROUGH_LONG_RUN === '1' ? 600000 : 300000;
-test(`mock fresh game reaches the boss and win through ordinary controls`, async ({
+test(`fresh game reaches the boss and win through ordinary controls`, async ({
   page,
 }, testInfo) => {
   test.setTimeout(playthroughTimeout);
@@ -11,7 +11,7 @@ test(`mock fresh game reaches the boss and win through ordinary controls`, async
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('http://127.0.0.1:3102');
   await page.getByLabel('Fixture').selectOption('playthrough');
-  await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
   const status = page.getByRole('status');
   await expect(status).toContainText('Ready', { timeout: playthroughTimeout - 20000 });
   const proof = JSON.parse((await status.getAttribute('data-playthrough'))!);

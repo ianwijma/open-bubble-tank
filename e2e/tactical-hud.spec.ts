@@ -7,7 +7,7 @@ import { DEFAULT_SETTINGS } from '../src/game/core/constants';
 const STARTER: TankDesign = JSON.parse(readFileSync(resolve('src/game/data/tanks.json'), 'utf8'))
   .avatar_defaults[0];
 
-test(`mock field readouts follow summoning, arrival, pause and zoom`, async ({ page }) => {
+test(`field readouts follow summoning, arrival, pause and zoom`, async ({ page }) => {
   const tank = {
     ...STARTER,
     id: 'readout-fixture',
@@ -38,10 +38,10 @@ test(`mock field readouts follow summoning, arrival, pause and zoom`, async ({ p
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'Play', exact: true }).click({ timeout: 60000 });
-  await page.getByRole('button', { name: 'Original game size', exact: true }).click();
+  await page.getByRole('button', { name: 'Actual size', exact: true }).click();
   await page.getByRole('checkbox', { name: 'Use saved avatars from previous game' }).check();
   await page
     .getByRole('dialog', { name: 'Choose your tanks' })

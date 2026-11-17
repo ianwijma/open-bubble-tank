@@ -10,7 +10,7 @@ const enemy: TankDesign =
     (t: TankDesign) => t.classId === 1 && t.parts.some((p) => p.type === 1002),
   ) ?? data.enemy_tanks[0];
 const snapshot = readCreatorDesign;
-test(`mock creator load uses original local viewer, animated cards, code view and fresh editor routing`, async ({
+test(`creator load uses the local viewer, animated cards, code view and fresh editor routing`, async ({
   page,
   context,
 }) => {
@@ -40,7 +40,7 @@ test(`mock creator load uses original local viewer, animated cards, code view an
     if (!/^(http:\/\/(localhost|127\.0\.0\.1):|data:|blob:)/.test(r.url())) outbound.push(r.url());
   });
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'Enemy tank creator', exact: true }).click();
   await dropPreview(page, 40, 0);
@@ -156,6 +156,10 @@ test(`mock creator load uses original local viewer, animated cards, code view an
   });
   await code.getByRole('button', { name: 'Submit tank code', exact: true }).click();
   await expect(code.getByRole('button', { name: 'Submit tank code', exact: true })).toBeDisabled();
+  // After a rendering update the browser has moved focus off the disabled button.
+  // The dialog must hold it, or Escape would go to BODY.
+  await page.evaluate(() => new Promise(requestAnimationFrame));
+  await expect(code).toBeFocused();
   await page.keyboard.press('Escape');
   await expect(code).toHaveCount(0);
   await page.waitForFunction(

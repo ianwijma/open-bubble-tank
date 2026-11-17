@@ -5,7 +5,7 @@ import type { AssetPack } from '../../src/game/assets/asset-pack';
 import type { Tank } from '../../src/game/core/types';
 import { STARTER } from '../../src/game/data/catalog';
 import { TankView } from '../../src/game/render/tank-view';
-import { SwfTextures } from '../../src/game/render/swf-textures';
+import { ArtTextures } from '../../src/game/render/art-textures';
 import { createTank } from '../../src/game/simulation/tank';
 import { World, emptyInput } from '../../src/game/simulation/world';
 import { createProjectile } from '../../src/game/simulation/create-projectile';
@@ -13,7 +13,7 @@ import { createProjectile } from '../../src/game/simulation/create-projectile';
 /** Production display/contact paths for independent AGunShield instances and callbacks. */
 export async function showShieldOwnership(pack: AssetPack, host: HTMLElement) {
   const app = new Application(),
-    textures = new SwfTextures(),
+    textures = new ArtTextures(),
     world = new World([], [], 76);
   await app.init({
     width: 250,
@@ -145,7 +145,6 @@ export async function showShieldOwnership(pack: AssetPack, host: HTMLElement) {
     tick(1);
     capture('Arrival · current film retained, immunity cleared');
     return {
-      mode: pack.mode,
       panels,
       contact,
       retainedB,

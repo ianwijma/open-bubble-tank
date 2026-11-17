@@ -6,15 +6,15 @@ import type { TacticalHudState } from '../core/tactical-hud';
 /** Ally rings, radar arrows and readouts are siblings of the fixed-stage HUD. */
 export class TacticalHudView {
   root = new Container();
-  private mock = new Graphics();
+  private paint = new Graphics();
   constructor() {
-    this.root.addChild(this.mock);
+    this.root.addChild(this.paint);
   }
   update(state: TacticalHudState) {
     this.drawMock(state);
   }
   private drawMock(state: TacticalHudState) {
-    const g = this.mock.clear();
+    const g = this.paint.clear();
     for (const ally of state.allies) {
       const radius = ally.width / 2;
       g.circle(ally.x, ally.y, radius).stroke({ color: 0xffffff, alpha: 0.15, width: 2 });

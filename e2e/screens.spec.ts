@@ -1,9 +1,9 @@
 import { waitForMainMenu } from './helpers/main-menu';
 import { expect, test } from './helpers/frame-paced-test';
 
-test('mock Info exit keeps the immediate pause key on the returned dialog', async ({ page }) => {
+test('Info exit keeps the immediate pause key on the returned dialog', async ({ page }) => {
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await page.getByRole('button', { name: 'Play', exact: true }).click();
   await page
     .getByRole('dialog', { name: 'Choose your tanks' })
@@ -40,16 +40,16 @@ test('mock Info exit keeps the immediate pause key on the returned dialog', asyn
   await expect(page.locator('body')).toHaveAttribute('data-info-return-focus', 'Paused');
 });
 
-test(`mock tank information shows native class attributes and returns to a frozen pause`, async ({
+test(`tank information shows native class attributes and returns to a frozen pause`, async ({
   page,
 }) => {
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto('/');
-  await page.getByRole('button', { name: 'Play with mock assets' }).click();
+  await page.getByRole('button', { name: 'Play' }).click();
   await waitForMainMenu(page);
   await page.getByRole('button', { name: 'Play', exact: true }).click({ timeout: 60000 });
-  await page.getByRole('button', { name: 'Original game size', exact: true }).click();
+  await page.getByRole('button', { name: 'Actual size', exact: true }).click();
   await page
     .getByRole('dialog', { name: 'Choose your tanks' })
     .getByRole('button', { name: 'PLAY', exact: true })
@@ -88,15 +88,13 @@ test(`mock tank information shows native class attributes and returns to a froze
   expect(errors).toEqual([]);
 });
 
-test(`mock win screen fades in its authored controls and omits retired promotion`, async ({
-  page,
-}) => {
+test(`win screen fades in its authored controls and omits retired promotion`, async ({ page }) => {
   // The fixture mounts the production component; no test hooks enter the game.
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto(`http://127.0.0.1:${process.env.SOAPTANK_FIXTURE_PORT ?? 3102}`);
   await page.getByLabel('Fixture').selectOption('win-screen');
-  await page.getByRole('button', { name: 'Use mock assets', exact: true }).click();
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
   await expect(page.getByRole('status')).toContainText('Ready', { timeout: 60000 });
   const host = page.locator('#stage');
   await expect(host).toHaveAttribute('data-ready', 'true');

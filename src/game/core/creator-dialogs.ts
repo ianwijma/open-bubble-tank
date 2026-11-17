@@ -1,13 +1,13 @@
 import data from '../data/creator-dialogs.json';
 import type { CreatorPrimitive } from './creator-controls';
 import type { CreatorField } from './creator-palette';
-import type { SwfMatrix } from '../assets/asset-pack';
+import type { ArtMatrix } from '../assets/asset-pack';
 import type { Rect } from './types';
 export type CreatorDialogFrame = 1 | 2 | 3 | 7;
 export interface CreatorDialogButton {
   name: string;
   symbol: number;
-  matrix: SwfMatrix;
+  matrix: ArtMatrix;
   bounds: Rect;
   variants: Record<'up' | 'over' | 'down', CreatorPrimitive[]>;
   fields: Record<'up' | 'over' | 'down', CreatorField[]>;
@@ -16,7 +16,7 @@ export const CREATOR_DIALOGS = data as {
   symbol: number;
   alert: {
     symbol: number;
-    matrix: SwfMatrix;
+    matrix: ArtMatrix;
     fields: CreatorField[];
     staticIds: number[];
     art: CreatorPrimitive[];

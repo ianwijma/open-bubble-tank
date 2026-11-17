@@ -180,7 +180,7 @@ test('Repulsor invokes the zero-amount increment after force and before Damage, 
   expect(world.stats.damageDone).toBe(0);
 });
 
-test('direct Damage, beam contact and turret interception retain their source absence of accounting', () => {
+test('direct Damage, beam contact and turret interception record no damage accounting', () => {
   const { world, target } = setup();
   world.damage(target, 1);
   const beam = shot(world, { kind: 'beam', symbol: 1992, damage: 2 });

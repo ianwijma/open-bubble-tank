@@ -35,7 +35,7 @@ test('the birth frame finishes World.Run once, and the new menu begins on the ne
   expect(menu!.motion.counter).toBe(1);
   expect(world.player.age).toBe(1);
   expect(world.player.artAge).toBe(2);
-  expect(world.hitSoundTimer).toBe(7); // Main4 omits the World listener's timer tail.
+  expect(world.hitSoundTimer).toBe(7); // The upgrade-menu phase omits the World listener's timer tail.
   expect(world.placeUpgrade(world.offers[0])).toBe(true);
   menu!.motion.beginClosing();
   const frames = world.stats.frames;
