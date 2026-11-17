@@ -1,7 +1,4 @@
 {
-  "scope": "Preserved original mask1542/shape1541 in project-added empty MovieClips. width/height and getBounds(world) are distinct original observations, not analytic expectations. Matrices use a,b,c,d,tx,ty; translations are integer twips.",
-  "probeSha256": "5a881148ed5bac23582e7a77f780b142aa9ade6902e58172abf8780f645ca278",
-  "evidenceId": "ev_db664f55e165ed103052975f34abac7c277a410d8c53ed3b3ae3e3c28b44cb33",
   "originalLeafTwips": {
     "xMin": -13919,
     "xMax": 13919,

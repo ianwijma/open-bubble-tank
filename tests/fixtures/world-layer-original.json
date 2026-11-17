@@ -1,20 +1,4 @@
 {
-  "scope": "Original Setup(Main), TankData import/default0/_-Tr(1,world), DeathAnimPart2 and synchronous ShrinkBubblefield(null) calls on preserved original classes. The newly added ENTER_FRAME listener is removed before manual calls. Original SHAKE/FLASH/RNG are unmodified; screen-effects ENTER_FRAME does not run between synchronous calls. Finish transform prefix, next constructors/position copies and detach are explicitly glue. No original DeathAnimPart3/Destroy/World.Run/arrival, event schedule, global RNG, Adobe, pixel/audio or full-game proof. concatenatedMatrix is its own API observation; detached values may differ from localToGlobal.",
-  "originalSha256": "f5827841c682f988f23dcf470ab4ab59c1ffc497acb4ca0f21077d03f942c153",
-  "probeSha256": "8ef4a4c9620b4fe89f252d47f36ce428bdf493da64fe97879c3bdbd95f4fcd9f",
-  "qualifiedSourceHashes": {
-    "export_pcode/scripts/Main.pcode": "faa5c3e921e0f625b5d07e07a1946b50ee5645a49290b9c42a923f9e904dde1d",
-    "export_pcode/scripts/BTAGameWorld.pcode": "eda20420933f4bd87fe9dce652428c3dde3a4bc6e0ee31702325fcdb3c9dba0b",
-    "export_pcode/scripts/_-0D.pcode": "5b30ed4cca2a726a56569c8da70a24c652282c92836692cdbd6fd1f97fc8b5ae",
-    "export_pcode/scripts/TankData.pcode": "4f1eec91c07616eaa1895078047c1423a21ce0253192d61161dfdc8f120491f0",
-    "export_pcode/scripts/_-Zx.pcode": "2a3d03e2eebf57c8189b5d4e2aea67e48f6dcfb50477271f07dca15b22bf80ea",
-    "export_pcode/scripts/_-1w.pcode": "9e8919b35d9a325a8f554acca0bd8a36f26229bb01470fb07f8de123fde48af7",
-    "export_pcode/scripts/Bubblefield.pcode": "3812bb686dde401803a56f75195f741a8a53fea87c45310700240f4acdc6e55e",
-    "export_pcode/scripts/_-dl.pcode": "8c301f340cb075b8ce196f21eeff167c6646eb0fc7f75160dab5ee1ae34e043e",
-    "export_pcode/scripts/_-My.pcode": "86c10cf1b0698794069644a5afca022700f2040129b559f63e95afeb6a1c3cae",
-    "export_pcode/scripts/_-Zs.pcode": "46f1f633c3baa616ed778290713c6f0c3c04423297588d21f6339f01780da0e8",
-    "export_pcode/scripts/_-Rt.pcode": "9165c7ad6a0dc8f20e05326de71474690ecdb7f780eef14dda0148772cfb1789"
-  },
   "fields": [
     "scaleX",
     "scaleY",
@@ -59,38 +43,13 @@
       [100, 40]
     ],
     "nextRootXY": [700, -90],
-    "nextBulletTopCopy": "current receiver root, not next root",
-    "scope": "Original Setup(Main), TankData import/default0/_-Tr(1,world), DeathAnimPart2 and synchronous ShrinkBubblefield(null) calls on preserved original classes. The newly added ENTER_FRAME listener is removed before manual calls. Original SHAKE/FLASH/RNG are unmodified; screen-effects ENTER_FRAME does not run between synchronous calls. Finish transform prefix, next constructors/position copies and detach are explicitly glue. No original DeathAnimPart3/Destroy/World.Run/arrival, event schedule, global RNG, Adobe, pixel/audio or full-game proof. concatenatedMatrix is its own API observation; detached values may differ from localToGlobal."
-  },
-  "originalAbcPayloadHashes": [
-    "130eef8fcef585dc1ae00f427903d11c35a79feb22e11d4e93219f987c719a1c",
-    "d849764541e5f8b5b7d3b9bbdb31960ad9e47b8fd4a3e24652ccfa408c8be596"
-  ],
-  "runtimeModules": [
-    {
-      "sha256": "1ed33b9b71a6b01b9aafafed660be343ffeb2d246c5d79e6425a32bf93e38207",
-      "bytes": 14302754
-    },
-    {
-      "sha256": "26036a94567088dfb3de88a759e8ed10a4cea07b29500af36f345eef42420098",
-      "bytes": 465885
-    },
-    {
-      "sha256": "d27c6bdce2a34afb32e8dfa40970bc7e86cbcb912f92db7eb3e1ac70e943bd82",
-      "bytes": 108322
-    }
-  ],
-  "viewer": {
-    "sha256": "967cffbcce1ffbf1d07001b27827f4f9107b73517a684e56ba88e58827efa164",
-    "bytes": 3553
+    "nextBulletTopCopy": "current receiver root, not next root"
   },
   "samples": [
     {
       "phase": "collapse",
       "age": 0,
       "role": "root",
-      "className": "Bubblefield",
-      "parentClass": "BTAGameWorld",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -120,8 +79,6 @@
       "phase": "collapse",
       "age": 0,
       "role": "bottom",
-      "className": "_-Rt",
-      "parentClass": "flash.display::MovieClip",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -151,8 +108,6 @@
       "phase": "collapse",
       "age": 0,
       "role": "top",
-      "className": "_-My",
-      "parentClass": "BTAGameWorld",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -182,8 +137,6 @@
       "phase": "collapse",
       "age": 0,
       "role": "bullet",
-      "className": "_-dl",
-      "parentClass": "BTAGameWorld",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -213,8 +166,6 @@
       "phase": "collapse",
       "age": 0,
       "role": "highlight",
-      "className": "_-Zs",
-      "parentClass": "BTAGameWorld",
       "parentMatches": true,
       "words": [
         [1073112678, 1717986918],
@@ -244,8 +195,6 @@
       "phase": "collapse",
       "age": 0,
       "role": "avatar",
-      "className": "_-Zx",
-      "parentClass": "BTAGameWorld",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -275,8 +224,6 @@
       "phase": "collapse",
       "age": 0,
       "role": "background",
-      "className": "flash.display::MovieClip",
-      "parentClass": "Bubblefield",
       "parentMatches": true,
       "words": [
         [1073112678, 1717986918],
@@ -306,8 +253,6 @@
       "phase": "collapse",
       "age": 0,
       "role": "under",
-      "className": "flash.display::MovieClip",
-      "parentClass": "Bubblefield",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -337,8 +282,6 @@
       "phase": "collapse",
       "age": 0,
       "role": "screen",
-      "className": "flash.display::MovieClip",
-      "parentClass": "BTAGameWorld",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -368,8 +311,6 @@
       "phase": "collapse",
       "age": 0,
       "role": "world",
-      "className": "BTAGameWorld",
-      "parentClass": "WorldLayerProbe",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -399,8 +340,6 @@
       "phase": "collapse",
       "age": 0,
       "role": "main",
-      "className": "WorldLayerProbe",
-      "parentClass": "flash.display::Stage",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -430,8 +369,6 @@
       "phase": "collapse",
       "age": 1,
       "role": "root",
-      "className": "Bubblefield",
-      "parentClass": "BTAGameWorld",
       "parentMatches": true,
       "words": [
         [1072682967, 3621246936],
@@ -461,8 +398,6 @@
       "phase": "collapse",
       "age": 1,
       "role": "bottom",
-      "className": "_-Rt",
-      "parentClass": "flash.display::MovieClip",
       "parentMatches": true,
       "words": [
         [1072682967, 3621246936],
@@ -492,8 +427,6 @@
       "phase": "collapse",
       "age": 1,
       "role": "top",
-      "className": "_-My",
-      "parentClass": "BTAGameWorld",
       "parentMatches": true,
       "words": [
         [1072682967, 3621246936],
@@ -523,8 +456,6 @@
       "phase": "collapse",
       "age": 1,
       "role": "bullet",
-      "className": "_-dl",
-      "parentClass": "BTAGameWorld",
       "parentMatches": true,
       "words": [
         [1072682967, 3621246936],
@@ -554,8 +485,6 @@
       "phase": "collapse",
       "age": 1,
       "role": "highlight",
-      "className": "_-Zs",
-      "parentClass": "BTAGameWorld",
       "parentMatches": true,
       "words": [
         [1072682967, 3621246936],
@@ -585,8 +514,6 @@
       "phase": "collapse",
       "age": 1,
       "role": "avatar",
-      "className": "_-Zx",
-      "parentClass": "BTAGameWorld",
       "parentMatches": true,
       "words": [
         [1072682967, 3621246936],
@@ -616,8 +543,6 @@
       "phase": "collapse",
       "age": 1,
       "role": "background",
-      "className": "flash.display::MovieClip",
-      "parentClass": "Bubblefield",
       "parentMatches": true,
       "words": [
         [1073112678, 1717986918],
@@ -647,8 +572,6 @@
       "phase": "collapse",
       "age": 1,
       "role": "under",
-      "className": "flash.display::MovieClip",
-      "parentClass": "Bubblefield",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -678,8 +601,6 @@
       "phase": "collapse",
       "age": 1,
       "role": "screen",
-      "className": "flash.display::MovieClip",
-      "parentClass": "BTAGameWorld",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -709,8 +630,6 @@
       "phase": "collapse",
       "age": 1,
       "role": "world",
-      "className": "BTAGameWorld",
-      "parentClass": "WorldLayerProbe",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -740,8 +659,6 @@
       "phase": "collapse",
       "age": 1,
       "role": "main",
-      "className": "WorldLayerProbe",
-      "parentClass": "flash.display::Stage",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -771,8 +688,6 @@
       "phase": "collapse",
       "age": 2,
       "role": "root",
-      "className": "Bubblefield",
-      "parentClass": "BTAGameWorld",
       "parentMatches": true,
       "words": [
         [1072672687, 2947526577],
@@ -802,8 +717,6 @@
       "phase": "collapse",
       "age": 2,
       "role": "bottom",
-      "className": "_-Rt",
-      "parentClass": "flash.display::MovieClip",
       "parentMatches": true,
       "words": [
         [1072672687, 2947526577],
@@ -833,8 +746,6 @@
       "phase": "collapse",
       "age": 2,
       "role": "top",
-      "className": "_-My",
-      "parentClass": "BTAGameWorld",
       "parentMatches": true,
       "words": [
         [1072672687, 2947526577],
@@ -864,8 +775,6 @@
       "phase": "collapse",
       "age": 2,
       "role": "bullet",
-      "className": "_-dl",
-      "parentClass": "BTAGameWorld",
       "parentMatches": true,
       "words": [
         [1072672687, 2947526577],
@@ -895,8 +804,6 @@
       "phase": "collapse",
       "age": 2,
       "role": "highlight",
-      "className": "_-Zs",
-      "parentClass": "BTAGameWorld",
       "parentMatches": true,
       "words": [
         [1072672687, 2947526577],
@@ -926,8 +833,6 @@
       "phase": "collapse",
       "age": 2,
       "role": "avatar",
-      "className": "_-Zx",
-      "parentClass": "BTAGameWorld",
       "parentMatches": true,
       "words": [
         [1072672687, 2947526577],
@@ -957,8 +862,6 @@
       "phase": "collapse",
       "age": 2,
       "role": "background",
-      "className": "flash.display::MovieClip",
-      "parentClass": "Bubblefield",
       "parentMatches": true,
       "words": [
         [1073112678, 1717986918],
@@ -988,8 +891,6 @@
       "phase": "collapse",
       "age": 2,
       "role": "under",
-      "className": "flash.display::MovieClip",
-      "parentClass": "Bubblefield",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -1019,8 +920,6 @@
       "phase": "collapse",
       "age": 2,
       "role": "screen",
-      "className": "flash.display::MovieClip",
-      "parentClass": "BTAGameWorld",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -1050,8 +949,6 @@
       "phase": "collapse",
       "age": 2,
       "role": "world",
-      "className": "BTAGameWorld",
-      "parentClass": "WorldLayerProbe",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -1081,8 +978,6 @@
       "phase": "collapse",
       "age": 2,
       "role": "main",
-      "className": "WorldLayerProbe",
-      "parentClass": "flash.display::Stage",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -1112,8 +1007,6 @@
       "phase": "collapse",
       "age": 51,
       "role": "root",
-      "className": "Bubblefield",
-      "parentClass": "BTAGameWorld",
       "parentMatches": true,
       "words": [
         [1072168960, 12],
@@ -1143,8 +1036,6 @@
       "phase": "collapse",
       "age": 51,
       "role": "bottom",
-      "className": "_-Rt",
-      "parentClass": "flash.display::MovieClip",
       "parentMatches": true,
       "words": [
         [1072168960, 12],
@@ -1174,8 +1065,6 @@
       "phase": "collapse",
       "age": 51,
       "role": "top",
-      "className": "_-My",
-      "parentClass": "BTAGameWorld",
       "parentMatches": true,
       "words": [
         [1072168960, 12],
@@ -1205,8 +1094,6 @@
       "phase": "collapse",
       "age": 51,
       "role": "bullet",
-      "className": "_-dl",
-      "parentClass": "BTAGameWorld",
       "parentMatches": true,
       "words": [
         [1072168960, 12],
@@ -1236,8 +1123,6 @@
       "phase": "collapse",
       "age": 51,
       "role": "highlight",
-      "className": "_-Zs",
-      "parentClass": "BTAGameWorld",
       "parentMatches": true,
       "words": [
         [1072168960, 12],
@@ -1267,8 +1152,6 @@
       "phase": "collapse",
       "age": 51,
       "role": "avatar",
-      "className": "_-Zx",
-      "parentClass": "BTAGameWorld",
       "parentMatches": true,
       "words": [
         [1072168960, 12],
@@ -1298,8 +1181,6 @@
       "phase": "collapse",
       "age": 51,
       "role": "background",
-      "className": "flash.display::MovieClip",
-      "parentClass": "Bubblefield",
       "parentMatches": true,
       "words": [
         [1073112678, 1717986918],
@@ -1329,8 +1210,6 @@
       "phase": "collapse",
       "age": 51,
       "role": "under",
-      "className": "flash.display::MovieClip",
-      "parentClass": "Bubblefield",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -1360,8 +1239,6 @@
       "phase": "collapse",
       "age": 51,
       "role": "screen",
-      "className": "flash.display::MovieClip",
-      "parentClass": "BTAGameWorld",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -1391,8 +1268,6 @@
       "phase": "collapse",
       "age": 51,
       "role": "world",
-      "className": "BTAGameWorld",
-      "parentClass": "WorldLayerProbe",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -1422,8 +1297,6 @@
       "phase": "collapse",
       "age": 51,
       "role": "main",
-      "className": "WorldLayerProbe",
-      "parentClass": "flash.display::Stage",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -1453,8 +1326,6 @@
       "phase": "collapse",
       "age": 119,
       "role": "root",
-      "className": "Bubblefield",
-      "parentClass": "BTAGameWorld",
       "parentMatches": true,
       "words": [
         [1071295146, 2863311576],
@@ -1484,8 +1355,6 @@
       "phase": "collapse",
       "age": 119,
       "role": "bottom",
-      "className": "_-Rt",
-      "parentClass": "flash.display::MovieClip",
       "parentMatches": true,
       "words": [
         [1071295146, 2863311576],
@@ -1515,8 +1384,6 @@
       "phase": "collapse",
       "age": 119,
       "role": "top",
-      "className": "_-My",
-      "parentClass": "BTAGameWorld",
       "parentMatches": true,
       "words": [
         [1071295146, 2863311576],
@@ -1546,8 +1413,6 @@
       "phase": "collapse",
       "age": 119,
       "role": "bullet",
-      "className": "_-dl",
-      "parentClass": "BTAGameWorld",
       "parentMatches": true,
       "words": [
         [1071295146, 2863311576],
@@ -1577,8 +1442,6 @@
       "phase": "collapse",
       "age": 119,
       "role": "highlight",
-      "className": "_-Zs",
-      "parentClass": "BTAGameWorld",
       "parentMatches": true,
       "words": [
         [1071295146, 2863311576],
@@ -1608,8 +1471,6 @@
       "phase": "collapse",
       "age": 119,
       "role": "avatar",
-      "className": "_-Zx",
-      "parentClass": "BTAGameWorld",
       "parentMatches": true,
       "words": [
         [1071295146, 2863311576],
@@ -1639,8 +1500,6 @@
       "phase": "collapse",
       "age": 119,
       "role": "background",
-      "className": "flash.display::MovieClip",
-      "parentClass": "Bubblefield",
       "parentMatches": true,
       "words": [
         [1073112678, 1717986918],
@@ -1670,8 +1529,6 @@
       "phase": "collapse",
       "age": 119,
       "role": "under",
-      "className": "flash.display::MovieClip",
-      "parentClass": "Bubblefield",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -1701,8 +1558,6 @@
       "phase": "collapse",
       "age": 119,
       "role": "screen",
-      "className": "flash.display::MovieClip",
-      "parentClass": "BTAGameWorld",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -1732,8 +1587,6 @@
       "phase": "collapse",
       "age": 119,
       "role": "world",
-      "className": "BTAGameWorld",
-      "parentClass": "WorldLayerProbe",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -1763,8 +1616,6 @@
       "phase": "collapse",
       "age": 119,
       "role": "main",
-      "className": "WorldLayerProbe",
-      "parentClass": "flash.display::Stage",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -1794,8 +1645,6 @@
       "phase": "main-fraction",
       "age": 119,
       "role": "root",
-      "className": "Bubblefield",
-      "parentClass": "BTAGameWorld",
       "parentMatches": true,
       "words": [
         [1071295146, 2863311576],
@@ -1825,8 +1674,6 @@
       "phase": "main-fraction",
       "age": 119,
       "role": "bottom",
-      "className": "_-Rt",
-      "parentClass": "flash.display::MovieClip",
       "parentMatches": true,
       "words": [
         [1071295146, 2863311576],
@@ -1856,8 +1703,6 @@
       "phase": "main-fraction",
       "age": 119,
       "role": "top",
-      "className": "_-My",
-      "parentClass": "BTAGameWorld",
       "parentMatches": true,
       "words": [
         [1071295146, 2863311576],
@@ -1887,8 +1732,6 @@
       "phase": "main-fraction",
       "age": 119,
       "role": "bullet",
-      "className": "_-dl",
-      "parentClass": "BTAGameWorld",
       "parentMatches": true,
       "words": [
         [1071295146, 2863311576],
@@ -1918,8 +1761,6 @@
       "phase": "main-fraction",
       "age": 119,
       "role": "highlight",
-      "className": "_-Zs",
-      "parentClass": "BTAGameWorld",
       "parentMatches": true,
       "words": [
         [1071295146, 2863311576],
@@ -1949,8 +1790,6 @@
       "phase": "main-fraction",
       "age": 119,
       "role": "avatar",
-      "className": "_-Zx",
-      "parentClass": "BTAGameWorld",
       "parentMatches": true,
       "words": [
         [1071295146, 2863311576],
@@ -1980,8 +1819,6 @@
       "phase": "main-fraction",
       "age": 119,
       "role": "background",
-      "className": "flash.display::MovieClip",
-      "parentClass": "Bubblefield",
       "parentMatches": true,
       "words": [
         [1073112678, 1717986918],
@@ -2011,8 +1848,6 @@
       "phase": "main-fraction",
       "age": 119,
       "role": "under",
-      "className": "flash.display::MovieClip",
-      "parentClass": "Bubblefield",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -2042,8 +1877,6 @@
       "phase": "main-fraction",
       "age": 119,
       "role": "screen",
-      "className": "flash.display::MovieClip",
-      "parentClass": "BTAGameWorld",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -2073,8 +1906,6 @@
       "phase": "main-fraction",
       "age": 119,
       "role": "world",
-      "className": "BTAGameWorld",
-      "parentClass": "WorldLayerProbe",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -2104,8 +1935,6 @@
       "phase": "main-fraction",
       "age": 119,
       "role": "main",
-      "className": "WorldLayerProbe",
-      "parentClass": "flash.display::Stage",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -2135,8 +1964,6 @@
       "phase": "finish-glue",
       "age": 120,
       "role": "root",
-      "className": "Bubblefield",
-      "parentClass": "BTAGameWorld",
       "parentMatches": true,
       "words": [
         [1071295146, 2863311576],
@@ -2166,8 +1993,6 @@
       "phase": "finish-glue",
       "age": 120,
       "role": "bottom",
-      "className": "_-Rt",
-      "parentClass": "flash.display::MovieClip",
       "parentMatches": true,
       "words": [
         [1071295146, 2863311576],
@@ -2197,8 +2022,6 @@
       "phase": "finish-glue",
       "age": 120,
       "role": "top",
-      "className": "_-My",
-      "parentClass": "BTAGameWorld",
       "parentMatches": true,
       "words": [
         [1071295146, 2863311576],
@@ -2228,8 +2051,6 @@
       "phase": "finish-glue",
       "age": 120,
       "role": "bullet",
-      "className": "_-dl",
-      "parentClass": "BTAGameWorld",
       "parentMatches": true,
       "words": [
         [1071295146, 2863311576],
@@ -2259,8 +2080,6 @@
       "phase": "finish-glue",
       "age": 120,
       "role": "highlight",
-      "className": "_-Zs",
-      "parentClass": "BTAGameWorld",
       "parentMatches": true,
       "words": [
         [1071295146, 2863311576],
@@ -2290,8 +2109,6 @@
       "phase": "finish-glue",
       "age": 120,
       "role": "avatar",
-      "className": "_-Zx",
-      "parentClass": "BTAGameWorld",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -2321,8 +2138,6 @@
       "phase": "finish-glue",
       "age": 120,
       "role": "background",
-      "className": "flash.display::MovieClip",
-      "parentClass": "Bubblefield",
       "parentMatches": true,
       "words": [
         [1073112678, 1717986918],
@@ -2352,8 +2167,6 @@
       "phase": "finish-glue",
       "age": 120,
       "role": "under",
-      "className": "flash.display::MovieClip",
-      "parentClass": "Bubblefield",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -2383,8 +2196,6 @@
       "phase": "finish-glue",
       "age": 120,
       "role": "screen",
-      "className": "flash.display::MovieClip",
-      "parentClass": "BTAGameWorld",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -2414,8 +2225,6 @@
       "phase": "finish-glue",
       "age": 120,
       "role": "world",
-      "className": "BTAGameWorld",
-      "parentClass": "WorldLayerProbe",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -2445,8 +2254,6 @@
       "phase": "finish-glue",
       "age": 120,
       "role": "main",
-      "className": "WorldLayerProbe",
-      "parentClass": "flash.display::Stage",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -2476,8 +2283,6 @@
       "phase": "next-glue",
       "age": 120,
       "role": "nextRoot",
-      "className": "Bubblefield",
-      "parentClass": "BTAGameWorld",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -2507,8 +2312,6 @@
       "phase": "next-glue",
       "age": 120,
       "role": "nextBullet",
-      "className": "_-dl",
-      "parentClass": "BTAGameWorld",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -2538,8 +2341,6 @@
       "phase": "next-glue",
       "age": 120,
       "role": "nextTop",
-      "className": "_-My",
-      "parentClass": "BTAGameWorld",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -2569,8 +2370,6 @@
       "phase": "next-glue",
       "age": 120,
       "role": "nextHighlight",
-      "className": "_-Zs",
-      "parentClass": "BTAGameWorld",
       "parentMatches": true,
       "words": [
         [1073112678, 1717986918],
@@ -2600,8 +2399,6 @@
       "phase": "detach-glue",
       "age": 120,
       "role": "root",
-      "className": "Bubblefield",
-      "parentClass": "null",
       "parentMatches": true,
       "words": [
         [1071295146, 2863311576],
@@ -2631,8 +2428,6 @@
       "phase": "detach-glue",
       "age": 120,
       "role": "bottom",
-      "className": "_-Rt",
-      "parentClass": "null",
       "parentMatches": true,
       "words": [
         [1071295146, 2863311576],
@@ -2662,8 +2457,6 @@
       "phase": "detach-glue",
       "age": 120,
       "role": "top",
-      "className": "_-My",
-      "parentClass": "null",
       "parentMatches": true,
       "words": [
         [1071295146, 2863311576],
@@ -2693,8 +2486,6 @@
       "phase": "detach-glue",
       "age": 120,
       "role": "bullet",
-      "className": "_-dl",
-      "parentClass": "null",
       "parentMatches": true,
       "words": [
         [1071295146, 2863311576],
@@ -2724,8 +2515,6 @@
       "phase": "detach-glue",
       "age": 120,
       "role": "highlight",
-      "className": "_-Zs",
-      "parentClass": "null",
       "parentMatches": true,
       "words": [
         [1071295146, 2863311576],
@@ -2755,8 +2544,6 @@
       "phase": "detach-glue",
       "age": 120,
       "role": "background",
-      "className": "flash.display::MovieClip",
-      "parentClass": "Bubblefield",
       "parentMatches": true,
       "words": [
         [1073112678, 1717986918],
@@ -2786,8 +2573,6 @@
       "phase": "detach-glue",
       "age": 120,
       "role": "under",
-      "className": "flash.display::MovieClip",
-      "parentClass": "Bubblefield",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -2817,8 +2602,6 @@
       "phase": "detach-glue",
       "age": 120,
       "role": "world",
-      "className": "BTAGameWorld",
-      "parentClass": "WorldLayerProbe",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -2848,8 +2631,6 @@
       "phase": "detach-glue",
       "age": 120,
       "role": "main",
-      "className": "WorldLayerProbe",
-      "parentClass": "flash.display::Stage",
       "parentMatches": true,
       "words": [
         [1072693248, 0],
@@ -2875,6 +2656,5 @@
         [1078196633, 2576980378]
       ]
     }
-  ],
-  "evidenceId": "ev_4e0a300fc5f73d46ce71b379fb669313d7274fffd7fb508ad8c47109e13455be"
+  ]
 }

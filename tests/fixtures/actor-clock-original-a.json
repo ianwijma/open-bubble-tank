@@ -1,60 +1,5 @@
 {
-  "originalSha256": "f5827841c682f988f23dcf470ab4ab59c1ffc497acb4ca0f21077d03f942c153",
-  "probeSha256": "29125140589eb1dbff66e1715e459996ab18f84db7381de2ef49e132cdae9bae",
-  "emitterSha256": "ef77a8956150b12e11603da4083ea01adca5c4a39baf5f59f4981ab37e64e96f",
-  "addedGlueAbcSha256": "e3953d1725a03e6c6c91eaf2371acb7062ccfea90adaa9251166e9860cda2c04",
-  "originalAbcPayloadHashes": [
-    "130eef8fcef585dc1ae00f427903d11c35a79feb22e11d4e93219f987c719a1c",
-    "d849764541e5f8b5b7d3b9bbdb31960ad9e47b8fd4a3e24652ccfa408c8be596"
-  ],
   "sourceAudit": {
-    "sourceHashes": {
-      "export_scripts/scripts/Main.as": "85964d3065f512772a97937c4c25a213bce167264c760d24b3f384fe4c424b5a",
-      "export_scripts_deobf/scripts/Main.as": "d2a2d6449178f7d85fcc2c5c41194518d9cefad36c204b0df028cfea83b7b182",
-      "export_pcode/scripts/Main.pcode": "faa5c3e921e0f625b5d07e07a1946b50ee5645a49290b9c42a923f9e904dde1d",
-      "export_scripts/scripts/BTAGameWorld.as": "66ae092b31799f36f776f777a576d52e10d3ce5e7901fcedd2716c4fa7be951e",
-      "export_scripts_deobf/scripts/BTAGameWorld.as": "66ae092b31799f36f776f777a576d52e10d3ce5e7901fcedd2716c4fa7be951e",
-      "export_pcode/scripts/BTAGameWorld.pcode": "eda20420933f4bd87fe9dce652428c3dde3a4bc6e0ee31702325fcdb3c9dba0b",
-      "export_scripts/scripts/TankData.as": "20a187f6db832a80b643cfdd8b8acb39c6859b43768dd594b971bf661687d9d8",
-      "export_scripts_deobf/scripts/TankData.as": "1e5458c64111a3ea5fe118c08bd05517612f70dc808ca55a44c25364090c7c82",
-      "export_pcode/scripts/TankData.pcode": "4f1eec91c07616eaa1895078047c1423a21ce0253192d61161dfdc8f120491f0",
-      "export_scripts/scripts/_-0D.as": "a3cb66e601053b5c615003b01077cfc96752554f85352a62feb278004750ac24",
-      "export_scripts_deobf/scripts/_-0D.as": "a3cb66e601053b5c615003b01077cfc96752554f85352a62feb278004750ac24",
-      "export_pcode/scripts/_-0D.pcode": "5b30ed4cca2a726a56569c8da70a24c652282c92836692cdbd6fd1f97fc8b5ae",
-      "export_scripts/scripts/_-HJ.as": "c6e0e3b5102c8262b057108e037b37c840d5770e0f14a7ad5523db2be7b3058b",
-      "export_scripts_deobf/scripts/_-HJ.as": "c6e0e3b5102c8262b057108e037b37c840d5770e0f14a7ad5523db2be7b3058b",
-      "export_pcode/scripts/_-HJ.pcode": "aabf76a02243d0d8fcf79a7c47b66e315295190b326bfa649c734a47d60d58a3",
-      "export_scripts/scripts/_-Zx.as": "3a5c16a3f14e1ceae76b93185a8c4a974b9e2b9326b6021526f2320d89522f16",
-      "export_scripts_deobf/scripts/_-Zx.as": "3a5c16a3f14e1ceae76b93185a8c4a974b9e2b9326b6021526f2320d89522f16",
-      "export_pcode/scripts/_-Zx.pcode": "2a3d03e2eebf57c8189b5d4e2aea67e48f6dcfb50477271f07dca15b22bf80ea",
-      "export_scripts/scripts/EnemyAI.as": "9161613eb21448921c24c65ea95e9e1dca0f05ece3af28aa02ab30381df46f1f",
-      "export_scripts_deobf/scripts/EnemyAI.as": "9161613eb21448921c24c65ea95e9e1dca0f05ece3af28aa02ab30381df46f1f",
-      "export_pcode/scripts/EnemyAI.pcode": "98e8741709a091e82008b4a88c4a58de42999d46d85d9e98b8aeb2a7668bcb68",
-      "export_scripts/scripts/Weapon.as": "b4db02e9d591822c18113c087f41064d328319681ecadd55ff6e43d33f78ac5a",
-      "export_scripts_deobf/scripts/Weapon.as": "b4db02e9d591822c18113c087f41064d328319681ecadd55ff6e43d33f78ac5a",
-      "export_pcode/scripts/Weapon.pcode": "683846fae3dfcc6b7ce0535119c4fa43f2d0ee439416897420d2de7bc8ef5245",
-      "export_scripts/scripts/Bubblefield.as": "2b186d45796fabc33dde5792d2438475dbc31ccde992be59879545519f95e646",
-      "export_scripts_deobf/scripts/Bubblefield.as": "2b186d45796fabc33dde5792d2438475dbc31ccde992be59879545519f95e646",
-      "export_pcode/scripts/Bubblefield.pcode": "3812bb686dde401803a56f75195f741a8a53fea87c45310700240f4acdc6e55e",
-      "export_scripts/scripts/_-MQ.as": "937a27b35cdc7c0123b0d357211956364d076b8078b27635d982a24792ac1db5",
-      "export_scripts_deobf/scripts/_-MQ.as": "937a27b35cdc7c0123b0d357211956364d076b8078b27635d982a24792ac1db5",
-      "export_pcode/scripts/_-MQ.pcode": "4fed14ea044c8c3f7acc42599c0d34910a088707d9841efa68821fae2b5e3366",
-      "export_scripts/scripts/_-1y.as": "c5ce07a40ba923b237d3809357c4e63b7d728558079cc2dc84c5ac23bb37a777",
-      "export_scripts_deobf/scripts/_-1y.as": "c5ce07a40ba923b237d3809357c4e63b7d728558079cc2dc84c5ac23bb37a777",
-      "export_pcode/scripts/_-1y.pcode": "a9ac694560375fa6a939d297710531ca243dbb9c393562287f547e9afd1471a4",
-      "export_scripts/scripts/_-cX.as": "d721281a5120bdc22a48380a2d0a8b6540648e463e5820e6a220955c5f626bef",
-      "export_scripts_deobf/scripts/_-cX.as": "d721281a5120bdc22a48380a2d0a8b6540648e463e5820e6a220955c5f626bef",
-      "export_pcode/scripts/_-cX.pcode": "4e38a5205f98a1415f992bddacd40971c9ba709b365e37c9a5c23280c4669c73",
-      "export_scripts/scripts/_-ct/_-KE.as": "82e9d4a5c355afe0680541ddf62ce5e67c62e4f9699179e8a79fd350d2abc132",
-      "export_scripts_deobf/scripts/_-ct/_-KE.as": "82e9d4a5c355afe0680541ddf62ce5e67c62e4f9699179e8a79fd350d2abc132",
-      "export_pcode/scripts/_-ct/_-KE.pcode": "91a3333274d9f251a852dc421569bf0491cc915c4bc5ce07d6eb9ba60134696f",
-      "export_scripts/scripts/main_fla/componentbubbleyellow_65.as": "72f1b303b2544521d8053953952a8e3f76c10a46ebb537f2438d3d3760f6d8b0",
-      "export_scripts_deobf/scripts/main_fla/componentbubbleyellow_65.as": "72f1b303b2544521d8053953952a8e3f76c10a46ebb537f2438d3d3760f6d8b0",
-      "export_pcode/scripts/main_fla/componentbubbleyellow_65.pcode": "c5734811d9fb57224d82c21468732f1b8c3d0b78b881897684c83049a5d0bc3e",
-      "export_scripts/scripts/_-7E.as": "ab0c1e908b687a82854a88778d18a95b9911c6e7bee2799ea01feb87b40f4a17",
-      "export_scripts_deobf/scripts/_-7E.as": "ab0c1e908b687a82854a88778d18a95b9911c6e7bee2799ea01feb87b40f4a17",
-      "export_pcode/scripts/_-7E.pcode": "6aeb27f5ee2d849c224e04dbf222fd8e0575c425f901aece62ca6947d89de717"
-    },
     "mounts": [
       {
         "id": 1501,
@@ -63,7 +8,6 @@
         "tree": [
           {
             "symbol": 20,
-            "className": "_-MQ",
             "frames": 100,
             "frameScript": true,
             "stop": false,
@@ -71,7 +15,6 @@
           },
           {
             "symbol": 17,
-            "className": "_-1y",
             "frames": 40,
             "frameScript": true,
             "stop": false,
@@ -79,7 +22,6 @@
           },
           {
             "symbol": 19,
-            "className": "_-cX",
             "frames": 40,
             "frameScript": true,
             "stop": false,
@@ -94,7 +36,6 @@
         "tree": [
           {
             "symbol": 701,
-            "className": "_-ct._-KE",
             "frames": 2,
             "frameScript": true,
             "stop": true,
@@ -102,7 +43,6 @@
           },
           {
             "symbol": 34,
-            "className": "main_fla.componentbubbleyellow_65",
             "frames": 40,
             "frameScript": true,
             "stop": false,
@@ -110,7 +50,6 @@
           },
           {
             "symbol": 31,
-            "className": null,
             "frames": 1,
             "frameScript": false,
             "stop": false,
@@ -118,7 +57,6 @@
           },
           {
             "symbol": 700,
-            "className": null,
             "frames": 2,
             "frameScript": false,
             "stop": false,
@@ -133,7 +71,6 @@
         "tree": [
           {
             "symbol": 680,
-            "className": "_-7E",
             "frames": 40,
             "frameScript": true,
             "stop": false,
@@ -148,7 +85,6 @@
         "tree": [
           {
             "symbol": 17,
-            "className": "_-1y",
             "frames": 40,
             "frameScript": true,
             "stop": false,
@@ -160,10 +96,8 @@
     "npc": {
       "id": "E10000033",
       "name": "Floaty",
-      "library": "_-UH",
       "index": 13,
       "mode": 3,
-      "sourceCodeSha256": "a5193da3ee26aec48f3d3d45107f03cfe43509966afed853e73e44fcf57d7116",
       "partTypes": [1001, 1001, 1001, 1102]
     },
     "controlled": {
@@ -173,8 +107,7 @@
         ["wiggle-positive", 1501, 0, 20],
         ["rotor", 4015, 30, 0]
       ]
-    },
-    "scope": "Genuine TankData._-Tr; no actor/World.Run. Field Deactivate and _-G0 actual calls; departure, parent add/remove and cache-record construction are controlled glue. Binary original getters only, no recreation poses."
+    }
   },
   "fields": [
     "x",
@@ -190,24 +123,6 @@
     "own.tx",
     "own.ty"
   ],
-  "runtimeModules": [
-    {
-      "sha256": "1ed33b9b71a6b01b9aafafed660be343ffeb2d246c5d79e6425a32bf93e38207",
-      "bytes": 14302754
-    },
-    {
-      "sha256": "26036a94567088dfb3de88a759e8ed10a4cea07b29500af36f345eef42420098",
-      "bytes": 465885
-    },
-    {
-      "sha256": "d27c6bdce2a34afb32e8dfa40970bc7e86cbcb912f92db7eb3e1ac70e943bd82",
-      "bytes": 108322
-    }
-  ],
-  "viewer": {
-    "sha256": "a08396339b282d4edadc2d36a20fbcd1fe6707a6f8af0fc066ca5005b426859e",
-    "bytes": 3629
-  },
   "contract": {
     "strings": [
       "PROBE_ACTOR_CLOCK_BEGIN",
@@ -30118,6 +30033,5 @@
       "7,254,95,75,56,56,92,38,83,11,10,12,53,21,13,5,14",
       "255,254"
     ]
-  },
-  "evidenceId": "ev_f228e97a78ffe6de67e18f682cda1ec058f9f871591e25ecc27b2edb522558f0"
+  }
 }

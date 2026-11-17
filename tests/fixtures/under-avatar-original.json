@@ -1,22 +1,4 @@
 {
-  "scope": "Original1544/1543 positive axis-aligned width-then-height controls. Original ByteArray.writeDouble/readUnsignedInt preserves f64 getters and effective matrix words, including signed zero. Decimal text is retained but is not a binary numeric oracle. No rotated/reflected/invalid/empty sizing or Adobe/full-game equality claim.",
-  "originalSha256": "f5827841c682f988f23dcf470ab4ab59c1ffc497acb4ca0f21077d03f942c153",
-  "probeSha256": "8e910b3a974d8d68fe9ad77a0c65e2815684cef57086c3140d9e4eec5bda2da1",
-  "evidenceId": "ev_d2df84eb7b6b4364286894b150fb056a3840c38efae71aa046b7b66ca805a079",
-  "runtimeModules": [
-    {
-      "sha256": "1ed33b9b71a6b01b9aafafed660be343ffeb2d246c5d79e6425a32bf93e38207",
-      "bytes": 14302754
-    },
-    {
-      "sha256": "26036a94567088dfb3de88a759e8ed10a4cea07b29500af36f345eef42420098",
-      "bytes": 465885
-    },
-    {
-      "sha256": "d27c6bdce2a34afb32e8dfa40970bc7e86cbcb912f92db7eb3e1ac70e943bd82",
-      "bytes": 108322
-    }
-  ],
   "originalLeafTwips": {
     "xMin": -1010,
     "xMax": 1010,

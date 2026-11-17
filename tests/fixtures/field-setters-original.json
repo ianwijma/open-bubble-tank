@@ -1,10 +1,4 @@
 {
-  "scope": "Preserved original mask1542 plus added empty containers. Finite setter order and iterative root/bottom getter controls; no original method/RNG replacement, ordinary lifecycle timing, under-avatar sizing qualification or complete field-query claim. Matrix translations in trace are pixels. Matrix coefficients decode as binary32; parsed decimal Number getter comparisons are not exact f64 word qualification. Under-avatar setter expectations remain separate and unresolved.",
-  "sourceSha256": "f5827841c682f988f23dcf470ab4ab59c1ffc497acb4ca0f21077d03f942c153",
-  "probeSha256": "d5aea9119ed4a2cc7e421b676e053d1d1121d108f279565227c28304219c3061",
-  "emitterSha256": "16d3e786a2d47b3f18c1165042d8e9ffdf1a04af626ff9fa8358076021614d02",
-  "baseEmitterSha256": "7006085edd8b55b1ee89c502520c0e4963ba4841265f21d70d6726a06297e2d0",
-  "evidenceId": "ev_815ac08f9df90df5e68e9a3136d2866bc6e6b124e6424ea83737d1d1f14a24e7",
   "inputs": {
     "authoredMask": [0.9924774169921875, 0, 0, 0.9924774169921875, -1, -1],
     "setterScales": [1.2, 0.1, 0.3],

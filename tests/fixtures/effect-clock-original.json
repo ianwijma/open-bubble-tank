@@ -1,14 +1,5 @@
 {
-  "originalSha256": "f5827841c682f988f23dcf470ab4ab59c1ffc497acb4ca0f21077d03f942c153",
-  "probeSha256": "c318560df6509ab51772a436fe5e3829f72673f2fb2dce2fccee0ce411b6236b",
-  "emitterSha256": "c80106a5021417a063ab2574de613ce971abd42952d47ab23a8a2baa1c78c305",
-  "addedGlueAbcSha256": "81c984e44583eca47cfa81bfd550923947c8853d7aa2c8ed8d5301b31029b967",
-  "originalAbcPayloadHashes": [
-    "130eef8fcef585dc1ae00f427903d11c35a79feb22e11d4e93219f987c719a1c",
-    "d849764541e5f8b5b7d3b9bbdb31960ad9e47b8fd4a3e24652ccfa408c8be596"
-  ],
   "sourceAudit": {
-    "originalSha256": "f5827841c682f988f23dcf470ab4ab59c1ffc497acb4ca0f21077d03f942c153",
     "roots": [
       {
         "key": "impact",
@@ -193,51 +184,7 @@
           }
         ]
       }
-    ],
-    "sourceHashes": {
-      "export_scripts_deobf/scripts/_-4z.as": "ace62d02baf040d804044dcb7ff31b7e866703bfc22180661adbd44822edea4a",
-      "export_pcode/scripts/_-4z.pcode": "f56f9e073ca99e010d46cfacc17f1082470efc675f2ab80a99b7b525bc655949",
-      "export_scripts_deobf/scripts/seeker_explosion.as": "bc52a06eeec3ee8bb3489c2fc85da8e163b10d8102a98294e8b5a1470c2ca878",
-      "export_pcode/scripts/seeker_explosion.pcode": "ae20723805120a71e4bbe710ee7d61ac955d062acb4df3e45f445c6a75c7f362",
-      "export_scripts_deobf/scripts/_-6j.as": "9ee8c994d47ae058deaffa5794d34be3bf7dc06822a95dad567a62746168dfaa",
-      "export_pcode/scripts/_-6j.pcode": "1217a37f32bb09cf827c3a8a9ed04fbd47540b2041a2733d2412eeb3d098cbb1",
-      "export_scripts_deobf/scripts/_-1g.as": "a74e566401b454049dfe27cb00747a53e36c06db8a1e67d3dbd74bacc4e1294e",
-      "export_pcode/scripts/_-1g.pcode": "4b8f9ed27dfe0c0c4f8728faad1682c1662384340c6c0bdf4d7a9b00a89ceb7d",
-      "export_scripts_deobf/scripts/damage_burst.as": "6709068ef11d5174a7041219a40b6f98867600361eb68274ba8a3d3abd82cb72",
-      "export_pcode/scripts/damage_burst.pcode": "36be53b8570264fdb8c8a2cd6b157d6ccd8bf45997ec5588e11031d4ed81775b",
-      "export_scripts_deobf/scripts/_-4L.as": "b251cdb505060d101d132e743455f3d88507ca0d0f87737b42ea9426f399bb96",
-      "export_pcode/scripts/_-4L.pcode": "76f16bbb1a53284f8c6fed51c25584fdf6876ec130d461d3b1d1026d55db529c",
-      "export_scripts_deobf/scripts/_-cy.as": "a838c881b1d5505554ca2821eab2630bb2e13fc51f21a32a4b3ab5be18a7129e",
-      "export_pcode/scripts/_-cy.pcode": "5e1dc32ed354a9896f0a4562523dd1cdf4723c0420e7f62543a33d9fb2b7e49f",
-      "export_scripts_deobf/scripts/_-5.as": "9b372687cb53c02667f8b8610fc711f593f5d92798992b9155a7ff65dc3345e0",
-      "export_pcode/scripts/_-5.pcode": "679223bebcf36eac6ab7d820d4854297dc0011b84d5694ce2c64c4caba86b91a",
-      "export_scripts_deobf/scripts/_-Tv.as": "e7a954c930e2f6d0a702477e16f6ccada23a52885f713ceb54cdd5682986ec96",
-      "export_pcode/scripts/_-Tv.pcode": "03a2e77db819d87889e75ed6cb7e46af00deb6965da7a530ce7f7fe85dc1235a",
-      "export_scripts_deobf/scripts/effect_convert.as": "4b358d179669cd47bc835a5f4ab143ae34ce110443229fbf7f648e45c374fbe6",
-      "export_pcode/scripts/effect_convert.pcode": "8bbf99abe5c8692e41317f322936a33fec0dec68ea3f7deae3fc62d3eaa6111d",
-      "export_scripts_deobf/scripts/_-Cd.as": "7bebe6a78c67995b5c68bf213e88365d04be0cb8295c007ef0824e80c995bbf9",
-      "export_pcode/scripts/_-Cd.pcode": "7e28b80cfa5e875fadb950e86180b00d75951c156b0beb53bfeb028ff9a8561a",
-      "export_scripts_deobf/scripts/_-Xh.as": "a7ac861d52e2171c28976a553cba494f3d2d6d9519436588afb07d27854c26d7",
-      "export_pcode/scripts/_-Xh.pcode": "5d33ffea716f134f460cd9c637ca185b5eb9dba089fbdd40c642dc7372abe8ae",
-      "export_scripts_deobf/scripts/ink_effect.as": "a9b819b0d4945226290d3511360b73bd70a1d34bd221587d337f1369168d23b1",
-      "export_pcode/scripts/ink_effect.pcode": "03c42c86a6bccb4a8a2609afaaefc119c3be124e63e98325025a418a7f02ddaf",
-      "export_scripts_deobf/scripts/_-Qw.as": "120d21af0c4ba9d3b83f9f648b895478403e2394d66a3fa8876a4c9244c9e476",
-      "export_pcode/scripts/_-Qw.pcode": "9d954ce8759c37eb1d18da309eada80caaa0805b4d0481c9c095c401877c03f7",
-      "export_scripts_deobf/scripts/_-MC.as": "d8e7d822f0ce4ee051ad29ae332edc59c5fb5bae802bed9d7b4331b439c9454d",
-      "export_pcode/scripts/_-MC.pcode": "3510e5ff6148b3715d9ddd8ce2bdf9408956944460a2b2742f6520d9b08c2b6b",
-      "export_scripts_deobf/scripts/main_fla/bubbleexplosiongloweffect_531.as": "59925cd079aa2d0ed7ebe555c32c6c3d78ee249c2720778413fbbfc4e88076af",
-      "export_pcode/scripts/main_fla/bubbleexplosiongloweffect_531.pcode": "f9e3f2eda0d9b6916c739ebf268bd007b37126d881a42ecd4be04390f4614ab3",
-      "export_scripts_deobf/scripts/Main.as": "d2a2d6449178f7d85fcc2c5c41194518d9cefad36c204b0df028cfea83b7b182",
-      "export_pcode/scripts/Main.pcode": "faa5c3e921e0f625b5d07e07a1946b50ee5645a49290b9c42a923f9e904dde1d",
-      "export_scripts_deobf/scripts/BTAGameWorld.as": "66ae092b31799f36f776f777a576d52e10d3ce5e7901fcedd2716c4fa7be951e",
-      "export_pcode/scripts/BTAGameWorld.pcode": "eda20420933f4bd87fe9dce652428c3dde3a4bc6e0ee31702325fcdb3c9dba0b",
-      "export_scripts_deobf/scripts/Bubblefield.as": "2b186d45796fabc33dde5792d2438475dbc31ccde992be59879545519f95e646",
-      "export_pcode/scripts/Bubblefield.pcode": "3812bb686dde401803a56f75195f741a8a53fea87c45310700240f4acdc6e55e",
-      "export_scripts_deobf/scripts/_-0D.as": "a3cb66e601053b5c615003b01077cfc96752554f85352a62feb278004750ac24",
-      "export_pcode/scripts/_-0D.pcode": "5b30ed4cca2a726a56569c8da70a24c652282c92836692cdbd6fd1f97fc8b5ae",
-      "export_scripts_deobf/scripts/_-2c.as": "fc2617bc670779857b6d6f5a338e20abf0539f16d0bb39cf3fae46d423f5c1d4",
-      "export_pcode/scripts/_-2c.pcode": "0b0fd628b643a30739baa0157072437bf4814008fc27e2cada217a83822409ee"
-    }
+    ]
   },
   "fields": [
     "x",
@@ -253,24 +200,6 @@
     "own.tx",
     "own.ty"
   ],
-  "runtimeModules": [
-    {
-      "sha256": "1ed33b9b71a6b01b9aafafed660be343ffeb2d246c5d79e6425a32bf93e38207",
-      "bytes": 14302754
-    },
-    {
-      "sha256": "26036a94567088dfb3de88a759e8ed10a4cea07b29500af36f345eef42420098",
-      "bytes": 465885
-    },
-    {
-      "sha256": "d27c6bdce2a34afb32e8dfa40970bc7e86cbcb912f92db7eb3e1ac70e943bd82",
-      "bytes": 108322
-    }
-  ],
-  "viewer": {
-    "sha256": "a08396339b282d4edadc2d36a20fbcd1fe6707a6f8af0fc066ca5005b426859e",
-    "bytes": 3629
-  },
   "contract": {
     "strings": [
       "PROBE_EFFECT_BEGIN",
@@ -25284,6 +25213,5 @@
       "8,392,402,394,17,17,886,74,395,12,12,13,4,4,12,4,0",
       "1079,392"
     ]
-  },
-  "evidenceId": "ev_4fc73fee7ea5f6e56889d100c0d3c5b13b58e4d68e701f10feb18c80fba984fd"
+  }
 }

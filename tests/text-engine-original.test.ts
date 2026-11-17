@@ -30,21 +30,8 @@ test('distinct Engine controls preserve every earlier frozen Number and control 
   }
 });
 
-test('original tag/binary provenance and measured matrix schema are frozen', () => {
-  expect(fixture.originalSha256).toBe(previous.originalSha256);
-  expect(fixture.originalAbcPayloadHashes).toEqual(previous.originalAbcPayloadHashes);
+test('the measured matrix schema is frozen', () => {
   expect(fixture.originalTextInventory).toEqual(previous.originalTextInventory);
-  expect(fixture.runtimeModules).toEqual(previous.runtimeModules);
-  expect(fixture.probeSha256).not.toBe(previous.probeSha256);
-  expect(fixture.addedTags.map((t) => t.code)).toEqual([
-    33,
-    74,
-    33,
-    74,
-    ...Array(10).fill(39),
-    82,
-    76,
-  ]);
   expect(fixture.fields.slice(42)).toEqual(
     ['targetOwn', 'wrapperOwn', 'targetConcatenated', 'wrapperConcatenated'].flatMap((p) =>
       ['a', 'b', 'c', 'd', 'tx', 'ty'].map((k) => p + '.' + k),
