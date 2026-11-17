@@ -10,7 +10,7 @@ import type { Vec } from './types';
  * Ancestors run from immediate parent toward the stage, excluding the stage.
  * Compose matrices before transforming corners; do not transform an AABB at
  * every ancestor. No text/glyph matrix, raster padding or Script getter enters
- * this calculation. Qualified for the finite 2D, no-scroll-rect controls;
+ * this calculation. Valid for the finite 2D, no-scroll-rect controls;
  * not arbitrary/nonfinite geometry.
  */
 export function staticTextEngineBounds(

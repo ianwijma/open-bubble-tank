@@ -25,7 +25,7 @@ export class MinimapView {
         .stroke({ color: 0xffffff, alpha: 0.2, width: 5 });
       const x = (col: number) => layout.center.x + (col - center.col) * 25 * layout.scale;
       const y = (row: number) => layout.center.y + (row - center.row) * 25 * layout.scale;
-      // The simple fallback uses the same viewport and cell spacing as the native map.
+      // The simple fallback uses the same viewport and cell spacing as the authored map.
       const inside = (col: number, row: number) =>
         x(col) > 8 &&
         y(row) > 8 &&

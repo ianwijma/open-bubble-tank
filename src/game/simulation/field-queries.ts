@@ -77,7 +77,7 @@ export function fieldStageShapeHit(
   source: FieldGeometrySource,
   stagePoint: Readonly<Vec>,
 ) {
-  // Qualified public shape queries require a stage-attached receiver. A detached
+  // Public shape queries require a stage-attached receiver. A detached
   // mask reference is handled separately inside the internal geometry traversal.
   if (!world.fieldDisplays.readPose(field).rooted) return false;
   return displayGeometryHit(
@@ -88,7 +88,7 @@ export function fieldStageShapeHit(
   );
 }
 
-/** Qualified player-root public hitTestPoint arguments, independently of the
+/** Player-root hitTestPoint arguments, independently of the
  * receiver's field/World/Main ancestry. Loaded-root semantics are not selected.
  */
 export function fieldPlayerRootHitTestPoint(

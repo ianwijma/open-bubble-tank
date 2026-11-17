@@ -476,8 +476,8 @@ export class AssetPack {
     pose.advance(tank.artAge - tank.forcefieldStartedAt + 1, part.y);
     return pose;
   }
-  /** Exact width/height bounds for a qualified retained clip and its parent-space matrix.
-   * Separate from legacy continuous metrics; field population/ownership is the caller's work.
+  /** Exact width/height bounds for a supported retained clip and its parent-space matrix.
+   * Separate from the continuous metrics; field population/ownership is the caller's work.
    */
   clipScriptTwipBounds(pose: ArtClip, matrix?: ArtMatrix) {
     return scriptTwipBounds(this.scriptGeometry, pose.id, pose.age, matrix, undefined, [], 0, pose);

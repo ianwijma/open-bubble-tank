@@ -25,7 +25,7 @@ export interface ClipPlayback {
   random: () => number;
 }
 
-/** Native display list: matrices advance once per game frame; leaf textures are shared. */
+/** Display list: matrices advance once per game frame; leaf textures are shared. */
 export class SymbolView {
   root = new Container();
   private children = new Map<
@@ -178,7 +178,7 @@ export class SymbolView {
     this.runtimeAlpha = alpha;
     this.refreshColor();
   }
-  /** Opacity of an embedding native owner; keep Pixi ancestors opaque during filter capture. */
+  /** Opacity of an embedding owner; keep Pixi ancestors opaque during filter capture. */
   setParentAlpha(alpha: number) {
     alpha = fixedColorMultiplier(alpha);
     if (alpha === this.parentAlpha) return;

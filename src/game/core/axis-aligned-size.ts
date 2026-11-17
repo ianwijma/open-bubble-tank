@@ -1,7 +1,7 @@
 import type { DisplayRectangle } from './display-transform';
 import type { NumericPose } from './retained-transform';
 
-/** Qualified positive, unrotated setter branch. Parent transforms do not enter width/height. */
+/** Positive, unrotated setter branch. Parent transforms do not enter width/height. */
 export function positiveAxisAlignedSize(
   before: NumericPose,
   bounds: Readonly<DisplayRectangle>,

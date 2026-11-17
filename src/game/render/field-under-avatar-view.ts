@@ -20,8 +20,8 @@ export class FieldUnderAvatarView {
     this.underInstance = read.slots.avatarUnder.id;
     this.maskInstance = read.slots.exteriorMask.id;
     this.root.addChild(this.maskSlot, this.under);
-    // Procedural approximation only: the native exterior contour has a slit.
-    // Keep that approximation out of native paint and all geometric queries.
+    // Procedural approximation only: the authored exterior contour has a slit.
+    // Keep that approximation out of authored paint and all geometric queries.
     const mask = new Graphics()
       .rect(-1000, -1000, 2000, 2000)
       .fill(0xffffff)

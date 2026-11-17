@@ -348,7 +348,7 @@ export class FieldDisplays {
   moveNext(current: Field, next: Field, offset: Vec, frame: number) {
     const from = this.wrapper(current),
       to = this.wrapper(next);
-    // The caller currently supplies legacy separation. Complete live width/height
+    // The caller currently supplies the earlier separation. Complete live width/height
     // calculation is deliberately a separate integration boundary.
     to.root.pose.x = from.root.pose.x + offset.x;
     to.root.pose.y = from.root.pose.y + offset.y;

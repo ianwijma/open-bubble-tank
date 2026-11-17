@@ -173,7 +173,7 @@ export function creatorTextLines(
   });
 }
 
-/** Numeric advances keep mock wrapping and glyph placement aligned with native text. */
+/** Numeric advances keep wrapping and glyph placement aligned with the authored text. */
 export function creatorGlyphLayout(text: string, field: CreatorField) {
   let width = 0;
   const glyphs = Array.from(text, (char) => {

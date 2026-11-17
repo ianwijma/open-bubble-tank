@@ -71,7 +71,7 @@ const twipBounds: BoundsArithmetic = {
   multiply: displayMatrixProduct,
   transform: (bounds, matrix) => {
     const rectangle = displayMatrixRectangle(matrix, {
-      // Recover the declared integer twips from the legacy pixel-source API.
+      // Recover the declared integer twips from the pixel-source API.
       // This is metadata decoding, not a truncating display setter.
       xMin: Math.round(bounds.x * 20),
       yMin: Math.round(bounds.y * 20),
@@ -224,7 +224,7 @@ export function projectileScriptBounds(
   return scriptBounds(source, bullet.symbol, frame, matrix, override, [], 0, bullet.artPose);
 }
 
-/** Legacy bounds for unknown future symbols; known mock shots use authored numeric geometry. */
+/** Fallback bounds for unknown symbols; known shots use authored numeric geometry. */
 export function mockProjectileBounds(bullet: Projectile): Bounds {
   if (bullet.artPose && !bullet.artPose.placements.length)
     return { x: bullet.x, y: bullet.y, width: 0, height: 0, empty: true };

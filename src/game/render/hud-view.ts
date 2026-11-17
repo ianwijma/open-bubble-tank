@@ -2,7 +2,7 @@ import { Container, Graphics, Text } from 'pixi.js';
 import { HUD, fireLayout, type HudReadout } from '../core/hud';
 import type { World } from '../simulation/world';
 
-/** The native life/fire widgets remain in stage coordinates, independently of camera zoom. */
+/** The life/fire widgets remain in stage coordinates, independently of camera zoom. */
 export class HudView {
   root = new Container();
   private mockLife = new Container();

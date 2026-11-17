@@ -14,7 +14,7 @@ import type { Vec } from './types';
 export type DisplayGeometryContent =
   | { readonly kind: 'empty' }
   | {
-      /** Selected only from qualified native static text metadata, never glyph/paint bounds. */
+      /** Selected only from static text metadata, never glyph/paint bounds. */
       readonly kind: 'advanced-static-text';
       readonly bounds: Readonly<DisplayRectangle>;
     }
@@ -35,7 +35,7 @@ export interface DisplayGeometryNode {
   readonly depth?: number;
   readonly clipDepth?: number;
   readonly visible?: boolean;
-  /** Not qualified by this geometry reader; retained owners must not omit it. */
+  /** Not resolved by this geometry reader; retained owners must not omit it. */
   readonly scrollRect?: Readonly<DisplayRectangle>;
   /** Actual maskee reference exists; this node is excluded from ordinary queries. */
   readonly isRuntimeMask?: boolean;
@@ -50,7 +50,7 @@ export interface DisplayGeometryNode {
 /** Actual immediate parent through Main, excluding stage. An empty list means
  * physically parented by stage. A precomposed matrix is NOT an ancestor list:
  * Float32 products/rounded translations are not associative. Owners must supply
- * the actual no-scrollRect chain for text; legacy shape callers keep their
+ * the actual no-scrollRect chain for text; shape callers keep their
  * existing parentToStage contract. No root/attachment identity is inferred.
  */
 export type DisplayGeometryAncestry = readonly Readonly<DisplayMatrix>[];
@@ -89,7 +89,7 @@ export function displayGeometryBounds(
 }
 
 /** Internal stage-space shape query, not the public hitTestPoint argument mapping.
- * Authored depth masks use the qualified mutable latch and exact-end admission.
+ * Authored depth masks use the mutable latch and exact-end admission.
  * Runtime mask references have their own parent chain and visibility policy.
  * Parent-to-stage ancestry is separate from Script width; alpha never removes geometry.
  */
@@ -169,7 +169,7 @@ function hitAtTwips(
       });
     }
     // The measured text wrappers require an inverse before children.
-    // Keep this correction bounded to text-bearing containers, preserving legacy
+    // Keep this correction bounded to text-bearing containers, preserving existing
     // shape/Script products; no arbitrary container Engine AABB is substituted.
     if (containsText(node)) {
       if (!ancestors) throw new Error('Advanced StaticText requires explicit parentAncestry');
