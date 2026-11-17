@@ -1,5 +1,5 @@
-import type { SwfGlowFilter } from '../../src/game/assets/asset-pack';
-import type { SwfColorTransform } from '../../src/game/assets/swf-color-transform';
+import type { GlowFilter } from '../../src/game/assets/asset-pack';
+import type { ColorTransform } from '../../src/game/assets/color-transform';
 
 /** Independent byte-image oracle, never shipped in the game. */
 export function premultiply(data: Uint8ClampedArray) {
@@ -36,7 +36,7 @@ export function oracleGlow(
   source: Uint8ClampedArray,
   width: number,
   height: number,
-  f: SwfGlowFilter,
+  f: GlowFilter,
 ) {
   let alpha: Uint8Array = Uint8Array.from({ length: width * height }, (_, i) => source[i * 4 + 3]);
   for (let p = 0; p < f.passes; p++) {
@@ -64,7 +64,7 @@ export function oracleGlow(
   }
   return result;
 }
-export function oracleColor(source: Uint8ClampedArray, f: SwfColorTransform) {
+export function oracleColor(source: Uint8ClampedArray, f: ColorTransform) {
   const result = new Uint8ClampedArray(source.length);
   const clamp = (n: number) => Math.max(0, Math.min(255, n));
   for (let i = 0; i < source.length; i += 4) {

@@ -1,4 +1,4 @@
-import { SwfClip } from '../assets/swf-clip';
+import { ArtClip } from '../assets/art-clip';
 import { buildDisplayList } from '../assets/display-list';
 import type { DisplayPlacement, SpriteInfo } from '../assets/asset-pack';
 import data from '../data/projectile-clips.json';
@@ -23,7 +23,7 @@ const source = {
 
 /** Polled projectile clips advance on the stage clock, including children. */
 export class ProjectileTimelines {
-  private clips = new WeakMap<Projectile, SwfClip>();
+  private clips = new WeakMap<Projectile, ArtClip>();
   constructor(private random: () => number) {}
   private root(b: Projectile) {
     switch (b.kind) {
@@ -50,7 +50,7 @@ export class ProjectileTimelines {
     if (id === undefined) return;
     let clip = this.clips.get(b);
     if (!clip) {
-      clip = new SwfClip(id, source, this.random);
+      clip = new ArtClip(id, source, this.random);
       this.clips.set(b, clip);
       if (b.kind === 'grow') {
         // The grow constructor's goto precedes frame-script polling. The frame is rounded.

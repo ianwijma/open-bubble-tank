@@ -5,13 +5,13 @@ import { STARTER } from '../../src/game/data/catalog';
 import { World, emptyInput } from '../../src/game/simulation/world';
 import { createTank } from '../../src/game/simulation/tank';
 import { TankView } from '../../src/game/render/tank-view';
-import { SwfTextures } from '../../src/game/render/swf-textures';
+import { ArtTextures } from '../../src/game/render/art-textures';
 import { captureFrame } from './pixi-capture';
 
 /** Real active World frames and production paint, sampled with an opaque reference pose. */
 export async function showPhasing(pack: AssetPack, host: HTMLElement) {
   const app = new Application(),
-    textures = new SwfTextures(),
+    textures = new ArtTextures(),
     world = new World([], [], 31);
   world.rng.next = () => 0.5;
   world.hitTest = () => false;

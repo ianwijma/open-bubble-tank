@@ -1,9 +1,9 @@
 import { Application, Rectangle } from 'pixi.js';
 import { AssetPack } from '../../src/game/assets/asset-pack';
-import type { SwfClip } from '../../src/game/assets/swf-clip';
+import type { ArtClip } from '../../src/game/assets/art-clip';
 import { PARTS, STARTER } from '../../src/game/data/catalog';
 import { TankView } from '../../src/game/render/tank-view';
-import { SwfTextures } from '../../src/game/render/swf-textures';
+import { ArtTextures } from '../../src/game/render/art-textures';
 import { createTank } from '../../src/game/simulation/tank';
 import { captureCanvas } from './pixi-capture';
 
@@ -11,7 +11,7 @@ import { captureCanvas } from './pixi-capture';
 export async function showMockPartMotion(source: AssetPack, host: HTMLElement, bodies = false) {
   const mock = await AssetPack.mock(),
     packs = [source, mock],
-    textures = new SwfTextures();
+    textures = new ArtTextures();
   const app = new Application();
   await app.init({
     width: 142,
@@ -34,7 +34,7 @@ export async function showMockPartMotion(source: AssetPack, host: HTMLElement, b
   const ctx = canvas.getContext('2d')!;
   ctx.fillStyle = '#24566a';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-  const digest = (p: SwfClip): unknown => ({
+  const digest = (p: ArtClip): unknown => ({
     id: p.id,
     frame: p.frame,
     children: [...p.children.values()].map((c) => ({

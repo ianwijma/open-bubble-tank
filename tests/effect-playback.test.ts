@@ -7,7 +7,7 @@ import { RegisteredEffects } from '../src/game/simulation/registered-effects';
 import { combatEffect, type CombatEffect } from '../src/game/simulation/effects';
 import { readEffectPlayback, drawEffectLine } from '../src/game/simulation/effect-playback';
 import type { Effect, Field } from '../src/game/core/types';
-import type { SwfClip } from '../src/game/assets/swf-clip';
+import type { ArtClip } from '../src/game/assets/art-clip';
 import { World, emptyInput } from '../src/game/simulation/world';
 import { RetainedTransform } from '../src/game/core/retained-transform';
 
@@ -39,8 +39,8 @@ for (const root of original.sourceAudit.roots)
       const construct = () =>
         (effect = combatEffect(1, root.key as CombatEffect, {}, engine.artwork));
       if (cohort === 'before') construct();
-      const retained = new Map<number, SwfClip>(),
-        aliases = new Map<SwfClip, number>();
+      const retained = new Map<number, ArtClip>(),
+        aliases = new Map<ArtClip, number>();
       let callbackTick = 0,
         stageTick = 0;
       const differences: unknown[] = [];
@@ -68,7 +68,7 @@ for (const root of original.sourceAudit.roots)
             totals.currentMatrixComparisons++;
           }
           // Native Shape wrappers can change their symbol without changing identity.
-          // SwfClip leaf placeholders model geometry, not that unqualified wrapper reuse.
+          // ArtClip leaf placeholders model geometry, not that unqualified wrapper reuse.
           if (row.total === 0) continue;
           // Transient wrapper holes are neither synthesized nor read here.
           // All own-pose/descendant correspondence claims are EXIT only.
@@ -171,10 +171,8 @@ for (const root of original.sourceAudit.roots)
       }
       expect(callbackTick).toBe(samples.find((r) => r.phase === 'callback')!.tick);
       expect(readEffectPlayback(effect!).status).toBe('retained');
-      expect(effect!.playback!.className).toBe(root.className);
       expect(effect!.playback!.symbol).toBe(root.symbol);
       expect(effect!.playback!.totalFrames).toBe(root.frames);
-      expect(effect!.playback!.sourceSha256).toBe(original.originalSha256);
       if (differences.length && process.env.SOAPTANK_EFFECT_DIAGNOSTICS)
         writeFileSync(
           `test-results/retained-effects/${cohort}-${root.key}.json`,

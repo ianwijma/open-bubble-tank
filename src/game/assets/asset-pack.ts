@@ -2,7 +2,7 @@ import { PARTS, partById } from '../data/catalog';
 import { svgMaskDefinition } from './svg-mask';
 import type { Projectile, Rect, Tank, TankDesign, TankPart } from '../core/types';
 import { Random, rotate } from '../core/math';
-import { SwfClip } from './swf-clip';
+import { ArtClip } from './art-clip';
 import { partSnapshot } from './part-snapshot';
 import { MountedParts, PartPlayback } from './part-playback';
 import { observeActorArtwork, readActorArtworkPhase } from '../core/actor-artwork';
@@ -36,7 +36,7 @@ export interface Raster extends Bounds {
   resolution: number;
   url: string;
 }
-export interface SwfMatrix {
+export interface ArtMatrix {
   a: number;
   b: number;
   c: number;
@@ -44,8 +44,8 @@ export interface SwfMatrix {
   tx: number;
   ty: number;
 }
-type Matrix = SwfMatrix;
-export interface SwfGlowFilter {
+type Matrix = ArtMatrix;
+export interface GlowFilter {
   kind: 'glow';
   color: number[];
   blurX: number;
@@ -68,7 +68,7 @@ export interface Placement {
   ratio?: number;
   blendMode?: number;
   cacheAsBitmap?: number;
-  filters?: SwfGlowFilter[];
+  filters?: GlowFilter[];
 }
 export interface DisplayPlacement extends Placement {
   charId: number;
@@ -135,17 +135,17 @@ export class AssetPack {
   private shapes = new Map<number, ShapeInfo>();
   private displayCache = new DisplayListCache();
   private classFrames = new Map<number, Raster>();
-  private classPoses = new Map<number, SwfClip>();
+  private classPoses = new Map<number, ArtClip>();
   private positivePosters = new Map<number, Raster>();
   private partClips = new WeakMap<Tank, MountedParts>();
-  private infections = new WeakMap<Tank, { startedAt: number; clip: SwfClip }>();
+  private infections = new WeakMap<Tank, { startedAt: number; clip: ArtClip }>();
   private statuses = new StatusPlayback(this);
   private forcefieldClones = new WeakMap<
     Tank,
     {
       design: TankDesign;
       generation: number;
-      parts: Map<string, SwfClip>;
+      parts: Map<string, ArtClip>;
       radius: number;
     }
   >();
@@ -209,7 +209,7 @@ export class AssetPack {
     id: number,
     frame = 1,
     seen = new Set<number>(),
-    pose?: SwfClip,
+    pose?: ArtClip,
   ): { body: string; bounds: Bounds } | null {
     if (seen.has(id) || seen.size > 24) return null;
     const next = new Set(seen);
@@ -304,7 +304,7 @@ export class AssetPack {
     return this.rasterCompiled(this.compile(id, frame));
   }
   /** Freeze each retained child at its own frame; raw rasterSymbol remains authored-frame access. */
-  async rasterClip(clip: SwfClip): Promise<Raster | null> {
+  async rasterClip(clip: ArtClip): Promise<Raster | null> {
     return this.rasterCompiled(this.compile(clip.id, clip.frame, new Set(), clip));
   }
   private async rasterCompiled(compiled: { body: string; bounds: Bounds } | null) {
@@ -400,9 +400,9 @@ export class AssetPack {
     if (clone) seed ^= Math.imul(tank.forcefieldGeneration, 0x85ebca6b);
     for (const c of part.key) seed = Math.imul(seed, 31) + c.charCodeAt(0);
     const random = new Random(seed >>> 0 || 1);
-    return new SwfClip(partById(part.type)!.symbol, this, () => random.next());
+    return new ArtClip(partById(part.type)!.symbol, this, () => random.next());
   }
-  private partSize(tank: Tank, part: TankPart, pose?: SwfClip, clone = false) {
+  private partSize(tank: Tank, part: TankPart, pose?: ArtClip, clone = false) {
     const angle =
       ((clone
         ? part.rotation
@@ -453,7 +453,7 @@ export class AssetPack {
   private forcefieldClone(tank: Tank) {
     let clone = this.forcefieldClones.get(tank);
     if (!clone || clone.design !== tank.design || clone.generation !== tank.forcefieldGeneration) {
-      const parts = new Map<string, SwfClip>();
+      const parts = new Map<string, ArtClip>();
       const children = tank.design.parts.map((part) => {
         const pose = this.hasPartTimeline(part.type)
           ? this.newPartClip(tank, part, true)
@@ -483,10 +483,10 @@ export class AssetPack {
   /** Exact width/height bounds for a qualified retained clip and its parent-space matrix.
    * Separate from legacy continuous metrics; field population/ownership is the caller's work.
    */
-  clipScriptTwipBounds(pose: SwfClip, matrix?: SwfMatrix) {
+  clipScriptTwipBounds(pose: ArtClip, matrix?: ArtMatrix) {
     return scriptTwipBounds(this.scriptGeometry, pose.id, pose.age, matrix, undefined, [], 0, pose);
   }
-  clipScriptBounds(pose: SwfClip) {
+  clipScriptBounds(pose: ArtClip) {
     return scriptBounds(this.scriptGeometry, pose.id, pose.age, undefined, undefined, [], 0, pose);
   }
   tankDisplayBounds = (tank: Tank) =>
@@ -513,7 +513,7 @@ export class AssetPack {
       );
       state = {
         startedAt: tank.infectStartedAt,
-        clip: new SwfClip(INFECTED_ART, this, () => random.next()),
+        clip: new ArtClip(INFECTED_ART, this, () => random.next()),
       };
       this.infections.set(tank, state);
     }
@@ -527,7 +527,7 @@ export class AssetPack {
     if (id === 23) return Math.hypot(x, y) <= 1.45;
     return undefined;
   }
-  hitClip(clip: SwfClip, x: number, y: number, inverse: ContactMatrix = CONTACT_IDENTITY): boolean {
+  hitClip(clip: ArtClip, x: number, y: number, inverse: ContactMatrix = CONTACT_IDENTITY): boolean {
     const geometric = this.leafContact(clip.id, x, y);
     if (geometric !== undefined) return geometric;
     const leaf = this.leaves.get(clip.id);

@@ -1,5 +1,5 @@
 import type { RetainedEffectPlayback } from '../simulation/effect-playback';
-import type { SwfClip } from '../assets/swf-clip';
+import type { ArtClip } from '../assets/art-clip';
 
 export interface Vec {
   x: number;
@@ -241,7 +241,7 @@ export interface Projectile extends Vec {
   partType?: number;
   artFrame?: number;
   /** Pure retained display-list pose, shared by stage playback, painting and contact. */
-  artPose?: SwfClip;
+  artPose?: ArtClip;
   artAlpha?: number;
   wobbleFrequency?: number;
   wobbleAmplitude?: number;

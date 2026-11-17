@@ -1,7 +1,7 @@
 import { displayMatrixProduct, displayMatrixRectangle } from '../core/display-transform';
-import type { SwfClip } from './swf-clip';
+import type { ArtClip } from './art-clip';
 import type { Projectile, Vec } from '../core/types';
-import type { Bounds, DisplayPlacement, SwfMatrix } from './asset-pack';
+import type { Bounds, DisplayPlacement, ArtMatrix } from './asset-pack';
 
 export interface ScriptBoundsSource {
   /** Declared shape bounds, including strokes; morphs return their start bounds. */
@@ -12,7 +12,7 @@ export interface ScriptBoundsSource {
 
 interface ChildOverride {
   age?: number;
-  matrix?: SwfMatrix;
+  matrix?: ArtMatrix;
 }
 type Override = (
   placement: DisplayPlacement,
@@ -20,10 +20,10 @@ type Override = (
   path: readonly string[],
 ) => ChildOverride | undefined;
 
-const identity: SwfMatrix = { a: 1, b: 0, c: 0, d: 1, tx: 0, ty: 0 };
+const identity: ArtMatrix = { a: 1, b: 0, c: 0, d: 1, tx: 0, ty: 0 };
 
-/** SWF translations remain in twips throughout composition. */
-function multiply(a: SwfMatrix, b: SwfMatrix): SwfMatrix {
+/** Translations remain in twips throughout composition. */
+function multiply(a: ArtMatrix, b: ArtMatrix): ArtMatrix {
   return {
     a: a.a * b.a + a.c * b.b,
     b: a.b * b.a + a.d * b.b,
@@ -33,7 +33,7 @@ function multiply(a: SwfMatrix, b: SwfMatrix): SwfMatrix {
     ty: a.b * b.tx + a.d * b.ty + a.ty,
   };
 }
-function transformed(bounds: Bounds, m: SwfMatrix): Bounds {
+function transformed(bounds: Bounds, m: ArtMatrix): Bounds {
   const corners = [
     [bounds.x, bounds.y],
     [bounds.x + bounds.width, bounds.y],
@@ -63,8 +63,8 @@ function union(a: Bounds | undefined, b: Bounds | undefined): Bounds | undefined
 }
 
 interface BoundsArithmetic {
-  multiply(left: SwfMatrix, right: SwfMatrix): SwfMatrix;
-  transform(bounds: Bounds, matrix: SwfMatrix): Bounds;
+  multiply(left: ArtMatrix, right: ArtMatrix): ArtMatrix;
+  transform(bounds: Bounds, matrix: ArtMatrix): Bounds;
 }
 const continuousBounds: BoundsArithmetic = { multiply, transform: transformed };
 const twipBounds: BoundsArithmetic = {
@@ -92,11 +92,11 @@ export function scriptBounds(
   source: ScriptBoundsSource,
   id: number,
   age: number,
-  matrix: SwfMatrix = identity,
+  matrix: ArtMatrix = identity,
   override?: Override,
   path: readonly string[] = [],
   depth = 0,
-  pose?: SwfClip,
+  pose?: ArtClip,
 ): Bounds | undefined {
   return visitBounds(continuousBounds, source, id, age, matrix, override, path, depth, pose);
 }
@@ -111,11 +111,11 @@ export function scriptTwipBounds(
   source: ScriptBoundsSource,
   id: number,
   age: number,
-  matrix: SwfMatrix = identity,
+  matrix: ArtMatrix = identity,
   override?: Override,
   path: readonly string[] = [],
   depth = 0,
-  pose?: SwfClip,
+  pose?: ArtClip,
 ): Bounds | undefined {
   const bounds = visitBounds(twipBounds, source, id, age, matrix, override, path, depth, pose);
   return (
@@ -133,11 +133,11 @@ function visitBounds(
   source: ScriptBoundsSource,
   id: number,
   age: number,
-  matrix: SwfMatrix = identity,
+  matrix: ArtMatrix = identity,
   override?: Override,
   path: readonly string[] = [],
   depth = 0,
-  pose?: SwfClip,
+  pose?: ArtClip,
 ): Bounds | undefined {
   if (depth > 24) return undefined;
   const leaf = source.leafBounds(id);
@@ -175,7 +175,7 @@ export function projectileScriptBounds(
   const frame = bullet.artFrame ?? bullet.age + 1,
     scale = bullet.artScale ?? 1,
     angle = ((bullet.kind === 'grow' ? bullet.heading : bullet.angle) * Math.PI) / 180,
-    matrix: SwfMatrix = {
+    matrix: ArtMatrix = {
       a: Math.cos(angle) * scale,
       b: Math.sin(angle) * scale,
       c: -Math.sin(angle) * scale,

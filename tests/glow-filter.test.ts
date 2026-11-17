@@ -4,8 +4,8 @@ import {
   composeColor,
   fixedColorMultiplier,
   IDENTITY_COLOR,
-} from '../src/game/assets/swf-color-transform';
-import type { SwfGlowFilter } from '../src/game/assets/asset-pack';
+} from '../src/game/assets/color-transform';
+import type { GlowFilter } from '../src/game/assets/asset-pack';
 
 test('box kernels retain fractional edge quantization, no-op axes and the255px cap', () => {
   for (const n of [-4, 0, 0.5, 1]) expect(glowKernel(n)).toBeUndefined();
@@ -15,7 +15,7 @@ test('box kernels retain fractional edge quantization, no-op axes and the255px c
   expect(glowKernel(300)).toEqual({ size: 255, extent: 127, edge: 1 });
 });
 test('filter padding follows repeated-pass growth with twip truncation before outward pixel rounding', () => {
-  const f = { blurX: 5, blurY: 0, passes: 1 } as SwfGlowFilter;
+  const f = { blurX: 5, blurY: 0, passes: 1 } as GlowFilter;
   expect(glowPadding(f)).toBe(5);
   expect(glowPadding({ ...f, passes: 2 })).toBe(11);
   expect(glowPadding({ ...f, passes: 3 })).toBe(14);

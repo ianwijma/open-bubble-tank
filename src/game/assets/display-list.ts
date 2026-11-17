@@ -18,7 +18,7 @@ export class DisplayListCache {
   }
 }
 
-/** Retained SWF depths, shared by browser artwork and numeric simulation poses. */
+/** Retained display depths, shared by browser artwork and numeric simulation poses. */
 export function buildDisplayList(sprite: SpriteInfo, age: number): DisplayPlacement[] {
   const frame = ((Math.max(1, Math.floor(age)) - 1) % sprite.frameCount) + 1;
   const list = new Map<number, DisplayPlacement>();

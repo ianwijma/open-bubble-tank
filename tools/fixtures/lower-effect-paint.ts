@@ -5,7 +5,7 @@ import { FieldLowerEffectsView } from '../../src/game/render/field-lower-effects
 import { fieldTransform } from '../../src/game/render/field-transform';
 import { GameRenderer } from '../../src/game/render/pixi-renderer';
 import type { CombatEffectsView } from '../../src/game/render/combat-effects-view';
-import { SwfTextures } from '../../src/game/render/swf-textures';
+import { ArtTextures } from '../../src/game/render/art-textures';
 import { combatEffect } from '../../src/game/simulation/effects';
 import { World } from '../../src/game/simulation/world';
 import { setEffectFixturePose } from './effect-pose';
@@ -25,7 +25,7 @@ export async function showLowerEffectPaint(pack: AssetPack, host: HTMLElement) {
   });
   host.appendChild(app.canvas);
   const world = new World([], [], 113),
-    textures = new SwfTextures();
+    textures = new ArtTextures();
   const read = world.fieldDisplays.read(world.field);
   const view = new FieldLowerEffectsView(read);
   view.update({

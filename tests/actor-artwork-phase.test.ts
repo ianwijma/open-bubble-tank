@@ -1,6 +1,6 @@
 import { expect, test } from 'bun:test';
 import { AssetPack, type SpriteInfo } from '../src/game/assets/asset-pack';
-import type { SwfClip } from '../src/game/assets/swf-clip';
+import type { ArtClip } from '../src/game/assets/art-clip';
 import type { Tank, TankDesign } from '../src/game/core/types';
 import { STARTER } from '../src/game/data/catalog';
 import metadata from '../src/game/data/mock-part-timelines.json';
@@ -45,7 +45,7 @@ function setup() {
   const clips = (tank: Tank) => tank.design.parts.map((part) => pack.partClip(tank, part));
   return { world, pack, make, clips };
 }
-const frames = (clips: SwfClip[]) => clips.map((clip) => clip.frame);
+const frames = (clips: ArtClip[]) => clips.map((clip) => clip.frame);
 
 for (const [capture, original] of [
   ['a', first],
@@ -77,7 +77,7 @@ for (const [capture, original] of [
         roots = clips(before);
       let expectedRng = world.rng.state;
       let inside: Tank | undefined,
-        insideRoots: SwfClip[] = [],
+        insideRoots: ArtClip[] = [],
         tick = 0;
       const actual: unknown[] = [],
         oracle: unknown[] = [];

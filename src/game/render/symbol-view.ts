@@ -9,15 +9,15 @@ import {
   type BLEND_MODES,
 } from 'pixi.js';
 import type { AssetPack, DisplayPlacement, Raster } from '../assets/asset-pack';
-import { SwfClip, type ClipLine } from '../assets/swf-clip';
+import { ArtClip, type ClipLine } from '../assets/art-clip';
 import {
   composeColor,
   fixedColorMultiplier,
   IDENTITY_COLOR,
-  type SwfColorTransform,
-} from '../assets/swf-color-transform';
-import { SwfGlowFilter } from './swf-glow-filter';
-import { SwfColorFilter } from './swf-color-filter';
+  type ColorTransform,
+} from '../assets/color-transform';
+import { GlowFilter } from './glow-filter';
+import { ColorFilter } from './color-filter';
 export interface RasterTextures {
   get(raster: Raster): Texture;
 }
@@ -26,24 +26,24 @@ export interface ClipPlayback {
 }
 
 /** Native display list: matrices advance once per game frame; leaf textures are shared. */
-export class SwfSymbolView {
+export class SymbolView {
   root = new Container();
   private children = new Map<
     number,
     {
       id: number;
-      view: SwfSymbolView;
-      pose?: SwfClip;
+      view: SymbolView;
+      pose?: ArtClip;
     }
   >();
   private lastFrame = -1;
   private lastAge = -1;
   private lastRevision = -1;
   private matrix = new Matrix();
-  private colorFilter: SwfColorFilter | null = null;
+  private colorFilter: ColorFilter | null = null;
   private isolation: AlphaFilter | null = null;
   private bitmapCache: AlphaFilter | null = null;
-  private glows: SwfGlowFilter[] = [];
+  private glows: GlowFilter[] = [];
   private filterKey = '';
   private localColor = IDENTITY_COLOR;
   private inheritedColor = IDENTITY_COLOR;
@@ -54,8 +54,8 @@ export class SwfSymbolView {
   private terminal: boolean;
   private effectiveBlend: BLEND_MODES = 'normal';
   private localBlend: BLEND_MODES = 'inherit';
-  private ownedPose?: SwfClip;
-  private renderedPose?: SwfClip;
+  private ownedPose?: ArtClip;
+  private renderedPose?: ArtClip;
   private drawnLines?: readonly ClipLine[];
   private drawing?: Graphics;
   constructor(
@@ -65,7 +65,7 @@ export class SwfSymbolView {
     playback?: ClipPlayback,
   ) {
     this.terminal = !assets.spriteInfo(id)?.placements.some((p) => p.charId !== undefined);
-    if (playback) this.ownedPose = new SwfClip(id, assets, playback.random);
+    if (playback) this.ownedPose = new ArtClip(id, assets, playback.random);
     const r = assets.leaves.get(id);
     if (r) {
       const s = new Sprite(textures.get(r));
@@ -84,7 +84,7 @@ export class SwfSymbolView {
     const frame = heldFrame ?? age;
     this.paint(age, frame, undefined, heldFrame !== undefined);
   }
-  updatePose(pose: SwfClip) {
+  updatePose(pose: ArtClip) {
     if (this.drawnLines !== pose.lines) {
       this.drawnLines = pose.lines;
       if (pose.lines.length || this.drawing) {
@@ -102,7 +102,7 @@ export class SwfSymbolView {
     }
     this.paint(pose.age, pose.frame, pose);
   }
-  private paint(age: number, frame: number, pose?: SwfClip, held = false) {
+  private paint(age: number, frame: number, pose?: ArtClip, held = false) {
     if (
       this.assets.leaves.has(this.id) ||
       (this.lastFrame === frame &&
@@ -122,13 +122,13 @@ export class SwfSymbolView {
         child.view.destroy();
         this.children.delete(depth);
       }
-    const masks: { depth: number; end: number; view: SwfSymbolView }[] = [];
+    const masks: { depth: number; end: number; view: SymbolView }[] = [];
     for (const p of placements) {
       const childPose = pose?.children.get(p.depth)?.clip;
       let node = this.children.get(p.depth);
       if (!node || node.id !== p.charId || (pose && node.pose !== childPose)) {
         node?.view.destroy();
-        const view = new SwfSymbolView(p.charId, this.assets, this.textures);
+        const view = new SymbolView(p.charId, this.assets, this.textures);
         node = { id: p.charId, view, pose: childPose };
         this.children.set(p.depth, node);
         this.root.addChild(view.root);
@@ -167,7 +167,7 @@ export class SwfSymbolView {
     const pose = this.renderedPose ?? this.ownedPose;
     return pose ? this.assets.clipScriptBounds(pose) : undefined;
   }
-  namedChild(name: string): SwfSymbolView | undefined {
+  namedChild(name: string): SymbolView | undefined {
     const placement = this.assets.displayList(this.id, this.lastFrame).find((p) => p.name === name);
     return placement ? this.children.get(placement.depth)?.view : undefined;
   }
@@ -185,7 +185,7 @@ export class SwfSymbolView {
     this.parentAlpha = alpha;
     this.refreshColor();
   }
-  private setColor(local: SwfColorTransform, inherited: SwfColorTransform) {
+  private setColor(local: ColorTransform, inherited: ColorTransform) {
     if (local === this.localColor && inherited === this.inheritedColor) return;
     this.localColor = local;
     this.inheritedColor = inherited;
@@ -232,7 +232,7 @@ export class SwfSymbolView {
         )
           this.root.alpha = m[3];
         else {
-          this.colorFilter = new SwfColorFilter(combined);
+          this.colorFilter = new ColorFilter(combined);
         }
       }
     }
@@ -272,7 +272,7 @@ export class SwfSymbolView {
     while (this.glows.length > filters.length) this.glows.pop()!.destroy();
     filters.forEach((f, i) => {
       if (this.glows[i]) this.glows[i].setOptions(f);
-      else this.glows.push(new SwfGlowFilter(f));
+      else this.glows.push(new GlowFilter(f));
     });
     if (p.cacheAsBitmap) this.bitmapCache ??= new AlphaFilter({ alpha: 1 });
     else {

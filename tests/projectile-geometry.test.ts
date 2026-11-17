@@ -5,7 +5,7 @@ import {
   mockProjectileShapes,
   projectileGeometrySource,
 } from '../src/game/assets/projectile-geometry';
-import { SwfClip } from '../src/game/assets/swf-clip';
+import { ArtClip } from '../src/game/assets/art-clip';
 import data from '../src/game/data/projectile-geometry.json';
 import type { Projectile } from '../src/game/core/types';
 import { createProjectile } from '../src/game/simulation/create-projectile';
@@ -100,7 +100,7 @@ test('known empty mine frames differ from unknown geometry and retained poses ov
   close(authoredProjectileBounds(b), { x: 50, y: -20, width: 0, height: 0, empty: true });
   b.artFrame = 1;
   expect(mockProjectileShapes(b)).toHaveLength(5);
-  const pose = new SwfClip(2182, projectileGeometrySource, () => 0.5);
+  const pose = new ArtClip(2182, projectileGeometrySource, () => 0.5);
   pose.start(7, false);
   b.artPose = pose;
   expect(mockProjectileShapes(b)).toEqual([]);
@@ -124,7 +124,7 @@ test('Grow held frame uses its authored heading/scale without applying active-ag
   const [shape] = mockProjectileShapes(b)!;
   close(shape.bounds, { x: -7.2, y: -11.4, width: 15.8, height: 23.25 });
   expect(shape.fillAlpha).toBeCloseTo(128 / 255);
-  const pose = new SwfClip(1943, projectileGeometrySource);
+  const pose = new ArtClip(1943, projectileGeometrySource);
   pose.start(17, false);
   b.artPose = pose;
   close(mockProjectileShapes(b)![0].bounds, { x: -7.25, y: -10.1, width: 16.1, height: 22.45 });

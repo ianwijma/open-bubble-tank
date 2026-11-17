@@ -1,14 +1,14 @@
 import { Filter, GlProgram } from 'pixi.js';
-import type { SwfColorTransform } from '../assets/swf-color-transform';
-import { filterVertex } from './swf-filter-shaders';
+import type { ColorTransform } from '../assets/color-transform';
+import { filterVertex } from './filter-shaders';
 
 /** Bitmap CT: unpremultiply, transform, saturate, then premultiply. Transparent pixels stay empty. */
-export class SwfColorFilter extends Filter {
-  constructor(color: SwfColorTransform) {
+export class ColorFilter extends Filter {
+  constructor(color: ColorTransform) {
     super({
       glProgram: GlProgram.from({
         vertex: filterVertex,
-        name: 'swf-color-transform',
+        name: 'color-transform',
         preferredFragmentPrecision: 'highp',
         fragment: `
 in vec2 vTextureCoord;

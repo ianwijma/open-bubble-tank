@@ -1,7 +1,7 @@
 import data from '../data/creator-palette.json';
 import type { CreatorSliderLayout } from './creator-controls';
 import type { CreatorPrimitive } from './creator-controls';
-import type { SwfMatrix } from '../assets/asset-pack';
+import type { ArtMatrix } from '../assets/asset-pack';
 import type { TankDesign } from './types';
 import { partById } from '../data/catalog';
 export interface CreatorField {
@@ -29,13 +29,13 @@ export interface CreatorField {
 interface Piece {
   name: string;
   symbol: number;
-  matrix: SwfMatrix;
+  matrix: ArtMatrix;
   bounds: { x: number; y: number; width: number; height: number };
   art: CreatorPrimitive[][];
   frameBounds?: { x: number; y: number; width: number; height: number }[];
 }
 export const CREATOR_PALETTE = data as {
-  origin: SwfMatrix;
+  origin: ArtMatrix;
   selectionInfo: {
     icon: { symbol: number; bounds: { x: number; y: number; width: number; height: number } };
     popup: {
@@ -47,16 +47,16 @@ export const CREATOR_PALETTE = data as {
   };
   details: {
     symbol: number;
-    origin: SwfMatrix;
+    origin: ArtMatrix;
     bounds: { x: number; y: number; width: number; height: number };
     static: CreatorPrimitive[];
     fields: CreatorField[];
-    viewer: { matrix: SwfMatrix; mask: { x: number; y: number; width: number; height: number } };
+    viewer: { matrix: ArtMatrix; mask: { x: number; y: number; width: number; height: number } };
     arrow: Piece & { mask: { x: number; y: number; width: number; height: number } };
   };
   advanced: {
     symbol: number;
-    origin: SwfMatrix;
+    origin: ArtMatrix;
     tab: Piece;
     basicTab: Piece;
     static: CreatorPrimitive[];
@@ -65,7 +65,7 @@ export const CREATOR_PALETTE = data as {
     sliders: CreatorSliderLayout[];
     confirm: {
       symbol: number;
-      matrix: SwfMatrix;
+      matrix: ArtMatrix;
       fields: CreatorField[];
       buttons: Piece[];
       frames: { frame: number; fields: CreatorField[]; art: CreatorPrimitive[] }[];
@@ -80,7 +80,7 @@ export const CREATOR_PALETTE = data as {
   };
   library: {
     symbol: number;
-    matrix: SwfMatrix;
+    matrix: ArtMatrix;
     bounds: { x: number; y: number; width: number; height: number };
     mask: { x: number; y: number; width: number; height: number };
     inside: { x: number; y: number };
@@ -101,7 +101,7 @@ export const CREATOR_PALETTE = data as {
     states: { color: number[] }[];
     codes: Record<number, number>;
   };
-  scroll: { matrix: SwfMatrix; pieces: Piece[] };
+  scroll: { matrix: ArtMatrix; pieces: Piece[] };
 };
 
 /** The summary ignores the return values of both substr calls: preserve its trailing comma and short plurals. */

@@ -5,7 +5,7 @@ import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { STARTER } from '../../src/game/data/catalog';
 import type { Tank } from '../../src/game/core/types';
 import { TankView } from '../../src/game/render/tank-view';
-import { SwfTextures } from '../../src/game/render/swf-textures';
+import { ArtTextures } from '../../src/game/render/art-textures';
 import { createTank } from '../../src/game/simulation/tank';
 import { World, emptyInput } from '../../src/game/simulation/world';
 import { killMountedShield } from '../../src/game/simulation/shields';
@@ -13,7 +13,7 @@ import { killMountedShield } from '../../src/game/simulation/shields';
 /** Production tank/protection views, retained bounds and clocks through a paused World. */
 export async function showTankArtProof(pack: AssetPack, host: HTMLElement) {
   const app = new Application(),
-    textures = new SwfTextures(),
+    textures = new ArtTextures(),
     world = new World([], [], 31);
   await app.init({
     width: 200,

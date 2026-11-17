@@ -9,7 +9,7 @@ import {
 } from 'react';
 import type { UpgradeMenu } from '@/game/services/upgrade-menu';
 import type { UpgradeSlotId } from '@/game/core/upgrade-loading';
-import type { AssetPack, SwfMatrix } from '@/game/assets/asset-pack';
+import type { AssetPack, ArtMatrix } from '@/game/assets/asset-pack';
 import type { StageRuntime } from '@/game/services/stage-runtime';
 import type { TankDesign } from '@/game/core/types';
 import { UPGRADE_SCREEN, upgradeWidget, upgradeWeaponSummary } from '@/game/core/upgrade-screen';
@@ -18,8 +18,8 @@ import { CreatorText } from './creator-text';
 import { useUpgradeArtwork } from './upgrade-artwork';
 import { Dialog } from './ui';
 
-const transform = (m: SwfMatrix) => `matrix(${m.a},${m.b},${m.c},${m.d},${m.tx / 20},${m.ty / 20})`;
-function Group({ matrix, children }: { matrix: SwfMatrix; children: ReactNode }) {
+const transform = (m: ArtMatrix) => `matrix(${m.a},${m.b},${m.c},${m.d},${m.tx / 20},${m.ty / 20})`;
+function Group({ matrix, children }: { matrix: ArtMatrix; children: ReactNode }) {
   return (
     <div className="upgrade-group" style={{ transform: transform(matrix) }}>
       {children}

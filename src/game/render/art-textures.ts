@@ -1,9 +1,9 @@
 import { CanvasSource, Texture } from 'pixi.js';
 import type { Raster } from '../assets/asset-pack';
-import type { RasterTextures } from './swf-symbol-view';
+import type { RasterTextures } from './symbol-view';
 
 /** Renderer-owned textures, one per prepared raster. */
-export class SwfTextures implements RasterTextures {
+export class ArtTextures implements RasterTextures {
   private textures = new Map<Raster, Texture>();
   get(raster: Raster) {
     let texture = this.textures.get(raster);

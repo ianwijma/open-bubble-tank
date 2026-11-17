@@ -1,20 +1,20 @@
 'use client';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import type { AssetPack } from '@/game/assets/asset-pack';
-import type { SwfMatrix } from '@/game/assets/asset-pack';
+import type { ArtMatrix } from '@/game/assets/asset-pack';
 import type { TankDesign, Rect } from '@/game/core/types';
 import { viewerWidget, viewerFit, type ViewerPiece } from '@/game/core/tank-viewer';
 import type { StageRuntime } from '@/game/services/stage-runtime';
 import { CreatorPrimitives } from './creator-controls';
 import { CreatorText } from './creator-text';
-export const viewerTransform = (m: SwfMatrix) =>
+export const viewerTransform = (m: ArtMatrix) =>
   `matrix(${m.a},${m.b},${m.c},${m.d},${m.tx / 20},${m.ty / 20})`;
 export function ViewerGroup({
   matrix,
   children,
   className = '',
 }: {
-  matrix: SwfMatrix;
+  matrix: ArtMatrix;
   children: ReactNode;
   className?: string;
 }) {

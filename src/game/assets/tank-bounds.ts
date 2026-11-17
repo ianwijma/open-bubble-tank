@@ -4,15 +4,15 @@ import { shieldClipFrame } from '../core/shield-art';
 import type { Tank, TankPart } from '../core/types';
 import { partById } from '../data/catalog';
 import { INFECTED_ART, PROTECTION_ART, shieldClipSymbol } from '../data/status-art';
-import type { Bounds, SwfMatrix } from './asset-pack';
+import type { Bounds, ArtMatrix } from './asset-pack';
 import { scriptBounds, type ScriptBoundsSource } from './projectile-bounds';
-import type { SwfClip } from './swf-clip';
+import type { ArtClip } from './art-clip';
 
 export interface TankBoundsClips {
-  part(tank: Tank, part: TankPart): SwfClip | undefined;
-  status(tank: Tank, index: number): SwfClip;
-  infection(tank: Tank): SwfClip;
-  forcefieldPart(tank: Tank, part: TankPart): SwfClip | undefined;
+  part(tank: Tank, part: TankPart): ArtClip | undefined;
+  status(tank: Tank, index: number): ArtClip;
+  infection(tank: Tank): ArtClip;
+  forcefieldPart(tank: Tank, part: TankPart): ArtClip | undefined;
   forcefieldRadius(tank: Tank): number;
   protectionRadius(tank: Tank): number;
 }
@@ -28,11 +28,11 @@ export function tankScriptBounds(tank: Tank, source: ScriptBoundsSource, clips: 
     angle = 0,
     sx = 1,
     sy = sx,
-    pose?: SwfClip,
+    pose?: ArtClip,
   ) => {
     const position = rotate({ x, y }, tank.rotation),
       radians = ((tank.rotation + angle) * Math.PI) / 180,
-      matrix: SwfMatrix = {
+      matrix: ArtMatrix = {
         a: Math.cos(radians) * sx,
         b: Math.sin(radians) * sx,
         c: -Math.sin(radians) * sy,
@@ -43,7 +43,7 @@ export function tankScriptBounds(tank: Tank, source: ScriptBoundsSource, clips: 
     const bounds = scriptBounds(source, id, age, matrix, undefined, [], 0, pose);
     if (bounds) boxes.push(bounds);
   };
-  const addPart = (part: TankPart, pose: SwfClip | undefined, aimed: boolean) => {
+  const addPart = (part: TankPart, pose: ArtClip | undefined, aimed: boolean) => {
     const id = partById(part.type)?.symbol;
     if (!id) return;
     add(

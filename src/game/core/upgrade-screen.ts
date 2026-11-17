@@ -1,7 +1,7 @@
 import geometry from '../data/upgrade-screen.json';
 import type { CreatorPrimitive } from './creator-controls';
 import type { CreatorField } from './creator-palette';
-import type { SwfMatrix } from '../assets/asset-pack';
+import type { ArtMatrix } from '../assets/asset-pack';
 import type { Rect, TankDesign, TankPart } from './types';
 import { partById } from '../data/catalog';
 import { displayPixel } from './display-values';
@@ -9,7 +9,7 @@ import { displayPixel } from './display-values';
 export interface UpgradePiece {
   name: string;
   symbol: number;
-  matrix: SwfMatrix;
+  matrix: ArtMatrix;
   bounds: Rect;
 }
 export interface UpgradeWidget {
@@ -18,19 +18,19 @@ export interface UpgradeWidget {
   leaf: boolean;
   staticDepths: number[];
   art: CreatorPrimitive[];
-  fields: (CreatorField & { matrix: SwfMatrix })[];
+  fields: (CreatorField & { matrix: ArtMatrix })[];
 }
 export const UPGRADE_SCREEN = geometry as {
   symbol: number;
   shade: UpgradePiece;
   foreground: UpgradePiece[];
-  viewers: { matrix: SwfMatrix; cards: UpgradePiece[] };
+  viewers: { matrix: ArtMatrix; cards: UpgradePiece[] };
   rootFrames: { frame: number; pieces: UpgradePiece[] }[];
   loading: UpgradePiece & {
     label: UpgradePiece;
     animation: UpgradePiece & {
       loopStart: number;
-      frames: { depth: number; symbol: number; matrix: SwfMatrix; alpha: number }[][];
+      frames: { depth: number; symbol: number; matrix: ArtMatrix; alpha: number }[][];
     };
   };
   edit: UpgradePiece;
@@ -59,7 +59,7 @@ export function upgradeWeaponSummary(tank: TankDesign, category: 2 | 3 | 5) {
 }
 
 /** Available adjacent-class slots are recentered after removing their unavailable siblings. */
-export function upgradeCardMatrix(index: number, count: number): SwfMatrix {
+export function upgradeCardMatrix(index: number, count: number): ArtMatrix {
   const card = UPGRADE_SCREEN.viewers.cards[index];
   const spacing =
     (UPGRADE_SCREEN.viewers.cards[1].matrix.tx - UPGRADE_SCREEN.viewers.cards[0].matrix.tx) / 20;

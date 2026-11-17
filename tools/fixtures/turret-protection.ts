@@ -5,7 +5,7 @@ import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { STARTER } from '../../src/game/data/catalog';
 import { shieldClipFrame } from '../../src/game/core/shield-art';
 import { TankView } from '../../src/game/render/tank-view';
-import { SwfTextures } from '../../src/game/render/swf-textures';
+import { ArtTextures } from '../../src/game/render/art-textures';
 import { createTank } from '../../src/game/simulation/tank';
 import { createProjectile } from '../../src/game/simulation/create-projectile';
 import { World, emptyInput } from '../../src/game/simulation/world';
@@ -14,7 +14,7 @@ import { FieldVisit } from '../../src/game/core/field-visit';
 /** The turret's owner-Run latch, retired hit children, and independently stopped protection clips. */
 export async function showTurretProtection(pack: AssetPack, host: HTMLElement) {
   const app = new Application(),
-    textures = new SwfTextures(),
+    textures = new ArtTextures(),
     world = new World([], [], 76);
   await app.init({
     width: 250,

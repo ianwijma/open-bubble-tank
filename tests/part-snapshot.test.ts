@@ -3,7 +3,7 @@ import { partSnapshot } from '../src/game/assets/part-snapshot';
 import { buildDisplayList } from '../src/game/assets/display-list';
 import { AssetPack, type SpriteInfo } from '../src/game/assets/asset-pack';
 import { STARTER } from '../src/game/data/catalog';
-import type { ClipSource } from '../src/game/assets/swf-clip';
+import type { ClipSource } from '../src/game/assets/art-clip';
 
 const matrix = { a: 1, b: 0, c: 0, d: 1, tx: 0, ty: 0 };
 const sprites: Record<number, SpriteInfo> = {

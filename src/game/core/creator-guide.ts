@@ -1,11 +1,11 @@
 import data from '../data/creator-guide.json';
 import type { CreatorPrimitive } from './creator-controls';
-import type { SwfMatrix } from '../assets/asset-pack';
+import type { ArtMatrix } from '../assets/asset-pack';
 import type { Rect } from './types';
 
 export const CREATOR_GUIDE = data as {
   symbol: number;
-  parent: SwfMatrix;
+  parent: ArtMatrix;
   frames: {
     frame: number;
     staticIds: number[];
@@ -14,7 +14,7 @@ export const CREATOR_GUIDE = data as {
     buttons: {
       name: string;
       symbol: number;
-      matrix: SwfMatrix;
+      matrix: ArtMatrix;
       bounds: Rect;
       art: CreatorPrimitive[][];
     }[];

@@ -7,7 +7,7 @@ import { STARTER } from '../../src/game/data/catalog';
 import type { Tank, TankChild } from '../../src/game/core/types';
 import { rotate } from '../../src/game/core/math';
 import { TankView } from '../../src/game/render/tank-view';
-import { SwfTextures } from '../../src/game/render/swf-textures';
+import { ArtTextures } from '../../src/game/render/art-textures';
 import { createTank } from '../../src/game/simulation/tank';
 import { World, emptyInput } from '../../src/game/simulation/world';
 import { detachForcefield } from '../../src/game/simulation/forcefield';
@@ -17,7 +17,7 @@ import { addTankChild, removeTankChild } from '../../src/game/simulation/tank-di
 
 export async function showShapeContact(pack: AssetPack, host: HTMLElement) {
   const app = new Application(),
-    textures = new SwfTextures();
+    textures = new ArtTextures();
   await app.init({
     width: 250,
     height: 120,

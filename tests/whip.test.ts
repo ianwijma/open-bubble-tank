@@ -1,7 +1,7 @@
 import { importActorFixtures } from './fixtures/actor-attachments';
 import { expect, test } from 'bun:test';
-import { SwfClip, type ClipSource } from '../src/game/assets/swf-clip';
-import type { DisplayPlacement, SwfMatrix } from '../src/game/assets/asset-pack';
+import { ArtClip, type ClipSource } from '../src/game/assets/art-clip';
+import type { DisplayPlacement, ArtMatrix } from '../src/game/assets/asset-pack';
 import type { GunState, Projectile } from '../src/game/core/types';
 import { STARTER } from '../src/game/data/catalog';
 import { createProjectile } from '../src/game/simulation/create-projectile';
@@ -9,11 +9,11 @@ import { createTank } from '../src/game/simulation/tank';
 import { tickWhip, whipSamples } from '../src/game/simulation/whip';
 import { World } from '../src/game/simulation/world';
 
-const identity: SwfMatrix = { a: 1, b: 0, c: 0, d: 1, tx: 0, ty: 0 };
+const identity: ArtMatrix = { a: 1, b: 0, c: 0, d: 1, tx: 0, ty: 0 };
 function placement(
   depth: number,
   charId: number,
-  matrix: SwfMatrix = identity,
+  matrix: ArtMatrix = identity,
   name?: string,
 ): DisplayPlacement {
   return { depth, charId, matrix, name, frame: 1, bornFrame: 1 };
@@ -34,7 +34,7 @@ function pose(
             )
           : [],
   };
-  const result = new SwfClip(10000, source);
+  const result = new ArtClip(10000, source);
   result.advance(1);
   return result;
 }

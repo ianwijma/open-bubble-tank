@@ -1,6 +1,6 @@
 import layouts from '../data/part-geometry.json';
 import leafFacts from '../data/mock-part-leaves.json';
-import type { Bounds, Raster, SwfMatrix } from './asset-pack';
+import type { Bounds, Raster, ArtMatrix } from './asset-pack';
 
 interface LeafFacts {
   colors: { base: number; light: number; spot: number };
@@ -30,7 +30,7 @@ interface MockPartLayout {
   bounds: Bounds;
   bubbles: {
     leaf: number;
-    matrix: SwfMatrix;
+    matrix: ArtMatrix;
     x: number;
     y: number;
     rx: number;

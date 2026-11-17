@@ -5,7 +5,7 @@ import {
 } from '../src/game/assets/contact-transform';
 import { expect, test } from 'bun:test';
 import { AssetPack, type SpriteInfo } from '../src/game/assets/asset-pack';
-import { SwfClip } from '../src/game/assets/swf-clip';
+import { ArtClip } from '../src/game/assets/art-clip';
 import { STARTER, partById } from '../src/game/data/catalog';
 import { createTank } from '../src/game/simulation/tank';
 import { protectionScale } from '../src/game/core/protection-size';
@@ -55,7 +55,7 @@ test('zero-alpha children still contact through retained transforms, but masks d
   ];
   Object.assign(pack, { sprites: new Map(sprites.map((s) => [s.id, s])) });
   const pose = (id: number) => {
-    const clip = new SwfClip(id, pack);
+    const clip = new ArtClip(id, pack);
     clip.advance(1);
     return clip;
   };

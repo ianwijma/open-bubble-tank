@@ -1,11 +1,11 @@
 import { Rectangle } from 'pixi.js';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
-import type { SwfClip } from '../../src/game/assets/swf-clip';
+import type { ArtClip } from '../../src/game/assets/art-clip';
 import { DEFAULT_SETTINGS } from '../../src/game/core/constants';
 import { STARTER } from '../../src/game/data/catalog';
 import { GameRenderer } from '../../src/game/render/pixi-renderer';
 import { TankView } from '../../src/game/render/tank-view';
-import { SwfTextures } from '../../src/game/render/swf-textures';
+import { ArtTextures } from '../../src/game/render/art-textures';
 import { addTankChild, removeTankChild } from '../../src/game/simulation/tank-display';
 import { World, emptyInput } from '../../src/game/simulation/world';
 import { setFieldFixtureLayout } from './field-layout';
@@ -15,7 +15,7 @@ import { captureFrame } from './pixi-capture';
 export async function showActorArtwork(pack: AssetPack, host: HTMLElement) {
   const world = new World([], [], 47),
     renderer = new GameRenderer(pack),
-    textures = new SwfTextures();
+    textures = new ArtTextures();
   await renderer.init(host, DEFAULT_SETTINGS);
   const tank = world.spawnEnemy(
     {
@@ -50,7 +50,7 @@ export async function showActorArtwork(pack: AssetPack, host: HTMLElement) {
   const child = rotor.children.get(1)!;
   const draw = () => renderer.draw(world, DEFAULT_SETTINGS);
   const nodes = () => (renderer as unknown as { tankNodes: Map<object, TankView> }).tankNodes;
-  const state = (clip: SwfClip): unknown => [
+  const state = (clip: ArtClip): unknown => [
     clip.age,
     clip.frame,
     [...clip.children.values()].map((c) => state(c.clip)),

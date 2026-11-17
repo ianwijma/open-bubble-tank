@@ -33,7 +33,7 @@ test('procedural buttons reject empty bounding-box corners but retain their pain
   }
 });
 
-test('menu inversion keeps valid minimum16.16 SWF scale coefficients', () => {
+test('menu inversion keeps valid minimum 16.16 scale coefficients', () => {
   const scale = 1 / 65536;
   expect(
     menuLocal(

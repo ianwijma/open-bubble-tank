@@ -8,8 +8,8 @@ import { buildDisplayList } from '../../src/game/assets/display-list';
 import { DEFAULT_SETTINGS } from '../../src/game/core/constants';
 import { STARTER } from '../../src/game/data/catalog';
 import { GameRenderer } from '../../src/game/render/pixi-renderer';
-import { SwfSymbolView } from '../../src/game/render/swf-symbol-view';
-import { SwfTextures } from '../../src/game/render/swf-textures';
+import { SymbolView } from '../../src/game/render/symbol-view';
+import { ArtTextures } from '../../src/game/render/art-textures';
 import { createTank } from '../../src/game/simulation/tank';
 import { createProjectile } from '../../src/game/simulation/create-projectile';
 import { World, emptyInput } from '../../src/game/simulation/world';
@@ -124,7 +124,7 @@ export async function showCollapseProof(pack: AssetPack, host: HTMLElement) {
       flash: world.effects.some((e) => e.symbol === 114),
     };
     const synthetic = new AssetPack('mock'),
-      textures = new SwfTextures();
+      textures = new ArtTextures();
     const leaf = (id: number, radius: number, color: string, square = false) => {
       const canvas = document.createElement('canvas');
       canvas.width = canvas.height = radius * 2;
@@ -189,7 +189,7 @@ export async function showCollapseProof(pack: AssetPack, host: HTMLElement) {
       return info ? buildDisplayList(info, age) : [];
     };
     const scene = new Container(),
-      view = new SwfSymbolView(30000, synthetic, textures);
+      view = new SymbolView(30000, synthetic, textures);
     scene.addChild(new Graphics().rect(0, 0, 100, 100).fill(0xff0000), view.root);
     view.root.position.set(50, 50);
     view.setBlendMode(2);

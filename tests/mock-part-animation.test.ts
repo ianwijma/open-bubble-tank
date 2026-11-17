@@ -1,6 +1,6 @@
 import { expect, test } from 'bun:test';
 import data from '../src/game/data/mock-part-timelines.json';
-import { SwfClip, type ClipSource } from '../src/game/assets/swf-clip';
+import { ArtClip, type ClipSource } from '../src/game/assets/art-clip';
 import { buildDisplayList } from '../src/game/assets/display-list';
 import type { SpriteInfo } from '../src/game/assets/asset-pack';
 import { PARTS } from '../src/game/data/catalog';
@@ -10,7 +10,7 @@ const source: ClipSource = {
   displayList: (id, frame) => (sprites.has(id) ? buildDisplayList(sprites.get(id)!, frame) : []),
 };
 function pose(id: number, age: number) {
-  const clip = new SwfClip(id, source, () => 0);
+  const clip = new ArtClip(id, source, () => 0);
   clip.advance(age);
   return clip;
 }

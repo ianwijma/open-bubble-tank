@@ -4,7 +4,7 @@ import { Application, Container, Rectangle } from 'pixi.js';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { STARTER } from '../../src/game/data/catalog';
 import { TankView } from '../../src/game/render/tank-view';
-import { SwfTextures } from '../../src/game/render/swf-textures';
+import { ArtTextures } from '../../src/game/render/art-textures';
 import { createTank } from '../../src/game/simulation/tank';
 import { createProjectile } from '../../src/game/simulation/create-projectile';
 import { World, emptyInput } from '../../src/game/simulation/world';
@@ -13,7 +13,7 @@ import { captureCanvas } from './pixi-capture';
 /** Production protection view across real cleanup, pause, arrival and passive Setup. */
 export async function showForcefieldLifecycle(pack: AssetPack, host: HTMLElement) {
   const app = new Application(),
-    textures = new SwfTextures(),
+    textures = new ArtTextures(),
     world = new World([], [], 83);
   await app.init({
     width: 250,

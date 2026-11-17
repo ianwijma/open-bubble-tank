@@ -3,11 +3,11 @@ import { Application, ColorMatrixFilter, Container } from 'pixi.js';
 import type { AssetPack } from '../assets/asset-pack';
 import type { TankPart } from '../core/types';
 import { partById } from '../data/catalog';
-import { SwfSymbolView } from './swf-symbol-view';
-import { SwfTextures } from './swf-textures';
+import { SymbolView } from './symbol-view';
+import { ArtTextures } from './art-textures';
 import { creatorThumbnailScale } from '../core/creator-details';
 import { rotate } from '../core/math';
-import { SwfGlowFilter } from './swf-glow-filter';
+import { GlowFilter } from './glow-filter';
 import { VIEWER_HOVER_GLOW } from '../core/viewer-highlights';
 
 type Layer = 'design' | 'draft' | 'preview' | 'details' | `viewer:${string}`;
@@ -15,7 +15,7 @@ interface PartView {
   type: number;
   born: number;
   wrapper: Container;
-  view: SwfSymbolView;
+  view: SymbolView;
   initialWidth: number;
   thumbnailScale: number;
 }
@@ -28,10 +28,10 @@ export interface ArtworkPart {
 /** One offscreen WebGL scene supplies live artwork to the creator's Canvas2D surfaces. */
 export class CreatorArtwork {
   private app = new Application();
-  private textures = new SwfTextures();
+  private textures = new ArtTextures();
   private groups = new Map<Layer, { root: Container; parts: Map<string, PartView> }>();
   private gray = new ColorMatrixFilter();
-  private hoverGlow: SwfGlowFilter | undefined;
+  private hoverGlow: GlowFilter | undefined;
   private destroyed = false;
   constructor(
     private pack: AssetPack,
@@ -66,7 +66,7 @@ export class CreatorArtwork {
   private createPart(part: TankPart, frame: number): PartView | undefined {
     const symbol = partById(part.type)?.symbol;
     if (!symbol) return;
-    const view = new SwfSymbolView(symbol, this.pack, this.textures, { random: Math.random }),
+    const view = new SymbolView(symbol, this.pack, this.textures, { random: Math.random }),
       wrapper = new Container();
     view.update(1, undefined, part.y);
     const raster = this.pack.part(part.type);
@@ -127,7 +127,7 @@ export class CreatorArtwork {
     const group = this.group(layer),
       active = new Set(parts.map(({ part }) => part.key));
     group.root.scale.set(scale);
-    if (highlighted) this.hoverGlow ??= new SwfGlowFilter(VIEWER_HOVER_GLOW);
+    if (highlighted) this.hoverGlow ??= new GlowFilter(VIEWER_HOVER_GLOW);
     group.root.filters = highlighted ? [this.hoverGlow!] : null;
     for (const [key, node] of group.parts) {
       if (!active.has(key)) {

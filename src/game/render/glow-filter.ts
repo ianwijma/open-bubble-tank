@@ -6,10 +6,10 @@ import {
   type FilterSystem,
   type RenderSurface,
 } from 'pixi.js';
-import type { SwfGlowFilter as GlowOptions } from '../assets/asset-pack';
+import type { GlowFilter as GlowOptions } from '../assets/asset-pack';
 import { glowKernel, glowPadding, type BoxKernel } from '../assets/glow-kernel';
 
-import { filterVertex as vertex } from './swf-filter-shaders';
+import { filterVertex as vertex } from './filter-shaders';
 
 const boxFragment = `
 in vec2 vTextureCoord;
@@ -71,7 +71,7 @@ function boxPass(axis: [number, number]) {
     glProgram: GlProgram.from({
       vertex,
       fragment: boxFragment,
-      name: 'swf-glow-box',
+      name: 'glow-box',
       preferredFragmentPrecision: 'highp',
     }),
     resolution: 1,
@@ -98,7 +98,7 @@ function boxPass(axis: [number, number]) {
  * Logical stage resolution is1: parent/field transforms do not scale the kernel.
  * Exact Stage/DPR scaling remains unverified.
  */
-export class SwfGlowFilter extends Filter {
+export class GlowFilter extends Filter {
   private readonly horizontal = boxPass([1, 0]);
   private readonly vertical = boxPass([0, 1]);
   private xKernel?: BoxKernel;
@@ -110,7 +110,7 @@ export class SwfGlowFilter extends Filter {
       glProgram: GlProgram.from({
         vertex,
         fragment: glowFragment,
-        name: 'swf-glow',
+        name: 'glow',
         preferredFragmentPrecision: 'highp',
       }),
       resolution: 1,

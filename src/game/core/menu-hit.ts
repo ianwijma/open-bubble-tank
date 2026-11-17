@@ -1,4 +1,4 @@
-import type { SwfMatrix } from '../assets/asset-pack';
+import type { ArtMatrix } from '../assets/asset-pack';
 import { MAIN_MENU } from './main-menu';
 import type { Vec } from './types';
 
@@ -11,7 +11,7 @@ export function sameMenuTarget(a?: MenuTarget, b?: MenuTarget) {
   );
 }
 
-export function menuLocal(point: Vec, matrix: SwfMatrix): Vec | undefined {
+export function menuLocal(point: Vec, matrix: ArtMatrix): Vec | undefined {
   const det = matrix.a * matrix.d - matrix.b * matrix.c;
   if (!Number.isFinite(det) || det === 0) return;
   const x = point.x - matrix.tx / 20,

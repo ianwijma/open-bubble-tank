@@ -1,11 +1,11 @@
 import type { GunState, Tank, TankDesign, TankPart } from '../core/types';
-import type { SwfClip } from './swf-clip';
+import type { ArtClip } from './art-clip';
 import { readActorArtworkPhase, type ActorArtworkPhase } from '../core/actor-artwork';
 
 /** Lazy mounted playback shared by painting/contact, with no simulation writes. */
 export class PartPlayback {
   private appliedAge = -1;
-  constructor(readonly clip: SwfClip) {}
+  constructor(readonly clip: ArtClip) {}
   /** Lazy host catch-up remains a boundary; already materialized mounts need no reads.
    * Previous scripts precede the next entry, current scripts wait until after Main.
    */

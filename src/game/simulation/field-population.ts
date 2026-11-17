@@ -1,4 +1,4 @@
-import type { SwfClip } from '../assets/swf-clip';
+import type { ArtClip } from '../assets/art-clip';
 import type { Field, Pickup, Tank } from '../core/types';
 import type { FieldInstanceRead } from './field-display';
 import { isArtwork, type EffectClip } from './registered-effects';
@@ -36,7 +36,7 @@ export interface PickupFieldPopulation extends PositionedPopulation {
   readonly instance: Pickup;
   readonly symbol: number;
   /** The existing owner supplies this retained tree; reading never initializes it. */
-  readonly pose: SwfClip;
+  readonly pose: ArtClip;
 }
 export interface EffectFieldPopulation extends PositionedPopulation {
   readonly kind: 'effect' | 'carrier';

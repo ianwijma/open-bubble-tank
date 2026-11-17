@@ -17,12 +17,12 @@ export interface ClipLine {
 
 export interface ClipChild {
   placement: DisplayPlacement;
-  clip: SwfClip;
+  clip: ArtClip;
   born: number;
 }
 
 /** A retained clip tree shared by painting and geometric contact; no DOM or Pixi dependency. */
-export class SwfClip {
+export class ArtClip {
   age = 0;
   revision = 0;
   /** Numeric graphics owned by this exact child, never by its parent request. */
@@ -30,7 +30,7 @@ export class SwfClip {
   placements: DisplayPlacement[] = [];
   /** Last actual authored own placement survives timeline removal. Root placement is host-owned. */
   placement?: DisplayPlacement;
-  parent: SwfClip | null = null;
+  parent: ArtClip | null = null;
   readonly children = new Map<number, ClipChild>();
   private timeline: ClipTimeline | null;
   private scriptsPending = false;
@@ -149,7 +149,7 @@ export class SwfClip {
         if (child) child.clip.parent = null;
         child = {
           placement,
-          clip: new SwfClip(placement.charId, this.source, this.random, this.depth + 1),
+          clip: new ArtClip(placement.charId, this.source, this.random, this.depth + 1),
           born: Math.max(1, this.age),
         };
         this.children.set(placement.depth, child);

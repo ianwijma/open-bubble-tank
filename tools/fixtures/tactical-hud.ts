@@ -3,7 +3,7 @@ import { Application } from 'pixi.js';
 import type { AssetPack } from '../../src/game/assets/asset-pack';
 import { TacticalHudState } from '../../src/game/core/tactical-hud';
 import { TacticalHudView } from '../../src/game/render/tactical-hud-view';
-import { SwfTextures } from '../../src/game/render/swf-textures';
+import { ArtTextures } from '../../src/game/render/art-textures';
 import { HudView } from '../../src/game/render/hud-view';
 import { EditSliderView } from '../../src/game/render/edit-slider-view';
 import { STARTER } from '../../src/game/data/catalog';
@@ -13,7 +13,7 @@ import { createTank } from '../../src/game/simulation/tank';
 /** Native overlay artwork in isolation, with authored frames, fixed HUD sizes and fill overrides. */
 export async function showTacticalHudProof(pack: AssetPack, host: HTMLElement) {
   const app = new Application(),
-    textures = new SwfTextures(),
+    textures = new ArtTextures(),
     state = new TacticalHudState();
   await app.init({
     width: 550,

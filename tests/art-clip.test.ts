@@ -1,5 +1,5 @@
 import { expect, test } from 'bun:test';
-import { SwfClip, type ClipSource } from '../src/game/assets/swf-clip';
+import { ArtClip, type ClipSource } from '../src/game/assets/art-clip';
 import type { DisplayPlacement } from '../src/game/assets/asset-pack';
 const placement = (charId: number, bornFrame = 1, y = 0): DisplayPlacement => ({
   charId,
@@ -14,7 +14,7 @@ test('children keep playing when their parent stops, and repeated reads do not a
     spriteInfo: (id) => ({ frameCount: id === 720 ? 27 : 40 }),
     displayList: (id) => (id === 720 ? [placement(680)] : []),
   };
-  const root = new SwfClip(720, source, () => {
+  const root = new ArtClip(720, source, () => {
     calls++;
     return 0.9;
   });
@@ -37,7 +37,7 @@ test('skipped draw frames still process removals and fresh clip construction in 
     displayList: (id, frame) =>
       id !== 10000 || frame === 3 ? [] : [placement(680, frame === 4 ? 4 : 1)],
   };
-  const root = new SwfClip(10000, source, () => {
+  const root = new ArtClip(10000, source, () => {
     calls++;
     return 0.5;
   });
@@ -54,7 +54,7 @@ test('nested branch scripts read their own local placement Y and react at the bo
     spriteInfo: (id) => ({ frameCount: id === 20 ? 100 : 200 }),
     displayList: (id, frame) => (id === 10000 ? [placement(20, 1, frame === 1 ? 10 : -10)] : []),
   };
-  const root = new SwfClip(10000, source);
+  const root = new ArtClip(10000, source);
   root.advance(1, -100);
   const child = root.children.get(1)!.clip;
   expect(child.frame).toBe(51);
@@ -68,7 +68,7 @@ test('a recursive supplied display list is bounded instead of exhausting the sta
     spriteInfo: () => ({ frameCount: 1 }),
     displayList: () => [placement(10000)],
   };
-  const root = new SwfClip(10000, source);
+  const root = new ArtClip(10000, source);
   root.advance(1);
   let clip = root,
     depth = 0;
@@ -85,7 +85,7 @@ test('existing descendants enter before parent removals, then retired descendant
     displayList: (id, frame) => (id === 10000 && frame < 5 ? [placement(10001)] : []),
   };
   for (const staged of [false, true]) {
-    const root = new SwfClip(10000, source);
+    const root = new ArtClip(10000, source);
     root.construct();
     const step = (age: number) => {
       if (staged) {
@@ -111,7 +111,7 @@ test('timeline retirement preserves a non-wrap frame rather than resetting every
     displayList: (id, frame) => (id === 10000 && frame < 3 ? [placement(10001)] : []),
   };
   for (const staged of [false, true]) {
-    const root = new SwfClip(10000, source);
+    const root = new ArtClip(10000, source);
     const step = (age: number) => {
       if (staged) {
         root.enterFrame();
@@ -135,7 +135,7 @@ test('combined advancement defers child actions until the parent placement tags 
     spriteInfo: (id) => ({ frameCount: id === 20 ? 100 : 200 }),
     displayList: (id, frame) => (id === 10000 ? [placement(20, 1, frame < 50 ? 10 : -10)] : []),
   };
-  const root = new SwfClip(10000, source);
+  const root = new ArtClip(10000, source);
   root.advance(49);
   const child = root.children.get(1)!.clip;
   expect(child.frame).toBe(99);
@@ -155,7 +155,7 @@ test('frame scripts visit current render children after entry/removal, preservin
           ],
   };
   const draws = [0.9, 0.9, 0.2, 0.7];
-  const root = new SwfClip(10000, source, () => draws.shift()!);
+  const root = new ArtClip(10000, source, () => draws.shift()!);
   root.advance(1);
   const retained = root.children.get(4)!.clip;
   retained.gotoAndPlay(40);
